@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none"
+    android:orientation="vertical">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:orientation="vertical"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="24dp">
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="主播介绍"
+            android:textSize="@dimen/text_size_13"
+            android:textColor="@color/beijing"/>
+        
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="18dp">
+            
+            <com.woting.widgetui.RoundImageView
+                android:id="@+id/round_image_head"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@mipmap/reg_default_portrait"/>
+            
+            <TextView
+                android:id="@+id/text_anchor_name"
+                android:layout_toRightOf="@id/round_image_head"
+                android:layout_toLeftOf="@+id/linear_concern"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="left|center"
+                android:textSize="@dimen/list_text_size"
+                android:text="我听我享听"
+                android:layout_marginLeft="13dp"
+                android:singleLine="true"
+                android:layout_marginRight="10dp"
+                android:textColor="@color/wt_login_third"/>
+            
+            <LinearLayout
+                android:id="@+id/linear_concern"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:orientation="vertical">
+                
+                <ImageView
+	                android:id="@+id/image_concern"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:src="@mipmap/focus"
+	                android:layout_gravity="center_horizontal"/>
+                
+                <TextView
+	                android:id="@+id/text_concern"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="关注"
+	                android:layout_gravity="center_horizontal"
+	                android:textColor="@color/dinglan_orange"
+	                android:textSize="@dimen/activity_normal_textone"/>
+                
+            </LinearLayout>
+            
+        </RelativeLayout>
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="内容介绍"
+            android:textSize="@dimen/text_size_13"
+            android:textColor="@color/beijing"
+            android:layout_marginTop="30dp"/>
+        
+        <TextView
+            android:id="@+id/text_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我听我享听"
+            android:textSize="@dimen/list_text_size"
+            android:textColor="@color/wt_login_third"
+            android:layout_marginTop="18dp"
+            android:ellipsize="end"/>
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="标签"
+            android:textSize="@dimen/text_size_13"
+            android:textColor="@color/beijing"
+            android:layout_marginTop="30dp"/>
+        
+        <TextView
+            android:id="@+id/text_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我听我享听"
+            android:textSize="@dimen/list_text_size"
+            android:textColor="@color/wt_login_third"
+            android:layout_marginTop="18dp"/>
+        
+        <View
+	        android:layout_width="match_parent"
+	        android:layout_height="60dp"/>
+        
+    </LinearLayout>
+    
+</ScrollView>

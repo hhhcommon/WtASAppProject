@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/WHITE"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/lin_dinglan"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#f7f7f7"
+        android:orientation="horizontal"
+        android:visibility="visible" >
+
+        <LinearLayout
+            android:id="@+id/lin_clear"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            android:gravity="center|left" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:src="@mipmap/wt_download_clear" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lin_quanxuan"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:gravity="center|right"
+            android:visibility="invisible" >
+
+            <ImageView
+                android:id="@+id/img_quanxuan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/wt_group_nochecked" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="全选" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/wt_download_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" >
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:visibility="gone" >
+        </ListView>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/lin_status_no"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginTop="200dp"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@mipmap/wt_download_nocontent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="暂无下载声音哦~"
+            android:textColor="@color/beijing"
+            android:textSize="@dimen/wt_group_detail_16"
+            android:visibility="visible" />
+    </LinearLayout>
+
+</LinearLayout>

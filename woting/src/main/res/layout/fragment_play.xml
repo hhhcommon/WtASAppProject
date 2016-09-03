@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/beige"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <com.woting.widgetui.xlistview.XListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animationCache="false"
+            android:divider="@color/WHITE"
+            android:scrollbars="none"
+            android:scrollingCache="false" >
+        </com.woting.widgetui.xlistview.XListView>
+
+        <com.woting.widgetui.MyLinearLayout
+            android:id="@+id/rl_voice"
+            android:layout_width="match_parent"
+            android:layout_height="171dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/transparentt"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/view_color" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:gravity="center" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="19dp"
+                    android:layout_weight="1"
+                    android:gravity="left|center" >
+
+                    <TextView
+                        android:id="@+id/tv_speak_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:text="请按住讲话"
+                        android:textColor="@color/wt_login_third"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/text_speak_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:textColor="@color/orange"
+                        android:textSize="14sp"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_cancle"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="right|center"
+                    android:paddingRight="19dp"
+                    android:text="关闭"
+                    android:textColor="@color/beijing"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/view_color" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center" >
+
+                <ImageView
+                    android:id="@+id/imageView_voice"
+                    android:layout_width="99dp"
+                    android:layout_height="99dp"
+                    android:src="@mipmap/talknormal" />
+
+            </LinearLayout>
+        </com.woting.widgetui.MyLinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

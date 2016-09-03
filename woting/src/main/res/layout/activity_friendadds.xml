@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/dinglan_orange"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/dinglan_orange"
+        android:gravity="center_vertical" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/head_left_btn"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/head_press"
+                android:gravity="left|center" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:background="@mipmap/back_images" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="详细资料"
+                android:textColor="@color/WHITE_1"
+                android:textSize="@dimen/activity_head_center_s" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/dinglan_orange"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="12dp" >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/image_touxiang"
+                    android:layout_width="85dip"
+                    android:layout_height="85dip"
+                    android:scaleType="centerCrop" />
+
+                <ImageView
+                    android:layout_width="85dip"
+                    android:layout_height="85dip"
+                    android:layout_centerInParent="true"
+                    android:src="@mipmap/liubianxing_orange" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:singleLine="true"
+                android:text="我听科技"
+                android:textColor="@color/WHITE"
+                android:textSize="@dimen/wt_group_detail_16" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="11dp"
+            android:text="100001"
+            android:textColor="@color/WHITE"
+            android:textSize="@dimen/wt_login_text_wjmm"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_sign"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="11dp"
+            android:layout_marginTop="11dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:singleLine="true"
+            android:text="不忘初心，方得始终"
+            android:textColor="@color/WHITE"
+            android:textSize="@dimen/wt_login_text_wjmm" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lin_ewm"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:background="@drawable/person_color"
+        android:visibility="gone" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dip"
+            android:text="二维码"
+            android:textColor="@color/gray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingRight="70dp" >
+
+            <ImageView
+                android:id="@+id/imageView_ewm"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:gravity="center"
+                android:src="@mipmap/ewm" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_z" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:background="@color/WHITE"
+        android:gravity="bottom"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/lin_yzxx"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/WHITE"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/WHITE"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
+                        android:background="@drawable/bg_edittext_normal"
+                        android:gravity="left|center"
+                        android:orientation="horizontal"
+                        android:padding="5dip"
+                        android:layout_marginTop="15dp" >
+
+                        <EditText
+                            android:id="@+id/et_news"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@color/WHITE"
+                            android:ellipsize="end"
+                            android:ems="10"
+                            android:hint="请输入验证信息"
+                            android:maxLines="1"
+                            android:padding="1dp"
+                            android:singleLine="true"
+                            android:textColor="@color/beijing"
+                            android:textColorHint="@color/gray"
+                            android:textCursorDrawable="@drawable/wt_edittext_cursor"
+                            android:textSize="@dimen/wt_login_text_wjmm" >
+                        </EditText>
+
+                        <LinearLayout
+                            android:id="@+id/lin_delete"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="5dp"
+                            android:gravity="center"
+                            android:orientation="vertical" >
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@mipmap/wt_img_clearnew" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/zhuxiao_press"
+            android:gravity="center"
+            android:padding="10dip"
+            android:text="添加对方为好友"
+            android:textColor="@color/WHITE"
+            android:textSize="@dimen/wt_button_default_text" />
+    </LinearLayout>
+
+</LinearLayout>

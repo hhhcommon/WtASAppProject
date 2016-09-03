@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dinglan_orange"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical" >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/head_left_btn"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/head_press"
+                    android:gravity="left|center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@mipmap/back_images"
+                        android:layout_marginLeft="6dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="定时关闭"
+                    android:textColor="@color/WHITE_1"
+                    android:textSize="@dimen/activity_head_center_s" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center" >
+
+                <LinearLayout
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/head_press"
+                    android:gravity="right|center"
+                    android:orientation="vertical"
+                    android:visibility="visible" >
+
+                    <TextView
+                        android:id="@+id/tv_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="00:00"
+                        android:textColor="@color/WHITE_1" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/app_bg"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/lin_10"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:background="@drawable/person_color"
+            android:gravity="left|center" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19dp"
+                android:text="10分钟"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="19dp"
+                android:layout_weight="1"
+                android:gravity="right|center" >
+
+                <ImageView
+                    android:id="@+id/image_time_10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/wt_group_checked"
+                    android:visibility="invisible" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/view_color" />
+
+        <LinearLayout
+            android:id="@+id/lin_20"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:background="@drawable/person_color"
+            android:gravity="left|center" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19dp"
+                android:text="20分钟"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="19dp"
+                android:layout_weight="1"
+                android:gravity="right|center" >
+
+                <ImageView
+                    android:id="@+id/image_time_20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/wt_group_checked"
+                    android:visibility="invisible" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/view_color" />
+
+        <LinearLayout
+            android:id="@+id/lin_30"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:background="@drawable/person_color"
+            android:gravity="left|center" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19dp"
+                android:text="30分钟"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="19dp"
+                android:layout_weight="1"
+                android:gravity="right|center" >
+
+                <ImageView
+                    android:id="@+id/image_time_30"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/wt_group_checked"
+                    android:visibility="invisible" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/view_color" />
+
+        <LinearLayout
+            android:id="@+id/lin_40"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:background="@drawable/person_color"
+            android:gravity="left|center" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19dp"
+                android:text="40分钟"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="19dp"
+                android:layout_weight="1"
+                android:gravity="right|center" >
+
+                <ImageView
+                    android:id="@+id/image_time_40"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/wt_group_checked"
+                    android:visibility="invisible" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/view_color" />
+
+        <LinearLayout
+            android:id="@+id/lin_50"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:background="@drawable/person_color"
+            android:gravity="left|center" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19dp"
+                android:text="50分钟"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="19dp"
+                android:layout_weight="1"
+                android:gravity="right|center" >
+
+                <ImageView
+                    android:id="@+id/image_time_50"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/wt_group_checked"
+                    android:visibility="invisible" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/view_color" />
+
+        <LinearLayout
+            android:id="@+id/lin_60"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:background="@drawable/person_color"
+            android:gravity="left|center" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19dp"
+                android:text="60分钟"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="19dp"
+                android:layout_weight="1"
+                android:gravity="right|center" >
+
+                <ImageView
+                    android:id="@+id/image_time_60"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/wt_group_checked"
+                    android:visibility="invisible" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/view_color" />
+
+        <LinearLayout
+            android:id="@+id/lin_playend"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:background="@drawable/person_color"
+            android:gravity="left|center" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19dp"
+                android:text="当前节目完成后关闭"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="19dp"
+                android:layout_weight="1"
+                android:gravity="right|center" >
+
+                <ImageView
+                    android:id="@+id/image_time_program_over"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/wt_group_checked"
+                    android:visibility="invisible" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/lin_view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/view_color" />
+
+        <LinearLayout
+            android:id="@+id/lin_nostart"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:background="@drawable/person_color"
+            android:gravity="left|center" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19dp"
+                android:text="不启动"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="19dp"
+                android:layout_weight="1"
+                android:gravity="right|center" >
+
+                <ImageView
+                    android:id="@+id/image_time_nostart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/wt_group_checked"
+                    android:visibility="invisible" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

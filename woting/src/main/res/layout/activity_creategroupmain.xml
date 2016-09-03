@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dinglan_orange"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/dinglan_orange"
+        android:gravity="center_vertical" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/head_left_btn"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/head_press"
+                android:gravity="left|center" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:background="@mipmap/back_images" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="创建群组"
+                android:textColor="@color/WHITE_1"
+                android:textSize="@dimen/activity_head_center_s" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/WHITE"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/lin_groupmain_first"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/person_color"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingBottom="15dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="15dp"
+                android:paddingTop="15dp"
+                android:src="@mipmap/wt_group_mainfirst" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center_vertical|right"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="30dp"
+                    android:text="公开群"
+                    android:textColor="@color/wt_login_third"
+                    android:textSize="@dimen/wt_group_main_33" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="30dp"
+                    android:paddingTop="5dp"
+                    android:text="无需验证加入"
+                    android:textColor="@color/beijing"
+                    android:textSize="@dimen/wt_login_text_wjmm" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.01"
+            android:background="@color/gray_z" />
+
+        <LinearLayout
+            android:id="@+id/lin_groupmain_second"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/person_color"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingBottom="15dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="15dp"
+                android:paddingTop="15dp"
+                android:src="@mipmap/wt_group_mainsecond" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center_vertical|right"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="30dp"
+                    android:text="密码群"
+                    android:textColor="@color/wt_login_third"
+                    android:textSize="@dimen/wt_group_main_33" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="30dp"
+                    android:paddingTop="5dp"
+                    android:text="需输入群密码加入"
+                    android:textColor="@color/beijing"
+                    android:textSize="@dimen/wt_login_text_wjmm" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.01"
+            android:background="@color/gray_z" />
+
+        <LinearLayout
+            android:id="@+id/lin_groupmain_third"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/person_color"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingBottom="15dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="15dp"
+                android:paddingTop="15dp"
+                android:src="@mipmap/wt_group_mainthird" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center_vertical|right"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="30dp"
+                    android:text="审核群"
+                    android:textColor="@color/wt_login_third"
+                    android:textSize="@dimen/wt_group_main_33" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="30dp"
+                    android:paddingTop="5dp"
+                    android:text="提交验证信息加入"
+                    android:textColor="@color/beijing"
+                    android:textSize="@dimen/wt_login_text_wjmm" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

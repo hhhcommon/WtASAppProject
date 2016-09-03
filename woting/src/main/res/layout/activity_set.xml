@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dinglan_orange"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/app_bg"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@color/dinglan_orange"
+            android:gravity="center_vertical" >
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+                <LinearLayout
+                    android:id="@+id/head_left_btn"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:gravity="left|center">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@mipmap/back_images"
+                        android:layout_marginLeft="6dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="设置"
+                    android:textColor="@color/WHITE"
+                    android:textSize="@dimen/activity_head_center_s" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/lin_downloadposition"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:background="@drawable/person_color"
+            android:gravity="left|center" >
+
+            <LinearLayout
+                android:layout_width="43dp"
+                android:layout_height="match_parent"
+                android:gravity="center" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="19dp"
+                    android:src="@mipmap/wt_person_download"/>
+                
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:text="下载路径"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="13dp"
+                android:layout_weight="1"
+                android:gravity="right|center" >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/live_more" />
+            </LinearLayout>
+        </LinearLayout>
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/view_color"/>
+
+        <LinearLayout
+            android:id="@+id/lin_clear"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:background="@drawable/person_color"
+            android:gravity="left|center" >
+            
+            <LinearLayout
+                android:layout_width="43dp"
+                android:layout_height="match_parent"
+                android:gravity="center" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="19dp"
+                    android:src="@mipmap/wt_person_cache" />
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:text="清除缓存"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center"
+                android:orientation="horizontal"
+                android:layout_marginRight="13dp">
+                <TextView
+                    android:id="@+id/text_cache"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:gravity="right|center"
+                    android:text="0MB"
+                    android:textColor="@color/beijing"
+                    android:textSize="@dimen/text_size_13" />
+                <ImageView
+                    android:id="@+id/tv_cache"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/live_more"/>
+            </LinearLayout>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/view_color"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/view_color"
+             android:layout_marginTop="10dp"/>
+        <LinearLayout
+            android:id="@+id/lin_help"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:background="@drawable/person_color"
+            android:gravity="left|center">
+            
+            <LinearLayout
+                android:layout_width="43dp"
+                android:layout_height="match_parent"
+                android:gravity="center" >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="19dp"
+                    android:src="@mipmap/wt_person_help" />
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:text="使用帮助"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="13dp"
+                android:layout_weight="1"
+                android:gravity="right|center" >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/live_more" />
+            </LinearLayout>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/view_color"/>
+        <LinearLayout
+            android:id="@+id/lin_feedback"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:background="@drawable/person_color"
+            android:gravity="left|center" >
+            <LinearLayout
+                android:layout_width="43dp"
+                android:layout_height="match_parent"
+                android:gravity="center" >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="19dp"
+                    android:src="@mipmap/wt_person_feedback" />
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:text="反馈建议"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="13dp"
+                android:layout_weight="1"
+                android:gravity="right|center" >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/live_more" />
+            </LinearLayout>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/view_color"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/view_color"
+             android:layout_marginTop="10dp"/>
+        <LinearLayout
+            android:id="@+id/lin_contactus"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:background="@drawable/person_color"
+            android:gravity="left|center">
+            <LinearLayout
+                android:layout_width="43dp"
+                android:layout_height="match_parent"
+                android:gravity="center" >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="19dp"
+                    android:src="@mipmap/wt_person_timercontactus"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:text="联系我们"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="13dp"
+                android:layout_weight="1"
+                android:gravity="right|center" >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/live_more" />
+            </LinearLayout>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/view_color"/>
+        <LinearLayout
+            android:id="@+id/lin_update"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:background="@drawable/person_color"
+            android:gravity="left|center" >
+            <LinearLayout
+                android:layout_width="43dp"
+                android:layout_height="match_parent"
+                android:gravity="center" >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="19dp"
+                    android:src="@mipmap/wt_person_update" />
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:text="检查更新"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="13dp"
+                android:layout_weight="1"
+                android:gravity="right|center" >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/live_more" />
+            </LinearLayout>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/view_color"/>
+        <LinearLayout
+            android:id="@+id/lin_about"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:background="@drawable/person_color"
+            android:gravity="left|center" >
+            <LinearLayout
+                android:layout_width="43dp"
+                android:layout_height="match_parent"
+                android:gravity="center" >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="19dp"
+                    android:src="@mipmap/wt_person_aboutus" />
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:text="关于我听"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="13dp"
+                android:layout_weight="1"
+                android:gravity="right|center" >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/live_more" />
+            </LinearLayout>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/view_color"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            <LinearLayout
+                android:id="@+id/lin_zhuxiao"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="bottom|center"
+                android:layout_marginBottom="25dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:background="@drawable/zhuxiao_press"
+                android:gravity="center"
+                android:orientation="horizontal" >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="注销登录"
+                    android:textColor="@color/WHITE"
+                    android:textSize="@dimen/activity_head_right" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/WHITE"
+    android:orientation="vertical" >
+
+    <com.woting.activity.home.program.radiolist.rollviewpager.RollPagerView
+        android:id="@+id/slideshowView"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        app:rollviewpager_play_delay="3000"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@color/setting_bg_color"
+            android:gravity="left|center" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="27dp"
+                android:text="猜你喜欢"
+                android:textColor="@color/wt_login_third"
+                android:textSize="13sp"/>
+        </LinearLayout>
+        
+        <LinearLayout
+            android:id="@+id/linear_more"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@color/setting_bg_color"
+            android:gravity="right|center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="更多"
+                android:textColor="@color/wt_login_third"
+                android:textSize="13sp"/>
+            
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/live_more"
+            	android:layout_marginRight="18dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

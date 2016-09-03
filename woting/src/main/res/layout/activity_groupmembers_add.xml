@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dinglan_orange"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/dinglan_orange"
+        android:gravity="center_vertical" >
+
+        <LinearLayout
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/head_left_btn"
+                android:layout_width="80dip"
+                android:layout_height="match_parent"
+                android:background="@drawable/head_press"
+                android:gravity="left|center" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:background="@mipmap/back_images" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <TextView
+                android:id="@+id/head_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="选择联系人"
+                android:textColor="@color/WHITE_1"
+                android:textSize="@dimen/activity_head_center_s" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="80dip"
+            android:layout_height="match_parent"
+            android:gravity="right|center" >
+
+            <LinearLayout
+                android:id="@+id/head_right_btn"
+                android:layout_width="60dip"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:background="@color/WHITE_1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="visible" >
+
+                <TextView
+                    android:id="@+id/tv_head"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="确定"
+                    android:textColor="@color/dinglan_orange"
+                    android:textSize="@dimen/activity_head_right" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/relative"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/WHITE"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/color_wt_circle_grays"
+            android:gravity="left|center" >
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginLeft="10dp"
+                android:src="@mipmap/abc_ic_search_api_holo_light" />
+
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="3dp"
+                android:layout_weight="1"
+                android:background="@color/WHITE"
+                android:hint="搜索"
+                android:padding="2dp"
+                android:textColor="@color/gray"
+                android:textColorHint="@color/gray"
+                android:textCursorDrawable="@drawable/wt_edittext_cursor"
+                android:textSize="@dimen/wt_edittext_default_text" >
+            </EditText>
+
+            <ImageView
+                android:id="@+id/image_clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:src="@mipmap/wt_img_clearnew"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <ListView
+                android:id="@+id/country_lvcountry"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:divider="@null"
+                android:scrollbars="none" >
+            </ListView>
+
+            <TextView
+                android:id="@+id/title_layout_no_friends"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:gravity="center"
+                android:text="没有找到联系人"
+                android:textColor="@color/gray"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/dialog"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:background="@drawable/linkman_bt"
+                android:gravity="center"
+                android:text="A"
+                android:textColor="@color/WHITE"
+                android:textSize="30sp"
+                android:visibility="gone" />
+
+            <com.woting.activity.interphone.linkman.view.SideBar
+                android:id="@+id/sidrbar"
+                android:layout_width="20dip"
+                  android:layout_marginTop="10dp"
+                  android:layout_marginBottom="10dp"
+                android:layout_height="fill_parent"
+                android:layout_gravity="right|center" 
+                />
+        </FrameLayout>
+    </LinearLayout>
+
+</LinearLayout>

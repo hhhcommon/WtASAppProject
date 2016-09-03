@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/WHITE"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/WHITE"
+        android:gravity="left|center"
+        android:paddingBottom="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="8dp" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imageView_inviter"
+                    android:layout_width="40dip"
+                    android:layout_height="40dip"
+                    android:layout_centerInParent="true"
+                    android:scaleType="centerCrop" />
+
+                <ImageView
+                    android:layout_width="40dip"
+                    android:layout_height="40dip"
+                    android:layout_centerInParent="true"
+                    android:src="@mipmap/wt_6_b_y_b" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dip"
+            android:layout_weight="4"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left|center"
+                android:orientation="vertical"
+                android:paddingLeft="10dip" >
+
+                <TextView
+                    android:id="@+id/tv_invitemeusername"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="朋友"
+                    android:textColor="@color/dinglan_orange"
+                    android:textSize="@dimen/wt_button_default_text" />
+
+                <TextView
+                    android:id="@+id/tv_invitemeusermessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="朋友"
+                    android:textColor="@color/gray"
+                    android:textSize="@dimen/wt_login_text_wjmm" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/textView_repeatstatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/login_zhuce"
+                    android:gravity="right"
+                    android:padding="5dip"
+                    android:text=" 已接受 "
+                    android:textColor="@color/dinglan_orange"
+                    android:textSize="14sp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/textView_repeatstatus2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/login_denglu"
+                    android:gravity="right"
+                    android:padding="5dip"
+                    android:text=" 接  受 "
+                    android:textColor="@color/WHITE"
+                    android:textSize="@dimen/wt_login_text_wjmm"
+                    android:visibility="visible" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

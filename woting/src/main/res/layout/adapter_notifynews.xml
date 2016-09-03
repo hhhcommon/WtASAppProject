@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/WHITE"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="81dp"
+        android:background="@color/WHITE"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp">
+
+            <ImageView
+                android:id="@+id/Image"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_centerInParent="true"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/wt_6_b_y_b" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="13dp"
+            android:layout_weight="2"
+            android:gravity="left|center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="朋友"
+                android:textColor="@color/dinglan_orange"
+                android:textSize="16sp"
+                android:layout_marginTop="11dp"/>
+
+            <TextView
+                android:id="@+id/content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="朋 友"
+                android:textColor="@color/gray"
+                android:textSize="13sp" />
+            
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="1970-11-11"
+                android:textColor="@color/gray"
+                android:textSize="11sp"
+                android:layout_marginBottom="11dp"/>
+            
+        </LinearLayout>
+        
+    </LinearLayout>
+
+</LinearLayout>

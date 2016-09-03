@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/WtAppProject.iml" filepath="$PROJECT_DIR$/WtAppProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/woting/woting.iml" filepath="$PROJECT_DIR$/woting/woting.iml" />
+    </modules>
+  </component>
+</project>

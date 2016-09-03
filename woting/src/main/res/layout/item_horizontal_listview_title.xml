@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <TextView
+        android:id="@+id/text_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:layout_centerInParent="true"
+        android:textColor="@color/wt_login_third"
+        android:text="推荐"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"/>
+    
+    <ImageView
+        android:id="@+id/cursor"
+        android:layout_width="38dp"
+        android:layout_height="2dp"
+        android:src="@mipmap/left_personal_bg"
+        android:scaleType="matrix"
+        android:layout_alignLeft="@id/text_title"
+        android:layout_alignRight="@id/text_title"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

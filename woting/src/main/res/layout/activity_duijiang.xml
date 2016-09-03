@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bg"
+    android:orientation="vertical" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/dinglan_orange"
+        android:gravity="center_vertical" >
+
+        <LinearLayout
+            android:id="@+id/lin_news"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/head_press"
+            android:gravity="right|center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:src="@mipmap/news" />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center">
+            
+            <LinearLayout
+	            android:layout_width="81dp"
+	            android:layout_height="28dp"
+	            android:layout_marginRight="8dp"
+	            android:gravity="center" >
+
+	            <TextView
+	                android:id="@+id/tv_guid1"
+	                android:layout_width="match_parent"
+	                android:layout_height="match_parent"
+	                android:gravity="center"
+	                android:background="@drawable/color_wt_circle_home_white"
+	                android:text="聊 天"
+	                android:textColor="@color/dinglan_orange"
+	                android:textSize="15sp" />
+        	</LinearLayout>
+
+	        <LinearLayout
+	            android:layout_width="81dp"
+	            android:layout_height="28dp"
+	            android:layout_marginLeft="8dp"
+	            android:gravity="center" >
+	
+	            <TextView
+	                android:id="@+id/tv_guid2"
+	                android:layout_width="match_parent"
+	                android:layout_height="match_parent"
+	                android:gravity="center"
+	                android:background="@drawable/color_wt_circle_orange"
+	                android:text="通讯录"
+	                android:textColor="@color/WHITE"
+	                android:textSize="15sp" />
+	        </LinearLayout>
+            
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lin_more"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/head_press"
+            android:gravity="right|center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/wt_more_white"
+                android:layout_marginRight="18dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <android.support.v4.view.ViewPager  
+        android:id="@+id/viewpager"  
+        android:layout_width="match_parent"  
+        android:layout_height="match_parent"  
+        android:flipInterval="30"  
+        android:persistentDrawingCache="animation"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

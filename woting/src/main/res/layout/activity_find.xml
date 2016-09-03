@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/dinglan_orange"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/dinglan_orange"
+        android:gravity="center_vertical" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/head_left_btn"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/head_press"
+                android:gravity="left|center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:background="@mipmap/back_images" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="4"
+                    android:background="@drawable/bg_dinglan_edittext"
+                    android:gravity="left|center" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3dp"
+                        android:src="@mipmap/wt_img_search_gray" />
+
+                    <EditText
+                        android:id="@+id/et_news"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:ellipsize="end"
+                        android:gravity="left|center"
+                        android:hint="昵称/手机号"
+                        android:singleLine="true"
+                        android:layout_marginLeft="14dp"
+                        android:textColorHint="@color/beijing"
+                        android:textColor="@color/wt_login_third"
+                        android:textSize="@dimen/wt_button_default_text" />
+
+                    <ImageView
+                        android:id="@+id/img_voicesearch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="11dp"
+                        android:src="@mipmap/wt_img_voicenew"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/img_delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="8dp"
+                        android:src="@mipmap/wt_img_clearnew"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lin_search"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="取消"
+                        android:textColor="@color/WHITE_1" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/WHITE_1"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/lin_saoyisao"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:background="@color/WHITE"
+            android:orientation="horizontal"
+            android:gravity="left|center"
+            android:paddingLeft="18dp"
+            android:paddingRight="19dp"
+            android:visibility="visible" >
+
+            <ImageView
+                android:id="@+id/RankImageUrl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/wt_img_saoyisao" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="13dp"
+                android:layout_weight="2"
+                android:gravity="left|center"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/RankTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="扫一扫"
+                    android:textColor="@color/dinglan_orange"
+                    android:textSize="@dimen/wt_button_default_text" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left|center" >
+                    <TextView
+                        android:id="@+id/tv_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="扫描二维码名片"
+                        android:textColor="@color/beijing"
+                        android:textSize="@dimen/wt_login_text_wjmm" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/wt_img_rightnew" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/fengexian" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/WHITE"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/lin_contactsearch"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:orientation="vertical"
+                android:visibility="gone" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:background="@drawable/person_color"
+                    android:gravity="left|center"
+                    android:orientation="horizontal"
+                    android:paddingLeft="18dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/wt_img_search_find" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="13dp"
+                        android:text="搜索："
+                        android:textColor="@color/dinglan_orange"
+                        android:textSize="@dimen/wt_button_default_text" />
+
+                    <TextView
+                        android:id="@+id/tv_search"
+                        android:layout_width="0dp"
+                        android:layout_height="35dip"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:text="AGUIFHSDIOSDH"
+                        android:maxLines="1"
+                        android:paddingLeft="5dp"
+                        android:singleLine="true"
+                        android:textColor="@color/dinglan_orange"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/fengexian" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

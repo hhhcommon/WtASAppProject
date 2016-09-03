@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/dinglan_orange"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/dinglan_orange"
+        android:gravity="center_vertical" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/head_left_btn"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:gravity="left|center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/back_images"
+                    android:layout_marginLeft="6dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:gravity="center" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="意见反馈"
+                android:textColor="@color/WHITE"
+                android:textSize="@dimen/activity_head_center_s" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/head_right_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:layout_marginRight="12dp"
+            android:layout_weight="1" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="right|center"
+                android:text="历史"
+                android:textSize="@dimen/wt_dinglan_text_right"
+                android:textColor="@color/WHITE" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/WHITE"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/edit_feedback_content"
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bk_bj"
+            android:gravity="left|top"
+            android:hint="请输入您的反馈意见以及您的联系方式"
+            android:padding="14dp"
+            android:textColor="@color/beijing"
+            android:textSize="@dimen/list_text_size" />
+
+        <TextView
+            android:id="@+id/submit_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/zhuxiao_press"
+            android:gravity="center"
+            android:text="提交"
+            android:textColor="@color/WHITE"
+            android:textSize="@dimen/activity_head_right" />
+    </LinearLayout>
+
+</LinearLayout>

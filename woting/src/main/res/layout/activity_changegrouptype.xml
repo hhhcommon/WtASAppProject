@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/dinglan_orange"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/app_bg"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@color/dinglan_orange"
+            android:gravity="center_vertical" >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/head_left_btn"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:gravity="left|center" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:background="@mipmap/back_images" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="更改群类型"
+                    android:textColor="@color/WHITE"
+                    android:textSize="@dimen/activity_head_center_s" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center" >
+
+                <LinearLayout
+                    android:id="@+id/head_right_btn"
+                    android:layout_width="60dip"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="@color/WHITE_1"
+                    android:gravity="right|center"
+                    android:orientation="vertical"
+                    android:visibility="invisible" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dip"
+                        android:text="确定"
+                        android:textColor="@color/dinglan_orange"
+                        android:textSize="@dimen/activity_head_right" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lin_open"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="left|center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/fengexian" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/person_color"
+                android:orientation="horizontal" >
+
+                <FrameLayout
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="15dp" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center" >
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/wt_group_mainfirst" />
+                    </LinearLayout>
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="15dip"
+                    android:text="公开群"
+                    android:textColor="#5e6471" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:gravity="right|center" >
+
+                    <ImageView
+                        android:id="@+id/img1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:src="@mipmap/wt_group_checked"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/fengexian" />
+
+        <LinearLayout
+            android:id="@+id/lin_password"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/person_color"
+            android:gravity="left|center" >
+
+            <FrameLayout
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/wt_group_mainsecond" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dip"
+                android:text="密码群"
+                android:textColor="#5e6471" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"
+                android:gravity="right|center" >
+
+                <ImageView
+                    android:id="@+id/img2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:src="@mipmap/wt_group_checked"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </LinearLayout>
+        <!-- 那个密码框 -->
+
+        <LinearLayout
+            android:id="@+id/lin_mima"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/person_color"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:visibility="gone" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="65dp"
+                android:layout_marginRight="45dp"
+                android:gravity="left|center" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="19dp"
+                    android:src="@mipmap/img_password" />
+
+                <EditText
+                    android:id="@+id/edittext_password"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/WHITE"
+                    android:ems="10"
+                    android:gravity="left|center"
+                    android:hint="群密码"
+                    android:maxLines="1"
+                    android:password="true"
+                    android:singleLine="true"
+                    android:textColor="@color/wt_login_third"
+                    android:textColorHint="@color/gray"
+                    android:textCursorDrawable="@drawable/wt_edittext_cursor"
+                    android:textSize="@dimen/wt_edittext_default_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="75dp"
+                android:layout_marginRight="45dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/bg_search_groupmembers"
+                android:gravity="left|center" >
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lin_vertify"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/person_color"
+            android:gravity="left|center"
+            android:visibility="visible" >
+
+            <FrameLayout
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center" >
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@mipmap/wt_group_mainthird" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dip"
+                android:text="审核群"
+                android:textColor="#5e6471" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"
+                android:gravity="right|center" >
+
+                <ImageView
+                    android:id="@+id/img3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:src="@mipmap/wt_group_checked"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_head"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/zhuxiao_press"
+            android:gravity="center"
+            android:padding="10dip"
+            android:text="确定"
+            android:textColor="@color/WHITE"
+            android:textSize="@dimen/wt_button_default_text" />
+    </LinearLayout>
+
+</LinearLayout>

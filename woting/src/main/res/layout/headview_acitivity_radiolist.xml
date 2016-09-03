@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/app_bg"
+    android:orientation="vertical" >
+    
+    <!-- <com.wotingfm.activity.home.program.tuijian.slideshowview.SlideShowView
+        android:id="@+id/slideshowView"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"/> -->
+        
+        <com.woting.activity.home.program.radiolist.rollviewpager.RollPagerView
+            android:id="@+id/slideshowView"
+	        android:layout_width="match_parent"
+	        android:layout_height="85dp"
+	        app:rollviewpager_play_delay="3000"/>
+    
+    <!--  
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:background="@color/setting_bg_color">
+        
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="left|center"
+            android:text="相关推荐"
+            android:textColor="@color/wt_login_third"
+            android:textSize="13sp"
+            android:layout_marginLeft="27dp"/>
+        
+        <LinearLayout
+            android:id="@+id/linear_more"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="right|center"
+            android:layout_marginRight="18dp">
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="更多"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/text_size_13"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/live_more"/>
+        </LinearLayout>
+    </LinearLayout>
+	-->
+
+</LinearLayout>

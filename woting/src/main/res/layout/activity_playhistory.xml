@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dinglan_orange"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical" >
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/dinglan_orange"
+        android:gravity="center_vertical" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/head_left_btn"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:gravity="left|center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/back_images"
+                    android:layout_marginLeft="6dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="播放历史"
+                android:textColor="@color/WHITE"
+                android:textSize="@dimen/activity_head_center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="right|center" >
+
+            <LinearLayout
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:gravity="right|center"
+                android:orientation="vertical">
+                
+                <TextView
+                    android:id="@+id/clear_empty"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:text="清空"
+                    android:gravity="center"
+                    android:textColor="@color/WHITE_1"
+                    android:textSize="@dimen/wt_dinglan_text_right"
+                    android:clickable="true"/>
+
+                <TextView
+                    android:id="@+id/open_edit"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:text="编辑"
+                    android:gravity="center"
+                    android:textColor="@color/WHITE_1"
+                    android:textSize="@dimen/wt_dinglan_text_right"
+                    android:visibility="gone"
+                    android:clickable="true"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/WHITE"
+        android:orientation="vertical" >
+        <LinearLayout
+            android:id="@+id/lin_clear"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/WHITE"
+            android:gravity="center" >
+            <TextView
+	            android:id="@+id/text_all"
+	            android:layout_width="0dp"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:text="全部"
+	            android:gravity="center"
+	            android:textSize="@dimen/wt_edittext_default_text"
+	            android:textColor="@color/dinglan_orange"/>
+        <!--
+        <TextView
+            android:id="@+id/text_sequ"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="专辑"
+            android:gravity="center"
+            android:textSize="@dimen/wt_edittext_default_text"
+            android:textColor="@color/group_item_text2"/>
+            -->
+        
+        <TextView
+            android:id="@+id/text_sound"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="声音"
+            android:gravity="center"
+            android:textSize="@dimen/wt_edittext_default_text"
+            android:textColor="@color/group_item_text2"/>
+        
+        <TextView
+            android:id="@+id/text_radio"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="电台"
+            android:gravity="center"
+            android:textSize="@dimen/wt_edittext_default_text"
+            android:textColor="@color/group_item_text2"/>
+        
+        <TextView
+            android:id="@+id/text_tts"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="TTS"
+            android:gravity="center"
+            android:textSize="@dimen/wt_edittext_default_text"
+            android:textColor="@color/group_item_text2"/>
+        </LinearLayout>
+        
+        <ImageView
+	        android:id="@+id/cursor"
+	        android:layout_width="wrap_content"
+	        android:layout_height="3dp"
+	        android:src="@mipmap/left_personal_bg"
+	        android:scaleType="matrix"/>
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/text_line_1"/>
+        
+        <com.woting.widgetui.MyViewPager
+	        android:id="@+id/viewpager"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:persistentDrawingCache="animation"/>
+    </LinearLayout>
+</LinearLayout>
