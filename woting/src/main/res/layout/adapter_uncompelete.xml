@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:roundProgress="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/WHITE"
@@ -147,7 +148,13 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_centerInParent="true"
-                        android:background="@mipmap/wt_download_circle" />
+                        android:background="@mipmap/wt_download_circle"
+                        roundProgress:Inside_Interval="2"
+                        roundProgress:Paint_Color="@color/dinglan_orange"
+                        roundProgress:Paint_Width="4"
+                        roundProgress:fill="true"
+                        roundProgress:max="100"
+                        />
 
                     <ImageView
                         android:id="@+id/image"
