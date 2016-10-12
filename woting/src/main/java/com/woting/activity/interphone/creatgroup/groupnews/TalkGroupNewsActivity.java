@@ -508,19 +508,8 @@ public class TalkGroupNewsActivity extends Activity implements OnClickListener {
 
 	// 主网络请求s
 	private void sendNet() {
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			//公共请求属性
-			jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			jsonObject.put("MobileClass", PhoneMessage.model+"::"+PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			jsonObject.put("PCDType", GlobalConfig.PCDType);
-			PhoneMessage.getGps(context); 
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			//模块属性
-			jsonObject.put("UserId", CommonUtils.getUserId(context));
 			jsonObject.put("GroupId", groupid);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -890,18 +879,8 @@ public class TalkGroupNewsActivity extends Activity implements OnClickListener {
 
 	// 更改群备注及信息
 	private void update(String b_name2, String groupSignature2) {
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			// 公共请求属性
-			jsonObject.put("SessionId",CommonUtils.getSessionId(TalkGroupNewsActivity.this));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(TalkGroupNewsActivity.this);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			jsonObject.put("PCDType", "1");
-			jsonObject.put("UserId",CommonUtils.getUserId(TalkGroupNewsActivity.this));
 			jsonObject.put("GroupId", groupid);
 			jsonObject.put("GroupName", b_name2);
 			jsonObject.put("GroupSignature", groupSignature2);
@@ -985,19 +964,9 @@ public class TalkGroupNewsActivity extends Activity implements OnClickListener {
 
 	// 退出群组
 	private void SendExitRequest() {
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			// 公共请求属性
-			jsonObject.put("SessionId", CommonUtils.getSessionId(TalkGroupNewsActivity.this));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(TalkGroupNewsActivity.this);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			jsonObject.put("UserId", CommonUtils.getUserId(TalkGroupNewsActivity.this));
 			jsonObject.put("GroupId", groupid);
-			jsonObject.put("PCDType", "1");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -1248,16 +1217,12 @@ public class TalkGroupNewsActivity extends Activity implements OnClickListener {
 							new File(filePath),
 							TestURI
 							+ ExtName
-							+ "&SessionId="
-							+ CommonUtils.getSessionId(getApplicationContext())
 							+ "&PCDType=" + "1" + "&GroupId="
 							+ groupid + "&IMEI="
 							+ PhoneMessage.imei);
 					Log.e("图片上传数据",
 							TestURI
 							+ ExtName
-							+ "&SessionId="
-							+ CommonUtils.getSessionId(getApplicationContext())
 							+ "&UserId="
 							+ CommonUtils.getUserId(getApplicationContext())
 							+ "&IMEI=" + PhoneMessage.imei);

@@ -19,9 +19,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.manager.MyActivityManager;
-import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
-import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
 
 import org.json.JSONException;
@@ -92,19 +90,8 @@ public class FeedbackActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void send() {
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(this);
 		try {
-			//公共请求属性
-			jsonObject.put("SessionId", CommonUtils.getSessionId(this));
-			jsonObject.put("MobileClass", PhoneMessage.model+"::"+PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(this);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			//模块属性
-			jsonObject.put("UserId", CommonUtils.getUserId(this));
-			jsonObject.put("PCDType",GlobalConfig.PCDType);
 			jsonObject.put("Opinion", sEditContent);
 		} catch (JSONException e) {
 			e.printStackTrace();

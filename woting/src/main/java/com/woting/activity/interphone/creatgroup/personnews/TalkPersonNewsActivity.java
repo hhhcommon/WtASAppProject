@@ -38,7 +38,6 @@ import com.woting.manager.MyActivityManager;
 import com.woting.util.BitmapUtils;
 import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
-import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
 
 import org.json.JSONException;
@@ -396,19 +395,8 @@ public class TalkPersonNewsActivity extends Activity {
 	}
 
 	protected void update(final String b_name2, String groupSignature) {
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject =VolleyRequest.getJsonObject(context);
 		try {
-			// 公共请求属性
-			jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(context);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			jsonObject.put("PCDType",GlobalConfig.PCDType);
-			// 模块属性
-			jsonObject.put("UserId", CommonUtils.getUserId(context));
 			if(Viewtype==-1){
 				jsonObject.put("FriendUserId", id);
 				jsonObject.put("FriendAliasName",  b_name2 );
@@ -490,19 +478,8 @@ public class TalkPersonNewsActivity extends Activity {
 	}
 
 	private void send() {
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			// 公共请求属性
-			jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(context);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			jsonObject.put("PCDType", GlobalConfig.PCDType);
-			// 模块属性
-			jsonObject.put("UserId", CommonUtils.getUserId(context));
 			jsonObject.put("FriendUserId", id);
 		} catch (JSONException e) {
 			e.printStackTrace();

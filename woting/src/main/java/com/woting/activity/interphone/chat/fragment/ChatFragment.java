@@ -63,7 +63,6 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.helper.ImageLoader;
 import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
-import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
 import com.woting.util.VibratorUtils;
 import com.woting.widgetui.MyLinearLayout;
@@ -595,22 +594,7 @@ public class ChatFragment extends Fragment implements OnClickListener{
 		//第一次获取群成员跟组
 		if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 			dialog = DialogUtils.Dialogph(context, "正在获取数据", dialog);
-			JSONObject jsonObject = new JSONObject();
-			try {
-				jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-				jsonObject.put("MobileClass", PhoneMessage.model+"::" + PhoneMessage.productor);
-				jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-				jsonObject.put("PCDType", "1");
-				jsonObject.put("IMEI", PhoneMessage.imei);
-				jsonObject.put("PCDType", "1");
-				PhoneMessage.getGps(context);
-				jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-				jsonObject.put("GPS-latitude", PhoneMessage.latitude);
-				// 模块属性
-				jsonObject.put("UserId", CommonUtils.getUserId(context));
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
+			JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 
 			VolleyRequest.RequestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
 
@@ -850,19 +834,8 @@ public class ChatFragment extends Fragment implements OnClickListener{
 	}
 
 	private static void getgridViewperson(String interphoneid) {
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			// 公共请求属性
-			jsonObject.put("SessionId",CommonUtils.getSessionId(context));
-			jsonObject.put("MobileClass", PhoneMessage.model+"::"+PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth+"x"+PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			jsonObject.put("PCDType", "1");
-			PhoneMessage.getGps(context); 
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			//模块属性
-			jsonObject.put("UserId",CommonUtils.getUserId(context));
 			jsonObject.put("GroupId", interphoneid);
 		} catch (JSONException e) {
 			e.printStackTrace();

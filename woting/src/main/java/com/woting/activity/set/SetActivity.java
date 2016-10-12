@@ -1,11 +1,5 @@
 package com.woting.activity.set;
 
-import java.io.File;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -27,7 +21,6 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.woting.R;
-import com.woting.activity.interphone.commom.service.InterPhoneControl;
 import com.woting.activity.person.feedback.activity.FeedbackActivity;
 import com.woting.activity.set.about.AboutActivity;
 import com.woting.activity.set.contactus.activity.ContactUsActivity;
@@ -40,10 +33,15 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.manager.CacheManager;
 import com.woting.manager.MyActivityManager;
-import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
 import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.io.File;
 
 /**
  * 设置
@@ -224,7 +222,6 @@ public class SetActivity extends Activity implements OnClickListener {
 				if(ReturnType != null && ReturnType.equals("1001")){	// 正常注销成功
 					Editor et = sp.edit();
 					et.putString(StringConstant.ISLOGIN, "false");
-					et.putString(StringConstant.SESSIONID, "");
 					et.putString(StringConstant.USERID, "");
 					et.putString(StringConstant.IMAGEURL, "");
 					et.commit();
@@ -236,7 +233,6 @@ public class SetActivity extends Activity implements OnClickListener {
 				} else if (ReturnType.equals("200")) {	// 还未登录，注销成功
 					Editor et = sp.edit();
 					et.putString(StringConstant.ISLOGIN, "false");
-					et.putString(StringConstant.SESSIONID, "");
 					et.putString(StringConstant.USERID, "");
 					et.putString(StringConstant.IMAGEURL, "");
 					et.commit();
@@ -245,7 +241,6 @@ public class SetActivity extends Activity implements OnClickListener {
 				} else if (ReturnType.equals("0000")) {					// 无法获取相关的参数，注销成功
 					Editor et = sp.edit();
 					et.putString(StringConstant.ISLOGIN, "false");
-					et.putString(StringConstant.SESSIONID, "");
 					et.putString(StringConstant.USERID, "");
 					et.putString(StringConstant.IMAGEURL, "");
 					et.commit();
@@ -254,7 +249,6 @@ public class SetActivity extends Activity implements OnClickListener {
 				} else if (ReturnType.equals("T")) {
 					Editor et = sp.edit();
 					et.putString(StringConstant.ISLOGIN, "false");
-					et.putString(StringConstant.SESSIONID, "");
 					et.putString(StringConstant.USERID, "");
 					et.putString(StringConstant.IMAGEURL, "");
 					et.commit();
@@ -263,7 +257,6 @@ public class SetActivity extends Activity implements OnClickListener {
 				} else {
 					Editor et = sp.edit();
 					et.putString(StringConstant.ISLOGIN, "false");
-					et.putString(StringConstant.SESSIONID, "");
 					et.putString(StringConstant.USERID, "");
 					et.putString(StringConstant.IMAGEURL, "");
 					et.commit();
@@ -283,20 +276,7 @@ public class SetActivity extends Activity implements OnClickListener {
 
 	//注销时提交服务器参数
 	private JSONObject setLogoutParam(){
-		JSONObject jsonObject = new JSONObject();
-		try {
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			jsonObject.put("PCDType",GlobalConfig.PCDType);
-			String userid = sp.getString(StringConstant.USERID, "");
-			if (userid != null && !userid.equals("")) {
-				jsonObject.put("UserId", CommonUtils.getUserId(context));
-			}
-			jsonObject.put("SessionId", CommonUtils.getSessionId(this));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		return jsonObject;
 	}
 
@@ -394,17 +374,8 @@ public class SetActivity extends Activity implements OnClickListener {
 
 	//检查更新请求服务器提交参数
 	private JSONObject setUpdataParam(){
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x"
-					+ PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			jsonObject.put("PCDType",GlobalConfig.PCDType);
-			PhoneMessage.getGps(this);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			jsonObject.put("SessionId", CommonUtils.getSessionId(this));
 			jsonObject.put("Version", PhoneMessage.appVersonName);
 		} catch (JSONException e) {
 			e.printStackTrace();

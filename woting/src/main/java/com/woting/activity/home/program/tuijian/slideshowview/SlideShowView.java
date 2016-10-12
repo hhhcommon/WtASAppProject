@@ -28,9 +28,8 @@ import com.android.volley.toolbox.Volley;
 import com.woting.R;
 import com.woting.activity.home.program.tuijian.slideshowview.model.ImgReceive;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.volley.VolleyRequest;
 import com.woting.helper.ImageLoader;
-import com.woting.util.CommonUtils;
-import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
 
 import org.json.JSONException;
@@ -200,18 +199,8 @@ public class SlideShowView extends FrameLayout {
 			public void onErrorResponse(VolleyError arg0) {
 			}
 		};
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			jsonObject.put("MobileClass", PhoneMessage.model+"::"+PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x"
-					+ PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(context);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			// 模块属性
-			jsonObject.put("UserId", CommonUtils.getUserId(context));
 			jsonObject.put("ContentType", "0");
 			jsonObject.put("CatalogType", "001");// 001为一个结果 002为另一个
 			jsonObject.put("CatalogId", "0001");

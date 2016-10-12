@@ -41,7 +41,6 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
-import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
 
 import org.json.JSONException;
@@ -268,22 +267,11 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 	}
 	
 	private JSONObject setParam(){
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			// 公共请求属性
-			jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(context);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			// 模块属性
-			jsonObject.put("UserId", CommonUtils.getUserId(context));
 			jsonObject.put("MediaType", "SEQU");
 			jsonObject.put("ContentId", AlbumActivity.id);
 			jsonObject.put("Page", "1");
-			jsonObject.put("PCDType", GlobalConfig.PCDType);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/WHITE"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <GridView
         android:id="@+id/gv_fenlei"
@@ -13,7 +13,6 @@
         android:horizontalSpacing="18dp"
         android:numColumns="4"
         android:scrollbars="none"
-        android:verticalSpacing="18dp" >
-    </GridView>
+        android:verticalSpacing="18dp"></GridView>
 
 </LinearLayout>

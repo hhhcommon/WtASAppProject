@@ -1,12 +1,28 @@
 package com.woting.activity.home.program.diantai.fragment;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.ExpandableListView.OnGroupClickListener;
+import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
@@ -29,35 +45,17 @@ import com.woting.common.constant.StringConstant;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.util.CommonUtils;
-import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
 import com.woting.widgetui.pulltorefresh.PullToRefreshLayout;
 import com.woting.widgetui.pulltorefresh.PullToRefreshLayout.OnRefreshListener;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ExpandableListView;
-import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.ExpandableListView.OnGroupClickListener;
-import android.widget.GridView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 电台主页
@@ -256,17 +254,8 @@ public class OnLineFragment extends Fragment {
 		if(GlobalConfig.AdCode!=null&&!GlobalConfig.AdCode.equals("")){
 			cityid=GlobalConfig.AdCode;
 		}
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			jsonObject.put("PCDType", GlobalConfig.PCDType);
-			// 模块属性
-			jsonObject.put("UserId", CommonUtils.getUserId(context));
 			jsonObject.put("MediaType", "RADIO");
 			jsonObject.put("CatalogType", "2");
 			jsonObject.put("CatalogId", cityid);
@@ -358,18 +347,8 @@ public class OnLineFragment extends Fragment {
 	}
 
 	private void send() {
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(context);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			jsonObject.put("PCDType", GlobalConfig.PCDType);
-			// 模块属性
-			jsonObject.put("UserId", CommonUtils.getUserId(context));
 			jsonObject.put("MediaType", "RADIO");
 			jsonObject.put("CatalogType", "1");// 按地区分类
 			JSONObject js=new JSONObject();

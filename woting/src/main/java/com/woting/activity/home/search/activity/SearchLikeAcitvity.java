@@ -1,9 +1,5 @@
 package com.woting.activity.home.search.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.json.JSONException;
-import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -32,7 +28,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
@@ -47,9 +42,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.android.volley.VolleyError;
 import com.woting.R;
-import com.woting.video.VoiceRecognizer;
 import com.woting.activity.home.search.adapter.SearchHistoryAdapter;
 import com.woting.activity.home.search.adapter.SearchLikeAdapter;
 import com.woting.activity.home.search.adapter.searchhotkeyadapter;
@@ -71,7 +66,14 @@ import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
 import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
+import com.woting.video.VoiceRecognizer;
 import com.woting.widgetui.MyLinearLayout;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 界面搜索界面
@@ -540,19 +542,8 @@ public class SearchLikeAcitvity extends FragmentActivity implements OnClickListe
 	 * @param keyword
 	 */
 	protected void sendKey(String keyword) {
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject =VolleyRequest.getJsonObject(context);
 		try {
-			// 公共请求属性
-			jsonObject.put("SessionId", CommonUtils.getSessionId(this));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			jsonObject.put("PCDType", GlobalConfig.PCDType);
-			PhoneMessage.getGps(this);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude", PhoneMessage.latitude);
-			// 模块属性
-			jsonObject.put("UserId", CommonUtils.getUserId(this));
 			jsonObject.put("FunType", "1");
 			jsonObject.put("WordSize", "10");
 			jsonObject.put("ReturnType", "2");
@@ -625,19 +616,8 @@ public class SearchLikeAcitvity extends FragmentActivity implements OnClickListe
 	 * 得到搜索热词，返回的是两个list
 	 */
 	private void send() {
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			// 公共请求属性
-			jsonObject.put("SessionId", CommonUtils.getSessionId(this));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			jsonObject.put("PCDType", GlobalConfig.PCDType);
-			PhoneMessage.getGps(this);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			// 模块属性
-			jsonObject.put("UserId", CommonUtils.getUserId(this));
 			jsonObject.put("FunType","1");
 			jsonObject.put("WordSize","12");
 			jsonObject.put("ReturnType","2");

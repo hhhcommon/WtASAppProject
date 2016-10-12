@@ -523,8 +523,6 @@ public class PersonActivity extends Activity implements OnClickListener {
 					String TestURI = "http://182.92.175.134:808/wt/common/upload4App.do?FType=UserP&ExtName=";
 					String Response = MyHttp.postFile(new File(filePath), TestURI
 									+ ExtName
-									+ "&SessionId="
-									+ CommonUtils.getSessionId(getApplicationContext())
 									+ "&PCDType="
 									+ GlobalConfig.PCDType
 									+ "&UserId="
@@ -532,8 +530,6 @@ public class PersonActivity extends Activity implements OnClickListener {
 									+ "&IMEI=" + PhoneMessage.imei);
 					Log.e("图片上传数据",TestURI
 									+ ExtName
-									+ "&SessionId="
-									+ CommonUtils.getSessionId(getApplicationContext())
 									+ "&UserId="
 									+ CommonUtils.getUserId(getApplicationContext())
 									+ "&IMEI=" + PhoneMessage.imei);

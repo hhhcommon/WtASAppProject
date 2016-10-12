@@ -26,7 +26,6 @@ import com.woting.helper.ImageLoader;
 import com.woting.manager.MyActivityManager;
 import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
-import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
 
 import org.json.JSONException;
@@ -220,20 +219,9 @@ public class GroupAddActivity extends Activity implements OnClickListener {
 	}
 
 	private void sendrequest() {
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			// 公共请求属性
-			jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(context);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			// 模块属性
-			jsonObject.put("UserId", CommonUtils.getUserId(context));
 			jsonObject.put("GroupId", contact.getGroupId());
-			jsonObject.put("PCDType",GlobalConfig.PCDType);
 			if (news != null && !news.equals("")) {
 				jsonObject.put("ApplyMsg", news);
 			}
@@ -293,18 +281,9 @@ public class GroupAddActivity extends Activity implements OnClickListener {
 
 	// 加入公开群和密码群的网络通信方法
 	private void send() {
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			jsonObject.put("SessionId", CommonUtils.getSessionId(GroupAddActivity.this));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("PCDType",GlobalConfig.PCDType);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(GroupAddActivity.this);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
 			// 模块属性
-			jsonObject.put("UserId", CommonUtils.getUserId(GroupAddActivity.this));
 			jsonObject.put("GroupNum", contact.getGroupNum());
 			if (GroupType.equals("2")) {
 				if (psd != null && !psd.equals("")) {

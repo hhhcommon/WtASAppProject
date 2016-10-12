@@ -1,12 +1,5 @@
 package com.woting.activity.home.program.citylist.activity;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -45,10 +38,15 @@ import com.woting.common.constant.StringConstant;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.manager.MyActivityManager;
-import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
-import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 城市列表
@@ -218,17 +216,8 @@ public class CityListActivity extends Activity implements OnClickListener {
 	 * @return
 	 */
 	private JSONObject setParam(){
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(context);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			jsonObject.put("PCDType", GlobalConfig.PCDType);
-			jsonObject.put("UserId", CommonUtils.getUserId(context));
 			jsonObject.put("CatalogType", "2");
 			jsonObject.put("ResultType", "1");
 			jsonObject.put("RelLevel", "0");

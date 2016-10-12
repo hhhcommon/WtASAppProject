@@ -28,9 +28,7 @@ import com.woting.activity.home.program.radiolist.mode.SubCata;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
-import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
 import com.woting.widgetui.PagerSlidingTabStrip;
 
@@ -142,18 +140,8 @@ public class RadioListActivity extends FragmentActivity implements OnClickListen
 	}
 
 	private JSONObject setParam(){
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject =VolleyRequest.getJsonObject(this);
 		try {
-			jsonObject.put("SessionId", CommonUtils.getSessionId(RadioListActivity.this));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(RadioListActivity.this);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			jsonObject.put("PCDType", GlobalConfig.PCDType);
-			// 模块属性
-			jsonObject.put("UserId", CommonUtils.getUserId(RadioListActivity.this));
 			jsonObject.put("CatalogType", CatagoryType);
 			jsonObject.put("CatalogId", id);
 			jsonObject.put("Page", "1");

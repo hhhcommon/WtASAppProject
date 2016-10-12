@@ -1,12 +1,5 @@
 package com.woting.activity.home.program.radiolist.fragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,8 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
@@ -42,10 +35,16 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.helper.ImageLoader;
 import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
-import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
 import com.woting.widgetui.xlistview.XListView;
 import com.woting.widgetui.xlistview.XListView.IXListViewListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 分类推荐列表
@@ -200,17 +199,8 @@ public class RecommendFragment extends Fragment{
 	}
 
 	private JSONObject setParam(){
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(context);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			// 模块属性
-			jsonObject.put("UserId", CommonUtils.getUserId(context));
 			jsonObject.put("MediaType", "");
 			jsonObject.put("CatalogType", RadioListActivity.CatagoryType);
 			jsonObject.put("CatalogId", RadioListActivity.id);

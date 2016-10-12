@@ -1,9 +1,5 @@
 package com.woting.common.application;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -37,6 +33,10 @@ import com.woting.service.SocketService;
 import com.woting.service.SubclassService;
 import com.woting.util.PhoneMessage;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 /**
  * BSApplication
  * @author 辛龙
@@ -51,11 +51,13 @@ public class BSApplication extends Application implements Location{
 	private static Context instance;
 	private String AdCodeLast;
 	public static String IMAGE_CACHE_PATH =Environment.getExternalStorageDirectory() + "/woting/ imageloader/Cache"; // 图片缓存路径
+	public  static SharedPreferences SharedPreferences;
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		instance=this;
 		//		initImageLoader();
+		SharedPreferences = this.getSharedPreferences("wotingfm",Context.MODE_PRIVATE);
 		queues = Volley.newRequestQueue(this);
 		//获取定位实例
 		mGDLocation=GDLocation.getInstance(this,this);

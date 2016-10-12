@@ -25,7 +25,6 @@ import com.woting.helper.ImageLoader;
 import com.woting.manager.MyActivityManager;
 import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
-import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
 
 import org.json.JSONException;
@@ -270,20 +269,10 @@ public class GroupPersonNewsActivity extends Activity {
 	}
 	
 	private void send() {
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject =VolleyRequest.getJsonObject(context);
 		try {
-			// 公共请求属性
-			jsonObject.put("SessionId", CommonUtils.getSessionId(this));
-			jsonObject.put("MobileClass", PhoneMessage.model+"::"+PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(this);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
 			// 模块属性
 			jsonObject.put("BeInvitedUserId",id);
-			jsonObject.put("UserId", CommonUtils.getUserId(this));
-			jsonObject.put("PCDType", GlobalConfig.PCDType);
 			jsonObject.put("InviteMsg", et_news.getText().toString().trim());
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -348,19 +337,9 @@ public class GroupPersonNewsActivity extends Activity {
 	}
 
 	protected void update(final String b_name2, String groupSignature) {
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			// 公共请求属性
-			jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(context);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			jsonObject.put("PCDType", GlobalConfig.PCDType);
 			// 模块属性
-			jsonObject.put("UserId", CommonUtils.getUserId(context));
 			jsonObject.put("GroupId", groupid);
 			jsonObject.put("UpdateUserId", id);
 			jsonObject.put("UserAliasName",  b_name2 );

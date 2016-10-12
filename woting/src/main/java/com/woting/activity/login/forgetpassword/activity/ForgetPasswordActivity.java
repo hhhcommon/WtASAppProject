@@ -19,9 +19,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.manager.MyActivityManager;
-import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
-import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
 
 import org.json.JSONException;
@@ -180,17 +178,8 @@ public class ForgetPasswordActivity extends Activity implements OnClickListener 
 
 	// 提交数据到服务器进行验证
 	private void sendrequest() {
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject =VolleyRequest.getJsonObject(context);
 		try {
-			// 公共请求属性
-			jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(context);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			jsonObject.put("PCDType", GlobalConfig.PCDType);
 			// 模块属性
 			jsonObject.put("PhoneNum", phonenum);
 			jsonObject.put("CheckCode", yanzhengma);
@@ -254,17 +243,8 @@ public class ForgetPasswordActivity extends Activity implements OnClickListener 
 
 	// 查找密码的相关接口
 	private void sendfindpassword() {
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			// 公共请求属性
-			jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(context);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			jsonObject.put("PCDType",GlobalConfig.PCDType);
 			// 模块属性
 			jsonObject.put("PhoneNum", phonenum);
 		} catch (JSONException e) {
@@ -323,17 +303,8 @@ public class ForgetPasswordActivity extends Activity implements OnClickListener 
 
 	// 再次发送验证码
 	private void Resend() {
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			// 公共请求属性
-			jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(context);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			jsonObject.put("PCDType",GlobalConfig.PCDType);
 			// 模块属性
 			jsonObject.put("PhoneNum", phonenum);
 			// OperType
@@ -386,17 +357,9 @@ public class ForgetPasswordActivity extends Activity implements OnClickListener 
 
 	protected void sendmodifypassword(String userid) {
 		dialog = DialogUtils.Dialogph(this, "正在提交请求", dialog);
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			jsonObject.put("SessionId", CommonUtils.getSessionId(this));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(this);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
 			jsonObject.put("RetrieveUserId", userid);
-			jsonObject.put("PCDType", GlobalConfig.PCDType);
 			jsonObject.put("NewPassword", password);
 		} catch (JSONException e) {
 			e.printStackTrace();

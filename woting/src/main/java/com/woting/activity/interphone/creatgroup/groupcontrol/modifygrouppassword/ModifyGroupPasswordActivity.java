@@ -18,9 +18,7 @@ import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
-import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
 
 import org.json.JSONException;
@@ -142,17 +140,8 @@ public class ModifyGroupPasswordActivity extends Activity {
 
 	protected void send() {
 		dialog = DialogUtils.Dialogph(this, "修改群密码提交请求", dialog);
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			jsonObject.put("SessionId", CommonUtils.getSessionId(this));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(this);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			jsonObject.put("UserId", CommonUtils.getUserId(this));
-			jsonObject.put("PCDType", GlobalConfig.PCDType);
 			jsonObject.put("OldPassword", oldpassword);
 			jsonObject.put("NewPassword", newpassword);
 			jsonObject.put("GroupId", groupid);

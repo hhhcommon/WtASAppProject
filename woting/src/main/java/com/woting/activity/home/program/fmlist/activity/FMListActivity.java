@@ -1,11 +1,19 @@
 package com.woting.activity.home.program.fmlist.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
@@ -25,25 +33,16 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.manager.MyActivityManager;
 import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
-import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
 import com.woting.widgetui.xlistview.XListView;
 import com.woting.widgetui.xlistview.XListView.IXListViewListener;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 电台列表
@@ -153,18 +152,8 @@ public class FMListActivity extends Activity implements OnClickListener {
 	}
 	
 	private JSONObject setParam(){
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			jsonObject.put("SessionId", CommonUtils.getSessionId(FMListActivity.this));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(FMListActivity.this);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			// 模块属性
-			jsonObject.put("PCDType", GlobalConfig.PCDType);
-			jsonObject.put("UserId", CommonUtils.getUserId(FMListActivity.this));
 			/*	jsonObject.put("CatalogId", CatalogId);*/
 			jsonObject.put("MediaType", "RADIO");
 			String cityid = shared.getString(StringConstant.CITYID, "110000");

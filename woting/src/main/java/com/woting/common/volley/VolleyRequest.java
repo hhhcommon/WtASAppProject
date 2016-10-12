@@ -1,5 +1,6 @@
 package com.woting.common.volley;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -11,7 +12,10 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
+import com.woting.util.CommonUtils;
+import com.woting.util.PhoneMessage;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -184,4 +188,28 @@ public class VolleyRequest {
 		Log.w("取消网络请求", "--- > > >" + "\t" + tag);
 		return true;
 	}
+
+	/**
+	 * 获取网络请求公共请求属性
+	 */
+	public static JSONObject getJsonObject(Context context){
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
+			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
+			jsonObject.put("IMEI", PhoneMessage.imei);
+			PhoneMessage.getGps(context);
+			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
+			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
+			jsonObject.put("PCDType", GlobalConfig.PCDType);
+			String userId = CommonUtils.getUserId(context);
+			if (userId != null && !userId.trim().equals("")) {
+				jsonObject.put("UserId", userId);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return jsonObject;
+	}
+
 }

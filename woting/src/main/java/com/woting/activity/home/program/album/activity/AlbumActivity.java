@@ -44,7 +44,6 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.helper.ImageLoader;
-import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
 import com.woting.util.PhoneMessage;
 import com.woting.util.ShareUtils;
@@ -322,21 +321,10 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 	 * 发送网络请求  获取喜欢数据
 	 */
 	private void sendFavorite(){
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			// 公共请求属性
-			jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(context);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			// 模块属性
-			jsonObject.put("UserId", CommonUtils.getUserId(context));
 			jsonObject.put("MediaType", "SEQU");
 			jsonObject.put("ContentId", id);
-			jsonObject.put("PCDType", GlobalConfig.PCDType);
 			if (ContentFavorite.equals("0")) {
 				jsonObject.put("Flag", "1");
 			} else {

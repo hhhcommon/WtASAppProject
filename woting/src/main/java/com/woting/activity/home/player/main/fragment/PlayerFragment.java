@@ -69,7 +69,6 @@ import com.woting.helper.ImageLoader;
 import com.woting.util.BitmapUtils;
 import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
-import com.woting.util.PhoneMessage;
 import com.woting.util.ShareUtils;
 import com.woting.util.TimeUtils;
 import com.woting.util.ToastUtils;
@@ -781,21 +780,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 	}
 
 	private void getLuKuangTTS() {
-		JSONObject jsonObject = new JSONObject();
-		try {
-			// 公共请求属性
-			jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(context);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			// 模块属性
-			jsonObject.put("UserId", CommonUtils.getUserId(context));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 
 		VolleyRequest.RequestPost(GlobalConfig.getLKTTS, jsonObject, new VolleyCallback() {
 			private String Message;
@@ -1315,15 +1300,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 	 private void searchByVoicesend(String str) {
 		 sendtype = 2;
 		 // 发送数据
-		 JSONObject jsonObject = new JSONObject();
+		 JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		 try {
-			 jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			 jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			 jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			 jsonObject.put("IMEI", PhoneMessage.imei);
-			 jsonObject.put("UserId", CommonUtils.getUserId(context));
 			 jsonObject.put("SearchStr", str);
-			 jsonObject.put("PCDType", GlobalConfig.PCDType);
 			 jsonObject.put("PageType", "0");
 		 } catch (JSONException e) {
 			 e.printStackTrace();
@@ -1442,17 +1421,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 	  */
 	 private void firstsend() {
 		 sendtype = 1;
-		 JSONObject jsonObject = new JSONObject();
+		 JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		 try {
-			 jsonObject.put("PCDType", GlobalConfig.PCDType);
-			 jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			 jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			 jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			 jsonObject.put("IMEI", PhoneMessage.imei);
-			 PhoneMessage.getGps(context);
-			 jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			 jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			 jsonObject.put("UserId", CommonUtils.getUserId(context));
 			 jsonObject.put("PageType", "0");
 			 jsonObject.put("Page", String.valueOf(page));
 			 jsonObject.put("PageSize", "10");
@@ -1741,18 +1711,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		 }
 		 // 发送数据
 		 sendtype = 2;
-		 JSONObject jsonObject = new JSONObject();
+		 JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		 try {
-			 jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			 jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			 jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			 jsonObject.put("IMEI", PhoneMessage.imei);
-			 PhoneMessage.getGps(context);
-			 jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			 jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			 jsonObject.put("UserId", CommonUtils.getUserId(context));
 			 jsonObject.put("SearchStr", contname);
-			 jsonObject.put("PCDType",GlobalConfig.PCDType);
 			 jsonObject.put("PageType", "0");
 		 } catch (JSONException e) {
 			 e.printStackTrace();
@@ -1826,16 +1787,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 	 }
 
 	 private static void getContentNews(String id, final int number) {
-		 JSONObject jsonObject = new JSONObject();
+		 JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		 try {
-			 jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			 jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			 jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			 jsonObject.put("IMEI", PhoneMessage.imei);
-			 PhoneMessage.getGps(context);
-			 jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			 jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			 jsonObject.put("UserId", CommonUtils.getUserId(context));
 			 jsonObject.put("MediaType", "TTS");
 			 jsonObject.put("ContentId", id);
 		 } catch (JSONException e) {
@@ -1908,22 +1861,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 
 	 private static void sendfavorite() {
 		 dialogs = DialogUtils.Dialogph(context, "通讯中", dialogs);
-		 JSONObject jsonObject = new JSONObject();
+		 JSONObject jsonObject =VolleyRequest.getJsonObject(context);
 		 try {
-			 // 公共请求属性
-			 jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			 jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			 jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			 jsonObject.put("IMEI", PhoneMessage.imei);
-			 PhoneMessage.getGps(context);
-			 jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			 jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			 // 模块属性
-			 jsonObject.put("UserId", CommonUtils.getUserId(context));
 			 // MediaType
 			 jsonObject.put("MediaType", GlobalConfig.playerobject.getMediaType());
 			 jsonObject.put("ContentId", GlobalConfig.playerobject.getContentId());
-			 jsonObject.put("PCDType",GlobalConfig.PCDType);
 			 if (GlobalConfig.playerobject.getContentFavorite().equals("0")) {
 				 jsonObject.put("Flag", 1);
 			 } else {

@@ -96,6 +96,5 @@ public class WelcomeActivity extends FragmentActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		imageViews = null;
 	}
 }

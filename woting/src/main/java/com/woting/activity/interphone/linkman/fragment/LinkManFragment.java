@@ -1,12 +1,5 @@
 package com.woting.activity.interphone.linkman.fragment;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -62,11 +55,15 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
-import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
 import com.woting.widgetui.HeightListView;
+
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 最新联系人排序
@@ -363,22 +360,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 			if(!isVisible()){
 				dialogs = DialogUtils.Dialogph(context, "正在获取数据", dialogs);
 			}
-			JSONObject jsonObject = new JSONObject();
-			try {
-				jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-				jsonObject.put("MobileClass", PhoneMessage.model+"::" + PhoneMessage.productor);
-				jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-				jsonObject.put("PCDType", "1");
-				jsonObject.put("IMEI", PhoneMessage.imei);
-				jsonObject.put("PCDType", "1");
-				PhoneMessage.getGps(context);
-				jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-				jsonObject.put("GPS-latitude", PhoneMessage.latitude);
-				// 模块属性
-				jsonObject.put("UserId", CommonUtils.getUserId(context));
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
+			JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 
 			VolleyRequest.RequestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
 				@Override

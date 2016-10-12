@@ -142,21 +142,11 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 
 	// 判断网络类型 主网络请求模块
 	private void send() {
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject =VolleyRequest.getJsonObject(context);
 		try {
-			// 公共请求属性
-			jsonObject.put("SessionId", CommonUtils.getSessionId(context));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(context);
-			jsonObject.put("PCDType", GlobalConfig.PCDType);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude", PhoneMessage.latitude);
 			// 模块属性
 			jsonObject.put("GroupType", grouptype);
 			jsonObject.put("GroupSignature", SIGN);
-			jsonObject.put("UserId", CommonUtils.getUserId(context));
 			jsonObject.put("GroupName", NICK);
 			/*
 			 * //NeedMember参数 0为不需要 1为需要 jsonObject.put("NeedMember", 0);
@@ -488,10 +478,9 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 						String ExtName = filePath.substring(filePath.lastIndexOf("."));
 						//String TestURI = "http://192.168.1.3:808/wt/common/upload4App.do?FType=GroupP&ExtName=";
 						String TestURI = "http://182.92.175.134:808/wt/common/upload4App.do?FType=GroupP&ExtName=";
-						String Response = MyHttp.postFile(new File(filePath),TestURI+ ExtName+ "&SessionId="
-								+ CommonUtils.getSessionId(getApplicationContext())+ "&PCDType=" + GlobalConfig.PCDType + "&GroupId="+ groupinfo.GroupId
+						String Response = MyHttp.postFile(new File(filePath),TestURI+ ExtName+ "&PCDType=" + GlobalConfig.PCDType + "&GroupId="+ groupinfo.GroupId
 								+ "&IMEI="+ PhoneMessage.imei);
-						Log.e("图片上传数据",	TestURI+ ExtName+ "&SessionId="+ CommonUtils.getSessionId(getApplicationContext())
+						Log.e("图片上传数据",	TestURI+ ExtName
 								+ "&UserId="+ CommonUtils.getUserId(getApplicationContext())+ "&IMEI=" + PhoneMessage.imei);
 						Gson gson = new Gson();
 						Response=ImageUploadReturnUtil.getResPonse(Response);

@@ -1,11 +1,5 @@
 package com.woting.activity.interphone.find.findresult;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -34,10 +28,15 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.manager.MyActivityManager;
 import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
-import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
 import com.woting.widgetui.xlistview.XListView;
 import com.woting.widgetui.xlistview.XListView.IXListViewListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 搜索结果页面
@@ -231,19 +230,8 @@ public class FindNewsResultActivity extends Activity implements OnClickListener 
 	 * 获取好友数据
 	 */
 	protected void getfriend() {
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject =VolleyRequest.getJsonObject(context);
 		try {
-			// 公共请求属性
-			jsonObject.put("SessionId", CommonUtils.getSessionId(this));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			jsonObject.put("PCDType",GlobalConfig.PCDType);
-			PhoneMessage.getGps(this);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			// 模块属性
-			jsonObject.put("UserId", CommonUtils.getUserId(this));
 			jsonObject.put("Page", PageNum);
 			jsonObject.put("SearchStr", searchstr);
 		} catch (JSONException e) {
@@ -330,20 +318,10 @@ public class FindNewsResultActivity extends Activity implements OnClickListener 
 	 * 获取群组数据
 	 */
 	protected void getgroup() {
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			// 公共请求属性
-			jsonObject.put("SessionId", CommonUtils.getSessionId(this));
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(this);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
 			// 模块属性
-			jsonObject.put("UserId", CommonUtils.getUserId(this));
 			jsonObject.put("Page", PageNum);
-			jsonObject.put("PCDType",GlobalConfig.PCDType);
 			jsonObject.put("SearchStr", searchstr);
 		} catch (JSONException e) {
 			e.printStackTrace();

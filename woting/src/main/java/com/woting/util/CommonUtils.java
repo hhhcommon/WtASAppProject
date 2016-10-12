@@ -12,16 +12,16 @@ import com.woting.common.constant.StringConstant;
  */
 public class CommonUtils {
 
-	/**
-	 * 获取SessionId
-	 * @param context
-	 * @return
-	 */
-	public static String getSessionId(Context context){
-		SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
-		String SessionId= sp.getString(StringConstant.SESSIONID, "0");
-		return SessionId;
-	}
+//	/**
+//	 * 获取SessionId
+//	 * @param context
+//	 * @return
+//	 */
+//	public static String getSessionId(Context context){
+//		SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
+//		String SessionId= sp.getString(StringConstant.SESSIONID, "0");
+//		return SessionId;
+//	}
 
 	/**
 	 * 获取USERID，没有则返回imei
@@ -32,7 +32,7 @@ public class CommonUtils {
 		SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
 		String UserId= sp.getString(StringConstant.USERID, "userid");
 		if(UserId==null||UserId.equals("")||UserId.equals("userid")){
-			return PhoneMessage.imei;
+			return null;
 		}else{
 			return UserId;
 		}
