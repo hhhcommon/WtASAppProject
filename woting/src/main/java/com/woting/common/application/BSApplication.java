@@ -29,7 +29,6 @@ import com.woting.common.location.GDLocation;
 import com.woting.common.location.GDLocation.Location;
 import com.woting.helper.CommonHelper;
 import com.woting.receiver.NetWorkChangeReceiver;
-import com.woting.service.SocketService;
 import com.woting.service.SubclassService;
 import com.woting.util.PhoneMessage;
 
@@ -80,8 +79,8 @@ public class BSApplication extends Application implements Location{
 		scc = new SocketClientConfig();
 		scc.setReConnectWays(_l);
 		//socket服务
-		Intent  	Socket = new Intent(this, SocketService.class);
-		startService(Socket);
+		/*Intent  	Socket = new Intent(this, SocketService.class);
+		startService(Socket);*/
 		//录音服务
 		Intent  record = new Intent(this, VoiceStreamRecordService.class);
 		startService(record);
