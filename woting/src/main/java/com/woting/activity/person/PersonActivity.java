@@ -32,7 +32,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.shenstec.utils.file.FileManager;
+import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 import com.woting.R;
 import com.woting.activity.home.player.timeset.activity.TimerPowerOffActivity;
@@ -52,7 +52,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.http.MyHttp;
-import com.woting.helper.ImageLoader;
+import com.woting.manager.FileManager;
 import com.woting.util.BitmapUtils;
 import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
@@ -70,7 +70,6 @@ public class PersonActivity extends Activity implements OnClickListener {
 	private PersonActivity context;
 	private SharedPreferences sharedPreferences;
 	private UserPortaitInside UserPortait;
-	private ImageLoader imgLoader;
 
 	private final int TO_GALLERY = 1;
 	private final int TO_CAMARA = 2;
@@ -125,7 +124,6 @@ public class PersonActivity extends Activity implements OnClickListener {
 		setView();			// 设置界面
 		getloginstatus();	// 获取是否登录的状态
 		imagedialog();
-        imgLoader = new ImageLoader(context);
 	}
 
 	//登陆状态下 用户设置头像对话框
@@ -344,7 +342,7 @@ public class PersonActivity extends Activity implements OnClickListener {
 				}else{
 					url = GlobalConfig.imageurl+imagurl;
 				}
-                imgLoader.DisplayImage(url.replace("\\", "/"),imgview_touxiang, false, false, null, null);
+				Picasso.with(context).load(url.replace("\\/", "/")).into(imgview_touxiang);
 			}
 			UserInviteMeInside news = new UserInviteMeInside();
 			news.setPortraitMini(imagurl);
@@ -455,7 +453,7 @@ public class PersonActivity extends Activity implements OnClickListener {
 					et.putString(StringConstant.IMAGEURL, imageurl);
 					et.commit();
 					// 正常切可用代码 已从服务器获得返回值，但是无法正常显示
-                    imgLoader.DisplayImage(imageurl.replace("\\", "/"),imgview_touxiang, false, false, null, null);
+					Picasso.with(context).load(imageurl.replace("\\/", "/")).into(imgview_touxiang);
 					if (dialog != null) {
 						dialog.dismiss();
 					}

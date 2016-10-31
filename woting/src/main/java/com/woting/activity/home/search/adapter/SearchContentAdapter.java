@@ -1,14 +1,5 @@
 package com.woting.activity.home.search.adapter;
 
-import java.util.List;
-
-import com.woting.R;
-import com.woting.activity.home.program.fmlist.model.RankInfo;
-import com.woting.activity.home.search.model.SuperRankInfo;
-import com.woting.common.config.GlobalConfig;
-import com.woting.helper.ImageLoader;
-import com.woting.util.BitmapUtils;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -19,15 +10,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+import com.woting.R;
+import com.woting.activity.home.program.fmlist.model.RankInfo;
+import com.woting.activity.home.search.model.SuperRankInfo;
+import com.woting.common.config.GlobalConfig;
+import com.woting.util.BitmapUtils;
+
+import java.util.List;
+
 public class SearchContentAdapter extends BaseExpandableListAdapter {
 	private Context context;
-	private ImageLoader imageLoader;
 	private List<SuperRankInfo> mSuperRankInfo;
 
 	public SearchContentAdapter(Context context,List<SuperRankInfo> mSuperRankInfo) {
 		this.context = context;
 		this.mSuperRankInfo = mSuperRankInfo;
-		imageLoader = new ImageLoader(context);
 	}
 
 	@Override
@@ -125,6 +123,8 @@ public class SearchContentAdapter extends BaseExpandableListAdapter {
 			}
 			if (lists.getContentImg() == null|| lists.getContentImg().equals("")|| lists.getContentImg().equals("null")
 					|| lists.getContentImg().trim().equals("")) {
+				Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
+				holder.imageview_rankimage.setImageBitmap(bmp);
 			} else {
 				String url1;
 				if(lists.getContentImg().startsWith("http")){
@@ -132,7 +132,7 @@ public class SearchContentAdapter extends BaseExpandableListAdapter {
 				}else{
 					url1 = GlobalConfig.imageurl + lists.getContentImg();
 				}
-				imageLoader.DisplayImage(url1.replace("\\/", "/"),holder.imageview_rankimage, false, false, null, null);
+				Picasso.with(context).load(url1.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 			}
 		} else if(lists.getMediaType().equals("AUDIO")){
 			if (lists.getContentName() == null|| lists.getContentName().equals("")) {
@@ -147,6 +147,8 @@ public class SearchContentAdapter extends BaseExpandableListAdapter {
 			}
 			if (lists.getContentImg() == null|| lists.getContentImg().equals("")|| lists.getContentImg().equals("null")
 					|| lists.getContentImg().trim().equals("")) {
+				Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
+				holder.imageview_rankimage.setImageBitmap(bmp);
 			} else {
 				String url1;
 				if(lists.getContentImg().startsWith("http")){
@@ -154,7 +156,7 @@ public class SearchContentAdapter extends BaseExpandableListAdapter {
 				}else{
 					url1 = GlobalConfig.imageurl + lists.getContentImg();
 				}
-				imageLoader.DisplayImage(url1.replace("\\/", "/"),holder.imageview_rankimage, false, false, null, null);
+				Picasso.with(context).load(url1.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 			}
 		}else if(lists.getMediaType().equals("SEQU")){// 判断mediatype==sequ的情况
 			if (lists.getContentName() == null|| lists.getContentName().equals("")) {
@@ -173,7 +175,7 @@ public class SearchContentAdapter extends BaseExpandableListAdapter {
 				}else{
 					url= GlobalConfig.imageurl + lists.getContentImg();
 				}
-				imageLoader.DisplayImage(url.replace("\\/", "/"),holder.imageview_rankimage, false, false, null, null);
+				Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 			}
 			holder.lin_CurrentPlay.setVisibility(View.INVISIBLE);
 		}else if(lists.getMediaType().equals("TTS")){
@@ -193,7 +195,7 @@ public class SearchContentAdapter extends BaseExpandableListAdapter {
 				}else{
 					url= GlobalConfig.imageurl + lists.getContentImg();
 				}
-				imageLoader.DisplayImage(url.replace("\\/", "/"),holder.imageview_rankimage, false, false, null, null);
+				Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 			}
 			holder.lin_CurrentPlay.setVisibility(View.INVISIBLE);
 		}

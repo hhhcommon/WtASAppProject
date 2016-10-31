@@ -23,13 +23,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.home.program.tuijian.slideshowview.model.ImgReceive;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.helper.ImageLoader;
 import com.woting.util.ToastUtils;
 
 import org.json.JSONException;
@@ -43,7 +44,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class SlideShowView extends FrameLayout {
-	private ImageLoader imageLoader;
 	// 轮播图图片数量
 	private final static int IMAGE_COUNT = 4;
 	// 自动轮播的时间间隔
@@ -84,7 +84,6 @@ public class SlideShowView extends FrameLayout {
 	public SlideShowView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		this.context = context;
-		imageLoader = new ImageLoader(context);
 		initData();
 		if (isAutoPlay) {
 			startPlay();
@@ -274,7 +273,7 @@ public class SlideShowView extends FrameLayout {
 				}
 			});
 //			String s = (String) imageView.getTag();
-			imageLoader.DisplayImage(imageView.getTag() + "", imageView, false, false, null, null);
+			Picasso.with(context).load(imageView.getTag() + "").into(imageView);
 			((ViewPager) container).addView(imageViewsList.get(position));
 			return imageViewsList.get(position);
 		}

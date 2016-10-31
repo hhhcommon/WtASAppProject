@@ -10,10 +10,11 @@ import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.linkman.model.TalkPersonInside;
 import com.woting.common.config.GlobalConfig;
-import com.woting.helper.ImageLoader;
 
 import java.util.List;
 
@@ -21,14 +22,12 @@ public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexe
 	private List<TalkPersonInside> list = null;
 	private Context mContext;
 	private TalkPersonInside lists;
-	private ImageLoader imageLoader;
 	private OnListeners onListeners;
 	private String url;
 
 	public SortGroupMemberAdapter(Context mContext, List<TalkPersonInside> list) {
 		this.mContext = mContext;
 		this.list = list;
-		imageLoader=new ImageLoader(mContext);
 	}
 	
 	public void setOnListeners(OnListeners onListener) {
@@ -105,7 +104,7 @@ public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexe
 				}else{
 					url = GlobalConfig.imageurl+lists.getPortraitMini();
 				}
-				imageLoader.DisplayImage(url.replace( "\\/", "/"), holder.imageView_touxiang, false, false,null, null);
+				Picasso.with(mContext).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageView_touxiang);
 			}
 		
 		holder.lin_add.setOnClickListener(new View.OnClickListener() {

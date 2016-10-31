@@ -22,13 +22,11 @@ import java.util.List;
 public class CityListAdapter extends BaseAdapter implements SectionIndexer{
 	private List<fenleiname> list;
 	private Context context;
-//	private ImageLoader imageLoader;
 	private fenleiname lists;
 	public CityListAdapter(Context context,List<fenleiname> list) {
 		super();
 		this.list = list;
 		this.context = context;
-//		imageLoader=new ImageLoader(context);
 	}
 	public void ChangeDate(List<fenleiname> list){
 		this.list = list;

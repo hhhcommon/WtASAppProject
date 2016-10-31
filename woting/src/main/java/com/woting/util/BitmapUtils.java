@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import com.shenstec.utils.file.FileManager;
+import com.woting.manager.FileManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

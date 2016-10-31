@@ -9,17 +9,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.creatgroup.groupcontrol.joingrouplist.model.CheckInfo;
 import com.woting.common.config.GlobalConfig;
-import com.woting.helper.ImageLoader;
 
 import java.util.List;
 
 public class joingrouplistadapter extends BaseAdapter implements OnClickListener{
 	private List<CheckInfo> list;
 	private Context context;
-	private ImageLoader imageLoader;
 	private Callback mCallback;
 	private String url;
 
@@ -32,7 +32,6 @@ public class joingrouplistadapter extends BaseAdapter implements OnClickListener
 		this.list = list;
 		this.context = context;
 		this.mCallback = callback;
-		imageLoader = new ImageLoader(context);
 	}
 
 	public void ChangeData(List<CheckInfo> list) {
@@ -87,7 +86,7 @@ public class joingrouplistadapter extends BaseAdapter implements OnClickListener
 			}else{
 				url = GlobalConfig.imageurl+Inviter.getPortraitMini();
 			}
-			imageLoader.DisplayImage(url.replace("\\/", "/"),holder.imageview_inviteimage, false, false, null, null);
+			Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageview_inviteimage);
 		}
 		if (Inviter.getCheckType() == 1) {
 			holder.textview_invitestauswait.setVisibility(View.VISIBLE);

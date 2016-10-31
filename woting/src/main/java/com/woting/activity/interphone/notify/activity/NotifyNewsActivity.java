@@ -1,24 +1,24 @@
 package com.woting.activity.interphone.notify.activity;
 
-import java.util.List;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.shenstec.activity.BaseActivity;
 import com.woting.R;
+import com.woting.activity.baseactivity.BaseActivity;
 import com.woting.activity.interphone.linkman.dao.NotifyHistoryDao;
 import com.woting.activity.interphone.linkman.model.DBNotifyHistorary;
 import com.woting.activity.interphone.notify.adapter.NotifyNewsAdapter;
 import com.woting.manager.MyActivityManager;
+
+import java.util.List;
 
 /**
  * 消息中心列表
@@ -91,7 +91,6 @@ public class NotifyNewsActivity extends BaseActivity implements OnClickListener 
 
 	@Override
 	public void onClick(View v) {
-		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.head_left_btn:
 			finish();

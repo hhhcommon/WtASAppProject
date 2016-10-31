@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.home.main.HomeActivity;
 import com.woting.activity.home.player.main.dao.SearchPlayerHistoryDao;
@@ -32,7 +33,6 @@ import com.woting.activity.home.program.radiolist.rollviewpager.hintview.IconHin
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.helper.ImageLoader;
 import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
 import com.woting.util.ToastUtils;
@@ -340,8 +340,7 @@ public class RecommendFragment extends Fragment{
 			ImageView view = new ImageView(container.getContext());
 			view.setScaleType(ImageView.ScaleType.FIT_XY);
 			view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-			new ImageLoader(context).DisplayImage(imgs[position%count],view, false, false, null, null);
-			return view;
+			Picasso.with(context).load(imgs[position%count]).into(view);			return view;
 		}
 
 		@Override

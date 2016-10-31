@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.chat.model.GroupTalkInside;
 import com.woting.activity.interphone.creatgroup.membershow.model.UserInfo;
@@ -21,7 +23,6 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.helper.ImageLoader;
 import com.woting.manager.MyActivityManager;
 import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
@@ -35,7 +36,6 @@ import org.json.JSONObject;
  * @author 辛龙 2016年1月19日
  */
 public class GroupPersonNewsActivity extends Activity {
-	private ImageLoader imageLoader;
 	private String name;
 	private String imageurl;
 	private String id;
@@ -82,7 +82,6 @@ public class GroupPersonNewsActivity extends Activity {
 	}
 
 	private void setView() {
-		imageLoader = new ImageLoader(this);
 		lin_delete = (LinearLayout) findViewById(R.id.lin_delete);	//验证信息清空
 		et_news= (EditText) findViewById(R.id.et_news);				//验证信息输入框
 		tv_add = (TextView) findViewById(R.id.tv_add);				//添加好友
@@ -156,7 +155,7 @@ public class GroupPersonNewsActivity extends Activity {
 			}else{
 				 url12 = GlobalConfig.imageurl+imageurl;
 			}
-			imageLoader.DisplayImage(url12.replace("\\/", "/"), image_touxiang,false, false, null, null);
+			Picasso.with(context).load(url12.replace("\\/", "/")).into(image_touxiang);
 		}
 		if(username==null||username.equals("")){
 			et_news.setText("");
@@ -416,7 +415,6 @@ public class GroupPersonNewsActivity extends Activity {
 		isCancelRequest = VolleyRequest.cancelRequest(tag);
 		MyActivityManager mam = MyActivityManager.getInstance();
 		mam.popOneActivity(context);
-		imageLoader = null;
 		lin_delete = null;
 		et_news = null;
 		tv_add = null;

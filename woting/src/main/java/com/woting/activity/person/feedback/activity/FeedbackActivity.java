@@ -12,8 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-import com.shenstec.activity.BaseActivity;
 import com.woting.R;
+import com.woting.activity.baseactivity.BaseActivity;
 import com.woting.activity.person.feedback.feedbacklist.activity.FeedbackListActivity;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.volley.VolleyCallback;
@@ -60,7 +60,6 @@ public class FeedbackActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.submit_button:
 			checkdata();

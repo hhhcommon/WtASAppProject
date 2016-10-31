@@ -16,8 +16,8 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.shenstec.activity.BaseActivity;
 import com.woting.R;
+import com.woting.activity.baseactivity.BaseActivity;
 import com.woting.activity.interphone.message.adapter.NewsAdapter;
 import com.woting.activity.interphone.message.adapter.NewsAdapter.OnListener;
 import com.woting.activity.interphone.message.model.GroupInfo;
@@ -121,7 +121,6 @@ public class NewsActivity extends BaseActivity implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-        super.onClick(v);
         switch (v.getId()) {
             case R.id.head_left_btn:
                 finish();

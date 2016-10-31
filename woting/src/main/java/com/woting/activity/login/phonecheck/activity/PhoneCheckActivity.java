@@ -15,8 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.shenstec.activity.BaseActivity;
 import com.woting.R;
+import com.woting.activity.baseactivity.BaseActivity;
 import com.woting.activity.login.register.activity.RegisterActivity;
 import com.woting.activity.person.modifypassword.activity.ModifyPasswordActivity;
 import com.woting.common.config.GlobalConfig;

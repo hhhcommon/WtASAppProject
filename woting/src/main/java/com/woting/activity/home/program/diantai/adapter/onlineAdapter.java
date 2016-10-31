@@ -13,12 +13,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.home.program.diantai.model.RadioPlay;
 import com.woting.activity.home.program.fmlist.activity.FMListActivity;
 import com.woting.activity.home.program.fmlist.model.RankInfo;
 import com.woting.common.config.GlobalConfig;
-import com.woting.helper.ImageLoader;
 import com.woting.util.BitmapUtils;
 import com.woting.util.ToastUtils;
 
@@ -30,13 +31,11 @@ import java.util.List;
 public class onlineAdapter extends BaseExpandableListAdapter  {
 	private Context context;
 	private List<RadioPlay> group;
-	private ImageLoader imageLoader;
 
 	public onlineAdapter(Context context, List<RadioPlay> group) {
 		this.context = context;
 		this.group = group;
-		imageLoader = new ImageLoader(context);
-	}
+ 	}
 
 	@Override
 	public int getGroupCount() {
@@ -157,7 +156,7 @@ public class onlineAdapter extends BaseExpandableListAdapter  {
 						}else{
 							url = GlobalConfig.imageurl + lists.getContentImg();
 						}
-						imageLoader.DisplayImage(url.replace("\\/", "/"),holder.imageview_rankimage, false, false, null, null);
+						Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 					}
 				} else {// 判断mediatype==AUDIO的情况
 					if (lists.getContentName() == null|| lists.getContentName().equals("")) {
@@ -178,7 +177,7 @@ public class onlineAdapter extends BaseExpandableListAdapter  {
 						}else{
 							url = GlobalConfig.imageurl + lists.getContentImg();
 						}
-						imageLoader.DisplayImage(url.replace("\\/", "/"),holder.imageview_rankimage, false, false, null, null);
+						Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 					}
 					holder.lin_CurrentPlay.setVisibility(View.INVISIBLE);
 				}

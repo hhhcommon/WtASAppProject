@@ -36,11 +36,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.shenstec.utils.file.FileManager;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.chat.dao.SearchTalkHistoryDao;
 import com.woting.activity.interphone.chat.fragment.ChatFragment;
@@ -73,7 +72,7 @@ import com.woting.common.http.MyHttp;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.helper.CreatQRImageHelper;
-import com.woting.helper.ImageLoader;
+import com.woting.manager.FileManager;
 import com.woting.manager.MyActivityManager;
 import com.woting.util.BitmapUtils;
 import com.woting.util.CommonUtils;
@@ -99,7 +98,6 @@ public class TalkGroupNewsActivity extends Activity implements OnClickListener {
 	private GridView gridView;
 	private ImageView image_touxiang;
 	private TextView tv_name;
-	private ImageLoader imageLoader;
 	private Dialog dialog;
 	private String groupid;
 	private TextView tv_id;
@@ -137,7 +135,6 @@ public class TalkGroupNewsActivity extends Activity implements OnClickListener {
 	private String imagePath;
 	private Uri outputFileUri;
 	private String outputFilePath;
-	private ImageLoader imgloader;
 	private String MiniUri;
 	private EditText et_jieshao;
 	private String text_jieshao;
@@ -172,7 +169,6 @@ public class TalkGroupNewsActivity extends Activity implements OnClickListener {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);		// 透明状态栏
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);	// 透明导航栏
 		context =this;
-		imgloader = new ImageLoader(context);
 		MyActivityManager mam = MyActivityManager.getInstance();
 		mam.pushOneActivity(this);
 		update = false;		// 此时修改的状态
@@ -386,7 +382,7 @@ public class TalkGroupNewsActivity extends Activity implements OnClickListener {
 			}else{
 				url12 = GlobalConfig.imageurl+imageurl;
 			}
-			imageLoader.DisplayImage(url12.replace("\\/", "/"), image_touxiang,false, false, null, null);
+			Picasso.with(context).load(url12.replace("\\/", "/")).into(image_touxiang);
 		}
 		news = new FindGroupNews();
 		news.setGroupName(name);
@@ -482,7 +478,6 @@ public class TalkGroupNewsActivity extends Activity implements OnClickListener {
 	}
 
 	private void listener() {
-		imageLoader = new ImageLoader(this);
 		head_left_btn.setOnClickListener(this);
 		lin_ewm.setOnClickListener(this);
 		image_add.setOnClickListener(this);
@@ -1176,7 +1171,7 @@ public class TalkGroupNewsActivity extends Activity implements OnClickListener {
 						url = GlobalConfig.imageurl+MiniUri;
 					}
 					// 正常切可用代码 已从服务器获得返回值，但是无法正常显示
-					imgloader.DisplayImage(url.replace("\\", "/"),image_touxiang, false, false, null, null);
+					Picasso.with(context).load(url.replace("\\/", "/")).into(image_touxiang);
 					// imgview_touxiang.setImageURI(Uri.parse(filePath));
 					Intent pushintent=new Intent("push_refreshlinkman");
 					context. sendBroadcast(pushintent);
@@ -1450,7 +1445,6 @@ public class TalkGroupNewsActivity extends Activity implements OnClickListener {
 		lists.clear();
 		lists=null;
 		list=null;
-		imageLoader=null;
 		tv_jiaqun =null;
 		tv_shenhe=null;
 		tv_gaimima =null;

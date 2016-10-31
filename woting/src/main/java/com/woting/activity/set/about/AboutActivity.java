@@ -2,13 +2,13 @@ package com.woting.activity.set.about;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.shenstec.activity.BaseActivity;
 import com.woting.R;
+import com.woting.activity.baseactivity.BaseActivity;
 import com.woting.manager.MyActivityManager;
 import com.woting.util.PhoneMessage;
 
@@ -44,7 +44,6 @@ public class AboutActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.head_left_btn:	// 返回
 			finish();

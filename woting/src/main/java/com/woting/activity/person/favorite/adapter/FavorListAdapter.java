@@ -1,6 +1,7 @@
 package com.woting.activity.person.favorite.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,24 +11,23 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.shenstec.utils.image.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.home.program.fmlist.model.RankInfo;
 import com.woting.common.config.GlobalConfig;
+import com.woting.util.BitmapUtils;
 
 import java.util.List;
 
 public class FavorListAdapter extends BaseAdapter{
 	private List<RankInfo> list;
 	private Context context;
-	private ImageLoader imageLoader;
 	private favorCheck favorcheck;
 	private String url;
 
 	public FavorListAdapter(Context context, List<RankInfo> list) {
 		this.context = context;
 		this.list = list;
-		imageLoader = new ImageLoader(context);
 
 	}
 	
@@ -73,14 +73,15 @@ public class FavorListAdapter extends BaseAdapter{
 		if (lists.getContentImg() == null || lists.getContentImg().equals("")
 				|| lists.getContentImg().equals("null")
 				|| lists.getContentImg().trim().equals("")) {
-			holder.imageview_rankimage.setImageResource(R.mipmap.wt_bg_noimage);
+			Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_bg_noimage);
+			holder.imageview_rankimage.setImageBitmap(bmp);
 		} else {
 			if(lists.getContentImg().startsWith("http:")){
 				 url=lists.getContentImg();
 			}else{
 				 url = GlobalConfig.imageurl+lists.getContentImg();
 			}
-			imageLoader.DisplayImage(url.replace("\\/", "/"),holder.imageview_rankimage, false, false, null);
+			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 		}
 		if (lists.getContentDesc() == null || lists.getContentDesc() .equals("")) {
 			holder.tv_RankContent.setText("未知");

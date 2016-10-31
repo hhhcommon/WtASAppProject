@@ -13,8 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-import com.shenstec.activity.BaseActivity;
 import com.woting.R;
+import com.woting.activity.baseactivity.BaseActivity;
 import com.woting.activity.login.login.activity.LoginActivity;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.volley.VolleyCallback;

@@ -34,11 +34,13 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
+import com.squareup.picasso.Picasso;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
@@ -64,7 +66,6 @@ import com.woting.common.constant.StringConstant;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.helper.CommonHelper;
-import com.woting.helper.ImageLoader;
 import com.woting.util.BitmapUtils;
 import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
@@ -98,7 +99,6 @@ import java.util.TimeZone;
 public class PlayerFragment extends Fragment implements OnClickListener, IXListViewListener {
 	public static FragmentActivity context;
 	// 功能性
-	private static ImageLoader imageLoader;
 	private static SimpleDateFormat format;
 	private static SearchPlayerHistoryDao dbDao;
 	private static LanguageSearchInside historyNews;
@@ -176,7 +176,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		context = this.getActivity();
-		imageLoader = new ImageLoader(context);
 		bmpPresss = BitmapUtils.readBitMap(context,R.mipmap.wt_duijiang_button_pressed);
 		bmp = BitmapUtils.readBitMap(context, R.mipmap.talknormal);
 		RefreshType = 0;
@@ -483,9 +482,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 						} else {
 							url = GlobalConfig.imageurl+ alllist.get(number).getContentImg();
 						}
-						imageLoader.DisplayImage(url.replace("\\/", "/"),img_news, false, false, null, null);
+						Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(img_news);
 					} else {
-						img_news.setImageResource(R.mipmap.wt_image_playertx);
+						Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
+						img_news.setImageBitmap(bmp);
 					}
 					for (int i = 0; i < alllist.size(); i++) {
 						alllist.get(i).setType("1");
@@ -530,9 +530,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 						} else {
 							url = GlobalConfig.imageurl + alllist.get(number).getContentImg();
 						}
-						imageLoader.DisplayImage(url.replace("\\/", "/"), img_news, false, false, null, null);
+						Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(img_news);
 					} else {
-						img_news.setImageResource(R.mipmap.wt_image_playertx);
+						Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
+						img_news.setImageBitmap(bmp);
 					}
 					for (int i = 0; i < alllist.size(); i++) {
 						alllist.get(i).setType("1");
@@ -847,9 +848,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 						} else {
 							url = GlobalConfig.imageurl+ GlobalConfig.playerobject.getContentImg();
 						}
-						imageLoader.DisplayImage(url.replace("\\/", "/"),img_news, false, false, null, null);
+						Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(img_news);
 					} else {
-						img_news.setImageResource(R.mipmap.wt_image_playertx);
+						Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
+						img_news.setImageBitmap(bmp);
 					}
 					for (int i = 0; i < alllist.size(); i++) {
 						alllist.get(i).setType("1");
@@ -891,9 +893,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 						} else {
 							url = GlobalConfig.imageurl+ GlobalConfig.playerobject.getContentImg();
 						}
-						imageLoader.DisplayImage(url.replace("\\/", "/"),img_news, false, false, null, null);
+						Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(img_news);
 					} else {
-						img_news.setImageResource(R.mipmap.wt_image_playertx);
+						Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
+						img_news.setImageBitmap(bmp);
 					}
 					for (int i = 0; i < alllist.size(); i++) {
 						alllist.get(i).setType("1");
@@ -1507,9 +1510,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			 } else {
 				 url = GlobalConfig.imageurl + fList.getContentImg();
 			 }
-			 imageLoader.DisplayImage(url.replace("\\/", "/"), img_news, false, false, null, null);
+			 Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(img_news);
 		 } else {
-			 img_news.setImageResource(R.mipmap.wt_image_playertx);
+			 Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
+			 img_news.setImageBitmap(bmp);
 		 }
 		 alllist.clear();
 		 alllist.addAll(list);
@@ -1550,9 +1554,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			 } else {
 				 url = GlobalConfig.imageurl + list.get(0).getContentImg();
 			 }
-			 imageLoader.DisplayImage(url.replace("\\/", "/"), img_news, false, false, null, null);
+			 Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(img_news);
 		 } else {
-			 img_news.setImageResource(R.mipmap.wt_image_playertx);
+			 Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
+			 img_news.setImageBitmap(bmp);
 		 }
 		 alllist.clear();
 		 alllist.addAll(list);
@@ -1743,9 +1748,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 								 } else {
 									 url = GlobalConfig.imageurl + alllist.get(number).getContentImg();
 								 }
-								 imageLoader.DisplayImage(url.replace("\\/", "/"), img_news, false, false, null, null);
+								 Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(img_news);
 							 } else {
-								 img_news.setImageResource(R.mipmap.wt_image_playertx);
+								 Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
+								 img_news.setImageBitmap(bmp);
 							 }
 							 for (int i = 0; i < alllist.size(); i++) {
 								 alllist.get(i).setType("1");

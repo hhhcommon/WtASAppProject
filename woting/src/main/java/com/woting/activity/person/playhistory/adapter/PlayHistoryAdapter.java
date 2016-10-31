@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.shenstec.utils.image.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.home.player.main.model.PlayerHistory;
 
@@ -21,7 +21,6 @@ import java.util.TimeZone;
 public class PlayHistoryAdapter extends BaseAdapter {
 	private List<PlayerHistory> list;
 	private Context context;
-	private ImageLoader imageLoader;
 	private PlayerHistory lists;
 	private String url;
 	private SimpleDateFormat format;
@@ -32,7 +31,6 @@ public class PlayHistoryAdapter extends BaseAdapter {
 		super();
 		this.list = list;
 		this.context = context;
-		imageLoader = new ImageLoader(context);
 	}
 
 	public void ChangeDate(List<PlayerHistory> list) {
@@ -107,7 +105,7 @@ public class PlayHistoryAdapter extends BaseAdapter {
 			holder.imageView_playImage.setImageResource(R.mipmap.wt_image_playertx);
 		} else {
 			url = lists.getPlayerImage();
-			imageLoader.DisplayImage(url.replace("\\/", "/"), holder.imageView_playImage, false, false, null);
+			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageView_playImage);
 		}
 		if(lists.isCheck()){
 			holder.imageCheck.setVisibility(View.VISIBLE);

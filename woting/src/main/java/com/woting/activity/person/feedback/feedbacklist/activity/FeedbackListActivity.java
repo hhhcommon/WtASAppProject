@@ -8,12 +8,11 @@ import android.view.WindowManager;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.LinearLayout;
-
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.shenstec.activity.BaseActivity;
 import com.woting.R;
+import com.woting.activity.baseactivity.BaseActivity;
 import com.woting.activity.person.feedback.feedbacklist.adapter.FeedBackExpandAdapter;
 import com.woting.activity.person.feedback.feedbacklist.model.OpinionMessage;
 import com.woting.common.config.GlobalConfig;

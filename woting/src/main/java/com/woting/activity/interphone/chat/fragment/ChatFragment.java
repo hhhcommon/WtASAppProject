@@ -32,8 +32,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.alert.CallAlertActivity;
 import com.woting.activity.interphone.chat.adapter.ChatListAdapter;
@@ -60,7 +62,6 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.helper.ImageLoader;
 import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
 import com.woting.util.ToastUtils;
@@ -88,7 +89,6 @@ public class ChatFragment extends Fragment implements OnClickListener{
 	private  MessageReceiver Receiver;
 	private static ImageView image_grouptx;
 	private static TextView tv_groupname;
-	private static ImageLoader imageLoader;
 	private static SearchTalkHistoryDao dbdao;
 	private View rootView;
 	private TextView talkingname;
@@ -160,7 +160,6 @@ public class ChatFragment extends Fragment implements OnClickListener{
 			context.registerReceiver(Receiver, filterb4);
 			ToastUtils.show_short(context, "注册了广播接收器");
 		}
-		imageLoader = new ImageLoader(context);
 	}
 
 	@Override
@@ -446,7 +445,7 @@ public class ChatFragment extends Fragment implements OnClickListener{
 				image_group_persontx.setImageResource(R.mipmap.wt_image_tx_hy);
 			}else{
 				String urls = GlobalConfig.imageurl+url;
-				imageLoader.DisplayImage(urls.replace( "\\/", "/"), image_group_persontx, false, false,null, null);
+				Picasso.with(context).load(urls.replace("\\/", "/")).into(image_group_persontx);
 			}
 			if (draw_group.isRunning()) { 
 			} else { 
@@ -718,7 +717,7 @@ public class ChatFragment extends Fragment implements OnClickListener{
 			image_grouptx.setImageResource(R.mipmap.wt_image_tx_qz);
 		}else{
 			String url = GlobalConfig.imageurl+firstdate.getPortrait();
-			imageLoader.DisplayImage(url.replace( "\\/", "/"), image_grouptx, false, false,null, null);
+			Picasso.with(context).load(url.replace("\\/", "/")).into(image_grouptx);
 		}
 		if(alllist.size()==0){
 			if(adapter==null){
@@ -755,7 +754,7 @@ public class ChatFragment extends Fragment implements OnClickListener{
 			image_persontx.setImageResource(R.mipmap.wt_image_tx_qz);
 		}else{
 			String url = GlobalConfig.imageurl+firstdate.getPortrait();
-			imageLoader.DisplayImage(url.replace( "\\/", "/"), image_persontx, false, false,null, null);
+			Picasso.with(context).load(url.replace("\\/", "/")).into(image_grouptx);
 		}
 		if(alllist.size()==0){
 			if(adapter==null){

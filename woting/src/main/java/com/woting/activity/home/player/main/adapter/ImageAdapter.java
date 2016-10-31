@@ -10,21 +10,18 @@ import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.activity.home.player.main.model.sharemodel;
-import com.woting.helper.ImageLoader;
 
 import java.util.List;
 
 public class ImageAdapter extends BaseAdapter{
 	private List<sharemodel> list;
 	private Context context;
-	private ImageLoader imageLoader;
 	private sharemodel lists;
 
 	public ImageAdapter (Context context, List<sharemodel> list) {
 		super();
 		this.list = list;
 		this.context = context;
-		imageLoader = new ImageLoader(context);
 	}
 
 	@Override
@@ -55,7 +52,7 @@ public class ImageAdapter extends BaseAdapter{
 			holder = (ViewHolder) convertView.getTag();
 		}
 		lists = list.get(position);
-		holder.img_share.setImageResource(lists.getShareImageUrl());			
+		holder.img_share.setImageResource(lists.getShareImageUrl());
 		if(lists.getShareText()!=null&&!lists.getShareText().equals("")){
 			holder.tv_platname.setText(lists.getShareText());	
 		}

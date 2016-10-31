@@ -9,10 +9,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.creatgroup.groupnews.model.GroupTalkInside;
 import com.woting.common.config.GlobalConfig;
-import com.woting.helper.ImageLoader;
 import com.woting.util.BitmapUtils;
 
 import java.util.List;
@@ -20,7 +21,6 @@ import java.util.List;
 public class GroupTalkAdapter extends BaseAdapter{
 	private List<GroupTalkInside> list;
 	private Context context;
-	private ImageLoader imageLoader;
 	private GroupTalkInside lists;
 	private String url;
 	
@@ -28,7 +28,6 @@ public class GroupTalkAdapter extends BaseAdapter{
 		super();
 		this.list = list;
 		this.context = context;
-		imageLoader=new ImageLoader(context);
 	}
 	
 	public void ChangeDate(List<GroupTalkInside> list){
@@ -82,7 +81,7 @@ public class GroupTalkAdapter extends BaseAdapter{
 				}else{
 					url = GlobalConfig.imageurl+lists.getPortraitMini();
 				}
-				imageLoader.DisplayImage(url.replace( "\\/", "/"), holder.imageView_touxiang, false, false, null, null);
+				Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageView_touxiang);
 			}
 		}else if(lists.getType() == 2){
 			holder.tv_name.setText("添加");

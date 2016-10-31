@@ -9,10 +9,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.linkman.model.TalkPersonInside;
 import com.woting.common.config.GlobalConfig;
-import com.woting.helper.ImageLoader;
 
 import java.util.List;
 /**
@@ -23,14 +24,12 @@ import java.util.List;
 public class TalkPersonAdapter extends BaseAdapter{
 	private List<TalkPersonInside> list;
 	private Context context;
-	private ImageLoader imageLoader;
 	private OnListeners onListeners;
 	private TalkPersonInside lists;
 	public TalkPersonAdapter(Context context,List<TalkPersonInside> list) {
 		super();
 		this.list = list;
 		this.context = context;
-		imageLoader=new ImageLoader(context);
 	}
 	public void ChangeDate(List<TalkPersonInside> list){
 		this.list = list;
@@ -95,7 +94,7 @@ public class TalkPersonAdapter extends BaseAdapter{
 				holder.imageView_touxiang.setImageResource(R.mipmap.wt_image_tx_hy);
 			}else{
 				String url = GlobalConfig.imageurl+lists.getPortraitMini();
-				imageLoader.DisplayImage(url.replace( "\\/", "/"), holder.imageView_touxiang, false, false,null, null);
+				Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageView_touxiang);
 			}
 		}		
 		holder.lin_add.setOnClickListener(new View.OnClickListener() {

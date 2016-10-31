@@ -9,8 +9,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.shenstec.utils.image.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.chat.dao.SearchTalkHistoryDao;
 import com.woting.activity.interphone.chat.fragment.ChatFragment;
@@ -34,7 +33,6 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
 	private TextView tv_name;
 	private LinearLayout lin_call;
 	private LinearLayout lin_guaduan;
-	private ImageLoader imageLoader;
 	private String image;
 	private String name;
 //	private TextView tv_news;
@@ -48,7 +46,6 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
 		instance = this;
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);		//透明状态栏
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);	//透明导航栏
-		imageLoader = new ImageLoader(instance);
 		//设置界面
 //		tv_news = (TextView) findViewById(R.id.tv_news);	
 		imageview = (ImageView) findViewById(R.id.image);	
@@ -78,7 +75,7 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
 			imageview.setImageResource(R.mipmap.wt_image_tx_hy);
 		}else{
 			String url = GlobalConfig.imageurl+image;
-			imageLoader.DisplayImage(url.replace( "\\/", "/"), imageview, false, false,null);
+			Picasso.with(instance).load(url.replace("\\/", "/")).into(imageview);
 		}
 		
 		//设置监听
@@ -164,7 +161,6 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
 		tv_name = null;
 		lin_call = null;
 		lin_guaduan = null;
-		imageLoader = null;
 		image = null;
 		name = null;
 		id = null;

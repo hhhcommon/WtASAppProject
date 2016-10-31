@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
@@ -43,7 +44,6 @@ import com.woting.activity.home.program.fmlist.model.RankInfo;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.helper.ImageLoader;
 import com.woting.util.DialogUtils;
 import com.woting.util.PhoneMessage;
 import com.woting.util.ShareUtils;
@@ -65,7 +65,6 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 	private String RadioName;
 	public static TextView tv_album_name;
 	public static ImageView img_album;
-	public static ImageLoader imageLoader;
 	public static String ContentDesc;
 	public static String ContentImg;
 	public static String ContentShareURL;
@@ -261,7 +260,6 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 		tv_album_name = (TextView) findViewById(R.id.head_name_tv);
 		img_album = (ImageView) findViewById(R.id.img_album);
 		imgageFavorite = (ImageView) findViewById(R.id.img_favorite);
-		imageLoader = new ImageLoader(context);							// 初始化ImageLoader
 		head_left = (LinearLayout) findViewById(R.id.head_left_btn);	// 返回按钮
 		lin_share = (LinearLayout) findViewById(R.id.lin_share);		// 分享按钮
 		lin_favorite = (LinearLayout) findViewById(R.id.lin_favorite);	// 喜欢按钮
@@ -467,7 +465,6 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 		RadioName = null;
 		tv_album_name = null;
 		img_album = null;
-		imageLoader = null;
 		ContentDesc = null;
 		ContentImg = null;
 		ContentShareURL = null;
