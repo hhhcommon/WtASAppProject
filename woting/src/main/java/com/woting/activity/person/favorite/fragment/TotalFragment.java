@@ -446,11 +446,17 @@ public class TotalFragment extends Fragment {
 					String ContentId = list.get(groupPosition).getList().get(childPosition).getContentId();
 					String localurl = list.get(groupPosition).getList().get(childPosition).getLocalurl();
 
-					// 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-					PlayerHistory history = new PlayerHistory(playername, playerimage, playerurl, playerurI,
-							playermediatype, plaplayeralltime, playerintime, playercontentdesc, playernum,
-							playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid,
-							playcontentshareurl, ContentFavorite, ContentId, localurl);
+					String sequName=list.get(groupPosition).getList().get(childPosition).getSequName();
+					String sequId=list.get(groupPosition).getList().get(childPosition).getSequId();
+					String sequDesc=list.get(groupPosition).getList().get(childPosition).getSequDesc();
+					String sequImg=list.get(groupPosition).getList().get(childPosition).getSequImg();
+
+					//如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+					PlayerHistory history = new PlayerHistory(
+							playername,  playerimage, playerurl, playerurI,playermediatype,
+							plaplayeralltime, playerintime, playercontentdesc, playernum,
+							playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
+							ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
 					dbdao.deleteHistory(playerurl);
 					dbdao.addHistory(history);
 					if (PlayerFragment.context != null) {

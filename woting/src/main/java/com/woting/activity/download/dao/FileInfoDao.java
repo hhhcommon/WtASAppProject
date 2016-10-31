@@ -12,7 +12,6 @@ import com.woting.util.SequenceUUID;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * 本地文件存储：存储要下载到本地的文件url，图片url等信息，已经下载过的程序标记finished="true"
  * 未下载的程序标记finished="false" 1：查詢部份已經完成，目前僅需要查詢未完成的列表，后续可扩展提供已完成的下载
@@ -34,8 +33,8 @@ public class FileInfoDao {
 	/**
 	 *  传递进来的下载地址 对下载地址进行处理使之变成一个list，对其进行保存，默认的finished设置为false；
 	 */
-	public List<FileInfo> queryFileinfo(String s,String useridnow) {
-		List<FileInfo> mylist = new ArrayList<FileInfo>();
+	public List<FileInfo> queryFileinfo(String s, String useridnow) {
+		List<FileInfo> mylist = new ArrayList<>();
 		SQLiteDatabase db = helper.getReadableDatabase();
 		Cursor cursor = null;
 		try {
@@ -89,9 +88,10 @@ public class FileInfoDao {
 		}
 		return mylist;
 	}
+
 	//type无意义可传任意int数，存在为实现重载
 	public List<FileInfo> queryFileinfo(String sequid,String userid,int type) {
-		List<FileInfo> mylist = new ArrayList<FileInfo>();
+		List<FileInfo> mylist = new ArrayList<>();
 		SQLiteDatabase db = helper.getReadableDatabase();
 		Cursor cursor = null;
 		try {
@@ -176,14 +176,7 @@ public class FileInfoDao {
 		return mylist;
 	}
 
-	// 增
-	/*
-	 * String s = urllist.get(0).getContentName(); String s1 =
-	 * urllist.get(0).getContentURI(); String s2 =
-	 * urllist.get(0).getContentImg(); String s3 = urllist.get(0).getSequname();
-	 * String s4 = urllist.get(0).getSequimgurl(); String s5 =
-	 * urllist.get(0).getSequdesc();
-	 */
+
 	public void insertfileinfo(List<ContentInfo> urllist) {
 		SQLiteDatabase db = helper.getWritableDatabase();
 		// 通过helper的实现对象获取可操作的数据库db
@@ -200,7 +193,7 @@ public class FileInfoDao {
 
 			}
 			if(name==null||name.trim().equals("")){
-				playname =SequenceUUID.getUUIDSubSegment(0)+".mp3";
+				playname = SequenceUUID.getUUIDSubSegment(0)+".mp3";
 			}else{
 				playname =name.replaceAll(
 						"[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……& amp;*（）——+|{}【】‘；：”“’。，、？|-]",
@@ -218,7 +211,7 @@ public class FileInfoDao {
 	// 改
 	public void updatefileinfo(String filename) {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String localurl=DownloadService.DOWNLOAD_PATH+filename;
+		String localurl= DownloadService.DOWNLOAD_PATH+filename;
 		db.execSQL("update fileinfo set finished=?,localurl=? where filename=?",
 				new Object[] {"true",localurl,filename});
 		db.close();
@@ -245,7 +238,7 @@ public class FileInfoDao {
 		SQLiteDatabase db = helper.getWritableDatabase();
 		db.execSQL("update fileinfo set start=?,end =? where url=?",
 				new Object[] { start,end,url});
-		db.close();	
+		db.close();
 	}
 
 	/**
@@ -320,8 +313,8 @@ public class FileInfoDao {
 	/*
 	 *关闭目前打开的所有数据库对象
 	 *
-	 */	
+	 */
 	public void closedb(){
-		helper.close();	
+		helper.close();
 	}
 }

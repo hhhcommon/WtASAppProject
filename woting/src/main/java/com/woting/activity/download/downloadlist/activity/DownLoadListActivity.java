@@ -1,16 +1,10 @@
 package com.woting.activity.download.downloadlist.activity;
 
-import java.io.File;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +30,11 @@ import com.woting.common.constant.StringConstant;
 import com.woting.manager.MyActivityManager;
 import com.woting.util.CommonUtils;
 import com.woting.util.ToastUtils;
+
+import java.io.File;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 /**
  * 下载列表
  * @author 辛龙
@@ -163,12 +162,6 @@ public class DownLoadListActivity extends Activity implements OnClickListener {
 		adapter.setonListener(new downloadlist() {
 			@Override
 			public void checkposition(int position) {
-				/*
-				 * if(fileinfolist.get(position).getChecktype()==0){
-				 * fileinfolist.get(position).setChecktype(1); Toast }else{
-				 * fileinfolist.get(position).setChecktype(0); }
-				 */
-				/* ToastUtil.show_allways(context, "此处弹窗确认是否删除"); */
 				deleteConfirmDialog(position);
 				confirmdialog1.show();
 			}
@@ -211,7 +204,7 @@ public class DownLoadListActivity extends Activity implements OnClickListener {
 		mlistview.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				//ToastUtil.show_allways(context, "我的localurl是"+fileinfolist.get(position).getLocalurl());
+				//ToastUtil.show_always(context, "我的localurl是"+fileinfolist.get(position).getLocalurl());
 				if(fileinfolist != null && fileinfolist.size() != 0){
 					positionnow =position;
 					FileInfo mFileInfo = fileinfolist.get(position);
@@ -237,13 +230,17 @@ public class DownLoadListActivity extends Activity implements OnClickListener {
 							String bjuserid = CommonUtils.getUserId(context);
 							String ContentFavorite = mFileInfo.getContentFavorite();
 							String ContentId = mFileInfo.getContentId();
-							//							String localurl = mFileInfo.getLocalurl();
+							String sequName=mFileInfo.getSequname();
+							String sequId=mFileInfo.getSequid();
+							String sequImg=mFileInfo.getSequimgurl();
+							String sequDesc=mFileInfo.getSequdesc();
 
 							//如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-							PlayerHistory history = new PlayerHistory( 
-									playername,  playerimage, playerurl, playerurI,playermediatype, 
+							PlayerHistory history = new PlayerHistory(
+									playername,  playerimage, playerurl, playerurI,playermediatype,
 									plaplayeralltime, playerintime, playercontentdesc, playernum,
-									playerzantype,  playerfrom, playerfromid, playerfromurl,playeraddtime,bjuserid,playercontentshareurl,ContentFavorite,ContentId,playlocalrurl);	
+									playerzantype,  playerfrom, playerfromid, playerfromurl,playeraddtime,bjuserid,playercontentshareurl,ContentFavorite,
+									ContentId,playlocalrurl,sequName,sequId,sequDesc,sequImg);
 							dbdao.deleteHistory(playerurl);
 							dbdao.addHistory(history);
 							if(PlayerFragment.context != null){
@@ -252,17 +249,18 @@ public class DownLoadListActivity extends Activity implements OnClickListener {
 								PlayerFragment.SendTextRequest(mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4), context);
 							}else{
 								SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
-								Editor et = sp.edit();
+								SharedPreferences.Editor et = sp.edit();
 								et.putString(StringConstant.PLAYHISTORYENTER, "true");
 								et.putString(StringConstant.PLAYHISTORYENTERNEWS,mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4));
 								et.commit();
 								MainActivity.change();
 								HomeActivity.UpdateViewPager();
 							}
-							context.finish();
+							setResult(1);
+							finish();
 							dbdao.closedb();
 						} else {	// 此处要调对话框，点击同意删除对应的文件信息
-							/* ToastUtil.show_allways(context, "文件已经被删除，是否删除本条记录"); */
+							/* ToastUtil.show_always(context, "文件已经被删除，是否删除本条记录"); */
 							positionnow = position;
 							confirmdialog.show();
 						}

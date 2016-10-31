@@ -241,12 +241,17 @@ public class RecommendFragment extends Fragment{
 							String ContentFavorite= newlist.get(position - 2).getContentFavorite();
 							String ContentId= newlist.get(position - 2).getContentId();
 							String localurl=newlist.get(position - 2).getLocalurl();
+							String sequName=newlist.get(position-2).getSequName();
+							String sequId=newlist.get(position-2).getSequId();
+							String sequDesc=newlist.get(position-2).getSequDesc();
+							String sequImg=newlist.get(position-2).getSequImg();
 
 							//如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-							PlayerHistory history = new PlayerHistory( 
-									playername,  playerimage, playerurl,playerurI, playermediatype, 
+							PlayerHistory history = new PlayerHistory(
+									playername,  playerimage, playerurl, playerurI,playermediatype,
 									plaplayeralltime, playerintime, playercontentdesc, playernum,
-									playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,ContentFavorite,ContentId,localurl);	
+									playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
+									ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
 							dbdao.deleteHistory(playerurl);
 							dbdao.addHistory(history);
 

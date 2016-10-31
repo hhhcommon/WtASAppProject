@@ -1,12 +1,5 @@
 package com.woting.activity.home.program.radiolist.fragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -45,6 +38,13 @@ import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
 import com.woting.widgetui.xlistview.XListView;
 import com.woting.widgetui.xlistview.XListView.IXListViewListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 分类列表
@@ -262,11 +262,17 @@ public class ClassifyFragment extends Fragment{
 						String ContentId= newlist.get(position - 2).getContentId();
 						String localurl=newlist.get(position - 2).getLocalurl();
 
+						String sequName=newlist.get(position-2).getSequName();
+						String sequId=newlist.get(position-2).getSequId();
+						String sequDesc=newlist.get(position-2).getSequDesc();
+						String sequImg=newlist.get(position-2).getSequImg();
+
 						//如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-						PlayerHistory history = new PlayerHistory( 
-								playername,  playerimage, playerurl,playerurI, playermediatype, 
-								 plaplayeralltime, playerintime, playercontentdesc, playernum,
-								 playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,ContentFavorite,ContentId,localurl);	
+						PlayerHistory history = new PlayerHistory(
+								playername,  playerimage, playerurl, playerurI,playermediatype,
+								plaplayeralltime, playerintime, playercontentdesc, playernum,
+								playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
+								ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
 						dbdao.deleteHistory(playerurl);
 						dbdao.addHistory(history);
 

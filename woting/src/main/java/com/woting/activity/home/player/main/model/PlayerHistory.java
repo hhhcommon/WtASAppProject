@@ -28,8 +28,44 @@ public class PlayerHistory implements Serializable{
 	private String ContentID;
 	private String ContentPub;
 
-	private String localurl;
-	
+	private String localurl;// 本地播放地址
+	private String sequId;//专辑ID
+	private String sequImg;//专辑图片
+	private String sequDesc;//专辑描述
+	private String sequName;//专辑名称
+
+	public String getSequImg() {
+		return sequImg;
+	}
+
+	public void setSequImg(String sequImg) {
+		this.sequImg = sequImg;
+	}
+
+	public String getSequDesc() {
+		return sequDesc;
+	}
+
+	public void setSequDesc(String sequDesc) {
+		this.sequDesc = sequDesc;
+	}
+
+	public String getSequName() {
+		return sequName;
+	}
+
+	public void setSequName(String sequName) {
+		this.sequName = sequName;
+	}
+
+	public String getSequId() {
+		return sequId;
+	}
+
+	public void setSequId(String sequId) {
+		this.sequId = sequId;
+	}
+
 	public String getLocalurl() {
 		return localurl;
 	}
@@ -39,16 +75,16 @@ public class PlayerHistory implements Serializable{
 	}
 	private int status;		//是否选中状态  0 未选中  1 选中
 	private boolean isCheck;//是否可以选中
-	
+
 	@Override
 	public String toString(){
-		return "播放路径:" + getPlayerUrl() + ", 播放类型:" + getPlayerMediaType() 
+		return "播放路径:" + getPlayerUrl() + ", 播放类型:" + getPlayerMediaType()
 				+ ", 播放显示名称:" + getPlayerName() + ", PlayerFromUrl:" + getPlayerFromUrl()
 				+ ", 此时播放时长:" + getPlayerInTime() + ", 播放次数:" + getPlayerNum()
 				+ ", ContentID:" + getContentID() + ", 播放时间:" + getPlayerAllTime()
 				+ ", 播放类型:" + getPlayerMediaType();
 	}
-	
+
 	public String getContentPub() {
 		return ContentPub;
 	}
@@ -68,11 +104,11 @@ public class PlayerHistory implements Serializable{
 	public void setStatus(int status){
 		this.status = status;
 	}
-	
+
 	public int getStatus(){
 		return this.status;
 	}
- 
+
 	public String getContentID() {
 		return ContentID;
 	}
@@ -120,11 +156,11 @@ public class PlayerHistory implements Serializable{
 	public void setBJUserid(String bJUserid) {
 		BJUserid = bJUserid;
 	}
-	
-	public PlayerHistory(String playername,String  playerimage,String playerurl,String playerurI,String playermediatype, 
-			String playeralltime,String playerintime,String playercontentdesc,String playernum,
-			String playerzantype,String  playerfrom,String playerfromid,String Playerfromurl,
-			String playeraddtime,String bjuserid,String playcontentshareurl,String ContentFavorite,String ContentID,String localurl) {
+
+	public PlayerHistory(String playername,String  playerimage,String playerurl,String playerurI,String playermediatype,
+						 String playeralltime,String playerintime,String playercontentdesc,String playernum,
+						 String playerzantype,String  playerfrom,String playerfromid,String Playerfromurl,
+						 String playeraddtime,String bjuserid,String playcontentshareurl,String ContentFavorite,String ContentID,String localurl,String sequName,String sequId,String sequDesc,String sequImg) {
 		super();
 		PlayerName = playername;
 		PlayerImage = playerimage;
@@ -142,6 +178,10 @@ public class PlayerHistory implements Serializable{
 		PlayerAddTime=playeraddtime;
 		BJUserid=bjuserid;
 		PlayContentShareUrl=playcontentshareurl;
+		this.sequName=sequName;
+		this.sequDesc=sequDesc;
+		this.sequId=sequId;
+		this.sequImg=sequImg;
 		this.ContentFavorite=ContentFavorite;
 		this.ContentID=ContentID;
 		this.localurl=localurl;
