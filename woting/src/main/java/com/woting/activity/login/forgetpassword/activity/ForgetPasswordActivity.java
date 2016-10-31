@@ -455,7 +455,10 @@ public class ForgetPasswordActivity extends Activity implements OnClickListener 
 		phonenum = null;
 		dialog = null;
 		yanzhengma = null;
-		mcountDownTimer = null;
+        if(mcountDownTimer != null) {
+            mcountDownTimer.cancel();
+            mcountDownTimer = null;
+        }
 		password = null;
 		tag = null;
 		setContentView(R.layout.activity_null);
