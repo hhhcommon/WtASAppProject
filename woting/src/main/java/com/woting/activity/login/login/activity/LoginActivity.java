@@ -393,7 +393,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 					et.putString(StringConstant.USERID, userid);
 					et.putString(StringConstant.ISLOGIN, "true");
 					et.putString(StringConstant.USERNAME, returnusername);
-					et.putString(StringConstant.IMAGEURL, imageurl);
+                    et.putString(StringConstant.IMAGEURL, imageurl);
 					et.putString(StringConstant.IMAGEURBIG, imageurlbig);
 					et.putString(StringConstant.PERSONREFRESHB, "true");
 					et.commit();

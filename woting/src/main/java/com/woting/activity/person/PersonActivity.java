@@ -70,10 +70,13 @@ public class PersonActivity extends Activity implements OnClickListener {
 	private PersonActivity context;
 	private SharedPreferences sharedPreferences;
 	private UserPortaitInside UserPortait;
-	private ImageLoader imgloader;
+	private ImageLoader imgLoader;
+
 	private final int TO_GALLERY = 1;
 	private final int TO_CAMARA = 2;
 	private final int PHOTO_REQUEST_CUT = 7;
+    private int imagenum;
+
 	private String ReturnType;
 	private String MiniUri;
 	private String islogin;				// 是否登录
@@ -81,19 +84,18 @@ public class PersonActivity extends Activity implements OnClickListener {
 	private String userid;				// 用户Id
 	private String outputFilePath;
 	private String imagePath;
-//	private String BigImageUrl;
 	private String filePath;
 	private String url;
 	private String imagurl;
-	private Uri outputFileUri;
+    private String PhotoCutAfterImagePath;
+
 	private Dialog dialog;
-	protected Dialog Imagedialog;
+    private Dialog Imagedialog;
 	private LinearLayout lin_liuliang;
 	private LinearLayout lin_modifypassword;
 	private LinearLayout lin_timer;
 	private LinearLayout lin_like;
 	private LinearLayout lin_xiugai;
-	private LinearLayout lin_set;
 	private LinearLayout lin_playhistory;
 	private LinearLayout lin_bingding;
 	private RelativeLayout lin_status_nodenglu;
@@ -109,9 +111,7 @@ public class PersonActivity extends Activity implements OnClickListener {
 	private ImageView lin_image_0;
 	private ImageView imgview_touxiang;
 	private ImageView imageNotLogin;
-	private int imagenum;
 	private View rulesLine0, rulesLine1, rulesLine2, rulesLine3;		// 分割线
-	private String PhotoCutAfterImagePath;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -121,12 +121,11 @@ public class PersonActivity extends Activity implements OnClickListener {
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(BroadcastConstants.TIMER_UPDATE);
 		filter.addAction(BroadcastConstants.TIMER_STOP);
-		context.registerReceiver(timerBreadcast, filter);				// 注册广播
+		context.registerReceiver(timerBroadcast, filter);				// 注册广播
 		setView();			// 设置界面
 		getloginstatus();	// 获取是否登录的状态
-		setLisener();		// 设置监听
 		imagedialog();
-		imgloader = new ImageLoader(context);
+        imgLoader = new ImageLoader(context);
 	}
 
 	//登陆状态下 用户设置头像对话框
@@ -160,13 +159,25 @@ public class PersonActivity extends Activity implements OnClickListener {
 
 	//设置view
 	private void setView() {
-		lin_set = (LinearLayout) findViewById(R.id.lin_set);
+        findViewById(R.id.lin_set).setOnClickListener(this);
+
 		lin_bingding = (LinearLayout) findViewById(R.id.lin_bingding);					// 账户绑定
+        lin_bingding.setOnClickListener(this);
+
 		lin_playhistory = (LinearLayout) findViewById(R.id.lin_playhistory);			// 播放历史
+        lin_playhistory.setOnClickListener(this);
+
 		imgview_touxiang = (ImageView) findViewById(R.id.image_touxiang);				// 登录后的头像
-		imageView_ewm = (ImageView) findViewById(R.id.imageView_ewm);
+
+        imageView_ewm = (ImageView) findViewById(R.id.imageView_ewm);
+        imageView_ewm.setOnClickListener(this);
+
 		imageNotLogin = (ImageView) findViewById(R.id.image_nodenglu);					// 没有登录时的头像
+        imageNotLogin.setOnClickListener(this);
+
 		tv_denglu = (TextView) findViewById(R.id.text_denglu);							// 点击登录
+        tv_denglu.setOnClickListener(this);
+
 		lin_status_nodenglu = (RelativeLayout) findViewById(R.id.lin_status_nodenglu);	// 未登录时的状态
 		lin_status_denglu = (RelativeLayout) findViewById(R.id.lin_status_denglu);		// 登录时的状态
 		lin_image = (ImageView) findViewById(R.id.lin_image);
@@ -177,21 +188,34 @@ public class PersonActivity extends Activity implements OnClickListener {
 		textTime = (TextView) findViewById(R.id.text_time);
 		tv_username = (TextView) findViewById(R.id.tv_username);					// 登录后的用户名控件
 		tv_userid = (TextView) findViewById(R.id.tv_userid);						// 登录后的用户ID控件
+
 		lin_timer = (LinearLayout) findViewById(R.id.lin_timer);					// 定时
-		lin_modifypassword = (LinearLayout) findViewById(R.id.lin_modifypassword);	// 修改密码 
+        lin_timer.setOnClickListener(this);
+
+		lin_modifypassword = (LinearLayout) findViewById(R.id.lin_modifypassword);	// 修改密码
+        lin_modifypassword.setOnClickListener(this);
+
 		lin_like = (LinearLayout) findViewById(R.id.lin_like);						// like
+        lin_like.setOnClickListener(this);
+
 		lin_liuliang = (LinearLayout) findViewById(R.id.lin_liuliang);				// 流量提醒
-		img_toggle = (ImageView) findViewById(R.id.wt_img_toggle);					// imgtoggle
-		lin_xiugai = (LinearLayout) findViewById(R.id.lin_xiugai);					// 修改个人资料
+        lin_liuliang.setOnClickListener(this);
+
+		img_toggle = (ImageView) findViewById(R.id.wt_img_toggle);					// imgToggle
+
+        lin_xiugai = (LinearLayout) findViewById(R.id.lin_xiugai);					// 修改个人资料
+        lin_xiugai.setOnClickListener(this);
+
 		textUser = (TextView) findViewById(R.id.tv_user);
 		textUser.setText("24岁  水瓶座  北京  ");
+
 		rulesLine0 = findViewById(R.id.line_rules_0);
 		rulesLine1 = findViewById(R.id.line_rules_1);
 		rulesLine2 = findViewById(R.id.line_rules_2);
 		rulesLine3 = findViewById(R.id.line_rules_3);
 	}
 
-	//初始化状态  登陆 OR 未登录
+	// 初始化状态  登陆 OR 未登录
 	private void judegLisener() {
 		if (islogin.equals("true")) {
 			lin_status_nodenglu.setVisibility(View.GONE);
@@ -232,9 +256,9 @@ public class PersonActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	//获取用户的登陆状态
+	// 获取用户的登陆状态
 	private void getloginstatus() {
-		sharedPreferences = this.getSharedPreferences("wotingfm",Context.MODE_PRIVATE);
+		sharedPreferences = getSharedPreferences("wotingfm",Context.MODE_PRIVATE);
 		islogin = sharedPreferences.getString(StringConstant.ISLOGIN, "false");
 	}
 
@@ -242,38 +266,40 @@ public class PersonActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.lin_set:				// 设置
-			startActivity(new Intent(this, SetActivity.class));
+			startActivity(new Intent(context, SetActivity.class));
 			break;
 		case R.id.lin_playhistory:		// 播放历史
-			Intent historyintent = new Intent(this, PlayHistoryActivity.class);
-			startActivity(historyintent);
+			startActivity(new Intent(context, PlayHistoryActivity.class));
 			break;
 		case R.id.lin_modifypassword:	// 修改密码
-			startActivity(new Intent(this, ModifyPasswordActivity.class));
+			startActivity(new Intent(context, ModifyPasswordActivity.class));
 			break;
 		case R.id.lin_bingding:			// 账户绑定
-			Intent PasswordIntent = new Intent(this, PhoneCheckActivity.class);
+			Intent PasswordIntent = new Intent(context, PhoneCheckActivity.class);
 			PasswordIntent.putExtra("origin", 2);
 			startActivity(PasswordIntent);
 			break;
 		case R.id.lin_timer:			// 定时
-			Intent timerintent = new Intent(context,TimerPowerOffActivity.class);
-			startActivity(timerintent);
+			startActivity(new Intent(context,TimerPowerOffActivity.class));
 			break;
 		case R.id.text_denglu:			// 登陆
 			startActivity(new Intent(context, LoginActivity.class));
 			break;
 		case R.id.lin_liuliang:			// 流量提示
-			String wifiset = sharedPreferences.getString(StringConstant.WIFISET, "true");
+			String wifiSet = sharedPreferences.getString(StringConstant.WIFISET, "true");
 			Editor et = sharedPreferences.edit();
-			if (wifiset.equals("true")) {
+			if (wifiSet.equals("true")) {
 				img_toggle.setImageResource(R.mipmap.wt_person_close);
 				et.putString(StringConstant.WIFISET, "false");
-				et.commit();
+				if(et.commit()) {
+                    Log.v("commit", "数据 commit 失败!");
+                }
 			} else {
 				img_toggle.setImageResource(R.mipmap.wt_person_on);
 				et.putString(StringConstant.WIFISET, "true");
-				et.commit();
+                if(et.commit()) {
+                    Log.v("commit", "数据 commit 失败!");
+                }
 			}
 			break;
 		case R.id.lin_xiugai:			// 修改个人资料
@@ -308,7 +334,7 @@ public class PersonActivity extends Activity implements OnClickListener {
 	protected void onResume() {
 		super.onResume();
 		getloginstatus();
-		judegLisener();
+        judegLisener();
 		if (islogin.equals("true")) {
 			imagurl = sharedPreferences.getString(StringConstant.IMAGEURL, "");	//
 			username = sharedPreferences.getString(StringConstant.USERNAME, "");// 用户名，昵称
@@ -318,50 +344,26 @@ public class PersonActivity extends Activity implements OnClickListener {
 				}else{
 					url = GlobalConfig.imageurl+imagurl;
 				}
-				//imagurl=http://182.92.175.134:808/wt/imageurl
-				imgloader.DisplayImage(url.replace("\\", "/"),imgview_touxiang, false, false, null, null);
+                imgLoader.DisplayImage(url.replace("\\", "/"),imgview_touxiang, false, false, null, null);
 			}
 			UserInviteMeInside news = new UserInviteMeInside();
 			news.setPortraitMini(imagurl);
 			news.setUserId(userid);
 			news.setUserName(username);
-			/*
-			Bitmap bmp = CreatQRImageUtil.createQRImage( 1, null,news,300, 300);
-			if(bmp!=null){
-				imageView_ewm.setImageBitmap(bmp);
-			}else{
-				Bitmap bmps = ReadSmallBitmapUtil.readBitMap(context, R.drawable.ewm);
-				imageView_ewm.setImageBitmap(bmps);
-			}
-			 */
 		} else {
 			imgview_touxiang.setImageResource(R.mipmap.reg_default_portrait);
 		}
 
 		// 获取当前的流量提醒按钮状态
-		String wifiset = sharedPreferences.getString(StringConstant.WIFISET,"true");
-		if (wifiset.equals("true")) {
+		String wifiSet = sharedPreferences.getString(StringConstant.WIFISET,"true");
+		if (wifiSet.equals("true")) {
 			img_toggle.setImageResource(R.mipmap.wt_person_on);
 		} else {
 			img_toggle.setImageResource(R.mipmap.wt_person_close);
 		}
 	}
 
-	private void setLisener() {
-		lin_set.setOnClickListener(this);
-		lin_playhistory.setOnClickListener(this);
-		lin_bingding.setOnClickListener(this);
-		tv_denglu.setOnClickListener(this);
-		lin_liuliang.setOnClickListener(this);
-		lin_modifypassword.setOnClickListener(this);
-		lin_timer.setOnClickListener(this);
-		lin_xiugai.setOnClickListener(this);
-		imageView_ewm.setOnClickListener(this);
-		lin_like.setOnClickListener(this);
-		imageNotLogin.setOnClickListener(this);
-	}
-
-	//拍照调用逻辑  从相册选择which==0   拍照which==1
+	// 拍照调用逻辑  从相册选择 which == 0   拍照 which == 1
 	private void doDialogClick(int which) {
 		switch (which) {
 		case 0:	// 调用图库
@@ -374,8 +376,8 @@ public class PersonActivity extends Activity implements OnClickListener {
 			String savepath = FileManager.getImageSaveFilePath(context);
 			FileManager.createDirectory(savepath);
 			String fileName=System.currentTimeMillis()+".jpg";
-			File file = new File(savepath, fileName);  
-			outputFileUri = Uri.fromFile(file);  
+			File file = new File(savepath, fileName);
+            Uri outputFileUri = Uri.fromFile(file);
 			outputFilePath=file.getAbsolutePath();
 			Intent intentss = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);  
 			intentss.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);  
@@ -400,27 +402,13 @@ public class PersonActivity extends Activity implements OnClickListener {
 				Log.d("KITKAT:", String.valueOf(Build.VERSION_CODES.KITKAT));
 				String path;
 				if (sdkVersion >= 19) {  // 或者 android.os.Build.VERSION_CODES.KITKAT这个常量的值是19
-					path = uri.getPath();//5.0直接返回的是图片路径 Uri.getPath is ：  /document/image:46 ，5.0以下是一个和数据库有关的索引值
-					Log.e("path:" , path);
-					// path_above19:/storage/emulated/0/girl.jpg 这里才是获取的图片的真实路径
 					path = getPath_above19(context, uri);
-					Log.e("path_above19:" , path);
-					imagePath = path; 
-					imagenum=1;
-					startPhotoZoom(Uri.parse(imagePath));
-					// Uri mImageCaptureUri = Uri.fromFile(new File(imagePath));
-					// chuli();
-					// startPhotoZoom(mImageCaptureUri);
 				} else {
 					path = getFilePath_below19(uri);
-					Log.e("path_below19:" , path);
-					imagePath = path; 
-					imagenum=1;
-					startPhotoZoom(Uri.parse(imagePath));
-					// chuli();
-					// Uri mImageCaptureUri = Uri.fromFile(new File(imagePath));
-					// startPhotoZoom(mImageCaptureUri);
 				}
+                imagePath = path;
+                imagenum=1;
+                startPhotoZoom(Uri.parse(imagePath));
 			}
 			break;
 		case TO_CAMARA:
@@ -439,19 +427,6 @@ public class PersonActivity extends Activity implements OnClickListener {
 			}
 			break;
 		}
-	}
-
-	/**
-	 * 获取文件路径
-	 */
-	private String uri2filePath(Uri uri) {
-		String[] projection = { MediaStore.Images.Media.DATA };
-		// Cursor cursor = managedQuery(uri, projection, null, null, null);
-		Cursor cursor = getContentResolver().query(uri, projection, null, null,null);
-		int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-		cursor.moveToFirst();
-		String path = cursor.getString(column_index);
-		return path;
 	}
 
 	// 图片裁剪
@@ -478,15 +453,9 @@ public class PersonActivity extends Activity implements OnClickListener {
 						imageurl = GlobalConfig.imageurl + MiniUri;
 					}
 					et.putString(StringConstant.IMAGEURL, imageurl);
-					/* et.putString(StringConstant.IMAGEURL, filePath); */
 					et.commit();
-					/*
-					 * imgloader.DisplayImage(BigImageUrl.replace("\\/", "/"),
-					 * imgview_touxiang, false, true, null, null);
-					 */
 					// 正常切可用代码 已从服务器获得返回值，但是无法正常显示
-					imgloader.DisplayImage(imageurl.replace("\\", "/"),imgview_touxiang, false, false, null, null);
-					// imgview_touxiang.setImageURI(Uri.parse(filePath));
+                    imgLoader.DisplayImage(imageurl.replace("\\", "/"),imgview_touxiang, false, false, null, null);
 					if (dialog != null) {
 						dialog.dismiss();
 					}
@@ -511,7 +480,6 @@ public class PersonActivity extends Activity implements OnClickListener {
 		};
 
 		new Thread() {
-			private String SessionId;
 			@Override
 			public void run() {
 				super.run(); 
@@ -543,11 +511,6 @@ public class PersonActivity extends Activity implements OnClickListener {
 						e1.printStackTrace();
 					}
 					try {
-						SessionId = UserPortait.getSessionId();
-					} catch (Exception e1) {
-						e1.printStackTrace();
-					}
-					try {
 						MiniUri = UserPortait.getPortraitMini();
 					} catch (Exception e1) {
 						e1.printStackTrace();
@@ -564,10 +527,9 @@ public class PersonActivity extends Activity implements OnClickListener {
 					if(m==imagenum){
 						msg.what=1;
 					}
-				} catch (Exception e) {		// 异常处理
-					e.printStackTrace();
-					if (e != null && e.getMessage() != null) {
-						msg.obj = "异常" + e.getMessage().toString();
+				} catch (Exception e) {
+					if (e.getMessage() != null) {
+						msg.obj = "异常" + e.getMessage();
 						Log.e("图片上传返回值异常", "" + e.getMessage());
 					} else {
 						Log.e("图片上传返回值异常", "" + e);
@@ -578,11 +540,9 @@ public class PersonActivity extends Activity implements OnClickListener {
 				handler.sendMessage(msg);
 			}
 		}.start();
-	};
+	}
 
-	/**
-	 * API19以下获取图片路径的方法
-	 */
+	// API19以下获取图片路径的方法
 	private String getFilePath_below19(Uri uri) {
 		// 这里开始的第二部分，获取图片的路径：低版本的是没问题的，但是sdk>19会获取不到
 		String[] proj = {MediaStore.Images.Media.DATA};
@@ -603,7 +563,6 @@ public class PersonActivity extends Activity implements OnClickListener {
 		return path;
 	}
 
-
 	/**
 	 * APIlevel 19以上才有
 	 * 创建项目时，我们设置了最低版本API Level，比如我的是10，
@@ -611,17 +570,11 @@ public class PersonActivity extends Activity implements OnClickListener {
 	 * 比如我用的“DocumentsContract.isDocumentUri(context, uri)”是Level 19 以上才有的，
 	 * 自然超过了10，所以提示错误。
 	 * 添加    @TargetApi(Build.VERSION_CODES.KITKAT)即可。
-	 *
-	 * @param context
-	 * @param uri
-	 * @return
 	 */
 	@TargetApi(Build.VERSION_CODES.KITKAT)
 	public  static String getPath_above19(final Context context, final Uri uri) {
 		final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-		// DocumentProvider
 		if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
-			// ExternalStorageProvider
 			if (isExternalStorageDocument(uri)) {
 				final String docId = DocumentsContract.getDocumentId(uri);
 				final String[] split = docId.split(":");
@@ -756,10 +709,8 @@ public class PersonActivity extends Activity implements OnClickListener {
 		return super.onKeyDown(keyCode, event);
 	}
 
-	/**
-	 * 广播接收  接收来自定时服务的时间更新广播
-	 */
-	private BroadcastReceiver timerBreadcast = new BroadcastReceiver(){
+	// 广播接收  接收来自定时服务的时间更新广播
+	private BroadcastReceiver timerBroadcast = new BroadcastReceiver(){
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
