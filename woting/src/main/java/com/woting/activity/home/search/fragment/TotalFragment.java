@@ -25,7 +25,7 @@ import com.woting.activity.home.player.main.fragment.PlayerFragment;
 import com.woting.activity.home.player.main.model.PlayerHistory;
 import com.woting.activity.home.program.album.activity.AlbumActivity;
 import com.woting.activity.home.program.fmlist.model.RankInfo;
-import com.woting.activity.home.search.activity.SearchLikeAcitvity;
+import com.woting.activity.home.search.activity.SearchLikeActivity;
 import com.woting.activity.home.search.adapter.SearchContentAdapter;
 import com.woting.activity.home.search.model.SuperRankInfo;
 import com.woting.activity.main.MainActivity;
@@ -46,69 +46,65 @@ import java.util.List;
 public class TotalFragment extends Fragment {
 	private View rootView;
 	private FragmentActivity context;
-//	private ListView mlistview;
 	private Dialog dialog;
-//	private boolean flag;
-	private ExpandableListView ex_listview;
-	private ArrayList<RankInfo> playlist;// 节目list
-	private ArrayList<RankInfo> sequlist;// 专辑list
-	private ArrayList<RankInfo> ttslist;//tts
-	private ArrayList<RankInfo> radiolist;//radio
-	private ArrayList<SuperRankInfo> list = new ArrayList<SuperRankInfo>();// 返回的节目list，拆分之前的list
+	private ExpandableListView ex_ListView;
+	private ArrayList<RankInfo> playList;// 节目list
+	private ArrayList<RankInfo> sequList;// 专辑list
+	private ArrayList<RankInfo> ttsList;//tts
+	private ArrayList<RankInfo> radioList;//radio
+	private ArrayList<SuperRankInfo> list = new ArrayList<>();// 返回的节目list，拆分之前的list
 	private List<RankInfo> SubList;
-	private SearchContentAdapter searchadapter;
-	private SearchPlayerHistoryDao dbdao;
-	private Intent mintent;
-	protected String searchstr;
+	private SearchContentAdapter searchAdapter;
+	private SearchPlayerHistoryDao dbDao;
+	private Intent mIntent;
+	protected String searchStr;
 	private String tag = "TOTAL_VOLLEY_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		context = this.getActivity();
-//		flag = true;
 		initDao();
-		mintent = new Intent();
-		mintent.setAction(SearchLikeAcitvity.SEARCH_VIEW_UPDATE);
+		mIntent = new Intent();
+		mIntent.setAction(SearchLikeActivity.SEARCH_VIEW_UPDATE);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if(rootView == null){
 			rootView = inflater.inflate(R.layout.fragment_favorite_total, container, false);
-			ex_listview=(ExpandableListView)rootView.findViewById(R.id.ex_listview);
+			ex_ListView=(ExpandableListView)rootView.findViewById(R.id.ex_listview);
 			// 去除indicator
-			ex_listview.setGroupIndicator(null);
+			ex_ListView.setGroupIndicator(null);
 			setListener();
-			IntentFilter myfileter = new IntentFilter();
-			myfileter.addAction(SearchLikeAcitvity.SEARCH_VIEW_UPDATE);
-			context.registerReceiver(mBroadcastReceiver, myfileter);
+			IntentFilter mFilter = new IntentFilter();
+			mFilter.addAction(SearchLikeActivity.SEARCH_VIEW_UPDATE);
+			context.registerReceiver(mBroadcastReceiver,mFilter);
 		}
 		return rootView;
 	}
 
 	private void initDao() {
-		dbdao = new SearchPlayerHistoryDao(context);
+		dbDao = new SearchPlayerHistoryDao(context);
 	}
 
 	private void setListener() {
 		//屏蔽group点击事件
-		ex_listview.setOnGroupClickListener(new OnGroupClickListener() {
+		ex_ListView.setOnGroupClickListener(new OnGroupClickListener() {
 			@Override
-			public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {		
-				SearchLikeAcitvity.updateviewpageer(list.get(groupPosition).getKey());
+			public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+				SearchLikeActivity.updateViewPage(list.get(groupPosition).getKey());
 				return true;
 			}
-		});	
+		});
 	}
 
 	private void sendRequest(){
 		VolleyRequest.RequestPost(GlobalConfig.getSearchByText, tag, setParam(), new VolleyCallback() {
-//			private String SessionId;
 			private String ReturnType;
 			private String Message;
-			private String resultlist;
+			private String resultList;
 			private JSONObject arg1;
 			private String StringSubList;
 
@@ -121,7 +117,6 @@ public class TotalFragment extends Fragment {
 					return ;
 				}
 				try {
-//					SessionId = result.getString("SessionId");
 					ReturnType = result.getString("ReturnType");
 					Message = result.getString("Message");
 				} catch (JSONException e) {
@@ -129,8 +124,8 @@ public class TotalFragment extends Fragment {
 				}
 				if (ReturnType != null && ReturnType.equals("1001")) {
 					try {
-						resultlist = result.getString("ResultList");
-						JSONTokener jsonParser = new JSONTokener(resultlist);
+						resultList = result.getString("ResultList");
+						JSONTokener jsonParser = new JSONTokener(resultList);
 						arg1 = (JSONObject) jsonParser.nextValue();
 						StringSubList = arg1.getString("List");
 						SubList = new Gson().fromJson(StringSubList,new TypeToken<List<RankInfo>>() {}.getType());
@@ -139,49 +134,49 @@ public class TotalFragment extends Fragment {
 						e.printStackTrace();
 					}
 					list.clear();
-					if (playlist != null) {
-						playlist.clear();
+					if (playList != null) {
+						playList.clear();
 					}
-					if (sequlist != null) {
-						sequlist.clear();
+					if (sequList != null) {
+						sequList.clear();
 					}
 					if (SubList.size() >= 0) {
 						for (int i = 0; i < SubList.size(); i++) {
 							if (SubList.get(i).getMediaType() != null && !SubList.get(i).getMediaType().equals("")) {
 								if (SubList.get(i).getMediaType().equals("AUDIO")) {
-									if (playlist == null) {
-										playlist = new ArrayList<RankInfo>();
-										playlist.add(SubList.get(i));
+									if (playList == null) {
+										playList = new ArrayList<>();
+										playList.add(SubList.get(i));
 									} else {
-										if(playlist.size()<3){
-											playlist.add(SubList.get(i));
+										if(playList.size()<3){
+											playList.add(SubList.get(i));
 										}
 									}
 								} else if (SubList.get(i).getMediaType().equals("SEQU")) {
-									if (sequlist == null) {
-										sequlist = new ArrayList<RankInfo>();
-										sequlist.add(SubList.get(i));
+									if (sequList == null) {
+										sequList = new ArrayList<>();
+										sequList.add(SubList.get(i));
 									} else {
-										if(sequlist.size()<3){
-											sequlist.add(SubList.get(i));
+										if(sequList.size()<3){
+											sequList.add(SubList.get(i));
 										}
 									}
 								}else if (SubList.get(i).getMediaType().equals("TTS")) {
-									if (ttslist == null) {
-										ttslist = new ArrayList<RankInfo>();
-										ttslist.add(SubList.get(i));
+									if (ttsList == null) {
+										ttsList = new ArrayList<>();
+										ttsList.add(SubList.get(i));
 									} else {
-										if(ttslist.size()<3){
-											ttslist.add(SubList.get(i));
+										if(ttsList.size()<3){
+											ttsList.add(SubList.get(i));
 										}
 									}
 								}else if (SubList.get(i).getMediaType().equals("RADIO")) {
-									if (radiolist == null) {
-										radiolist = new ArrayList<RankInfo>();
-										radiolist.add(SubList.get(i));
+									if (radioList == null) {
+										radioList = new ArrayList<>();
+										radioList.add(SubList.get(i));
 									} else {
-										if(radiolist.size()<3){
-											radiolist.add(SubList.get(i));
+										if(radioList.size()<3){
+											radioList.add(SubList.get(i));
 										}
 
 									}
@@ -189,74 +184,74 @@ public class TotalFragment extends Fragment {
 
 							}
 						}
-						if (playlist != null && !playlist.equals("") && playlist.size() != 0) {
+						if (playList != null && !playList.equals("") && playList.size() != 0) {
 							SuperRankInfo mSuperRankInfo = new SuperRankInfo();
-							mSuperRankInfo.setKey(playlist.get(0).getMediaType());
-							//							if (playlist.size() > 3) {
+							mSuperRankInfo.setKey(playList.get(0).getMediaType());
+							//							if (playList.size() > 3) {
 							//								List<RankInfo> list = new ArrayList<RankInfo>();
 							//								for (int i = 0; i < 3; i++) {
-							//									list.add(playlist.get(i));
+							//									list.add(playList.get(i));
 							//								}
 							//								mSuperRankInfo.setList(list);
 							//							} else {
-							//								mSuperRankInfo.setList(playlist);
+							//								mSuperRankInfo.setList(playList);
 							//							}
-							mSuperRankInfo.setList(playlist);
+							mSuperRankInfo.setList(playList);
 							list.add(mSuperRankInfo);
 						}
-						if (sequlist != null && !sequlist.equals("")&& sequlist.size() != 0) {
+						if (sequList != null && !sequList.equals("")&& sequList.size() != 0) {
 							SuperRankInfo mSuperRankInfo1= new SuperRankInfo();
-							mSuperRankInfo1.setKey(sequlist.get(0).getMediaType());							
+							mSuperRankInfo1.setKey(sequList.get(0).getMediaType());
 							//不加限制
-							//							if (sequlist.size() > 3) {
+							//							if (sequList.size() > 3) {
 							//								List<RankInfo> list = new ArrayList<RankInfo>();
 							//								for (int i = 0; i < 3; i++) {
-							//									list.add(sequlist.get(i));
+							//									list.add(sequList.get(i));
 							//								}
 							//								mSuperRankInfo1.setList(list);
 							//							} else {
-							//								mSuperRankInfo1.setList(sequlist);
+							//								mSuperRankInfo1.setList(sequList);
 							//							}
-							mSuperRankInfo1.setList(sequlist);
+							mSuperRankInfo1.setList(sequList);
 							list.add(mSuperRankInfo1);
 						}
-						if (ttslist != null && !ttslist.equals("") && ttslist.size() != 0) {
+						if (ttsList != null && !ttsList.equals("") && ttsList.size() != 0) {
 							SuperRankInfo mSuperRankInfo1= new SuperRankInfo();
-							mSuperRankInfo1.setKey(ttslist.get(0).getMediaType());							
+							mSuperRankInfo1.setKey(ttsList.get(0).getMediaType());
 							//不加限制
-							//							if (ttslist.size() > 3) {
+							//							if (ttsList.size() > 3) {
 							//								List<RankInfo> list = new ArrayList<RankInfo>();
 							//								for (int i = 0; i < 3; i++) {
-							//									list.add(ttslist.get(i));
+							//									list.add(ttsList.get(i));
 							//								}
 							//								mSuperRankInfo1.setList(list);
 							//							} else {
-							//								mSuperRankInfo1.setList(ttslist);
+							//								mSuperRankInfo1.setList(ttsList);
 							//							}
-							mSuperRankInfo1.setList(ttslist);
+							mSuperRankInfo1.setList(ttsList);
 							list.add(mSuperRankInfo1);
 						}
-						if (radiolist != null && !radiolist.equals("") && radiolist.size() != 0) {
+						if (radioList != null && !radioList.equals("") && radioList.size() != 0) {
 							SuperRankInfo mSuperRankInfo1= new SuperRankInfo();
-							mSuperRankInfo1.setKey(radiolist.get(0).getMediaType());							
+							mSuperRankInfo1.setKey(radioList.get(0).getMediaType());
 							//不加限制
-							//							if (radiolist.size() > 3) {
+							//							if (radioList.size() > 3) {
 							//								List<RankInfo> list = new ArrayList<RankInfo>();
 							//								for (int i = 0; i < 3; i++) {
-							//									list.add(radiolist.get(i));
+							//									list.add(radioList.get(i));
 							//								}
 							//								mSuperRankInfo1.setList(list);
 							//							} else {
-							//								mSuperRankInfo1.setList(radiolist);
+							//								mSuperRankInfo1.setList(radioList);
 							//							}
-							mSuperRankInfo1.setList(radiolist);
+							mSuperRankInfo1.setList(radioList);
 							list.add(mSuperRankInfo1);
 						}
 						if (list.size() != 0) {
-							searchadapter = new SearchContentAdapter(context, list);
-							ex_listview.setAdapter(searchadapter);
+							searchAdapter = new SearchContentAdapter(context, list);
+							ex_ListView.setAdapter(searchAdapter);
 							for (int i = 0; i < list.size(); i++) {
-								ex_listview.expandGroup(i);
+								ex_ListView.expandGroup(i);
 							}
 							setitemListener();
 						} else {
@@ -269,14 +264,14 @@ public class TotalFragment extends Fragment {
 					ToastUtils.show_allways(context, ""+ Message);
 				} else if (ReturnType != null && ReturnType.equals("1011")) {
 					ToastUtils.show_allways(context, ""+ Message);
-					ex_listview.setVisibility(View.GONE);
+					ex_ListView.setVisibility(View.GONE);
 				} else {
 					if (Message != null && !Message.trim().equals("")) {
 						ToastUtils.show_allways(context,Message + "");
 					}
 				}
 			}
-			
+
 			@Override
 			protected void requestError(VolleyError error) {
 				if (dialog != null) {
@@ -285,22 +280,22 @@ public class TotalFragment extends Fragment {
 			}
 		});
 	}
-	
+
 	private JSONObject setParam(){
 		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
 			jsonObject.put("PageSize","12");
-			if(searchstr != null && !searchstr.equals("")){
-				jsonObject.put("SearchStr", searchstr);
+			if(searchStr != null && !searchStr.equals("")){
+				jsonObject.put("searchStr", searchStr);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		return jsonObject;
 	}
-	
+
 	protected void setitemListener() {
-		ex_listview.setOnChildClickListener(new OnChildClickListener() {
+		ex_ListView.setOnChildClickListener(new OnChildClickListener() {
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v,int groupPosition, int childPosition, long id) {
 				String MediaType = null;
@@ -341,13 +336,13 @@ public class TotalFragment extends Fragment {
 							plaplayeralltime, playerintime, playercontentdesc, playernum,
 							playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
 							ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
-					dbdao.deleteHistory(playerurl);
-					dbdao.addHistory(history);
+					dbDao.deleteHistory(playerurl);
+					dbDao.addHistory(history);
 					MainActivity.change();
 					HomeActivity.UpdateViewPager();
 					PlayerFragment.SendTextRequest(list.get(groupPosition).getList().get(childPosition).getContentName(),context.getApplicationContext());
-			     	context.finish();
-				} else if (MediaType!=null&&MediaType.equals("SEQU")) {	
+					context.finish();
+				} else if (MediaType!=null&&MediaType.equals("SEQU")) {
 					Intent intent = new Intent(context, AlbumActivity.class);
 					Bundle bundle = new Bundle();
 					bundle.putString("type", "search");
@@ -364,14 +359,14 @@ public class TotalFragment extends Fragment {
 
 	// 广播接收器
 	private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-		
+
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			if (action.equals(SearchLikeAcitvity.SEARCH_VIEW_UPDATE)) {
+			if (action.equals(SearchLikeActivity.SEARCH_VIEW_UPDATE)) {
 				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-					searchstr=intent.getStringExtra("SearchStr");
-					if(searchstr!=null&&!searchstr.equals("")){
+					searchStr=intent.getStringExtra("searchStr");
+					if(searchStr!=null&&!searchStr.equals("")){
 						dialog = DialogUtils.Dialogph(context, "通讯中", dialog);
 						sendRequest();
 					}else{
@@ -380,7 +375,7 @@ public class TotalFragment extends Fragment {
 				} else {
 					ToastUtils.show_allways(context, "网络失败，请检查网络");
 				}
-			} 
+			}
 		}
 	};
 
@@ -388,29 +383,29 @@ public class TotalFragment extends Fragment {
 	public void onDestroyView() {
 		super.onDestroy();
 		if (null != rootView) {
-			((ViewGroup) rootView.getParent()).removeView(rootView);   
+			((ViewGroup) rootView.getParent()).removeView(rootView);
 		}
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		isCancelRequest = VolleyRequest.cancelRequest(tag);
-		ex_listview = null;
-		dbdao = null;
+		ex_ListView = null;
+		dbDao = null;
 		context.unregisterReceiver(mBroadcastReceiver);
 		rootView = null;
 		context = null;
 		dialog = null;
-		playlist = null;
-		sequlist = null;
-		ttslist = null;
-		radiolist = null;
+		playList = null;
+		sequList = null;
+		ttsList = null;
+		radioList = null;
 		list = null;
 		SubList = null;
-		searchadapter = null;
-		mintent = null;
-		searchstr = null;
+		searchAdapter = null;
+		mIntent = null;
+		searchStr = null;
 		tag = null;
 	}
 }

@@ -127,7 +127,7 @@ public class SequFragment extends Fragment {
 	private void setListener() {
 		adapter.setOnListener(new favorCheck() {
 			@Override
-			public void checkposition(int position) {
+			public void checkPosition(int position) {
 				if (newlist.get(position).getChecktype() == 0) {
 					newlist.get(position).setChecktype(1);
 				} else {

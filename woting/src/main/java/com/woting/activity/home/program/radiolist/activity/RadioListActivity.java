@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,7 +21,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
-import com.woting.activity.home.program.fenlei.model.fenleiname;
+import com.woting.activity.home.program.fenlei.model.CatalogName;
 import com.woting.activity.home.program.radiolist.adapter.MyPagerAdaper;
 import com.woting.activity.home.program.radiolist.fragment.ClassifyFragment;
 import com.woting.activity.home.program.radiolist.fragment.RecommendFragment;
@@ -40,14 +42,14 @@ import java.util.List;
 
 /**
  * 某一分类数据
- * @author 辛龙 
+ * @author 辛龙
  * 2016年4月5日
  */
 public class RadioListActivity extends FragmentActivity implements OnClickListener {
 	private LinearLayout head_left_btn;		// 返回
-	private TextView mtextview_head;
-	public static String CatagoryName;
-	public static String CatagoryType;
+	private TextView mTextView_Head;
+	public static String catalogName;
+	public static String catalogType;
 	public static String id;
 	private Dialog dialog;					// 加载对话框
 	private List<String> list;
@@ -55,9 +57,9 @@ public class RadioListActivity extends FragmentActivity implements OnClickListen
 	private PagerSlidingTabStrip pageSlidingTab;
 	private ViewPager viewPager;
 	private int count = 1;
-	public static final String tag = "RADIOLIST_VOLLEY_REQUEST_CANCEL_TAG";
+	public static final String tag = "RADIO_LIST_VOLLEY_REQUEST_CANCEL_TAG";
 	public static boolean isCancelRequest;
-	private RecommendFragment reco;
+	private RecommendFragment recommend;
 
 	@TargetApi(Build.VERSION_CODES.KITKAT)
 	@SuppressLint("InlinedApi")
@@ -67,14 +69,14 @@ public class RadioListActivity extends FragmentActivity implements OnClickListen
 		setContentView(R.layout.activity_radiolist);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);		// 透明状态栏
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);	// 透明导航栏
-		fragments = new ArrayList<Fragment>();
-		setview();
-		HandleRequestType();
+		fragments = new ArrayList<>();
+		setView();
+		handleRequestType();
 		if(list == null){
-			list = new ArrayList<String>();
+			list = new ArrayList<>();
 			list.add("推荐");
-			reco = new RecommendFragment();
-			fragments.add(reco);
+			recommend = new RecommendFragment();
+			fragments.add( recommend);
 		}
 		sendRequest();
 		dialog = DialogUtils.Dialogph(this, "正在获取数据", dialog);
@@ -83,14 +85,14 @@ public class RadioListActivity extends FragmentActivity implements OnClickListen
 	/**
 	 * 接收上一个页面传递过来的数据
 	 */
-	private void HandleRequestType() {
+	private void handleRequestType() {
 		Intent listIntent = getIntent();
 		if (listIntent != null) {
-			fenleiname list = (fenleiname) listIntent.getSerializableExtra("Catalog");
-			CatagoryName = list.getCatalogName();
-			CatagoryType = list.getCatalogType();
+			CatalogName list = (CatalogName) listIntent.getSerializableExtra("Catalog");
+			catalogName = list.getCatalogName();
+			catalogType = list.getCatalogType();
 			id = list.getCatalogId();
-			mtextview_head.setText(CatagoryName);
+			mTextView_Head.setText(catalogName);
 		}
 	}
 
@@ -100,12 +102,11 @@ public class RadioListActivity extends FragmentActivity implements OnClickListen
 	private void sendRequest(){
 		VolleyRequest.RequestPost(GlobalConfig.getCatalogUrl, tag, setParam(), new VolleyCallback() {
 			private String ReturnType;
-			private List<SubCata> subcataList;
+			private List<SubCata> subDataList;
 			private String CatalogData;
 
 			@Override
 			protected void requestSuccess(JSONObject result) {
-//				closeDialog();
 				try {
 					ReturnType = result.getString("ReturnType");
 					CatalogData = result.getString("CatalogData");
@@ -114,11 +115,11 @@ public class RadioListActivity extends FragmentActivity implements OnClickListen
 				}
 				if (ReturnType != null && ReturnType.equals("1001")) {
 					CatalogData catalogData = new Gson().fromJson(CatalogData, new TypeToken<CatalogData>() {}.getType());
-					subcataList = catalogData.getSubCata();
-					if(subcataList != null && subcataList.size() > 0){
-						for(int i=0; i<subcataList.size(); i++){
-							list.add(subcataList.get(i).getCatalogName());
-							fragments.add(ClassifyFragment.instance(subcataList.get(i).getCatalogId(), subcataList.get(i).getCatalogType()));
+					subDataList = catalogData.getSubCata();
+					if(subDataList != null && subDataList.size() > 0){
+						for(int i=0; i<subDataList.size(); i++){
+							list.add(subDataList.get(i).getCatalogName());
+							fragments.add(ClassifyFragment.instance(subDataList.get(i).getCatalogId(), subDataList.get(i).getCatalogType()));
 							count++;
 						}
 					}
@@ -142,7 +143,7 @@ public class RadioListActivity extends FragmentActivity implements OnClickListen
 	private JSONObject setParam(){
 		JSONObject jsonObject =VolleyRequest.getJsonObject(this);
 		try {
-			jsonObject.put("CatalogType", CatagoryType);
+			jsonObject.put("CatalogType",catalogType);
 			jsonObject.put("CatalogId", id);
 			jsonObject.put("Page", "1");
 			jsonObject.put("ResultType", "1");
@@ -177,10 +178,10 @@ public class RadioListActivity extends FragmentActivity implements OnClickListen
 	/**
 	 * 初始化界面
 	 */
-	private void setview() {
+	private void setView() {
 		head_left_btn = (LinearLayout) findViewById(R.id.head_left_btn);
 		head_left_btn.setOnClickListener(this);
-		mtextview_head = (TextView) findViewById(R.id.head_name_tv);
+		mTextView_Head = (TextView) findViewById(R.id.head_name_tv);
 		pageSlidingTab = (PagerSlidingTabStrip) findViewById(R.id.tabs_title);
 		viewPager = (ViewPager) findViewById(R.id.view_pager);
 		pageSlidingTab.setIndicatorHeight(4);								// 滑动指示器的高度
@@ -199,6 +200,16 @@ public class RadioListActivity extends FragmentActivity implements OnClickListen
 		}
 	}
 
+	// 设置android app 的字体大小不受系统字体大小改变的影响
+	@Override
+	public Resources getResources() {
+		Resources res = super.getResources();
+		Configuration config = new Configuration();
+		config.setToDefaults();
+		res.updateConfiguration(config, res.getDisplayMetrics());
+		return res;
+	}
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -206,13 +217,13 @@ public class RadioListActivity extends FragmentActivity implements OnClickListen
 		pageSlidingTab = null;
 		viewPager = null;
 		head_left_btn = null;
-		mtextview_head = null;
+		mTextView_Head = null;
 		dialog = null;
 		if(list != null){
 			list.clear();
 			list = null;
 		}
-		reco = null;
+		recommend = null;
 		if(fragments != null){
 			fragments.clear();
 			fragments = null;

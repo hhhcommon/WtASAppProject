@@ -1,12 +1,12 @@
 package com.woting.activity.interphone.linkman.view;
 
-import com.woting.activity.home.program.fenlei.model.fenleiname;
+import com.woting.activity.home.program.fenlei.model.CatalogName;
 
 import java.util.Comparator;
 
-public class PinyinComparator_d implements Comparator<fenleiname> {
+public class PinyinComparator_d implements Comparator<CatalogName> {
 
-	public int compare(fenleiname o1, fenleiname o2) {
+	public int compare(CatalogName o1, CatalogName o2) {
 		if (o1.getSortLetters().equals("@")
 				|| o2.getSortLetters().equals("#")) {
 			return -1;

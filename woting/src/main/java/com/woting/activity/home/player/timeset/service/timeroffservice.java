@@ -19,14 +19,13 @@ import java.util.TimeZone;
 public class timeroffservice extends Service {
 
 	private CountDownTimer mcountDownTimer;
-	private Intent mintent;
-
+	private Intent mIntent;
+	long EndTime;
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (BroadcastConstants.TIMER_START.equals(intent.getAction())) {
 			int a = intent.getIntExtra("time", 0);
 			final int index = a;
-			long EndTime = 0;
 			if(PlayerFragment.isCurrentPlay){
 				EndTime = a;
 			}else{
@@ -35,8 +34,8 @@ public class timeroffservice extends Service {
 			if (mcountDownTimer != null) {
 				mcountDownTimer.cancel();
 			}
-			mintent = new Intent();
-			mintent.setAction(BroadcastConstants.TIMER_UPDATE);
+			mIntent = new Intent();
+			mIntent.setAction(BroadcastConstants.TIMER_UPDATE);
 			mcountDownTimer = new CountDownTimer(EndTime, 1000) {
 				private long a;
 				private SimpleDateFormat format;
@@ -52,18 +51,18 @@ public class timeroffservice extends Service {
 					String s = format.format(a);
 
 					// 此处需要将此消息已广播形式发送回主activity
-					mintent.putExtra("update", s);
+					mIntent.putExtra("update", s);
 					if(PlayerFragment.isCurrentPlay){
-						mintent.putExtra("check_image", 100);
+						mIntent.putExtra("check_image", 100);
 					}else{
-						mintent.putExtra("check_image", index);
+						mIntent.putExtra("check_image", index);
 					}
-					sendBroadcast(mintent);
+					sendBroadcast(mIntent);
 				}
 				@Override
 				public void onFinish() {
-					mintent.setAction(BroadcastConstants.TIMER_END);
-					sendBroadcast(mintent);
+					mIntent.setAction(BroadcastConstants.TIMER_END);
+					sendBroadcast(mIntent);
 				}
 			};
 			mcountDownTimer.start();
@@ -72,13 +71,12 @@ public class timeroffservice extends Service {
 			if (mcountDownTimer != null) {
 				mcountDownTimer.cancel();
 			}
-			if(mintent != null){
-				mintent.setAction(BroadcastConstants.TIMER_STOP);
-				sendBroadcast(mintent);
+			if(mIntent!= null){
+				mIntent.setAction(BroadcastConstants.TIMER_STOP);
+				sendBroadcast(mIntent);
 			}
 			onDestroy();
 		}
-		//		return super.onStartCommand(intent, flags, startId)则intent.getAction()有异常NullPointerException
 		return 0;
 	}
 

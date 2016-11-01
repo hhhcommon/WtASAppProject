@@ -10,7 +10,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.activity.home.program.fenlei.model.fenleiname;
+import com.woting.activity.home.program.fenlei.model.CatalogName;
 
 import java.util.List;
 
@@ -20,15 +20,15 @@ import java.util.List;
  * 2016年3月25日
  */
 public class CityListAdapter extends BaseAdapter implements SectionIndexer{
-	private List<fenleiname> list;
+	private List<CatalogName> list;
 	private Context context;
-	private fenleiname lists;
-	public CityListAdapter(Context context,List<fenleiname> list) {
+	private CatalogName lists;
+	public CityListAdapter(Context context,List<CatalogName> list) {
 		super();
 		this.list = list;
 		this.context = context;
 	}
-	public void ChangeDate(List<fenleiname> list){
+	public void ChangeDate(List<CatalogName> list){
 		this.list = list;
 		this.notifyDataSetChanged();
 	}

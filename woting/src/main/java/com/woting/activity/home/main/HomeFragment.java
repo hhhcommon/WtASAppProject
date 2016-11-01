@@ -75,11 +75,11 @@ public class HomeFragment extends Fragment {
 	public void InitViewPager() {
 		mPager = (ViewPager) rootView.findViewById(R.id.viewpager);
 		mPager.setOffscreenPageLimit(1);
-		ArrayList<Fragment> fragmentList = new ArrayList<Fragment>();
-		PlayerFragment playfragment = new PlayerFragment();
-		ProgramFragment newsfragment = new ProgramFragment();
-		fragmentList.add(playfragment);
-		fragmentList.add(newsfragment);
+		ArrayList<Fragment> fragmentList = new ArrayList<>();
+		PlayerFragment playFragment = new PlayerFragment();
+		ProgramFragment newsFragment = new ProgramFragment();
+		fragmentList.add(playFragment);
+		fragmentList.add(newsFragment);
 		mPager.setAdapter(new MyFragmentChildPagerAdapter(getFragmentManager(), fragmentList));
 		mPager.setCurrentItem(0);// 设置当前显示标签页为第一页mPager
 	}

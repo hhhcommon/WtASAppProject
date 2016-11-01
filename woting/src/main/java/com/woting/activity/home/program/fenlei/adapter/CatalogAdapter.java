@@ -23,16 +23,16 @@ import com.woting.util.ToastUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class fenleiadapter extends BaseExpandableListAdapter {
+public class CatalogAdapter extends BaseExpandableListAdapter {
 	private Context context;
 	private List<RadioPlay> group;
 	private static int num = 0;// Group的计数项
 	private static int i = 0;
-	private fenleigridAdapter adapter;
+	private CatalogGridAdapter adapter;
 	private static int oldChildPosion = -1;
 	private static int oldGroupPosion = -1;
 
-	public fenleiadapter(Context context, List<RadioPlay> group) {
+	public CatalogAdapter(Context context, List<RadioPlay> group) {
 		this.context = context;
 		this.group = group;
 	}
@@ -144,7 +144,7 @@ public class fenleiadapter extends BaseExpandableListAdapter {
 			}
 			// 区分情况来处理
 			oldChildPosion = groupPosition;
-	/*		adapter = new fenleigridAdapter(context, mylist);*/
+	/*		adapter = new CatalogGridAdapter(context, mylist);*/
 			holder.mgridview.setAdapter(adapter);
 			holder.mgridview.setOnItemClickListener(new OnItemClickListener() {
 				@Override

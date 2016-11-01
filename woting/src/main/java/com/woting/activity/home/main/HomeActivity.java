@@ -1,6 +1,8 @@
 package com.woting.activity.home.main;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -16,7 +18,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.woting.R;
 import com.woting.activity.home.player.main.fragment.PlayerFragment;
 import com.woting.activity.home.program.main.ProgramFragment;
-import com.woting.activity.home.search.activity.SearchLikeAcitvity;
+import com.woting.activity.home.search.activity.SearchLikeActivity;
 import com.woting.common.adapter.MyFragmentPagerAdapter;
 import com.woting.util.ToastUtils;
 
@@ -52,7 +54,7 @@ public class HomeActivity extends FragmentActivity {
 			@Override
 			public void onClick(View v) {
 				// 跳转到搜索界面  原来的代码 要加在这里
-				Intent intent = new Intent(context, SearchLikeAcitvity.class);
+				Intent intent = new Intent(context,SearchLikeActivity.class);
 				startActivity(intent);	
 			}
 		});
@@ -89,12 +91,11 @@ public class HomeActivity extends FragmentActivity {
 	public void InitViewPager() {
 		mPager = (ViewPager) findViewById(R.id.viewpager);
 		mPager.setOffscreenPageLimit(1);
-		ArrayList<Fragment> fragmentList = new ArrayList<Fragment>();
-		PlayerFragment playfragment = new PlayerFragment();
-		ProgramFragment newsfragment = new ProgramFragment();
-		fragmentList.add(playfragment);
-		fragmentList.add(newsfragment);
-		// mPager.setAdapter(new MyFragmentChildPagerAdapter(getChildFragmentManager(), fragmentList));
+		ArrayList<Fragment> fragmentList = new ArrayList<>();
+		PlayerFragment playFragment = new PlayerFragment();
+		ProgramFragment newsFragment = new ProgramFragment();
+		fragmentList.add(playFragment);
+		fragmentList.add(newsFragment);
 		mPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager(), fragmentList));
 		mPager.setOnPageChangeListener(new MyOnPageChangeListener());	// 页面变化时的监听器
 		mPager.setCurrentItem(0);	// 设置当前显示标签页为第一页mPager
@@ -131,7 +132,15 @@ public class HomeActivity extends FragmentActivity {
 		view2.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
 	}
 
-
+	// 设置android app 的字体大小不受系统字体大小改变的影响
+	@Override
+	public Resources getResources() {
+		Resources res = super.getResources();
+		Configuration config = new Configuration();
+		config.setToDefaults();
+		res.updateConfiguration(config, res.getDisplayMetrics());
+		return res;
+	}
 
 	/*
 	 * 手机实体返回按键的处理  与onbackpress同理

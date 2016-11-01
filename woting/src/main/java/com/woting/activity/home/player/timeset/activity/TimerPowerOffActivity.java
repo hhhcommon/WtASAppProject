@@ -1,6 +1,5 @@
 package com.woting.activity.home.player.timeset.activity;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,12 +7,12 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.woting.R;
+import com.woting.activity.baseactivity.BaseActivity;
 import com.woting.activity.home.player.main.fragment.PlayerFragment;
 import com.woting.activity.home.player.timeset.service.timeroffservice;
 import com.woting.common.config.GlobalConfig;
@@ -25,7 +24,7 @@ import com.woting.manager.MyActivityManager;
  * @author 辛龙
  *  2016年4月1日
  */
-public class TimerPowerOffActivity extends Activity implements OnClickListener {
+public class TimerPowerOffActivity extends BaseActivity implements OnClickListener {
 	private TimerPowerOffActivity context;
 	private Intent intent;
 	private LinearLayout head_left_btn;
@@ -48,15 +47,13 @@ public class TimerPowerOffActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_timerpoweroff);
 		context = this;
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);	// 透明状态栏
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);// 透明导航栏
 		// 设置界面
 		setView();
 		setListener();
 		// 注册广播里接收器
-		IntentFilter myfileter = new IntentFilter();
-		myfileter.addAction(BroadcastConstants.TIMER_UPDATE);
-		registerReceiver(mBroadcastReceiver, myfileter);
+		IntentFilter mFilter = new IntentFilter();
+		mFilter.addAction(BroadcastConstants.TIMER_UPDATE);
+		registerReceiver(mBroadcastReceiver,mFilter);
 		// 设置Intent
 		intent = new Intent(TimerPowerOffActivity.this, timeroffservice.class);
 		intent.setAction(BroadcastConstants.TIMER_START);

@@ -1,6 +1,5 @@
 package com.woting.activity.home.program.fmlist.activity;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,7 +8,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
@@ -19,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
+import com.woting.activity.baseactivity.BaseActivity;
 import com.woting.activity.home.main.HomeActivity;
 import com.woting.activity.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.activity.home.player.main.fragment.PlayerFragment;
@@ -49,23 +48,22 @@ import java.util.List;
  * @author 辛龙
  *2016年8月8日
  */
-public class FMListActivity extends Activity implements OnClickListener {
+public class FMListActivity extends BaseActivity implements OnClickListener {
 	private LinearLayout head_left_btn;
-	private XListView mlistview;
+	private XListView mListView;
 	private Dialog dialog;
-	private TextView mtextview_head;
+	private TextView mTextView_Head;
 	private FMListActivity context;
 	private int ViewType = 1;
 	private int page = 1;
-	private int RefreshType;// refreshtype 1为下拉加载 2为上拉加载更多
-	private int pagesizenum;
+	private int RefreshType;// refreshType 1为下拉加载 2为上拉加载更多
+	private int pageSizeNum;
 	private String CatalogName;
-//	private String CatalogType;
 	private String CatalogId;
-	private ArrayList<RankInfo> newlist = new ArrayList<RankInfo>();
+	private ArrayList<RankInfo> newList = new ArrayList<RankInfo>();
 	protected RankInfoAdapter adapter;
 	protected List<RankInfo> SubList;
-	private SearchPlayerHistoryDao dbdao;
+	private SearchPlayerHistoryDao dbDao;
 	private SharedPreferences shared;
 	private String tag = "FMLIST_VOLLEY_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
@@ -78,10 +76,8 @@ public class FMListActivity extends Activity implements OnClickListener {
 		MyActivityManager mam = MyActivityManager.getInstance();
 		mam.pushOneActivity(this);
 		shared = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);		// 透明状态栏
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);	// 透明导航栏
 		RefreshType = 1;
-		setview();
+		setView();
 		setListener();
 		HandleRequestType();
 		initDao();
@@ -120,17 +116,17 @@ public class FMListActivity extends Activity implements OnClickListener {
 						JSONObject arg1 = (JSONObject) jsonParser.nextValue();
 						StringSubList = arg1.getString("List");
 						String pagesize = arg1.getString("PageSize");
-						pagesizenum = Integer.valueOf(pagesize);
+						pageSizeNum = Integer.valueOf(pagesize);
 						SubList = new Gson().fromJson(StringSubList, new TypeToken<List<RankInfo>>() {}.getType());
 						if (RefreshType == 1) {
-							mlistview.stopRefresh();
-							newlist.clear();
-							newlist.addAll(SubList);
-							adapter = new RankInfoAdapter(FMListActivity.this, newlist);
-							mlistview.setAdapter(adapter);
+							mListView.stopRefresh();
+							newList.clear();
+							newList.addAll(SubList);
+							adapter = new RankInfoAdapter(FMListActivity.this, newList);
+							mListView.setAdapter(adapter);
 						}else if (RefreshType == 2) {
-							mlistview.stopLoadMore();
-							newlist.addAll(SubList);
+							mListView.stopLoadMore();
+							newList.addAll(SubList);
 							adapter.notifyDataSetChanged();
 						}
 						setListView();
@@ -138,28 +134,27 @@ public class FMListActivity extends Activity implements OnClickListener {
 						e.printStackTrace();
 					}
 				}else{
-					mlistview.stopLoadMore();
+					mListView.stopLoadMore();
 				}
 			}
-			
+
 			@Override
 			protected void requestError(VolleyError error) {
 				if (dialog != null) {
 					dialog.dismiss();
-				}				
+				}
 			}
 		});
 	}
-	
+
 	private JSONObject setParam(){
 		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			/*	jsonObject.put("CatalogId", CatalogId);*/
 			jsonObject.put("MediaType", "RADIO");
-			String cityid = shared.getString(StringConstant.CITYID, "110000");
+			String cityId = shared.getString(StringConstant.CITYID, "110000");
 			if(ViewType==1){
 				//获取当前城市下所有分类内容
-				jsonObject.put("CatalogId", cityid);
+				jsonObject.put("CatalogId", cityId);
 				jsonObject.put("CatalogType", "2");//
 			}else{
 				//按照分类获取内容
@@ -167,7 +162,7 @@ public class FMListActivity extends Activity implements OnClickListener {
 				jsonObject.put("CatalogType","1");
 				jsonObject.put("CatalogId", CatalogId);
 				js.put("CatalogType","2");
-				js.put("CatalogId",cityid);
+				js.put("CatalogId",cityId);
 				jsonObject.put("FilterData", js);
 			}
 			jsonObject.put("PerSize", "3");
@@ -181,40 +176,40 @@ public class FMListActivity extends Activity implements OnClickListener {
 	}
 
 	private void initDao() {// 初始化数据库命令执行对象
-		dbdao = new SearchPlayerHistoryDao(context);
+		dbDao = new SearchPlayerHistoryDao(context);
 	}
 
 	// 这里要改
 	protected void setListView() {
-		mlistview.setOnItemClickListener(new OnItemClickListener() {
+		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				if(newlist != null && newlist.get(position-1) != null && newlist.get(position-1).getMediaType() != null){
-					String MediaType = newlist.get(position-1).getMediaType();
+				if(newList != null && newList.get(position-1) != null && newList.get(position-1).getMediaType() != null){
+					String MediaType = newList.get(position-1).getMediaType();
 					if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
-						String playername = newlist.get(position-1).getContentName();
-						String playerimage = newlist.get(position-1).getContentImg();
-						String playerurl = newlist.get(position-1).getContentPlay();
-						String playerurI = newlist.get(position-1).getContentURI();
-						String playcontentshareurl=newlist.get(position-1).getContentShareURL();
-						String playermediatype = newlist.get(position-1).getMediaType();
+						String playername = newList.get(position-1).getContentName();
+						String playerimage = newList.get(position-1).getContentImg();
+						String playerurl = newList.get(position-1).getContentPlay();
+						String playerurI = newList.get(position-1).getContentURI();
+						String playcontentshareurl=newList.get(position-1).getContentShareURL();
+						String playermediatype = newList.get(position-1).getMediaType();
 						String plaplayeralltime = "0";
 						String playerintime = "0";
-						String playercontentdesc = newlist.get(position-1).getCurrentContent();
-						String playernum = newlist.get(position-1).getWatchPlayerNum();
+						String playercontentdesc = newList.get(position-1).getCurrentContent();
+						String playernum = newList.get(position-1).getWatchPlayerNum();
 						String playerzantype = "0";
 						String playerfrom = "";
 						String playerfromid = "";
 						String playerfromurl = "";
 						String playeraddtime = Long.toString(System.currentTimeMillis());
 						String bjuserid =CommonUtils.getUserId(context);
-						String ContentFavorite=newlist.get(position-1).getContentFavorite();
-						String ContentId= newlist.get(position-1).getContentId();
-						String localurl=newlist.get(position-1).getLocalurl();
-						String sequName=newlist.get(position-1).getSequName();
-						String sequId=newlist.get(position-1).getSequId();
-						String sequDesc=newlist.get(position-1).getSequDesc();
-						String sequImg=newlist.get(position-1).getSequImg();
+						String ContentFavorite=newList.get(position-1).getContentFavorite();
+						String ContentId= newList.get(position-1).getContentId();
+						String localurl=newList.get(position-1).getLocalurl();
+						String sequName=newList.get(position-1).getSequName();
+						String sequId=newList.get(position-1).getSequId();
+						String sequDesc=newList.get(position-1).getSequDesc();
+						String sequImg=newList.get(position-1).getSequImg();
 
 						//如果该数据已经存在数据库则删除原有数据，然后添加最新数据
 						PlayerHistory history = new PlayerHistory(
@@ -222,12 +217,12 @@ public class FMListActivity extends Activity implements OnClickListener {
 								plaplayeralltime, playerintime, playercontentdesc, playernum,
 								playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
 								ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
-						dbdao.deleteHistory(playerurl);
-						dbdao.addHistory(history);
+						dbDao.deleteHistory(playerurl);
+						dbDao.addHistory(history);
 						HomeActivity.UpdateViewPager();
-						PlayerFragment.SendTextRequest(newlist.get(position-1).getContentName(),context);
+						PlayerFragment.SendTextRequest(newList.get(position-1).getContentName(),context);
 						finish();
-					} 
+					}
 				}
 			}
 		});
@@ -244,30 +239,28 @@ public class FMListActivity extends Activity implements OnClickListener {
 		RadioPlay list;
 		if (type != null && type.trim().equals("online")) {
 			CatalogName = this.getIntent().getStringExtra("name");
-//			CatalogType = this.getIntent().getStringExtra("type");
 			CatalogId = this.getIntent().getStringExtra("id");
 		} else {
 			list = (RadioPlay) this.getIntent().getSerializableExtra("list");
 			CatalogName = list.getCatalogName();
-//			CatalogType = list.getCatalogType();
 			CatalogId = list.getCatalogId();
 		}
-		mtextview_head.setText(CatalogName);
+		mTextView_Head.setText(CatalogName);
 	}
 
-	private void setview() {
-		mlistview = (XListView) findViewById(R.id.listview_fm);
+	private void setView() {
+		mListView = (XListView) findViewById(R.id.listview_fm);
 		head_left_btn = (LinearLayout) findViewById(R.id.head_left_btn);
-		mtextview_head = (TextView) findViewById(R.id.head_name_tv);
+		mTextView_Head = (TextView) findViewById(R.id.head_name_tv);
 	}
 
 	private void setListener() {
 		head_left_btn.setOnClickListener(this);
 		// 设置上下拉参数
-		mlistview.setPullLoadEnable(true);
-		mlistview.setPullRefreshEnable(true);
-		mlistview.setSelector(new ColorDrawable(Color.TRANSPARENT));
-		mlistview.setXListViewListener(new IXListViewListener() {
+		mListView.setPullLoadEnable(true);
+		mListView.setPullRefreshEnable(true);
+		mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+		mListView.setXListViewListener(new IXListViewListener() {
 			@Override
 			public void onRefresh() {
 				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
@@ -281,7 +274,7 @@ public class FMListActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void onLoadMore() {
-				if (page <= pagesizenum) {
+				if (page <= pageSizeNum) {
 					if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 						RefreshType = 2;
 						sendRequest();
@@ -289,7 +282,7 @@ public class FMListActivity extends Activity implements OnClickListener {
 						ToastUtils.show_short(FMListActivity.this, "网络失败，请检查网络");
 					}
 				} else {
-					mlistview.stopLoadMore();
+					mListView.stopLoadMore();
 					ToastUtils.show_short(FMListActivity.this, "已经没有最新的数据了");
 				}
 			}
@@ -298,9 +291,9 @@ public class FMListActivity extends Activity implements OnClickListener {
 
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.head_left_btn:
-			finish();
-			break;
+			case R.id.head_left_btn:
+				finish();
+				break;
 		}
 	}
 
@@ -311,15 +304,15 @@ public class FMListActivity extends Activity implements OnClickListener {
 		MyActivityManager mam = MyActivityManager.getInstance();
 		mam.popOneActivity(context);
 		head_left_btn = null;
-		mlistview = null;
+		mListView = null;
 		dialog = null;
-		mtextview_head = null;
-		if(dbdao != null){
-			dbdao.closedb();
-			dbdao = null;
+		mTextView_Head = null;
+		if(dbDao != null){
+			dbDao.closedb();
+			dbDao = null;
 		}
-		newlist.clear();
-		newlist = null;
+		newList.clear();
+		newList = null;
 		if(SubList != null){
 			SubList.clear();
 			SubList = null;

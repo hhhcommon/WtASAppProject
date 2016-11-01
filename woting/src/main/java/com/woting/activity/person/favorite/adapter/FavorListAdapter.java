@@ -109,14 +109,14 @@ public class FavorListAdapter extends BaseAdapter{
 
 			@Override
 			public void onClick(View v) {
-				favorcheck.checkposition(position);
+				favorcheck.checkPosition(position);
 			}
 		});
 
 		return convertView;
 	}
 	public interface favorCheck {
-		public void checkposition(int position);
+		public void checkPosition(int position);
 	}
 
 	private class ViewHolder {

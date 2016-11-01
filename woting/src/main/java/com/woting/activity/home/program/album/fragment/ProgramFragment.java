@@ -53,14 +53,14 @@ import java.util.List;
 
 /**
  * 专辑列表页
- * 
+ *
  * @author woting11
  */
 public class ProgramFragment extends Fragment implements OnClickListener {
 	private View rootView;
 	private Context context;
 	private FileInfoDao FID;
-	private SearchPlayerHistoryDao dbdao;
+	private SearchPlayerHistoryDao dbDao;
 	private Dialog dialog;
 	private ListView lv_album, lv_download; 		// 节目列表 下载列表
 	private ImageView img_download, img_quanxuan; 	// 下载 全选
@@ -68,15 +68,15 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 	private LinearLayout lin_quanxuan, lin_status2;
 	private ImageView imageSort;					// 排序
 	private ImageView imageSortDown;
-	private AlbumMainAdapter mainadapter;
+	private AlbumMainAdapter mainAdapter;
 	private AlbumAdapter adapter;
-	private List<ContentInfo> SubListAll = new ArrayList<ContentInfo>();
-	private List<ContentInfo> urllist = new ArrayList<ContentInfo>();
+	private List<ContentInfo> SubListAll = new ArrayList<>();
+	private List<ContentInfo> urlList = new ArrayList<>();
 	private List<ContentInfo> SubList; 				// 请求返回的网络数据值
-	private List<FileInfo> flist;
+	private List<FileInfo> fList;
 	private boolean flag = false; 					// 标记全选的按钮
 	private int sum = 0; 							// 计数项
-	private String userid;
+	private String userId;
 	private boolean isCancelRequest;
 	private String tag = "PROGRAM_VOLLEY_REQUEST_CANCEL_TAG";
 
@@ -84,7 +84,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		context = getActivity();
-		userid = CommonUtils.getUserId(context);
+		userId = CommonUtils.getUserId(context);
 		initDao();
 	}
 
@@ -105,7 +105,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 
 	/**
 	 * 初始化控件
-	 * 
+	 *
 	 * @param view
 	 */
 	private void findView(View view) {
@@ -123,10 +123,10 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 		tv_sum = (TextView) view.findViewById(R.id.tv_sum); 				// 计数项
 		lin_status2 = (LinearLayout) view.findViewById(R.id.lin_status2); 	// 第二种状态
 		textTotal = (TextView) view.findViewById(R.id.text_total); 			// 下载列表的总计
-		
+
 		imageSort = (ImageView) view.findViewById(R.id.img_sort);			// 排序
 		imageSort.setOnClickListener(this);
-		
+
 		imageSortDown = (ImageView) view.findViewById(R.id.img_sort_down);
 		imageSortDown.setOnClickListener(this);
 	}
@@ -141,38 +141,38 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 				if (SubList != null && SubList.get(position) != null && SubList.get(position).getMediaType() != null) {
 					String MediaType = SubList.get(position).getMediaType();
 					if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
-						String playername = SubList.get(position).getContentName();
-						String playerimage = SubList.get(position).getContentImg();
-						String playerurl = SubList.get(position).getContentPlay();
-						String playerurI = SubList.get(position).getContentURI();
-						String playermediatype = SubList.get(position).getMediaType();
-						String playcontentshareurl = SubList.get(position).getContentShareURL();
-						String contentid = SubList.get(position).getContentId();
-						String plaplayeralltime = "0";
-						String playerintime = "0";
-						String playercontentdesc = SubList.get(position).getContentDesc();
-						String playernum = SubList.get(position).getPlayCount();
-						String playerzantype = "0";
-						String playerfrom = "";
-						String playerfromid = "";
-						String playerfromurl = "";
-						String playeraddtime = Long.toString(System.currentTimeMillis());
-						String bjuserid = CommonUtils.getUserId(context);
+						String playerName = SubList.get(position).getContentName();
+						String playerImage = SubList.get(position).getContentImg();
+						String playUrl = SubList.get(position).getContentPlay();
+						String playUrI = SubList.get(position).getContentURI();
+						String playMediaType = SubList.get(position).getMediaType();
+						String playContentShareUrl = SubList.get(position).getContentShareURL();
+						String ContentId = SubList.get(position).getContentId();
+						String playAllTime = "0";
+						String playInTime = "0";
+						String playContentDesc = SubList.get(position).getContentDesc();
+						String playNum = SubList.get(position).getPlayCount();
+						String playZanType = "0";
+						String playFrom = "";
+						String playFromId = "";
+						String playFromUrl = "";
+						String playAddTime = Long.toString(System.currentTimeMillis());
+						String bjUserId = CommonUtils.getUserId(context);
 						String ContentFavorite = SubList.get(position).getContentFavorite();
-						String localurl=SubList.get(position).getLocalurl();
+						String localUrl=SubList.get(position).getLocalurl();
 						//name id desc img
 						String sequName=SubList.get(position).getSequname();
 						String sequId=SubList.get(position).getSequid();
 						String sequDesc=SubList.get(position).getSequdesc();
 						String sequImg=SubList.get(position).getSequimgurl();
 
-						// 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-						PlayerHistory history = new PlayerHistory(playername, playerimage, playerurl, playerurI,
-								playermediatype, plaplayeralltime, playerintime, playercontentdesc, playernum,
-								playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid,
-								playcontentshareurl, ContentFavorite, contentid,localurl,sequName,sequId,sequDesc,sequImg);
-						dbdao.deleteHistory(playerurl);
-						dbdao.addHistory(history);
+						PlayerHistory history = new PlayerHistory(
+								playerName,  playerImage, playUrl, playUrI,playMediaType,
+								playAllTime, playInTime, playContentDesc, playNum,
+								playZanType, playFrom , playFromId,playFromUrl,playAddTime,bjUserId,playContentShareUrl,
+								ContentFavorite,ContentId,localUrl,sequName,sequId,sequDesc,sequImg);
+						dbDao.deleteHistory(playUrl);
+						dbDao.addHistory(history);
 						if(PlayerFragment.context!=null){
 							MainActivity.change();
 							HomeActivity.UpdateViewPager();
@@ -219,7 +219,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				
+
 				if (ReturnType != null) { // 根据返回值来对程序进行解析
 					if (ReturnType.equals("1001")) {
 						try {
@@ -227,20 +227,20 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 							JSONTokener jsonParser = new JSONTokener(ResultList);
 							arg1 = (JSONObject) jsonParser.nextValue();
 
-							// 此处后期需要用typetoken将字符串StringSubList 转化成为一个list集合
+							// 此处后期需要用typeToken将字符串StringSubList 转化成为一个list集合
 							StringSubList = arg1.getString("SubList");
 							Gson gson = new Gson();
 							SubList = gson.fromJson(StringSubList, new TypeToken<List<ContentInfo>>() {}.getType());
 							if (SubList != null && SubList.size() > 0) {
 								SubListAll.clear();
 								SubListAll.addAll(SubList);
-								mainadapter = new AlbumMainAdapter(context, SubList);
-								lv_album.setAdapter(mainadapter);
+								mainAdapter = new AlbumMainAdapter(context, SubList);
+								lv_album.setAdapter(mainAdapter);
 								setListener();
-								getdate();
+								getData();
 								adapter = new AlbumAdapter(context, SubListAll);
 								lv_download.setAdapter(adapter);
-								setinterface();
+								setInterface();
 								textTotal.setText("共" + SubListAll.size() + "集");
 							}
 						} catch (Exception e) {
@@ -261,16 +261,16 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 					}
 				}
 			}
-			
+
 			@Override
 			protected void requestError(VolleyError error) {
 				if (dialog != null) {
 					dialog.dismiss();
-				}				
+				}
 			}
 		});
 	}
-	
+
 	private JSONObject setParam(){
 		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
@@ -286,7 +286,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 	/**
 	 * 实现接口的方法
 	 */
-	private void setinterface() {
+	private void setInterface() {
 		lv_download.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -330,27 +330,27 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 	/**
 	 * 获取数据
 	 */
-	protected void getdate() {
-		flist = FID.queryFileinfoAll(userid);
-		Log.e("flist", flist.size() + "");
-		ArrayList<FileInfo> seqlist = new ArrayList<FileInfo>();
-		if (flist != null && flist.size() > 0) {
-			for (int i = 0; i < flist.size(); i++) {
-				if (flist.get(i).getSequimgurl() != null
-						&& flist.get(i).getSequimgurl().equals(AlbumActivity.ContentImg)) {
+	private void getData() {
+		fList = FID.queryFileinfoAll(userId);
+		Log.e("fList", fList.size() + "");
+		ArrayList<FileInfo> seqList = new ArrayList<>();
+		if (fList != null && fList.size() > 0) {
+			for (int i = 0; i < fList.size(); i++) {
+				if (fList.get(i).getSequimgurl() != null
+						&& fList.get(i).getSequimgurl().equals(AlbumActivity.ContentImg)) {
 
-					seqlist.add(flist.get(i));
+					seqList.add(fList.get(i));
 				}
 			}
 		}
-		Log.e("seqlist", seqlist.size() + "");
-		if (seqlist != null && seqlist.size() > 0) {
-			for (int i = 0; i < seqlist.size(); i++) {
-				String linshi = seqlist.get(i).getUrl();
-				if (linshi != null && !linshi.trim().equals("")) {
+		Log.e("seqList", seqList.size() + "");
+		if (seqList != null && seqList.size() > 0) {
+			for (int i = 0; i < seqList.size(); i++) {
+				String temp= seqList.get(i).getUrl();
+				if (temp != null && !temp.trim().equals("")) {
 					for (int j = 0; j < SubListAll.size(); j++) {
 						if (SubListAll.get(j).getContentPlay() != null
-								&& SubListAll.get(j).getContentPlay().equals(linshi)) {
+								&& SubListAll.get(j).getContentPlay().equals(temp)) {
 							SubListAll.get(j).setCheckType(3);
 						}
 					}
@@ -365,120 +365,119 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.img_download: 	// 显示下载列表
-			if(SubList.size() == 0){
-				return ;
-			}
-			SubListAll.clear();
-			SubListAll.addAll(SubList);
-			getdate();
-			if (adapter != null) {
-				adapter.notifyDataSetChanged();
-			} else {
-				adapter = new AlbumAdapter(context, SubListAll);
-				lv_download.setAdapter(adapter);
-			}
-			lv_download.setSelection(0);
-			lin_status2.setVisibility(View.VISIBLE);
-			break;
-		case R.id.tv_quxiao: 		// 取消
-			lin_status2.setVisibility(View.GONE);
+			case R.id.img_download: 	// 显示下载列表
+				if(SubList.size() == 0){
+					return ;
+				}
+				SubListAll.clear();
+				SubListAll.addAll(SubList);
+				getData();
+				if (adapter != null) {
+					adapter.notifyDataSetChanged();
+				} else {
+					adapter = new AlbumAdapter(context, SubListAll);
+					lv_download.setAdapter(adapter);
+				}
+				lv_download.setSelection(0);
+				lin_status2.setVisibility(View.VISIBLE);
+				break;
+			case R.id.tv_quxiao: 		// 取消
+				lin_status2.setVisibility(View.GONE);
 
-			for(int i=0; i<SubListAll.size(); i++){
-				if(SubListAll.get(i).getCheckType() != 3){
-					img_quanxuan.setImageResource(R.mipmap.image_not_all_check);
-					SubListAll.get(i).setCheckType(1);
-				}
-			}
-			sum = 0;
-			setsum();
-			flag = false;
-			break;
-		case R.id.lin_quanxuan: 	// 全选
-			if (flag == false) { 	// 默认为未选中状态
-				sum = 0;
-				for (int i = 0; i < SubListAll.size(); i++) {
-					if (SubListAll.get(i).getCheckType() != 3) {
-						SubListAll.get(i).setCheckType(2);
-						sum++;
-					}
-				}
-				flag = true;
-				img_quanxuan.setImageResource(R.mipmap.image_all_check);
-				setsum();
-			} else {
-				for (int i = 0; i < SubListAll.size(); i++) {
-					if (SubListAll.get(i).getCheckType() != 3) {
+				for(int i=0; i<SubListAll.size(); i++){
+					if(SubListAll.get(i).getCheckType() != 3){
+						img_quanxuan.setImageResource(R.mipmap.image_not_all_check);
 						SubListAll.get(i).setCheckType(1);
 					}
 				}
-				flag = false;
-				img_quanxuan.setImageResource(R.mipmap.image_not_all_check);
 				sum = 0;
 				setsum();
-			}
-			adapter.notifyDataSetChanged();
-			break;
-		case R.id.tv_download: 		// 下载
-			urllist.clear();
-			for (int i = 0; i < SubListAll.size(); i++) {
-				if(SubListAll.get(i).getCheckType()==2){
-					ContentInfo mContent = SubListAll.get(i);
-					mContent.setSequdesc(AlbumActivity.ContentDesc);
-					mContent.setSequname(AlbumActivity.ContentName);
-					mContent.setSequimgurl(AlbumActivity.ContentImg);	
-					mContent.setSequid(AlbumActivity.id);
-					//判断userid是否为空
-					/*	userid=Utils.getUserId(context);*/
-					mContent.setUserid(userid);
-					mContent.setDownloadtype("0");
-					FID.updatedownloadstatus(mContent.getContentPlay(), "0");//将所有数据设置
-					urllist.add(mContent);
+				flag = false;
+				break;
+			case R.id.lin_quanxuan: 	// 全选
+				if (flag == false) { 	// 默认为未选中状态
+					sum = 0;
+					for (int i = 0; i < SubListAll.size(); i++) {
+						if (SubListAll.get(i).getCheckType() != 3) {
+							SubListAll.get(i).setCheckType(2);
+							sum++;
+						}
+					}
+					flag = true;
+					img_quanxuan.setImageResource(R.mipmap.image_all_check);
+					setsum();
+				} else {
+					for (int i = 0; i < SubListAll.size(); i++) {
+						if (SubListAll.get(i).getCheckType() != 3) {
+							SubListAll.get(i).setCheckType(1);
+						}
+					}
+					flag = false;
+					img_quanxuan.setImageResource(R.mipmap.image_not_all_check);
+					sum = 0;
+					setsum();
 				}
-			}
-			if (urllist.size() > 0) {
-				FID.insertfileinfo(urllist);
-				List<FileInfo> linshilist = FID.queryFileinfo("false",userid);//查询表中未完成的任务
-				//未下载列表
-				for(int kk=0;kk<linshilist.size();kk++){
-					if(linshilist.get(kk).getDownloadtype()==1){
-						DownloadService.workStop(linshilist.get(kk));
-						FID.updatedownloadstatus(linshilist.get(kk).getUrl(), "2");
-						Log.e("测试下载问题"," 暂停下载的单体"+(linshilist.get(kk).getFileName()));
+				adapter.notifyDataSetChanged();
+				break;
+			case R.id.tv_download: 		// 下载
+				urlList.clear();
+				for (int i = 0; i < SubListAll.size(); i++) {
+					if(SubListAll.get(i).getCheckType()==2){
+						ContentInfo mContent = SubListAll.get(i);
+						mContent.setSequdesc(AlbumActivity.ContentDesc);
+						mContent.setSequname(AlbumActivity.ContentName);
+						mContent.setSequimgurl(AlbumActivity.ContentImg);
+						mContent.setSequid(AlbumActivity.id);
+						//判断userId是否为空
+						mContent.setUserid(userId);
+						mContent.setDownloadtype("0");
+						FID.updatedownloadstatus(mContent.getContentPlay(), "0");//将所有数据设置
+						urlList.add(mContent);
 					}
 				}
-				linshilist.get(0).setDownloadtype(1);
-				FID.updatedownloadstatus(linshilist.get(0).getUrl(), "1");
-				Log.e("数据库内数据", linshilist.toString());	
-				DownloadService.workStart(linshilist.get(0));
-				//发送更新界面数据广播
-				Intent p_intent=new Intent("push_down_uncompleted");
-				context.sendBroadcast(p_intent);
-				lin_status2.setVisibility(View.GONE);
-			} else {
-				ToastUtils.show_allways(context, "请重新选择数据");
-				return;
-			}
-			break;
-		case R.id.img_sort:
-			if(SubList.size() != 0 && mainadapter != null){
-				Collections.reverse(SubList);			// 倒序
-				mainadapter.notifyDataSetChanged();
-				imageSortDown.setVisibility(View.VISIBLE);
-				imageSort.setVisibility(View.GONE);
-			}
-			break;
-		case R.id.img_sort_down:
-			if(SubList.size() != 0 && mainadapter != null){
-				Collections.reverse(SubList);			// 倒序
-				mainadapter.notifyDataSetChanged();
-				imageSortDown.setVisibility(View.GONE);
-				imageSort.setVisibility(View.VISIBLE);
-			}
-			break;
+				if (urlList.size() > 0) {
+					FID.insertfileinfo(urlList);
+					List<FileInfo> tempList = FID.queryFileinfo("false",userId);//查询表中未完成的任务
+					//未下载列表
+					for(int kk=0;kk<tempList.size();kk++){
+						if(tempList.get(kk).getDownloadtype()==1){
+							DownloadService.workStop(tempList.get(kk));
+							FID.updatedownloadstatus(tempList.get(kk).getUrl(), "2");
+							Log.e("测试下载问题"," 暂停下载的单体"+(tempList.get(kk).getFileName()));
+						}
+					}
+					tempList.get(0).setDownloadtype(1);
+					FID.updatedownloadstatus(tempList.get(0).getUrl(), "1");
+					Log.e("数据库内数据", tempList.toString());
+					DownloadService.workStart(tempList.get(0));
+					//发送更新界面数据广播
+					Intent p_intent=new Intent("push_down_uncompleted");
+					context.sendBroadcast(p_intent);
+					lin_status2.setVisibility(View.GONE);
+				} else {
+					ToastUtils.show_allways(context, "请重新选择数据");
+					return;
+				}
+				break;
+			case R.id.img_sort:
+				if(SubList.size() != 0 && mainAdapter != null){
+					Collections.reverse(SubList);			// 倒序
+					mainAdapter.notifyDataSetChanged();
+					imageSortDown.setVisibility(View.VISIBLE);
+					imageSort.setVisibility(View.GONE);
+				}
+				break;
+			case R.id.img_sort_down:
+				if(SubList.size() != 0 && mainAdapter != null){
+					Collections.reverse(SubList);			// 倒序
+					mainAdapter.notifyDataSetChanged();
+					imageSortDown.setVisibility(View.GONE);
+					imageSort.setVisibility(View.VISIBLE);
+				}
+				break;
 		}
 	}
-	
+
 	protected void setsum() {
 		tv_sum.setText(sum + "");
 	}
@@ -487,7 +486,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 	 * 初始化数据库命令执行对象
 	 */
 	private void initDao() {
-		dbdao = new SearchPlayerHistoryDao(context);
+		dbDao = new SearchPlayerHistoryDao(context);
 		FID = new FileInfoDao(context);
 	}
 
@@ -498,7 +497,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 			((ViewGroup) rootView.getParent()).removeView(rootView);
 		}
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -506,7 +505,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 		rootView = null;
 		context = null;
 		FID = null;
-		dbdao = null;
+		dbDao = null;
 		dialog = null;
 		lv_album = null;
 		lv_download = null;
@@ -520,12 +519,12 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 		lin_status2 = null;
 		imageSort = null;
 		imageSortDown = null;
-		mainadapter = null;
+		mainAdapter = null;
 		adapter = null;
 		SubListAll = null;
-		urllist = null;
+		urlList = null;
 		SubList = null;
-		flist = null;
-		userid = null;
+		fList = null;
+		userId = null;
 	}
 }

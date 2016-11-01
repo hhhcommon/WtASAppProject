@@ -100,11 +100,12 @@ public class VLCInstance {
         catch(NumberFormatException nfe) {
             hardwareAcceleration = -1;
         }
-        int networkCaching = pref.getInt("network_caching_value", 1500);
-        if(networkCaching > 60000)
+      /*  int networkCaching = pref.getInt("network_caching_value", 15000);*/
+        int networkCaching=15000;
+    /*    if(networkCaching > 60000)
             networkCaching = 60000;
         else if(networkCaching < 0)
-            networkCaching = 0;
+            networkCaching = 0;*/
         instance.setAout(aout);
         instance.setVout(vout);
         instance.setDeblocking(deblocking);

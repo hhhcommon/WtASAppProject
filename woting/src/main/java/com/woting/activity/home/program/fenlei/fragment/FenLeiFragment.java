@@ -13,40 +13,37 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
-
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
-import com.woting.activity.home.program.fenlei.adapter.fenleigridAdapter;
-import com.woting.activity.home.program.fenlei.model.fenlei;
-import com.woting.activity.home.program.fenlei.model.fenleiname;
+import com.woting.activity.home.program.fenlei.adapter.CatalogGridAdapter;
+import com.woting.activity.home.program.fenlei.model.Catalog;
+import com.woting.activity.home.program.fenlei.model.CatalogName;
 import com.woting.activity.home.program.radiolist.activity.RadioListActivity;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.util.ToastUtils;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 分类页面
- * @author 辛龙 
+ * @author 辛龙
  * 2016年3月31日
  */
 public class FenLeiFragment extends Fragment {
 	private FragmentActivity context;
 	private View rootView;
-	private GridView gv_fenlei;
-	List<fenleiname> fenleilist = new ArrayList<fenleiname>();
-	private fenleigridAdapter adapter;
+	private GridView gv_Catalog;
+	List<CatalogName> CatalogList = new ArrayList<>();
+	private CatalogGridAdapter adapter;
 	private Dialog dialog;
-	protected List<fenleiname> SubList;
-	private String tag = "FENLEI_VOLLEY_REQUEST_CANCEL_TAG";
+	protected List<CatalogName> SubList;
+	private String tag = "CATALOG_VOLLEY_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
 
 	@Override
@@ -59,8 +56,8 @@ public class FenLeiFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (rootView == null) {
 			rootView = inflater.inflate(R.layout.fragment_fenlei_new, container, false);
-			gv_fenlei = (GridView) rootView.findViewById(R.id.gv_fenlei);
-			gv_fenlei.setSelector(new ColorDrawable(Color.TRANSPARENT));// 取消默认背景选择器
+			gv_Catalog = (GridView) rootView.findViewById(R.id.gv_fenlei);
+			gv_Catalog.setSelector(new ColorDrawable(Color.TRANSPARENT));// 取消默认背景选择器
 			if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {		// 发送网络请求
 				sendRequest();
 			} else {
@@ -74,7 +71,7 @@ public class FenLeiFragment extends Fragment {
 	 * GridView 点击事件
 	 */
 	private void setItemListener() {
-		gv_fenlei.setOnItemClickListener(new OnItemClickListener() {
+		gv_Catalog.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent intent = new Intent(context, RadioListActivity.class);
@@ -91,7 +88,6 @@ public class FenLeiFragment extends Fragment {
 	 */
 	private void sendRequest(){
 		VolleyRequest.RequestPost(GlobalConfig.getCatalogUrl, tag, setParam(), new VolleyCallback() {
-//			private String SessionId;
 			private String ReturnType;
 			private String ResultList;
 
@@ -104,26 +100,25 @@ public class FenLeiFragment extends Fragment {
 					return ;
 				}
 				try {
-//					SessionId = result.getString("SessionId");
 					ReturnType = result.getString("ReturnType");
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				
+
 				// 根据返回值来对程序进行解析
 				if (ReturnType != null) {
 					if (ReturnType.equals("1001")) {
 						try {
 							ResultList = result.getString("CatalogData");
-							fenlei SubList_all = new Gson().fromJson(ResultList, new TypeToken<fenlei>() {}.getType());
+							Catalog SubList_all = new Gson().fromJson(ResultList, new TypeToken<Catalog>() {}.getType());
 							SubList = SubList_all.getSubCata();
 							if (SubList != null) {
 								if (SubList.size() == 0) {
 									ToastUtils.show_allways(context, "获取分类列表为空");
 								} else {
 									if (adapter == null) {
-										adapter = new fenleigridAdapter(context, SubList);
-										gv_fenlei.setAdapter(adapter);
+										adapter = new CatalogGridAdapter(context, SubList);
+										gv_Catalog.setAdapter(adapter);
 									} else {
 										adapter.notifyDataSetChanged();
 									}
@@ -148,21 +143,20 @@ public class FenLeiFragment extends Fragment {
 					ToastUtils.show_allways(context, "数据获取异常，请稍候重试");
 				}
 			}
-			
+
 			@Override
 			protected void requestError(VolleyError error) {
 				if (dialog != null) {
 					dialog.dismiss();
-				}				
+				}
 			}
 		});
 	}
-	
+
 	private JSONObject setParam(){
 		JSONObject jsonObject =VolleyRequest.getJsonObject(context);
 		try {
 			jsonObject.put("CatalogType", "3");
-//			jsonObject.put("CatalogId", "1");
 			jsonObject.put("ResultType", "1");
 			// 以001类型的分类为基础，获得0001结点下的2级分类的树形分类数据（实际上是森林）
 			jsonObject.put("RelLevel", "0");
@@ -173,7 +167,7 @@ public class FenLeiFragment extends Fragment {
 		}
 		return jsonObject;
 	}
-	
+
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
@@ -181,15 +175,15 @@ public class FenLeiFragment extends Fragment {
 			((ViewGroup) rootView.getParent()).removeView(rootView);
 		}
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		isCancelRequest = VolleyRequest.cancelRequest(tag);
 		context = null;
 		rootView = null;
-		gv_fenlei = null;
-		fenleilist = null;
+		gv_Catalog = null;
+		CatalogList = null;
 		adapter = null;
 		dialog = null;
 		SubList = null;

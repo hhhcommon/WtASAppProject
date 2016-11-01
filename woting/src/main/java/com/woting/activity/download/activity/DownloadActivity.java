@@ -16,7 +16,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.woting.R;
 import com.woting.activity.download.fragment.DownLoadCompleted;
 import com.woting.activity.download.fragment.DownLoadUnCompleted;
-import com.woting.activity.home.search.activity.SearchLikeAcitvity;
+import com.woting.activity.home.search.activity.SearchLikeActivity;
 import com.woting.common.adapter.MyFragmentPagerAdapter;
 import com.woting.util.ToastUtils;
 
@@ -103,7 +103,7 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
 			// startActivity(new Intent(context, HandleMessageActivity.class));
 			break;
 		case R.id.lin_find:			// 跳转到搜索界面
-			Intent intent = new Intent(context, SearchLikeAcitvity.class);
+			Intent intent = new Intent(context, SearchLikeActivity.class);
 			startActivity(intent);
 			break;
 		}

@@ -138,7 +138,7 @@ public class DetailsFragment extends Fragment implements OnClickListener{
 							ResultList = result.getString("ResultInfo");
 							JSONTokener jsonParser = new JSONTokener(ResultList);
 							arg1 = (JSONObject) jsonParser.nextValue();
-							// 此处后期需要用typetoken将字符串StringSubList 转化成为一个list集合
+							// 此处后期需要用typeToken将字符串StringSubList 转化成为一个list集合
 							StringSubList = arg1.getString("SubList");
 							Gson gson = new Gson();
 							SubList = gson.fromJson(StringSubList, new TypeToken<List<ContentInfo>>() {}.getType());
@@ -154,15 +154,15 @@ public class DetailsFragment extends Fragment implements OnClickListener{
 							e.printStackTrace();
 						}
 						
-						AlbumActivity.returnresult = 1;
+						AlbumActivity.returnResult = 1;
 						if (SubList != null && SubList.size() > 0) {
 							if (AlbumActivity.ContentFavorite != null && !AlbumActivity.ContentFavorite.equals("")) {
 								if (AlbumActivity.ContentFavorite.equals("0")) {
 									AlbumActivity.tv_favorite.setText("喜欢");
-									AlbumActivity.imgageFavorite.setImageDrawable(context.getResources().getDrawable(R.mipmap.wt_img_like));
+									AlbumActivity.imageFavorite.setImageDrawable(context.getResources().getDrawable(R.mipmap.wt_img_like));
 								} else {
 									AlbumActivity.tv_favorite.setText("已喜欢");
-									AlbumActivity.imgageFavorite.setImageDrawable(context.getResources().getDrawable(R.mipmap.wt_img_liked));
+									AlbumActivity.imageFavorite.setImageDrawable(context.getResources().getDrawable(R.mipmap.wt_img_liked));
 								}
 							}
 							if (AlbumActivity.ContentName != null && !AlbumActivity.ContentName.equals("")) {
@@ -201,7 +201,6 @@ public class DetailsFragment extends Fragment implements OnClickListener{
 									 }
 								 }
 								 textLabel.setText(builder.toString());
-								 builder = null;
 							 }
 						}
 					}

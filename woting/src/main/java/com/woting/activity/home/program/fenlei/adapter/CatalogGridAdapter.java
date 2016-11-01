@@ -8,16 +8,16 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.activity.home.program.fenlei.model.fenleiname;
+import com.woting.activity.home.program.fenlei.model.CatalogName;
 
 import java.util.List;
 
-public class fenleigridAdapter extends BaseAdapter {
-	private List<fenleiname> list;
+public class CatalogGridAdapter extends BaseAdapter {
+	private List<CatalogName> list;
 	private Context context;
 	private ViewHolder holder;
 
-	public fenleigridAdapter(Context context, List<fenleiname> list) {
+	public CatalogGridAdapter(Context context, List<CatalogName> list) {
 		super();
 		this.list = list;
 		this.context = context;

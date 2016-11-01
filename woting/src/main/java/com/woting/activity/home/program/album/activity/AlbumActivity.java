@@ -2,6 +2,8 @@ package com.woting.activity.home.program.album.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
@@ -27,7 +29,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
@@ -57,7 +58,7 @@ import java.util.List;
 
 /**
  * 专辑页
- * @author 辛龙 
+ * @author 辛龙
  * 2016年4月1日
  */
 public class AlbumActivity extends FragmentActivity implements OnClickListener {
@@ -70,17 +71,16 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 	public static String ContentShareURL;
 	public static String ContentName;
 	public static String id;
-	public static int returnresult = -1;		// =1说明信息获取正常，returntype=1001
+	public static int returnResult = -1;		// =1说明信息获取正常，returntype=1001
 	public static String ContentFavorite;		// 从网络获取的当前值，如果为空，表示页面并未获取到此值
 	public static TextView tv_favorite;
 	private LinearLayout head_left;
 	private LinearLayout lin_share;
 	private LinearLayout lin_favorite;
 	private Dialog dialog;
-	private Dialog Sharedialog;
-	private Dialog dialog1;	
-	private UMShareAPI mShareAPI;
-	private UMImage image;	
+	private Dialog shareDialog;
+	private Dialog dialog1;
+	private UMImage image;
 	private ProgramFragment programFragment;	//专辑列表页
 	private DetailsFragment detailsFragment;	//专辑详情页
 	protected Fragment mFragmentContent; 		// 上一个Fragment
@@ -92,7 +92,9 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 	private int targetIndex;
 	private int screenw;
 	private boolean isCancelRequest;
-	
+	public static ImageView imageFavorite;
+	private String tag = "ALBUM_VOLLEY_REQUEST_CANCEL_TAG";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -101,65 +103,65 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);// 透明状态栏
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);// 透明导航栏
 		InitImage();
-		setview();			// 设置界面
-		handleIntent(); 
-		setlistener();
-		ShareDialog();		// 分享dialog
-		mShareAPI = UMShareAPI.get(context);// 初始化友盟
+		setView();			// 设置界面
+		handleIntent();
+		setListener();
+		shareDialog();		// 分享dialog
+	/*	mShareAPI = UMShareAPI.get(context);// 初始化友盟*/
 		programFragment = new ProgramFragment();
 		detailsFragment = new DetailsFragment();
 		changeFragmentContent(R.id.frame_change, detailsFragment);
 	}
-	
-	private void ShareDialog() {
+
+	private void shareDialog() {
 		final View dialog = LayoutInflater.from(context).inflate(R.layout.dialog_sharedialog, null);
-		HorizontalListView mgallery = (HorizontalListView) dialog.findViewById(R.id.share_gallery);
-		TextView tv_cancle = (TextView) dialog.findViewById(R.id.tv_cancle);
-		Sharedialog = new Dialog(context, R.style.MyDialog);
+		HorizontalListView mGallery = (HorizontalListView) dialog.findViewById(R.id.share_gallery);
+		TextView tv_cancel = (TextView) dialog.findViewById(R.id.tv_cancle);
+		shareDialog = new Dialog(context, R.style.MyDialog);
 		// 从底部上升到一个位置
-		Sharedialog.setContentView(dialog);
-		Window window = Sharedialog.getWindow();
+		shareDialog.setContentView(dialog);
+		Window window = shareDialog.getWindow();
 		DisplayMetrics dm = new DisplayMetrics();
 		context.getWindowManager().getDefaultDisplay().getMetrics(dm);
 		screenw = dm.widthPixels;
 		LayoutParams params = dialog.getLayoutParams();
-		params.width = (int) screenw;
+		params.width =  screenw;
 		dialog.setLayoutParams(params);
 		window.setGravity(Gravity.BOTTOM);
 		window.setWindowAnimations(R.style.sharestyle);
-		Sharedialog.setCanceledOnTouchOutside(true);
-		Sharedialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
-		final List<sharemodel> mylist = ShareUtils.getShareModelList();
-		ImageAdapter shareadapter = new ImageAdapter(context, mylist);
-		mgallery.setAdapter(shareadapter);
+		shareDialog.setCanceledOnTouchOutside(true);
+		shareDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
+		final List<sharemodel> mList = ShareUtils.getShareModelList();
+		ImageAdapter shareAdapter = new ImageAdapter(context,mList);
+		mGallery.setAdapter(shareAdapter);
 		dialog1 = DialogUtils.Dialogphnoshow(context, "通讯中", dialog1);
 		Config.dialog = dialog1;
-		mgallery.setOnItemClickListener(new OnItemClickListener() {
+		mGallery.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				SHARE_MEDIA Platform = mylist.get(position).getSharePlatform();
+				SHARE_MEDIA Platform = mList.get(position).getSharePlatform();
 				CallShare(Platform);
 			}
 		});
 
-		tv_cancle.setOnClickListener(new OnClickListener() {
+		tv_cancel.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Sharedialog.dismiss();
+				shareDialog.dismiss();
 			}
 		});
 	}
 
 	protected void CallShare(SHARE_MEDIA Platform) {
-		if (returnresult == 1) {// 此处需从服务器获取分享所需要的信息，拿到字段后进行处理
-			String sharename;
+		if (returnResult == 1) {// 此处需从服务器获取分享所需要的信息，拿到字段后进行处理
+			String shareName;
 			String shareDesc;
 			String shareContentImg;
-			String shareurl;
+			String shareUrl;
 			if (ContentName != null && !ContentName.equals("")) {
-				sharename = ContentName;
+				shareName = ContentName;
 			} else {
-				sharename = "我听我享听";
+				shareName = "我听我享听";
 			}
 			if (ContentDesc != null && !ContentDesc.equals("")) {
 				shareDesc = ContentDesc;
@@ -174,14 +176,14 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 				image = new UMImage(context, shareContentImg);
 			}
 			if (ContentShareURL != null && !ContentShareURL.equals("")) {
-				shareurl = ContentShareURL;
+				shareUrl = ContentShareURL;
 			} else {
-				shareurl = "http://www.wotingfm.com/";
+				shareUrl = "http://www.wotingfm.com/";
 			}
 			dialog1 = DialogUtils.Dialogph(context, "通讯中", dialog1);
 			Config.dialog = dialog1;
 			new ShareAction(context).setPlatform(Platform).setCallback(umShareListener).withMedia(image)
-					.withText(shareDesc).withTitle(sharename).withTargetUrl(shareurl).share();
+					.withText(shareDesc).withTitle(shareName).withTargetUrl(shareUrl).share();
 		} else {
 			ToastUtils.show_allways(context, "专辑列表获取异常正在重新获取");
 			if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
@@ -194,28 +196,28 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private UMShareListener umShareListener = new UMShareListener() {
-		
+
 		@Override
 		public void onResult(SHARE_MEDIA platform) {
 			Log.d("plat", "platform" + platform);
 			Toast.makeText(context, platform + " 分享成功啦", Toast.LENGTH_SHORT).show();
-			Sharedialog.dismiss();
+			shareDialog.dismiss();
 		}
 
 		@Override
 		public void onError(SHARE_MEDIA platform, Throwable t) {
 			Toast.makeText(context, platform + " 分享失败啦", Toast.LENGTH_SHORT).show();
-			Sharedialog.dismiss();
+			shareDialog.dismiss();
 		}
 
 		@Override
 		public void onCancel(SHARE_MEDIA platform) {
 			ToastUtils.show_allways(context, "用户退出认证");
-			Sharedialog.dismiss();
+			shareDialog.dismiss();
 		}
 	};
-	
-	private void setlistener() {
+
+	private void setListener() {
 		head_left.setOnClickListener(this);
 		lin_share.setOnClickListener(this);
 		lin_favorite.setOnClickListener(this);
@@ -239,7 +241,7 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 			ContentDesc=list.getContentDesc();
 			id = list.getContentId();
 		} else if (type != null && type.trim().equals("main")) {
-			//congmainlaide 再做一个
+			// 再做一个
 			RadioName = this.getIntent().getStringExtra("conentname");
 			id = this.getIntent().getStringExtra("id");
 		} else {
@@ -256,10 +258,10 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 		Log.e("本节目的专辑ID为", id + "");
 	}
 
-	private void setview() {
+	private void setView() {
 		tv_album_name = (TextView) findViewById(R.id.head_name_tv);
 		img_album = (ImageView) findViewById(R.id.img_album);
-		imgageFavorite = (ImageView) findViewById(R.id.img_favorite);
+		imageFavorite = (ImageView) findViewById(R.id.img_favorite);
 		head_left = (LinearLayout) findViewById(R.id.head_left_btn);	// 返回按钮
 		lin_share = (LinearLayout) findViewById(R.id.lin_share);		// 分享按钮
 		lin_favorite = (LinearLayout) findViewById(R.id.lin_favorite);	// 喜欢按钮
@@ -275,45 +277,42 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.head_left_btn: // 左上角返回键
-			finish();
-			break;
-		case R.id.lin_share: // 分享
-			Sharedialog.show();
-			break;
-		case R.id.lin_favorite: // 喜欢
-			if (ContentFavorite != null && !ContentFavorite.equals("")) {
-				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-					dialog = DialogUtils.Dialogph(context, "正在获取数据", dialog);
-					sendFavorite();
+			case R.id.head_left_btn: // 左上角返回键
+				finish();
+				break;
+			case R.id.lin_share: // 分享
+				shareDialog.show();
+				break;
+			case R.id.lin_favorite: // 喜欢
+				if (ContentFavorite != null && !ContentFavorite.equals("")) {
+					if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+						dialog = DialogUtils.Dialogph(context, "正在获取数据", dialog);
+						sendFavorite();
+					} else {
+						ToastUtils.show_allways(context, "网络失败，请检查网络");
+					}
 				} else {
-					ToastUtils.show_allways(context, "网络失败，请检查网络");
+					ToastUtils.show_allways(context, "专辑信息获取异常");
 				}
-			} else {
-				ToastUtils.show_allways(context, "专辑信息获取异常");
-			}
-			break;
-		case R.id.text_details: // 详情
-			textProgram.setClickable(true);
-			textDetails.setClickable(false);
-			currentIndex = 1;
-			targetIndex = 0;
-			imageMove();
-			changeFragmentContent(R.id.frame_change, detailsFragment);
-			break;
-		case R.id.text_program: // 列表
-			textProgram.setClickable(false);
-			textDetails.setClickable(true);
-			currentIndex = 0;
-			targetIndex = 1;
-			imageMove();
-			changeFragmentContent(R.id.frame_change, programFragment);
-			break;
+				break;
+			case R.id.text_details: // 详情
+				textProgram.setClickable(true);
+				textDetails.setClickable(false);
+				currentIndex = 1;
+				targetIndex = 0;
+				imageMove();
+				changeFragmentContent(R.id.frame_change, detailsFragment);
+				break;
+			case R.id.text_program: // 列表
+				textProgram.setClickable(false);
+				textDetails.setClickable(true);
+				currentIndex = 0;
+				targetIndex = 1;
+				imageMove();
+				changeFragmentContent(R.id.frame_change, programFragment);
+				break;
 		}
 	}
-	
-	public static ImageView imgageFavorite;
-	private String tag = "ALBUM_VOLLEY_REQUEST_CANCEL_TAG";
 
 	/**
 	 * 发送网络请求  获取喜欢数据
@@ -331,7 +330,7 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 		VolleyRequest.RequestPost(GlobalConfig.clickFavoriteUrl, tag, jsonObject, new VolleyCallback() {
 			private String ReturnType;
 			private String Message;
@@ -356,11 +355,11 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 						if (ContentFavorite.equals("0")) {
 							ContentFavorite = "1";
 							tv_favorite.setText("已喜欢");
-							imgageFavorite.setImageDrawable(getResources().getDrawable(R.mipmap.wt_img_liked));
+							imageFavorite.setImageDrawable(getResources().getDrawable(R.mipmap.wt_img_liked));
 						} else {
 							ContentFavorite = "0";
 							tv_favorite.setText("喜欢");
-							imgageFavorite.setImageDrawable(getResources().getDrawable(R.mipmap.wt_img_like));
+							imageFavorite.setImageDrawable(getResources().getDrawable(R.mipmap.wt_img_like));
 						}
 					} else if (ReturnType.equals("0000")) {
 						ToastUtils.show_allways(context, "无法获取相关的参数");
@@ -380,19 +379,19 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 						ToastUtils.show_allways(context, Message + "");
 					}
 				} else {
-					ToastUtils.show_allways(context, "Returntype==null");
+					ToastUtils.show_allways(context, "ReturnType==null");
 				}
 			}
-			
+
 			@Override
 			protected void requestError(VolleyError error) {
 				if (dialog != null) {
 					dialog.dismiss();
-				}				
+				}
 			}
 		});
 	}
-	
+
 	/**
 	 * 切换 Fragment mFragmentContent
 	 */
@@ -412,7 +411,7 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 		fragmentTransaction.commitAllowingStateLoss();
 		mFragmentContent = to;
 	}
-	
+
 	/**
 	 * 设置cursor的宽
 	 */
@@ -427,12 +426,12 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 		int screenW = dm.widthPixels;
 		offset = (screenW / 2 - bmpW) / 2;
 
-		// imgageview设置平移，使下划线平移到初始位置（平移一个offset）
+		// imageView设置平移，使下划线平移到初始位置（平移一个offset）
 		Matrix matrix = new Matrix();
 		matrix.postTranslate(offset, 0);
 		imageCursor.setImageMatrix(matrix);
 	}
-	
+
 	/**
 	 * ImageCursor 移动动画
 	 */
@@ -448,7 +447,7 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 		} else if (currentIndex == 1) { 		// 专辑
 			textDetails.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
 			textProgram.setTextColor(context.getResources().getColor(R.color.group_item_text2));
-		} 
+		}
 	}
 
 	@Override
@@ -456,7 +455,18 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 		super.onActivityResult(requestCode, resultCode, data);
 		UMShareAPI.get(context).onActivityResult(requestCode, resultCode, data);
 	}
-	
+
+
+	// 设置android app 的字体大小不受系统字体大小改变的影响
+	@Override
+	public Resources getResources() {
+		Resources res = super.getResources();
+		Configuration config = new Configuration();
+		config.setToDefaults();
+		res.updateConfiguration(config, res.getDisplayMetrics());
+		return res;
+	}
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -476,10 +486,9 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 		lin_share = null;
 		lin_favorite = null;
 		dialog = null;
-		Sharedialog = null;
-		dialog1 = null;	
-		mShareAPI = null;
-		image = null;	
+		shareDialog = null;
+		dialog1 = null;
+		image = null;
 		programFragment = null;
 		detailsFragment = null;
 		mFragmentContent = null;

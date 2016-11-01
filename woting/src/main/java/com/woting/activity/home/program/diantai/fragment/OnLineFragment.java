@@ -34,7 +34,7 @@ import com.woting.activity.home.player.main.fragment.PlayerFragment;
 import com.woting.activity.home.player.main.model.PlayerHistory;
 import com.woting.activity.home.program.album.activity.AlbumActivity;
 import com.woting.activity.home.program.citylist.activity.CityListActivity;
-import com.woting.activity.home.program.diantai.adapter.citynewsadapter;
+import com.woting.activity.home.program.diantai.adapter.cityNewsAdapter;
 import com.woting.activity.home.program.diantai.adapter.onlineAdapter;
 import com.woting.activity.home.program.diantai.model.RadioPlay;
 import com.woting.activity.home.program.fmlist.activity.FMListActivity;
@@ -59,7 +59,7 @@ import java.util.List;
 
 /**
  * 电台主页
- * 
+ *
  * @author 辛龙 2016年2月26日
  */
 public class OnLineFragment extends Fragment {
@@ -67,28 +67,26 @@ public class OnLineFragment extends Fragment {
 	private View rootView;
 	private String ReturnType;
 	private onlineAdapter adapter;
-	/* private ExpandableListView listView_main; */
-	private List<RadioPlay> mainlist;
-	private ExpandableListView listView_main;
-	private int RefreshType;// refreshtype 1为下拉加载 2为上拉加载更多
+	private List<RadioPlay> mainList;
+	private ExpandableListView listView_Main;
+	private int RefreshType;// refreshType 1为下拉加载 2为上拉加载更多
 	private int page = 1;// 数的问题
-	private ArrayList<RadioPlay> newlist = new ArrayList<RadioPlay>();
-	//	private int pagesizenum;
+	private ArrayList<RadioPlay> newList = new ArrayList<>();
 	private String BeginCatalogId;
-	private View headview;
+	private View headView;
 	private LinearLayout lin_address;
-	private TextView tv_name;
+	private TextView tv_Name;
 	private LinearLayout lin_head_more;
 	private GridView gridView;
-	private List<RankInfo> mainlists;
+	private List<RankInfo> mainLists;
 	private SharedPreferences shared;
-	private SearchPlayerHistoryDao dbdao;
-	private String cityid;
+	private SearchPlayerHistoryDao dbDao;
+	private String cityId;
 	private String tag = "ONLINE_VOLLEY_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
 	private PullToRefreshLayout mPullToRefreshLayout;
 	private MessageReceiver Receiver;
-	private String cityname;
+	private String cityName;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -103,23 +101,23 @@ public class OnLineFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (rootView == null) {
 			rootView = inflater.inflate(R.layout.fragment_radio, container, false);
-			listView_main = (ExpandableListView) rootView.findViewById(R.id.listView_main);
-			headview = LayoutInflater.from(context).inflate(R.layout.head_online, null);
-			lin_address = (LinearLayout) headview.findViewById(R.id.lin_address);
-			tv_name = (TextView) headview.findViewById(R.id.tv_name);
-			lin_head_more = (LinearLayout) headview.findViewById(R.id.lin_head_more);
-			gridView = (GridView) headview.findViewById(R.id.gridView);
+			listView_Main = (ExpandableListView) rootView.findViewById(R.id.listView_main);
+			headView = LayoutInflater.from(context).inflate(R.layout.head_online, null);
+			lin_address = (LinearLayout) headView.findViewById(R.id.lin_address);
+			tv_Name = (TextView) headView.findViewById(R.id.tv_name);
+			lin_head_more = (LinearLayout) headView.findViewById(R.id.lin_head_more);
+			gridView = (GridView) headView.findViewById(R.id.gridView);
 			// 取消默认selector
 			gridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 			mPullToRefreshLayout=(PullToRefreshLayout)rootView.findViewById(R.id.refresh_view);
 			setView();
-			listView_main.addHeaderView(headview);
+			listView_Main.addHeaderView(headView);
 			if(Receiver==null){
 				Receiver = new MessageReceiver();
 				IntentFilter filter = new IntentFilter();
 				filter.addAction(BroadcastConstants.CITY_CHANGE);
 				context.registerReceiver(Receiver, filter);
-			}	
+			}
 		}
 		return rootView;
 	}
@@ -130,14 +128,18 @@ public class OnLineFragment extends Fragment {
 			String action = intent.getAction();
 			if (action.equals(BroadcastConstants.CITY_CHANGE)) {
 				if(GlobalConfig.CityName!=null){
-					cityname=GlobalConfig.CityName;
+					cityName=GlobalConfig.CityName;
 				}
-				tv_name.setText(cityname);
+				tv_Name.setText(cityName);
 				page=1;
 				BeginCatalogId="";
 				RefreshType=1;
-				getcity();
-				send();
+				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+					send();
+					getCity();
+				}else{
+					ToastUtils.show_allways(context,"网络异常");
+				}
 				Editor et = shared.edit();
 				et.putString(StringConstant.CITYTYPE, "false");
 				et.commit();
@@ -153,12 +155,11 @@ public class OnLineFragment extends Fragment {
 		if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 			RefreshType = 1;
 			BeginCatalogId = "";
-			String cityname = shared.getString(StringConstant.CITYNAME, "北京");
-			tv_name.setText(cityname);
-			getcity();
+			String cityName = shared.getString(StringConstant.CITYNAME, "北京");
+			tv_Name.setText(cityName);
+			getCity();
 			send();
 		} else {
-			//listView_main.stopLoadMore();
 			mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.FAIL);
 			ToastUtils.show_short(context, "网络失败，请检查网络");
 		}
@@ -176,7 +177,7 @@ public class OnLineFragment extends Fragment {
 	 * 初始化数据库命令执行对象
 	 */
 	private void initDao() {
-		dbdao = new SearchPlayerHistoryDao(context);
+		dbDao = new SearchPlayerHistoryDao(context);
 	}
 
 	private void setView() {
@@ -193,22 +194,22 @@ public class OnLineFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				if (mainlists != null) {
-					String cityid = shared.getString(StringConstant.CITYID, "110000");
-					String cityname = shared.getString(StringConstant.CITYNAME, "北京");
+				if (mainLists != null) {
+					String cityId = shared.getString(StringConstant.CITYID, "110000");
+					String cityName = shared.getString(StringConstant.CITYNAME, "北京");
 					Intent intent = new Intent(context, FMListActivity.class);
 					Bundle bundle = new Bundle();
 					bundle.putString("fromtype", "online");
-					bundle.putString("name", cityname);
+					bundle.putString("name", cityName);
 					bundle.putString("type", "2");
-					bundle.putString("id", cityid);
+					bundle.putString("id", cityId);
 					intent.putExtras(bundle);
 					startActivity(intent);
 				}
 			}
 		});
 
-		listView_main.setOnGroupClickListener(new OnGroupClickListener() {
+		listView_Main.setOnGroupClickListener(new OnGroupClickListener() {
 
 			@Override
 			public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
@@ -216,7 +217,7 @@ public class OnLineFragment extends Fragment {
 			}
 		});
 
-		listView_main.setGroupIndicator(null);
+		listView_Main.setGroupIndicator(null);
 		mPullToRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
 
 			@Override
@@ -233,7 +234,6 @@ public class OnLineFragment extends Fragment {
 
 			@Override
 			public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
-				//if (page <= pagesizenum) {
 				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 					RefreshType = 2;
 					send();
@@ -241,24 +241,24 @@ public class OnLineFragment extends Fragment {
 				} else {
 					ToastUtils.show_short(context, "网络失败，请检查网络");
 				}
-			} 
+			}
 
 		});
 
-		listView_main.setSelector(new ColorDrawable(Color.TRANSPARENT));
+		listView_Main.setSelector(new ColorDrawable(Color.TRANSPARENT));
 	}
 
-	private void getcity() {
+	private void getCity() {
 		// 此处在splashActivity中refreshB设置成true
-		cityid = shared.getString(StringConstant.CITYID, "110000");
+		cityId = shared.getString(StringConstant.CITYID, "110000");
 		if(GlobalConfig.AdCode!=null&&!GlobalConfig.AdCode.equals("")){
-			cityid=GlobalConfig.AdCode;
+			cityId=GlobalConfig.AdCode;
 		}
 		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
 			jsonObject.put("MediaType", "RADIO");
 			jsonObject.put("CatalogType", "2");
-			jsonObject.put("CatalogId", cityid);
+			jsonObject.put("CatalogId", cityId);
 			jsonObject.put("Page", "1");
 			jsonObject.put("PerSize", "3");
 			jsonObject.put("ResultType", "3");
@@ -268,7 +268,7 @@ public class OnLineFragment extends Fragment {
 		}
 
 		VolleyRequest.RequestPost(GlobalConfig.getContentUrl, tag, jsonObject, new VolleyCallback() {
-			private citynewsadapter adapters;
+			private cityNewsAdapter adapters;
 
 			@Override
 			protected void requestSuccess(JSONObject result) {
@@ -282,15 +282,15 @@ public class OnLineFragment extends Fragment {
 						String ResultList = result.getString("ResultList");
 						JSONTokener jsonParser = new JSONTokener(ResultList);
 						JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-						String MainList = arg1.getString("List"); 
-						mainlists = new Gson().fromJson(MainList, new TypeToken<List<RankInfo>>() {}.getType());
+						String MainList = arg1.getString("List");
+						mainLists = new Gson().fromJson(MainList, new TypeToken<List<RankInfo>>() {}.getType());
 						if (adapters == null) {
-							adapters = new citynewsadapter(context, mainlists);
+							adapters = new cityNewsAdapter(context, mainLists);
 							gridView.setAdapter(adapters);
 						} else {
 							adapters.notifyDataSetChanged();
 						}
-						gridlistener();
+						gridListener();
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -304,46 +304,46 @@ public class OnLineFragment extends Fragment {
 		});
 	}
 
-	protected void gridlistener() {
+	protected void gridListener() {
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				if (mainlists != null && mainlists.get(position) != null && mainlists.get(position).getMediaType() != null) {
-					String MediaType = mainlists.get(position).getMediaType();
+				if (mainLists != null && mainLists.get(position) != null && mainLists.get(position).getMediaType() != null) {
+					String MediaType = mainLists.get(position).getMediaType();
 					if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
-						String playername = mainlists.get(position).getContentName();
-						String playerimage = mainlists.get(position).getContentImg();
-						String playerurl = mainlists.get(position).getContentPlay();
-						String playerurI = mainlists.get(position).getContentURI();
-						String playermediatype = mainlists.get(position).getMediaType();
-						String playcontentshareurl = mainlists.get(position).getContentShareURL();
+						String playername = mainLists.get(position).getContentName();
+						String playerimage = mainLists.get(position).getContentImg();
+						String playerurl = mainLists.get(position).getContentPlay();
+						String playerurI = mainLists.get(position).getContentURI();
+						String playermediatype = mainLists.get(position).getMediaType();
+						String playcontentshareurl = mainLists.get(position).getContentShareURL();
 						String plaplayeralltime = "0";
 						String playerintime = "0";
-						String playercontentdesc = mainlists.get(position).getCurrentContent();
-						String playernum = mainlists.get(position).getWatchPlayerNum();
+						String playercontentdesc = mainLists.get(position).getCurrentContent();
+						String playernum = mainLists.get(position).getWatchPlayerNum();
 						String playerzantype = "0";
 						String playerfrom = "";
 						String playerfromid = "";
 						String playerfromurl = "";
 						String playeraddtime = Long.toString(System.currentTimeMillis());
 						String bjuserid =CommonUtils.getUserId(context);
-						String ContentFavorite=mainlists.get(position).getContentFavorite();
-						String ContentId= mainlists.get(position).getContentId();
-						String localurl=mainlists.get(position).getLocalurl();
-						String sequName=mainlists.get(position).getSequName();
-						String sequId=mainlists.get(position).getSequId();
-						String sequDesc=mainlists.get(position).getSequDesc();
-						String sequImg=mainlists.get(position).getSequImg();
+						String ContentFavorite=mainLists.get(position).getContentFavorite();
+						String ContentId= mainLists.get(position).getContentId();
+						String localurl=mainLists.get(position).getLocalurl();
+						String sequName=mainLists.get(position).getSequName();
+						String sequId=mainLists.get(position).getSequId();
+						String sequDesc=mainLists.get(position).getSequDesc();
+						String sequImg=mainLists.get(position).getSequImg();
 
 						//如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-						PlayerHistory history = new PlayerHistory( 
-								playername,  playerimage, playerurl, playerurI,playermediatype, 
+						PlayerHistory history = new PlayerHistory(
+								playername,  playerimage, playerurl, playerurI,playermediatype,
 								plaplayeralltime, playerintime, playercontentdesc, playernum,
 								playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
 								ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
-						dbdao.deleteHistory(playerurl);
-						dbdao.addHistory(history);
-						PlayerFragment.SendTextRequest(mainlists.get(position).getContentName(), context);
+						dbDao.deleteHistory(playerurl);
+						dbDao.addHistory(history);
+						PlayerFragment.SendTextRequest(mainLists.get(position).getContentName(), context);
 						HomeActivity.UpdateViewPager();
 					}
 				}
@@ -358,7 +358,7 @@ public class OnLineFragment extends Fragment {
 			jsonObject.put("CatalogType", "1");// 按地区分类
 			JSONObject js=new JSONObject();
 			js.put("CatalogType","2");
-			js.put("CatalogId",cityid);
+			js.put("CatalogId",cityId);
 			jsonObject.put("FilterData", js);
 			jsonObject.put("BeginCatalogId", BeginCatalogId);
 			jsonObject.put("Page", String.valueOf(page));
@@ -377,7 +377,6 @@ public class OnLineFragment extends Fragment {
 				if(isCancelRequest){
 					return ;
 				}
-				String s=""+result.toString();
 				page++;
 				try {
 					ReturnType = result.getString("ReturnType");
@@ -389,29 +388,29 @@ public class OnLineFragment extends Fragment {
 							JSONObject arg1 = (JSONObject) jsonParser.nextValue();
 							MainList = arg1.getString("List");
 							BeginCatalogId = arg1.getString("BeginCatalogId");
-							mainlist = new Gson().fromJson(MainList, new TypeToken<List<RadioPlay>>() {}.getType());
+							mainList = new Gson().fromJson(MainList, new TypeToken<List<RadioPlay>>() {}.getType());
 							if (RefreshType == 1) {
 								mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-								newlist.clear();
-								newlist.addAll(mainlist);
+								newList.clear();
+								newList.addAll(mainList);
 								if (adapter == null) {
-									adapter = new onlineAdapter(context, newlist);
-									listView_main.setAdapter(adapter);
+									adapter = new onlineAdapter(context, newList);
+									listView_Main.setAdapter(adapter);
 								} else {
 									adapter.notifyDataSetChanged();
 								}
 							}
 							if (RefreshType == 2) {
 								mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
-								newlist.addAll(mainlist);
+								newList.addAll(mainList);
 								adapter.notifyDataSetChanged();
 							}
-							for (int i = 0; i < newlist.size(); i++) {
-								listView_main.expandGroup(i);
+							for (int i = 0; i < newList.size(); i++) {
+								listView_Main.expandGroup(i);
 							}
 							setItemListener();
 						}else{
-
+							ToastUtils.show_allways(context, "暂无数据");
 						}
 					} else {
 
@@ -431,37 +430,37 @@ public class OnLineFragment extends Fragment {
 
 	// 初始一号位置为0,0
 	protected void setItemListener() {
-		listView_main.setOnChildClickListener(new OnChildClickListener() {
+		listView_Main.setOnChildClickListener(new OnChildClickListener() {
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-				if (newlist != null && newlist.get(groupPosition).getList().get(childPosition) != null
-						&& newlist.get(groupPosition).getList().get(childPosition).getMediaType() != null) {
-					String MediaType = newlist.get(groupPosition).getList().get(childPosition).getMediaType();
+				if (newList != null && newList.get(groupPosition).getList().get(childPosition) != null
+						&& newList.get(groupPosition).getList().get(childPosition).getMediaType() != null) {
+					String MediaType = newList.get(groupPosition).getList().get(childPosition).getMediaType();
 					if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
-						String playername = newlist.get(groupPosition).getList().get(childPosition).getContentName();
-						String playerimage = newlist.get(groupPosition).getList().get(childPosition).getContentImg();
-						String playerurl = newlist.get(groupPosition).getList().get(childPosition).getContentPlay();
-						String playerurI = newlist.get(groupPosition).getList().get(childPosition).getContentURI();
-						String playermediatype = newlist.get(groupPosition).getList().get(childPosition).getMediaType();
-						String playcontentshareurl = newlist.get(groupPosition).getList().get(childPosition).getContentShareURL();
+						String playername = newList.get(groupPosition).getList().get(childPosition).getContentName();
+						String playerimage = newList.get(groupPosition).getList().get(childPosition).getContentImg();
+						String playerurl = newList.get(groupPosition).getList().get(childPosition).getContentPlay();
+						String playerurI = newList.get(groupPosition).getList().get(childPosition).getContentURI();
+						String playermediatype = newList.get(groupPosition).getList().get(childPosition).getMediaType();
+						String playcontentshareurl = newList.get(groupPosition).getList().get(childPosition).getContentShareURL();
 						String plaplayeralltime = "0";
 						String playerintime = "0";
-						String playercontentdesc = newlist.get(groupPosition).getList().get(childPosition).getCurrentContent();
-						String playernum = newlist.get(groupPosition).getList().get(childPosition).getWatchPlayerNum();
+						String playercontentdesc = newList.get(groupPosition).getList().get(childPosition).getCurrentContent();
+						String playernum = newList.get(groupPosition).getList().get(childPosition).getWatchPlayerNum();
 						String playerzantype = "0";
 						String playerfrom = "";
 						String playerfromid = "";
 						String playerfromurl = "";
 						String playeraddtime = Long.toString(System.currentTimeMillis());
 						String bjuserid =CommonUtils.getUserId(context);
-						String ContentFavorite=newlist.get(groupPosition).getList().get(childPosition).getContentFavorite();
-						String ContentId=newlist.get(groupPosition).getList().get(childPosition).getContentId();
-						String localurl=newlist.get(groupPosition).getList().get(childPosition).getLocalurl();
+						String ContentFavorite=newList.get(groupPosition).getList().get(childPosition).getContentFavorite();
+						String ContentId=newList.get(groupPosition).getList().get(childPosition).getContentId();
+						String localurl=newList.get(groupPosition).getList().get(childPosition).getLocalurl();
 
-						String sequName=newlist.get(groupPosition).getList().get(childPosition).getSequName();
-						String sequId=newlist.get(groupPosition).getList().get(childPosition).getSequId();
-						String sequDesc=newlist.get(groupPosition).getList().get(childPosition).getSequDesc();
-						String sequImg=newlist.get(groupPosition).getList().get(childPosition).getSequImg();
+						String sequName=newList.get(groupPosition).getList().get(childPosition).getSequName();
+						String sequId=newList.get(groupPosition).getList().get(childPosition).getSequId();
+						String sequDesc=newList.get(groupPosition).getList().get(childPosition).getSequDesc();
+						String sequImg=newList.get(groupPosition).getList().get(childPosition).getSequImg();
 
 						//如果该数据已经存在数据库则删除原有数据，然后添加最新数据
 						PlayerHistory history = new PlayerHistory(
@@ -469,16 +468,16 @@ public class OnLineFragment extends Fragment {
 								plaplayeralltime, playerintime, playercontentdesc, playernum,
 								playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
 								ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
-						dbdao.deleteHistory(playerurl);
-						dbdao.addHistory(history);
+						dbDao.deleteHistory(playerurl);
+						dbDao.addHistory(history);
 						HomeActivity.UpdateViewPager();
-						PlayerFragment.SendTextRequest(newlist.get(groupPosition).getList().get(childPosition).getContentName(), context);
+						PlayerFragment.SendTextRequest(newList.get(groupPosition).getList().get(childPosition).getContentName(), context);
 
 					} else if (MediaType.equals("SEQU")) {
 						Intent intent = new Intent(context, AlbumActivity.class);
 						Bundle bundle = new Bundle();
 						bundle.putString("type", "recommend");
-						bundle.putSerializable("list", (Serializable) newlist.get(groupPosition).getList());
+						bundle.putSerializable("list", (Serializable) newList.get(groupPosition).getList());
 						intent.putExtras(bundle);
 						startActivity(intent);
 					} else {
@@ -493,18 +492,18 @@ public class OnLineFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		String citytype = shared.getString(StringConstant.CITYTYPE, "false");
-		cityname = shared.getString(StringConstant.CITYNAME, "北京");
-		cityid = shared.getString(StringConstant.CITYID, "110000");
+		String cityType = shared.getString(StringConstant.CITYTYPE, "false");
+		cityName = shared.getString(StringConstant.CITYNAME, "北京");
+		cityId = shared.getString(StringConstant.CITYID, "110000");
 		if(GlobalConfig.CityName!=null){
-			cityname=GlobalConfig.CityName;
+			cityName=GlobalConfig.CityName;
 		}
-		if (citytype != null && citytype.equals("true")) {
-			tv_name.setText(cityname);
+		if (cityType != null && cityType.equals("true")) {
+			tv_Name.setText(cityName);
 			page=1;
 			BeginCatalogId="";
 			RefreshType=1;
-			getcity();
+			getCity();
 			send();
 			Editor et = shared.edit();
 			et.putString(StringConstant.CITYTYPE, "false");

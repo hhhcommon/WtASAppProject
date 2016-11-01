@@ -17,7 +17,7 @@ import com.android.volley.toolbox.Volley;
 import com.umeng.socialize.PlatformConfig;
 import com.woting.activity.download.service.DownloadService;
 import com.woting.activity.home.program.citylist.dao.CityInfoDao;
-import com.woting.activity.home.program.fenlei.model.fenleiname;
+import com.woting.activity.home.program.fenlei.model.CatalogName;
 import com.woting.activity.interphone.commom.service.NotificationService;
 import com.woting.activity.interphone.commom.service.VoiceStreamPlayerService;
 import com.woting.activity.interphone.commom.service.VoiceStreamRecordService;
@@ -223,7 +223,7 @@ public class BSApplication extends Application implements Location{
 		//获取当前的城市list信息
 		if(CID==null){			CID=new CityInfoDao(instance);
 		}
-		List<fenleiname> list = CID.queryCityInfo();
+		List<CatalogName> list = CID.queryCityInfo();
 		if(list.size()==0){
 			adCode="110000";
 		}else{

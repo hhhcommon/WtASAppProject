@@ -15,7 +15,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
@@ -35,7 +34,6 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
-import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
 import com.woting.widgetui.xlistview.XListView;
 import com.woting.widgetui.xlistview.XListView.IXListViewListener;
@@ -54,31 +52,31 @@ import java.util.List;
 public class ClassifyFragment extends Fragment{
 	private View rootView;
 	private Context context;
-	private XListView mlistview;			// 列表
+	private XListView mListView;			// 列表
 	private Dialog dialog;					// 加载对话框
 	private int page = 1;					// 页码
-	private List<ListInfo> newlist;
-	private int pagesizenum;
-	private SearchPlayerHistoryDao dbdao;	// 数据库
+	private List<ListInfo> newList;
+	private int pageSizeNum;
+	private SearchPlayerHistoryDao dbDao;	// 数据库
 	protected List<ListInfo> SubList;
 	protected ListInfoAdapter adapter;
-	private int RefreshType;				// refreshtype 1为下拉加载 2为上拉加载更多
-	private View headview;					// 头部视图
+	private int RefreshType;				// refreshType 1为下拉加载 2为上拉加载更多
+	private View headView;					// 头部视图
 	private String CatalogId;
 	private String CatalogType;
 	private RollPagerView mLoopViewPager;
 
 	/**
-     * 创建 Fragment 实例
-     */
-    public static Fragment instance(String CatalogId, String CatalogType) {
-    	Fragment fragment = new ClassifyFragment();
+	 * 创建 Fragment 实例
+	 */
+	public static Fragment instance(String CatalogId, String CatalogType) {
+		Fragment fragment = new ClassifyFragment();
 		Bundle bundle = new Bundle();
 		bundle.putString("CatalogId", CatalogId);
 		bundle.putString("CatalogType", CatalogType);
 		fragment.setArguments(bundle);
 		return fragment;
-    }
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -95,14 +93,13 @@ public class ClassifyFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if(rootView == null){
 			rootView = inflater.inflate(R.layout.fragment_radio_list_layout, container, false);
-			headview = LayoutInflater.from(context).inflate(R.layout.headview_acitivity_radiolist, null);
+			headView = LayoutInflater.from(context).inflate(R.layout.headview_acitivity_radiolist, null);
 			// 轮播图
-			mLoopViewPager= (RollPagerView) headview.findViewById(R.id.slideshowView);
-//	        mLoopViewPager.setPlayDelay(5000);
+			mLoopViewPager= (RollPagerView) headView.findViewById(R.id.slideshowView);
 			mLoopViewPager.setAdapter(new LoopAdapter(mLoopViewPager));
 			mLoopViewPager.setHintView(new IconHintView(context,R.mipmap.indicators_now,R.mipmap.indicators_default));
-			mlistview = (XListView) rootView.findViewById(R.id.listview_fm);
-			mlistview.addHeaderView(headview);
+			mListView = (XListView) rootView.findViewById(R.id.listview_fm);
+			mListView.addHeaderView(headView);
 			setListener();
 		}
 		if (dialog != null) {
@@ -112,29 +109,29 @@ public class ClassifyFragment extends Fragment{
 	}
 
 	/**
-	 * 与onActivityCreated()方法 解决预加载问题 
+	 * 与onActivityCreated()方法 解决预加载问题
 	 */
 	@Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        if(isVisibleToUser && adapter == null && getActivity() != null){
-            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		if(isVisibleToUser && adapter == null && getActivity() != null){
+			if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 				dialog = DialogUtils.Dialogph(context, "正在获取数据", dialog);
-				newlist = new ArrayList<ListInfo>();
+				newList = new ArrayList<>();
 				sendRequest();
 			} else {
 				ToastUtils.show_short(context, "网络连接失败，请稍后重试");
 			}
-        }
-        super.setUserVisibleHint(isVisibleToUser);
-    }
+		}
+		super.setUserVisibleHint(isVisibleToUser);
+	}
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setUserVisibleHint(getUserVisibleHint());
-    }
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		setUserVisibleHint(getUserVisibleHint());
+	}
 
-    private int pageSize;
+	private int pageSize;
 
 	/**
 	 * 请求网络获取分类信息
@@ -165,36 +162,36 @@ public class ClassifyFragment extends Fragment{
 						String PageSize = arg1.getString("PageSize");
 						String Allcount = arg1.getString("AllCount");
 						if(Integer.valueOf(PageSize) < 10){
-							mlistview.stopLoadMore();
-							mlistview.setPullLoadEnable(false);
+							mListView.stopLoadMore();
+							mListView.setPullLoadEnable(false);
 						}else{
-							mlistview.setPullLoadEnable(true);
+							mListView.setPullLoadEnable(true);
 						}
 						if (Allcount != null && !Allcount.equals("") && PageSize != null && !PageSize.equals("")) {
 							int allcount = Integer.valueOf(Allcount);
 							pageSize = Integer.valueOf(PageSize);
 							// 先求余 如果等于0 最后结果不加1 如果不等于0 结果加一
 							if (allcount % pageSize == 0) {
-								pagesizenum = allcount / pageSize;
+								pageSizeNum = allcount / pageSize;
 							} else {
-								pagesizenum = allcount / pageSize + 1;
+								pageSizeNum = allcount / pageSize + 1;
 							}
 						} else {
 							ToastUtils.show_allways(context, "页码获取异常");
 						}
 						SubList = new Gson().fromJson(StringSubList, new TypeToken<List<ListInfo>>() {}.getType());
 						if (RefreshType == 1) {
-							mlistview.stopRefresh();
-							newlist.clear();
-							newlist.addAll(SubList);
-							adapter = new ListInfoAdapter(context, newlist);
-							mlistview.setAdapter(adapter);
+							mListView.stopRefresh();
+							newList.clear();
+							newList.addAll(SubList);
+							adapter = new ListInfoAdapter(context, newList);
+							mListView.setAdapter(adapter);
 						} else if (RefreshType == 2) {
-							mlistview.stopLoadMore();
-							newlist.addAll(SubList);
+							mListView.stopLoadMore();
+							newList.addAll(SubList);
 							adapter.notifyDataSetChanged();
 						}
-						setonitem();
+						setOnItem();
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -213,17 +210,8 @@ public class ClassifyFragment extends Fragment{
 	}
 
 	private JSONObject setParam(){
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-			jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-			jsonObject.put("IMEI", PhoneMessage.imei);
-			PhoneMessage.getGps(context);
-			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-			jsonObject.put("PCDType", GlobalConfig.PCDType);
-			// 模块属性
-			jsonObject.put("UserId", CommonUtils.getUserId(context));
 			jsonObject.put("CatalogType", CatalogType);
 			jsonObject.put("CatalogId", CatalogId);
 			jsonObject.put("Page", String.valueOf(page));
@@ -236,55 +224,55 @@ public class ClassifyFragment extends Fragment{
 		return jsonObject;
 	}
 
-	private void setonitem() {
-		mlistview.setOnItemClickListener(new OnItemClickListener() {
+	private void setOnItem() {
+		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-				if(newlist != null && newlist.get(position - 2) != null && newlist.get(position - 2).getMediaType() != null){
-					String MediaType = newlist.get(position - 2).getMediaType();
+				if(newList != null && newList.get(position - 2) != null && newList.get(position - 2).getMediaType() != null){
+					String MediaType = newList.get(position - 2).getMediaType();
 					if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
-						String playername = newlist.get(position - 2).getContentName();
-						String playerimage = newlist.get(position - 2).getContentImg();
-						String playerurl = newlist.get(position - 2).getContentPlay();
-						String playerurI = newlist.get(position - 2).getContentURI();
-						String playcontentshareurl=newlist.get(position - 2).getContentShareURL();
-						String playermediatype = newlist.get(position - 2).getMediaType();
-						String plaplayeralltime = "0";
-						String playerintime = "0";
-						String playercontentdesc = newlist.get(position - 2).getContentDesc();
-						String playernum = newlist.get(position - 2).getPlayCount();
-						String playerzantype = "0";
-						String playerfrom = "";
-						String playerfromid = "";
-						String playerfromurl = "";
-						String playeraddtime = Long.toString(System.currentTimeMillis());
-						String bjuserid =CommonUtils.getUserId(context);
-						String ContentFavorite= newlist.get(position - 2).getContentFavorite();
-						String ContentId= newlist.get(position - 2).getContentId();
-						String localurl=newlist.get(position - 2).getLocalurl();
+						String playerName = newList.get(position - 2).getContentName();
+						String playerImage = newList.get(position - 2).getContentImg();
+						String playUrl = newList.get(position - 2).getContentPlay();
+						String playUrI = newList.get(position - 2).getContentURI();
+						String playContentShareUrl=newList.get(position - 2).getContentShareURL();
+						String playMediaType = newList.get(position - 2).getMediaType();
+						String playAllTime = "0";
+						String playInTime = "0";
+						String playContentDesc = newList.get(position - 2).getContentDesc();
+						String playNum = newList.get(position - 2).getPlayCount();
+						String playZanType = "0";
+						String playFrom = "";
+						String playFromId = "";
+						String playFromUrl = "";
+						String playAddTime = Long.toString(System.currentTimeMillis());
+						String bjUserId =CommonUtils.getUserId(context);
+						String ContentFavorite= newList.get(position - 2).getContentFavorite();
+						String ContentId= newList.get(position - 2).getContentId();
+						String localUrl=newList.get(position - 2).getLocalurl();
 
-						String sequName=newlist.get(position-2).getSequName();
-						String sequId=newlist.get(position-2).getSequId();
-						String sequDesc=newlist.get(position-2).getSequDesc();
-						String sequImg=newlist.get(position-2).getSequImg();
+						String sequName=newList.get(position-2).getSequName();
+						String sequId=newList.get(position-2).getSequId();
+						String sequDesc=newList.get(position-2).getSequDesc();
+						String sequImg=newList.get(position-2).getSequImg();
 
 						//如果该数据已经存在数据库则删除原有数据，然后添加最新数据
 						PlayerHistory history = new PlayerHistory(
-								playername,  playerimage, playerurl, playerurI,playermediatype,
-								plaplayeralltime, playerintime, playercontentdesc, playernum,
-								playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
-								ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
-						dbdao.deleteHistory(playerurl);
-						dbdao.addHistory(history);
+								playerName,  playerImage, playUrl, playUrI,playMediaType,
+								playAllTime, playInTime, playContentDesc, playNum,
+								playZanType, playFrom , playFromId,playFromUrl,playAddTime,bjUserId,playContentShareUrl,
+								ContentFavorite,ContentId,localUrl,sequName,sequId,sequDesc,sequImg);
+						dbDao.deleteHistory(playUrl);
+						dbDao.addHistory(history);
 
 						HomeActivity.UpdateViewPager();
-						PlayerFragment.SendTextRequest(newlist.get(position - 2).getContentName(),context);
+						PlayerFragment.SendTextRequest(newList.get(position - 2).getContentName(),context);
 						getActivity().finish();
 					} else if (MediaType.equals("SEQU")) {
 						Intent intent = new Intent(context, AlbumActivity.class);
 						Bundle bundle = new Bundle();
 						bundle.putString("type", "radiolistactivity");
-						bundle.putSerializable("list", newlist.get(position - 2));
+						bundle.putSerializable("list", newList.get(position - 2));
 						intent.putExtras(bundle);
 						startActivityForResult(intent, 1);
 					} else {
@@ -299,10 +287,10 @@ public class ClassifyFragment extends Fragment{
 	 * 设置刷新、加载更多参数
 	 */
 	private void setListener() {
-		mlistview.setPullLoadEnable(true);
-		mlistview.setPullRefreshEnable(true);
-		mlistview.setSelector(new ColorDrawable(Color.TRANSPARENT));
-		mlistview.setXListViewListener(new IXListViewListener() {
+		mListView.setPullLoadEnable(true);
+		mListView.setPullRefreshEnable(true);
+		mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+		mListView.setXListViewListener(new IXListViewListener() {
 			@Override
 			public void onRefresh() {
 				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
@@ -316,7 +304,7 @@ public class ClassifyFragment extends Fragment{
 
 			@Override
 			public void onLoadMore() {
-				if (page <= pagesizenum) {
+				if (page <= pageSizeNum) {
 					if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 						RefreshType = 2;
 						sendRequest();
@@ -325,8 +313,8 @@ public class ClassifyFragment extends Fragment{
 						ToastUtils.show_short(context, "网络失败，请检查网络");
 					}
 				} else {
-					mlistview.stopLoadMore();
-					mlistview.setPullLoadEnable(false);
+					mListView.stopLoadMore();
+					mListView.setPullLoadEnable(false);
 					ToastUtils.show_short(context, "已经没有最新的数据了");
 				}
 			}
@@ -337,43 +325,43 @@ public class ClassifyFragment extends Fragment{
 	 * 初始化数据库命令执行对象
 	 */
 	private void initDao() {
-		dbdao = new SearchPlayerHistoryDao(context);
+		dbDao = new SearchPlayerHistoryDao(context);
 	}
 
 	@Override
 	public void onDestroyView() {
-		super .onDestroyView(); 
+		super .onDestroyView();
 		if (null != rootView) {
-			((ViewGroup) rootView.getParent()).removeView(rootView);   
+			((ViewGroup) rootView.getParent()).removeView(rootView);
 		}
 	}
-	
+
 	private class LoopAdapter extends LoopPagerAdapter{
-        public LoopAdapter(RollPagerView viewPager) {
+		public LoopAdapter(RollPagerView viewPager) {
 			super(viewPager);
 		}
 
-		private int count = imgs.length;
+		private int count = images.length;
 
-        @Override
-        public View getView(ViewGroup container, int position) {
-            ImageView view = new ImageView(container.getContext());
-            view.setScaleType(ImageView.ScaleType.FIT_XY);
-            view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-			Picasso.with(context).load(imgs[position%count]).into(view);
+		@Override
+		public View getView(ViewGroup container, int position) {
+			ImageView view = new ImageView(container.getContext());
+			view.setScaleType(ImageView.ScaleType.FIT_XY);
+			view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+			Picasso.with(context).load(images[position%count]).into(view);
 			return view;
-        }
+		}
 
 		@Override
 		public int getRealCount() {
 			return count;
 		}
-    }
-	
-	public String[] imgs = {
-        "http://pic.500px.me/picurl/vcg5da48ce9497b91f9c81c17958d4f882e?code=e165fb4d228d4402",
-        "http://pic.500px.me/picurl/49431365352e4e94936d4562a7fbc74a---jpg?code=647e8e97cd219143",
-        "http://pic.500px.me/picurl/vcgd5d3cfc7257da293f5d2686eec1068d1?code=2597028fc68bd766",
-        "http://pic.500px.me/picurl/vcg1aa807a1b8bd1369e4f983e555d5b23b?code=c0c4bb78458e5503",
+	}
+
+	public String[] images = {
+			"http://pic.500px.me/picurl/vcg5da48ce9497b91f9c81c17958d4f882e?code=e165fb4d228d4402",
+			"http://pic.500px.me/picurl/49431365352e4e94936d4562a7fbc74a---jpg?code=647e8e97cd219143",
+			"http://pic.500px.me/picurl/vcgd5d3cfc7257da293f5d2686eec1068d1?code=2597028fc68bd766",
+			"http://pic.500px.me/picurl/vcg1aa807a1b8bd1369e4f983e555d5b23b?code=c0c4bb78458e5503",
 	};
 }
