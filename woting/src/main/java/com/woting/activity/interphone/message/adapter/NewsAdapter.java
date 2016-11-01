@@ -1,6 +1,7 @@
 package com.woting.activity.interphone.message.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,11 +9,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.message.model.MessageInFo;
 import com.woting.common.config.GlobalConfig;
+import com.woting.util.BitmapUtils;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -57,7 +58,7 @@ public class NewsAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		ViewHolder holder = null;
+		ViewHolder holder ;
 		if(convertView == null){
 			holder = new ViewHolder();
 			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_messagenews, null);
@@ -94,7 +95,8 @@ public class NewsAdapter extends BaseAdapter {
 				}
 				if (lists.getPortrait()== null || lists.getPortrait().equals("")
 						|| lists.getPortrait().equals("null") || lists.getPortrait().trim().equals("")) {
-					holder.Image.setImageResource(R.mipmap.wt_image_tx_hy);
+					Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_hy);
+					holder.Image.setImageBitmap(bmp);
 				} else {
 					String url;
 					if(lists.getPortrait().startsWith("http:")){
@@ -124,7 +126,8 @@ public class NewsAdapter extends BaseAdapter {
 				}
 				if (lists.getProtraitMini() == null || lists.getProtraitMini().equals("")
 						|| lists.getProtraitMini().equals("null") || lists.getProtraitMini().trim().equals("")) {
-					holder.Image.setImageResource(R.mipmap.wt_image_tx_qz);
+					Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_qz);
+					holder.Image.setImageBitmap(bmp);
 				} else {
 					String url;
 					if(lists.getProtraitMini().startsWith("http:")){

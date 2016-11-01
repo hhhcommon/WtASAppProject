@@ -1,6 +1,5 @@
 package com.woting.activity.interphone.main;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
@@ -27,35 +26,32 @@ import com.woting.activity.interphone.notify.activity.NotifyNewsActivity;
 import com.woting.activity.login.login.activity.LoginActivity;
 import com.woting.activity.scanning.activity.CaptureActivity;
 import com.woting.common.adapter.MyFragmentPagerAdapter;
+import com.woting.common.application.BSApplication;
 import com.woting.common.constant.StringConstant;
 import com.woting.util.ToastUtils;
 
 import java.util.ArrayList;
 
 /**
- * 对讲activity
- * @author 辛龙
- * 2016年1月19日
+ * 对讲模块主页
+ * 作者：xinlong on 2016/1/19 21:18
+ * 邮箱：645700751@qq.com
  */
 public class DuiJiangActivity extends FragmentActivity {
 	private static TextView view1;
 	private static TextView view2;
 	private ArrayList<Fragment> fragmentList;
-	//	private Dialog adddialog;
 	private LinearLayout lin_more;
-	private SharedPreferences sharedPreferences;
-	private PopupWindow adddialog;
+	private SharedPreferences sharedPreferences= BSApplication.SharedPreferences;
+	private PopupWindow addDialog;
 	private static ViewPager mPager;
 	private static DuiJiangActivity context;
-	public static final String UPDATA_GROUP = "com.woting.UPDATA_GROUP";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_duijiang);
 		context = this;
-		sharedPreferences = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
-
 		InitTextView();		// 初始化视图
 		InitViewPager();	// 初始化ViewPager
 		dialog(); 			// 初始化功能弹出框
@@ -82,8 +78,8 @@ public class DuiJiangActivity extends FragmentActivity {
 				if (login != null && !login.trim().equals("") && login.equals("true")) {
 				} else {
 				}
-				//				startActivity(new Intent(context, ContactAddInformationActivity.class));
-				adddialog.dismiss();
+				//startActivity(new Intent(context, ContactAddInformationActivity.class));
+				addDialog.dismiss();
 			}
 		});
 
@@ -103,7 +99,7 @@ public class DuiJiangActivity extends FragmentActivity {
 				} else {
 					startActivity(new Intent(context, LoginActivity.class));
 				}
-				adddialog.dismiss();
+				addDialog.dismiss();
 			}
 		});
 
@@ -123,7 +119,7 @@ public class DuiJiangActivity extends FragmentActivity {
 				} else {
 					startActivity(new Intent(context, LoginActivity.class));
 				}
-				adddialog.dismiss();
+				addDialog.dismiss();
 			}
 		});
 
@@ -140,7 +136,7 @@ public class DuiJiangActivity extends FragmentActivity {
 				} else {
 					startActivity(new Intent(context, LoginActivity.class));
 				}
-				adddialog.dismiss();
+				addDialog.dismiss();
 			}
 		});
 
@@ -156,30 +152,29 @@ public class DuiJiangActivity extends FragmentActivity {
 				} else {
 					startActivity(new Intent(context, LoginActivity.class));
 				}
-				adddialog.dismiss();
+				addDialog.dismiss();
 			}
 		});
 
-		adddialog = new PopupWindow(dialog);
+		addDialog = new PopupWindow(dialog);
 //		adddialog = new PopupWindow(dialog, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, true);
 		// 使其聚集
-		adddialog.setFocusable(true);
+		addDialog.setFocusable(true);
 		// 在android4.0/5.0系统上点击内容外部区域无法关闭问题
 //		adddialog.setBackgroundDrawable(new BitmapDrawable());
-		adddialog.setBackgroundDrawable(new ColorDrawable(0x00000000));
+		addDialog.setBackgroundDrawable(new ColorDrawable(0x00000000));
 		// 设置允许在外点击消失
-		adddialog.setOutsideTouchable(true);
+		addDialog.setOutsideTouchable(true);
 		// 控制popupwindow的宽度和高度自适应  
-		dialog.measure(View.MeasureSpec.UNSPECIFIED,   View.MeasureSpec.UNSPECIFIED);  
-		adddialog.setWidth(dialog.getMeasuredWidth());  
-		adddialog.setHeight(dialog.getMeasuredHeight() );  
+		dialog.measure(View.MeasureSpec.UNSPECIFIED,   View.MeasureSpec.UNSPECIFIED);
+		addDialog.setWidth(dialog.getMeasuredWidth());
+		addDialog.setHeight(dialog.getMeasuredHeight() );
 
-		
-		//		adddialog = new Dialog(context, R.style.MyDialog_duijiang);
-		//		adddialog.setContentView(dialog);
-		//		adddialog.setCanceledOnTouchOutside(true);
-		//		adddialog.getWindow().setGravity(Gravity.TOP | Gravity.RIGHT);
-		//		adddialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
+		//addDialog = new Dialog(context, R.style.MyDialog_duijiang);
+		//addDialog.setContentView(dialog);
+		//addDialog.setCanceledOnTouchOutside(true);
+		//addDialog.getWindow().setGravity(Gravity.TOP | Gravity.RIGHT);
+		//addDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
 	}
 
 	/*
@@ -210,11 +205,11 @@ public class DuiJiangActivity extends FragmentActivity {
 		lin_more.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(adddialog!=null&&adddialog.isShowing()){
-					adddialog.dismiss();
+				if(addDialog!=null&&addDialog.isShowing()){
+					addDialog.dismiss();
 				}else{
-					//					adddialog.show();
-					adddialog.showAsDropDown(lin_more);
+					// addDialog.show();
+					addDialog.showAsDropDown(lin_more);
 				}
 			}
 		});
@@ -299,8 +294,6 @@ public class DuiJiangActivity extends FragmentActivity {
 			}
 		}
 	}
-
-
 
 	/*
 	 * 手机实体返回按键的处理

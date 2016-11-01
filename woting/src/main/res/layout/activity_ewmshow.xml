@@ -5,69 +5,42 @@
     android:background="@color/dinglan_orange"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/dinglan_orange"
-        android:gravity="center_vertical" >
+        android:gravity="center_vertical">
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical" >
+        <ImageView
+            android:id="@+id/head_left_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:background="@mipmap/back_images"/>
 
-            <LinearLayout
-                android:id="@+id/head_left_btn"
-                android:layout_width="48dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/head_press"
-                android:gravity="left|center"
-                android:layout_marginLeft="6dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="二维码"
+            android:layout_centerInParent="true"
+            android:textColor="@color/WHITE"
+            android:textSize="@dimen/activity_head_center_s"/>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@mipmap/back_images" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="二维码"
-                android:textColor="@color/WHITE"
-                android:textSize="@dimen/activity_head_center_s" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/dinglan_orange"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="4"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -77,69 +50,65 @@
                 android:layout_marginRight="12dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/color_wt_white"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="25dp"
                         android:gravity="left"
-                        android:layout_marginTop="25dp" 
                         android:paddingLeft="28dp">
 
-                        <LinearLayout
+                        <RelativeLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="right|center"
-                            android:orientation="vertical"
-                            android:paddingRight="13dp" >
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="13dp">
 
-                            <RelativeLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" >
+                            <ImageView
+                                android:id="@+id/image"
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
+                                android:scaleType="centerCrop"
+                                android:src="@mipmap/wt_image_tx_hy"/>
 
-                                <ImageView
-                                    android:id="@+id/image"
-                                    android:layout_width="45dp"
-                                    android:layout_height="45dp"
-                                    android:scaleType="centerCrop"
-                                    android:src="@mipmap/wt_image_tx_hy" />
+                            <ImageView
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
+                                android:src="@mipmap/wt_6_b_y_b"/>
 
-                                <ImageView
-                                    android:layout_width="45dp"
-                                    android:layout_height="45dp"
-                                    android:src="@mipmap/wt_6_b_y_b" />
-                            </RelativeLayout>
-                        </LinearLayout>
+                        </RelativeLayout>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="left"
                             android:orientation="vertical"
-                            android:paddingLeft="5dp" >
+                            android:paddingLeft="5dp">
 
                             <TextView
                                 android:id="@+id/name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="小辛"
+                                android:text="我听科技"
                                 android:textColor="@color/dinglan_orange"
-                                android:textSize="@dimen/wt_button_default_text" />
+                                android:textSize="@dimen/wt_button_default_text"/>
 
                             <TextView
                                 android:id="@+id/news"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="3dp"
+                                android:text="这家伙很懒啥都没写~~"
                                 android:textColor="@color/gray"
-                                android:text="北京  东城"
-                                android:textSize="@dimen/wt_login_text_wjmm" />
+                                android:textSize="@dimen/wt_login_text_wjmm"/>
+
                         </LinearLayout>
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -148,25 +117,29 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:orientation="vertical"
+                        android:paddingBottom="28dp"
                         android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:paddingBottom="28dp">
+                        android:paddingRight="10dp">
 
                         <ImageView
                             android:id="@+id/imageView_ewm"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:scaleType="centerCrop" />
+                            android:scaleType="centerCrop"/>
+
                     </LinearLayout>
+
                 </LinearLayout>
+
             </RelativeLayout>
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_share"
@@ -178,8 +151,10 @@
                 android:gravity="center"
                 android:text="分享该名片"
                 android:textColor="@color/dinglan_orange"
-                android:textSize="16sp" />
+                android:textSize="16sp"/>
+
         </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>

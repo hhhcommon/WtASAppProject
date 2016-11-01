@@ -25,7 +25,7 @@ import com.woting.activity.interphone.commom.model.GroupInfo;
 import com.woting.activity.interphone.commom.model.InviteUserInfo;
 import com.woting.activity.interphone.commom.model.UserInfo;
 import com.woting.activity.interphone.linkman.dao.NotifyHistoryDao;
-import com.woting.activity.interphone.linkman.model.DBNotifyHistorary;
+import com.woting.activity.interphone.linkman.model.DBNotifyHistory;
 import com.woting.common.config.GlobalConfig;
 import com.woting.util.CommonUtils;
 import com.woting.util.JsonEncloseUtils;
@@ -66,7 +66,7 @@ public  class NotificationService   extends  Service{
 	public void add(String type,String imageurl,String content,String title,String dealtime) {
 		String addtime = Long.toString(System.currentTimeMillis());
 		String bjuserid =CommonUtils.getUserId(context);
-		DBNotifyHistorary history =new  DBNotifyHistorary( bjuserid,  type,  imageurl, content, 
+		DBNotifyHistory history =new DBNotifyHistory( bjuserid,  type,  imageurl, content,
 				title,  dealtime, addtime);		
 		dbdao.addNotifyHistory(history);
 	}
