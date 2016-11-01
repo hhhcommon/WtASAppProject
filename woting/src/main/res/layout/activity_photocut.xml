@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/dinglan_orange"
@@ -7,25 +7,19 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <TextView
         android:id="@+id/lin_save"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:gravity="right|center"
-        android:background="@color/dinglan_orange">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:paddingRight="15dp"
-            android:text="保 存" 
-            android:textColor="@color/WHITE"/>
-    </LinearLayout>
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:layout_alignParentRight="true"
+        android:text="保 存"
+        android:textColor="@color/WHITE"/>
 
     <com.woting.widgetui.photocut.ClipImageLayout
         android:id="@+id/id_clipImageLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/lin_save"/>
 
-</LinearLayout>
+</RelativeLayout>

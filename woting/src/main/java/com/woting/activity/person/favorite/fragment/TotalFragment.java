@@ -121,7 +121,7 @@ public class TotalFragment extends Fragment {
 		ex_listview.setOnGroupClickListener(new OnGroupClickListener() {
 			@Override
 			public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-				FavoriteActivity.updateviewpageer(list.get(groupPosition).getKey());
+				FavoriteActivity.updateViewPager(list.get(groupPosition).getKey());
 				return true;
 			}
 		});

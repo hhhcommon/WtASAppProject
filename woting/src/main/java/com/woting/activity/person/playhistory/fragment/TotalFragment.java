@@ -47,7 +47,7 @@ public class TotalFragment extends Fragment {
 	private SearchPlayerHistoryDao dbdao;	//播放历史数据库
 	private PlayHistoryExpandableAdapter adapter;
 	private List<PlayerHistory> subList;	//播放历史数据
-	private ArrayList<SuperRankInfo> list = new ArrayList<SuperRankInfo>();// 返回的节目list，拆分之前的list
+	private ArrayList<SuperRankInfo> list = new ArrayList<>();// 返回的节目list，拆分之前的list
 	private Dialog delDialog;
 	private boolean isLoad;					// 是否已经加载过
 	private int delchildposition = -1;
@@ -88,7 +88,6 @@ public class TotalFragment extends Fragment {
 		if (subList != null && subList.size() > 0) {
 			list.clear();
 			ArrayList<PlayerHistory> playlist = null;
-//			ArrayList<PlayerHistory> sequlist = null;
 			ArrayList<PlayerHistory> ttslist = null;
 			ArrayList<PlayerHistory> radiolist = null;
 
@@ -100,25 +99,16 @@ public class TotalFragment extends Fragment {
 				if (subList.get(i).getPlayerMediaType()!=null && !subList.get(i).getPlayerMediaType().equals("")) {
 					if (subList.get(i).getPlayerMediaType().equals("AUDIO")) {
 						if (playlist == null) {
-							playlist = new ArrayList<PlayerHistory>();
+							playlist = new ArrayList<>();
 							playlist.add(subList.get(i));
 						} else {
 							if(playlist.size()<3){
 								playlist.add(subList.get(i));
 							}
 						}
-					} /*else if (subList.get(i).getPlayerMediaType().equals("SEQU")) {
-						if (sequlist == null) {
-							sequlist = new ArrayList<PlayerHistory>();
-							sequlist.add(subList.get(i));
-						} else {
-							if(sequlist.size()<3){
-								sequlist.add(subList.get(i));
-							}
-						}
-					}*/else if (subList.get(i).getPlayerMediaType().equals("RADIO")) {
+					} else if (subList.get(i).getPlayerMediaType().equals("RADIO")) {
 						if (radiolist == null) {
-							radiolist = new ArrayList<PlayerHistory>();
+							radiolist = new ArrayList<>();
 							radiolist.add(subList.get(i));
 						} else {
 							if(radiolist.size()<3){
@@ -127,7 +117,7 @@ public class TotalFragment extends Fragment {
 						}
 					}else if (subList.get(i).getPlayerMediaType().equals("TTS")) {
 						if (ttslist == null) {
-							ttslist = new ArrayList<PlayerHistory>();
+							ttslist = new ArrayList<>();
 							ttslist.add(subList.get(i));
 						} else {
 							if(ttslist.size()<3){
@@ -143,14 +133,6 @@ public class TotalFragment extends Fragment {
 				mSuperRankInfo.setHistoryList(playlist);
 				list.add(mSuperRankInfo);
 			}
-			/*
-			if (sequlist != null &&  sequlist.size() > 0) {
-				SuperRankInfo mSuperRankInfo1 = new SuperRankInfo();
-				mSuperRankInfo1.setKey(sequlist.get(0).getPlayerMediaType());							
-				mSuperRankInfo1.setHistoryList(sequlist);
-				list.add(mSuperRankInfo1);
-			}
-			*/
 			if (radiolist != null  && radiolist.size() > 0) {
 				SuperRankInfo mSuperRankInfo1 = new SuperRankInfo();
 				mSuperRankInfo1.setKey(radiolist.get(0).getPlayerMediaType());							
