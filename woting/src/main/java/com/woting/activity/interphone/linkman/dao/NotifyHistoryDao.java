@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.woting.activity.interphone.linkman.model.DBNotifyHistorary;
+import com.woting.activity.interphone.linkman.model.DBNotifyHistory;
 import com.woting.common.database.SqliteHelper;
 import com.woting.util.CommonUtils;
 
@@ -29,7 +29,7 @@ public class NotifyHistoryDao {
 	/**
 	 * 插入搜索历史表一条数据
 	 */
-	public void addNotifyHistory(DBNotifyHistorary history) {
+	public void addNotifyHistory(DBNotifyHistory history) {
 		//通过helper的实现对象获取可操作的数据库db
 		SQLiteDatabase db = helper.getWritableDatabase();
 		db.execSQL("insert into notifyhistory(bjuserid,type,imageurl,content,title,dealtime,addtime) values(?,?,?,?,?,?,?)",
@@ -45,8 +45,8 @@ public class NotifyHistoryDao {
 	/**
 	 * 查询数据库里的数据，无参查询语句 供特定使用
 	 */
-	public List<DBNotifyHistorary> queryHistory() {
-		List<DBNotifyHistorary> mylist = new ArrayList<DBNotifyHistorary>();
+	public List<DBNotifyHistory> queryHistory() {
+		List<DBNotifyHistory> mylist = new ArrayList<DBNotifyHistory>();
 		SQLiteDatabase db = helper.getReadableDatabase();
 		String userid = CommonUtils.getUserId(context);
 		Cursor cursor = null;
@@ -61,7 +61,7 @@ public class NotifyHistoryDao {
 				String dealtime = cursor.getString(6);
 				String addtime = cursor.getString(7);
 				//把每个对象都放到history对象里
-				DBNotifyHistorary h = new DBNotifyHistorary( bjuserid,  type,  imageurl, content, 
+				DBNotifyHistory h = new DBNotifyHistory( bjuserid,  type,  imageurl, content,
 						 title,  dealtime, addtime);		
 				mylist.add(h);
 			}

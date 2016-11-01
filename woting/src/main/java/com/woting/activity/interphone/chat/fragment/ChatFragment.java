@@ -32,7 +32,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
@@ -59,6 +58,7 @@ import com.woting.activity.interphone.linkman.model.TalkGroupInside;
 import com.woting.activity.interphone.main.DuiJiangActivity;
 import com.woting.activity.login.login.activity.LoginActivity;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
@@ -147,7 +147,7 @@ public class ChatFragment extends Fragment implements OnClickListener{
 			Receiver=new MessageReceiver();
 			IntentFilter filter=new IntentFilter();
 			filter.addAction("push");
-			filter.addAction(DuiJiangActivity.UPDATA_GROUP);
+			filter.addAction(BroadcastConstants.UP_DATA_GROUP);
 			context.registerReceiver(Receiver, filter);
 
 			IntentFilter filterb3=new IntentFilter();
@@ -468,7 +468,7 @@ public class ChatFragment extends Fragment implements OnClickListener{
 	 */
 	public static void zhidinggroupss(String groupids ) {
 		Intent intent = new Intent();
-		intent.setAction(DuiJiangActivity.UPDATA_GROUP);
+		intent.setAction(BroadcastConstants.UP_DATA_GROUP);
 		context.sendBroadcast(intent);
 		entergrouptype=1;
 		groupid=groupids;
@@ -483,7 +483,7 @@ public class ChatFragment extends Fragment implements OnClickListener{
 	 */
 	public static void zhidinggroup(TalkGroupInside talkGroupInside) {
 		Intent intent = new Intent();
-		intent.setAction(DuiJiangActivity.UPDATA_GROUP);
+		intent.setAction(BroadcastConstants.UP_DATA_GROUP);
 		context.sendBroadcast(intent);
 		entergrouptype=1;
 		groupid=talkGroupInside.getGroupId();
@@ -498,7 +498,7 @@ public class ChatFragment extends Fragment implements OnClickListener{
 	 */
 	public static void zhidinggroups(TalkGroupInside talkGroupInside) {
 		Intent intent = new Intent();
-		intent.setAction(DuiJiangActivity.UPDATA_GROUP);
+		intent.setAction(BroadcastConstants.UP_DATA_GROUP);
 		context.sendBroadcast(intent);
 		entergrouptype=2;
 		groupid=talkGroupInside.getGroupId();
@@ -1316,7 +1316,7 @@ public class ChatFragment extends Fragment implements OnClickListener{
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
-			}else if(action.equals(DuiJiangActivity.UPDATA_GROUP)){
+			}else if(action.equals(BroadcastConstants.UP_DATA_GROUP)){
 				if(gridView_person != null){
 					gridView_person.setVisibility(View.GONE);
 				}

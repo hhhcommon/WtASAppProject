@@ -7,31 +7,34 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.woting.R;
 import com.woting.activity.baseactivity.BaseActivity;
 import com.woting.activity.interphone.linkman.dao.NotifyHistoryDao;
-import com.woting.activity.interphone.linkman.model.DBNotifyHistorary;
+import com.woting.activity.interphone.linkman.model.DBNotifyHistory;
 import com.woting.activity.interphone.notify.adapter.NotifyNewsAdapter;
-import com.woting.manager.MyActivityManager;
+import com.woting.common.constant.BroadcastConstants;
 
 import java.util.List;
 
 /**
  * 消息中心列表
- * @author 辛龙
- * 2016年5月5日
+ * 作者：xinlong on 2016/5/5 21:18
+ * 邮箱：645700751@qq.com
  */
 public class NotifyNewsActivity extends BaseActivity implements OnClickListener {
 	private ListView mListView;
 	private LinearLayout lin_back;
+
 	private NotifyNewsAdapter adapter;
-	private NotifyHistoryDao dbdao;
+
+	private NotifyHistoryDao dbDao;
+	private List<DBNotifyHistory> list;
+
 	private NotifyNewsActivity context;
-	private List<DBNotifyHistorary> list;
+
 	private MessageReceiver Receiver;
 
 	@Override
@@ -39,17 +42,13 @@ public class NotifyNewsActivity extends BaseActivity implements OnClickListener 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_notifynews);
 		context=this;
-		MyActivityManager mam = MyActivityManager.getInstance();
-		mam.pushOneActivity(context);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);		// 透明状态栏
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);	// 透明导航栏
-		setview();// 设置界面
-		initDao();// 初始化数据库命令执行对象
-		getdate();// 获取数据
-		if(Receiver == null) {		// 注册广播
+		setView();                             // 设置界面
+		initDao();                             // 初始化数据库命令执行对象
+		getData();                             // 获取数据
+		if(Receiver == null) {		           // 注册广播
 			Receiver = new MessageReceiver();
 			IntentFilter filter = new IntentFilter();
-			filter.addAction("push_refreshnews");
+			filter.addAction(BroadcastConstants.PUSH_REFRESHNEWS);
 			registerReceiver(Receiver, filter);
 		}
 	}
@@ -61,8 +60,8 @@ public class NotifyNewsActivity extends BaseActivity implements OnClickListener 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			if(action.equals("push_refreshnews")){
-				getdate();
+			if(action.equals(BroadcastConstants.PUSH_REFRESHNEWS)){
+				getData();
 			}
 		}
 	}
@@ -70,8 +69,8 @@ public class NotifyNewsActivity extends BaseActivity implements OnClickListener 
 	/*
 	 * 获取数据库的数据	
 	 */
-	private void getdate() {
-		list = dbdao.queryHistory();
+	private void getData() {
+		list = dbDao.queryHistory();
 		adapter = new NotifyNewsAdapter(this, list);
 		mListView.setAdapter(adapter);
 	}
@@ -80,10 +79,10 @@ public class NotifyNewsActivity extends BaseActivity implements OnClickListener 
 	 * 初始化数据库命令执行对象
 	 */
 	private void initDao() {
-		dbdao = new NotifyHistoryDao(context);
+		dbDao = new NotifyHistoryDao(context);
 	}
 
-	private void setview() {
+	private void setView() {
 		mListView = (ListView) findViewById(R.id.listview_history);
 		lin_back = (LinearLayout) findViewById(R.id.head_left_btn);
 		lin_back.setOnClickListener(this);
@@ -101,13 +100,11 @@ public class NotifyNewsActivity extends BaseActivity implements OnClickListener 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		MyActivityManager mam = MyActivityManager.getInstance();
-		mam.popOneActivity(context);
 		if(Receiver != null){
 			unregisterReceiver(Receiver);
 			Receiver = null;
 		}
-		dbdao = null;
+		dbDao = null;
 		list = null;
 		adapter = null;
 		mListView = null;
