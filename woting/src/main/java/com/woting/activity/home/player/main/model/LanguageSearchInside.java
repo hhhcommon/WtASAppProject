@@ -5,16 +5,16 @@ import java.io.Serializable;
 public class LanguageSearchInside implements Serializable{
 	private String Type="1";
 	private String ContentURI;
-	private String ContentPersons;  
-/*	private String ContentCatalogs;*/
+	private String ContentPersons;
+	/*	private String ContentCatalogs;*/
 	private String ContentKeyWord;
 	private String cTime;
 	private String ContentSubjectWord;
 	private String ContentTimes;
-	private String ContentName;  
+	private String ContentName;
 	private String ContentPubTime;
 	private String ContentPub;
-//	private String ContentSource;
+	//	private String ContentSource;
 	private String ContentPlay;
 	private String MediaType;
 	private String ContentId;
@@ -27,7 +27,43 @@ public class LanguageSearchInside implements Serializable{
 	private String ContentShareURL;
 	private String ContentFavorite;
 	private String localurl;
-	
+	private String sequId;//专辑ID
+	private String sequImg;//专辑图片
+	private String sequDesc;//专辑描述
+	private String sequName;//专辑名称
+
+	public String getSequId() {
+		return sequId;
+	}
+
+	public void setSequId(String sequId) {
+		this.sequId = sequId;
+	}
+
+	public String getSequImg() {
+		return sequImg;
+	}
+
+	public void setSequImg(String sequImg) {
+		this.sequImg = sequImg;
+	}
+
+	public String getSequDesc() {
+		return sequDesc;
+	}
+
+	public void setSequDesc(String sequDesc) {
+		this.sequDesc = sequDesc;
+	}
+
+	public String getSequName() {
+		return sequName;
+	}
+
+	public void setSequName(String sequName) {
+		this.sequName = sequName;
+	}
+
 	public String getPlayCount() {
 		return PlayCount;
 	}
@@ -76,12 +112,12 @@ public class LanguageSearchInside implements Serializable{
 	public void setContentPersons(String contentPersons) {
 		ContentPersons = contentPersons;
 	}
-/*	public String getContentCatalogs() {
-		return ContentCatalogs;
-	}
-	public void setContentCatalogs(String contentCatalogs) {
-		ContentCatalogs = contentCatalogs;
-	}*/
+	/*	public String getContentCatalogs() {
+            return ContentCatalogs;
+        }
+        public void setContentCatalogs(String contentCatalogs) {
+            ContentCatalogs = contentCatalogs;
+        }*/
 	public String getContentPlay() {
 		return ContentPlay;
 	}
@@ -166,8 +202,4 @@ public class LanguageSearchInside implements Serializable{
 	public void setContentImg(String contentImg) {
 		ContentImg = contentImg;
 	}
-
-	
-	
-	
 }

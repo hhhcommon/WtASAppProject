@@ -14,13 +14,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.find.findresult.model.UserInviteMeInside;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.helper.ImageLoader;
 import com.woting.manager.MyActivityManager;
 import com.woting.util.DialogUtils;
 import com.woting.util.ToastUtils;
@@ -48,7 +49,6 @@ public class FriendAddActivity extends Activity implements OnClickListener {
 	private UserInviteMeInside contact;
 	private FriendAddActivity context;
 	private TextView tv_sign;
-	private ImageLoader imageLoader;
 	private String tag = "FRIEND_ADD_VOLLEY_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
 	
@@ -57,7 +57,6 @@ public class FriendAddActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friendadds);
 		context=this;
-		imageLoader = new ImageLoader(this);
 		MyActivityManager mam = MyActivityManager.getInstance();
 		mam.pushOneActivity(context);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);		//透明状态栏
@@ -110,7 +109,7 @@ public class FriendAddActivity extends Activity implements OnClickListener {
 			}else{
 				url = GlobalConfig.imageurl+contact.getPortraitMini();
 			}
-			imageLoader.DisplayImage(url.replace( "\\/", "/"), image_touxiang, false, false,null, null);
+			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(image_touxiang);
 		}
 		if(username==null||username.equals("")){
 			et_news.setText("");
@@ -237,7 +236,6 @@ public class FriendAddActivity extends Activity implements OnClickListener {
 		head_left_btn = null;
 		tv_add = null;
 		sharedPreferences = null;
-		imageLoader = null;
 		context = null;
 		dialog = null;
 		username = null;

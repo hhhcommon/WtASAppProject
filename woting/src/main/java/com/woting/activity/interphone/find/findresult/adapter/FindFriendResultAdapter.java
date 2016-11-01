@@ -8,23 +8,21 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.find.findresult.model.UserInviteMeInside;
 import com.woting.common.config.GlobalConfig;
-import com.woting.helper.ImageLoader;
 
 import java.util.List;
 
 public class FindFriendResultAdapter extends BaseAdapter{
 	private List<UserInviteMeInside> list;
 	private Context context;
-	private ImageLoader imageLoader;
 	private String url;
 	public FindFriendResultAdapter(Context context,List<UserInviteMeInside> list) {
 		super();
 		this.list = list;
 		this.context = context;
-		imageLoader=new ImageLoader(context);
 	}
 	
 	public void ChangeData(List<UserInviteMeInside> list){
@@ -82,7 +80,7 @@ public class FindFriendResultAdapter extends BaseAdapter{
 			}else{
 				url = GlobalConfig.imageurl+Inviter.getPortraitMini();
 			}
-			imageLoader.DisplayImage(url.replace( "\\/", "/"), holder.imageview_inviteimage, false, false, null, null);
+			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_inviteimage);
 		}
 		return convertView;
 	}

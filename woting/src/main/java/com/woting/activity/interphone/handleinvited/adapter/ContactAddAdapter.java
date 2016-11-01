@@ -8,8 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.shenstec.utils.image.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.handleinvited.model.UserInviteMeInside;
 import com.woting.common.config.GlobalConfig;
@@ -20,7 +19,6 @@ public class ContactAddAdapter extends BaseAdapter implements OnClickListener {
 
 	private List<UserInviteMeInside> list;
 	private Context context;
-	private ImageLoader imageLoader;
 	// private OnListener onListener;
 	private UserInviteMeInside Inviter;
 	private String url;
@@ -35,7 +33,6 @@ public class ContactAddAdapter extends BaseAdapter implements OnClickListener {
 		this.list = list;
 		this.context = context;
 		this.mCallback = callback;
-		imageLoader = new ImageLoader(context);
 	}
 
 	public void ChangeData(List<UserInviteMeInside> list) {
@@ -90,7 +87,7 @@ public class ContactAddAdapter extends BaseAdapter implements OnClickListener {
 		} else {
 			holder.imageview_inviteimage.setImageResource(R.mipmap.wt_bg_noimage);
 			url = GlobalConfig.imageurl + Inviter.getPortrait();
-			imageLoader.DisplayImage(url.replace("\\/", "/"), holder.imageview_inviteimage, false, false, null);
+			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_inviteimage);
 		}
 		if (Inviter.getType() == 1) {
 			holder.textview_invitestauswait.setVisibility(View.VISIBLE);

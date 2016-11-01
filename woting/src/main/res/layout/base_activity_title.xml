@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative_title"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:background="@color/dinglan_orange">
+
+    <TextView
+        android:id="@+id/left_back"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="返回"
+        android:textColor="@color/WHITE"
+        android:textSize="16sp"
+        android:layout_marginLeft="6dp"/>
+
+    <ImageView
+        android:id="@+id/left_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="14dp"
+        android:src="@mipmap/wt_image_left_message"
+        android:layout_centerVertical="true"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/text_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="@color/WHITE"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/right_more"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:text="更多"
+        android:textColor="@color/WHITE"
+        android:layout_marginRight="6dp"
+        android:textSize="16sp"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/right_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:src="@mipmap/wt_image_right_more"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="14dp"
+        android:visibility="gone"/>
+
+</RelativeLayout>

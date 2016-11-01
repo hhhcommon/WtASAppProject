@@ -8,10 +8,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.message.model.MessageInFo;
 import com.woting.common.config.GlobalConfig;
-import com.woting.helper.ImageLoader;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -20,7 +21,6 @@ import java.util.List;
 public class NewsAdapter extends BaseAdapter {
 	private List<MessageInFo> list;
 	private Context context;
-	private ImageLoader imageLoader;
 	private MessageInFo lists;
 	private SimpleDateFormat format;
 	protected OnListener onListener;
@@ -28,7 +28,6 @@ public class NewsAdapter extends BaseAdapter {
 		super();
 		this.list = list;
 		this.context = context;
-		imageLoader=new ImageLoader(context);
 		format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	}
 
@@ -103,7 +102,7 @@ public class NewsAdapter extends BaseAdapter {
 					}else{
 						url = GlobalConfig.imageurl+lists.getPortrait();
 					}
-					imageLoader.DisplayImage(url.replace("\\/", "/"),holder.Image, false, false, null, null);
+					Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.Image);
 				}
 			}else{
 
@@ -133,7 +132,7 @@ public class NewsAdapter extends BaseAdapter {
 					}else{
 						url = GlobalConfig.imageurl+lists.getProtraitMini();
 					}
-					imageLoader.DisplayImage(url.replace("\\/", "/"),holder.Image, false, false, null, null);
+					Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.Image);
 				}
 
 			}

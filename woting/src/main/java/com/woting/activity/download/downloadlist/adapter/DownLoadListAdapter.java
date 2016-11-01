@@ -1,6 +1,7 @@
 package com.woting.activity.download.downloadlist.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,22 +11,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.download.model.FileInfo;
-import com.woting.helper.ImageLoader;
+import com.woting.util.BitmapUtils;
 
 import java.util.List;
 
 public class DownLoadListAdapter extends BaseAdapter {
 	private List<FileInfo> list;
 	private Context context;
-	private ImageLoader imageLoader;
 	private downloadlist downloadlist;
 
 	public DownLoadListAdapter(Context context, List<FileInfo> list) {
 		this.context = context;
 		this.list = list;
-		imageLoader = new ImageLoader(context);
 	}
 
 	@Override
@@ -74,17 +74,15 @@ public class DownLoadListAdapter extends BaseAdapter {
 					|| lists.getSequimgurl().equals("")
 					|| lists.getSequimgurl().equals("null")
 					|| lists.getSequimgurl().trim().equals("")) {
-				holder.imageview_rankimage
-						.setImageResource(R.mipmap.wt_bg_noimage);
+				Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_bg_noimage);
+				holder.imageview_rankimage.setImageBitmap(bmp);
 			}else{
 				String url = /* GlobalConfig.imageurl + */lists.getSequimgurl();
-				imageLoader.DisplayImage(url.replace("\\/", "/"),
-						holder.imageview_rankimage, false, false, null, null);
+				Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 			}
 		} else {
 			String url = /* GlobalConfig.imageurl + */lists.getImageurl();
-			imageLoader.DisplayImage(url.replace("\\/", "/"),
-					holder.imageview_rankimage, false, false, null, null);
+			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 		}
 		if (lists.getAuthor() == null || lists.getAuthor().equals("")) {
 			holder.tv_RankContent.setText("我听科技");

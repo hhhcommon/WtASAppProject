@@ -9,10 +9,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.chat.model.GroupTalkInside;
 import com.woting.common.config.GlobalConfig;
-import com.woting.helper.ImageLoader;
 import com.woting.util.BitmapUtils;
 
 import java.util.List;
@@ -20,7 +21,6 @@ import java.util.List;
 public class GroupPersonAdapter extends BaseAdapter{
 	private List<GroupTalkInside> list;
 	private Context context;
-	private ImageLoader imageLoader;
 	//	private OnListener onListener;
 	private GroupTalkInside lists;
 	private Bitmap bmp;
@@ -31,7 +31,6 @@ public class GroupPersonAdapter extends BaseAdapter{
 		super();
 		this.list = list;
 		this.context = context;
-		imageLoader=new ImageLoader(context);
 		 bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
 		 bmps = BitmapUtils.readBitMap(context, R.mipmap.wt_image_6_gray);
 		 bmpa = BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_hy);
@@ -88,7 +87,7 @@ public class GroupPersonAdapter extends BaseAdapter{
 			}
 		}else{
 			String url = GlobalConfig.imageurl+lists.getPortraitBig();
-			imageLoader.DisplayImage(url.replace( "\\/", "/"), holder.imageView_touxiang, false, false,null, null);
+			Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageView_touxiang);
 		}
 		if(lists.getOnLine()==2){
 			holder.tv_name.setTextColor(context.getResources().getColor(R.color.dinglan_orange) );

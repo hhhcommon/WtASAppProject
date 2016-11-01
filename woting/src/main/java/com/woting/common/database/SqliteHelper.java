@@ -1,17 +1,19 @@
 package com.woting.common.database;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
 import com.woting.common.config.GlobalConfig;
 
+
+
+
+/**
+ * 创建数据库表
+ * 作者：xinlong on 2016/8/29 11:29
+ * 邮箱：645700751@qq.com
+ */
 public class SqliteHelper extends SQLiteOpenHelper {
-	/**
-	 * 创建数据库表
-	 * 
-	 * @author 辛龙 2016年1月21日
-	 */
+
 	public SqliteHelper(Context paramContext) {
 		super(paramContext, "woting.db", null, GlobalConfig.dbversoncode);
 	}
@@ -35,7 +37,7 @@ public class SqliteHelper extends SQLiteOpenHelper {
 		db.execSQL("CREATE TABLE IF NOT EXISTS playerhistory(_id Integer primary key autoincrement, "
 				+ "playername varchar(50),playerimage varchar(50),playerurl varchar(50),playerurI varchar(5000),playermediatype varchar(50),"
 				+ "playeralltime varchar(50),playerintime varchar(50),playercontentdesc varchar(1500),playernum varchar(50),"
-				+ "playerzantype varchar(50),playerfrom varchar(50),playerfromid varchar(50),playerfromurl varchar(50),playeraddtime varchar(50),bjuserid varchar(50),playshareurl varchar(100),playfavorite varchar(100),contentid varchar(50),localurl varchar(100))");
+				+ "playerzantype varchar(50),playerfrom varchar(50),playerfromid varchar(50),playerfromurl varchar(50),playeraddtime varchar(50),bjuserid varchar(50),playshareurl varchar(100),playfavorite varchar(100),contentid varchar(50),localurl varchar(100),sequname varchar(50),sequimg varchar(200),sequdesc varchar(150),sequid varchar(50))");
 
 		// 线程表
 		db.execSQL("create table IF NOT EXISTS thread_info(_id integer primary key autoincrement,"
@@ -44,11 +46,11 @@ public class SqliteHelper extends SQLiteOpenHelper {
 		db.execSQL("create table IF NOT EXISTS fileinfo(_id integer primary key autoincrement,"
 				+ "start integer,end integer,url varchar(200),imageurl varchar(200), finished varchar(10),"
 				+ "author varchar(50),playcontent varchar(50),filename varchar(50),localurl varchar(100),"
-				+ "sequname varchar(50),sequimgurl varchar(200),sequdesc varchar(150),sequid varchar(50),userid varchar(20),downloadtype varchar(10),playshareurl varchar(100),playfavorite varchar(100),contentid varchar(50))");
+				+ "sequname varchar(50),sequimgurl varchar(200),sequdesc varchar(150),sequid varchar(50),userid varchar(50),downloadtype varchar(10),playshareurl varchar(100),playfavorite varchar(100),contentid varchar(50))");
 
 		// 城市表
-				db.execSQL("create table IF NOT EXISTS cityinfo(_id integer primary key autoincrement,"
-						+ "adcode varchar(20), cityname varchar(50))");
+		db.execSQL("create table IF NOT EXISTS cityinfo(_id integer primary key autoincrement,"
+				+ "adcode varchar(20), cityname varchar(50))");
 		// 专辑表
 		//		db.execSQL("create table IF NOT EXISTS sequinfo(_id integer primary key autoincrement,"
 		//				+ "sequimgurl varchar(200),sequdesc varchar(150),sequname varchar(50))");

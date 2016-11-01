@@ -9,17 +9,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.chat.model.TalkListGP;
 import com.woting.common.config.GlobalConfig;
-import com.woting.helper.ImageLoader;
 import com.woting.util.TimeUtils;
 
 import java.util.List;
 
 public class ChatListAdapter extends BaseAdapter {
 	private Context context;
-	private ImageLoader imageLoader;
 	private OnListener onListener;
 	private String url;
 	private String id;
@@ -31,7 +30,6 @@ public class ChatListAdapter extends BaseAdapter {
 		this.list = alllist;
 		this.id = ids;
 		this.context = context;
-		imageLoader = new ImageLoader(context);
 	}
 
 	public void ChangeDate(List<TalkListGP> list, String ids) {
@@ -114,7 +112,7 @@ public class ChatListAdapter extends BaseAdapter {
 			}
 		} else {
 			url = GlobalConfig.imageurl + lists.getPortrait();
-			imageLoader.DisplayImage(url.replace("\\/", "/"), holder.imageView_touxiang, false, false, null, null);
+			Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageView_touxiang);
 		}
 		holder.lin_zhiding.setOnClickListener(new View.OnClickListener() {
 			

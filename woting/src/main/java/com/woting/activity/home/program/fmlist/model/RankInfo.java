@@ -4,14 +4,14 @@ import java.io.Serializable;
 
 public class RankInfo implements Serializable {
 	private String MediaType;
-	private String CurrentContent; 
+	private String CurrentContent;
 	private String WatchPlayerNum;
 	//以下为media=audio时解析实体类 为SEQU时数据类似 会直接跳转到一个相关的类表项里
 	private String ContentId;
-	private String ContentName; 	
-	private String Actor; 	
-	private String ContentImg; 	
-	private String ContentURI; 	
+	private String ContentName;
+	private String Actor;
+	private String ContentImg;
+	private String ContentURI;
 	private String ContentSubjectWord;
 	private String ContentPlay;
 	private String ContentShareURL;
@@ -22,11 +22,15 @@ public class RankInfo implements Serializable {
 	private String ContentPub;
 	private String ContentSubCount;
 	private String PlayCount;
+	private String sequId;//专辑ID
+	private String sequImg;//专辑图片
+	private String sequDesc;//专辑描述
+	private String sequName;//专辑名称
 
 	//界面展示状态
 	private int viewtype=0;//界面决定组件 1为显示点选框 0是没有
 	private int checktype=0;//点选框被选中为1 未被选中时为0
-	
+
 	public String getPlayCount() {
 		return PlayCount;
 	}
@@ -160,10 +164,36 @@ public class RankInfo implements Serializable {
 	public void setContentImg(String contentImg) {
 		ContentImg = contentImg;
 	}
-	//	public String getContentURI() {
-	//		return ContentURI;
-	//	}
-	//	public void setContentURI(String contentURI) {
-	//		ContentURI = contentURI;
-	//	}
+
+	public String getSequId() {
+		return sequId;
+	}
+
+	public void setSequId(String sequId) {
+		this.sequId = sequId;
+	}
+
+	public String getSequImg() {
+		return sequImg;
+	}
+
+	public void setSequImg(String sequImg) {
+		this.sequImg = sequImg;
+	}
+
+	public String getSequDesc() {
+		return sequDesc;
+	}
+
+	public void setSequDesc(String sequDesc) {
+		this.sequDesc = sequDesc;
+	}
+
+	public String getSequName() {
+		return sequName;
+	}
+
+	public void setSequName(String sequName) {
+		this.sequName = sequName;
+	}
 }

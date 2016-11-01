@@ -10,11 +10,12 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.person.feedback.feedbacklist.model.OpinionMessage;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
-import com.woting.helper.ImageLoader;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,7 +23,6 @@ import java.util.List;
 
 public class FeedBackExpandAdapter extends BaseExpandableListAdapter {
 	private Context context;
-	private ImageLoader imageLoader;
 	List<OpinionMessage> OM;
 	private OpinionMessage opinion;
 	private SharedPreferences sharedPreferences;
@@ -35,7 +35,6 @@ public class FeedBackExpandAdapter extends BaseExpandableListAdapter {
 		super();
 		this.context = context;
 		this.OM = OM;
-		imageLoader = new ImageLoader(context);
 		sharedPreferences = context.getSharedPreferences("wotingfm",Context.MODE_PRIVATE);
 		sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
 	}
@@ -146,7 +145,7 @@ public class FeedBackExpandAdapter extends BaseExpandableListAdapter {
 			}else{
 				url = GlobalConfig.imageurl+userImg;
 			}
-			imageLoader.DisplayImage(url.replace("\\", "/"),holder.OpinionImage, false, false, null, null);
+			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.OpinionImage);
 		}
 		return convertView;
 	}

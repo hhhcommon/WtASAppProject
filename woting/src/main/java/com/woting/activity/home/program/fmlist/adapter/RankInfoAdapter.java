@@ -1,6 +1,7 @@
 package com.woting.activity.home.program.fmlist.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,10 +9,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.home.program.fmlist.model.RankInfo;
 import com.woting.common.config.GlobalConfig;
-import com.woting.helper.ImageLoader;
+import com.woting.util.BitmapUtils;
 
 import java.util.List;
 
@@ -19,7 +21,6 @@ import java.util.List;
 public class RankInfoAdapter extends BaseAdapter   {
 	private List<RankInfo> list;
 	private Context context;
-	private ImageLoader imageLoader;
 //	private RankInfo rank;
 //	private String url;
 
@@ -27,7 +28,6 @@ public class RankInfoAdapter extends BaseAdapter   {
 		super();
 		this.list = list;
 		this.context = context;
-		imageLoader = new ImageLoader(context);
 	}
 
 	@Override
@@ -73,7 +73,8 @@ public class RankInfoAdapter extends BaseAdapter   {
 		}
 		if (lists.getContentImg() == null || lists.getContentImg().equals("")
 				|| lists.getContentImg().equals("null") || lists.getContentImg().trim().equals("")) {
-			holder.imageview_rankimage.setImageResource(R.mipmap.wt_image_playertx);
+			Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
+			holder.imageview_rankimage.setImageBitmap(bmp);
 		} else {
 			String url;
 			if(lists.getContentImg().startsWith("http")){
@@ -81,7 +82,7 @@ public class RankInfoAdapter extends BaseAdapter   {
 			}else{
 				 url = GlobalConfig.imageurl + lists.getContentImg();
 			}
-			imageLoader.DisplayImage(url.replace("\\/", "/"),holder.imageview_rankimage, false, false, null, null);
+			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 		}
 		if (lists.getWatchPlayerNum() == null
 				|| lists.getWatchPlayerNum().equals("") || lists.getWatchPlayerNum().equals("null")) {

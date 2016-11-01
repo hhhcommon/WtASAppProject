@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.shenstec.utils.image.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.chat.dao.SearchTalkHistoryDao;
 import com.woting.activity.interphone.chat.fragment.ChatFragment;
@@ -49,7 +49,6 @@ public class CallAlertActivity extends Activity implements OnClickListener{
 	private MessageReceiver Receiver;
 	private String image;
 	private String name;
-	private ImageLoader imageLoader;
 	private ImageView imageview;
 	private boolean iscall;
 
@@ -60,7 +59,6 @@ public class CallAlertActivity extends Activity implements OnClickListener{
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);		//透明状态栏
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);	//透明导航栏
 		instance = this;
-		imageLoader = new ImageLoader(instance);
 		Intent intent = getIntent();
 		if(intent != null){
 			id = intent.getStringExtra("id");
@@ -88,7 +86,7 @@ public class CallAlertActivity extends Activity implements OnClickListener{
 			imageview.setImageResource(R.mipmap.wt_image_tx_hy);
 		}else{
 			String url = GlobalConfig.imageurl+image;
-			imageLoader.DisplayImage(url.replace( "\\/", "/"), imageview, false, false,null);
+			Picasso.with(instance).load(url.replace("\\/", "/")).into(imageview);
 		}
 		lin_call.setOnClickListener(this);
 		lin_guaduan.setOnClickListener(this);
@@ -390,7 +388,6 @@ public class CallAlertActivity extends Activity implements OnClickListener{
 		id = null;
 		image = null;
 		name = null;
-		imageLoader = null;
 		imageview = null;
 		if(dbdao != null){
 			dbdao = null;

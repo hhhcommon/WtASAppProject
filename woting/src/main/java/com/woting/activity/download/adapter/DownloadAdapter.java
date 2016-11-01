@@ -1,6 +1,7 @@
 package com.woting.activity.download.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.shenstec.utils.image.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.download.model.FileInfo;
+import com.woting.util.BitmapUtils;
 import com.woting.widgetui.CircleProgress;
 
 import java.text.DecimalFormat;
@@ -22,13 +24,11 @@ import java.util.List;
 public class DownloadAdapter extends BaseAdapter {
 	private List<FileInfo> list;
 	private Context context;
-	private ImageLoader imageLoader;
 	private DecimalFormat df;
 
 	public DownloadAdapter(Context context, List<FileInfo> list) {
 		this.context = context;
 		this.list = list;
-		imageLoader = new ImageLoader(context);
 		df = new DecimalFormat("0.00");
 	}
 
@@ -76,10 +76,11 @@ public class DownloadAdapter extends BaseAdapter {
 		}
 		if (lists.getImageurl() == null || lists.getImageurl().equals("")
 				|| lists.getImageurl().equals("null") || lists.getImageurl().trim().equals("")) {
-			holder.imageview_rankimage.setImageResource(R.mipmap.wt_bg_noimage);
+			Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_bg_noimage);
+			holder.imageview_rankimage.setImageBitmap(bmp);
 		} else {
 			String url = lists.getImageurl();
-			imageLoader.DisplayImage(url.replace("\\/", "/"), holder.imageview_rankimage, false, false, null);
+			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 		}
 
 		if (lists.getAuthor() == null || lists.getAuthor().equals("")|| lists.getAuthor().equals("null")|| lists.getAuthor().trim().equals("")|| lists.getAuthor().trim().equals("author")) {

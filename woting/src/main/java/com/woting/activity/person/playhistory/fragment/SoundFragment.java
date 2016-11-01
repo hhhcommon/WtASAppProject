@@ -1,7 +1,18 @@
 package com.woting.activity.person.playhistory.fragment;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.woting.R;
 import com.woting.activity.home.main.HomeActivity;
@@ -16,19 +27,8 @@ import com.woting.common.constant.StringConstant;
 import com.woting.util.CommonUtils;
 import com.woting.util.ToastUtils;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.LinearLayout;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 播放历史记录  声音界面
@@ -207,16 +207,20 @@ public class SoundFragment extends Fragment{
 						String playeraddtime = Long.toString(System.currentTimeMillis());
 						String bjuserid =CommonUtils.getUserId(context);
 						String ContentFavorite=playList.get(position).getContentFavorite();
-						String  playshareurl=playList.get(position).getPlayContentShareUrl();
+						String playcontentshareurl=playList.get(position).getPlayContentShareUrl();
 						String ContentId= playList.get(position).getContentID();
 						String localurl=playList.get(position).getLocalurl();
-						
-						//如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-						PlayerHistory history = new PlayerHistory( 
-								playername, playerimage, playerurl, playerurI, playermediatype, 
+
+						String sequName= playList.get(position).getSequName();
+						String sequId= playList.get(position).getSequId();
+						String sequDesc= playList.get(position).getSequDesc();
+						String sequImg=playList.get(position).getSequImg();
+
+						PlayerHistory history = new PlayerHistory(
+								playername,  playerimage, playerurl, playerurI,playermediatype,
 								plaplayeralltime, playerintime, playercontentdesc, playernum,
-								playerzantype, playerfrom, playerfromid, playerfromurl,
-								playeraddtime, bjuserid, playshareurl, ContentFavorite, ContentId, localurl);
+								playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
+								ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
 						dbdao.deleteHistory(playerurl);
 						dbdao.addHistory(history);
 						if(PlayerFragment.context!=null){

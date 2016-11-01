@@ -9,10 +9,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.android.volley.VolleyError;
-import com.shenstec.activity.BaseActivity;
 import com.woting.R;
+import com.woting.activity.baseactivity.BaseActivity;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
@@ -85,7 +84,6 @@ public class AccountBinDingActivity extends BaseActivity implements OnClickListe
 
 	@Override
 	public void onClick(View v) {
-		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.head_left_btn:	// 返回
 			finish();

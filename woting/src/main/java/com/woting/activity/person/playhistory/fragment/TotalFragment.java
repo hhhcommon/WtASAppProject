@@ -1,7 +1,22 @@
 package com.woting.activity.person.playhistory.fragment;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.ExpandableListView.OnGroupClickListener;
+import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.activity.home.main.HomeActivity;
@@ -16,23 +31,8 @@ import com.woting.common.constant.StringConstant;
 import com.woting.util.CommonUtils;
 import com.woting.util.ToastUtils;
 
-import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.ExpandableListView.OnGroupClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ExpandableListView;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 全部播放历史
@@ -213,15 +213,20 @@ public class TotalFragment extends Fragment {
 					String playeraddtime = Long.toString(System.currentTimeMillis());
 					String bjuserid = CommonUtils.getUserId(context);
 					String ContentFavorite = list.get(groupPosition).getHistoryList().get(childPosition).getContentFavorite();
-					String  playshareurl = list.get(groupPosition).getHistoryList().get(childPosition).getPlayContentShareUrl();
+					String playcontentshareurl = list.get(groupPosition).getHistoryList().get(childPosition).getPlayContentShareUrl();
 					String ContentId = list.get(groupPosition).getHistoryList().get(childPosition).getContentID();
 					String localurl = list.get(groupPosition).getHistoryList().get(childPosition).getLocalurl();
 
-					PlayerHistory history = new PlayerHistory( 
-							playername, playerimage, playerurl, playerurI, playermediatype,
+					String sequName=  list.get(groupPosition).getHistoryList().get(childPosition).getSequName();
+					String sequId= list.get(groupPosition).getHistoryList().get(childPosition).getSequId();
+					String sequDesc=  list.get(groupPosition).getHistoryList().get(childPosition).getSequDesc();
+					String sequImg= list.get(groupPosition).getHistoryList().get(childPosition).getSequImg();
+
+					PlayerHistory history = new PlayerHistory(
+							playername,  playerimage, playerurl, playerurI,playermediatype,
 							plaplayeralltime, playerintime, playercontentdesc, playernum,
-							playerzantype,  playerfrom, playerfromid, playerfromurl,
-							playeraddtime, bjuserid, playshareurl, ContentFavorite, ContentId, localurl);	
+							playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
+							ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
 
 					//如果该数据已经存在数据库则删除原有数据，然后添加最新数据
 					if(playermediatype != null && playermediatype.equals("TTS")){

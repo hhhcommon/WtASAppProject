@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.creatgroup.groupnews.TalkGroupNewsActivity;
 import com.woting.activity.interphone.find.findresult.model.FindGroupNews;
@@ -22,9 +24,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.helper.ImageLoader;
 import com.woting.manager.MyActivityManager;
-import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
 import com.woting.util.ToastUtils;
 
@@ -43,7 +43,6 @@ public class GroupAddActivity extends Activity implements OnClickListener {
 	private String username;
 	private TextView tv_name;
 	private String url;
-	private ImageLoader imageLoader;
 	private ImageView image_touxiang;
 	private TextView tv_id;
 	private LinearLayout head_left_btn;
@@ -142,7 +141,7 @@ public class GroupAddActivity extends Activity implements OnClickListener {
 			}else{
 				url = GlobalConfig.imageurl+contact.getGroupImg();
 			}
-			imageLoader.DisplayImage(url.replace("\\/", "/"), image_touxiang,false, false, null, null);
+			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(image_touxiang);
 		}
 		if(username == null || username.equals("")){
 			et_news.setText("");
@@ -152,7 +151,6 @@ public class GroupAddActivity extends Activity implements OnClickListener {
 	}
 
 	private void setListener() {
-		imageLoader = new ImageLoader(this);
 		head_left_btn.setOnClickListener(this);
 		tv_add.setOnClickListener(this);
 		lin_delete.setOnClickListener(new OnClickListener() {
@@ -366,7 +364,6 @@ public class GroupAddActivity extends Activity implements OnClickListener {
 		isCancelRequest = VolleyRequest.cancelRequest(tag);
 		MyActivityManager mam = MyActivityManager.getInstance();
 		mam.popOneActivity(context);
-		imageLoader = null;
 		image_touxiang = null;
 		et_password = null;
 		et_news = null;

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.home.program.album.activity.AlbumActivity;
 import com.woting.activity.home.program.album.model.ContentCatalogs;
@@ -179,11 +180,9 @@ public class DetailsFragment extends Fragment implements OnClickListener{
 								} else {
 									url = GlobalConfig.imageurl + AlbumActivity.ContentImg;
 								}
-								AlbumActivity.imageLoader.DisplayImage(url.replace("\\/", "/"), AlbumActivity.img_album,
-										false, false, null, null);
-								
-								AlbumActivity.imageLoader.DisplayImage(url.replace("\\/", "/"), imageHead,
-										false, false, null, null);
+								Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(AlbumActivity.img_album);
+								Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(imageHead);
+
 							}
 							 if (contentDesc != null && !contentDesc.equals("") && !contentDesc.equals("null")) {
 								 textContent.setText(contentDesc);

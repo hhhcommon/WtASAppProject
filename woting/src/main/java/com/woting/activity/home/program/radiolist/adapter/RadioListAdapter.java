@@ -8,24 +8,22 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.home.program.fmlist.model.RankInfo;
 import com.woting.common.config.GlobalConfig;
-import com.woting.helper.ImageLoader;
 
 import java.util.List;
 
 public class RadioListAdapter extends BaseAdapter  {
 	private List<RankInfo> list;
 	private Context context;
-	private ImageLoader imageLoader;
 	private ViewHolder holder;
 
 	public RadioListAdapter(Context context, List<RankInfo> list) {
 		this.context = context;
 		this.list = list;
-		imageLoader = new ImageLoader(context);
-	} 
+	}
 
 	@Override
 	public int getCount() {
@@ -73,7 +71,7 @@ public class RadioListAdapter extends BaseAdapter  {
 			}else{
 				 url = GlobalConfig.imageurl + lists.getContentImg();
 			}
-			imageLoader.DisplayImage(url.replace("\\/", "/"),holder.imageview_rankimage, false, false, null, null);
+			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 		}
 		if (lists.getPlayCount() == null
 				|| lists.getPlayCount().equals("")

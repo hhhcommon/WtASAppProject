@@ -35,8 +35,8 @@ public class TimerPowerOffActivity extends Activity implements OnClickListener {
 	private LinearLayout lin_40;
 	private LinearLayout lin_50;
 	private LinearLayout lin_60;
-	private LinearLayout lin_playend;
-	private LinearLayout lin_nostart;
+	private LinearLayout lin_PlayEnd;
+	private LinearLayout lin_NoStart;
 	private TextView tv_time;
 	private ImageView imageTime10, imageTime20, imageTime30, 
 	imageTime40, imageTime50, imageTime60, imageTimeProgramOver, imageTimeNoStart;
@@ -51,8 +51,8 @@ public class TimerPowerOffActivity extends Activity implements OnClickListener {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);	// 透明状态栏
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);// 透明导航栏
 		// 设置界面
-		setview();
-		setlistener();
+		setView();
+		setListener();
 		// 注册广播里接收器
 		IntentFilter myfileter = new IntentFilter();
 		myfileter.addAction(BroadcastConstants.TIMER_UPDATE);
@@ -65,7 +65,7 @@ public class TimerPowerOffActivity extends Activity implements OnClickListener {
 		setImageTimeCheck(0);
 	}
 
-	private void setview() {
+	private void setView() {
 		head_left_btn = (LinearLayout) findViewById(R.id.head_left_btn);// 返回按钮
 		lin_10 = (LinearLayout) findViewById(R.id.lin_10);				// 10分钟结束
 		lin_20 = (LinearLayout) findViewById(R.id.lin_20);
@@ -73,9 +73,9 @@ public class TimerPowerOffActivity extends Activity implements OnClickListener {
 		lin_40 = (LinearLayout) findViewById(R.id.lin_40);
 		lin_50 = (LinearLayout) findViewById(R.id.lin_50);
 		lin_60 = (LinearLayout) findViewById(R.id.lin_60);
-		lin_playend = (LinearLayout) findViewById(R.id.lin_playend);	// 播放结束
+		lin_PlayEnd = (LinearLayout) findViewById(R.id.lin_playend);	// 播放结束
 		tv_time = (TextView) findViewById(R.id.tv_time);
-		lin_nostart = (LinearLayout) findViewById(R.id.lin_nostart);	// 停止服务
+		lin_NoStart = (LinearLayout) findViewById(R.id.lin_nostart);	// 停止服务
 		linView = findViewById(R.id.lin_view);
 
 		imageTime10 = (ImageView) findViewById(R.id.image_time_10);
@@ -90,29 +90,29 @@ public class TimerPowerOffActivity extends Activity implements OnClickListener {
 		// 判断定时服务中的当前节目播放完后关闭是否显示  当前正在播放的是电台节目、当前没有播放任何节目以及当前播放节目处于暂停状态时隐藏此服务
 		if(GlobalConfig.playerobject != null){
 			if(GlobalConfig.playerobject.getMediaType().equals("RADIO")){
-				lin_playend.setVisibility(View.GONE);
+				lin_PlayEnd.setVisibility(View.GONE);
 				linView.setVisibility(View.GONE);
 			}else{
-				if(PlayerFragment.audioplay == null){
-					lin_playend.setVisibility(View.GONE);
+				if(PlayerFragment.audioPlay == null){
+					lin_PlayEnd.setVisibility(View.GONE);
 					linView.setVisibility(View.GONE);
 					return ;
 				}
-				if(PlayerFragment.audioplay.isPlaying()){
-					lin_playend.setVisibility(View.VISIBLE);
+				if(PlayerFragment.audioPlay.isPlaying()){
+					lin_PlayEnd.setVisibility(View.VISIBLE);
 					linView.setVisibility(View.VISIBLE);
 				}else{
-					lin_playend.setVisibility(View.GONE);
+					lin_PlayEnd.setVisibility(View.GONE);
 					linView.setVisibility(View.GONE);
 				}
 			}
 		}else{
-			lin_playend.setVisibility(View.GONE);
+			lin_PlayEnd.setVisibility(View.GONE);
 			linView.setVisibility(View.GONE);
 		}
 
 		if(PlayerFragment.isCurrentPlay){
-			lin_playend.setClickable(false);
+			lin_PlayEnd.setClickable(false);
 		}
 	}
 
@@ -208,7 +208,7 @@ public class TimerPowerOffActivity extends Activity implements OnClickListener {
 	/*
 	 * 设置监听事件
 	 */
-	private void setlistener() {
+	private void setListener() {
 		head_left_btn.setOnClickListener(this);
 		lin_10.setOnClickListener(this);
 		lin_20.setOnClickListener(this);
@@ -216,8 +216,8 @@ public class TimerPowerOffActivity extends Activity implements OnClickListener {
 		lin_40.setOnClickListener(this);
 		lin_50.setOnClickListener(this);
 		lin_60.setOnClickListener(this);
-		lin_playend.setOnClickListener(this);
-		lin_nostart.setOnClickListener(this);
+		lin_PlayEnd.setOnClickListener(this);
+		lin_NoStart.setOnClickListener(this);
 	}
 
 	@Override
@@ -231,42 +231,42 @@ public class TimerPowerOffActivity extends Activity implements OnClickListener {
 			intent.putExtra("time", 10);
 			startService(intent);
 			PlayerFragment.isCurrentPlay = false;
-			lin_playend.setClickable(true);
+			lin_PlayEnd.setClickable(true);
 			break;
 		case R.id.lin_20:			//二十分钟
 			imageTimeCheck = 20;
 			intent.putExtra("time", 20);
 			startService(intent);
 			PlayerFragment.isCurrentPlay = false;
-			lin_playend.setClickable(true);
+			lin_PlayEnd.setClickable(true);
 			break;
 		case R.id.lin_30:			//三十分钟
 			imageTimeCheck = 30;
 			intent.putExtra("time", 30);
 			startService(intent);
 			PlayerFragment.isCurrentPlay = false;
-			lin_playend.setClickable(true);
+			lin_PlayEnd.setClickable(true);
 			break;
 		case R.id.lin_40:			//四十分钟
 			imageTimeCheck = 40;
 			intent.putExtra("time", 40);
 			startService(intent);
 			PlayerFragment.isCurrentPlay = false;
-			lin_playend.setClickable(true);
+			lin_PlayEnd.setClickable(true);
 			break;
 		case R.id.lin_50:			//五十分钟
 			imageTimeCheck = 50;
 			intent.putExtra("time", 50);
 			startService(intent);
 			PlayerFragment.isCurrentPlay = false;
-			lin_playend.setClickable(true);
+			lin_PlayEnd.setClickable(true);
 			break;
 		case R.id.lin_60:			//六十分钟
 			imageTimeCheck = 60;
 			intent.putExtra("time", 60);
 			startService(intent);
 			PlayerFragment.isCurrentPlay = false;
-			lin_playend.setClickable(true);
+			lin_PlayEnd.setClickable(true);
 			break;
 		case R.id.lin_playend:		//当前节目播放完
 			imageTimeCheck = 100;
@@ -274,7 +274,7 @@ public class TimerPowerOffActivity extends Activity implements OnClickListener {
 			intent.putExtra("time", time);
 			startService(intent);
 			PlayerFragment.isCurrentPlay = true;
-			lin_playend.setClickable(false);
+			lin_PlayEnd.setClickable(false);
 			break;
 		case R.id.lin_nostart:// 不启动
 			imageTimeCheck = 0;
@@ -283,7 +283,7 @@ public class TimerPowerOffActivity extends Activity implements OnClickListener {
 			startService(intent);
 			tv_time.setText("00:00");
 			PlayerFragment.isCurrentPlay = false;
-			lin_playend.setClickable(true);
+			lin_PlayEnd.setClickable(true);
 			break;
 		}
 		setImageTimeCheck(imageTimeCheck);
@@ -325,8 +325,8 @@ public class TimerPowerOffActivity extends Activity implements OnClickListener {
 		lin_40=null;
 		lin_50=null;
 		lin_60=null;
-		lin_playend=null;
-		lin_nostart=null;
+		lin_PlayEnd=null;
+		lin_NoStart=null;
 		tv_time=null;
 		imageTime10=null;
 		imageTime20=null;

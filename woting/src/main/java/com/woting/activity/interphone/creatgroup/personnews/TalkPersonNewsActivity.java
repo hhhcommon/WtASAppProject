@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.alert.CallAlertActivity;
 import com.woting.activity.interphone.chat.fragment.ChatFragment;
@@ -33,7 +35,6 @@ import com.woting.common.constant.StringConstant;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.helper.CreatQRImageHelper;
-import com.woting.helper.ImageLoader;
 import com.woting.manager.MyActivityManager;
 import com.woting.util.BitmapUtils;
 import com.woting.util.CommonUtils;
@@ -48,7 +49,6 @@ import org.json.JSONObject;
  * @author 辛龙 2016年1月19日
  */
 public class TalkPersonNewsActivity extends Activity {
-	private ImageLoader imageLoader;
 	private String name;
 	private String imageurl;
 	private String id;
@@ -154,7 +154,6 @@ public class TalkPersonNewsActivity extends Activity {
 	}
 
 	private void setView() {
-		imageLoader = new ImageLoader(this);
 		image_touxiang = (ImageView) findViewById(R.id.image_touxiang);
 		tv_name = (TextView) findViewById(R.id.tv_name);
 		et_b_name = (EditText) findViewById(R.id.et_b_name);
@@ -268,7 +267,7 @@ public class TalkPersonNewsActivity extends Activity {
 			}else{
 				url12 = GlobalConfig.imageurl+imageurl;
 			}
-			imageLoader.DisplayImage(url12.replace("\\/", "/"), image_touxiang, false, false, null, null);
+			Picasso.with(context).load(url12.replace("\\/", "/")).into(image_touxiang);
 		}
 		news = new com.woting.activity.interphone.find.findresult.model.UserInviteMeInside();
 		news.setPortraitMini(imageurl);
@@ -575,7 +574,6 @@ public class TalkPersonNewsActivity extends Activity {
 			bmps = null;
 		} 
 		news = null;
-		imageLoader = null;
 		confirmdialog = null;
 		context = null;
 		name = null;

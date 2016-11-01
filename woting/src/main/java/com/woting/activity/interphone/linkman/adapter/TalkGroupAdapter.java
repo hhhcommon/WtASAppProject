@@ -9,10 +9,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.linkman.model.TalkGroupInside;
 import com.woting.common.config.GlobalConfig;
-import com.woting.helper.ImageLoader;
 
 import java.util.List;
 
@@ -24,7 +25,6 @@ import java.util.List;
 public class TalkGroupAdapter extends BaseAdapter{
 	private List<TalkGroupInside> list;
 	private Context context;
-	private ImageLoader imageLoader;
 	private OnListener onListener;
 	private TalkGroupInside lists;
 	private String url;
@@ -32,7 +32,6 @@ public class TalkGroupAdapter extends BaseAdapter{
 		super();
 		this.list = list;
 		this.context = context;
-		imageLoader=new ImageLoader(context);
 	}
 	public void ChangeDate(List<TalkGroupInside> list){
 		this.list = list;
@@ -90,7 +89,8 @@ public class TalkGroupAdapter extends BaseAdapter{
 			}else{
 				url = GlobalConfig.imageurl+lists.getGroupImg();
 			}
-			imageLoader.DisplayImage(url.replace( "\\/", "/"), holder.imageView_touxiang, false, false,null, null);
+			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageView_touxiang);
+
 		}
 
 		holder.lin_add.setOnClickListener(new View.OnClickListener() {

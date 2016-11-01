@@ -9,10 +9,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.creatgroup.memberadd.model.UserInfo;
 import com.woting.common.config.GlobalConfig;
-import com.woting.helper.ImageLoader;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -21,7 +22,6 @@ import java.util.List;
 public class HandleGroupApplyAdapter extends BaseAdapter implements OnClickListener{
 	private List<UserInfo> list;
 	private Context context;
-	private ImageLoader imageLoader;
 	// private OnListener onListener;
 	private UserInfo Inviter;
 	private String url;
@@ -37,7 +37,6 @@ public class HandleGroupApplyAdapter extends BaseAdapter implements OnClickListe
 		this.list = list;
 		this.context = context;
 		this.mCallback = callback;
-		imageLoader = new ImageLoader(context);
 		format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	}
 
@@ -99,7 +98,7 @@ public class HandleGroupApplyAdapter extends BaseAdapter implements OnClickListe
 			}else{
 				url = GlobalConfig.imageurl+Inviter.getPortraitMini();
 			}
-			imageLoader.DisplayImage(url.replace("\\/", "/"),holder.imageview_inviteimage, false, false, null, null);
+			Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageview_inviteimage);
 		}
 		if (Inviter.getType() == 1) {
 			holder.textview_invitestauswait.setVisibility(View.VISIBLE);

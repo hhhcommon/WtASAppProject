@@ -1,10 +1,5 @@
 package com.woting.activity.interphone.creatgroup.creat;
 
-import java.io.File;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
@@ -34,7 +29,6 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.shenstec.utils.file.FileManager;
 import com.woting.R;
 import com.woting.activity.interphone.creatgroup.creat.model.GroupInformation;
 import com.woting.activity.interphone.creatgroup.creat.util.ImageUploadReturnUtil;
@@ -45,11 +39,17 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.http.MyHttp;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.manager.FileManager;
 import com.woting.manager.MyActivityManager;
 import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
 import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 
 /**
  * 创建组的实现界面 1：edittext已经做出限制，只可以设置英文和数字输入 

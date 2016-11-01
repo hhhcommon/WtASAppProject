@@ -2,12 +2,12 @@ package com.woting.activity.set.contactus.activity;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 
-import com.shenstec.activity.BaseActivity;
 import com.woting.R;
+import com.woting.activity.baseactivity.BaseActivity;
 import com.woting.manager.MyActivityManager;
 
 /**
@@ -40,7 +40,6 @@ public class ContactUsActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.head_left_btn:	// 返回
 			finish();

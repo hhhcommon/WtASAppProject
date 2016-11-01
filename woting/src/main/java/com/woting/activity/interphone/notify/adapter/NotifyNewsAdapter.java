@@ -8,10 +8,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.linkman.model.DBNotifyHistorary;
 import com.woting.common.config.GlobalConfig;
-import com.woting.helper.ImageLoader;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -20,14 +21,12 @@ import java.util.List;
 public class NotifyNewsAdapter extends BaseAdapter {
 	private List<DBNotifyHistorary> list;
 	private Context context;
-	private ImageLoader imageLoader;
 	private DBNotifyHistorary lists;
 	private SimpleDateFormat format;
 	public NotifyNewsAdapter(Context context,List<DBNotifyHistorary> list) {
 		super();
 		this.list = list;
 		this.context = context;
-		imageLoader=new ImageLoader(context);
 		format = new SimpleDateFormat("yy-MM-dd HH:mm");
 	}
 
@@ -87,7 +86,7 @@ public class NotifyNewsAdapter extends BaseAdapter {
 				holder.Image.setImageResource(R.mipmap.wt_linkman_news);
 			}else{
 				String url = GlobalConfig.imageurl+lists.getImageUrl();
-				imageLoader.DisplayImage(url.replace( "\\/", "/"), holder.Image, false, false,null, null);
+				Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.Image);
 			}
 		}
 		return convertView;

@@ -160,12 +160,17 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 						String bjuserid = CommonUtils.getUserId(context);
 						String ContentFavorite = SubList.get(position).getContentFavorite();
 						String localurl=SubList.get(position).getLocalurl();
-						
+						//name id desc img
+						String sequName=SubList.get(position).getSequname();
+						String sequId=SubList.get(position).getSequid();
+						String sequDesc=SubList.get(position).getSequdesc();
+						String sequImg=SubList.get(position).getSequimgurl();
+
 						// 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
 						PlayerHistory history = new PlayerHistory(playername, playerimage, playerurl, playerurI,
 								playermediatype, plaplayeralltime, playerintime, playercontentdesc, playernum,
 								playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid,
-								playcontentshareurl, ContentFavorite, contentid,localurl);
+								playcontentshareurl, ContentFavorite, contentid,localurl,sequName,sequId,sequDesc,sequImg);
 						dbdao.deleteHistory(playerurl);
 						dbdao.addHistory(history);
 						if(PlayerFragment.context!=null){

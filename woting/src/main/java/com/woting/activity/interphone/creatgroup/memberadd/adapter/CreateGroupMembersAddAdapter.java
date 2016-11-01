@@ -11,17 +11,17 @@ import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.creatgroup.memberadd.model.UserInfo;
 import com.woting.common.config.GlobalConfig;
-import com.woting.helper.ImageLoader;
 
 import java.util.List;
 
 public class CreateGroupMembersAddAdapter extends BaseAdapter  implements SectionIndexer{
 	private List<UserInfo> list;
 	private Context context;
-	private ImageLoader imageLoader;
 	private UserInfo lists;
 	private String url;
 	private friendCheck friendcheck;
@@ -30,7 +30,6 @@ public class CreateGroupMembersAddAdapter extends BaseAdapter  implements Sectio
 		super();
 		this.list = list;
 		this.context = context;
-		imageLoader = new ImageLoader(context);
 	}
 
 	public void ChangeDate(List<UserInfo> list) {
@@ -103,8 +102,7 @@ public class CreateGroupMembersAddAdapter extends BaseAdapter  implements Sectio
 				}else{
 					 url = GlobalConfig.imageurl+lists.getPortraitMini();
 				}
-				imageLoader.DisplayImage(url.replace("\\/", "/"),
-						holder.imageView_touxiang, false, false, null, null);
+				Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageView_touxiang);
 			}
 			if (lists.getCheckType() == 2) {
 				holder.imageView_check

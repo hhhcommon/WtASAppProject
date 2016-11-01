@@ -1,14 +1,5 @@
 package com.woting.activity.person.playhistory.adapter;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.TimeZone;
-
-import com.shenstec.utils.image.ImageLoader;
-import com.woting.R;
-import com.woting.activity.home.player.main.model.PlayerHistory;
-import com.woting.activity.home.search.model.SuperRankInfo;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +9,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+import com.woting.R;
+import com.woting.activity.home.player.main.model.PlayerHistory;
+import com.woting.activity.home.search.model.SuperRankInfo;
+
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.TimeZone;
+
 public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
 	private Context context;
-	private ImageLoader imageLoader;
 	private List<SuperRankInfo> mSuperRankInfo;
 	private SimpleDateFormat format;
 	private Object a;
@@ -30,7 +29,6 @@ public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
 	public PlayHistoryExpandableAdapter(Context context,List<SuperRankInfo> mSuperRankInfo) {
 		this.context = context;
 		this.mSuperRankInfo = mSuperRankInfo;
-		imageLoader = new ImageLoader(context);
 	}
 	
 	public void setOnClick(PlayHistoryCheck playCheck) {
@@ -153,7 +151,7 @@ public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
 				holder.imageView_playImage.setImageResource(R.mipmap.wt_image_playertx);
 			} else {
 				url = lists.getPlayerImage();
-				imageLoader.DisplayImage(url.replace("\\/", "/"), holder.imageView_playImage, false, false, null);
+				Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageView_playImage);
 			}
 		} else if(lists.getPlayerMediaType().equals("AUDIO")){
 			if (lists.getPlayerName() == null || lists.getPlayerName().equals("")) {
@@ -185,7 +183,7 @@ public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
 				holder.imageView_playImage.setImageResource(R.mipmap.wt_image_playertx);
 			} else {
 				url = lists.getPlayerImage();
-				imageLoader.DisplayImage(url.replace("\\/", "/"), holder.imageView_playImage, false, false, null);
+				Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageView_playImage);
 			}
 			
 		}/*else if(lists.getPlayerMediaType().equals("SEQU")){// 判断mediatype==sequ的情况
@@ -251,7 +249,7 @@ public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
 				holder.imageView_playImage.setImageResource(R.mipmap.wt_image_playertx);
 			} else {
 				url = lists.getPlayerImage();
-				imageLoader.DisplayImage(url.replace("\\/", "/"), holder.imageView_playImage, false, false, null);
+				Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageView_playImage);
 			}
 		}
 		return convertView;
