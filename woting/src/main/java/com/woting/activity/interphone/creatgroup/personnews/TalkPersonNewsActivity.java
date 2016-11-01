@@ -20,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.alert.CallAlertActivity;
@@ -288,9 +287,8 @@ public class TalkPersonNewsActivity extends Activity {
 			public void onClick(View v) {
 				Intent intent = new Intent(context,EWMShowActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putString("type", "1");
+                bundle.putInt("type", 2);
 				bundle.putString("id", num);
-//				String s = imageurl;
 				bundle.putString("image", imageurl);
 				bundle.putString("news",descn);
 				bundle.putString("name", name);

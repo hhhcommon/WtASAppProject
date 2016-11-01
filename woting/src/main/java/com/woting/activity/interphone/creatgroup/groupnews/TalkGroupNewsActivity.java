@@ -719,7 +719,7 @@ public class TalkGroupNewsActivity extends Activity implements OnClickListener {
 		case R.id.lin_ewm:
 			Intent intente = new Intent(context,EWMShowActivity.class);
 			Bundle bundlee = new Bundle();
-			bundlee.putString("type", "2");
+			bundlee.putInt("type", 2);
 			bundlee.putString("id", number);
 			bundlee.putString("image", imageurl);
 			bundlee.putString("news",groupdesc);

@@ -1,16 +1,5 @@
 package com.woting.activity.person.playhistory.fragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.woting.R;
-import com.woting.activity.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.activity.home.player.main.model.PlayerHistory;
-import com.woting.activity.person.playhistory.activity.PlayHistoryActivity;
-import com.woting.activity.person.playhistory.adapter.PlayHistoryAdapter;
-import com.woting.activity.person.playhistory.adapter.PlayHistoryAdapter.playhistorycheck;
-import com.woting.util.ToastUtils;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+
+import com.woting.R;
+import com.woting.activity.home.player.main.dao.SearchPlayerHistoryDao;
+import com.woting.activity.home.player.main.model.PlayerHistory;
+import com.woting.activity.person.playhistory.activity.PlayHistoryActivity;
+import com.woting.activity.person.playhistory.adapter.PlayHistoryAdapter;
+import com.woting.activity.person.playhistory.adapter.PlayHistoryAdapter.playhistorycheck;
+import com.woting.util.ToastUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 播放历史记录  专辑界面
@@ -126,7 +126,7 @@ public class SequFragment extends Fragment{
 	 */
 	private void ifAll(){
 		if(checkList == null){
-			checkList = new ArrayList<PlayerHistory>();
+			checkList = new ArrayList<>();
 		}
 		for(int i=0; i<playList.size(); i++){
 			if(playList.get(i).getStatus() == 1 && !checkList.contains(playList.get(i))){
@@ -137,11 +137,11 @@ public class SequFragment extends Fragment{
 		}
 		if(checkList.size() == playList.size()){
 			Intent intentAll = new Intent();
-			intentAll.setAction(PlayHistoryActivity.UPDATA_ACTION_ALL);
+			intentAll.setAction(PlayHistoryActivity.UPDATE_ACTION_ALL);
 			context.sendBroadcast(intentAll);
 		}else{
 			Intent intentNoCheck = new Intent();
-			intentNoCheck.setAction(PlayHistoryActivity.UPDATA_ACTION_CHECK);
+			intentNoCheck.setAction(PlayHistoryActivity.UPDATE_ACTION_CHECK);
 			context.sendBroadcast(intentNoCheck);
 		}
 	}
@@ -177,7 +177,7 @@ public class SequFragment extends Fragment{
 		int number = 0;
 		for(int i=0; i<playList.size(); i++){
 			if(deleteList == null){
-				deleteList = new ArrayList<PlayerHistory>();
+				deleteList = new ArrayList<>();
 			}
 			if(playList.get(i).getStatus() == 1){
 				deleteList.add(playList.get(i));

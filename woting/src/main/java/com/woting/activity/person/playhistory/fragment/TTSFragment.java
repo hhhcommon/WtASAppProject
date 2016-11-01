@@ -88,7 +88,7 @@ public class TTSFragment extends Fragment{
 				if (subList.get(i).getPlayerMediaType() != null && !subList.get(i).getPlayerMediaType().equals("")) {
 					if (subList.get(i).getPlayerMediaType().equals("TTS")) {
 						if (playList == null) {
-							playList = new ArrayList<PlayerHistory>();
+							playList = new ArrayList<>();
 						}
 						playList.add(subList.get(i));
 						isData = true;
@@ -96,7 +96,7 @@ public class TTSFragment extends Fragment{
 				}
 			}
 			if(playList == null){
-				playList = new ArrayList<PlayerHistory>();
+				playList = new ArrayList<>();
 			}
 			adapter = new PlayHistoryAdapter(context, playList);
 			listView.setAdapter(adapter);
@@ -228,7 +228,7 @@ public class TTSFragment extends Fragment{
 	 */
 	private void ifAll(){
 		if(checkList == null){
-			checkList = new ArrayList<PlayerHistory>();
+			checkList = new ArrayList<>();
 		}
 		for(int i=0; i<playList.size(); i++){
 			if(playList.get(i).getStatus() == 1 && !checkList.contains(playList.get(i))){
@@ -239,11 +239,11 @@ public class TTSFragment extends Fragment{
 		}
 		if(checkList.size() == playList.size()){		// 发送广播更新为全选状态
 			Intent intentAll = new Intent();
-			intentAll.setAction(PlayHistoryActivity.UPDATA_ACTION_ALL);
+			intentAll.setAction(PlayHistoryActivity.UPDATE_ACTION_ALL);
 			context.sendBroadcast(intentAll);
 		}else{											// 发送广播更新为非全选状态
 			Intent intentNoCheck = new Intent();
-			intentNoCheck.setAction(PlayHistoryActivity.UPDATA_ACTION_CHECK);
+			intentNoCheck.setAction(PlayHistoryActivity.UPDATE_ACTION_CHECK);
 			context.sendBroadcast(intentNoCheck);
 		}
 	}
