@@ -72,9 +72,9 @@ public class PersonActivity extends Activity implements OnClickListener {
 	private UserPortaitInside UserPortait;
 	private ImageLoader imgLoader;
 
-	private final int TO_GALLERY = 1;
-	private final int TO_CAMARA = 2;
-	private final int PHOTO_REQUEST_CUT = 7;
+	private final int TO_GALLERY = 1;// 标识 打开系统图库
+	private final int TO_CAMERA = 2;// 标识 打开系统照相机
+	private final int PHOTO_REQUEST_CUT = 7;// 标识 跳转到图片裁剪界面
     private int imagenum;
 
 	private String ReturnType;
@@ -91,26 +91,20 @@ public class PersonActivity extends Activity implements OnClickListener {
 
 	private Dialog dialog;
     private Dialog Imagedialog;
-	private LinearLayout lin_liuliang;
 	private LinearLayout lin_modifypassword;
-	private LinearLayout lin_timer;
 	private LinearLayout lin_like;
-	private LinearLayout lin_xiugai;
-	private LinearLayout lin_playhistory;
 	private LinearLayout lin_bingding;
 	private RelativeLayout lin_status_nodenglu;
 	private RelativeLayout lin_status_denglu;
 	private TextView textTime;
 	private TextView tv_username;
 	private TextView tv_userid;
-	private TextView tv_denglu;
 	private TextView textUser;
 	private ImageView img_toggle;
 	private ImageView lin_image;
-	private ImageView imageView_ewm;
 	private ImageView lin_image_0;
 	private ImageView imgview_touxiang;
-	private ImageView imageNotLogin;
+//	private ImageView imageNotLogin;
 	private View rulesLine0, rulesLine1, rulesLine2, rulesLine3;		// 分割线
 
 	@Override
@@ -161,50 +155,44 @@ public class PersonActivity extends Activity implements OnClickListener {
 	private void setView() {
         findViewById(R.id.lin_set).setOnClickListener(this);
 
-		lin_bingding = (LinearLayout) findViewById(R.id.lin_bingding);					// 账户绑定
+		lin_bingding = (LinearLayout) findViewById(R.id.lin_bingding);// 账户绑定
         lin_bingding.setOnClickListener(this);
 
-		lin_playhistory = (LinearLayout) findViewById(R.id.lin_playhistory);			// 播放历史
-        lin_playhistory.setOnClickListener(this);
+        findViewById(R.id.lin_playhistory).setOnClickListener(this);// 播放历史
 
-		imgview_touxiang = (ImageView) findViewById(R.id.image_touxiang);				// 登录后的头像
+		imgview_touxiang = (ImageView) findViewById(R.id.image_touxiang);// 登录后的头像
 
-        imageView_ewm = (ImageView) findViewById(R.id.imageView_ewm);
-        imageView_ewm.setOnClickListener(this);
+        findViewById(R.id.imageView_ewm).setOnClickListener(this);// 二维码
+        findViewById(R.id.image_nodenglu).setOnClickListener(this);// 没有登录时的头像
+        findViewById(R.id.text_denglu).setOnClickListener(this);// 点击登录
 
-		imageNotLogin = (ImageView) findViewById(R.id.image_nodenglu);					// 没有登录时的头像
-        imageNotLogin.setOnClickListener(this);
+		lin_status_nodenglu = (RelativeLayout) findViewById(R.id.lin_status_nodenglu);// 未登录时的状态
+		lin_status_denglu = (RelativeLayout) findViewById(R.id.lin_status_denglu);// 登录时的状态
 
-		tv_denglu = (TextView) findViewById(R.id.text_denglu);							// 点击登录
-        tv_denglu.setOnClickListener(this);
-
-		lin_status_nodenglu = (RelativeLayout) findViewById(R.id.lin_status_nodenglu);	// 未登录时的状态
-		lin_status_denglu = (RelativeLayout) findViewById(R.id.lin_status_denglu);		// 登录时的状态
 		lin_image = (ImageView) findViewById(R.id.lin_image);
 		Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.img_person_background);
 		lin_image.setImageBitmap(bmp);
+
 		lin_image_0 = (ImageView) findViewById(R.id.lin_image_0);
 		lin_image_0.setImageBitmap(bmp);
+
 		textTime = (TextView) findViewById(R.id.text_time);
-		tv_username = (TextView) findViewById(R.id.tv_username);					// 登录后的用户名控件
-		tv_userid = (TextView) findViewById(R.id.tv_userid);						// 登录后的用户ID控件
+		tv_username = (TextView) findViewById(R.id.tv_username);// 登录后的用户名控件
+		tv_userid = (TextView) findViewById(R.id.tv_userid);// 登录后的用户ID控件
 
-		lin_timer = (LinearLayout) findViewById(R.id.lin_timer);					// 定时
-        lin_timer.setOnClickListener(this);
+        findViewById(R.id.lin_timer).setOnClickListener(this);// 定时
 
-		lin_modifypassword = (LinearLayout) findViewById(R.id.lin_modifypassword);	// 修改密码
+		lin_modifypassword = (LinearLayout) findViewById(R.id.lin_modifypassword);// 修改密码
         lin_modifypassword.setOnClickListener(this);
 
-		lin_like = (LinearLayout) findViewById(R.id.lin_like);						// like
+		lin_like = (LinearLayout) findViewById(R.id.lin_like);// like
         lin_like.setOnClickListener(this);
 
-		lin_liuliang = (LinearLayout) findViewById(R.id.lin_liuliang);				// 流量提醒
-        lin_liuliang.setOnClickListener(this);
+        findViewById(R.id.lin_liuliang).setOnClickListener(this);// 流量提醒
 
-		img_toggle = (ImageView) findViewById(R.id.wt_img_toggle);					// imgToggle
+		img_toggle = (ImageView) findViewById(R.id.wt_img_toggle);// imgToggle
 
-        lin_xiugai = (LinearLayout) findViewById(R.id.lin_xiugai);					// 修改个人资料
-        lin_xiugai.setOnClickListener(this);
+        findViewById(R.id.lin_xiugai).setOnClickListener(this);// 修改个人资料
 
 		textUser = (TextView) findViewById(R.id.tv_user);
 		textUser.setText("24岁  水瓶座  北京  ");
@@ -381,7 +369,7 @@ public class PersonActivity extends Activity implements OnClickListener {
 			outputFilePath=file.getAbsolutePath();
 			Intent intentss = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);  
 			intentss.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);  
-			startActivityForResult(intentss, TO_CAMARA);
+			startActivityForResult(intentss, TO_CAMERA);
 			break;
 		default:
 			ToastUtils.show_allways(PersonActivity.this, "发生未知异常");
@@ -411,7 +399,7 @@ public class PersonActivity extends Activity implements OnClickListener {
                 startPhotoZoom(Uri.parse(imagePath));
 			}
 			break;
-		case TO_CAMARA:
+		case TO_CAMERA:
 			if (resultCode == Activity.RESULT_OK) {
 				imagePath = outputFilePath;
 				imagenum=1;
