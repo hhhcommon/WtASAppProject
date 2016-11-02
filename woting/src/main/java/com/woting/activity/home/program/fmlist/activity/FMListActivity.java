@@ -115,8 +115,8 @@ public class FMListActivity extends BaseActivity implements OnClickListener {
 						JSONTokener jsonParser = new JSONTokener(ResultList);
 						JSONObject arg1 = (JSONObject) jsonParser.nextValue();
 						StringSubList = arg1.getString("List");
-						String pagesize = arg1.getString("PageSize");
-						pageSizeNum = Integer.valueOf(pagesize);
+						String pageSize = arg1.getString("PageSize");
+						pageSizeNum = Integer.valueOf(pageSize);
 						SubList = new Gson().fromJson(StringSubList, new TypeToken<List<RankInfo>>() {}.getType());
 						if (RefreshType == 1) {
 							mListView.stopRefresh();

@@ -226,7 +226,7 @@ public class RadioFragment extends Fragment {
 		try {
 			jsonObject.put("MediaType", "RADIO");
 			if(searchStr != null && !searchStr.equals("")){
-				jsonObject.put("searchStr", searchStr);
+				jsonObject.put("SearchStr", searchStr);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

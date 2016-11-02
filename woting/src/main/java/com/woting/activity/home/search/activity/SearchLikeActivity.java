@@ -504,7 +504,7 @@ public class SearchLikeActivity extends FragmentActivity implements OnClickListe
 			lin_status_second.setVisibility(View.GONE);
 			lin_status_first.setVisibility(View.GONE);
 			lin_status_third.setVisibility(View.VISIBLE);
-			mIntent.putExtra("SearchStr", str);
+			mIntent.putExtra("searchStr", str);
 			history = new History(CommonUtils.getUserId(context),str);
 			shd.addHistory(history);
 			// 此处执行去重       08/19 往上提了几行代码  解决搜索历史重复问题

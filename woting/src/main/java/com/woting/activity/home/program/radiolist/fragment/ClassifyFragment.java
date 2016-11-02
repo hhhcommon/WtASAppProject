@@ -160,21 +160,21 @@ public class ClassifyFragment extends Fragment{
 						JSONObject arg1 = (JSONObject) jsonParser.nextValue();
 						StringSubList = arg1.getString("List");
 						String PageSize = arg1.getString("PageSize");
-						String Allcount = arg1.getString("AllCount");
+						String AllCountTemp = arg1.getString("AllCount");
 						if(Integer.valueOf(PageSize) < 10){
 							mListView.stopLoadMore();
 							mListView.setPullLoadEnable(false);
 						}else{
 							mListView.setPullLoadEnable(true);
 						}
-						if (Allcount != null && !Allcount.equals("") && PageSize != null && !PageSize.equals("")) {
-							int allcount = Integer.valueOf(Allcount);
+						if (AllCountTemp != null && !AllCountTemp.equals("") && PageSize != null && !PageSize.equals("")) {
+							int AllCount = Integer.valueOf(AllCountTemp);
 							pageSize = Integer.valueOf(PageSize);
 							// 先求余 如果等于0 最后结果不加1 如果不等于0 结果加一
-							if (allcount % pageSize == 0) {
-								pageSizeNum = allcount / pageSize;
+							if (AllCount % pageSize == 0) {
+								pageSizeNum = AllCount / pageSize;
 							} else {
-								pageSizeNum = allcount / pageSize + 1;
+								pageSizeNum = AllCount / pageSize + 1;
 							}
 						} else {
 							ToastUtils.show_allways(context, "页码获取异常");

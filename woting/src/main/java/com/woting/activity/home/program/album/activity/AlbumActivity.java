@@ -38,7 +38,7 @@ import com.umeng.socialize.media.UMImage;
 import com.woting.R;
 import com.woting.activity.home.player.main.adapter.ImageAdapter;
 import com.woting.activity.home.player.main.model.LanguageSearchInside;
-import com.woting.activity.home.player.main.model.sharemodel;
+import com.woting.activity.home.player.main.model.ShareModel;
 import com.woting.activity.home.program.album.fragment.DetailsFragment;
 import com.woting.activity.home.program.album.fragment.ProgramFragment;
 import com.woting.activity.home.program.fmlist.model.RankInfo;
@@ -90,7 +90,7 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 	private int offset; 						// 图片移动的偏移量
 	private int currentIndex;
 	private int targetIndex;
-	private int screenw;
+	private int screenWidth;
 	private boolean isCancelRequest;
 	public static ImageView imageFavorite;
 	private String tag = "ALBUM_VOLLEY_REQUEST_CANCEL_TAG";
@@ -123,15 +123,15 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 		Window window = shareDialog.getWindow();
 		DisplayMetrics dm = new DisplayMetrics();
 		context.getWindowManager().getDefaultDisplay().getMetrics(dm);
-		screenw = dm.widthPixels;
+		screenWidth = dm.widthPixels;
 		LayoutParams params = dialog.getLayoutParams();
-		params.width =  screenw;
+		params.width = screenWidth;
 		dialog.setLayoutParams(params);
 		window.setGravity(Gravity.BOTTOM);
 		window.setWindowAnimations(R.style.sharestyle);
 		shareDialog.setCanceledOnTouchOutside(true);
 		shareDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
-		final List<sharemodel> mList = ShareUtils.getShareModelList();
+		final List<ShareModel> mList = ShareUtils.getShareModelList();
 		ImageAdapter shareAdapter = new ImageAdapter(context,mList);
 		mGallery.setAdapter(shareAdapter);
 		dialog1 = DialogUtils.Dialogphnoshow(context, "通讯中", dialog1);

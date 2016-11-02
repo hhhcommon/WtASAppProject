@@ -309,7 +309,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 							if(SubListAll.get(i).getCheckType() == 3) {
 								downLoadSum++;
 							}
-							setsum();
+							setSum();
 							adapter.notifyDataSetChanged();
 						}
 
@@ -391,7 +391,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 					}
 				}
 				sum = 0;
-				setsum();
+				setSum();
 				flag = false;
 				break;
 			case R.id.lin_quanxuan: 	// 全选
@@ -405,7 +405,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 					}
 					flag = true;
 					img_quanxuan.setImageResource(R.mipmap.image_all_check);
-					setsum();
+					setSum();
 				} else {
 					for (int i = 0; i < SubListAll.size(); i++) {
 						if (SubListAll.get(i).getCheckType() != 3) {
@@ -415,7 +415,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 					flag = false;
 					img_quanxuan.setImageResource(R.mipmap.image_not_all_check);
 					sum = 0;
-					setsum();
+					setSum();
 				}
 				adapter.notifyDataSetChanged();
 				break;
@@ -478,7 +478,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 		}
 	}
 
-	protected void setsum() {
+	protected void setSum() {
 		tv_sum.setText(sum + "");
 	}
 

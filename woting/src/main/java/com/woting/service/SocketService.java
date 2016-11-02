@@ -671,7 +671,7 @@ public class SocketService extends Service  {
 				String message = intent.getStringExtra("message");
 				if(message!=null&&message.equals("true")){
 					Log.e("socket", "socket监听到有网络，开始连接");
-					Toast.makeText(context, "网络连接", 2).show();
+					Toast.makeText(context, "网络连接", Toast.LENGTH_LONG).show();
 					workStart();
 				}else{
 					Log.e("socket", "socket监听到网络断开，关闭socket");

@@ -97,7 +97,7 @@ import com.wotingfm.activity.home.player.main.dao.SearchPlayerHistoryDao;
 import com.wotingfm.activity.home.player.main.model.LanguageSearch;
 import com.wotingfm.activity.home.player.main.model.LanguageSearchInside;
 import com.wotingfm.activity.home.player.main.model.PlayerHistory;
-import com.wotingfm.activity.home.player.main.model.sharemodel;
+import com.wotingfm.activity.home.player.main.model.shareModel;
 import com.wotingfm.activity.home.player.timeset.activity.TimerPowerOffActivity;
 import com.wotingfm.activity.home.player.timeset.service.timeroffservice;
 import com.wotingfm.activity.home.program.album.model.ContentInfo;

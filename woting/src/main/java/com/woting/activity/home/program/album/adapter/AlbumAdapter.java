@@ -73,7 +73,6 @@ public class AlbumAdapter extends BaseAdapter {
 	}
 
 	class ViewHolder {
-		public ImageView imageView_touxiang;
 		public TextView tv_name;
 		public ImageView imageView_check;
 	}
