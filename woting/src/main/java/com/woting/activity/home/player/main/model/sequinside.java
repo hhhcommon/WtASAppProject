@@ -2,7 +2,7 @@ package com.woting.activity.home.player.main.model;
 
 import java.io.Serializable;
 
-public class sequInside implements Serializable{
+public class SequInside implements Serializable{
 
 	private String ContentURI;
 	private String ContentPersons;

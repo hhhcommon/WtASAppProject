@@ -49,7 +49,10 @@ public class DetailsFragment extends Fragment implements OnClickListener{
 	private List<ContentInfo> SubList;	// 请求返回的网络数据值
 	private String contentDesc;
 	private TextView textConcern;		// text_concern
-	
+	private String tag = "DETAILS_VOLLEY_REQUEST_CANCEL_TAG";
+	private boolean isCancelRequest;
+
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -102,10 +105,7 @@ public class DetailsFragment extends Fragment implements OnClickListener{
 			break;
 		}
 	}
-	
-	private String tag = "DETAILS_VOLLEY_REQUEST_CANCEL_TAG";
-	private boolean isCancelRequest;
-	
+
 	/**
 	 * 向服务器发送请求
 	 */
@@ -144,7 +144,6 @@ public class DetailsFragment extends Fragment implements OnClickListener{
 							SubList = gson.fromJson(StringSubList, new TypeToken<List<ContentInfo>>() {}.getType());
 							ContentInfo contentInfo = gson.fromJson(ResultList, new TypeToken<ContentInfo>() {}.getType());
 							contentCatalogsList = contentInfo.getContentCatalogs();
-							
 							contentDesc = arg1.getString("ContentDesc");
 							AlbumActivity.ContentImg = arg1.getString("ContentImg");
 							AlbumActivity.ContentName = arg1.getString("ContentName");

@@ -34,7 +34,7 @@ import com.woting.activity.home.player.main.fragment.PlayerFragment;
 import com.woting.activity.home.player.main.model.PlayerHistory;
 import com.woting.activity.home.program.album.activity.AlbumActivity;
 import com.woting.activity.home.program.citylist.activity.CityListActivity;
-import com.woting.activity.home.program.diantai.adapter.cityNewsAdapter;
+import com.woting.activity.home.program.diantai.adapter.CityNewAdapter;
 import com.woting.activity.home.program.diantai.adapter.onlineAdapter;
 import com.woting.activity.home.program.diantai.model.RadioPlay;
 import com.woting.activity.home.program.fmlist.activity.FMListActivity;
@@ -268,7 +268,7 @@ public class OnLineFragment extends Fragment {
 		}
 
 		VolleyRequest.RequestPost(GlobalConfig.getContentUrl, tag, jsonObject, new VolleyCallback() {
-			private cityNewsAdapter adapters;
+			private CityNewAdapter adapters;
 
 			@Override
 			protected void requestSuccess(JSONObject result) {
@@ -285,7 +285,7 @@ public class OnLineFragment extends Fragment {
 						String MainList = arg1.getString("List");
 						mainLists = new Gson().fromJson(MainList, new TypeToken<List<RankInfo>>() {}.getType());
 						if (adapters == null) {
-							adapters = new cityNewsAdapter(context, mainLists);
+							adapters = new CityNewAdapter(context, mainLists);
 							gridView.setAdapter(adapters);
 						} else {
 							adapters.notifyDataSetChanged();
