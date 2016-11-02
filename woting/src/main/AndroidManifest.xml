@@ -270,7 +270,7 @@
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.home.search.activity.SearchLikeAcitvity"
+            android:name="com.woting.activity.home.search.activity.SearchLikeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />

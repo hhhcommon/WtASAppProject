@@ -16,11 +16,11 @@ import com.woting.util.BitmapUtils;
 
 import java.util.List;
 
-public class cityNewsAdapter extends BaseAdapter {
+public class CityNewAdapter extends BaseAdapter {
 	private List<RankInfo> list;
 	private Context context;
 
-	public cityNewsAdapter(Context context, List<RankInfo> list) {
+	public CityNewAdapter(Context context, List<RankInfo> list) {
 		this.context = context;
 		this.list = list;
 	}
