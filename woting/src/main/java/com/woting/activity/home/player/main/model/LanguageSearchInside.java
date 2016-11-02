@@ -6,7 +6,6 @@ public class LanguageSearchInside implements Serializable{
 	private String Type="1";
 	private String ContentURI;
 	private String ContentPersons;
-	/*	private String ContentCatalogs;*/
 	private String ContentKeyWord;
 	private String cTime;
 	private String ContentSubjectWord;
@@ -14,7 +13,7 @@ public class LanguageSearchInside implements Serializable{
 	private String ContentName;
 	private String ContentPubTime;
 	private String ContentPub;
-	//	private String ContentSource;
+
 	private String ContentPlay;
 	private String MediaType;
 	private String ContentId;
@@ -23,7 +22,7 @@ public class LanguageSearchInside implements Serializable{
 	private String PlayerAllTime;
 	private String PlayerInTime;
 	private String PlayCount;
-	private sequinside SeqInfo;
+	private sequInside SeqInfo;
 	private String ContentShareURL;
 	private String ContentFavorite;
 	private String localurl;
@@ -88,10 +87,10 @@ public class LanguageSearchInside implements Serializable{
 	public void setContentShareURL(String contentShareURL) {
 		ContentShareURL = contentShareURL;
 	}
-	public sequinside getSeqInfo() {
+	public sequInside getSeqInfo() {
 		return SeqInfo;
 	}
-	public void setSeqInfo(sequinside seqInfo) {
+	public void setSeqInfo(sequInside seqInfo) {
 		SeqInfo = seqInfo;
 	}
 	public String getPlayerInTime() {
@@ -112,12 +111,6 @@ public class LanguageSearchInside implements Serializable{
 	public void setContentPersons(String contentPersons) {
 		ContentPersons = contentPersons;
 	}
-	/*	public String getContentCatalogs() {
-            return ContentCatalogs;
-        }
-        public void setContentCatalogs(String contentCatalogs) {
-            ContentCatalogs = contentCatalogs;
-        }*/
 	public String getContentPlay() {
 		return ContentPlay;
 	}

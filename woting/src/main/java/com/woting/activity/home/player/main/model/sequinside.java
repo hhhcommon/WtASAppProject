@@ -2,11 +2,10 @@ package com.woting.activity.home.player.main.model;
 
 import java.io.Serializable;
 
-public class  sequinside  implements Serializable{
+public class sequInside implements Serializable{
 
 	private String ContentURI;
-	private String ContentPersons;  
-	//	private String ContentCatalogs;
+	private String ContentPersons;
 	private String ContentKeyWord;
 	private String cTime;
 	private String ContentSubjectWord;
@@ -34,12 +33,7 @@ public class  sequinside  implements Serializable{
 	public void setContentPersons(String contentPersons) {
 		ContentPersons = contentPersons;
 	}
-	//	public String getContentCatalogs() {
-	//		return ContentCatalogs;
-	//	}
-	//	public void setContentCatalogs(String contentCatalogs) {
-	//		ContentCatalogs = contentCatalogs;
-	//	}
+
 	public String getContentKeyWord() {
 		return ContentKeyWord;
 	}

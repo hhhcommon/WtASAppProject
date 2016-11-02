@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -66,7 +65,7 @@ public class CityListActivity extends BaseActivity implements OnClickListener {
 	private List<CatalogName> userList= new ArrayList<>();
 	private CityListAdapter adapter;
 	private List<CatalogName> srcList;
-	private String tag = "CITY_LIST_REQUEST_CANCLE_TAG";
+	private String tag = "CITY_LIST_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
 
 	@Override
@@ -120,7 +119,6 @@ public class CityListActivity extends BaseActivity implements OnClickListener {
 				if (dialog != null) {
 					dialog.dismiss();
 				}
-				Log.e("获取城市列表", ""+result.toString());
 				// 如果网络请求已经执行取消操作  就表示就算请求成功也不需要数据返回了  所以方法就此结束
 				if(isCancelRequest){
 					return ;
@@ -138,14 +136,12 @@ public class CityListActivity extends BaseActivity implements OnClickListener {
 							String ResultList = result.getString("CatalogData");
 							Catalog SubList_all = new Gson().fromJson(ResultList, new TypeToken<Catalog>() {}.getType());
 							srcList = SubList_all.getSubCata();
-
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
 						if (srcList.size() == 0) {
 							ToastUtils.show_allways(context, "获取分类列表为空");
 						} else {
-
 							userList.clear();
 							userList.addAll(srcList);
 							filledData(userList);

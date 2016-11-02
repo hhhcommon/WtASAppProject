@@ -138,7 +138,10 @@ public class FenLeiFragment extends Fragment {
 						ToastUtils.show_allways(context, "当前暂无分类");
 					} else if (ReturnType.equals("T")) {
 						ToastUtils.show_allways(context, "获取列表异常");
+					}else{
+						ToastUtils.show_allways(context, "获取列表异常");
 					}
+
 				} else {
 					ToastUtils.show_allways(context, "数据获取异常，请稍候重试");
 				}

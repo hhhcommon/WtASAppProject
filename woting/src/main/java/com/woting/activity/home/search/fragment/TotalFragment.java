@@ -253,7 +253,7 @@ public class TotalFragment extends Fragment {
 							for (int i = 0; i < list.size(); i++) {
 								ex_ListView.expandGroup(i);
 							}
-							setitemListener();
+							setItemListener();
 						} else {
 							ToastUtils.show_short(context, "没有数据");
 						}
@@ -286,7 +286,7 @@ public class TotalFragment extends Fragment {
 		try {
 			jsonObject.put("PageSize","12");
 			if(searchStr != null && !searchStr.equals("")){
-				jsonObject.put("searchStr", searchStr);
+				jsonObject.put("SearchStr", searchStr);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -294,7 +294,7 @@ public class TotalFragment extends Fragment {
 		return jsonObject;
 	}
 
-	protected void setitemListener() {
+	protected void setItemListener() {
 		ex_ListView.setOnChildClickListener(new OnChildClickListener() {
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v,int groupPosition, int childPosition, long id) {
@@ -305,25 +305,25 @@ public class TotalFragment extends Fragment {
 					e.printStackTrace();
 				}
 				if (MediaType!=null&&MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
-					String playername = list.get(groupPosition).getList().get(childPosition).getContentName();
-					String playerimage = list.get(groupPosition).getList().get(childPosition).getContentImg();
-					String playerurl = list.get(groupPosition).getList().get(childPosition).getContentPlay();
-					String playerurI= list.get(groupPosition).getList().get(childPosition).getContentURI();
-					String playermediatype = list.get(groupPosition).getList().get(childPosition).getMediaType();
-					String plaplayeralltime = "0";
-					String playerintime = "0";
-					String playercontentdesc = list.get(groupPosition).getList().get(childPosition).getCurrentContent();
-					String playernum = list.get(groupPosition).getList().get(childPosition).getWatchPlayerNum();
-					String playerzantype = "0";
-					String playerfrom = "";
-					String playerfromid = "";
-					String playerfromurl = "";
-					String playeraddtime = Long.toString(System.currentTimeMillis());
-					String bjuserid =CommonUtils.getUserId(context);
-					String playcontentshareurl=list.get(groupPosition).getList().get(childPosition).getContentShareURL();
+					String playName=list.get(groupPosition).getList().get(childPosition).getContentName();
+					String playImage =list.get(groupPosition).getList().get(childPosition).getContentImg();
+					String playUrl = list.get(groupPosition).getList().get(childPosition).getContentPlay();
+					String playUri =list.get(groupPosition).getList().get(childPosition).getContentURI();
+					String playMediaType =list.get(groupPosition).getList().get(childPosition).getMediaType();
+					String playContentShareUrl = list.get(groupPosition).getList().get(childPosition).getContentShareURL();
+					String playAllTime = "0";
+					String playInTime = "0";
+					String playContentDesc = list.get(groupPosition).getList().get(childPosition).getCurrentContent();
+					String playerNum =list.get(groupPosition).getList().get(childPosition).getWatchPlayerNum();
+					String playZanType = "0";
+					String playFrom = "";
+					String playFromId = "";
+					String playFromUrl = "";
+					String playAddTime = Long.toString(System.currentTimeMillis());
+					String bjUserId =CommonUtils.getUserId(context);
 					String ContentFavorite=list.get(groupPosition).getList().get(childPosition).getContentFavorite();
 					String ContentId=list.get(groupPosition).getList().get(childPosition).getContentId();
-					String localurl=list.get(groupPosition).getList().get(childPosition).getLocalurl();
+					String localUrl=list.get(groupPosition).getList().get(childPosition).getLocalurl();
 
 					String sequName=list.get(groupPosition).getList().get(childPosition).getSequName();
 					String sequId=list.get(groupPosition).getList().get(childPosition).getSequId();
@@ -332,11 +332,11 @@ public class TotalFragment extends Fragment {
 
 					//如果该数据已经存在数据库则删除原有数据，然后添加最新数据
 					PlayerHistory history = new PlayerHistory(
-							playername,  playerimage, playerurl, playerurI,playermediatype,
-							plaplayeralltime, playerintime, playercontentdesc, playernum,
-							playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
-							ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
-					dbDao.deleteHistory(playerurl);
+							playName, playImage,playUrl,playUri,playMediaType,
+							playAllTime, playInTime, playContentDesc,playerNum,
+							playZanType,playFrom,playFromId,playFromUrl,playAddTime,bjUserId,playContentShareUrl,
+							ContentFavorite,ContentId,localUrl,sequName,sequId,sequDesc,sequImg);
+					dbDao.deleteHistory(playUrl);
 					dbDao.addHistory(history);
 					MainActivity.change();
 					HomeActivity.UpdateViewPager();
@@ -370,7 +370,6 @@ public class TotalFragment extends Fragment {
 						dialog = DialogUtils.Dialogph(context, "通讯中", dialog);
 						sendRequest();
 					}else{
-					/*	ToastUtil.show_allways(context, "搜索字符串获取异常");*/
 					}
 				} else {
 					ToastUtils.show_allways(context, "网络失败，请检查网络");

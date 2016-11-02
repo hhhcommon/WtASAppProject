@@ -311,25 +311,26 @@ public class OnLineFragment extends Fragment {
 				if (mainLists != null && mainLists.get(position) != null && mainLists.get(position).getMediaType() != null) {
 					String MediaType = mainLists.get(position).getMediaType();
 					if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
-						String playername = mainLists.get(position).getContentName();
-						String playerimage = mainLists.get(position).getContentImg();
-						String playerurl = mainLists.get(position).getContentPlay();
-						String playerurI = mainLists.get(position).getContentURI();
-						String playermediatype = mainLists.get(position).getMediaType();
-						String playcontentshareurl = mainLists.get(position).getContentShareURL();
-						String plaplayeralltime = "0";
-						String playerintime = "0";
-						String playercontentdesc = mainLists.get(position).getCurrentContent();
-						String playernum = mainLists.get(position).getWatchPlayerNum();
-						String playerzantype = "0";
-						String playerfrom = "";
-						String playerfromid = "";
-						String playerfromurl = "";
-						String playeraddtime = Long.toString(System.currentTimeMillis());
-						String bjuserid =CommonUtils.getUserId(context);
+						String playName =mainLists.get(position).getContentName();
+						String playImage = mainLists.get(position).getContentImg();
+						String playUrl = mainLists.get(position).getContentPlay();
+						String playUri = mainLists.get(position).getContentURI();
+						String playMediaType = mainLists.get(position).getMediaType();
+						String playContentShareUrl = mainLists.get(position).getContentShareURL();
+						String playAllTime = "0";
+						String playInTime = "0";
+						String playContentDesc = mainLists.get(position).getCurrentContent();
+						String playerNum =mainLists.get(position).getWatchPlayerNum();
+						String playZanType = "0";
+						String playFrom = "";
+						String playFromId = "";
+						String playFromUrl = "";
+						String playAddTime = Long.toString(System.currentTimeMillis());
+						String bjUserId =CommonUtils.getUserId(context);
 						String ContentFavorite=mainLists.get(position).getContentFavorite();
-						String ContentId= mainLists.get(position).getContentId();
-						String localurl=mainLists.get(position).getLocalurl();
+						String ContentId=mainLists.get(position).getContentId();
+						String localUrl=mainLists.get(position).getLocalurl();
+
 						String sequName=mainLists.get(position).getSequName();
 						String sequId=mainLists.get(position).getSequId();
 						String sequDesc=mainLists.get(position).getSequDesc();
@@ -337,11 +338,11 @@ public class OnLineFragment extends Fragment {
 
 						//如果该数据已经存在数据库则删除原有数据，然后添加最新数据
 						PlayerHistory history = new PlayerHistory(
-								playername,  playerimage, playerurl, playerurI,playermediatype,
-								plaplayeralltime, playerintime, playercontentdesc, playernum,
-								playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
-								ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
-						dbDao.deleteHistory(playerurl);
+								playName, playImage,playUrl,playUri,playMediaType,
+								playAllTime, playInTime, playContentDesc,playerNum,
+								playZanType,playFrom,playFromId,playFromUrl,playAddTime,bjUserId,playContentShareUrl,
+								ContentFavorite,ContentId,localUrl,sequName,sequId,sequDesc,sequImg);
+						dbDao.deleteHistory(playUrl);
 						dbDao.addHistory(history);
 						PlayerFragment.SendTextRequest(mainLists.get(position).getContentName(), context);
 						HomeActivity.UpdateViewPager();
@@ -437,25 +438,25 @@ public class OnLineFragment extends Fragment {
 						&& newList.get(groupPosition).getList().get(childPosition).getMediaType() != null) {
 					String MediaType = newList.get(groupPosition).getList().get(childPosition).getMediaType();
 					if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
-						String playername = newList.get(groupPosition).getList().get(childPosition).getContentName();
-						String playerimage = newList.get(groupPosition).getList().get(childPosition).getContentImg();
-						String playerurl = newList.get(groupPosition).getList().get(childPosition).getContentPlay();
-						String playerurI = newList.get(groupPosition).getList().get(childPosition).getContentURI();
-						String playermediatype = newList.get(groupPosition).getList().get(childPosition).getMediaType();
-						String playcontentshareurl = newList.get(groupPosition).getList().get(childPosition).getContentShareURL();
-						String plaplayeralltime = "0";
-						String playerintime = "0";
-						String playercontentdesc = newList.get(groupPosition).getList().get(childPosition).getCurrentContent();
-						String playernum = newList.get(groupPosition).getList().get(childPosition).getWatchPlayerNum();
-						String playerzantype = "0";
-						String playerfrom = "";
-						String playerfromid = "";
-						String playerfromurl = "";
-						String playeraddtime = Long.toString(System.currentTimeMillis());
-						String bjuserid =CommonUtils.getUserId(context);
+						String playName = newList.get(groupPosition).getList().get(childPosition).getContentName();
+						String playImage = newList.get(groupPosition).getList().get(childPosition).getContentImg();
+						String playUrl = newList.get(groupPosition).getList().get(childPosition).getContentPlay();
+						String playUri = newList.get(groupPosition).getList().get(childPosition).getContentURI();
+						String playMediaType = newList.get(groupPosition).getList().get(childPosition).getMediaType();
+						String playContentShareUrl = newList.get(groupPosition).getList().get(childPosition).getContentShareURL();
+						String playAllTime = "0";
+						String playInTime = "0";
+						String playContentDesc = newList.get(groupPosition).getList().get(childPosition).getCurrentContent();
+						String playerNum = newList.get(groupPosition).getList().get(childPosition).getWatchPlayerNum();
+						String playZanType = "0";
+						String playFrom = "";
+						String playFromId = "";
+						String playFromUrl = "";
+						String playAddTime = Long.toString(System.currentTimeMillis());
+						String bjUserId =CommonUtils.getUserId(context);
 						String ContentFavorite=newList.get(groupPosition).getList().get(childPosition).getContentFavorite();
 						String ContentId=newList.get(groupPosition).getList().get(childPosition).getContentId();
-						String localurl=newList.get(groupPosition).getList().get(childPosition).getLocalurl();
+						String localUrl=newList.get(groupPosition).getList().get(childPosition).getLocalurl();
 
 						String sequName=newList.get(groupPosition).getList().get(childPosition).getSequName();
 						String sequId=newList.get(groupPosition).getList().get(childPosition).getSequId();
@@ -464,11 +465,12 @@ public class OnLineFragment extends Fragment {
 
 						//如果该数据已经存在数据库则删除原有数据，然后添加最新数据
 						PlayerHistory history = new PlayerHistory(
-								playername,  playerimage, playerurl, playerurI,playermediatype,
-								plaplayeralltime, playerintime, playercontentdesc, playernum,
-								playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
-								ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
-						dbDao.deleteHistory(playerurl);
+								playName, playImage,playUrl,playUri,playMediaType,
+								playAllTime, playInTime, playContentDesc,playerNum,
+								playZanType,playFrom,playFromId,playFromUrl,playAddTime,bjUserId,playContentShareUrl,
+								ContentFavorite,ContentId,localUrl,sequName,sequId,sequDesc,sequImg);
+
+						dbDao.deleteHistory(playUrl);
 						dbDao.addHistory(history);
 						HomeActivity.UpdateViewPager();
 						PlayerFragment.SendTextRequest(newList.get(groupPosition).getList().get(childPosition).getContentName(), context);

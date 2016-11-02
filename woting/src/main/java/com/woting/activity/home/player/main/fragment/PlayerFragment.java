@@ -55,7 +55,7 @@ import com.woting.activity.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.activity.home.player.main.model.LanguageSearch;
 import com.woting.activity.home.player.main.model.LanguageSearchInside;
 import com.woting.activity.home.player.main.model.PlayerHistory;
-import com.woting.activity.home.player.main.model.sharemodel;
+import com.woting.activity.home.player.main.model.shareModel;
 import com.woting.activity.home.player.timeset.activity.TimerPowerOffActivity;
 import com.woting.activity.home.player.timeset.service.timeroffservice;
 import com.woting.activity.home.program.album.model.ContentInfo;
@@ -396,7 +396,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 					ContentFavorite=contentFavorite;
 				}
 			}
-
 		}else {
 			ContentFavorite = languageSearchInside.getContentFavorite();
 		}
@@ -487,7 +486,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 					} else {
 						musicPlay(allList.get(number).getContentPlay());
 					}
-
 					GlobalConfig.playerobject = allList.get(number);
 					resetHeadView();
 					num = number;
@@ -643,7 +641,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 							return;
 						}
 						// 对数据进行转换
-						List<ContentInfo> datalist = new ArrayList<ContentInfo>();
+						List<ContentInfo> datalist = new ArrayList<>();
 						ContentInfo mcontent = new ContentInfo();
 						mcontent.setAuthor(datals.getContentPersons());
 						mcontent.setContentPlay(datals.getContentPlay());
@@ -1149,7 +1147,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		ShareDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
 		dialog1 = DialogUtils.Dialogphnoshow(context, "通讯中", dialog1);
 		Config.dialog = dialog1;
-		final List<sharemodel> mList = ShareUtils.getShareModelList();
+		final List<shareModel> mList = ShareUtils.getShareModelList();
 		ImageAdapter shareAdapter = new ImageAdapter(context, mList);
 		mGallery.setAdapter(shareAdapter);
 		mGallery.setOnItemClickListener(new OnItemClickListener() {
@@ -1355,7 +1353,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				if (dialogs != null) {
 					dialogs.dismiss();
 				}
-				Log.e("第一次返回值",""+result.toString());
 				try {
 					ReturnType = result.getString("ReturnType");
 				} catch (JSONException e) {

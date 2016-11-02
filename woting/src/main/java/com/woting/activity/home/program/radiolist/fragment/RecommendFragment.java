@@ -145,22 +145,22 @@ public class RecommendFragment extends Fragment{
 						JSONTokener jsonParser = new JSONTokener(ResultList);
 						JSONObject arg1 = (JSONObject) jsonParser.nextValue();
 						StringSubList = arg1.getString("List");
-						String pagesize = arg1.getString("PageSize");
-						String Allcount = arg1.getString("AllCount");
-						if(Integer.valueOf(pagesize) < 10){
+						String pageSizeTemp = arg1.getString("PageSize");
+						String AllCountTemp = arg1.getString("AllCount");
+						if(Integer.valueOf(pageSizeTemp) < 10){
 							mListView.stopLoadMore();
 							mListView.setPullLoadEnable(false);
 						}else{
 							mListView.setPullLoadEnable(true);
 						}
-						if (Allcount != null && !Allcount.equals("") && pagesize != null && !pagesize.equals("")) {
-							int allcount = Integer.valueOf(Allcount);
-							pageSize = Integer.valueOf(pagesize);
+						if (AllCountTemp != null && !AllCountTemp.equals("") && pageSizeTemp != null && !pageSizeTemp.equals("")) {
+							int AllCount = Integer.valueOf(AllCountTemp);
+							pageSize = Integer.valueOf(pageSizeTemp);
 							// 先求余 如果等于0 最后结果不加1 如果不等于0 结果加一
-							if (allcount % pageSize == 0) {
-								pageSizeNum = allcount / pageSize;
+							if (AllCount  % pageSize == 0) {
+								pageSizeNum = AllCount  / pageSize;
 							} else {
-								pageSizeNum = allcount / pageSize + 1;
+								pageSizeNum = AllCount  / pageSize + 1;
 							}
 						} else {
 							ToastUtils.show_allways(context, "页码获取异常");
@@ -328,7 +328,7 @@ public class RecommendFragment extends Fragment{
 	}
 
 	private class LoopAdapter extends LoopPagerAdapter{
-		private int count = imgs.length;
+		private int count = images.length;
 
 		public LoopAdapter(RollPagerView viewPager){
 			super(viewPager);
@@ -339,7 +339,7 @@ public class RecommendFragment extends Fragment{
 			ImageView view = new ImageView(container.getContext());
 			view.setScaleType(ImageView.ScaleType.FIT_XY);
 			view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-			Picasso.with(context).load(imgs[position%count]).into(view);			return view;
+			Picasso.with(context).load(images[position%count]).into(view);			return view;
 		}
 
 		@Override
@@ -348,7 +348,7 @@ public class RecommendFragment extends Fragment{
 		}
 	}
 
-	public String[] imgs = {
+	public String[] images = {
 			"http://pic.500px.me/picurl/vcg5da48ce9497b91f9c81c17958d4f882e?code=e165fb4d228d4402",
 			"http://pic.500px.me/picurl/49431365352e4e94936d4562a7fbc74a---jpg?code=647e8e97cd219143",
 			"http://pic.500px.me/picurl/vcgd5d3cfc7257da293f5d2686eec1068d1?code=2597028fc68bd766",
