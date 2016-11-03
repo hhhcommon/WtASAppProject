@@ -36,12 +36,16 @@ public class SearchPlayerHistoryDao {
 		db.execSQL("insert into playerhistory(playername,playerimage,playerurl,playerurI,playermediatype,playeralltime"
 						+ ",playerintime,playercontentdesc,playernum,playerzantype,playerfrom,playerfromid,playeraddtime,bjuserid,playshareurl,playfavorite,contentid,localurl,sequname,sequimg,sequdesc,sequid) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
 				new Object[] { playerhistory.getPlayerName(), playerhistory.getPlayerImage()
-						, playerhistory.getPlayerUrl(),playerhistory.getPlayerUrI(),  playerhistory.getPlayerMediaType()
-						, playerhistory.getPlayerAllTime(), playerhistory.getPlayerInTime()
+						, playerhistory.getPlayerUrl(),playerhistory.getPlayerUrI()
+						,playerhistory.getPlayerMediaType()
+						, playerhistory.getPlayerAllTime(), playerhistory.getPlayerInTime()//这里
 						, playerhistory.getPlayerContentDesc(), playerhistory.getPlayerNum()
 						, playerhistory.getPlayerZanType(), playerhistory.getPlayerFrom()
-						, playerhistory.getPlayerFromId(), playerhistory.getPlayerAddTime(), playerhistory.getBJUserid(),playerhistory.getPlayContentShareUrl(),playerhistory.getContentFavorite(),playerhistory.getContentID(),playerhistory.getLocalurl()
-						, playerhistory.getSequName(),playerhistory.getSequImg(),playerhistory.getSequDesc(),playerhistory.getSequId()});//sql语句
+						, playerhistory.getPlayerFromId(), playerhistory.getPlayerAddTime()
+						, playerhistory.getBJUserid(),playerhistory.getPlayContentShareUrl()
+						,playerhistory.getContentFavorite(),playerhistory.getContentID(),playerhistory.getLocalurl()
+						, playerhistory.getSequName(),playerhistory.getSequImg(),playerhistory.getSequDesc()
+						,playerhistory.getSequId()});//sql语句
 		db.close();//关闭数据库对象
 	}
 
@@ -65,8 +69,10 @@ public class SearchPlayerHistoryDao {
 				String playerurl = cursor.getString(cursor.getColumnIndex("playerurl"));
 				String playerurI= cursor.getString(cursor.getColumnIndex("playerurI"));
 				String playermediatype = cursor.getString(cursor.getColumnIndex("playermediatype"));
+
 				String playeralltime =cursor.getString(cursor.getColumnIndex("playeralltime"));
 				String playerintime =cursor.getString(cursor.getColumnIndex("playerintime "));
+
 				String playercontentdesc =cursor.getString(cursor.getColumnIndex("playercontentdesc"));
 				String playernum = cursor.getString(cursor.getColumnIndex("playernum"));
 				String playerzantype = cursor.getString(cursor.getColumnIndex("playerzantype"));
@@ -260,6 +266,23 @@ public class SearchPlayerHistoryDao {
 		db.close();
 	}
 
+	/**
+	 * 修改数据库当中某个单体节目的喜欢类型
+	 */
+	public void updatePlayerIntime(String url,long times) {
+		SQLiteDatabase	db = helper.getWritableDatabase();
+		String userid=CommonUtils.getUserId(context);
+		if(times>0){
+		if(userid!=null&&!userid.equals("")){
+			db.execSQL("update playerhistory set playintime=? where bjuserid=? and playerurl=?",new Object[]{times,userid,url});
+		}else{
+			db.execSQL("update playerhistory set playintime=? where playerurl=?",new Object[]{times,url});
+		}
+		}else{
+			db.execSQL("update playerhistory set playintime=? where bjuserid=? and playerurl=?",new Object[]{"0",userid,url});
+		}
+		db.close();
+	}
 
 
 	/**

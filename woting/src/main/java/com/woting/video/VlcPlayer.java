@@ -136,7 +136,6 @@ public class VlcPlayer implements WtAudioPlay {
 			case EventHandler.MediaPlayerBuffering:
 	/*			String s=audioPlay.getCachePath();
 				int a=audioPlay.getNetworkCaching();
-
 				float s1=msg.getData().getFloat("data");
 				Log.e("缓冲了",""+msg.getData().getFloat("data"));*/
 				break;

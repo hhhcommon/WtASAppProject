@@ -90,7 +90,6 @@ public class TotalFragment extends Fragment {
 			ArrayList<PlayerHistory> playlist = null;
 			ArrayList<PlayerHistory> ttslist = null;
 			ArrayList<PlayerHistory> radiolist = null;
-
 			/**
 			 * 循环遍历  对数据库里的数据进行分类
 			 */

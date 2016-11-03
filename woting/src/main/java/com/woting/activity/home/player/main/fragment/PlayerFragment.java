@@ -166,6 +166,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 	public static boolean isCurrentPlay;
 	private static String playType;// 当前播放的媒体类型
 	private static String ContentFavorite;
+	public static int timerService; // 当前节目播放剩余时间长度
+	private static long currPosition;//当前的播放时间
+	private static String playUrlLast;//上一个播放的节目url
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -545,6 +548,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				// 开启网络播放数据连接提醒
 				CommonHelper.checkNetworkStatus(context);// 网络设置获取
 				GlobalConfig.playerobject=allList.get(number);
+				decideUpdatePlayHistory();
 				addDb(allList.get(number));
 				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 					if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == 1) {
@@ -566,6 +570,25 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				// 未开启网络播放数据连接提醒
 				num = number;
 				play(number);
+			}
+		}
+	}
+
+    //由此方法决定是否需要获取进度
+	private static void decideUpdatePlayHistory() {
+		String playUrlNow=GlobalConfig.playerobject.getContentPlay();
+		if(playUrlLast==null){
+		   playUrlLast=playUrlNow;
+		}else{
+			if(playUrlLast.equals(playUrlNow)){
+
+			}else{
+				if(audioPlay.mark().equals("AUDIO")){
+					dbDao.updatePlayerIntime(playUrlLast,audioPlay.getTime());
+
+				}else{
+
+				}
 			}
 		}
 	}
@@ -1013,7 +1036,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		}
 	}
 
-	public static int timerService; // 当前节目播放剩余时间长度
 	static Handler mUIHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -1021,7 +1043,12 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 					if (GlobalConfig.playerobject != null&& GlobalConfig.playerobject.getMediaType() != null
 							&& GlobalConfig.playerobject.getMediaType().trim().length() > 0
 							&& GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
-						long currPosition = audioPlay.getTime();
+						/*if(GlobalConfig.playerobject.getPlayerInTime()!=null&&GlobalConfig.playerobject.getPlayerInTime().equals("")){
+						currPosition = audioPlay.getTime();
+						}else{
+						 currPosition = audioPlay.getTime();
+						}*/
+						currPosition = audioPlay.getTime();
 						long duration = audioPlay.getTotalTime();
 						updateTextViewWithTimeFormat(time_start,(int) (currPosition / 1000));
 						updateTextViewWithTimeFormat(time_end,(int) (duration / 1000));
