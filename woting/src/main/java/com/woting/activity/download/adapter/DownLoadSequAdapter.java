@@ -51,7 +51,7 @@ public class DownLoadSequAdapter extends BaseAdapter {
 	
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		ViewHolder holder = null;
+		ViewHolder holder;
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_download_complete, null);
@@ -108,8 +108,7 @@ public class DownLoadSequAdapter extends BaseAdapter {
 		}
 		
 		if(lists.getSum()!=-1){
-		    holder.tv_sum.setText(df.format(lists.getSum() / 1000.0 / 1000.0)
-					+ "MB");	
+		    holder.tv_sum.setText(df.format(lists.getSum() / 1000.0 / 1000.0) + "MB");
 		}
          holder.lin_check.setOnClickListener(new OnClickListener() {
 			
@@ -122,7 +121,7 @@ public class DownLoadSequAdapter extends BaseAdapter {
 	}
 
 	public interface downloadsequCheck {
-		public void checkposition(int position);
+        void checkposition(int position);
 	 }
  
 	private class ViewHolder {

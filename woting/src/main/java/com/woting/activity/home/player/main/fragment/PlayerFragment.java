@@ -55,7 +55,7 @@ import com.woting.activity.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.activity.home.player.main.model.LanguageSearch;
 import com.woting.activity.home.player.main.model.LanguageSearchInside;
 import com.woting.activity.home.player.main.model.PlayerHistory;
-import com.woting.activity.home.player.main.model.sharemodel;
+import com.woting.activity.home.player.main.model.ShareModel;
 import com.woting.activity.home.player.timeset.activity.TimerPowerOffActivity;
 import com.woting.activity.home.player.timeset.service.timeroffservice;
 import com.woting.activity.home.program.album.model.ContentInfo;
@@ -635,49 +635,49 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				if (GlobalConfig.playerobject != null) {
 					if (GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
 						// 此处执行将当前播放任务加到数据库的操作
-						LanguageSearchInside datals = GlobalConfig.playerobject;
-						if (datals.getLocalurl() != null) {
+						LanguageSearchInside data = GlobalConfig.playerobject;
+						if (data.getLocalurl() != null) {
 							ToastUtils.show_allways(context, "此节目已经保存到本地，请到已下载界面查看");
 							return;
 						}
 						// 对数据进行转换
-						List<ContentInfo> datalist = new ArrayList<>();
+						List<ContentInfo> dataList = new ArrayList<>();
 						ContentInfo mcontent = new ContentInfo();
-						mcontent.setAuthor(datals.getContentPersons());
-						mcontent.setContentPlay(datals.getContentPlay());
-						mcontent.setContentImg(datals.getContentImg());
-						mcontent.setContentName(datals.getContentName());
+						mcontent.setAuthor(data.getContentPersons());
+						mcontent.setContentPlay(data.getContentPlay());
+						mcontent.setContentImg(data.getContentImg());
+						mcontent.setContentName(data.getContentName());
 						mcontent.setUserid(CommonUtils.getUserId(context));
 						mcontent.setDownloadtype("0");
-						if (datals.getSeqInfo() == null
-								|| datals.getSeqInfo().getContentName() == null
-								|| datals.getSeqInfo().getContentName().equals("")) {
-							mcontent.setSequname(datals.getContentName());
+						if (data.getSeqInfo() == null
+								|| data.getSeqInfo().getContentName() == null
+								|| data.getSeqInfo().getContentName().equals("")) {
+							mcontent.setSequname(data.getContentName());
 						} else {
-							mcontent.setSequname(datals.getSeqInfo().getContentName());
+							mcontent.setSequname(data.getSeqInfo().getContentName());
 						}
-						if (datals.getSeqInfo() == null
-								|| datals.getSeqInfo().getContentId() == null
-								|| datals.getSeqInfo().getContentId().equals("")) {
-							mcontent.setSequid(datals.getContentId());
+						if (data.getSeqInfo() == null
+								|| data.getSeqInfo().getContentId() == null
+								|| data.getSeqInfo().getContentId().equals("")) {
+							mcontent.setSequid(data.getContentId());
 						} else {
-							mcontent.setSequid(datals.getSeqInfo().getContentId());
+							mcontent.setSequid(data.getSeqInfo().getContentId());
 						}
-						if (datals.getSeqInfo() == null
-								|| datals.getSeqInfo().getContentImg() == null
-								|| datals.getSeqInfo().getContentImg().equals("")) {
-							mcontent.setSequimgurl(datals.getContentImg());
+						if (data.getSeqInfo() == null
+								|| data.getSeqInfo().getContentImg() == null
+								|| data.getSeqInfo().getContentImg().equals("")) {
+							mcontent.setSequimgurl(data.getContentImg());
 						} else {
-							mcontent.setSequimgurl(datals.getSeqInfo().getContentImg());
+							mcontent.setSequimgurl(data.getSeqInfo().getContentImg());
 						}
-						if (datals.getSeqInfo() == null
-								|| datals.getSeqInfo().getContentDesc() == null
-								|| datals.getSeqInfo().getContentDesc().equals("")) {
-							mcontent.setSequdesc(datals.getContentDesc());
+						if (data.getSeqInfo() == null
+								|| data.getSeqInfo().getContentDesc() == null
+								|| data.getSeqInfo().getContentDesc().equals("")) {
+							mcontent.setSequdesc(data.getContentDesc());
 						} else {
-							mcontent.setSequdesc(datals.getSeqInfo().getContentDesc());
+							mcontent.setSequdesc(data.getSeqInfo().getContentDesc());
 						}
-						datalist.add(mcontent);
+						dataList.add(mcontent);
 						// 检查是否重复,如果不重复插入数据库，并且开始下载，重复了提示
 						List<FileInfo> fileDataList = FID.queryFileinfoAll(CommonUtils.getUserId(context));
 						if (fileDataList.size() != 0) {
@@ -696,7 +696,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 							if (isDownload) {
 								ToastUtils.show_allways(context,mcontent.getContentName() + "已经存在于下载列表");
 							} else {
-								FID.insertfileinfo(datalist);
+								FID.insertfileinfo(dataList);
 								ToastUtils.show_allways(context,mcontent.getContentName() + "已经插入了下载列表");
 								// 未下载列表
 								List<FileInfo> fileUnDownLoadList = FID.queryFileinfo("false",CommonUtils.getUserId(context));
@@ -722,7 +722,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 							/**
 							 * 此时库里没数据
 							 */
-							FID.insertfileinfo(datalist);
+							FID.insertfileinfo(dataList);
 							ToastUtils.show_allways(context,mcontent.getContentName() + "已经插入了下载列表");
 							// 未下载列表
 							List<FileInfo> fileUnDownloadList = FID.queryFileinfo("false", CommonUtils.getUserId(context));
@@ -1147,7 +1147,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		ShareDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
 		dialog1 = DialogUtils.Dialogphnoshow(context, "通讯中", dialog1);
 		Config.dialog = dialog1;
-		final List<sharemodel> mList = ShareUtils.getShareModelList();
+		final List<ShareModel> mList = ShareUtils.getShareModelList();
 		ImageAdapter shareAdapter = new ImageAdapter(context, mList);
 		mGallery.setAdapter(shareAdapter);
 		mGallery.setOnItemClickListener(new OnItemClickListener() {

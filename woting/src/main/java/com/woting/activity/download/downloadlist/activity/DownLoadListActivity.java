@@ -1,22 +1,21 @@
 package com.woting.activity.download.downloadlist.activity;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.woting.R;
+import com.woting.activity.baseactivity.BaseActivity;
 import com.woting.activity.download.dao.FileInfoDao;
 import com.woting.activity.download.downloadlist.adapter.DownLoadListAdapter;
 import com.woting.activity.download.downloadlist.adapter.DownLoadListAdapter.downloadlist;
@@ -26,8 +25,9 @@ import com.woting.activity.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.activity.home.player.main.fragment.PlayerFragment;
 import com.woting.activity.home.player.main.model.PlayerHistory;
 import com.woting.activity.main.MainActivity;
+import com.woting.common.application.BSApplication;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
-import com.woting.manager.MyActivityManager;
 import com.woting.util.CommonUtils;
 import com.woting.util.ToastUtils;
 
@@ -35,292 +35,255 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * 下载列表
  * @author 辛龙
- *2016年8月8日
+ * 2016年8月8日
  */
-public class DownLoadListActivity extends Activity implements OnClickListener {
-	private DownLoadListActivity context;
-	private LinearLayout head_left;
-	private ListView mlistview;
-	private TextView head_name_tv;
-	//	private LinearLayout lin_clear;
-	private TextView tv_sum;
-	private TextView tv_totalcache;
-	private LinearLayout lin_dinglan;
-	private List<FileInfo> fileinfolist = new ArrayList<FileInfo>();
-	private DownLoadListAdapter adapter;
-	private String sequname;
-	private int positionnow = -1;	// 标记当前选中的位置
-	private String sequid;
-	private int sum = 0;
-	private Dialog confirmdialog;
-	private Dialog confirmdialog1;
-	private DecimalFormat df;
-	private SearchPlayerHistoryDao dbdao;
-	private FileInfoDao FID;
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_downloadlist);
-		context = this;
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);		// 透明状态栏
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);	// 透明导航栏
-		MyActivityManager mam = MyActivityManager.getInstance();
-		mam.pushOneActivity(context);
-		InitDao();
-		handleIntent();
-		setview();
-		confirmdialog();// 确定是否删除记录弹窗
-		setListener();
-		df = new DecimalFormat("0.00");
-	}
+public class DownLoadListActivity extends BaseActivity implements OnClickListener {
+    private SearchPlayerHistoryDao dbDao;
+    private FileInfoDao FID;
+    private DownLoadListAdapter adapter;
+    private List<FileInfo> fileInfoList = new ArrayList<>();
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		setListValue();// 给list赋初值
-	}
+    private Dialog confirmDialog;
+    private Dialog confirmDialog1;
+    private RelativeLayout linearTop;// 顶栏
+    private ListView mListView;
+    private TextView textSum;
+    private TextView textTotalCache;
 
-	private void confirmdialog() {
-		final View dialog1 = LayoutInflater.from(this).inflate(R.layout.dialog_exit_confirm, null);
-		TextView tv_cancle = (TextView) dialog1.findViewById(R.id.tv_cancle);
-		TextView tv_confirm = (TextView) dialog1.findViewById(R.id.tv_confirm);
-		TextView tv_title = (TextView) dialog1.findViewById(R.id.tv_title);
-		tv_title.setText("文件不存在，是否删除这条记录?");
-		confirmdialog = new Dialog(this, R.style.MyDialog);
-		confirmdialog.setContentView(dialog1);
-		confirmdialog.setCanceledOnTouchOutside(true);
-		confirmdialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
-		tv_cancle.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				confirmdialog.dismiss();
-			}
-		});
+    private String sequName;
+    private String sequId;
+    private int positionNow = -1;// 标记当前选中的位置
 
-		tv_confirm.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// 这里添加删除数据库事件
-				try {
-					FID.deletefileinfo(fileinfolist.get(positionnow).getLocalurl(), CommonUtils.getUserId(context));
-					if (confirmdialog != null) {
-						confirmdialog.dismiss();
-					}
-					setListValue();
-					Intent p_intent = new Intent("push_down_completed");
-					context.sendBroadcast(p_intent);
-					ToastUtils.show_allways(context, "此目录内已经没有内容");
-				} catch (Exception e) {
-					ToastUtils.show_allways(context, "文件删除失败，请稍后重试");
-					if (confirmdialog != null) {
-						confirmdialog.dismiss();
-					}
-				}
-			}
-		});
-	}
+    // 初始化数据库对象
+    private void initDao() {
+        FID = new FileInfoDao(DownLoadListActivity.this);
+        dbDao = new SearchPlayerHistoryDao(DownLoadListActivity.this);
+    }
 
-	private void InitDao() {
-		FID = new FileInfoDao(DownLoadListActivity.this);
-		dbdao = new SearchPlayerHistoryDao(DownLoadListActivity.this);
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_downloadlist);
+        initDao();
+        confirmDialog();// 确定是否删除记录弹窗
 
-	private void setListValue() {
-		sum=0;
-		fileinfolist = FID.queryFileinfo(sequid, CommonUtils.getUserId(context),0);
-		if (fileinfolist.size() != 0) {
-			lin_dinglan.setVisibility(View.VISIBLE);
-			mlistview.setVisibility(View.VISIBLE);
-			adapter = new DownLoadListAdapter(context, fileinfolist);
-			mlistview.setAdapter(adapter);
-			setItemListener();
-			setInterface();
-			tv_sum.setText("共" + fileinfolist.size() + "个节目");
-/*			tv_totalcache.setText("20.0MB");*/
-			for(int i=0;i<fileinfolist.size();i++){
-				sum += fileinfolist.get(i).getEnd();			
-			}
-			if(sum != 0){
-				tv_totalcache.setText("共"+df.format(sum / 1000.0 / 1000.0) + "MB");
-			}
-		}else{
-			lin_dinglan.setVisibility(View.GONE);
-			adapter = new DownLoadListAdapter(context, fileinfolist);
-			mlistview.setAdapter(adapter);
-			/*lin_dinglan.setVisibility(View.GONE);
-			mlistview.setVisibility(View.GONE);*/
-			Intent p_intent = new Intent("push_down_completed");
-			context.sendBroadcast(p_intent);
-			ToastUtils.show_allways(context, "此目录内已经没有内容");
-		}
-	}
+        setView();
+    }
 
-	private void setInterface() {
-		adapter.setonListener(new downloadlist() {
-			@Override
-			public void checkposition(int position) {
-				deleteConfirmDialog(position);
-				confirmdialog1.show();
-			}
-		});
-	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setListValue();
+    }
 
-	/*
-	 * 删除对话框
-	 */
-	private void deleteConfirmDialog(final int position) {
-		final View dialog1 = LayoutInflater.from(context).inflate(R.layout.dialog_exit_confirm, null);
-		TextView tv_cancle = (TextView) dialog1.findViewById(R.id.tv_cancle);
-		TextView tv_confirm = (TextView) dialog1.findViewById(R.id.tv_confirm);
-		TextView tv_title = (TextView) dialog1.findViewById(R.id.tv_title);
-		tv_title.setText("是否删除这条记录");
-		confirmdialog1 = new Dialog(context, R.style.MyDialog);
-		confirmdialog1.setContentView(dialog1);
-		confirmdialog1.setCanceledOnTouchOutside(false);
-		confirmdialog1.getWindow().setBackgroundDrawableResource(R.color.dialog);
-		tv_cancle.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				confirmdialog1.dismiss();
-			}
-		});
+    private void setView() {
+        handleIntent();
+        findViewById(R.id.head_left_btn).setOnClickListener(this);// 返回
 
-		tv_confirm.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				confirmdialog1.dismiss();
-				FID.deletefileinfo(fileinfolist.get(position).getLocalurl(), CommonUtils.getUserId(context));
-				setListValue();
-				Intent p_intent = new Intent("push_down_completed");
-				context.sendBroadcast(p_intent);
-			}
-		});
-	}
+        TextView textHeadName = (TextView) findViewById(R.id.head_name_tv);
+        textHeadName.setText(sequName);
 
-	private void setItemListener() {
-		mlistview.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				//ToastUtil.show_always(context, "我的localurl是"+fileinfolist.get(position).getLocalurl());
-				if(fileinfolist != null && fileinfolist.size() != 0){
-					positionnow =position;
-					FileInfo mFileInfo = fileinfolist.get(position);
-					if(mFileInfo.getLocalurl() != null && !mFileInfo.getLocalurl().equals("")){
-						File file = new File(mFileInfo.getLocalurl());
-						if (file.exists()) {
-							String playername = mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4);
-							String playerimage = mFileInfo.getImageurl();
-							String playerurl = mFileInfo.getUrl();
-							String playerurI = mFileInfo.getLocalurl();
-							String playlocalrurl = mFileInfo.getLocalurl();
-							String playermediatype = "AUDIO";
-							String playercontentshareurl = mFileInfo.getContentShareURL();
-							String plaplayeralltime = "0";
-							String playerintime = "0";
-							String playercontentdesc = mFileInfo.getPlaycontent();
-							String playernum ="0";
-							String playerzantype = "0";
-							String playerfrom = "";
-							String playerfromid = "";
-							String playerfromurl = "";
-							String playeraddtime = Long.toString(System.currentTimeMillis());
-							String bjuserid = CommonUtils.getUserId(context);
-							String ContentFavorite = mFileInfo.getContentFavorite();
-							String ContentId = mFileInfo.getContentId();
-							String sequName=mFileInfo.getSequname();
-							String sequId=mFileInfo.getSequid();
-							String sequImg=mFileInfo.getSequimgurl();
-							String sequDesc=mFileInfo.getSequdesc();
+        mListView = (ListView) findViewById(R.id.lv_downloadlist);
+        textSum = (TextView) findViewById(R.id.tv_sum);
+        textTotalCache = (TextView) findViewById(R.id.tv_totalcache);
+        linearTop = (RelativeLayout) findViewById(R.id.lin_dinglan);
+    }
 
-							//如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-							PlayerHistory history = new PlayerHistory(
-									playername,  playerimage, playerurl, playerurI,playermediatype,
-									plaplayeralltime, playerintime, playercontentdesc, playernum,
-									playerzantype,  playerfrom, playerfromid, playerfromurl,playeraddtime,bjuserid,playercontentshareurl,ContentFavorite,
-									ContentId,playlocalrurl,sequName,sequId,sequDesc,sequImg);
-							dbdao.deleteHistory(playerurl);
-							dbdao.addHistory(history);
-							if(PlayerFragment.context != null){
-								MainActivity.change();
-								HomeActivity.UpdateViewPager();
-								PlayerFragment.SendTextRequest(mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4), context);
-							}else{
-								SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
-								SharedPreferences.Editor et = sp.edit();
-								et.putString(StringConstant.PLAYHISTORYENTER, "true");
-								et.putString(StringConstant.PLAYHISTORYENTERNEWS,mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4));
-								et.commit();
-								MainActivity.change();
-								HomeActivity.UpdateViewPager();
-							}
-							setResult(1);
-							finish();
-							dbdao.closedb();
-						} else {	// 此处要调对话框，点击同意删除对应的文件信息
-							/* ToastUtil.show_always(context, "文件已经被删除，是否删除本条记录"); */
-							positionnow = position;
-							confirmdialog.show();
-						}
-					}
-				}
-			}
-		});
-	}
+    private void handleIntent() {
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        sequName = bundle.getString("sequname");
+        sequId = bundle.getString("sequid");
+    }
 
-	private void setListener() {
-		head_left.setOnClickListener(this);
-	}
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.head_left_btn:
+                finish();
+                break;
+            case R.id.tv_cancle:
+                confirmDialog.dismiss();
+                break;
+            case R.id.tv_confirm:
+                confirmDialog.dismiss();
+                try {
+                    FID.deletefileinfo(fileInfoList.get(positionNow).getLocalurl(), CommonUtils.getUserId(context));
+                    setListValue();
+                    context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));
+                    ToastUtils.show_allways(context, "此目录内已经没有内容");
+                } catch (Exception e) {
+                    ToastUtils.show_allways(context, "文件删除失败，请稍后重试");
+                }
+                break;
+        }
+    }
 
-	private void handleIntent() {
-		Intent intent = context.getIntent();
-		Bundle bundle = intent.getExtras();
-		sequname = bundle.getString("sequname");
-		sequid = bundle.getString("sequid");
-	}
+    // 初始化对话框
+    private void confirmDialog() {
+        final View dialog1 = LayoutInflater.from(context).inflate(R.layout.dialog_exit_confirm, null);
+        dialog1.findViewById(R.id.tv_cancle).setOnClickListener(this);
+        dialog1.findViewById(R.id.tv_confirm).setOnClickListener(this);
+        TextView textTitle = (TextView) dialog1.findViewById(R.id.tv_title);
+        textTitle.setText("文件不存在，是否删除这条记录?");
 
-	private void setview() {
-		// 返回按钮
-		head_left = (LinearLayout) findViewById(R.id.head_left_btn);
-		mlistview = (ListView) findViewById(R.id.lv_downloadlist);
-		head_name_tv = (TextView) findViewById(R.id.head_name_tv);
-		head_name_tv.setText(sequname);
-		tv_sum = (TextView) findViewById(R.id.tv_sum);
-		tv_totalcache = (TextView) findViewById(R.id.tv_totalcache);
-		lin_dinglan = (LinearLayout) findViewById(R.id.lin_dinglan);
-	}
+        confirmDialog = new Dialog(context, R.style.MyDialog);
+        confirmDialog.setContentView(dialog1);
+        confirmDialog.setCanceledOnTouchOutside(true);
+        confirmDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
+    }
 
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.head_left_btn:
-			finish();
-			break;
-		}
-	}
+    // 初始化删除对话框
+    private void deleteConfirmDialog(final int position) {
+        View dialog1 = LayoutInflater.from(context).inflate(R.layout.dialog_exit_confirm, null);
+        TextView textTitle = (TextView) dialog1.findViewById(R.id.tv_title);
+        textTitle.setText("是否删除这条记录");
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		MyActivityManager mam = MyActivityManager.getInstance();
-		mam.popOneActivity(context);
-		head_left=null;
-		mlistview=null;
-		head_name_tv=null;
-		tv_sum=null;
-		tv_totalcache=null;
-		lin_dinglan=null;
-		fileinfolist.clear();
-		fileinfolist=null;
-		adapter=null;
-		confirmdialog=null;
-		confirmdialog1=null;
-		df=null;
-		dbdao=null;
-		FID=null;
-		context = this;
-		setContentView(R.layout.activity_null);
-	}
+        confirmDialog1 = new Dialog(context, R.style.MyDialog);
+        confirmDialog1.setContentView(dialog1);
+        confirmDialog1.setCanceledOnTouchOutside(false);
+        confirmDialog1.getWindow().setBackgroundDrawableResource(R.color.dialog);
+        confirmDialog1.show();
+
+        dialog1.findViewById(R.id.tv_cancle).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmDialog1.dismiss();
+            }
+        });
+        dialog1.findViewById(R.id.tv_confirm).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmDialog1.dismiss();
+                FID.deletefileinfo(fileInfoList.get(position).getLocalurl(), CommonUtils.getUserId(context));
+                setListValue();
+                sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));
+            }
+        });
+    }
+
+    private void setListValue() {
+        int sum = 0;
+        fileInfoList = FID.queryFileinfo(sequId, CommonUtils.getUserId(context), 0);
+        if (fileInfoList.size() != 0) {
+            linearTop.setVisibility(View.VISIBLE);
+            mListView.setVisibility(View.VISIBLE);
+            adapter = new DownLoadListAdapter(context, fileInfoList);
+            mListView.setAdapter(adapter);
+            setItemListener();
+            setInterface();
+            textSum.setText("共" + fileInfoList.size() + "个节目");
+            for (int i = 0; i < fileInfoList.size(); i++) {
+                sum += fileInfoList.get(i).getEnd();
+            }
+            if (sum != 0) {
+                textTotalCache.setText("共" + new DecimalFormat("0.00").format(sum / 1000.0 / 1000.0) + "MB");
+            }
+        } else {
+            linearTop.setVisibility(View.GONE);
+            adapter = new DownLoadListAdapter(context, fileInfoList);
+            mListView.setAdapter(adapter);
+            context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));
+            ToastUtils.show_allways(context, "此目录内已经没有内容");
+        }
+    }
+
+    private void setInterface() {
+        adapter.setonListener(new downloadlist() {
+            @Override
+            public void checkposition(int position) {
+                deleteConfirmDialog(position);
+            }
+        });
+    }
+
+    private void setItemListener() {
+        mListView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (fileInfoList != null && fileInfoList.size() != 0) {
+                    positionNow = position;
+                    FileInfo mFileInfo = fileInfoList.get(position);
+                    if (mFileInfo.getLocalurl() != null && !mFileInfo.getLocalurl().equals("")) {
+                        File file = new File(mFileInfo.getLocalurl());
+                        if (file.exists()) {
+                            String playername = mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4);
+                            String playerimage = mFileInfo.getImageurl();
+                            String playerurl = mFileInfo.getUrl();
+                            String playerurI = mFileInfo.getLocalurl();
+                            String playlocalrurl = mFileInfo.getLocalurl();
+                            String playermediatype = "AUDIO";
+                            String playercontentshareurl = mFileInfo.getContentShareURL();
+                            String plaplayeralltime = "0";
+                            String playerintime = "0";
+                            String playercontentdesc = mFileInfo.getPlaycontent();
+                            String playernum = "0";
+                            String playerzantype = "0";
+                            String playerfrom = "";
+                            String playerfromid = "";
+                            String playerfromurl = "";
+                            String playeraddtime = Long.toString(System.currentTimeMillis());
+                            String bjuserid = CommonUtils.getUserId(context);
+                            String ContentFavorite = mFileInfo.getContentFavorite();
+                            String ContentId = mFileInfo.getContentId();
+                            String sequName = mFileInfo.getSequname();
+                            String sequId = mFileInfo.getSequid();
+                            String sequImg = mFileInfo.getSequimgurl();
+                            String sequDesc = mFileInfo.getSequdesc();
+
+                            // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+                            PlayerHistory history = new PlayerHistory(
+                                    playername, playerimage, playerurl, playerurI, playermediatype,
+                                    plaplayeralltime, playerintime, playercontentdesc, playernum,
+                                    playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playercontentshareurl, ContentFavorite,
+                                    ContentId, playlocalrurl, sequName, sequId, sequDesc, sequImg);
+                            dbDao.deleteHistory(playerurl);
+                            dbDao.addHistory(history);
+                            if (PlayerFragment.context != null) {
+                                MainActivity.change();
+                                HomeActivity.UpdateViewPager();
+                                PlayerFragment.SendTextRequest(mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4), context);
+                            } else {
+                                SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
+                                et.putString(StringConstant.PLAYHISTORYENTER, "true");
+                                et.putString(StringConstant.PLAYHISTORYENTERNEWS, mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4));
+                                if (!et.commit()) {
+                                    Log.v("commit", "数据 commit 失败!");
+                                }
+                                MainActivity.change();
+                                HomeActivity.UpdateViewPager();
+                            }
+                            setResult(1);
+                            finish();
+                            dbDao.closedb();
+                        } else {    // 此处要调对话框，点击同意删除对应的文件信息
+                            positionNow = position;
+                            confirmDialog.show();
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mListView = null;
+        textSum = null;
+        textTotalCache = null;
+        linearTop = null;
+        fileInfoList.clear();
+        fileInfoList = null;
+        adapter = null;
+        confirmDialog = null;
+        confirmDialog1 = null;
+        dbDao = null;
+        FID = null;
+        setContentView(R.layout.activity_null);
+    }
 }

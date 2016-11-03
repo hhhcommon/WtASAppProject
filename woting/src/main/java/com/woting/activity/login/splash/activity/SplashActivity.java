@@ -7,6 +7,7 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
@@ -46,10 +47,12 @@ public class SplashActivity extends Activity {
         Bitmap bmp = BitmapUtils.readBitMap(SplashActivity.this, R.mipmap.splash);
         imageView.setImageBitmap(bmp);
 
-        first = sharedPreferences.getString(StringConstant.FIRST, "0");//是否是第一次登录
+        first = sharedPreferences.getString(StringConstant.FIRST, "0");// 是否是第一次登录
         Editor et = sharedPreferences.edit();
         et.putString(StringConstant.PERSONREFRESHB, "true");
-        et.commit();
+        if (!et.commit()) {
+            Log.v("commit", "数据 commit 失败!");
+        }
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -63,37 +66,33 @@ public class SplashActivity extends Activity {
         VolleyRequest.RequestPost(GlobalConfig.splashUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
-                if (isCancelRequest) {
-                    return;
-                }
+                if (isCancelRequest) return;
                 try {
                     String ReturnType = result.getString("ReturnType");
-                    if (ReturnType.equals("1001")) {
+                    if (ReturnType != null && ReturnType.equals("1001")) {
                         Editor et = sharedPreferences.edit();
-                        try {
-                            String UserInfo = result.getString("UserInfo");
-                            if (UserInfo == null || UserInfo.trim().equals("")) {
-                                et.putString(StringConstant.USERID, "userid");
-                                et.putString(StringConstant.USERNAME, "username");
-                                et.putString(StringConstant.IMAGEURL, "imageurl");
-                                et.putString(StringConstant.IMAGEURBIG, "imageurlbig");
-                                et.commit();
-                            } else {
-                                UserInfo list = new UserInfo();
-                                list = new Gson().fromJson(UserInfo, new TypeToken<UserInfo>() {
-                                }.getType());
-                                String userId = list.getUserId();
-                                String userName = list.getUserName();
-                                String imageUrl = list.getPortraitMini();
-                                String imageUrlBig = list.getPortraitBig();
-                                et.putString(StringConstant.USERID, userId);
-                                et.putString(StringConstant.IMAGEURL, userName);
-                                et.putString(StringConstant.IMAGEURBIG, imageUrl);
-                                et.putString(StringConstant.USERNAME, imageUrlBig);
-                                et.commit();
+                        String UserInfo = result.getString("UserInfo");
+                        if (UserInfo == null || UserInfo.trim().equals("")) {
+                            et.putString(StringConstant.USERID, "userid");
+                            et.putString(StringConstant.USERNAME, "username");
+                            et.putString(StringConstant.IMAGEURL, "imageurl");
+                            et.putString(StringConstant.IMAGEURBIG, "imageurlbig");
+                            if (!et.commit()) {
+                                Log.v("commit", "数据 commit 失败!");
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        } else {
+                            UserInfo list = new Gson().fromJson(UserInfo, new TypeToken<UserInfo>() {}.getType());
+                            String userId = list.getUserId();
+                            String userName = list.getUserName();
+                            String imageUrl = list.getPortraitMini();
+                            String imageUrlBig = list.getPortraitBig();
+                            et.putString(StringConstant.USERID, userId);
+                            et.putString(StringConstant.IMAGEURL, userName);
+                            et.putString(StringConstant.IMAGEURBIG, imageUrl);
+                            et.putString(StringConstant.USERNAME, imageUrlBig);
+                            if (!et.commit()) {
+                                Log.v("commit", "数据 commit 失败!");
+                            }
                         }
                     }
                 } catch (JSONException e) {
@@ -101,9 +100,9 @@ public class SplashActivity extends Activity {
                 }
 
                 if (first != null && first.equals("1")) {
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));        //跳转到主页
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));       // 跳转到主页
                 } else {
-                    startActivity(new Intent(SplashActivity.this, WelcomeActivity.class));    //跳转到引导页
+                    startActivity(new Intent(SplashActivity.this, WelcomeActivity.class));    // 跳转到引导页
                 }
                 // overridePendingTransition(R.anim.wt_fade, R.anim.wt_hold);
                 // overridePendingTransition(R.anim.wt_zoom_enter, R.anim.wt_zoom_exit);
@@ -113,9 +112,9 @@ public class SplashActivity extends Activity {
             @Override
             protected void requestError(VolleyError error) {
                 if (first != null && first.equals("1")) {
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));        //跳转到主页
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));       // 跳转到主页
                 } else {
-                    startActivity(new Intent(SplashActivity.this, WelcomeActivity.class));    //跳转到引导页
+                    startActivity(new Intent(SplashActivity.this, WelcomeActivity.class));    // 跳转到引导页
                 }
                 finish();
             }

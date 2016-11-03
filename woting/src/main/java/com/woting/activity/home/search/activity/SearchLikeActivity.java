@@ -49,7 +49,7 @@ import com.android.volley.VolleyError;
 import com.woting.R;
 import com.woting.activity.home.search.adapter.SearchHistoryAdapter;
 import com.woting.activity.home.search.adapter.SearchLikeAdapter;
-import com.woting.activity.home.search.adapter.searchhotkeyadapter;
+import com.woting.activity.home.search.adapter.SearchHotAdapter;
 import com.woting.activity.home.search.dao.SearchHistoryDao;
 import com.woting.activity.home.search.fragment.RadioFragment;
 import com.woting.activity.home.search.fragment.SequFragment;
@@ -109,7 +109,7 @@ public class SearchLikeActivity extends FragmentActivity implements OnClickListe
 
 	private ArrayList<String> topSearchList1=new ArrayList<String>();//热门搜索list
 	private SearchLikeAdapter adapter;
-	private searchhotkeyadapter searchHotAdapter;
+	private SearchHotAdapter searchHotAdapter;
 	private SearchHistoryAdapter adapterHistory;
 	private Bitmap bmp;
 	private Bitmap bmpPress;
@@ -573,7 +573,7 @@ public class SearchLikeActivity extends FragmentActivity implements OnClickListe
 				if (ReturnType != null && ReturnType.equals("1001")) {
 					if (topSearchList != null && topSearchList.size() > 0) {
 						if (searchHotAdapter == null) {
-							searchHotAdapter = new searchhotkeyadapter(context,topSearchList);
+							searchHotAdapter = new SearchHotAdapter(context,topSearchList);
 							lv_mListView.setAdapter(searchHotAdapter);
 						} else {
 							searchHotAdapter.notifyDataSetChanged();

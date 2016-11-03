@@ -20,7 +20,7 @@ import com.woting.util.ToastUtils;
 /**
  * 展示二维码
  * @author 辛龙
- *         2016年4月28日
+ * 2016年4月28日
  */
 public class EWMShowActivity extends BaseActivity implements OnClickListener {
     private ImageView imageEwm;
