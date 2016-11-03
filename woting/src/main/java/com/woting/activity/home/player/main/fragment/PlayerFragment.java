@@ -440,7 +440,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 	 */
 	protected static void play(int number) {
 		if (allList != null && allList.get(number) != null&& allList.get(number).getMediaType() != null) {
-			addDb(allList.get(number));
 			playType = allList.get(number).getMediaType();
 			if (playType.equals("AUDIO") || playType.equals("RADIO")) {
 				// 首先判断audioPlay是否为空
@@ -492,7 +491,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				} else {
 					ToastUtils.show_short(context, "暂不支持播放");
 				}
-			} else if (playType.equals("TTS")) {
+			   } else if (playType.equals("TTS")) {
 				if (allList.get(number).getContentURI() != null
 						&& allList.get(number).getContentURI().trim().length() > 0) {
 					if (audioPlay == null) {
@@ -545,6 +544,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			if (wifiSet != null && !wifiSet.trim().equals("") && wifiSet.equals("true")) {
 				// 开启网络播放数据连接提醒
 				CommonHelper.checkNetworkStatus(context);// 网络设置获取
+				GlobalConfig.playerobject=allList.get(number);
+				addDb(allList.get(number));
 				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 					if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == 1) {
 						play(number);

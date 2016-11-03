@@ -54,6 +54,13 @@ public class VlcPlayer implements WtAudioPlay {
 
 	}
 
+/*	public String getCache(){
+		audioPlay.getNetworkCaching();
+		audioPlay.getCachePath();
+		return "";
+	}*/
+
+
 	@Override
 	public void stop() {
 		audioPlay.stop();
@@ -112,6 +119,7 @@ public class VlcPlayer implements WtAudioPlay {
 				break;
 			case EventHandler.MediaPlayerOpening:
 				Log.e("url", "MediaPlayerOpenning()"+Url);
+	/*			audioPlay.getTime();*/
 				break;
 			case EventHandler.MediaParsedChanged:
 				break;
@@ -125,6 +133,12 @@ public class VlcPlayer implements WtAudioPlay {
 			case EventHandler.MediaPlayerEndReached:
 				Log.e("url", "MediaPlayerEndReached()");
 				PlayerFragment.playNext();
+			case EventHandler.MediaPlayerBuffering:
+	/*			String s=audioPlay.getCachePath();
+				int a=audioPlay.getNetworkCaching();
+
+				float s1=msg.getData().getFloat("data");
+				Log.e("缓冲了",""+msg.getData().getFloat("data"));*/
 				break;
 			}
 		}

@@ -116,10 +116,15 @@ public class CacheManager {
 				} else {  
 					size = size + fileList[i].length();  
 				}  
-			}  
+			}
+
+
+
 		} catch (Exception e) {  
 			e.printStackTrace();  
-		}  
+		}
+
+
 		return size;  
 	}  
 
@@ -157,6 +162,8 @@ public class CacheManager {
 				flag = true;
 			}
 		}
+
+
 		return flag;
 	}
 
