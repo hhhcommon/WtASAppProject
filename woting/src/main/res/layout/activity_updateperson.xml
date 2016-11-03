@@ -56,6 +56,7 @@
                 android:id="@+id/tv_zhanghu"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="left|center"
                 android:layout_marginLeft="39dp"
                 android:textColor="#5e6471" />
 

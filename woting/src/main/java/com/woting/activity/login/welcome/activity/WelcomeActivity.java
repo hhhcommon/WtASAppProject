@@ -7,7 +7,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.woting.R;
@@ -24,52 +23,42 @@ import java.util.ArrayList;
  * 2016年4月27日
  */
 public class WelcomeActivity extends FragmentActivity {
-	private ViewPager mPager;
-	private ArrayList<Fragment> fragmentList;
 	private ImageView[] imageViews;
-	private ImageView imageView;
-	private ViewGroup group;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_welcomes);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);		// 透明状态栏
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);	// 透明导航栏
-		imageViews = new ImageView[3];		//设置引导页下标小红点
-		group = (ViewGroup)findViewById(R.id.viewGroup);  
+		imageViews = new ImageView[3];
+        ImageView imageView;
+        ViewGroup group = (ViewGroup)findViewById(R.id.viewGroup);
 		for (int i = 0; i < 3; i++) {  
 			imageView = new ImageView(this);  
 			imageView.setLayoutParams(new LayoutParams(20,20));  
 			imageView.setPadding(20, 0, 20, 0);  
 			imageViews[i] = imageView;  
 			if (i == 0) {  
-				//默认选中第一张图片
 				imageViews[i].setBackgroundResource(R.mipmap.page_indicator_focused);
 			} else {  
 				imageViews[i].setBackgroundResource(R.mipmap.page_indicator);
 			}  
 			group.addView(imageViews[i]);  
-		}  
-		InitViewPager();
+		}
+        initViewPager();
 	}
 
-	/*
-	 * 初始化ViewPager
-	 */
-	public void InitViewPager() {
-		mPager = (ViewPager) findViewById(R.id.viewpager);
+	// 初始化 ViewPager
+	public void initViewPager() {
+        ArrayList<Fragment> fragmentList = new ArrayList<>();
+        fragmentList.add(new WelcomeaFragment());
+        fragmentList.add(new WelcomebFragment());
+        fragmentList.add(new WelcomecFragment());
+
+        ViewPager mPager = (ViewPager) findViewById(R.id.viewpager);
 		mPager.setOffscreenPageLimit(1);
-		fragmentList = new ArrayList<Fragment>();
-		Fragment btFragmenta = new WelcomeaFragment();
-		Fragment btFragmentb = new WelcomebFragment();
-		Fragment btFragmentc = new WelcomecFragment();
-		fragmentList.add(btFragmenta);
-		fragmentList.add(btFragmentb);
-		fragmentList.add(btFragmentc);
 		mPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager(), fragmentList));
 		mPager.setOnPageChangeListener(new GuidePageChangeListener()); 
-		mPager.setCurrentItem(0);// 设置当前显示标签页为第一页
+		mPager.setCurrentItem(0);
 	}
 
 	// 指引页面更改事件监听器
@@ -92,9 +81,4 @@ public class WelcomeActivity extends FragmentActivity {
 			}
 		}  
 	} 
-	
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
 }

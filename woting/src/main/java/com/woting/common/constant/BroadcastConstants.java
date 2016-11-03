@@ -76,4 +76,7 @@ public class BroadcastConstants {
 
 	// duijiang页  UP_DATA_GROUP = "com.woting.UPDATA_GROUP";
 	public static final String UP_DATA_GROUP = "UP_DATA_GROUP";
+
+    // 刷新下载完成界面
+    public static final String PUSH_DOWN_COMPLETED= "push_down_completed";
 }

@@ -184,9 +184,8 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
                 startActivity(new Intent(context, ModifyPasswordActivity.class));
                 break;
             case R.id.lin_bingding:         // 账户绑定
-                Intent PasswordIntent = new Intent(context, PhoneCheckActivity.class);
-                PasswordIntent.putExtra("origin", 2);
-                startActivity(PasswordIntent);
+//                PasswordIntent.putExtra("origin", 2);
+                startActivity(new Intent(context, PhoneCheckActivity.class));
                 break;
             case R.id.lin_timer:            // 定时
                 startActivity(new Intent(context, TimerPowerOffActivity.class));
@@ -273,7 +272,9 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
             userName = sharedPreferences.getString(StringConstant.USERNAME, "");// 用户名
             userId = sharedPreferences.getString(StringConstant.USERID, "");    // 用户 ID
             imageUrl = sharedPreferences.getString(StringConstant.IMAGEURL, "");// 用户头像
-
+            if(userName.equals("")) {
+                userName = sharedPreferences.getString(StringConstant.USERPHONENUMBER, "");
+            }
             textUserName.setText(userName);
             if (!imageUrl.equals("")) {
                 if (imageUrl.startsWith("http:")) {

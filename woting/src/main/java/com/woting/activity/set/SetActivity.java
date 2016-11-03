@@ -207,7 +207,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 }
                 logOut.setVisibility(View.INVISIBLE);
                 sendBroadcast(new Intent("push_down_completed"));// 发送广播 更新已下载和未下载界面
-                Toast.makeText(context, "注销成功,请稍等", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "注销成功", Toast.LENGTH_SHORT).show();
             }
 
             @Override

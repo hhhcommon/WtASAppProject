@@ -1,78 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <ImageView
+    <ImageView
         android:id="@+id/imageView1"
-        android:scaleType="centerCrop"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"/>
 
-        <LinearLayout
-            android:id="@+id/lin_enter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="20dip"
-            android:layout_marginTop="40dip"
-            android:gravity="right|center"
-            android:padding="10dip" >
+    <TextView
+        android:id="@+id/lin_enter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="进入"
+        android:textColor="@color/BLACK"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="30dp"
+        android:drawableRight="@mipmap/finding_title_tag"
+        android:drawablePadding="5dp"
+        android:textSize="18sp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="进入"
-                android:textColor="@color/BLACK"
-                android:textSize="18sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dip">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dip"
-                android:src="@mipmap/finding_title_tag" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/tv_login"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/wt_login"
+            android:text="登录"
+            android:textColor="@color/WHITE"
+            android:textSize="20sp"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="40dip"
-            android:orientation="horizontal" >
+        <Button
+            android:id="@+id/tv_register"
+            android:layout_width="0dip"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dip"
+            android:layout_marginRight="30dip"
+            android:layout_weight="1"
+            android:background="@drawable/wt_login"
+            android:text="注册"
+            android:textColor="@color/WHITE"
+            android:textSize="20sp"/>
 
-            <TextView
-                android:id="@+id/tv_login"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dip"
-                android:layout_marginRight="20dip"
-                android:layout_weight="1"
-               android:background="@drawable/wt_login"
-                android:gravity="center"
-                android:padding="5dip"
-                android:textSize="20sp"
-                android:text="登录"
-                android:textColor="@color/WHITE" />
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_register"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dip"
-                android:layout_marginRight="30dip"
-                android:layout_weight="1"
-                android:background="@drawable/wt_login"
-                android:gravity="center"
-                android:padding="5dip"
-                android:textSize="20sp"
-                android:text="注册"
-                android:textColor="@color/WHITE" />
-        </LinearLayout>
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>
