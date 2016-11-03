@@ -36,16 +36,16 @@ public class PhotoCutActivity extends BaseActivity implements OnClickListener {
                 if (type == 1) {
                     long a = System.currentTimeMillis();
                     String s = String.valueOf(a);
-                    FileOutputStream out = new FileOutputStream(new File(Environment.getExternalStorageDirectory() + "/woting/" + s + ".png"));
+                    FileOutputStream out = new FileOutputStream(new File(Environment.getExternalStorageDirectory() + "/woting/image/" + s + ".png"));
                     out.write(outputStream.toByteArray());
                     out.flush();
                     out.close();
                     Intent intent = new Intent();
-                    intent.putExtra("return", Environment.getExternalStorageDirectory() + "/woting/" + s + ".png");
+                    intent.putExtra("return", Environment.getExternalStorageDirectory() + "/woting/image/" + s + ".png");
                     setResult(1, intent);
                     finish();
                 } else {
-                    FileOutputStream out = new FileOutputStream(new File(Environment.getExternalStorageDirectory() + "/woting/portaitUser.png"));
+                    FileOutputStream out = new FileOutputStream(new File(Environment.getExternalStorageDirectory() + "/woting/image/portaitUser.png"));
                     out.write(outputStream.toByteArray());
                     out.flush();
                     out.close();
