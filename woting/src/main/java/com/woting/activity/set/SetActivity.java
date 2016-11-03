@@ -26,6 +26,7 @@ import com.woting.activity.set.help.HelpActivity;
 import com.woting.activity.set.update.UpdateManager;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
@@ -206,7 +207,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                     Log.v("commit", "数据 commit 失败!");
                 }
                 logOut.setVisibility(View.INVISIBLE);
-                sendBroadcast(new Intent("push_down_completed"));// 发送广播 更新已下载和未下载界面
+                sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));// 发送广播 更新已下载和未下载界面
                 Toast.makeText(context, "注销成功", Toast.LENGTH_SHORT).show();
             }
 
@@ -267,27 +268,26 @@ public class SetActivity extends BaseActivity implements OnClickListener {
 
     // 检查版本更新
     protected void dealVersion(String ResultList, String mastUpdate) {
-        String Version = "0.1.0.X.0";
+        String version = "0.1.0.X.0";
         String Descn = null;
         try {
-            JSONTokener jsonParser = new JSONTokener(ResultList);
-            JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-            Version = arg1.getString("Version");
+            JSONObject arg1 = (JSONObject) new JSONTokener(ResultList).nextValue();
+            version = arg1.getString("Version");
             Descn = arg1.getString("Descn");
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         // 版本更新比较
-        String verson = Version;
-        String[] strArray = verson.split("\\.");
-        String verson_build;
+//        String version = Version;
+        String[] strArray = version.split("\\.");
+//        String versionBuild;
         try {
-            verson_build = strArray[4];
-            int verson_old = PhoneMessage.versionCode;
-            int verson_new = Integer.parseInt(verson_build);
-            if (verson_new > verson_old) {
-                if (mastUpdate != null && mastUpdate.equals("1")) {        // 强制升级
+//            versionBuild = strArray[4];
+            int versionOld = PhoneMessage.versionCode;
+            int versionNew = Integer.parseInt(strArray[4]);
+            if (versionNew > versionOld) {
+                if (mastUpdate != null && mastUpdate.equals("1")) {// 强制升级
                     if (Descn != null && !Descn.trim().equals("")) {
                         updateNews = Descn;
                     } else {
@@ -304,7 +304,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                     updateType = 1;// 不需要强制升级
                     updateDialog.show();
                 }
-            } else if (verson_new == verson_old) {
+            } else if (versionNew == versionOld) {
                 ToastUtils.show_allways(context, "已经是最新版本");
             }
         } catch (Exception e) {
