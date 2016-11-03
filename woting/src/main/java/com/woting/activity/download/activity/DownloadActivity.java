@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
@@ -30,10 +29,24 @@ import java.util.ArrayList;
  * 2016年4月1日
  */
 public class DownloadActivity extends FragmentActivity implements OnClickListener {
-	private TextView tv_completed;
-	private TextView tv_uncompleted;
-	private ViewPager vp_download;
-	private DownloadActivity context;
+    private DownloadActivity context;
+
+	private TextView textCompleted;
+	private TextView textUncompleted;
+	private ViewPager viewDownload;
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.lin_news:			// 跳转到新消息界面
+                // startActivity(new Intent(context, HandleMessageActivity.class));
+                break;
+            case R.id.lin_find:			// 跳转到搜索界面
+                Intent intent = new Intent(context, SearchLikeActivity.class);
+                startActivity(intent);
+                break;
+        }
+    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,74 +57,44 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
 		initViewPager();
 	}
 
-	/**
-	 * 设置界面
-	 */
+	// 设置界面
 	private void setView() {
-		tv_completed = (TextView) findViewById(R.id.tv_completed);
-		tv_uncompleted = (TextView) findViewById(R.id.tv_uncompleted);
-		vp_download = (ViewPager)findViewById(R.id.viewpager);
-		LinearLayout lin_news = (LinearLayout) findViewById(R.id.lin_news);
-		lin_news.setOnClickListener(this);
-		LinearLayout lin_find = (LinearLayout) findViewById(R.id.lin_find);
-		lin_find.setOnClickListener(this);
+        findViewById(R.id.lin_news).setOnClickListener(this);
+        findViewById(R.id.lin_find).setOnClickListener(this);
+
+        textCompleted = (TextView) findViewById(R.id.tv_completed);
+        textUncompleted = (TextView) findViewById(R.id.tv_uncompleted);
+        viewDownload = (ViewPager)findViewById(R.id.viewpager);
 	}
 
 	private void initViewPager() {
-		ArrayList<Fragment> fragmentList = new ArrayList<Fragment>();
-		Fragment mDownLoadFragment = new DownLoadCompleted();
-		Fragment mDownLoadUnFragment = new DownLoadUnCompleted();
-		fragmentList.add(mDownLoadFragment);
-		fragmentList.add(mDownLoadUnFragment);
-		// vp_download.setAdapter(new MyFragmentChildPagerAdapter(getChildFragmentManager(), fragmentList));
-		vp_download.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager(), fragmentList));
-		vp_download.setOnPageChangeListener(new MyOnPageChangeListener());
-		vp_download.setCurrentItem(0); 
-		vp_download.setOffscreenPageLimit(1);
-		tv_completed.setOnClickListener(new DownloadClickListener(0));
-		tv_uncompleted.setOnClickListener(new DownloadClickListener(1));
+		ArrayList<Fragment> fragmentList = new ArrayList<>();
+		fragmentList.add(new DownLoadCompleted());
+		fragmentList.add(new DownLoadUnCompleted());
+        viewDownload.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager(), fragmentList));
+        viewDownload.setOnPageChangeListener(new MyOnPageChangeListener());
+        viewDownload.setCurrentItem(0);
+        viewDownload.setOffscreenPageLimit(1);
+        textCompleted.setOnClickListener(new DownloadClickListener(0));
+        textUncompleted.setOnClickListener(new DownloadClickListener(1));
 	}
 
-	public class MyOnPageChangeListener implements OnPageChangeListener {
-		
-		@Override
-		public void onPageScrolled(int arg0, float arg1, int arg2) {
-		}
+    // 更新界面
+    private void updateView(int index) {
+        if (index == 0) {
+            textCompleted.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
+            textCompleted.setBackgroundResource(R.drawable.color_wt_circle_home_white);
+            textUncompleted.setTextColor(context.getResources().getColor(R.color.white));
+            textUncompleted.setBackgroundResource(R.drawable.color_wt_circle_orange);
+        } else if (index == 1) {
+            textUncompleted.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
+            textUncompleted	.setBackgroundResource(R.drawable.color_wt_circle_home_white);
+            textCompleted.setTextColor(context.getResources().getColor(R.color.white));
+            textCompleted.setBackgroundResource(R.drawable.color_wt_circle_orange);
+        }
+    }
 
-		@Override
-		public void onPageScrollStateChanged(int arg0) {
-		}
-
-		@Override
-		public void onPageSelected(int arg0) {
-			if (arg0 == 0) {
-				tv_completed.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
-				tv_completed.setBackgroundResource(R.drawable.color_wt_circle_home_white);
-				tv_uncompleted.setTextColor(context.getResources().getColor(R.color.white));
-				tv_uncompleted.setBackgroundResource(R.drawable.color_wt_circle_orange);
-			} else if (arg0 == 1) {
-				tv_uncompleted.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
-				tv_uncompleted.setBackgroundResource(R.drawable.color_wt_circle_home_white);
-				tv_completed.setTextColor(context.getResources().getColor(R.color.white));
-				tv_completed.setBackgroundResource(R.drawable.color_wt_circle_orange);
-			}
-		}
-	}
-	
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.lin_news:			// 跳转到新消息界面
-			// startActivity(new Intent(context, HandleMessageActivity.class));
-			break;
-		case R.id.lin_find:			// 跳转到搜索界面
-			Intent intent = new Intent(context, SearchLikeActivity.class);
-			startActivity(intent);
-			break;
-		}
-	}
-
-	public class DownloadClickListener implements OnClickListener {
+    class DownloadClickListener implements OnClickListener {
 		private int index = 0;
 		public DownloadClickListener(int i) {
 			index = i;
@@ -119,39 +102,23 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
 		
 		@Override
 		public void onClick(View v) {
-			vp_download.setCurrentItem(index);		// 界面切换字体的改变
-			if (index == 0) {
-				tv_completed.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
-				tv_completed.setBackgroundResource(R.drawable.color_wt_circle_home_white);
-				tv_uncompleted.setTextColor(context.getResources().getColor(R.color.white));
-				tv_uncompleted.setBackgroundResource(R.drawable.color_wt_circle_orange);
-			} else if (index == 1) {
-				tv_uncompleted.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
-				tv_uncompleted	.setBackgroundResource(R.drawable.color_wt_circle_home_white);
-				tv_completed.setTextColor(context.getResources().getColor(R.color.white));
-				tv_completed.setBackgroundResource(R.drawable.color_wt_circle_orange);
-			}
+            viewDownload.setCurrentItem(index);		// 界面切换字体的改变
+            updateView(index);
 		}
 	}
-	
+
 	long waitTime = 2000L;
 	long touchTime = 0;
 	
-	/**
-	 * 手机实体返回按键的处理  与onBackPress同理
-	 * @param keyCode
-	 * @param event
-	 * @return
-	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (event.getAction() == KeyEvent.ACTION_DOWN && KeyEvent.KEYCODE_BACK == keyCode) {
 			long currentTime = System.currentTimeMillis();
 			if ((currentTime - touchTime) >= waitTime) {
-				ToastUtils.show_allways(DownloadActivity.this, "再按一次退出");
+				ToastUtils.show_allways(context, "再按一次退出");
 				touchTime = currentTime;
 			} else {
-				MobclickAgent.onKillProcess(this);
+				MobclickAgent.onKillProcess(context);
 				finish();
 				android.os.Process.killProcess(android.os.Process.myPid());
 			}
@@ -159,7 +126,6 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-
 
 	// 设置android app 的字体大小不受系统字体大小改变的影响
 	@Override
@@ -170,12 +136,29 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
 		res.updateConfiguration(config, res.getDisplayMetrics());
 		return res;
 	}
+
+    class MyOnPageChangeListener implements OnPageChangeListener {
+
+        @Override
+        public void onPageScrolled(int arg0, float arg1, int arg2) {
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int arg0) {
+        }
+
+        @Override
+        public void onPageSelected(int arg0) {
+            updateView(arg0);
+        }
+    }
+
 	@Override
 	protected void onDestroy() {
-		super.onDestroy();		
-		tv_completed = null;
-		tv_uncompleted = null;
-		vp_download = null;
+		super.onDestroy();
+        textCompleted = null;
+        textUncompleted = null;
+        viewDownload = null;
 		context = null;
 		setContentView(R.layout.activity_null);
 	}

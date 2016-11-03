@@ -42,7 +42,8 @@
                 android:singleLine="true"
                 android:layout_marginTop="16dp"
                 android:layout_centerHorizontal="true"
-                android:text="小茉莉"
+                android:maxWidth="200dp"
+                android:text="小茉莉小茉莉小茉莉小茉莉小茉莉小茉莉小茉莉"
                 android:textColor="@color/white"
                 android:textSize="17sp" />
 
