@@ -1567,7 +1567,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 		 Sharedialog.show(); 
 		dialog1 = Utils.Dialogphnoshow(context, "通讯中", dialog1);
 		Config.dialog = dialog1;
-		final List<sharemodel> mylist = Utils.getShareModelList();
+		final List<ShareMode> mylist = Utils.getShareModelList();
 		ImageAdapter shareadapter = new ImageAdapter(context, mylist);
 		mgallery.setAdapter(shareadapter);
 		mgallery.setOnItemClickListener(new OnItemClickListener() {
