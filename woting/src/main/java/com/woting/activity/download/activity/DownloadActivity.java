@@ -1,6 +1,8 @@
 package com.woting.activity.download.activity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -38,14 +40,14 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_download);
 		context = this;
-		setview();
+		setView();
 		initViewPager();
 	}
 
 	/**
 	 * 设置界面
 	 */
-	private void setview() {
+	private void setView() {
 		tv_completed = (TextView) findViewById(R.id.tv_completed);
 		tv_uncompleted = (TextView) findViewById(R.id.tv_uncompleted);
 		vp_download = (ViewPager)findViewById(R.id.viewpager);
@@ -134,11 +136,9 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
 	
 	long waitTime = 2000L;
 	long touchTime = 0;
-//	private String userid;
-//	private List<FileInfo> filoinfolist;
 	
 	/**
-	 * 手机实体返回按键的处理  与onbackpress同理
+	 * 手机实体返回按键的处理  与onBackPress同理
 	 * @param keyCode
 	 * @param event
 	 * @return
@@ -151,13 +151,6 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
 				ToastUtils.show_allways(DownloadActivity.this, "再按一次退出");
 				touchTime = currentTime;
 			} else {
-//				//当程序结束时将所有符合条件的数据全部设置为待下载状态
-//			    FileInfoDao FID=new FileInfoDao(context);
-//			    userid=Utils.getUserId(context);
-//				filoinfolist = FID.queryFileinfo("false",userid);// 查询表中未完成的任务
-//				for (int i = 0; i < filoinfolist.size(); i++) {
-//					FID.updatedownloadstatus(filoinfolist.get(i).getUrl(), "0");
-//				}
 				MobclickAgent.onKillProcess(this);
 				finish();
 				android.os.Process.killProcess(android.os.Process.myPid());
@@ -167,6 +160,16 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
 		return super.onKeyDown(keyCode, event);
 	}
 
+
+	// 设置android app 的字体大小不受系统字体大小改变的影响
+	@Override
+	public Resources getResources() {
+		Resources res = super.getResources();
+		Configuration config = new Configuration();
+		config.setToDefaults();
+		res.updateConfiguration(config, res.getDisplayMetrics());
+		return res;
+	}
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();		
