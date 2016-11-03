@@ -22,7 +22,7 @@ public class LanguageSearchInside implements Serializable{
 	private String PlayerAllTime;
 	private String PlayerInTime;
 	private String PlayCount;
-	private sequInside SeqInfo;
+	private sequinside SeqInfo;
 	private String ContentShareURL;
 	private String ContentFavorite;
 	private String localurl;
@@ -87,10 +87,10 @@ public class LanguageSearchInside implements Serializable{
 	public void setContentShareURL(String contentShareURL) {
 		ContentShareURL = contentShareURL;
 	}
-	public sequInside getSeqInfo() {
+	public sequinside getSeqInfo() {
 		return SeqInfo;
 	}
-	public void setSeqInfo(sequInside seqInfo) {
+	public void setSeqInfo(sequinside seqInfo) {
 		SeqInfo = seqInfo;
 	}
 	public String getPlayerInTime() {

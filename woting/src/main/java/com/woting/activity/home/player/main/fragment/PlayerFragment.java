@@ -55,7 +55,7 @@ import com.woting.activity.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.activity.home.player.main.model.LanguageSearch;
 import com.woting.activity.home.player.main.model.LanguageSearchInside;
 import com.woting.activity.home.player.main.model.PlayerHistory;
-import com.woting.activity.home.player.main.model.shareModel;
+import com.woting.activity.home.player.main.model.sharemodel;
 import com.woting.activity.home.player.timeset.activity.TimerPowerOffActivity;
 import com.woting.activity.home.player.timeset.service.timeroffservice;
 import com.woting.activity.home.program.album.model.ContentInfo;
@@ -1147,7 +1147,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		ShareDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
 		dialog1 = DialogUtils.Dialogphnoshow(context, "通讯中", dialog1);
 		Config.dialog = dialog1;
-		final List<shareModel> mList = ShareUtils.getShareModelList();
+		final List<sharemodel> mList = ShareUtils.getShareModelList();
 		ImageAdapter shareAdapter = new ImageAdapter(context, mList);
 		mGallery.setAdapter(shareAdapter);
 		mGallery.setOnItemClickListener(new OnItemClickListener() {

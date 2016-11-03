@@ -1,10 +1,10 @@
 package com.woting.activity.home.player.main.model;
 
-import java.io.Serializable;
-
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
-public class shareModel implements Serializable{
+import java.io.Serializable;
+
+public class sharemodel implements Serializable{
 	
 	private SHARE_MEDIA sharePlatform;
 	private int shareImageUrl;

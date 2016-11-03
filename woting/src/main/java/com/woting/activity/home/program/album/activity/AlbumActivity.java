@@ -38,7 +38,7 @@ import com.umeng.socialize.media.UMImage;
 import com.woting.R;
 import com.woting.activity.home.player.main.adapter.ImageAdapter;
 import com.woting.activity.home.player.main.model.LanguageSearchInside;
-import com.woting.activity.home.player.main.model.shareModel;
+import com.woting.activity.home.player.main.model.sharemodel;
 import com.woting.activity.home.program.album.fragment.DetailsFragment;
 import com.woting.activity.home.program.album.fragment.ProgramFragment;
 import com.woting.activity.home.program.fmlist.model.RankInfo;
@@ -131,7 +131,7 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 		window.setWindowAnimations(R.style.sharestyle);
 		shareDialog.setCanceledOnTouchOutside(true);
 		shareDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
-		final List<shareModel> mList = ShareUtils.getShareModelList();
+		final List<sharemodel> mList = ShareUtils.getShareModelList();
 		ImageAdapter shareAdapter = new ImageAdapter(context,mList);
 		mGallery.setAdapter(shareAdapter);
 		dialog1 = DialogUtils.Dialogphnoshow(context, "通讯中", dialog1);
