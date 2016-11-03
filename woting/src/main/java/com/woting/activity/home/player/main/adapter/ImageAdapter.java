@@ -9,16 +9,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.activity.home.player.main.model.ShareMode;
+import com.woting.activity.home.player.main.model.ShareModel;
 
 import java.util.List;
 
 public class ImageAdapter extends BaseAdapter{
-	private List<ShareMode> list;
+	private List<ShareModel> list;
 	private Context context;
-	private ShareMode lists;
+	private ShareModel lists;
 
-	public ImageAdapter (Context context, List<ShareMode> list) {
+	public ImageAdapter (Context context, List<ShareModel> list) {
 		super();
 		this.list = list;
 		this.context = context;

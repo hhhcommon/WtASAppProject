@@ -4,7 +4,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.io.Serializable;
 
-public class ShareMode implements Serializable{
+public class ShareModel implements Serializable{
 	
 	private SHARE_MEDIA sharePlatform;
 	private int shareImageUrl;
