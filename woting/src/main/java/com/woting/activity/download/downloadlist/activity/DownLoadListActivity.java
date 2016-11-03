@@ -1,6 +1,5 @@
 package com.woting.activity.download.downloadlist.activity;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
@@ -17,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.woting.R;
+import com.woting.activity.baseactivity.BaseActivity;
 import com.woting.activity.download.dao.FileInfoDao;
 import com.woting.activity.download.downloadlist.adapter.DownLoadListAdapter;
 import com.woting.activity.download.downloadlist.adapter.DownLoadListAdapter.downloadlist;
@@ -40,39 +39,35 @@ import java.util.List;
  * @author 辛龙
  *2016年8月8日
  */
-public class DownLoadListActivity extends Activity implements OnClickListener {
+public class DownLoadListActivity extends BaseActivity implements OnClickListener {
 	private DownLoadListActivity context;
 	private LinearLayout head_left;
-	private ListView mlistview;
+	private ListView mListView;
 	private TextView head_name_tv;
 	//	private LinearLayout lin_clear;
 	private TextView tv_sum;
-	private TextView tv_totalcache;
-	private LinearLayout lin_dinglan;
-	private List<FileInfo> fileinfolist = new ArrayList<FileInfo>();
+	private TextView tv_TotalCache;
+	private LinearLayout lin_Ding_Lan;
+	private List<FileInfo> fileInfoList = new ArrayList<>();
 	private DownLoadListAdapter adapter;
-	private String sequname;
-	private int positionnow = -1;	// 标记当前选中的位置
-	private String sequid;
+	private String sequName;
+	private int positionNow = -1;	// 标记当前选中的位置
+	private String sequId;
 	private int sum = 0;
-	private Dialog confirmdialog;
-	private Dialog confirmdialog1;
+	private Dialog confirmDialog;
+	private Dialog confirmDialog1;
 	private DecimalFormat df;
-	private SearchPlayerHistoryDao dbdao;
+	private SearchPlayerHistoryDao dbDao;
 	private FileInfoDao FID;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_downloadlist);
 		context = this;
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);		// 透明状态栏
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);	// 透明导航栏
-		MyActivityManager mam = MyActivityManager.getInstance();
-		mam.pushOneActivity(context);
 		InitDao();
 		handleIntent();
 		setview();
-		confirmdialog();// 确定是否删除记录弹窗
+		confirmDialog();// 确定是否删除记录弹窗
 		setListener();
 		df = new DecimalFormat("0.00");
 	}
@@ -83,20 +78,20 @@ public class DownLoadListActivity extends Activity implements OnClickListener {
 		setListValue();// 给list赋初值
 	}
 
-	private void confirmdialog() {
+	private void confirmDialog() {
 		final View dialog1 = LayoutInflater.from(this).inflate(R.layout.dialog_exit_confirm, null);
-		TextView tv_cancle = (TextView) dialog1.findViewById(R.id.tv_cancle);
+		TextView tv_cancel = (TextView) dialog1.findViewById(R.id.tv_cancle);
 		TextView tv_confirm = (TextView) dialog1.findViewById(R.id.tv_confirm);
 		TextView tv_title = (TextView) dialog1.findViewById(R.id.tv_title);
 		tv_title.setText("文件不存在，是否删除这条记录?");
-		confirmdialog = new Dialog(this, R.style.MyDialog);
-		confirmdialog.setContentView(dialog1);
-		confirmdialog.setCanceledOnTouchOutside(true);
-		confirmdialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
-		tv_cancle.setOnClickListener(new OnClickListener() {
+		confirmDialog = new Dialog(this, R.style.MyDialog);
+		confirmDialog.setContentView(dialog1);
+		confirmDialog.setCanceledOnTouchOutside(true);
+		confirmDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
+		tv_cancel.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				confirmdialog.dismiss();
+				confirmDialog.dismiss();
 			}
 		});
 
@@ -105,9 +100,9 @@ public class DownLoadListActivity extends Activity implements OnClickListener {
 			public void onClick(View v) {
 				// 这里添加删除数据库事件
 				try {
-					FID.deletefileinfo(fileinfolist.get(positionnow).getLocalurl(), CommonUtils.getUserId(context));
-					if (confirmdialog != null) {
-						confirmdialog.dismiss();
+					FID.deletefileinfo(fileInfoList.get(positionNow).getLocalurl(), CommonUtils.getUserId(context));
+					if (confirmDialog != null) {
+						confirmDialog.dismiss();
 					}
 					setListValue();
 					Intent p_intent = new Intent("push_down_completed");
@@ -115,8 +110,8 @@ public class DownLoadListActivity extends Activity implements OnClickListener {
 					ToastUtils.show_allways(context, "此目录内已经没有内容");
 				} catch (Exception e) {
 					ToastUtils.show_allways(context, "文件删除失败，请稍后重试");
-					if (confirmdialog != null) {
-						confirmdialog.dismiss();
+					if (confirmDialog != null) {
+						confirmDialog.dismiss();
 					}
 				}
 			}
@@ -125,33 +120,30 @@ public class DownLoadListActivity extends Activity implements OnClickListener {
 
 	private void InitDao() {
 		FID = new FileInfoDao(DownLoadListActivity.this);
-		dbdao = new SearchPlayerHistoryDao(DownLoadListActivity.this);
+		dbDao = new SearchPlayerHistoryDao(DownLoadListActivity.this);
 	}
 
 	private void setListValue() {
 		sum=0;
-		fileinfolist = FID.queryFileinfo(sequid, CommonUtils.getUserId(context),0);
-		if (fileinfolist.size() != 0) {
-			lin_dinglan.setVisibility(View.VISIBLE);
-			mlistview.setVisibility(View.VISIBLE);
-			adapter = new DownLoadListAdapter(context, fileinfolist);
-			mlistview.setAdapter(adapter);
+		fileInfoList = FID.queryFileinfo(sequId, CommonUtils.getUserId(context),0);
+		if (fileInfoList.size() != 0) {
+			lin_Ding_Lan.setVisibility(View.VISIBLE);
+			mListView.setVisibility(View.VISIBLE);
+			adapter = new DownLoadListAdapter(context, fileInfoList);
+			mListView.setAdapter(adapter);
 			setItemListener();
 			setInterface();
-			tv_sum.setText("共" + fileinfolist.size() + "个节目");
-/*			tv_totalcache.setText("20.0MB");*/
-			for(int i=0;i<fileinfolist.size();i++){
-				sum += fileinfolist.get(i).getEnd();			
+			tv_sum.setText("共" + fileInfoList.size() + "个节目");
+			for(int i=0;i<fileInfoList.size();i++){
+				sum += fileInfoList.get(i).getEnd();
 			}
 			if(sum != 0){
-				tv_totalcache.setText("共"+df.format(sum / 1000.0 / 1000.0) + "MB");
+				tv_TotalCache.setText("共"+df.format(sum / 1000.0 / 1000.0) + "MB");
 			}
 		}else{
-			lin_dinglan.setVisibility(View.GONE);
-			adapter = new DownLoadListAdapter(context, fileinfolist);
-			mlistview.setAdapter(adapter);
-			/*lin_dinglan.setVisibility(View.GONE);
-			mlistview.setVisibility(View.GONE);*/
+			lin_Ding_Lan.setVisibility(View.GONE);
+			adapter = new DownLoadListAdapter(context, fileInfoList);
+			mListView.setAdapter(adapter);
 			Intent p_intent = new Intent("push_down_completed");
 			context.sendBroadcast(p_intent);
 			ToastUtils.show_allways(context, "此目录内已经没有内容");
@@ -163,7 +155,7 @@ public class DownLoadListActivity extends Activity implements OnClickListener {
 			@Override
 			public void checkposition(int position) {
 				deleteConfirmDialog(position);
-				confirmdialog1.show();
+				confirmDialog1.show();
 			}
 		});
 	}
@@ -173,26 +165,26 @@ public class DownLoadListActivity extends Activity implements OnClickListener {
 	 */
 	private void deleteConfirmDialog(final int position) {
 		final View dialog1 = LayoutInflater.from(context).inflate(R.layout.dialog_exit_confirm, null);
-		TextView tv_cancle = (TextView) dialog1.findViewById(R.id.tv_cancle);
+		TextView tv_cancel = (TextView) dialog1.findViewById(R.id.tv_cancle);
 		TextView tv_confirm = (TextView) dialog1.findViewById(R.id.tv_confirm);
 		TextView tv_title = (TextView) dialog1.findViewById(R.id.tv_title);
 		tv_title.setText("是否删除这条记录");
-		confirmdialog1 = new Dialog(context, R.style.MyDialog);
-		confirmdialog1.setContentView(dialog1);
-		confirmdialog1.setCanceledOnTouchOutside(false);
-		confirmdialog1.getWindow().setBackgroundDrawableResource(R.color.dialog);
-		tv_cancle.setOnClickListener(new OnClickListener() {
+		confirmDialog1 = new Dialog(context, R.style.MyDialog);
+		confirmDialog1.setContentView(dialog1);
+		confirmDialog1.setCanceledOnTouchOutside(false);
+		confirmDialog1.getWindow().setBackgroundDrawableResource(R.color.dialog);
+		tv_cancel.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				confirmdialog1.dismiss();
+				confirmDialog1.dismiss();
 			}
 		});
 
 		tv_confirm.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				confirmdialog1.dismiss();
-				FID.deletefileinfo(fileinfolist.get(position).getLocalurl(), CommonUtils.getUserId(context));
+				confirmDialog1.dismiss();
+				FID.deletefileinfo(fileInfoList.get(position).getLocalurl(), CommonUtils.getUserId(context));
 				setListValue();
 				Intent p_intent = new Intent("push_down_completed");
 				context.sendBroadcast(p_intent);
@@ -201,13 +193,12 @@ public class DownLoadListActivity extends Activity implements OnClickListener {
 	}
 
 	private void setItemListener() {
-		mlistview.setOnItemClickListener(new OnItemClickListener() {
+		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				//ToastUtil.show_always(context, "我的localurl是"+fileinfolist.get(position).getLocalurl());
-				if(fileinfolist != null && fileinfolist.size() != 0){
-					positionnow =position;
-					FileInfo mFileInfo = fileinfolist.get(position);
+				if(fileInfoList != null && fileInfoList.size() != 0){
+					positionNow =position;
+					FileInfo mFileInfo = fileInfoList.get(position);
 					if(mFileInfo.getLocalurl() != null && !mFileInfo.getLocalurl().equals("")){
 						File file = new File(mFileInfo.getLocalurl());
 						if (file.exists()) {
@@ -241,8 +232,8 @@ public class DownLoadListActivity extends Activity implements OnClickListener {
 									plaplayeralltime, playerintime, playercontentdesc, playernum,
 									playerzantype,  playerfrom, playerfromid, playerfromurl,playeraddtime,bjuserid,playercontentshareurl,ContentFavorite,
 									ContentId,playlocalrurl,sequName,sequId,sequDesc,sequImg);
-							dbdao.deleteHistory(playerurl);
-							dbdao.addHistory(history);
+							dbDao.deleteHistory(playerurl);
+							dbDao.addHistory(history);
 							if(PlayerFragment.context != null){
 								MainActivity.change();
 								HomeActivity.UpdateViewPager();
@@ -258,11 +249,11 @@ public class DownLoadListActivity extends Activity implements OnClickListener {
 							}
 							setResult(1);
 							finish();
-							dbdao.closedb();
+							dbDao.closedb();
 						} else {	// 此处要调对话框，点击同意删除对应的文件信息
 							/* ToastUtil.show_always(context, "文件已经被删除，是否删除本条记录"); */
-							positionnow = position;
-							confirmdialog.show();
+							positionNow = position;
+							confirmDialog.show();
 						}
 					}
 				}
@@ -277,19 +268,19 @@ public class DownLoadListActivity extends Activity implements OnClickListener {
 	private void handleIntent() {
 		Intent intent = context.getIntent();
 		Bundle bundle = intent.getExtras();
-		sequname = bundle.getString("sequname");
-		sequid = bundle.getString("sequid");
+		sequName = bundle.getString("sequname");
+		sequId = bundle.getString("sequid");
 	}
 
 	private void setview() {
 		// 返回按钮
 		head_left = (LinearLayout) findViewById(R.id.head_left_btn);
-		mlistview = (ListView) findViewById(R.id.lv_downloadlist);
+		mListView = (ListView) findViewById(R.id.lv_downloadlist);
 		head_name_tv = (TextView) findViewById(R.id.head_name_tv);
-		head_name_tv.setText(sequname);
+		head_name_tv.setText(sequName);
 		tv_sum = (TextView) findViewById(R.id.tv_sum);
-		tv_totalcache = (TextView) findViewById(R.id.tv_totalcache);
-		lin_dinglan = (LinearLayout) findViewById(R.id.lin_dinglan);
+		tv_TotalCache = (TextView) findViewById(R.id.tv_totalcache);
+		lin_Ding_Lan= (LinearLayout) findViewById(R.id.lin_dinglan);
 	}
 
 	@Override
@@ -307,18 +298,18 @@ public class DownLoadListActivity extends Activity implements OnClickListener {
 		MyActivityManager mam = MyActivityManager.getInstance();
 		mam.popOneActivity(context);
 		head_left=null;
-		mlistview=null;
+		mListView=null;
 		head_name_tv=null;
 		tv_sum=null;
-		tv_totalcache=null;
-		lin_dinglan=null;
-		fileinfolist.clear();
-		fileinfolist=null;
+		tv_TotalCache=null;
+		lin_Ding_Lan=null;
+		fileInfoList.clear();
+		fileInfoList=null;
 		adapter=null;
-		confirmdialog=null;
-		confirmdialog1=null;
+		confirmDialog=null;
+		confirmDialog1=null;
 		df=null;
-		dbdao=null;
+		dbDao=null;
 		FID=null;
 		context = this;
 		setContentView(R.layout.activity_null);
