@@ -86,7 +86,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 	 */
 	private PinyinComparator pinyinComparator;
 	private FragmentActivity context;
-	private boolean headviewshow;
+//	private boolean headviewshow;
 	private MessageReceiver Receiver;
 	private SharedPreferences sharedPreferences;
 	private String islogin;
@@ -118,7 +118,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		headviewshow = false;
+//		headviewshow = false;
 		context = this.getActivity();
 		characterParser = CharacterParser.getInstance();	// 实例化汉字转拼音类
 		pinyinComparator = new PinyinComparator();
@@ -547,7 +547,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 					sortListView.setVisibility(View.VISIBLE);
 					//					sortListView.removeHeaderView(headview);
 					lin_grouplist.setVisibility(View.GONE);
-					headviewshow=false;
+//					headviewshow=false;
 					if(adapter==null){
 						adapter = new SortGroupMemberAdapter(context, list);
 						sortListView.setAdapter(adapter);
@@ -696,11 +696,11 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 				Intent intent = new Intent(context,TalkPersonNewsActivity.class);
 				Bundle bundle = new Bundle();
 				bundle.putString("type", "talkpersonfragment");
-				if(headviewshow){
+//				if(headviewshow){
 					bundle.putSerializable("data", srclist_p.get(position-1));
-				}else{
-					bundle.putSerializable("data", srclist_p.get(position));
-				}
+//				}else{
+//					bundle.putSerializable("data", srclist_p.get(position));
+//				}
 				intent.putExtras(bundle);
 				startActivity(intent);
 			}
