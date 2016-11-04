@@ -183,8 +183,8 @@ public class TotalFragment extends Fragment {
 					String playerurl = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerUrl();
 					String playerurI = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerUrI();
 					String playermediatype = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerMediaType();
-					String plaplayeralltime = "0";
-					String playerintime = "0";
+					String plaplayeralltime = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerAllTime();
+					String playerintime = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerInTime();
 					String playercontentdesc = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerContentDesc();
 					String playernum = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerNum();
 					String playerzantype = "0";

@@ -127,8 +127,8 @@ public class SearchPlayerHistoryDao {
 				String playerurl = cursor.getString(3);
 				String playerurI= cursor.getString(4);//iiiii
 				String playermediatype = cursor.getString(5);
-				String playeralltime = cursor.getString(6);
-				String playerintime = cursor.getString(7);
+				String playeralltime =cursor.getString(cursor.getColumnIndex("playeralltime"));
+				String playerintime =cursor.getString(cursor.getColumnIndex("playerintime"));
 				String playercontentdesc = cursor.getString(8);
 				String playernum = cursor.getString(9);
 				String playerzantype = cursor.getString(10);

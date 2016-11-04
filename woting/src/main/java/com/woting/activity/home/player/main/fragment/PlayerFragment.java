@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -356,6 +357,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			historyNews.setContentId(historyNew.getContentID());
 			historyNews.setContentDesc(historyNew.getPlayerContentDesc());
 			historyNews.setContentImg(historyNew.getPlayerImage());
+			String s=historyNew.getPlayerAllTime();
+			String s1=historyNew.getPlayerAllTime();
 			historyNews.setPlayerAllTime(historyNew.getPlayerAllTime());
 			historyNews.setPlayerInTime(historyNew.getPlayerInTime());
 			historyNews.setContentShareURL(historyNew.getPlayContentShareUrl());
@@ -382,8 +385,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		String playerUrI = languageSearchInside.getContentURI();
 		String playerMediaType = languageSearchInside.getMediaType();
 		String playContentShareUrl = languageSearchInside.getContentShareURL();
-		String playerAllTime = "";
-		String playerInTime = "";
+		String playerAllTime = languageSearchInside.getPlayerAllTime();
+		String playerInTime =languageSearchInside.getPlayerInTime();
 		String playerContentDesc = languageSearchInside.getContentDesc();
 		String playerNum = "999";
 		String playerZanType = "false";
@@ -1525,8 +1528,20 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			tv_name.setText("未知数据");
 		}
         //如果进来就要看到 在这里设置界面
-		time_start.setText("00:00:00");
-		time_end.setText("00:00:00");
+		if(TextUtils.isEmpty(GlobalConfig.playerobject.getPlayerInTime())&&
+				TextUtils.isEmpty(GlobalConfig.playerobject.getPlayerAllTime())){
+			long current=Long.valueOf(GlobalConfig.playerobject.getPlayerInTime());
+			long duration =Long.valueOf(GlobalConfig.playerobject.getPlayerAllTime());
+			updateTextViewWithTimeFormat(time_start,(int) ( current / 1000));
+			updateTextViewWithTimeFormat(time_end,(int) (duration / 1000));
+			seekBar.setMax((int) duration);
+			seekBar.setProgress((int)current);
+		}else{
+			time_start.setText("00:00:00");
+			time_end.setText("00:00:00");
+		}
+		/*time_start.setText("00:00:00");
+		time_end.setText("00:00:00");*/
 
 		if (fList.getContentImg() != null) {
 			String url;
