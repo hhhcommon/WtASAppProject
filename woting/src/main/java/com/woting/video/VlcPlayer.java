@@ -130,7 +130,7 @@ public class VlcPlayer implements WtAudioPlay {
 			case EventHandler.MediaPlayerPlaying:
 				Log.e("url", "MediaPlayerPlaying()"+Url);
 				break;
-			case EventHandler.MediaPlayerEndReached:
+			case EventHandler.MediaPlayerEndReached://这个回调
 				Log.e("url", "MediaPlayerEndReached()");
 				PlayerFragment.playNext();
 			case EventHandler.MediaPlayerBuffering:

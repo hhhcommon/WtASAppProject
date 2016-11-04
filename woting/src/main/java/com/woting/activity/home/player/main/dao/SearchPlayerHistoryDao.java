@@ -269,17 +269,17 @@ public class SearchPlayerHistoryDao {
 	/**
 	 * 修改数据库当中某个单体节目的喜欢类型
 	 */
-	public void updatePlayerIntime(String url,long times) {
+	public void updatePlayerInTime(String url,long times) {
 		SQLiteDatabase	db = helper.getWritableDatabase();
 		String userid=CommonUtils.getUserId(context);
 		if(times>0){
 		if(userid!=null&&!userid.equals("")){
-			db.execSQL("update playerhistory set playintime=? where bjuserid=? and playerurl=?",new Object[]{times,userid,url});
+			db.execSQL("update playerhistory set playerintime=? where bjuserid=? and playerurl=?",new Object[]{times,userid,url});
 		}else{
-			db.execSQL("update playerhistory set playintime=? where playerurl=?",new Object[]{times,url});
+			db.execSQL("update playerhistory set playerintime=? where playerurl=?",new Object[]{times,url});
 		}
 		}else{
-			db.execSQL("update playerhistory set playintime=? where bjuserid=? and playerurl=?",new Object[]{"0",userid,url});
+			db.execSQL("update playerhistory set playerintime=? where bjuserid=? and playerurl=?",new Object[]{"0",userid,url});
 		}
 		db.close();
 	}
