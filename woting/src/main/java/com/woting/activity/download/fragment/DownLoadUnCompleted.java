@@ -92,8 +92,8 @@ public class DownLoadUnCompleted extends Fragment {
         imageStart = (ImageView) rootView.findViewById(R.id.img_start);
         linearStart = (LinearLayout) rootView.findViewById(R.id.lin_start);
         linearClear = (LinearLayout) rootView.findViewById(R.id.lin_clear);
-        linearStatusYes = (LinearLayout) rootView.findViewById(R.id.lin_status_yes);    // 有未下载时布局
-        linearStatusNo = (LinearLayout) rootView.findViewById(R.id.lin_status_no);    // 无未下载时布局
+        linearStatusYes = (LinearLayout) rootView.findViewById(R.id.lin_status_yes);// 有未下载时布局
+        linearStatusNo = (LinearLayout) rootView.findViewById(R.id.lin_status_no);// 无未下载时布局
     }
 
     private void setDownLoadSource() {
@@ -105,16 +105,10 @@ public class DownLoadUnCompleted extends Fragment {
         } else {
             linearStatusNo.setVisibility(View.GONE);
             linearStatusYes.setVisibility(View.VISIBLE);
-            if (DownloadTask.mContext != null) {
-                if (DownloadTask.isPause) {
-                    imageStart.setImageResource(R.mipmap.wt_download_play);
-                    dwType = false;
-                    textStart.setText("全部开始");
-                } else {
-                    dwType = true;
-                    imageStart.setImageResource(R.mipmap.wt_download_pause);
-                    textStart.setText("全部暂停");
-                }
+            if (DownloadTask.mContext != null && DownloadTask.isPause) {
+                imageStart.setImageResource(R.mipmap.wt_download_play);
+                dwType = false;
+                textStart.setText("全部开始");
             } else {
                 dwType = true;
                 imageStart.setImageResource(R.mipmap.wt_download_play);
@@ -152,7 +146,7 @@ public class DownLoadUnCompleted extends Fragment {
                 } else {
 					/**
 					 * 1:全部开始事件
-                     * 2:目前为1状态的设置为 2  2状态的不处理
+                     * 2:目前为1状态的设置为 2
                      * 3:所有为 0 状态的不处理 将 position 为 0 的数据标记为下载状态 == 1
                      * 4:设置图片和文字
 					 * 5:设置 downloadStatus 标签为 1，下载完当前任务后，开始下载另一条
@@ -175,9 +169,7 @@ public class DownLoadUnCompleted extends Fragment {
                         textStart.setText("全部暂停");
                         // 如果点击了全部开始 就需要开始下一个下载对象
                         getFileInfo(fileInfoList.get(getNum()));
-                        Handler h = new Handler();
-                        h.postDelayed(new Runnable() {
-
+                        new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 if (DownloadTask.downloadstatus == -1) {
@@ -229,17 +221,13 @@ public class DownLoadUnCompleted extends Fragment {
                     }
                     getFileInfo(fileInfoList.get(position));
                 } else if (fileInfoList.get(position).getDownloadtype() == 1) {
-					/*
-					 * 点击该项目时，此时该项目的状态是下载中 只需要把项目自己变为暂停状态即可
-					 */
+					// 点击该项目时，此时该项目的状态是下载中 只需要把项目自己变为暂停状态即可
                     fileInfoList.get(position).setDownloadtype(2);
                     FID.updatedownloadstatus(fileInfoList.get(position).getUrl(), "2");
                     DownloadService.workStop(fileInfoList.get(position));
                     adapter.notifyDataSetChanged();
                 } else {
-					/*
-					 * 点击该项目时，该项目为暂停状态 把其它的播放状态变为暂停状态 最后把自己状态变为下载中状态
-					 */
+					// 点击该项目时，该项目为暂停状态 把其它的播放状态变为暂停状态 最后把自己状态变为下载中状态
                     for (int i = 0; i < fileInfoList.size(); i++) {
                         if (fileInfoList.get(i).getDownloadtype() == 1) {
                             fileInfoList.get(i).setDownloadtype(2);

@@ -87,9 +87,9 @@ public class SplashActivity extends Activity {
                             String imageUrl = list.getPortraitMini();
                             String imageUrlBig = list.getPortraitBig();
                             et.putString(StringConstant.USERID, userId);
-                            et.putString(StringConstant.IMAGEURL, userName);
+                            et.putString(StringConstant.IMAGEURL, imageUrlBig);
                             et.putString(StringConstant.IMAGEURBIG, imageUrl);
-                            et.putString(StringConstant.USERNAME, imageUrlBig);
+                            et.putString(StringConstant.USERNAME, userName);
                             if (!et.commit()) {
                                 Log.v("commit", "数据 commit 失败!");
                             }

@@ -129,7 +129,7 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
         imageDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
     }
 
-    // 设置view
+    // 设置 view
     private void setView() {
         Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.img_person_background);
         textTime = (TextView) findViewById(R.id.text_time);                 // 定时关闭的时间显示
@@ -272,9 +272,9 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
             userName = sharedPreferences.getString(StringConstant.USERNAME, "");// 用户名
             userId = sharedPreferences.getString(StringConstant.USERID, "");    // 用户 ID
             imageUrl = sharedPreferences.getString(StringConstant.IMAGEURL, "");// 用户头像
-            if(userName.equals("")) {
-                userName = sharedPreferences.getString(StringConstant.USERPHONENUMBER, "");
-            }
+//            if(userName.equals("")) {
+//                userName = (String) SharePreferenceManager.getSharePreferenceValue(context, "USER_NAME", "USER_NAME", "");
+//            }
             textUserName.setText(userName);
             if (!imageUrl.equals("")) {
                 if (imageUrl.startsWith("http:")) {
