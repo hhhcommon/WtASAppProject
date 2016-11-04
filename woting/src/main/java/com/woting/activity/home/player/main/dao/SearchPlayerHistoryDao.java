@@ -32,7 +32,7 @@ public class SearchPlayerHistoryDao {
 	public void addHistory(PlayerHistory playerhistory) {
 		//通过helper的实现对象获取可操作的数据库db
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String s=playerhistory.getContentFavorite();
+		String s=playerhistory.getPlayerAllTime();
 		db.execSQL("insert into playerhistory(playername,playerimage,playerurl,playerurI,playermediatype,playeralltime"
 						+ ",playerintime,playercontentdesc,playernum,playerzantype,playerfrom,playerfromid,playeraddtime,bjuserid,playshareurl,playfavorite,contentid,localurl,sequname,sequimg,sequdesc,sequid) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
 				new Object[] { playerhistory.getPlayerName(), playerhistory.getPlayerImage()
@@ -269,17 +269,17 @@ public class SearchPlayerHistoryDao {
 	/**
 	 * 修改数据库当中某个单体节目的喜欢类型
 	 */
-	public void updatePlayerInTime(String url,long times) {
+	public void updatePlayerInTime(String url,long CurrentTimes,long TotalTimes) {
 		SQLiteDatabase	db = helper.getWritableDatabase();
 		String userid=CommonUtils.getUserId(context);
-		if(times>0){
+		if(CurrentTimes>0&&TotalTimes>0){
 		if(userid!=null&&!userid.equals("")){
-			db.execSQL("update playerhistory set playerintime=? where bjuserid=? and playerurl=?",new Object[]{times,userid,url});
+			db.execSQL("update playerhistory set playerintime=? , playeralltime=? where bjuserid=? and playerurl=?",new Object[]{CurrentTimes,TotalTimes,userid,url});
 		}else{
-			db.execSQL("update playerhistory set playerintime=? where playerurl=?",new Object[]{times,url});
+			db.execSQL("update playerhistory set playerintime=? ,playeralltime=? where playerurl=?",new Object[]{CurrentTimes,TotalTimes,url});
 		}
 		}else{
-			db.execSQL("update playerhistory set playerintime=? where bjuserid=? and playerurl=?",new Object[]{"0",userid,url});
+			db.execSQL("update playerhistory set playerintime=?,playeralltime=? where bjuserid=? and playerurl=?",new Object[]{"0","0",userid,url});
 		}
 		db.close();
 	}

@@ -1070,7 +1070,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 						if (audioPlay.isPlaying()) {
 							seekBar.setProgress((int) currPosition);
 						}
-					   dbDao.updatePlayerInTime(GlobalConfig.playerobject.getContentPlay(),currPosition);
+					   dbDao.updatePlayerInTime(GlobalConfig.playerobject.getContentPlay(),currPosition,duration);
 					} else if (GlobalConfig.playerobject != null
 							&& GlobalConfig.playerobject.getMediaType() != null
 							&& GlobalConfig.playerobject.getMediaType().trim().length() > 0
