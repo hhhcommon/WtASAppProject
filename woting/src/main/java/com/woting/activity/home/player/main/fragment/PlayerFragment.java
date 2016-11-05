@@ -90,6 +90,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.Timer;
 
 /**
  * 播放主页
@@ -352,7 +353,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			historyNews.setContentTimes("");
 			historyNews.setContentName(historyNew.getPlayerName());
 			historyNews.setContentPubTime("");
-			historyNews.setContentPub("");
+			historyNews.setContentPub(historyNew.getPlayerFrom());
 			historyNews.setContentPlay(historyNew.getPlayerUrl());
 			historyNews.setMediaType(historyNew.getPlayerMediaType());
 			historyNews.setContentId(historyNew.getContentID());
@@ -391,7 +392,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		String playerContentDesc = languageSearchInside.getContentDesc();
 		String playerNum = "999";
 		String playerZanType = "false";
-		String playerFrom = "";
+		String playerFrom = languageSearchInside.getContentPub();
 		String playerFromId = "";
 		String playerFromUrl = "";
 		String playerAddTime = Long.toString(System.currentTimeMillis());

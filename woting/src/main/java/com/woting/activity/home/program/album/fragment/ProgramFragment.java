@@ -153,7 +153,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 						String playContentDesc = SubList.get(position).getContentDesc();
 						String playNum = SubList.get(position).getPlayCount();
 						String playZanType = "0";
-						String playFrom = "";
+						String playFrom = SubList.get(position).getContentPub();
 						String playFromId = "";
 						String playFromUrl = "";
 						String playAddTime = Long.toString(System.currentTimeMillis());

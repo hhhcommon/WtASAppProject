@@ -188,7 +188,7 @@ public class TotalFragment extends Fragment {
 					String playercontentdesc = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerContentDesc();
 					String playernum = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerNum();
 					String playerzantype = "0";
-					String playerfrom = "";
+					String playerfrom =list.get(groupPosition).getHistoryList().get(childPosition).getPlayerFrom();
 					String playerfromid = "";
 					String playerfromurl = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerFromUrl();
 					String playeraddtime = Long.toString(System.currentTimeMillis());

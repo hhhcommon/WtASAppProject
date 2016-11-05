@@ -87,10 +87,10 @@ public class PlayHistoryAdapter extends BaseAdapter {
 		} else {
 			holder.textNumber.setText(lists.getPlayerNum());
 		}
-		if (lists.getContentPub() == null || lists.getContentPub().equals("")) {
+		if (lists.getPlayerFrom() == null || lists.getPlayerFrom().equals("")) {
 			holder.textRankContent.setText("我听科技");
 		} else {
-			holder.textRankContent.setText(lists.getContentPub());
+			holder.textRankContent.setText(lists.getPlayerFrom());
 		}
 		if (lists.getPlayerInTime() == null | lists.getPlayerInTime().equals("")) {
 			holder.textView_PlayIntroduce.setText("未知");

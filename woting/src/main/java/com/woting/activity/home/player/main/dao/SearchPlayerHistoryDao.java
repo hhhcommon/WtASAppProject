@@ -32,7 +32,7 @@ public class SearchPlayerHistoryDao {
 	public void addHistory(PlayerHistory playerhistory) {
 		//通过helper的实现对象获取可操作的数据库db
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String s=playerhistory.getPlayerAllTime();
+		String s=playerhistory.getPlayerFrom();
 		db.execSQL("insert into playerhistory(playername,playerimage,playerurl,playerurI,playermediatype,playeralltime"
 						+ ",playerintime,playercontentdesc,playernum,playerzantype,playerfrom,playerfromid,playeraddtime,bjuserid,playshareurl,playfavorite,contentid,localurl,sequname,sequimg,sequdesc,sequid) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
 				new Object[] { playerhistory.getPlayerName(), playerhistory.getPlayerImage()
@@ -40,8 +40,7 @@ public class SearchPlayerHistoryDao {
 						,playerhistory.getPlayerMediaType()
 						, playerhistory.getPlayerAllTime(), playerhistory.getPlayerInTime()//这里
 						, playerhistory.getPlayerContentDesc(), playerhistory.getPlayerNum()
-						, playerhistory.getPlayerZanType(), playerhistory.getPlayerFrom()
-						, playerhistory.getPlayerFromId(), playerhistory.getPlayerAddTime()
+						, playerhistory.getPlayerZanType(), playerhistory.getPlayerFrom(), playerhistory.getPlayerFromId(), playerhistory.getPlayerAddTime()
 						, playerhistory.getBJUserid(),playerhistory.getPlayContentShareUrl()
 						,playerhistory.getContentFavorite(),playerhistory.getContentID(),playerhistory.getLocalurl()
 						, playerhistory.getSequName(),playerhistory.getSequImg(),playerhistory.getSequDesc()
@@ -69,10 +68,8 @@ public class SearchPlayerHistoryDao {
 				String playerurl = cursor.getString(cursor.getColumnIndex("playerurl"));
 				String playerurI= cursor.getString(cursor.getColumnIndex("playerurI"));
 				String playermediatype = cursor.getString(cursor.getColumnIndex("playermediatype"));
-
 				String playeralltime =cursor.getString(cursor.getColumnIndex("playeralltime"));
 				String playerintime =cursor.getString(cursor.getColumnIndex("playerintime "));
-
 				String playercontentdesc =cursor.getString(cursor.getColumnIndex("playercontentdesc"));
 				String playernum = cursor.getString(cursor.getColumnIndex("playernum"));
 				String playerzantype = cursor.getString(cursor.getColumnIndex("playerzantype"));

@@ -44,6 +44,11 @@ public class VlcPlayer implements WtAudioPlay {
 	public void play(String url) {
 		this.Url = url;
 		if(url != null){
+		/*	try{
+				Thread.sleep(500);
+			}catch (Exception e){
+				e.printStackTrace();
+			}*/
 			audioPlay.playMRL(Url);	
 		}
 	}

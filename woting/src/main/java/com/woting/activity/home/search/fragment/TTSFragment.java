@@ -121,7 +121,7 @@ public class TTSFragment extends Fragment {
 						String playContentDesc = newList.get(position - 1).getCurrentContent();
 						String playerNum =newList.get(position - 1).getWatchPlayerNum();
 						String playZanType = "0";
-						String playFrom = "";
+						String playFrom = newList.get(position - 1).getContentPub();
 						String playFromId = "";
 						String playFromUrl = "";
 						String playAddTime = Long.toString(System.currentTimeMillis());
