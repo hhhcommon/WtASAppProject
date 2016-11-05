@@ -176,7 +176,7 @@ public class RadioFragment extends Fragment {
 							String playercontentdesc = newlist.get(position - 1).getCurrentContent();
 							String playernum = newlist.get(position - 1).getWatchPlayerNum();
 							String playerzantype = "0";
-							String playerfrom = "";
+							String playerfrom = newlist.get(position - 1).getContentPub();
 							String playerfromid = "";
 							String playerfromurl = "";
 							String playeraddtime = Long.toString(System.currentTimeMillis());

@@ -196,12 +196,12 @@ public class SoundFragment extends Fragment{
 						String playerurl = playList.get(position).getPlayerUrl();
 						String playerurI = playList.get(position).getPlayerUrI();
 						String playermediatype = playList.get(position).getPlayerMediaType();
-						String plaplayeralltime = "0";
-						String playerintime = "0";
+						String plaplayeralltime = playList.get(position).getPlayerAllTime();
+						String playerintime =  playList.get(position).getPlayerInTime();
 						String playercontentdesc = playList.get(position).getPlayerContentDesc();
 						String playernum = playList.get(position).getPlayerNum();
 						String playerzantype = "0";
-						String playerfrom = "";
+						String playerfrom = playList.get(position).getPlayerFrom();
 						String playerfromid = "";
 						String playerfromurl = playList.get(position).getPlayerFromUrl();
 						String playeraddtime = Long.toString(System.currentTimeMillis());

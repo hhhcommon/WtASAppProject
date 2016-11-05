@@ -32,16 +32,19 @@ public class SearchPlayerHistoryDao {
 	public void addHistory(PlayerHistory playerhistory) {
 		//通过helper的实现对象获取可操作的数据库db
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String s=playerhistory.getContentFavorite();
+		String s=playerhistory.getPlayerFrom();
 		db.execSQL("insert into playerhistory(playername,playerimage,playerurl,playerurI,playermediatype,playeralltime"
 						+ ",playerintime,playercontentdesc,playernum,playerzantype,playerfrom,playerfromid,playeraddtime,bjuserid,playshareurl,playfavorite,contentid,localurl,sequname,sequimg,sequdesc,sequid) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
 				new Object[] { playerhistory.getPlayerName(), playerhistory.getPlayerImage()
-						, playerhistory.getPlayerUrl(),playerhistory.getPlayerUrI(),  playerhistory.getPlayerMediaType()
-						, playerhistory.getPlayerAllTime(), playerhistory.getPlayerInTime()
+						, playerhistory.getPlayerUrl(),playerhistory.getPlayerUrI()
+						,playerhistory.getPlayerMediaType()
+						, playerhistory.getPlayerAllTime(), playerhistory.getPlayerInTime()//这里
 						, playerhistory.getPlayerContentDesc(), playerhistory.getPlayerNum()
-						, playerhistory.getPlayerZanType(), playerhistory.getPlayerFrom()
-						, playerhistory.getPlayerFromId(), playerhistory.getPlayerAddTime(), playerhistory.getBJUserid(),playerhistory.getPlayContentShareUrl(),playerhistory.getContentFavorite(),playerhistory.getContentID(),playerhistory.getLocalurl()
-						, playerhistory.getSequName(),playerhistory.getSequImg(),playerhistory.getSequDesc(),playerhistory.getSequId()});//sql语句
+						, playerhistory.getPlayerZanType(), playerhistory.getPlayerFrom(), playerhistory.getPlayerFromId(), playerhistory.getPlayerAddTime()
+						, playerhistory.getBJUserid(),playerhistory.getPlayContentShareUrl()
+						,playerhistory.getContentFavorite(),playerhistory.getContentID(),playerhistory.getLocalurl()
+						, playerhistory.getSequName(),playerhistory.getSequImg(),playerhistory.getSequDesc()
+						,playerhistory.getSequId()});//sql语句
 		db.close();//关闭数据库对象
 	}
 
@@ -121,8 +124,8 @@ public class SearchPlayerHistoryDao {
 				String playerurl = cursor.getString(3);
 				String playerurI= cursor.getString(4);//iiiii
 				String playermediatype = cursor.getString(5);
-				String playeralltime = cursor.getString(6);
-				String playerintime = cursor.getString(7);
+				String playeralltime =cursor.getString(cursor.getColumnIndex("playeralltime"));
+				String playerintime =cursor.getString(cursor.getColumnIndex("playerintime"));
 				String playercontentdesc = cursor.getString(8);
 				String playernum = cursor.getString(9);
 				String playerzantype = cursor.getString(10);
@@ -260,6 +263,23 @@ public class SearchPlayerHistoryDao {
 		db.close();
 	}
 
+	/**
+	 * 修改数据库当中某个单体节目的喜欢类型
+	 */
+	public void updatePlayerInTime(String url,long CurrentTimes,long TotalTimes) {
+		SQLiteDatabase	db = helper.getWritableDatabase();
+		String userid=CommonUtils.getUserId(context);
+		if(CurrentTimes>0&&TotalTimes>0){
+		if(userid!=null&&!userid.equals("")){
+			db.execSQL("update playerhistory set playerintime=? , playeralltime=? where bjuserid=? and playerurl=?",new Object[]{CurrentTimes,TotalTimes,userid,url});
+		}else{
+			db.execSQL("update playerhistory set playerintime=? ,playeralltime=? where playerurl=?",new Object[]{CurrentTimes,TotalTimes,url});
+		}
+		}else{
+			db.execSQL("update playerhistory set playerintime=?,playeralltime=? where bjuserid=? and playerurl=?",new Object[]{"0","0",userid,url});
+		}
+		db.close();
+	}
 
 
 	/**

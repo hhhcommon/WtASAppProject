@@ -32,7 +32,7 @@ public class CommonUtils {
 		SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
 		String UserId= sp.getString(StringConstant.USERID, "userid");
 		if(UserId==null||UserId.equals("")||UserId.equals("userid")){
-			return null;
+			return PhoneMessage.imei;
 		}else{
 			return UserId;
 		}

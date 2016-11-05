@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -89,6 +90,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.Timer;
 
 /**
  * 播放主页
@@ -166,6 +168,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 	public static boolean isCurrentPlay;
 	private static String playType;// 当前播放的媒体类型
 	private static String ContentFavorite;
+	public static int timerService; // 当前节目播放剩余时间长度
+	private static long currPosition=-1;//当前的播放时间
+	private static Boolean PlayFlag=false; //是否首次播放的控制
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -290,6 +295,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				return true;
 			}
 		});
+
 		// seekBar事件
 		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			@Override
@@ -347,12 +353,14 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			historyNews.setContentTimes("");
 			historyNews.setContentName(historyNew.getPlayerName());
 			historyNews.setContentPubTime("");
-			historyNews.setContentPub("");
+			historyNews.setContentPub(historyNew.getPlayerFrom());
 			historyNews.setContentPlay(historyNew.getPlayerUrl());
 			historyNews.setMediaType(historyNew.getPlayerMediaType());
 			historyNews.setContentId(historyNew.getContentID());
 			historyNews.setContentDesc(historyNew.getPlayerContentDesc());
 			historyNews.setContentImg(historyNew.getPlayerImage());
+			String s=historyNew.getPlayerAllTime();
+			String s1=historyNew.getPlayerAllTime();
 			historyNews.setPlayerAllTime(historyNew.getPlayerAllTime());
 			historyNews.setPlayerInTime(historyNew.getPlayerInTime());
 			historyNews.setContentShareURL(historyNew.getPlayContentShareUrl());
@@ -379,12 +387,12 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		String playerUrI = languageSearchInside.getContentURI();
 		String playerMediaType = languageSearchInside.getMediaType();
 		String playContentShareUrl = languageSearchInside.getContentShareURL();
-		String playerAllTime = "";
-		String playerInTime = "";
+		String playerAllTime = languageSearchInside.getPlayerAllTime();
+		String playerInTime =languageSearchInside.getPlayerInTime();
 		String playerContentDesc = languageSearchInside.getContentDesc();
 		String playerNum = "999";
 		String playerZanType = "false";
-		String playerFrom = "";
+		String playerFrom = languageSearchInside.getContentPub();
 		String playerFromId = "";
 		String playerFromUrl = "";
 		String playerAddTime = Long.toString(System.currentTimeMillis());
@@ -545,6 +553,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				// 开启网络播放数据连接提醒
 				CommonHelper.checkNetworkStatus(context);// 网络设置获取
 				GlobalConfig.playerobject=allList.get(number);
+				//decideUpdatePlayHistory();
 				addDb(allList.get(number));
 				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 					if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == 1) {
@@ -569,6 +578,24 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			}
 		}
 	}
+
+ /*   //由此方法决定是否需要获取进度
+	private static void decideUpdatePlayHistory() {
+		String playUrlNow=GlobalConfig.playerobject.getContentPlay();
+		if(playUrlLast==null){
+		   playUrlLast=playUrlNow;
+		}else{
+			if(playUrlLast.equals(playUrlNow)){
+
+			}else{
+				if(audioPlay.mark().equals("AUDIO")){
+					dbDao.updatePlayerIntime(playUrlLast,audioPlay.getTime());
+				}else{
+
+				}
+			}
+		}
+	}*/
 
 	@Override
 	public void onClick(View v) {
@@ -1013,15 +1040,30 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		}
 	}
 
-	public static int timerService; // 当前节目播放剩余时间长度
 	static Handler mUIHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 				case TIME_UI: // 更新进度及时间
-					if (GlobalConfig.playerobject != null&& GlobalConfig.playerobject.getMediaType() != null
+				 if (GlobalConfig.playerobject != null&& GlobalConfig.playerobject.getMediaType() != null
 							&& GlobalConfig.playerobject.getMediaType().trim().length() > 0
 							&& GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
-						long currPosition = audioPlay.getTime();
+					 if(PlayFlag==true){
+					 if(GlobalConfig.playerobject.getPlayerInTime()!=null&&
+							 !GlobalConfig.playerobject.getPlayerInTime().equals("")){
+						try {
+							audioPlay.setTime(Long.valueOf(GlobalConfig.playerobject.getPlayerInTime()));
+						}catch (Exception e){
+							e.printStackTrace();
+						}
+						 currPosition = audioPlay.getTime();
+						 PlayFlag=false;
+					 }else{
+						 currPosition = audioPlay.getTime();
+						 PlayFlag=false;
+					 }
+					 }else{
+						 currPosition = audioPlay.getTime();
+					 }
 						long duration = audioPlay.getTotalTime();
 						updateTextViewWithTimeFormat(time_start,(int) (currPosition / 1000));
 						updateTextViewWithTimeFormat(time_end,(int) (duration / 1000));
@@ -1030,6 +1072,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 						if (audioPlay.isPlaying()) {
 							seekBar.setProgress((int) currPosition);
 						}
+					   dbDao.updatePlayerInTime(GlobalConfig.playerobject.getContentPlay(),currPosition,duration);
 					} else if (GlobalConfig.playerobject != null
 							&& GlobalConfig.playerobject.getMediaType() != null
 							&& GlobalConfig.playerobject.getMediaType().trim().length() > 0
@@ -1091,7 +1134,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			local = s;
 			mUIHandler.sendEmptyMessage(PLAY);
 			img_play.setImageResource(R.mipmap.wt_play_play);
+			img_play.setImageResource(R.mipmap.wt_play_play);
 			setPlayingType();
+			PlayFlag=true;
 		} else {
 			// 不等于空
 			if (local.equals(s)) {
@@ -1115,6 +1160,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				mUIHandler.sendEmptyMessage(PLAY);
 				img_play.setImageResource(R.mipmap.wt_play_play);
 				setPlayingType();
+				PlayFlag=true;
 			}
 		}
 
@@ -1252,6 +1298,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 							allList.clear();
 							allList.addAll(list);
 							GlobalConfig.playerobject=allList.get(num);
+							//decideUpdatePlayHistory();
 							lin_tuijian.setVisibility(View.VISIBLE);
 							adapter = new PlayerListAdapter(context, allList);
 							mListView.setAdapter(adapter);
@@ -1482,9 +1529,21 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		} else {
 			tv_name.setText("未知数据");
 		}
-
-		time_start.setText("00:00:00");
-		time_end.setText("00:00:00");
+        //如果进来就要看到 在这里设置界面
+		if(TextUtils.isEmpty(GlobalConfig.playerobject.getPlayerInTime())&&
+				TextUtils.isEmpty(GlobalConfig.playerobject.getPlayerAllTime())){
+			long current=Long.valueOf(GlobalConfig.playerobject.getPlayerInTime());
+			long duration =Long.valueOf(GlobalConfig.playerobject.getPlayerAllTime());
+			updateTextViewWithTimeFormat(time_start,(int) ( current / 1000));
+			updateTextViewWithTimeFormat(time_end,(int) (duration / 1000));
+			seekBar.setMax((int) duration);
+			seekBar.setProgress((int)current);
+		}else{
+			time_start.setText("00:00:00");
+			time_end.setText("00:00:00");
+		}
+		/*time_start.setText("00:00:00");
+		time_end.setText("00:00:00");*/
 
 		if (fList.getContentImg() != null) {
 			String url;
@@ -1657,6 +1716,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 							allList.add(fList);
 							allList.addAll(list);
 							GlobalConfig.playerobject=allList.get(num);
+							//decideUpdatePlayHistory();
 							lin_tuijian.setVisibility(View.VISIBLE);
 							adapter = new PlayerListAdapter(context, allList);
 							mListView.setAdapter(adapter);

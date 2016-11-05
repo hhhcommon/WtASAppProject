@@ -316,7 +316,7 @@ public class TotalFragment extends Fragment {
 					String playContentDesc = list.get(groupPosition).getList().get(childPosition).getCurrentContent();
 					String playerNum =list.get(groupPosition).getList().get(childPosition).getWatchPlayerNum();
 					String playZanType = "0";
-					String playFrom = "";
+					String playFrom =list.get(groupPosition).getList().get(childPosition).getContentPub();
 					String playFromId = "";
 					String playFromUrl = "";
 					String playAddTime = Long.toString(System.currentTimeMillis());

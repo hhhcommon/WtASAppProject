@@ -449,7 +449,7 @@ public class OnLineFragment extends Fragment {
 						String playContentDesc = newList.get(groupPosition).getList().get(childPosition).getCurrentContent();
 						String playerNum = newList.get(groupPosition).getList().get(childPosition).getWatchPlayerNum();
 						String playZanType = "0";
-						String playFrom = "";
+						String playFrom = newList.get(groupPosition).getList().get(childPosition).getContentPub();;
 						String playFromId = "";
 						String playFromUrl = "";
 						String playAddTime = Long.toString(System.currentTimeMillis());

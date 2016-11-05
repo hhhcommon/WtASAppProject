@@ -232,7 +232,7 @@ public class ClassifyFragment extends Fragment{
 						String playContentDesc = newList.get(position - 2).getContentDesc();
 						String playNum = newList.get(position - 2).getPlayCount();
 						String playZanType = "0";
-						String playFrom = "";
+						String playFrom =newList.get(position - 2).getContentPub();
 						String playFromId = "";
 						String playFromUrl = "";
 						String playAddTime = Long.toString(System.currentTimeMillis());
