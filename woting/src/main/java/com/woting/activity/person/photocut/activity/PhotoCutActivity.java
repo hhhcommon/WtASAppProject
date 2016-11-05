@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 
 /**
  * 照片裁剪页
+ *
  * @author 辛龙
  *         2016年7月19日
  */
@@ -28,32 +29,33 @@ public class PhotoCutActivity extends BaseActivity implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.lin_save) {
+        if (v.getId() == R.id.lin_save) {
             bitmap = mClipImageLayout.clip();
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 10, outputStream);
-            try {
-                if (type == 1) {
-                    long a = System.currentTimeMillis();
-                    String s = String.valueOf(a);
-                    FileOutputStream out = new FileOutputStream(new File(Environment.getExternalStorageDirectory() + "/woting/image/" + s + ".png"));
-                    out.write(outputStream.toByteArray());
-                    out.flush();
-                    out.close();
-                    Intent intent = new Intent();
-                    intent.putExtra("return", Environment.getExternalStorageDirectory() + "/woting/image/" + s + ".png");
-                    setResult(1, intent);
-                    finish();
-                } else {
-                    FileOutputStream out = new FileOutputStream(new File(Environment.getExternalStorageDirectory() + "/woting/image/portaitUser.png"));
-                    out.write(outputStream.toByteArray());
-                    out.flush();
-                    out.close();
-                    setResult(1);
-                    finish();
+            if (bitmap.compress(Bitmap.CompressFormat.PNG, 10, outputStream)) {
+                try {
+                    if (type == 1) {
+                        long a = System.currentTimeMillis();
+                        String s = String.valueOf(a);
+                        FileOutputStream out = new FileOutputStream(new File(Environment.getExternalStorageDirectory() + "/woting/image/" + s + ".png"));
+                        out.write(outputStream.toByteArray());
+                        out.flush();
+                        out.close();
+                        Intent intent = new Intent();
+                        intent.putExtra("return", Environment.getExternalStorageDirectory() + "/woting/image/" + s + ".png");
+                        setResult(1, intent);
+                        finish();
+                    } else {
+                        FileOutputStream out = new FileOutputStream(new File(Environment.getExternalStorageDirectory() + "/woting/image/portaitUser.png"));
+                        out.write(outputStream.toByteArray());
+                        out.flush();
+                        out.close();
+                        setResult(1);
+                        finish();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }
@@ -70,7 +72,7 @@ public class PhotoCutActivity extends BaseActivity implements OnClickListener {
         findViewById(R.id.lin_save).setOnClickListener(this);// 保存
         mClipImageLayout = (ClipImageLayout) findViewById(R.id.id_clipImageLayout);
 
-        if(getIntent() != null) {
+        if (getIntent() != null) {
             Intent intent = getIntent();
             String imageUrl = intent.getStringExtra("URI");
             type = intent.getIntExtra("type", -1);

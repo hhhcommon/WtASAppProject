@@ -4,7 +4,7 @@
      > 
      
      <!-- 实心    --> 
-    <solid android:color="#ffa634"/> 
+    <solid  android:color="@color/dinglan_orange" />
     <!-- 描边 -->  
      
     <stroke   

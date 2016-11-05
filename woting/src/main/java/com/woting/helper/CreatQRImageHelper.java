@@ -62,6 +62,7 @@ public class CreatQRImageHelper {
 	 * @return
 	 */
 	public  Bitmap createQRImage(int type,FindGroupNews news,UserInviteMeInside newss,int QR_WIDTH,int QR_HEIGHT ){
+		try	{
 		Map<String, Object> map = new HashMap<String, Object>();
 		String url;
 		if(type==1){
@@ -84,7 +85,7 @@ public class CreatQRImageHelper {
 			map.put("FindGroupNews", DataMap);
 			 url = jsonEnclose(map).toString();
 		}
-		try	{
+
 			//判断URL合法性
 			if (url == null || "".equals(url) || url.length() < 1){
 				map=null;

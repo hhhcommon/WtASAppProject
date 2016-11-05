@@ -287,7 +287,7 @@ public class TalkPersonNewsActivity extends Activity {
 			public void onClick(View v) {
 				Intent intent = new Intent(context,EWMShowActivity.class);
 				Bundle bundle = new Bundle();
-                bundle.putInt("type", 2);
+                bundle.putInt("type", 1);
 				bundle.putString("id", num);
 				bundle.putString("image", imageurl);
 				bundle.putString("news",descn);

@@ -12,18 +12,18 @@ import com.woting.R;
 import com.woting.util.BitmapUtils;
 
 /**
- * 第一张引导页
+ * 第二张引导页
  * @author 辛龙
  * 2016年4月27日
  */
-public class WelcomeaFragment extends Fragment  {
+public class WelcomeTwoFragment extends Fragment  {
 	private Bitmap bmp;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.item_welcomea, container, false);
+		View rootView = inflater.inflate(R.layout.item_welcomeb, container, false);
 		ImageView imageView1 = (ImageView)rootView.findViewById(R.id.imageView1);
-		bmp = BitmapUtils.readBitMap(getActivity(), R.mipmap.welcomea);
+		bmp = BitmapUtils.readBitMap(getActivity(), R.mipmap.welcomeb);
 		imageView1.setImageBitmap(bmp);
 		return rootView;
 	}

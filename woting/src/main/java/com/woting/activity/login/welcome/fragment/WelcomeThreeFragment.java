@@ -26,7 +26,7 @@ import com.woting.util.BitmapUtils;
  * 第三张引导页
  * 辛龙
  */
-public class WelcomecFragment extends Fragment implements OnClickListener {
+public class WelcomeThreeFragment extends Fragment implements OnClickListener {
     private FragmentActivity context;
     private Bitmap bmp;
 

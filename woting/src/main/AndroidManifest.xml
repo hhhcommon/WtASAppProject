@@ -37,7 +37,7 @@
         <activity
             android:name="com.woting.activity.login.splash.activity.SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -4,16 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.woting.R;
 import com.woting.activity.login.splash.model.UserInfo;
 import com.woting.activity.login.welcome.activity.WelcomeActivity;
 import com.woting.activity.main.MainActivity;
@@ -22,7 +19,6 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.util.BitmapUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,10 +38,10 @@ public class SplashActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
-        ImageView imageView = (ImageView) findViewById(R.id.imageView1);
-        Bitmap bmp = BitmapUtils.readBitMap(SplashActivity.this, R.mipmap.splash);
-        imageView.setImageBitmap(bmp);
+//        setContentView(R.layout.activity_splash);
+//        ImageView imageView = (ImageView) findViewById(R.id.imageView1);
+//        Bitmap bmp = BitmapUtils.readBitMap(SplashActivity.this, R.mipmap.splash);
+//        imageView.setImageBitmap(bmp);
 
         first = sharedPreferences.getString(StringConstant.FIRST, "0");// 是否是第一次登录
         Editor et = sharedPreferences.edit();
@@ -87,9 +83,9 @@ public class SplashActivity extends Activity {
                             String imageUrl = list.getPortraitMini();
                             String imageUrlBig = list.getPortraitBig();
                             et.putString(StringConstant.USERID, userId);
-                            et.putString(StringConstant.IMAGEURL, userName);
-                            et.putString(StringConstant.IMAGEURBIG, imageUrl);
-                            et.putString(StringConstant.USERNAME, imageUrlBig);
+                            et.putString(StringConstant.IMAGEURL, imageUrl);
+                            et.putString(StringConstant.IMAGEURBIG, imageUrlBig);
+                            et.putString(StringConstant.USERNAME, userName);
                             if (!et.commit()) {
                                 Log.v("commit", "数据 commit 失败!");
                             }
