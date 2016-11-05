@@ -90,7 +90,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.Timer;
 
 /**
  * 播放主页
@@ -361,8 +360,18 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			historyNews.setContentImg(historyNew.getPlayerImage());
 			String s=historyNew.getPlayerAllTime();
 			String s1=historyNew.getPlayerAllTime();
-			historyNews.setPlayerAllTime(historyNew.getPlayerAllTime());
-			historyNews.setPlayerInTime(historyNew.getPlayerInTime());
+            if(historyNew.getPlayerAllTime().equals("")){
+                historyNews.setPlayerAllTime("0");
+            }else{
+                historyNews.setPlayerAllTime(historyNew.getPlayerAllTime());
+            }
+            if(historyNew.getPlayerInTime().equals("")){
+                historyNews.setPlayerInTime("0");
+            }else{
+                historyNews.setPlayerInTime(historyNew.getPlayerInTime());
+            }
+			/*historyNews.setPlayerAllTime(historyNew.getPlayerAllTime());
+			historyNews.setPlayerInTime(historyNew.getPlayerInTime());*/
 			historyNews.setContentShareURL(historyNew.getPlayContentShareUrl());
 			historyNews.setContentFavorite(historyNew.getContentFavorite());
 			historyNews.setLocalurl(historyNew.getLocalurl());
