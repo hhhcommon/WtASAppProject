@@ -294,6 +294,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				return true;
 			}
 		});
+
 		// seekBar事件
 		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			@Override
