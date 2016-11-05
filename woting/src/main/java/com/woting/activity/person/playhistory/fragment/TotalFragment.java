@@ -90,7 +90,6 @@ public class TotalFragment extends Fragment {
 			ArrayList<PlayerHistory> playlist = null;
 			ArrayList<PlayerHistory> ttslist = null;
 			ArrayList<PlayerHistory> radiolist = null;
-
 			/**
 			 * 循环遍历  对数据库里的数据进行分类
 			 */
@@ -184,12 +183,12 @@ public class TotalFragment extends Fragment {
 					String playerurl = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerUrl();
 					String playerurI = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerUrI();
 					String playermediatype = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerMediaType();
-					String plaplayeralltime = "0";
-					String playerintime = "0";
+					String plaplayeralltime = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerAllTime();
+					String playerintime = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerInTime();
 					String playercontentdesc = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerContentDesc();
 					String playernum = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerNum();
 					String playerzantype = "0";
-					String playerfrom = "";
+					String playerfrom =list.get(groupPosition).getHistoryList().get(childPosition).getPlayerFrom();
 					String playerfromid = "";
 					String playerfromurl = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerFromUrl();
 					String playeraddtime = Long.toString(System.currentTimeMillis());

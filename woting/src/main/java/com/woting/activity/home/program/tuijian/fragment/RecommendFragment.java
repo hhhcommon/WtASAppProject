@@ -153,7 +153,7 @@ public class RecommendFragment extends Fragment {
                         String playercontentdesc = newList.get(position - 2).getCurrentContent();
                         String playernum = newList.get(position - 2).getWatchPlayerNum();
                         String playerzantype = "0";
-                        String playerfrom = "";
+                        String playerfrom = newList.get(position - 2).getContentPub();
                         String playerfromid = "";
                         String playerfromurl = "";
                         String playeraddtime = Long.toString(System.currentTimeMillis());

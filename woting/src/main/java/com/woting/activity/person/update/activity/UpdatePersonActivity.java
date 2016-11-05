@@ -90,9 +90,9 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
 
         String userName = BSApplication.SharedPreferences.getString(StringConstant.USERNAME, "");// 用户昵称
         TextView textName = (TextView) findViewById(R.id.tv_name);
-        if(userName.equals("")) {
-            userName = BSApplication.SharedPreferences.getString(StringConstant.USERPHONENUMBER, "");
-        }
+//        if(userName.equals("")) {
+//            userName = (String) SharePreferenceManager.getSharePreferenceValue(context, "USER_NAME", "USER_NAME", "");
+//        }
         textName.setText(userName);
 
         textGender = (TextView) findViewById(R.id.tv_gender);// 性别

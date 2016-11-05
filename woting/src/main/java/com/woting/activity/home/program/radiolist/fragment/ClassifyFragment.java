@@ -131,16 +131,12 @@ public class ClassifyFragment extends Fragment{
 		setUserVisibleHint(getUserVisibleHint());
 	}
 
-	private int pageSize;
-
 	/**
 	 * 请求网络获取分类信息
 	 */
 	private void sendRequest(){
 		VolleyRequest.RequestPost(GlobalConfig.getContentUrl, setParam(), new VolleyCallback() {
 			private String ReturnType;
-			private String ResultList;
-			private String StringSubList;
 
 			@Override
 			protected void requestSuccess(JSONObject result) {
@@ -150,36 +146,30 @@ public class ClassifyFragment extends Fragment{
 				page++;
 				try {
 					ReturnType = result.getString("ReturnType");
-					ResultList = result.getString("ResultList");
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 				if (ReturnType != null && ReturnType.equals("1001")) {
 					try {
-						JSONTokener jsonParser = new JSONTokener(ResultList);
-						JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-						StringSubList = arg1.getString("List");
-						String PageSize = arg1.getString("PageSize");
-						String AllCountTemp = arg1.getString("AllCount");
-						if(Integer.valueOf(PageSize) < 10){
-							mListView.stopLoadMore();
-							mListView.setPullLoadEnable(false);
-						}else{
-							mListView.setPullLoadEnable(true);
+						JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
+						String pageSizeString = arg1.getString("PageSize");
+						String allCountString = arg1.getString("AllCount");
+						if (allCountString != null && !allCountString.equals("") && pageSizeString != null && !pageSizeString.equals("")) {
+							int allCountInt = Integer.valueOf(allCountString);
+                            int pageSizeInt = Integer.valueOf(pageSizeString);
+                            if(allCountInt < 10 || pageSizeInt < 10){
+                                mListView.stopLoadMore();
+                                mListView.setPullLoadEnable(false);
+                            }else{
+                                mListView.setPullLoadEnable(true);
+                                if (allCountInt % pageSizeInt == 0) {
+                                    pageSizeNum = allCountInt / pageSizeInt;
+                                } else {
+                                    pageSizeNum = allCountInt / pageSizeInt + 1;
+                                }
+                            }
 						}
-						if (AllCountTemp != null && !AllCountTemp.equals("") && PageSize != null && !PageSize.equals("")) {
-							int AllCount = Integer.valueOf(AllCountTemp);
-							pageSize = Integer.valueOf(PageSize);
-							// 先求余 如果等于0 最后结果不加1 如果不等于0 结果加一
-							if (AllCount % pageSize == 0) {
-								pageSizeNum = AllCount / pageSize;
-							} else {
-								pageSizeNum = AllCount / pageSize + 1;
-							}
-						} else {
-							ToastUtils.show_allways(context, "页码获取异常");
-						}
-						SubList = new Gson().fromJson(StringSubList, new TypeToken<List<ListInfo>>() {}.getType());
+						SubList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<ListInfo>>() {}.getType());
 						if (RefreshType == 1) {
 							mListView.stopRefresh();
 							newList.clear();
@@ -242,7 +232,7 @@ public class ClassifyFragment extends Fragment{
 						String playContentDesc = newList.get(position - 2).getContentDesc();
 						String playNum = newList.get(position - 2).getPlayCount();
 						String playZanType = "0";
-						String playFrom = "";
+						String playFrom =newList.get(position - 2).getContentPub();
 						String playFromId = "";
 						String playFromUrl = "";
 						String playAddTime = Long.toString(System.currentTimeMillis());

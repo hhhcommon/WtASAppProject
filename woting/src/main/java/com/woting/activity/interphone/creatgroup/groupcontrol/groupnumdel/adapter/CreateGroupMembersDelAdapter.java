@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.activity.interphone.creatgroup.groupcontrol.groupnumdel.model.UserInfo;
@@ -120,7 +119,7 @@ public class CreateGroupMembersDelAdapter extends BaseAdapter implements Section
 	}
 
 	public interface friendCheck {
-		public void checkposition(int position);
+        void checkposition(int position);
 	}
 
 	class ViewHolder {

@@ -7,56 +7,27 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/dinglan_orange"
-        android:gravity="center_vertical" >
+        android:layout_height="48dp">
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical" >
+        <ImageView
+            android:id="@+id/head_left_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_centerVertical="true"
+            android:background="@mipmap/back_images" />
 
-            <LinearLayout
-                android:id="@+id/head_left_btn"
-                android:layout_width="48dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/head_press"
-                android:gravity="left|center" >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="详细资料"
+            android:textColor="@color/WHITE"
+            android:layout_centerInParent="true"
+            android:textSize="@dimen/activity_head_center_s" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="6dp"
-                    android:background="@mipmap/back_images" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="详细资料"
-                android:textColor="@color/WHITE"
-                android:textSize="@dimen/activity_head_center_s" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-
-    </LinearLayout>
+    </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -71,80 +42,67 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/dinglan_orange"
-                android:paddingTop="12dp" >
+                android:layout_height="200dp"
+                android:paddingTop="12dp"
+                android:visibility="visible"
+                android:background="@color/dinglan_orange">
 
-                <RelativeLayout
-                    android:id="@+id/center_head"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageView
+                    android:id="@+id/image_touxiang"
+                    android:layout_width="85dp"
+                    android:layout_height="85dp"
                     android:layout_centerHorizontal="true"
-                    android:gravity="center">
+                    android:scaleType="centerCrop" />
 
-                    <ImageView
-                        android:id="@+id/image_touxiang"
-                        android:layout_width="85dp"
-                        android:layout_height="85dp"
-                        android:layout_centerInParent="true"
-                        android:scaleType="centerCrop" />
-
-                    <ImageView
-                        android:layout_width="85dp"
-                        android:layout_height="85dp"
-                        android:layout_centerInParent="true"
-                        android:src="@mipmap/liubianxing_orange" />
-                </RelativeLayout>
+                <ImageView
+                    android:layout_width="85dp"
+                    android:layout_height="85dp"
+                    android:layout_centerHorizontal="true"
+                    android:src="@mipmap/liubianxing_orange" />
 
                 <ImageView
                     android:id="@+id/image_add"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/center_head"
                     android:layout_marginLeft="36dp"
-                    android:layout_alignParentBottom="true"
+                    android:layout_toRightOf="@id/image_touxiang"
+                    android:layout_alignBottom="@id/image_touxiang"
                     android:src="@mipmap/addgroup_talk" />
 
                 <ImageView
                     android:id="@+id/image_xiugai"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="43dp"
+                    android:layout_toRightOf="@id/image_touxiang"
+                    android:layout_marginLeft="54dp"
                     android:src="@mipmap/xiugai" />
-                
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/dinglan_orange"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="visible" >
 
                 <EditText
                     android:id="@+id/et_b_name"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="15dp"
-                    android:background="@color/dinglan_orange"
+                    android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:gravity="center"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
                     android:singleLine="true"
+                    android:ems="10"
+                    android:gravity="center"
                     android:text="我听科技"
                     android:textColor="@color/WHITE"
-                    android:textSize="@dimen/wt_group_detail_16" >
-                </EditText>
+                    android:enabled="false"
+                    android:layout_below="@id/image_touxiang"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/dinglan_orange"
+                    android:layout_marginTop="15dp"
+                    android:maxWidth="200dp"
+                    android:textSize="@dimen/wt_group_detail_16" />
 
                 <TextView
                     android:id="@+id/tv_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="100001"
+                    android:text="ID:100001"
+                    android:layout_below="@id/et_b_name"
+                    android:layout_centerHorizontal="true"
                     android:textColor="@color/WHITE"
                     android:textSize="@dimen/wt_login_text_wjmm" />
 
@@ -152,408 +110,348 @@
                     android:id="@+id/et_groupSignature"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="21dp"
                     android:layout_marginTop="5dp"
                     android:background="@color/dinglan_orange"
                     android:ellipsize="end"
-                    android:gravity="center"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
                     android:singleLine="true"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:enabled="false"
+                    android:layout_below="@id/tv_id"
+                    android:layout_centerHorizontal="true"
+                    android:maxWidth="240dp"
                     android:text="不忘初心，方得始终"
                     android:textColor="@color/WHITE"
                     android:textSize="@dimen/wt_login_text_wjmm" />
-            </LinearLayout>
 
-            <LinearLayout
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/lin_ewm"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@drawable/person_color"
-                android:gravity="left|center"
-                android:visibility="visible" >
+                android:background="@drawable/person_color">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="15dp"
-                    android:paddingLeft="20dp"
-                    android:paddingTop="15dp"
                     android:text="群二维码"
+                    android:textColor="@color/beijing"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:textSize="@dimen/wt_login_text_wjmm" />
+
+                <ImageView
+                    android:id="@+id/imageView_ewm"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_centerInParent="true"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dip"
+                    android:background="@color/view_color"
+                    android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lin_allperson"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/person_color" >
+
+                <TextView
+                    android:id="@+id/text_all_person"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="全部成员"
+                    android:layout_centerVertical="true"
                     android:textColor="@color/beijing"
                     android:textSize="@dimen/wt_login_text_wjmm" />
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical" >
-
-                    <ImageView
-                        android:id="@+id/imageView_ewm"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp" />
-                </LinearLayout>
-
                 <TextView
+                    android:id="@+id/tv_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="15dip"
-                    android:text="二维码"
-                    android:textColor="@color/BLACK"
-                    android:visibility="invisible" />
-            </LinearLayout>
+                    android:layout_toRightOf="@id/text_all_person"
+                    android:layout_centerVertical="true"
+                    android:text="（0）"
+                    android:textColor="@color/group_4b" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0.1dip"
-                android:background="@color/fengexian" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/WHITE"
-                android:orientation="vertical"
-                android:visibility="visible" >
-
-                <LinearLayout
-                    android:id="@+id/lin_allperson"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/person_color"
-                    android:gravity="left" >
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="13dp"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/live_more" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="15dp"
-                        android:paddingLeft="20dp"
-                        android:paddingTop="15dp"
-                        android:text="全部成员"
-                        android:textColor="@color/beijing"
-                        android:textSize="@dimen/wt_login_text_wjmm" />
+            </RelativeLayout>
 
-                    <TextView
-                        android:id="@+id/tv_number"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="4dp"
-                        android:text="（0）"
-                        android:textColor="@color/group_4b" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="18dp"
-                        android:layout_weight="1"
-                        android:gravity="right|center" >
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@mipmap/live_more" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <GridView
-                    android:id="@+id/gridView"
-                    android:layout_width="match_parent"
-                    android:layout_height="180dp"
-                    android:background="@color/WHITE"
-                    android:gravity="center"
-                    android:horizontalSpacing="10dp"
-                    android:numColumns="4"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="5dp"
-                    android:scrollbars="none"
-                    android:verticalSpacing="10dp"
-                    android:visibility="visible" >
-                </GridView>
-            </LinearLayout>
+            <GridView
+                android:id="@+id/gridView"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:background="@color/WHITE"
+                android:horizontalSpacing="10dp"
+                android:numColumns="4"
+                android:scrollbars="none"
+                android:verticalSpacing="10dp"/>
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="0.1dip"
+                android:layout_height="0.5dp"
                 android:background="@color/text_line_1" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/lin_group_name"
                 android:layout_width="match_parent"
-                android:layout_height="50dip"
-                android:background="@drawable/person_color"
-                android:gravity="left|center" >
+                android:layout_height="50dp"
+                android:background="@drawable/person_color" >
 
                 <TextView
+                    android:id="@+id/text_group_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="15dp"
                     android:paddingLeft="20dp"
-                    android:paddingTop="15dp"
                     android:text="群名称"
+                    android:layout_centerVertical="true"
                     android:textColor="@color/beijing"
                     android:textSize="@dimen/wt_login_text_wjmm" />
 
                 <TextView
                     android:id="@+id/tv_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:ellipsize="end"
-                    android:gravity="left|center"
                     android:singleLine="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/text_group_name"
                     android:text="我听科技"
                     android:textColor="@color/wt_login_third"
                     android:textSize="@dimen/wt_edittext_default_text" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0.1dip"
-                android:background="@color/text_line_1" />
-
-            <LinearLayout
-                android:id="@+id/lin_group_introduce"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/person_color"
-                android:gravity="left|top" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="15dp"
-                    android:paddingLeft="20dp"
-                    android:paddingTop="15dp"
-                    android:text="群介绍"
-                    android:textColor="@color/beijing"
-                    android:textSize="@dimen/wt_login_text_wjmm" />
-
-                <EditText
-                    android:id="@+id/et_jieshao"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:background="@color/transparent"
-                    android:enabled="false"
-                    android:padding="15dip"
-                    android:text="这家伙很懒，什么都没写"
-                    android:textColor="@color/wt_login_third"
-                    android:textSize="@dimen/wt_edittext_default_text" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tv_jiaqun"
-                android:layout_width="match_parent"
-                android:layout_height="0.1dip"
-                android:background="@color/text_line_1" />
-
-            <LinearLayout
-                android:id="@+id/lin_creator"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
-
-                <LinearLayout
-                    android:id="@+id/lin_jiaqun"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dip"
-                    android:background="@drawable/person_color"
-                    android:gravity="left|center" >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="15dp"
-                        android:paddingLeft="20dp"
-                        android:paddingTop="15dp"
-                        android:text="加群消息"
-                        android:textColor="@color/beijing"
-                        android:textSize="@dimen/wt_login_text_wjmm" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="18dp"
-                        android:layout_weight="1"
-                        android:gravity="right|center" >
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@mipmap/live_more" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tv_shenhe"
-                    android:layout_width="match_parent"
-                    android:layout_height="0.1dip"
-                    android:background="@color/text_line_1" />
-
-                <LinearLayout
-                    android:id="@+id/lin_groupapply"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dip"
-                    android:background="@drawable/person_color"
-                    android:gravity="left|center" >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="15dp"
-                        android:paddingLeft="20dp"
-                        android:paddingTop="15dp"
-                        android:text="审核消息"
-                        android:textColor="@color/beijing"
-                        android:textSize="@dimen/wt_login_text_wjmm" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="18dp"
-                        android:layout_weight="1"
-                        android:gravity="right|center" >
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@mipmap/live_more" />
-                    </LinearLayout>
-                </LinearLayout>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0.1dip"
                     android:background="@color/text_line_1"
-                    android:visibility="gone" />
+                    android:layout_alignParentBottom="true"/>
 
-                <LinearLayout
-                    android:id="@+id/lin_changetype"
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lin_group_introduce"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/person_color">
+
+                <TextView
+                    android:id="@+id/text_a"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="群介绍"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/beijing"
+                    android:textSize="@dimen/wt_login_text_wjmm" />
+
+                <TextView
+                    android:id="@+id/et_jieshao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:layout_toRightOf="@id/text_a"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:text="本群还没有介绍~~"
+                    android:textColor="@color/wt_login_third"
+                    android:textSize="@dimen/wt_edittext_default_text" />
+
+                <TextView
+                    android:id="@+id/tv_jiaqun"
                     android:layout_width="match_parent"
-                    android:layout_height="50dip"
-                    android:background="@drawable/person_color"
-                    android:gravity="left|center"
-                    android:visibility="gone" >
+                    android:layout_height="0.1dip"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/text_line_1" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="15dp"
-                        android:paddingLeft="20dp"
-                        android:paddingTop="15dp"
-                        android:text="更改群类型"
-                        android:textColor="@color/gray" />
+            </RelativeLayout>
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="18dp"
-                        android:layout_weight="1"
-                        android:gravity="right|center" >
+            <RelativeLayout
+                android:id="@+id/lin_jiaqun"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:visibility="gone"
+                android:background="@drawable/person_color" >
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@mipmap/live_more" />
-                    </LinearLayout>
-                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="加群消息"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/beijing"
+                    android:textSize="@dimen/wt_login_text_wjmm" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="13dp"
+                    android:src="@mipmap/live_more" />
+
+                <TextView
+                    android:id="@+id/tv_shenhe"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/view_color" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lin_groupapply"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:visibility="gone"
+                android:background="@drawable/person_color" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="审核消息"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/beijing"
+                    android:textSize="@dimen/wt_login_text_wjmm" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="13dp"
+                    android:src="@mipmap/live_more" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/view_color"
+                    android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lin_changetype"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/person_color"
+                android:visibility="gone" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:layout_centerVertical="true"
+                    android:text="更改群类型"
+                    android:textColor="@color/gray" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="13dp"
+                    android:src="@mipmap/live_more" />
 
                 <TextView
                     android:id="@+id/tv_gaimima"
                     android:layout_width="match_parent"
-                    android:layout_height="0.1dip"
-                    android:background="@color/text_line_1" />
+                    android:layout_height="0.5dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/view_color" />
 
-                <LinearLayout
-                    android:id="@+id/lin_modifypassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dip"
-                    android:background="@drawable/person_color"
-                    android:gravity="left|center" >
+            </RelativeLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="15dp"
-                        android:paddingLeft="20dp"
-                        android:paddingTop="15dp"
-                        android:text="更改群密码"
-                        android:textColor="@color/beijing"
-                        android:textSize="@dimen/wt_login_text_wjmm" />
+            <RelativeLayout
+                android:id="@+id/lin_modifypassword"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:visibility="gone"
+                android:background="@drawable/person_color">
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="18dp"
-                        android:layout_weight="1"
-                        android:gravity="right|center" >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="更改群密码"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/beijing"
+                    android:textSize="@dimen/wt_login_text_wjmm" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@mipmap/live_more" />
-                    </LinearLayout>
-                </LinearLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="13dp"
+                    android:src="@mipmap/live_more" />
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="0.1dip"
-                    android:background="@color/text_line_1" />
+                    android:layout_height="0.5dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/view_color" />
 
-                <LinearLayout
-                    android:id="@+id/lin_yijiao"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dip"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/person_color"
-                    android:gravity="left|center" >
+            </RelativeLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="15dp"
-                        android:paddingLeft="20dp"
-                        android:paddingTop="15dp"
-                        android:text="移交管理权限"
-                        android:textColor="@color/beijing"
-                        android:textSize="@dimen/wt_login_text_wjmm" />
+            <RelativeLayout
+                android:id="@+id/lin_yijiao"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:visibility="gone"
+                android:background="@drawable/person_color">
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="18dp"
-                        android:layout_weight="1"
-                        android:gravity="right|center" >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="移交管理权限"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/beijing"
+                    android:textSize="@dimen/wt_login_text_wjmm" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@mipmap/live_more" />
-                    </LinearLayout>
-                </LinearLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="13dp"
+                    android:src="@mipmap/live_more" />
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="0.1dip"
-                    android:background="@color/text_line_1" />
-            </LinearLayout>
+                    android:layout_height="0.5dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/view_color" />
 
-            <TextView
+            </RelativeLayout>
+
+            <Button
                 android:id="@+id/tv_delete"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="15dp"
+                android:layout_height="40dp"
+                android:layout_margin="15dp"
                 android:background="@drawable/zhuxiao_press"
-                android:gravity="center"
-                android:padding="10dip"
                 android:text="退出该群"
                 android:textColor="@color/WHITE"
                 android:textSize="@dimen/wt_button_default_text" />
+
         </LinearLayout>
+
     </ScrollView>
 
 </LinearLayout>

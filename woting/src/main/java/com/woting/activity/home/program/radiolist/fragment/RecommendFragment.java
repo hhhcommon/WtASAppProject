@@ -62,9 +62,8 @@ public class RecommendFragment extends Fragment{
 	protected List<RankInfo> SubList;
 	protected RadioListAdapter adapter;
 	private int RefreshType;				// refreshType 1为下拉加载 2为上拉加载更多
-	private View headView;					// 头部视图
-	private RollPagerView mLoopViewPager;
-	private int pageSize;
+//	private View headView;					// 头部视图
+//	private RollPagerView mLoopViewPager;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -78,9 +77,9 @@ public class RecommendFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if(rootView == null){
 			rootView = inflater.inflate(R.layout.fragment_radio_list_layout, container, false);
-			headView = LayoutInflater.from(context).inflate(R.layout.headview_acitivity_radiolist, null);
+            View headView = LayoutInflater.from(context).inflate(R.layout.headview_acitivity_radiolist, null);
 			// 轮播图
-			mLoopViewPager= (RollPagerView) headView.findViewById(R.id.slideshowView);
+            RollPagerView mLoopViewPager= (RollPagerView) headView.findViewById(R.id.slideshowView);
 			mLoopViewPager.setAdapter(new LoopAdapter(mLoopViewPager));
 			mLoopViewPager.setHintView(new IconHintView(context,R.mipmap.indicators_now,R.mipmap.indicators_default));
 			mListView = (XListView) rootView.findViewById(R.id.listview_fm);
@@ -122,75 +121,58 @@ public class RecommendFragment extends Fragment{
 	 */
 	public void sendRequest(){
 		VolleyRequest.RequestPost(GlobalConfig.getContentUrl, setParam(), new VolleyCallback() {
-			private String ResultList;
-			private String StringSubList;
 			private String ReturnType;
 
 			@Override
 			protected void requestSuccess(JSONObject result) {
-				if (dialog != null) {
-					dialog.dismiss();
-				}
+				if (dialog != null) dialog.dismiss();
 				((RadioListActivity)getActivity()).closeDialog();
 				page++;
 				try {
 					ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
+                        SubList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
+                        String pageSizeString = arg1.getString("PageSize");
+                        String allCountString = arg1.getString("AllCount");
+                        if (allCountString != null && !allCountString.equals("") && pageSizeString != null && !pageSizeString.equals("")) {
+                            int allCountInt = Integer.valueOf(allCountString);
+                            int pageSizeInt = Integer.valueOf(pageSizeString);
+                            if(allCountInt < 10 || pageSizeInt < 10){
+                                mListView.stopLoadMore();
+                                mListView.setPullLoadEnable(false);
+                            }else{
+                                mListView.setPullLoadEnable(true);
+                                if (allCountInt  % pageSizeInt == 0) {
+                                    pageSizeNum = allCountInt  / pageSizeInt;
+                                } else {
+                                    pageSizeNum = allCountInt  / pageSizeInt + 1;
+                                }
+                            }
+                        }
+                        if (RefreshType == 1) {
+                            mListView.stopRefresh();
+                            newList.clear();
+                            newList.addAll(SubList);
+                            adapter = new RadioListAdapter(context, newList);
+                            mListView.setAdapter(adapter);
+                        } else if (RefreshType == 2) {
+                            mListView.stopLoadMore();
+                            newList.addAll(SubList);
+                            adapter.notifyDataSetChanged();
+                        }
+                        setOnItem();
+                    } else {
+                        ToastUtils.show_allways(context, "暂没有该分类数据");
+                    }
 				} catch (JSONException e) {
 					e.printStackTrace();
-				}
-				if (ReturnType != null && ReturnType.equals("1001")) {
-					try {
-						// 获取列表
-						ResultList = result.getString("ResultList");
-						JSONTokener jsonParser = new JSONTokener(ResultList);
-						JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-						StringSubList = arg1.getString("List");
-						String pageSizeTemp = arg1.getString("PageSize");
-						String AllCountTemp = arg1.getString("AllCount");
-						if(Integer.valueOf(pageSizeTemp) < 10){
-							mListView.stopLoadMore();
-							mListView.setPullLoadEnable(false);
-						}else{
-							mListView.setPullLoadEnable(true);
-						}
-						if (AllCountTemp != null && !AllCountTemp.equals("") && pageSizeTemp != null && !pageSizeTemp.equals("")) {
-							int AllCount = Integer.valueOf(AllCountTemp);
-							pageSize = Integer.valueOf(pageSizeTemp);
-							// 先求余 如果等于0 最后结果不加1 如果不等于0 结果加一
-							if (AllCount  % pageSize == 0) {
-								pageSizeNum = AllCount  / pageSize;
-							} else {
-								pageSizeNum = AllCount  / pageSize + 1;
-							}
-						} else {
-							ToastUtils.show_allways(context, "页码获取异常");
-						}
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-					SubList = new Gson().fromJson(StringSubList, new TypeToken<List<RankInfo>>() {}.getType());
-					if (RefreshType == 1) {
-						mListView.stopRefresh();
-						newList.clear();
-						newList.addAll(SubList);
-						adapter = new RadioListAdapter(context, newList);
-						mListView.setAdapter(adapter);
-					} else if (RefreshType == 2) {
-						mListView.stopLoadMore();
-						newList.addAll(SubList);
-						adapter.notifyDataSetChanged();
-					}
-					setOnItem();
-				} else {
-					ToastUtils.show_allways(context, "暂没有该分类数据");
 				}
 			}
 
 			@Override
 			protected void requestError(VolleyError error) {
-				if (dialog != null) {
-					dialog.dismiss();
-				}
+				if (dialog != null) dialog.dismiss();
 				((RadioListActivity)getActivity()).closeDialog();
 			}
 		});
@@ -231,7 +213,7 @@ public class RecommendFragment extends Fragment{
 							String playContentDesc = newList.get(position - 2).getCurrentContent();
 							String playNum = newList.get(position - 2).getWatchPlayerNum();
 							String playZanType = "0";
-							String playFrom = "";
+							String playFrom = newList.get(position - 2).getContentPub();
 							String playFromId = "";
 							String playFromUrl = "";
 							String playAddTime = Long.toString(System.currentTimeMillis());
@@ -245,7 +227,7 @@ public class RecommendFragment extends Fragment{
 							String sequDesc=newList.get(position-2).getSequDesc();
 							String sequImg=newList.get(position-2).getSequImg();
 
-							//如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+							// 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
 							PlayerHistory history = new PlayerHistory(
 									playerName,  playerImage, playUrl, playUrI,playMediaType,
 									playAllTime, playInTime, playContentDesc, playNum,

@@ -17,7 +17,7 @@ import com.woting.common.config.GlobalConfig;
 
 import java.util.List;
 
-public class joingrouplistadapter extends BaseAdapter implements OnClickListener{
+public class JoinGroupAdapter extends BaseAdapter implements OnClickListener{
 	private List<CheckInfo> list;
 	private Context context;
 	private Callback mCallback;
@@ -27,7 +27,7 @@ public class joingrouplistadapter extends BaseAdapter implements OnClickListener
 		public void click(View v);
 	}
 
-	public joingrouplistadapter(Context context, List<CheckInfo> list,Callback callback) {
+	public JoinGroupAdapter(Context context, List<CheckInfo> list, Callback callback) {
 		super();
 		this.list = list;
 		this.context = context;

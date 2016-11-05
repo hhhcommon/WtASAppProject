@@ -51,7 +51,9 @@ import com.woting.activity.interphone.linkman.view.SideBar.OnTouchingLetterChang
 import com.woting.activity.interphone.main.DuiJiangActivity;
 import com.woting.activity.interphone.message.activity.NewsActivity;
 import com.woting.activity.login.login.activity.LoginActivity;
+import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
@@ -86,7 +88,6 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 	 */
 	private PinyinComparator pinyinComparator;
 	private FragmentActivity context;
-//	private boolean headviewshow;
 	private MessageReceiver Receiver;
 	private SharedPreferences sharedPreferences;
 	private String islogin;
@@ -96,7 +97,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 	private int type = 1;			//1.个人2.组
 	private TalkGroupInside group;
 	private TalkGroupAdapter adapter_group;
-	private List<TalkGroupInside> grouplist = new ArrayList<TalkGroupInside>();
+	private List<TalkGroupInside> grouplist = new ArrayList<>();
 	private List<TalkGroupInside> srclist_g;
 	private List<TalkPersonInside> srclist_p;
 	private String id;
@@ -118,15 +119,14 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		headviewshow = false;
 		context = this.getActivity();
 		characterParser = CharacterParser.getInstance();	// 实例化汉字转拼音类
 		pinyinComparator = new PinyinComparator();
-		if(Receiver == null) {								//注册广播接收socketservice的数据
+		if(Receiver == null) {								//注册广播接收socketService的数据
 			Receiver = new MessageReceiver();
 			IntentFilter filter = new IntentFilter();
-			filter.addAction("push_refreshlinkman");
-			filter.addAction("push_newperson");
+			filter.addAction(BroadcastConstants.PUSH_REFRESH_LINKMAN);
+			filter.addAction(BroadcastConstants.PUSH_NEWPERSON);
 			context.registerReceiver(Receiver, filter);
 		}
 		Dialog();
@@ -144,13 +144,13 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 
 	/**
 	 * 1.判断是否登录 
-	 * 2.登录了若personrefresh为"true",则刷新数据，否则不处理
-	 * 3.若未登录，则隐藏listview界面，展示咖啡的界面
+	 * 2.登录了若personRefresh为"true",则刷新数据，否则不处理
+	 * 3.若未登录，则隐藏listView界面，展示咖啡的界面
 	 */
 	@Override
 	public void onResume() {
 		super.onResume();
-		sharedPreferences = getActivity().getSharedPreferences("wotingfm", context.MODE_PRIVATE);
+		sharedPreferences = BSApplication.SharedPreferences;
 		islogin = sharedPreferences.getString(StringConstant.ISLOGIN, "false");
 		if (islogin.equals("true")) {
 			lin_second.setVisibility(View.GONE);
@@ -239,7 +239,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 	 * @param filterStr
 	 */
 	private List<TalkPersonInside> filterData(String filterStr) {
-		List<TalkPersonInside> filterDateList = new ArrayList<TalkPersonInside>();
+		List<TalkPersonInside> filterDateList = new ArrayList<>();
 		filterDateList.clear();
 		for (TalkPersonInside sortModel : srclist_p) {
 			String name = sortModel.getName();
@@ -283,10 +283,10 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			if(action.equals("push_refreshlinkman")){
+			if(action.equals(BroadcastConstants.PUSH_REFRESH_LINKMAN)){
 				send();
 				ToastUtils.show_allways(context, "重新获取了新数据");
-			}else if(action.equals("push_newperson")){
+			}else if(action.equals(BroadcastConstants.PUSH_NEWPERSON)){
 				String messages = intent.getStringExtra("outmessage");
 				if(messages!=null&&!messages.equals("")){
 					message=messages;
@@ -470,7 +470,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				String search_name = s.toString();
-				if (search_name == null || search_name.equals("") || search_name.trim().equals("")) {
+				if (search_name.trim().equals("")) {
 					image_clear.setVisibility(View.INVISIBLE);
 					tvNofriends.setVisibility(View.GONE);		// 关键词为空
 					sortListView.setVisibility(View.VISIBLE);

@@ -112,8 +112,18 @@ public class PlayerListAdapter extends BaseAdapter {
 			}else{
 				holder.textview_ranktitle.setText("woting_music");
 			}
-			
-			//节目时长
+
+			if(searchlist.getPlayerAllTime()!=null&&!searchlist.getPlayerAllTime().equals("")) {
+
+				int minute = Integer.valueOf(searchlist.getPlayerAllTime()) / (1000 * 60);
+				int second = (Integer.valueOf(searchlist.getPlayerAllTime()) / 1000) % 60;
+				if(second < 10){
+					holder.textPlayTime.setText(minute + "\'" + " " + "0" + second + "\"");
+				}else{
+					holder.textPlayTime.setText(minute + "\'" + " " + second + "\"");
+				}
+			}else{
+				//节目时长
 			if (searchlist.getContentTimes() == null
 					|| searchlist.getContentTimes().equals("")
 					|| searchlist.getContentTimes().equals("null")) {
@@ -126,6 +136,7 @@ public class PlayerListAdapter extends BaseAdapter {
 				}else{
 					holder.textPlayTime.setText(minute + "\'" + " " + second + "\"");
 				}
+			}
 			}
 		}
 		return convertView;

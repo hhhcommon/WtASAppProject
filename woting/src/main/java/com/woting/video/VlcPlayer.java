@@ -44,6 +44,11 @@ public class VlcPlayer implements WtAudioPlay {
 	public void play(String url) {
 		this.Url = url;
 		if(url != null){
+		/*	try{
+				Thread.sleep(500);
+			}catch (Exception e){
+				e.printStackTrace();
+			}*/
 			audioPlay.playMRL(Url);	
 		}
 	}
@@ -130,13 +135,12 @@ public class VlcPlayer implements WtAudioPlay {
 			case EventHandler.MediaPlayerPlaying:
 				Log.e("url", "MediaPlayerPlaying()"+Url);
 				break;
-			case EventHandler.MediaPlayerEndReached:
+			case EventHandler.MediaPlayerEndReached://这个回调
 				Log.e("url", "MediaPlayerEndReached()");
 				PlayerFragment.playNext();
 			case EventHandler.MediaPlayerBuffering:
 	/*			String s=audioPlay.getCachePath();
 				int a=audioPlay.getNetworkCaching();
-
 				float s1=msg.getData().getFloat("data");
 				Log.e("缓冲了",""+msg.getData().getFloat("data"));*/
 				break;
