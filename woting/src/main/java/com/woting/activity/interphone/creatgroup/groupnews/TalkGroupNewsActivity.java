@@ -532,7 +532,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
                 startActivity(intent2);
                 break;
             case R.id.lin_jiaqun:// 加群消息
-                startToActivity(HandleGroupApplyActivity.class, 4);
+                startToActivity(HandleGroupApplyActivity.class, 2);
                 break;
             case R.id.image_touxiang:// 修改群头像
                 if (groupCreator.equals(CommonUtils.getUserId(context))) {
@@ -700,7 +700,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
             if(lists.get(position).getType() == 2) {
                 startToActivity(GroupMemberAddActivity.class);
             } else if(lists.get(position).getType() == 3) {
-                startToActivity(GroupMemberDelActivity.class);
+                startToActivity(GroupMemberDelActivity.class, 2);
             }
         }
     }

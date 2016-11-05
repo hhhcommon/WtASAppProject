@@ -11,7 +11,6 @@ import android.graphics.Matrix;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
@@ -30,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.woting.R;
+import com.woting.activity.baseactivity.AppBaseFragmentActivity;
 import com.woting.activity.person.favorite.fragment.RadioFragment;
 import com.woting.activity.person.favorite.fragment.SequFragment;
 import com.woting.activity.person.favorite.fragment.SoundFragment;
@@ -45,7 +45,7 @@ import java.util.ArrayList;
 /**
  * 我喜欢的
  */
-public class FavoriteActivity extends FragmentActivity implements OnClickListener {
+public class FavoriteActivity extends AppBaseFragmentActivity implements OnClickListener {
     private static FavoriteActivity context;
     private MyBroadcast mBroadcast;
     private TotalFragment totalFragment;
@@ -87,13 +87,7 @@ public class FavoriteActivity extends FragmentActivity implements OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        // 透明状态栏
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    // 透明导航栏
-
         context = this;
-        MyActivityManager mam = MyActivityManager.getInstance();
-        mam.pushOneActivity(context);
-
         // 注册广播
         mBroadcast = new MyBroadcast();
         IntentFilter intentFilter = new IntentFilter();
@@ -187,7 +181,7 @@ public class FavoriteActivity extends FragmentActivity implements OnClickListene
         image.setLayoutParams(lp);
         bmpW = BitmapFactory.decodeResource(getResources(), R.mipmap.left_personal_bg).getWidth();
         DisplayMetrics dm = new DisplayMetrics();
-        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
         int screenW = dm.widthPixels;
         offset = (screenW / 5 - bmpW) / 2;
         Matrix matrix = new Matrix();

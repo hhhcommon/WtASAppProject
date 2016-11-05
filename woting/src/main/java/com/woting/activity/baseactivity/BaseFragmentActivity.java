@@ -1,6 +1,7 @@
 package com.woting.activity.baseactivity;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
@@ -13,11 +14,13 @@ import android.view.WindowManager;
  * 邮箱：645700751@qq.com
  */
 public abstract class BaseFragmentActivity extends FragmentActivity {
+    protected Context context;
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        // 透明状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    // 透明导航栏
     }

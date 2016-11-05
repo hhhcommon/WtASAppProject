@@ -129,7 +129,7 @@ public class GroupMemberDelActivity extends BaseActivity implements OnClickListe
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     try {
-                        userList = new Gson().fromJson(result.getString("userList"), new TypeToken<List<UserInfo>>() {}.getType());
+                        userList = new Gson().fromJson(result.getString("UserList"), new TypeToken<List<UserInfo>>() {}.getType());
                         if(userList == null || userList.size() == 0) {
                             ToastUtils.show_allways(context, "当前组内已经没有其他联系人了");
                             return ;
@@ -225,6 +225,8 @@ public class GroupMemberDelActivity extends BaseActivity implements OnClickListe
         userList2.addAll(filterDateList);
         if (filterDateList.size() == 0) {
             textNoFriend.setVisibility(View.VISIBLE);
+        } else {
+            textNoFriend.setVisibility(View.GONE);
         }
     }
 
