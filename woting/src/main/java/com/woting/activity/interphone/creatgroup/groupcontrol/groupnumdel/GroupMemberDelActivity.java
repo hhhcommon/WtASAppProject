@@ -1,6 +1,5 @@
 package com.woting.activity.interphone.creatgroup.groupcontrol.groupnumdel;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Editable;
@@ -8,18 +7,16 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.umeng.socialize.utils.Log;
 import com.woting.R;
+import com.woting.activity.baseactivity.BaseActivity;
 import com.woting.activity.interphone.creatgroup.groupcontrol.groupnumdel.adapter.CreateGroupMembersDelAdapter;
 import com.woting.activity.interphone.creatgroup.groupcontrol.groupnumdel.adapter.CreateGroupMembersDelAdapter.friendCheck;
 import com.woting.activity.interphone.creatgroup.groupcontrol.groupnumdel.model.UserInfo;
@@ -29,7 +26,6 @@ import com.woting.activity.interphone.linkman.view.SideBar;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.manager.MyActivityManager;
 import com.woting.util.CommonUtils;
 import com.woting.util.DialogUtils;
 import com.woting.util.ToastUtils;
@@ -46,384 +42,319 @@ import java.util.List;
  * @author 辛龙
  * 2016年3月25日
  */
-public class GroupMemberDelActivity extends Activity implements OnClickListener {
-	private GroupMemberDelActivity context;
-	private String groupid;
-	private Dialog dialog;
-	private CharacterParser characterParser;
-	private PinyinComparator_b pinyinComparator;
-	private CreateGroupMembersDelAdapter adapter;
-	private TextView tvNofriends;
-	private SideBar sideBar;
-	private ListView listView;
-	private EditText et_searh_content;
-	private LinearLayout lin_head_left;
-	private ImageView image_clear;
-	private LinearLayout lin_head_right;
-	private TextView tv_head_name;
-	private List<UserInfo>  userlist;
-	private List<UserInfo> userlist2 = new ArrayList<UserInfo>();
-	private List<String> dellist=new ArrayList<String>();
-	private TextView tv_head_right;
-	private TextView dialogs;
-	private String tag = "GROUP_MEMBER_DEL_VOLLEY_REQUEST_CANCEL_TAG";
-	private boolean isCancelRequest;
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_groupmembers_add);
-		context = this;
-		characterParser = CharacterParser.getInstance();			// 实例化汉字转拼音类
-		pinyinComparator = new PinyinComparator_b();
-		MyActivityManager mam = MyActivityManager.getInstance();
-		mam.pushOneActivity(context);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);		// 透明状态栏
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);	// 透明导航栏
-		setview();
-		groupid= this.getIntent().getStringExtra("GroupId");		// 获取传递给当前用户组的GroupId
-		setlistener();
-		if (groupid != null && !groupid.equals("")) {
-			if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-				dialog = DialogUtils.Dialogph(context, "正在获取群成员信息", dialog);
-				send();
-			} else {
-				ToastUtils.show_allways(context, "网络失败，请检查网络");
-			}
-		} else {
-			ToastUtils.show_allways(context, "组ID为空，数据异常，请返回上一级界面重试");
-		}
-	}
+public class GroupMemberDelActivity extends BaseActivity implements OnClickListener, TextWatcher {
+    private CharacterParser characterParser = CharacterParser.getInstance();// 实例化汉字转拼音类
+    private PinyinComparator_b pinyinComparator = new PinyinComparator_b();
+    private CreateGroupMembersDelAdapter adapter;
+    private List<UserInfo> userList;
+    private List<UserInfo> userList2 = new ArrayList<>();
+    private List<String> delList = new ArrayList<>();
+    private SideBar sideBar;
+    
+    private Dialog dialog;
+    private ListView listView;
+    private EditText editSearchContent;
+    private TextView textHeadName;
+    private TextView textNoFriend;
+    private TextView textHeadRight;
+    private TextView dialogs;
+    private ImageView imageClear;
 
-	private void send() {
-		JSONObject jsonObject =VolleyRequest.getJsonObject(context);
-		try {
-			jsonObject.put("GroupId", groupid);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		
-		VolleyRequest.RequestPost(GlobalConfig.grouptalkUrl, tag, jsonObject, new VolleyCallback() {
-//			private String SessionId;
-			private String ReturnType;
-			private String Message;
+    private String groupId;
+    private String tag = "GROUP_MEMBER_DEL_VOLLEY_REQUEST_CANCEL_TAG";
+    private boolean isCancelRequest;
 
-			@Override
-			protected void requestSuccess(JSONObject result) {
-				if (dialog != null) {
-					dialog.dismiss();
-				}
-				if(isCancelRequest){
-					return ;
-				}
-				Log.e("返回的获取好友列表",""+result.toString());
-				String userlist1 = null;
-				try {
-					ReturnType = result.getString("ReturnType");
-//					SessionId = result.getString("SessionId");
-					userlist1 = result.getString("UserList");
-					Message = result.getString("Message");					
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				if (ReturnType != null && ReturnType.equals("1001")) {
-					try {
-						userlist = new Gson().fromJson(userlist1, new TypeToken<List<UserInfo>>() {}.getType());
-					} catch (Exception e1) {
-						e1.printStackTrace();
-					}
-					// 从服务器返回的list当中去掉用户自己
-					String userid = CommonUtils.getUserId(context);
-					if(userlist!=null){
-					for (int i = 0; i < userlist.size(); i++) {
-						if (userlist.get(i).getUserId().equals(userid)) {
-							userlist.remove(i);
-						}
-					}
-					}
-					if (userlist.size() == 0) {
-						ToastUtils.show_short(context, "当前组内已经没有其他联系人了");
-					} else {
-						userlist2.clear();
-						userlist2.addAll(userlist);
-						filledData(userlist2);
-						Collections.sort(userlist2, pinyinComparator);
-						adapter = new CreateGroupMembersDelAdapter(context, userlist2);
-						listView.setAdapter(adapter);
-						setinterface();
-					}
-				}
-				if (ReturnType != null && ReturnType.equals("1002")) {
-					ToastUtils.show_allways(context, "无法获取组Id");
-				} else if (ReturnType != null && ReturnType.equals("T")) {
-					ToastUtils.show_allways(context, "异常返回值");
-				} else if (ReturnType != null && ReturnType.equals("1011")) {
-					ToastUtils.show_allways(context, "组中无成员");
-				} else {
-					if (Message != null && !Message.trim().equals("")) {
-						ToastUtils.show_allways(context, Message + "");
-					}
-				}
-			}
-			
-			@Override
-			protected void requestError(VolleyError error) {
-				if (dialog != null) {
-					dialog.dismiss();
-				}
-			}
-		});
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_groupmembers_add);
 
-	private  void  filledData(List<UserInfo> person) {
-		for (int i = 0; i < person.size(); i++) {
-			person.get(i).setName(person.get(i).getUserName());
-			// 汉字转换成拼音
-			String pinyin = characterParser.getSelling(person.get(i).getUserName());
-			String sortString = pinyin.substring(0, 1).toUpperCase();
-			// 正则表达式，判断首字母是否是英文字母
-			if (sortString.matches("[A-Z]")) {
-				person.get(i).setSortLetters(sortString.toUpperCase());
-			} else {
-				person.get(i).setSortLetters("#");
-			}
-		}
-	}
+        initView();
+    }
 
-	protected void setinterface() {
-		adapter.setOnListener(new friendCheck() {
-			@Override
-			public void checkposition(int position) {
-				if (userlist2.get(position).getCheckType() == 1) {
-					userlist2.get(position).setCheckType(2);
-				} else {
-					userlist2.get(position).setCheckType(1);
-				}
-				adapter.notifyDataSetChanged();
-				int num = 0;
-				for(int i=0;i<userlist2.size();i++){
-					if(userlist2.get(i).getCheckType()==2){
-						num++;
-					}
-				}
-				tv_head_right.setText("确定("+String.valueOf(num)+")");
-			}
-		});
-	}
+    private void initView() {
+        findViewById(R.id.head_left_btn).setOnClickListener(this);
+        findViewById(R.id.head_right_btn).setOnClickListener(this);// 添加按钮
 
-	private void search(String search_name) {
-		List<UserInfo> filterDateList = new ArrayList<UserInfo>();
-		if (TextUtils.isEmpty(search_name)) {
-			filterDateList = userlist2;
-			tvNofriends.setVisibility(View.GONE);
-		} else {
-			filterDateList.clear();
-			for (UserInfo sortModel : userlist2) {
-				String name = sortModel.getName();
-				if (name.indexOf(search_name.toString()) != -1 
-						|| characterParser.getSelling(name).startsWith(search_name.toString())) {
-					filterDateList.add(sortModel);
-				}
-			}
-		}
-		// 根据a-z进行排序
-		Collections.sort(filterDateList, pinyinComparator);
-		adapter.ChangeDate(filterDateList);
-		userlist2.clear();
-		userlist2.addAll(filterDateList);
-		if (filterDateList.size() == 0) {
-			tvNofriends.setVisibility(View.VISIBLE);
-		}
-	}
+        editSearchContent = (EditText) findViewById(R.id.et_search);// 搜索控件
+        editSearchContent.addTextChangedListener(this);
 
-	private void setlistener() {
-		lin_head_left.setOnClickListener(this);
-		lin_head_right.setOnClickListener(this);
-		image_clear.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				image_clear.setVisibility(View.INVISIBLE);
-				et_searh_content.setText("");
-				tvNofriends.setVisibility(View.GONE);
-			}
-		});
-		
-		// 当输入框输入过汉字，且回复0后就要调用使用userlist1的原表数据
-		et_searh_content.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-			}
-			
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-			
-			@Override
-			public void afterTextChanged(Editable s) {
-				String search_name = s.toString();
-				if (search_name == null || search_name.equals("") || search_name.trim().equals("")) {
-					image_clear.setVisibility(View.INVISIBLE);
-					tvNofriends.setVisibility(View.GONE);
-					// 关键词为空
-					if (userlist == null || userlist.size() == 0) {
-						listView.setVisibility(View.GONE);
-					} else {
-						listView.setVisibility(View.VISIBLE);
-						userlist2.clear();
-						userlist2.addAll(userlist);
-						filledData(userlist2);
-						Collections.sort(userlist2, pinyinComparator);
-						adapter = new CreateGroupMembersDelAdapter(context,userlist2);
-						listView.setAdapter(adapter);
-						setinterface();
-					}
-				} else {
-					userlist2.clear();
-					userlist2.addAll(userlist);
-					image_clear.setVisibility(View.VISIBLE);
-					search(search_name);
-				}
-			}
-		});
-	}
+        imageClear = (ImageView) findViewById(R.id.image_clear);
+        imageClear.setOnClickListener(this);
 
-	private void setview() {
-		tvNofriends = (TextView) findViewById(R.id.title_layout_no_friends);
-		sideBar = (SideBar) findViewById(R.id.sidrbar);
-		dialogs = (TextView) findViewById(R.id.dialog);
-		sideBar.setTextView(dialogs);
-		listView = (ListView) findViewById(R.id.country_lvcountry);
-		et_searh_content = (EditText) findViewById(R.id.et_search);			// 搜索控件
-		lin_head_left = (LinearLayout) findViewById(R.id.head_left_btn);
-		image_clear = (ImageView) findViewById(R.id.image_clear);
-		lin_head_left = (LinearLayout) findViewById(R.id.head_left_btn);
-		lin_head_right = (LinearLayout) findViewById(R.id.head_right_btn);	// 添加按钮
-		tv_head_right = (TextView) findViewById(R.id.tv_head);
-		tv_head_name = (TextView) findViewById(R.id.head_name_tv);
-		tv_head_name.setText("删除群成员");
-	}
+        dialogs = (TextView) findViewById(R.id.dialog);
+        sideBar = (SideBar) findViewById(R.id.sidrbar);
+        sideBar.setTextView(dialogs);
 
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.head_left_btn:
-			finish();
-			break;
-		case R.id.head_right_btn:
-			// 此处需要执行添加好友的请求，现在还没有，需要等待这个接口出来之后调用
-			// 清空原有list
-			if (userlist2!=null&&userlist2.size() >0) {
-				for (int i = 0; i < userlist2.size(); i++) {
-					if (userlist2.get(i).getCheckType() == 2) {
-						dellist.add(userlist2.get(i).getUserId());
-					}
-				}
-			} 
-			if (dellist!=null&&dellist.size() >0) {
-				// 发送进入组的邀请
-				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-					dialog = DialogUtils.Dialogph(context, "正在发送邀请", dialog);
-					sendMemberDelete();
-				} else {
-					ToastUtils.show_allways(context, "网络失败，请检查网络");
-				}
-			}else{
-				ToastUtils.show_allways(context, "请您勾选您要删除的成员");
-			}
-			break;
-		}
-	}
+        listView = (ListView) findViewById(R.id.country_lvcountry);
+        textNoFriend = (TextView) findViewById(R.id.title_layout_no_friends);
+        textHeadRight = (TextView) findViewById(R.id.tv_head);
+        textHeadName = (TextView) findViewById(R.id.head_name_tv);
+        textHeadName.setText("删除群成员");
 
-	private void sendMemberDelete() {
-		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-		try {
-			// 对s进行处理 去掉"[]"符号
-			String s = dellist.toString().replaceAll(" ", "");
-			jsonObject.put("UserIds", s.substring(1, s.length() - 1));
-			// groupid由上一个界面传递而来
-			jsonObject.put("GroupId", groupid);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		
-		VolleyRequest.RequestPost(GlobalConfig.KickOutMembersUrl, tag, jsonObject, new VolleyCallback() {
-			private String ReturnType;
-			private String Message;
-//			private String SessionId;
+        groupId = getIntent().getStringExtra("GroupId");
+        if (groupId != null && !groupId.equals("")) {
+            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                dialog = DialogUtils.Dialogph(context, "正在获取群成员信息", dialog);
+                send();
+            } else {
+                ToastUtils.show_allways(context, "网络失败，请检查网络");
+            }
+        } else {
+            ToastUtils.show_allways(context, "获取数据异常请返回重试!");
+        }
+    }
 
-			@Override
-			protected void requestSuccess(JSONObject result) {
-				if (dialog != null) {
-					dialog.dismiss();
-				}
-				if(isCancelRequest){
-					return ;
-				}
-				try {
-//					SessionId = result.getString("SessionId");
-					ReturnType = result.getString("ReturnType");
-					Message = result.getString("Message");
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				if (ReturnType != null && ReturnType.equals("1001")) {
-					ToastUtils.show_allways(context, "群成员已经成功删除");
-					setResult(1);
-					finish();
-				}else if (ReturnType != null && ReturnType.equals("1002")) {
-					ToastUtils.show_allways(context, "无法获取用户Id");
-				} else if (ReturnType != null && ReturnType.equals("T")) {
-					ToastUtils.show_allways(context, "异常返回值");
-				} else if (ReturnType != null && ReturnType.equals("200")) {
-					ToastUtils.show_allways(context, "尚未登录");
-				} else if (ReturnType != null && ReturnType.equals("1003")) {
-					ToastUtils.show_allways(context, "异常返回值");
-				} else if (ReturnType != null && ReturnType.equals("10021")) {
-					ToastUtils.show_allways(context, "用户不是该组的管理员");
-				} else if (ReturnType != null && ReturnType.equals("0000")) {
-					ToastUtils.show_allways(context, "无法获取相关的参数");
-				} else if (ReturnType != null && ReturnType.equals("1004")) {
-					ToastUtils.show_allways(context, "无法获取被踢出用户Id");
-				} else {
-					if (Message != null && !Message.trim().equals("")) {
-						ToastUtils.show_allways(context, Message + "");
-					}
-				}
-			}
-			
-			@Override
-			protected void requestError(VolleyError error) {
-				if (dialog != null) {
-					dialog.dismiss();
-				}
-			}
-		});
-	}
+    private void send() {
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("GroupId", groupId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		isCancelRequest = VolleyRequest.cancelRequest(tag);
-		MyActivityManager mam = MyActivityManager.getInstance();
-		mam.popOneActivity(context);
-		tvNofriends = null;
-		sideBar = null;
-		dialogs = null;
-		listView = null;
-		et_searh_content = null;
-		lin_head_left = null;
-		image_clear = null;
-		lin_head_left = null;
-		lin_head_right = null;
-		tv_head_right = null;
-		tv_head_name = null;
-		pinyinComparator = null;
-		userlist2.clear();
-		userlist2 = null;
-		userlist = null;
-		adapter = null;
-		pinyinComparator = null;
-		context = null;
-		setContentView(R.layout.activity_null);
-	}
+        VolleyRequest.RequestPost(GlobalConfig.grouptalkUrl, tag, jsonObject, new VolleyCallback() {
+            private String ReturnType;
+            private String Message;
+
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (dialog != null) dialog.dismiss();
+                if (isCancelRequest) return;
+                try {
+                    ReturnType = result.getString("ReturnType");
+                    Message = result.getString("Message");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (ReturnType != null && ReturnType.equals("1001")) {
+                    try {
+                        userList = new Gson().fromJson(result.getString("userList"), new TypeToken<List<UserInfo>>() {}.getType());
+                        if(userList == null || userList.size() == 0) {
+                            ToastUtils.show_allways(context, "当前组内已经没有其他联系人了");
+                            return ;
+                        }
+                        String userId = CommonUtils.getUserId(context);// 从返回的 list 当中去掉用户自己
+                        for (int i = 0; i < userList.size(); i++) {
+                            if (userList.get(i).getUserId().equals(userId)) {
+                                userList.remove(i);
+                            }
+                        }
+                        userList2.clear();
+                        userList2.addAll(userList);
+                        filledData(userList2);
+                        Collections.sort(userList2, pinyinComparator);
+                        listView.setAdapter(adapter = new CreateGroupMembersDelAdapter(context, userList2));
+                        setInterface();
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+                }
+                if (ReturnType != null && ReturnType.equals("1002")) {
+                    ToastUtils.show_allways(context, "无法获取组Id");
+                } else if (ReturnType != null && ReturnType.equals("T")) {
+                    ToastUtils.show_allways(context, "异常返回值");
+                } else if (ReturnType != null && ReturnType.equals("1011")) {
+                    ToastUtils.show_allways(context, "组中无成员");
+                } else {
+                    if (Message != null && !Message.trim().equals("")) {
+                        ToastUtils.show_allways(context, Message + "");
+                    }
+                }
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+                if (dialog != null) dialog.dismiss();
+                ToastUtils.showVolleyError(context);
+            }
+        });
+    }
+
+    private void filledData(List<UserInfo> person) {
+        for (int i = 0; i < person.size(); i++) {
+            person.get(i).setName(person.get(i).getUserName());
+            String pinyin = characterParser.getSelling(person.get(i).getUserName());
+            String sortString = pinyin.substring(0, 1).toUpperCase();
+            if (sortString.matches("[A-Z]")) {// 判断首字母是否是英文字母
+                person.get(i).setSortLetters(sortString.toUpperCase());
+            } else {
+                person.get(i).setSortLetters("#");
+            }
+        }
+    }
+
+    protected void setInterface() {
+        adapter.setOnListener(new friendCheck() {
+            @Override
+            public void checkposition(int position) {
+                if (userList2.get(position).getCheckType() == 1) {
+                    userList2.get(position).setCheckType(2);
+                } else {
+                    userList2.get(position).setCheckType(1);
+                }
+                adapter.notifyDataSetChanged();
+                int num = 0;
+                for (int i = 0; i < userList2.size(); i++) {
+                    if (userList2.get(i).getCheckType() == 2) {
+                        num++;
+                    }
+                }
+                textHeadRight.setText("确定(" + String.valueOf(num) + ")");
+            }
+        });
+    }
+
+    private void search(String search_name) {
+        List<UserInfo> filterDateList = new ArrayList<>();
+        if (TextUtils.isEmpty(search_name)) {
+            filterDateList = userList2;
+            textNoFriend.setVisibility(View.GONE);
+        } else {
+            filterDateList.clear();
+            for (UserInfo sortModel : userList2) {
+                String name = sortModel.getName();
+                if (name.contains(search_name)|| characterParser.getSelling(name).startsWith(search_name)) {
+                    filterDateList.add(sortModel);
+                }
+            }
+        }
+        Collections.sort(filterDateList, pinyinComparator);// 根据 a - z 进行排序
+        adapter.ChangeDate(filterDateList);
+        userList2.clear();
+        userList2.addAll(filterDateList);
+        if (filterDateList.size() == 0) {
+            textNoFriend.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.head_left_btn:
+                finish();
+                break;
+            case R.id.head_right_btn:
+                if (userList2 != null && userList2.size() > 0) {
+                    for (int i = 0; i < userList2.size(); i++) {
+                        if (userList2.get(i).getCheckType() == 2) {
+                            delList.add(userList2.get(i).getUserId());
+                        }
+                    }
+                }
+                if (delList != null && delList.size() > 0) {
+                    if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                        dialog = DialogUtils.Dialogph(context, "正在发送邀请", dialog);
+                        sendMemberDelete();
+                    } else {
+                        ToastUtils.show_allways(context, "网络失败，请检查网络");
+                    }
+                } else {
+                    ToastUtils.show_allways(context, "请您勾选您要删除的成员");
+                }
+                break;
+            case R.id.image_clear:
+                imageClear.setVisibility(View.INVISIBLE);
+                editSearchContent.setText("");
+                textNoFriend.setVisibility(View.GONE);
+                break;
+        }
+    }
+
+    private void sendMemberDelete() {
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            String s = delList.toString().replaceAll(" ", "");
+            jsonObject.put("UserIds", s.substring(1, s.length() - 1));
+            jsonObject.put("GroupId", groupId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        VolleyRequest.RequestPost(GlobalConfig.KickOutMembersUrl, tag, jsonObject, new VolleyCallback() {
+            private String ReturnType;
+            private String Message;
+
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (dialog != null) dialog.dismiss();
+                if (isCancelRequest) return;
+                try {
+                    ReturnType = result.getString("ReturnType");
+                    Message = result.getString("Message");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (ReturnType != null && ReturnType.equals("1001")) {
+                    ToastUtils.show_allways(context, "群成员已经成功删除");
+                    setResult(1);
+                    finish();
+                } else {
+                    if (Message != null && !Message.trim().equals("")) {
+                        ToastUtils.show_allways(context, Message + "");
+                    }
+                }
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+                if (dialog != null) dialog.dismiss();
+                ToastUtils.showVolleyError(context);
+            }
+        });
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        String search_name = s.toString();
+        if (search_name.trim().equals("")) {
+            imageClear.setVisibility(View.INVISIBLE);
+            textNoFriend.setVisibility(View.GONE);
+            if (userList == null || userList.size() == 0) {
+                listView.setVisibility(View.GONE);
+            } else {
+                listView.setVisibility(View.VISIBLE);
+                userList2.clear();
+                userList2.addAll(userList);
+                filledData(userList2);
+                Collections.sort(userList2, pinyinComparator);
+                listView.setAdapter(adapter = new CreateGroupMembersDelAdapter(context, userList2));
+                setInterface();
+            }
+        } else {
+            userList2.clear();
+            userList2.addAll(userList);
+            imageClear.setVisibility(View.VISIBLE);
+            search(search_name);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isCancelRequest = VolleyRequest.cancelRequest(tag);
+        textNoFriend = null;
+        sideBar = null;
+        dialogs = null;
+        listView = null;
+        editSearchContent = null;
+        imageClear = null;
+        textHeadRight = null;
+        textHeadName = null;
+        pinyinComparator = null;
+        userList2.clear();
+        userList2 = null;
+        userList = null;
+        adapter = null;
+        pinyinComparator = null;
+        setContentView(R.layout.activity_null);
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+    }
 }

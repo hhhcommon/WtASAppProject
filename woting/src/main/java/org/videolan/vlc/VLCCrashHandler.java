@@ -20,7 +20,14 @@
 
 package org.videolan.vlc;
 
+import android.os.Environment;
+import android.text.format.DateFormat;
+import android.util.Log;
+
+import org.videolan.vlc.util.Logcat;
+
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -29,12 +36,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.Thread.UncaughtExceptionHandler;
-
-import org.videolan.vlc.util.Logcat;
-
-import android.os.Environment;
-import android.text.format.DateFormat;
-import android.util.Log;
 
 public class VLCCrashHandler implements UncaughtExceptionHandler {
 
@@ -68,11 +69,16 @@ public class VLCCrashHandler implements UncaughtExceptionHandler {
 
         // Save the log on SD card if available
         if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            String sdcardPath = Environment.getExternalStorageDirectory().getPath();
+            String sdcardPath =Environment.getExternalStorageDirectory() + "/woting/vlclog/";
+            File dir = new File(sdcardPath);
+            if (!dir.exists()) {
+                if(!dir.mkdir()) {
+                    Log.w("vlc", "文件创建失败!");
+                }
+            }
             writeLog(stacktrace, sdcardPath + "/vlc_crash");
             writeLogcat(sdcardPath + "/vlc_logcat");
         }
-
         defaultUEH.uncaughtException(thread, ex);
     }
 

@@ -196,8 +196,8 @@ public class FindNewsResultActivity extends Activity implements OnClickListener 
 								if (GroupList.get(position - 1).getGroupCreator().equals(CommonUtils.getUserId(context))) {
 									Intent intent = new Intent(FindNewsResultActivity.this,TalkGroupNewsActivity.class);
 									Bundle bundle = new Bundle();
-									bundle.putSerializable("contact",GroupList.get(position - 1));
-									bundle.putString("type", "FindNewsResultActivity");
+									bundle.putSerializable("data",GroupList.get(position - 1));
+									bundle.putString("type", "groupaddactivity");
 									intent.putExtras(bundle);
 									startActivity(intent);
 								} else {

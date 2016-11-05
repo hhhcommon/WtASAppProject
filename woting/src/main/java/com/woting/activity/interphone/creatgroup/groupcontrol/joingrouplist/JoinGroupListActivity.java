@@ -18,8 +18,8 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
-import com.woting.activity.interphone.creatgroup.groupcontrol.joingrouplist.adapter.joingrouplistadapter;
-import com.woting.activity.interphone.creatgroup.groupcontrol.joingrouplist.adapter.joingrouplistadapter.Callback;
+import com.woting.activity.interphone.creatgroup.groupcontrol.joingrouplist.adapter.JoinGroupAdapter;
+import com.woting.activity.interphone.creatgroup.groupcontrol.joingrouplist.adapter.JoinGroupAdapter.Callback;
 import com.woting.activity.interphone.creatgroup.groupcontrol.joingrouplist.model.CheckInfo;
 import com.woting.activity.interphone.creatgroup.groupnews.model.GroupTalkInside;
 import com.woting.common.config.GlobalConfig;
@@ -46,7 +46,7 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 	private String groupid;
 	private ListView lv_jiaqun;
 	private LinearLayout lin_left;
-	protected joingrouplistadapter adapter;
+	protected JoinGroupAdapter adapter;
 	private List<CheckInfo> userlist ;
 	private Integer onclicktv;
 	private ArrayList<GroupTalkInside> list;
@@ -164,7 +164,7 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 							}
 						}						
 					}										
-					adapter = new joingrouplistadapter(context, userlist,context);
+					adapter = new JoinGroupAdapter(context, userlist,context);
 					lv_jiaqun.setAdapter(adapter);
 					lv_jiaqun.setOnItemLongClickListener(new OnItemLongClickListener() {
 

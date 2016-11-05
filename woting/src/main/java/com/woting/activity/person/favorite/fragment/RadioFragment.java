@@ -67,7 +67,7 @@ public class RadioFragment extends Fragment {
 	private String ReturnType;
 	private Intent mintent;
 	private SearchPlayerHistoryDao dbdao;
-	protected Integer pagesize;
+//	protected Integer pagesize;
 	private View linearNull;
 	private String tag = "RADIO_VOLLEY_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
@@ -264,7 +264,6 @@ public class RadioFragment extends Fragment {
 	private void send() {
 		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			// 模块属性
 			jsonObject.put("MediaType", "RADIO");
 			jsonObject.put("Page", String.valueOf(page));
 		} catch (JSONException e) {
@@ -272,8 +271,6 @@ public class RadioFragment extends Fragment {
 		}
 		
 		VolleyRequest.RequestPost(GlobalConfig.getFavoriteListUrl, tag, jsonObject, new VolleyCallback() {
-			private String ResultList;
-			private String StringSubList;
 			private String ReturnType;
 
 			@Override
@@ -290,80 +287,60 @@ public class RadioFragment extends Fragment {
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				if (ReturnType != null) {
-					if (ReturnType.equals("1001")) {
-						if(isDel){
-							ToastUtils.show_allways(context, "已删除");
-							isDel = false;
-						}
-						try {
-							// 获取列表
-							ResultList = result.getString("ResultList");
-							JSONTokener jsonParser = new JSONTokener(ResultList);
-							JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-							StringSubList = arg1.getString("FavoriteList");
-							String Allcount = arg1.getString("AllCount");
-							String PageSize = arg1.getString("PageSize");
-							if(Integer.valueOf(PageSize) < 10){
-								mlistView.stopLoadMore();
-								mlistView.setPullLoadEnable(false);
-							}else{
-								mlistView.setPullLoadEnable(true);
-							}
-							if (Allcount != null && !Allcount.equals("") && PageSize != null && !PageSize.equals("")) {
-								int allcount = Integer.valueOf(Allcount);
-								pagesize = Integer.valueOf(PageSize);
-								// 先求余 如果等于0 最后结果不加1 如果不等于0 结果加一
-								if (allcount % pagesize == 0) {
-									pagesizenum = allcount / pagesize;
-								} else {
-									pagesizenum = allcount / pagesize + 1;
-								}
-							} else {
-								ToastUtils.show_allways(context, "页码获取异常");
-							}
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-						SubList = new Gson().fromJson(StringSubList, new TypeToken<List<RankInfo>>() {}.getType());
-						if (RefreshType == 1) {
-							newlist.clear();
-							newlist.addAll(SubList);
-							if (adapter == null) {
-								adapter = new FavorListAdapter(context, newlist);
-								mlistView.setAdapter(adapter);
-							} else {
-								adapter.notifyDataSetChanged();
-							}
-							mlistView.stopRefresh();
-							setListener();
-						}else if (RefreshType == 2) {
-							mlistView.stopLoadMore();
-							newlist.addAll(SubList);
-							adapter.notifyDataSetChanged();
-							setListener();
-						}
-					} else {
-						if (ReturnType.equals("0000")) {
-							ToastUtils.show_short(context, "无法获取相关的参数");
-						} else if (ReturnType.equals("1002")) {
-							ToastUtils.show_short(context, "无此分类信息");
-						} else if (ReturnType.equals("1003")) {
-							ToastUtils.show_short(context, "无法获得列表");
-						} else if (ReturnType.equals("1011")) {
-							ToastUtils.show_short(context, "无数据");
-							mlistView.setVisibility(View.GONE);
-						}
-						// 无论何种返回值，都需要终止掉上拉刷新及下拉加载的滚动状态
-						if (RefreshType == 1) {
-							mlistView.stopRefresh();
-						} else {
-							mlistView.stopLoadMore();
-						}
-					}
-				} else {
-					ToastUtils.show_short(context, "ReturnType不能为空");
-				}
+				if (ReturnType != null && ReturnType.equals("1001")) {
+                    if(isDel){
+                        ToastUtils.show_allways(context, "已删除");
+                        isDel = false;
+                    }
+                    try {
+                        JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
+                        String allCountString = arg1.getString("AllCount");
+                        String pageSizeString = arg1.getString("PageSize");
+                        if (allCountString != null && !allCountString.equals("") && pageSizeString != null && !pageSizeString.equals("")) {
+                            int allCountInt = Integer.valueOf(allCountString);
+                            int pageSizeInt = Integer.valueOf(pageSizeString);
+                            if(pageSizeInt < 10 || allCountInt < 10){
+                                mlistView.stopLoadMore();
+                                mlistView.setPullLoadEnable(false);
+                            }else{
+                                mlistView.setPullLoadEnable(true);
+                                if (allCountInt % pageSizeInt == 0) {
+                                    pagesizenum = allCountInt / pageSizeInt;
+                                } else {
+                                    pagesizenum = allCountInt / pageSizeInt + 1;
+                                }
+                            }
+                        }
+                        SubList = new Gson().fromJson(arg1.getString("FavoriteList"), new TypeToken<List<RankInfo>>() {}.getType());
+                        if (RefreshType == 1) {
+                            newlist.clear();
+                        }
+                        newlist.addAll(SubList);
+                        if (adapter == null) {
+                            mlistView.setAdapter(adapter = new FavorListAdapter(context, newlist));
+                        } else {
+                            adapter.notifyDataSetChanged();
+                        }
+                        setListener();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+				} else if (ReturnType != null && ReturnType.equals("0000")) {
+                    ToastUtils.show_short(context, "无法获取相关的参数");
+                } else if (ReturnType != null && ReturnType.equals("1002")) {
+                    ToastUtils.show_short(context, "无此分类信息");
+                } else if (ReturnType != null && ReturnType.equals("1003")) {
+                    ToastUtils.show_short(context, "无法获得列表");
+                } else if (ReturnType != null && ReturnType.equals("1011")) {
+                    ToastUtils.show_short(context, "无数据");
+                    mlistView.setVisibility(View.GONE);
+                }
+                // 无论何种返回值，都需要终止掉上拉刷新及下拉加载的滚动状态
+                if (RefreshType == 1) {
+                    mlistView.stopRefresh();
+                } else {
+                    mlistView.stopLoadMore();
+                }
 			}
 			
 			@Override
@@ -590,7 +567,6 @@ public class RadioFragment extends Fragment {
 		dellist = null;
 		ReturnType = null;
 		mintent = null;
-		pagesize = null;
 		linearNull = null;
 		tag = null;
 		if(dbdao != null){
