@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-<com.woting.widgetui.MyLinearLayout
+<com.woting.common.widgetui.MyLinearLayout
             android:id="@+id/rl_voice"
             android:layout_width="match_parent"
             android:layout_height="171dp"
@@ -81,5 +81,5 @@
                     android:src="@mipmap/talknormal"/>
                 
             </LinearLayout>
-        </com.woting.widgetui.MyLinearLayout>
+        </com.woting.common.widgetui.MyLinearLayout>
 </LinearLayout>

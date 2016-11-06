@@ -133,7 +133,7 @@
                 android:textSize="30sp"
                 android:visibility="gone"/>
 
-            <com.woting.activity.interphone.linkman.view.SideBar
+            <com.woting.ui.interphone.linkman.view.SideBar
                 android:id="@+id/sidrbar"
                 android:layout_width="20dip"
                 android:layout_height="fill_parent"

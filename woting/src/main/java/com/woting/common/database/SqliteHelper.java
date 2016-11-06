@@ -3,19 +3,15 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.woting.common.config.GlobalConfig;
-
-
-
-
 /**
  * 创建数据库表
  * 作者：xinlong on 2016/8/29 11:29
  * 邮箱：645700751@qq.com
  */
-public class SqliteHelper extends SQLiteOpenHelper {
+public class SQLiteHelper extends SQLiteOpenHelper {
 
-	public SqliteHelper(Context paramContext) {
-		super(paramContext, "woting.db", null, GlobalConfig.dbversoncode);
+	public SQLiteHelper(Context paramContext) {
+		super(paramContext, "woting.db", null, GlobalConfig.dbVersonCode);
 	}
 
 	public void onCreate(SQLiteDatabase db) {

@@ -14,7 +14,7 @@
        
    	</LinearLayout>
 
-    <com.woting.widgetui.xlistview.XListView
+    <com.woting.common.widgetui.xlistview.XListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -24,7 +24,7 @@
         android:scrollbars="none"
         android:scrollingCache="false"
         android:layout_above="@id/linear_null">
-    </com.woting.widgetui.xlistview.XListView>
+    </com.woting.common.widgetui.xlistview.XListView>
 
 
 </RelativeLayout>

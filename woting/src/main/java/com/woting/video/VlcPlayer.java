@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.woting.activity.home.player.main.fragment.PlayerFragment;
+import com.woting.ui.home.player.main.fragment.PlayerFragment;
 
 import org.videolan.libvlc.EventHandler;
 import org.videolan.libvlc.LibVLC;

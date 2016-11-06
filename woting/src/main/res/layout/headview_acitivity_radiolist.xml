@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="85dp"/> -->
         
-        <com.woting.activity.home.program.radiolist.rollviewpager.RollPagerView
+        <com.woting.ui.home.program.radiolist.rollviewpager.RollPagerView
             android:id="@+id/slideshowView"
 	        android:layout_width="match_parent"
 	        android:layout_height="85dp"

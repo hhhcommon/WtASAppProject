@@ -17,7 +17,7 @@
             android:layout_weight="1"
             android:gravity="center" >
 
-            <com.woting.widgetui.HorizontalListView
+            <com.woting.common.widgetui.HorizontalListView
                 android:id="@+id/share_gallery"
                 android:layout_width="match_parent"
                 android:layout_marginRight="25dp"

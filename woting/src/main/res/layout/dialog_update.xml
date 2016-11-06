@@ -34,7 +34,7 @@
             android:layout_marginLeft="19dp"/>
         
         <TextView
-            android:id="@+id/text_contnt"
+            android:id="@+id/text_context"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1.优化了首页的加载速度，更快更省流量"

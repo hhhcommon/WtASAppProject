@@ -9,8 +9,8 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.rectsoft.ppsip.G729ACodec;
-import com.woting.activity.interphone.commom.base64.Base64;
-import com.woting.helper.BytesTransHelper;
+import com.woting.ui.interphone.commom.base64.Base64;
+import com.woting.common.helper.BytesTransHelper;
 
 import java.io.File;
 import java.io.FileWriter;

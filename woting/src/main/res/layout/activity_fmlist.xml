@@ -59,12 +59,12 @@
         </LinearLayout>
     </LinearLayout>
 
-    <com.woting.widgetui.xlistview.XListView
+    <com.woting.common.widgetui.xlistview.XListView
         android:id="@+id/listview_fm"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/WHITE"
         android:scrollbars="none" >
-    </com.woting.widgetui.xlistview.XListView>
+    </com.woting.common.widgetui.xlistview.XListView>
 
 </LinearLayout>

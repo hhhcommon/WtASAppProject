@@ -135,7 +135,7 @@
                 android:textColor="@color/WHITE"
                 android:visibility="gone" />
 
-            <com.woting.activity.interphone.linkman.view.SideBar
+            <com.woting.ui.interphone.linkman.view.SideBar
                 android:id="@+id/sidrbar"
                 android:layout_width="20.0dip"
                 android:layout_marginTop="10dp"

@@ -59,7 +59,7 @@
         
     </LinearLayout>
     
-    <com.woting.widgetui.PagerSlidingTabStrip
+    <com.woting.common.widgetui.PagerSlidingTabStrip
         android:id="@+id/tabs_title"
         android:layout_width="match_parent"
         android:background="@color/WHITE"

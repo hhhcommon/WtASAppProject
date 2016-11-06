@@ -16,7 +16,7 @@
         android:text="保 存"
         android:textColor="@color/WHITE"/>
 
-    <com.woting.widgetui.photocut.ClipImageLayout
+    <com.woting.common.widgetui.photocut.ClipImageLayout
         android:id="@+id/id_clipImageLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

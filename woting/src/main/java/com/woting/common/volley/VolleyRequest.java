@@ -12,8 +12,8 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
-import com.woting.util.CommonUtils;
-import com.woting.util.PhoneMessage;
+import com.woting.common.util.CommonUtils;
+import com.woting.common.util.PhoneMessage;
 
 import org.json.JSONException;
 import org.json.JSONObject;

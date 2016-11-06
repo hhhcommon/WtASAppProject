@@ -8,7 +8,7 @@
         android:required="false" />
 
     <application
-        android:name="com.woting.common.application.BSApplication"
+        android:name=".common.application.BSApplication"
         android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/app_logo"
@@ -35,7 +35,7 @@
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.login.splash.activity.SplashActivity"
+            android:name=".ui.common.splash.activity.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -47,21 +47,21 @@
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.alert.ReceiveAlertActivity"
+            android:name="com.woting.ui.interphone.alert.ReceiveAlertActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.alert.CallAlertActivity"
+            android:name="com.woting.ui.interphone.alert.CallAlertActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.main.MainActivity"
+            android:name="com.woting.ui.main.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
             <intent-filter>
@@ -76,369 +76,363 @@
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.person.qrcodes.EWMShowActivity"
+            android:name="com.woting.ui.mine.qrcodes.EWMShowActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.home.main.HomeActivity"
+            android:name="com.woting.ui.home.main.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.notify.activity.NotifyNewsActivity"
+            android:name="com.woting.ui.interphone.notify.activity.NotifyNewsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.download.activity.DownloadActivity"
+            android:name="com.woting.ui.download.activity.DownloadActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.person.PersonActivity"
+            android:name="com.woting.ui.mine.PersonActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.home.program.citylist.activity.CityListActivity"
+            android:name="com.woting.ui.home.program.citylist.activity.CityListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.message.activity.NewsActivity"
+            android:name="com.woting.ui.interphone.message.activity.NewsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.creatgroup.grouppersonnews.GroupPersonNewsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan" />
-
-        <!--  -->
-        <activity
-            android:name="com.woting.activity.login.login.activity.LoginActivity"
+            android:name=".ui.interphone.group.groupcontrol.grouppersonnews.GroupPersonNewsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.set.SetActivity"
+            android:name=".ui.common.login.activity.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.main.DuiJiangActivity"
+            android:name=".ui.mine.set.SetActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.person.photocut.activity.PhotoCutActivity"
+            android:name="com.woting.ui.interphone.main.DuiJiangActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.creatgroup.personnews.TalkPersonNewsActivity"
+            android:name=".ui.mine.photocut.PhotoCutActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.login.register.activity.RegisterActivity"
+            android:name=".ui.interphone.group.groupcontrol.personnews.TalkPersonNewsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.login.welcome.activity.WelcomeActivity"
+            android:name=".ui.common.register.activity.RegisterActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" />
+
+        <!--  -->
+        <activity
+            android:name=".ui.common.welcome.activity.WelcomeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.login.forgetpassword.activity.ForgetPasswordActivity"
+            android:name=".ui.mine.forgetpassword.activity.ForgetPasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.set.about.AboutActivity"
+            android:name=".ui.mine.set.about.AboutActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.set.help.HelpActivity"
+            android:name=".ui.mine.set.help.HelpActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.person.binding.AccountBinDingActivity"
+            android:name="com.woting.ui.mine.binding.AccountBinDingActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.person.playhistory.activity.PlayHistoryActivity"
+            android:name="com.woting.ui.mine.playhistory.activity.PlayHistoryActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.person.modifypassword.activity.ModifyPasswordActivity"
+            android:name=".ui.mine.modifypassword.ModifyPasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.person.feedback.activity.FeedbackActivity"
+            android:name="com.woting.ui.mine.feedback.activity.FeedbackActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.person.feedback.feedbacklist.activity.FeedbackListActivity"
+            android:name="com.woting.ui.mine.feedback.feedbacklist.activity.FeedbackListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.scanning.activity.ResultActivity"
+            android:name=".ui.common.scanning.activity.ResultActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.scanning.activity.CaptureActivity"
+            android:name=".ui.common.scanning.activity.CaptureActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.creatgroup.groupmain.CreateGroupMainActivity"
+            android:name=".ui.interphone.group.creatgroup.CreateGroupActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.creatgroup.creat.CreateGroupContentActivity"
+            android:name=".ui.interphone.group.creatgroup.creat.CreateGroupContentActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.creatgroup.groupnews.TalkGroupNewsActivity"
+            android:name=".ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.home.search.activity.SearchLikeActivity"
+            android:name="com.woting.ui.home.search.activity.SearchLikeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.home.program.radiolist.activity.RadioListActivity"
+            android:name="com.woting.ui.home.program.radiolist.activity.RadioListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.home.program.fmlist.activity.FMListActivity"
+            android:name="com.woting.ui.home.program.fmlist.activity.FMListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.find.friendadd.FriendAddActivity"
+            android:name="com.woting.ui.interphone.find.friendadd.FriendAddActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.find.groupadd.GroupAddActivity"
+            android:name=".ui.interphone.find.groupadd.GroupAddActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.find.findresult.FindNewsResultActivity"
+            android:name="com.woting.ui.interphone.find.findresult.FindNewsResultActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.find.main.FindActivity"
+            android:name="com.woting.ui.interphone.find.main.FindActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.creatgroup.memberadd.GroupMemberAddActivity"
+            android:name=".ui.interphone.group.groupcontrol.memberadd.GroupMemberAddActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.creatgroup.groupcontrol.groupnumdel.GroupMemberDelActivity"
+            android:name="com.woting.ui.interphone.group.groupcontrol.groupnumdel.GroupMemberDelActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.creatgroup.groupcontrol.transferauthority.TransferAuthorityActivity"
+            android:name="com.woting.ui.interphone.group.groupcontrol.transferauthority.TransferAuthorityActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.creatgroup.membershow.GroupMembersActivity"
+            android:name=".ui.interphone.group.groupcontrol.membershow.GroupMembersActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.home.program.album.activity.AlbumActivity"
+            android:name="com.woting.ui.home.program.album.activity.AlbumActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.home.player.timeset.activity.TimerPowerOffActivity"
+            android:name="com.woting.ui.home.player.timeset.activity.TimerPowerOffActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
+
+
+        <!--  -->
+        <activity
+            android:name="com.woting.ui.interphone.group.groupcontrol.changegrouptype.ChangeGroupTypeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.handleinvited.activity.HandleInvitedActivity"
+            android:name="com.woting.ui.interphone.group.groupcontrol.modifygrouppassword.ModifyGroupPasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.creatgroup.groupcontrol.changegrouptype.ChangeGroupTypeActivity"
+            android:name="com.woting.ui.interphone.group.groupcontrol.handlegroupapply.HandleGroupApplyActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.creatgroup.groupcontrol.modifygrouppassword.ModifyGroupPasswordActivity"
+            android:name="com.woting.ui.interphone.group.groupcontrol.joingrouplist.JoinGroupListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.creatgroup.groupcontrol.handlegroupapply.HandleGroupApplyActivity"
+            android:name="com.woting.ui.download.downloadlist.activity.DownLoadListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.interphone.creatgroup.groupcontrol.joingrouplist.JoinGroupListActivity"
+            android:name=".ui.mine.set.downloadposition.DownloadPositionActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.download.downloadlist.activity.DownLoadListActivity"
+            android:name=".ui.mine.phonecheck.PhoneCheckActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.set.downloadposition.activity.DownloadPositionActivity"
+            android:name=".ui.mine.updatepersonnews.UpdatePersonActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.login.phonecheck.activity.PhoneCheckActivity"
+            android:name=".ui.mine.set.contactus.ContactUsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.person.update.activity.UpdatePersonActivity"
+            android:name="com.woting.ui.mine.favorite.activity.FavoriteActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name="com.woting.activity.set.contactus.activity.ContactUsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
-
-        <!--  -->
-        <activity
-            android:name="com.woting.activity.person.favorite.activity.FavoriteActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
-
-        <!--  -->
-        <activity
-            android:name="com.woting.activity.home.program.tuijian.activity.RecommendLikeListActivity"
+            android:name="com.woting.ui.home.program.tuijian.activity.RecommendLikeListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
@@ -498,7 +492,7 @@
             android:windowSoftInputMode="adjustResize" />
 
         <!-- 开机启动 -->
-        <receiver android:name="com.woting.receiver.AutoStartReceiver" >
+        <receiver android:name=".common.receiver.AutoStartReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
 
@@ -506,15 +500,15 @@
             </intent-filter>
         </receiver>
 
-        <service android:name="com.woting.service.SubclassService" />
-        <service android:name="com.woting.activity.interphone.commom.service.NotificationService" />
-        <service android:name="com.woting.activity.home.player.timeset.service.timeroffservice" />
-        <service android:name="com.woting.service.SocketService" />
-        <service android:name="com.woting.activity.interphone.commom.service.VoiceStreamRecordService" />
-        <service android:name="com.woting.activity.interphone.commom.service.VoiceStreamPlayerService" />
-        <service android:name="com.woting.activity.download.service.DownloadService" />
-        <service android:name="com.woting.service.FloatingWindowService" />
-
+        <service android:name=".common.service.SubclassService" />
+        <service android:name="com.woting.ui.interphone.commom.service.NotificationService" />
+        <service android:name="com.woting.ui.home.player.timeset.service.timeroffservice" />
+        <service android:name=".common.service.SocketService" />
+        <service android:name="com.woting.ui.interphone.commom.service.VoiceStreamRecordService" />
+        <service android:name="com.woting.ui.interphone.commom.service.VoiceStreamPlayerService" />
+        <service android:name="com.woting.ui.download.service.DownloadService" />
+        <service android:name=".common.service.FloatingWindowService" />
+        <service android:name="com.woting.common.service.LocationService" />
         <!-- 高德地图定位服务 -->
         <service android:name="com.amap.api.location.APSService" />
     </application>

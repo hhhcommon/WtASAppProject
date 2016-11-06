@@ -372,7 +372,7 @@
 
         </LinearLayout>
         
-        <com.woting.widgetui.MyLinearLayout
+        <com.woting.common.widgetui.MyLinearLayout
             android:id="@+id/lin_foot"
             android:layout_width="match_parent"
             android:layout_height="136dp"
@@ -433,6 +433,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>
-        </com.woting.widgetui.MyLinearLayout>
+        </com.woting.common.widgetui.MyLinearLayout>
     </RelativeLayout>
 </LinearLayout>

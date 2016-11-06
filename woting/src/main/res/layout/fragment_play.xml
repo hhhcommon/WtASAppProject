@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <com.woting.widgetui.xlistview.XListView
+        <com.woting.common.widgetui.xlistview.XListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -17,9 +17,9 @@
             android:divider="@color/WHITE"
             android:scrollbars="none"
             android:scrollingCache="false" >
-        </com.woting.widgetui.xlistview.XListView>
+        </com.woting.common.widgetui.xlistview.XListView>
 
-        <com.woting.widgetui.MyLinearLayout
+        <com.woting.common.widgetui.MyLinearLayout
             android:id="@+id/rl_voice"
             android:layout_width="match_parent"
             android:layout_height="171dp"
@@ -95,7 +95,7 @@
                     android:src="@mipmap/talknormal" />
 
             </LinearLayout>
-        </com.woting.widgetui.MyLinearLayout>
+        </com.woting.common.widgetui.MyLinearLayout>
     </RelativeLayout>
 
 </LinearLayout>

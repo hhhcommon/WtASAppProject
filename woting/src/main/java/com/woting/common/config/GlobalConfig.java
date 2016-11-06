@@ -1,25 +1,16 @@
 package com.woting.common.config;
 
-import com.woting.activity.home.player.main.model.LanguageSearchInside;
-import com.woting.activity.interphone.linkman.model.TalkGroupInside;
-import com.woting.activity.interphone.linkman.model.TalkPersonInside;
+import com.woting.ui.home.player.main.model.LanguageSearchInside;
+import com.woting.ui.interphone.linkman.model.TalkGroupInside;
+import com.woting.ui.interphone.linkman.model.TalkPersonInside;
 
 import java.util.List;
-
+/**
+ * GlobalConfig
+ * 作者：xinlong on 2016/11/6 21:18
+ * 邮箱：645700751@qq.com
+ */
 public class GlobalConfig {
-
-    /***
-     * 三方信息
-     */
-    //微信
-    public static final String WEIXIN_KEY = "wx99e28b6b8ed44a60";
-    public static final String WEIXIN_SECRET = "a579a0cfe0755b87eb17442e81254857";
-    //QQ
-    public static final String QQ_KEY = "1105341370";
-    public static final String QQ_SECRET = "Hi2ccDP2eAfvjg1E";
-    //新浪微博
-    public static final String WEIBO_KEY = "2633057288";
-    public static final String WEIBO_SECRET = "95a5b41d6818cecffab50b2f1347fef8";
     //定位信息保存
     public static String longitude;
     public static String latitude;
@@ -33,14 +24,14 @@ public class GlobalConfig {
     public static final int NETWORK_STATE_CTWAP = 4;
     public static int CURRENT_NETWORK_STATE_TYPE = NETWORK_STATE_IDLE;
     //volley请求超时 时间
-    public static final int HTTP_CONNECTION_TIMEOUT = 60 * 1000;
+    public static final int HTTP_CONNECTION_TIMEOUT = 0 * 1000;
     public static List<TalkGroupInside> list_group;
     public static List<TalkPersonInside> list_person;
     public static LanguageSearchInside playerobject;//播放器播放对象
     /**
      * 数据库版本号
      */
-    public static final int dbversoncode = 33;
+    public static final int dbVersonCode = 33;
     /**
      * 是否活跃状态，有活跃状态才能播放声音，否则即使收到音频包也不播放
      */

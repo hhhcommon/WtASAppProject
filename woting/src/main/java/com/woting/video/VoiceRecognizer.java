@@ -11,7 +11,7 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.woting.common.constant.BroadcastConstants;
-import com.woting.helper.JsonParser;
+import com.woting.common.helper.JsonParser;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -6,10 +6,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 
-import com.woting.activity.interphone.commom.base64.Base64;
-import com.woting.util.CommonUtils;
-import com.woting.util.PhoneMessage;
-import com.woting.util.SequenceUUID;
+import com.woting.ui.interphone.commom.base64.Base64;
+import com.woting.common.util.CommonUtils;
+import com.woting.common.util.PhoneMessage;
+import com.woting.common.util.SequenceUUID;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

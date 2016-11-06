@@ -49,7 +49,6 @@ import android.util.Log;
 /**
  * http数据请求交互 单例方式
  * @author 辛龙
- *
  */
 public class MyHttp {
 	private static String TAG="MyHttp";

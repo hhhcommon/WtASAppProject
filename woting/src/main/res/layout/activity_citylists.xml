@@ -159,7 +159,7 @@
                 android:textSize="30sp"
                 android:visibility="invisible" />
 
-            <com.woting.activity.interphone.linkman.view.SideBar
+            <com.woting.ui.interphone.linkman.view.SideBar
                 android:id="@+id/sidrbar"
                 android:layout_width="30dp"
                 android:layout_height="match_parent"

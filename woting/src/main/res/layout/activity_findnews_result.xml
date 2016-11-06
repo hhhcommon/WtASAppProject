@@ -63,13 +63,13 @@
         android:layout_height="match_parent"
         android:visibility="visible" >
 
-        <com.woting.widgetui.xlistview.XListView
+        <com.woting.common.widgetui.xlistview.XListView
             android:id="@+id/listview_querycontact"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/WHITE_1"
             android:scrollbars="none" >
-        </com.woting.widgetui.xlistview.XListView>
+        </com.woting.common.widgetui.xlistview.XListView>
     </LinearLayout>
 
 </LinearLayout>
