@@ -12,7 +12,6 @@ import android.graphics.Matrix;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -33,12 +32,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.woting.R;
+import com.woting.activity.baseactivity.AppBaseFragmentActivity;
 import com.woting.activity.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.activity.person.playhistory.fragment.RadioFragment;
 import com.woting.activity.person.playhistory.fragment.SoundFragment;
 import com.woting.activity.person.playhistory.fragment.TTSFragment;
 import com.woting.activity.person.playhistory.fragment.TotalFragment;
-import com.woting.manager.MyActivityManager;
 import com.woting.util.BitmapUtils;
 import com.woting.util.PhoneMessage;
 import com.woting.util.ToastUtils;
@@ -52,8 +51,7 @@ import java.util.List;
  *
  * @author woting11
  */
-public class PlayHistoryActivity extends FragmentActivity implements OnClickListener {
-    private PlayHistoryActivity context;
+public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnClickListener {
     private SearchPlayerHistoryDao dbDao;// 播放历史数据库
     private TotalFragment allFragment;// 全部
     private SoundFragment soundFragment;// 声音
@@ -84,19 +82,13 @@ public class PlayHistoryActivity extends FragmentActivity implements OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playhistory);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        // 透明状态栏
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    // 透明导航栏
 
         // 注册广播
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(PlayHistoryActivity.UPDATE_ACTION_ALL);
         intentFilter.addAction(PlayHistoryActivity.UPDATE_ACTION_CHECK);
         registerReceiver(myBroadcast, intentFilter);
-        context = this;
         dbDao = new SearchPlayerHistoryDao(context);// 初始化数据库
-
-        MyActivityManager mam = MyActivityManager.getInstance();
-        mam.pushOneActivity(context);
 
         initImage();
         setView();
@@ -218,7 +210,7 @@ public class PlayHistoryActivity extends FragmentActivity implements OnClickList
         image.setLayoutParams(lp);
         bmpW = BitmapFactory.decodeResource(getResources(), R.mipmap.left_personal_bg).getWidth();
         DisplayMetrics dm = new DisplayMetrics();
-        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
         int screenW = dm.widthPixels;
         offset = (screenW / 4 - bmpW) / 2;
         Matrix matrix = new Matrix();
@@ -260,7 +252,7 @@ public class PlayHistoryActivity extends FragmentActivity implements OnClickList
         delDialog.setContentView(dialog); // 从底部上升到一个位置
         Window window = delDialog.getWindow();
         DisplayMetrics dm = new DisplayMetrics();
-        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
         int scrEnw = dm.widthPixels;
         LayoutParams params = dialog.getLayoutParams();
         params.width = scrEnw;
@@ -516,13 +508,10 @@ public class PlayHistoryActivity extends FragmentActivity implements OnClickList
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MyActivityManager mam = MyActivityManager.getInstance();
-        mam.popOneActivity(context);
         unregisterReceiver(myBroadcast);
         SoundFragment.isLoad = false;
         RadioFragment.isData = false;
         TTSFragment.isLoad = false;
-        context = null;
         image = null;
         allText = null;
         soundText = null;
