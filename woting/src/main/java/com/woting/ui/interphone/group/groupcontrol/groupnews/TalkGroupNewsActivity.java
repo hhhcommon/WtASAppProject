@@ -104,6 +104,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
     private View linearModifyPassword;// 修改密码
     private View linearGroupApply;// 群审核
     private View linearAddMessage;// 加群消息
+    private View LinearTransferAuthority;// 移交权限
 
     private Dialog confirmDialog;// 退出群组确认对话框
     private Dialog imageDialog;// 修改群组头像对话框
@@ -276,7 +277,6 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
         findViewById(R.id.lin_ewm).setOnClickListener(this);// 二维码
         findViewById(R.id.image_add).setOnClickListener(this);// 添加群成员
         findViewById(R.id.lin_allperson).setOnClickListener(this);// 查看所有群成员
-        findViewById(R.id.lin_yijiao).setOnClickListener(this);// 移交管理员权限
         findViewById(R.id.lin_changetype).setOnClickListener(this);// 更改群类型
         findViewById(R.id.tv_delete).setOnClickListener(this);// 退出群
 
@@ -294,6 +294,9 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
 
         linearAddMessage = findViewById(R.id.lin_jiaqun);// 加群消息
         linearAddMessage.setOnClickListener(this);
+
+        LinearTransferAuthority = findViewById(R.id.lin_yijiao);// 移交管理员权限
+        LinearTransferAuthority.setOnClickListener(this);
 
         imageEwm = (ImageView) findViewById(R.id.imageView_ewm);// 二维码
         textGroupNumber = (TextView) findViewById(R.id.tv_number);// 群成员数量
@@ -359,10 +362,13 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
                 case "0":// 审核群
                     linearGroupApply.setVisibility(View.VISIBLE);// 审核消息
                     linearAddMessage.setVisibility(View.VISIBLE);// 加群消息
+                    LinearTransferAuthority.setVisibility(View.VISIBLE);// 移交权限
                     break;
                 case "1":// 公开群
+                    LinearTransferAuthority.setVisibility(View.VISIBLE);
                     break;
                 case "2":// 密码群
+                    LinearTransferAuthority.setVisibility(View.VISIBLE);
                     linearModifyPassword.setVisibility(View.VISIBLE);// 修改密码
                     break;
             }
@@ -426,7 +432,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
                         groupTalkInsideType2.setType(2);
                         lists.add(groupTalkInsideType2);
 
-                        if (groupCreator.equals(CommonUtils.getUserId(context)) && list.size() > 2) {
+                        if (groupCreator.equals(CommonUtils.getUserId(context)) && list.size() >= 2) {
                             GroupTalkInside groupTalkInsideType3 = new GroupTalkInside();// 删除
                             groupTalkInsideType3.setType(3);
                             lists.add(groupTalkInsideType3);
@@ -464,7 +470,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
                 intent.putExtras(bundle);
                 startActivity(intent);
                 break;
-            case R.id.head_left_btn:
+            case R.id.head_left_btn:// 返回
                 finish();
                 break;
             case R.id.lin_allperson:// 查看所有成员
@@ -719,6 +725,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
         switch (requestCode) {
             case 1:
                 if (resultCode == 1) {
+                    LinearTransferAuthority.setVisibility(View.GONE);
                     lists.remove(lists.size() - 1);
                     GroupTalkAdapter adapter = new GroupTalkAdapter(context, lists);
                     gridView.setAdapter(adapter);
@@ -745,8 +752,8 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
                     Uri uri = data.getData();
                     Log.e("URI:", uri.toString());
                     int sdkVersion = Integer.valueOf(Build.VERSION.SDK);
-                    Log.d("sdkVersion:", String.valueOf(sdkVersion));
-                    Log.d("KITKAT:", String.valueOf(Build.VERSION_CODES.KITKAT));
+//                    Log.d("sdkVersion:", String.valueOf(sdkVersion));
+//                    Log.d("KITKAT:", String.valueOf(Build.VERSION_CODES.KITKAT));
                     String path;
                     if (sdkVersion >= 19) {
                         path = getPath_above19(context, uri);
