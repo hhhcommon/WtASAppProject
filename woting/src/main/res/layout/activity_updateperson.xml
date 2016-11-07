@@ -38,7 +38,7 @@
         <LinearLayout
             android:id="@+id/lin_zhanghu"
             android:layout_width="match_parent"
-            android:layout_height="43dp"
+            android:layout_height="48dp"
             android:background="@drawable/person_color"
             android:clickable="true">
 
@@ -61,15 +61,19 @@
                 android:textColor="#5e6471" />
 
         </LinearLayout>
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_z"
+            />
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="43dp"
+            android:layout_height="48dp"
             android:background="@drawable/person_color"
             android:gravity="left|center"
             android:orientation="horizontal"
             android:clickable="true"
-            android:layout_marginTop="1dp">
+           >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -104,12 +108,22 @@
                     android:src="@mipmap/wt_person_modify" />
             </LinearLayout>
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_z"
+            />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/gray_z"
+            />
         <LinearLayout
             android:id="@+id/lin_gender"
             android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="48dp"
             android:background="@drawable/person_color"
             android:gravity="left|center"
             android:orientation="horizontal" >
@@ -123,37 +137,82 @@
                 android:textColor="@color/wt_login_third"
                 android:textSize="@dimen/list_text_size"/>
 
-            <TextView
-                android:id="@+id/tv_gender"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="39dp"
-                android:layout_weight="1"
-                android:gravity="left|center"
-                android:text="男"
-                android:textColor="#5e6471" />
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:id="@+id/lin_gender_man"
+                android:layout_marginTop="8dp"
                 android:layout_marginRight="13dp"
-                android:gravity="right|center" >
+                android:layout_marginLeft="39dp"
+                android:gravity="right|center"
+                android:background="@color/dinglan_orange"
+                android:layout_marginBottom="8dp"
+                >
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/live_more" />
-            </LinearLayout>
-        </LinearLayout>
+                    android:layout_marginLeft="15dp"
+                    android:src="@mipmap/wt_img_gender_men"
+                    />
 
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="男"
+                     android:textSize="16sp"
+                     android:layout_marginLeft="10dp"
+                     android:layout_marginRight="15dp"
+                     android:textColor="@color/white"
+                     />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="13dp"
+                android:layout_marginLeft="20dp"
+                android:gravity="right|center"
+                android:id="@+id/lin_gender_woman"
+                android:background="@color/up_bg_unselected"
+                android:layout_marginBottom="8dp"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:src="@mipmap/wt_img_gender_woman"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="女"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="15dp"
+                    android:textColor="@color/white"
+                    />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_z"
+            />
         <LinearLayout
             android:id="@+id/lin_age"
             android:layout_width="match_parent"
-            android:layout_height="43dp"
+            android:layout_height="48dp"
             android:background="@drawable/person_color"
             android:gravity="left|center"
             android:orientation="horizontal"
-            android:layout_marginTop="1dp">
+           >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -172,7 +231,7 @@
                 android:layout_weight="1"
                 android:gravity="left|center"
                 android:text="18"
-                android:textColor="#5e6471" />
+                android:textColor="@color/up_tv_default" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -186,15 +245,20 @@
                     android:src="@mipmap/live_more" />
             </LinearLayout>
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_z"
+            />
 
         <LinearLayout
             android:id="@+id/lin_xingzuo"
             android:layout_width="match_parent"
-            android:layout_height="43dp"
+            android:layout_height="48dp"
             android:background="@drawable/person_color"
             android:gravity="left|center"
             android:orientation="horizontal"
-            android:layout_marginTop="1dp">
+         >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -213,7 +277,7 @@
                 android:layout_weight="1"
                 android:gravity="left|center"
                 android:text="水瓶座"
-                android:textColor="#5e6471" />
+                android:textColor="@color/up_tv_default" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -228,15 +292,20 @@
             </LinearLayout>
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_z"
+            />
         <LinearLayout
             android:id="@+id/lin_area"
             android:layout_width="match_parent"
-            android:layout_height="43dp"
+            android:layout_height="48dp"
             android:background="@drawable/person_color"
             android:gravity="left|center"
             android:orientation="horizontal"
             android:clickable="true"
-            android:layout_marginTop="1dp">
+           >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -254,7 +323,7 @@
                 android:layout_weight="1"
                 android:gravity="left|center"
                 android:text="北京 朝阳区"
-                android:textColor="#5e6471" />
+                android:textColor="@color/up_tv_default" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -268,16 +337,20 @@
                     android:src="@mipmap/live_more" />
             </LinearLayout>
         </LinearLayout>
-        
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_z"
+            />
         <LinearLayout
             android:id="@+id/lin_signature"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="43dp"
+            android:minHeight="48dp"
             android:background="@drawable/person_color"
             android:gravity="left|center"
             android:orientation="horizontal"
-            android:layout_marginTop="1dp"
             android:clickable="true">
 
             <TextView
@@ -301,7 +374,7 @@
                 android:layout_marginLeft="11dp"
                 android:layout_weight="8"
                 android:gravity="left|center"
-                android:textColor="#5e6471" 
+                android:textColor="@color/up_tv_default"
                 android:text="Anyone can give up, do not give up"/>
 
             <LinearLayout
@@ -318,6 +391,11 @@
                     android:src="@mipmap/wt_person_modify" />
             </LinearLayout>
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_z"
+            />
 
     </LinearLayout>
 

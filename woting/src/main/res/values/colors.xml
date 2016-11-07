@@ -688,5 +688,8 @@
     <color name="wt_login_third">#3d3d3d</color>
     <color name="fengexian">#e9e8e6</color>
     <color name="background_tab_pressed">#6633B5E5</color>
+    <!--UpdatePerson -->
+    <color name="up_tv_default">#5e6471</color>
+    <color name="up_bg_unselected">#888888</color>
 
 </resources>
