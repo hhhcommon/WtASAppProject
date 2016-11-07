@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
-import com.woting.ui.interphone.linkman.model.TalkPersonInside;
 import com.woting.common.config.GlobalConfig;
+import com.woting.ui.common.model.UserInfo;
 
 import java.util.List;
 /**
@@ -21,16 +21,16 @@ import java.util.List;
  *2016年3月25日
  */
 public class TalkPersonAdapter extends BaseAdapter{
-	private List<TalkPersonInside> list;
+	private List<UserInfo> list;
 	private Context context;
 	private OnListeners onListeners;
-	private TalkPersonInside lists;
-	public TalkPersonAdapter(Context context,List<TalkPersonInside> list) {
+	private UserInfo lists;
+	public TalkPersonAdapter(Context context,List<UserInfo> list) {
 		super();
 		this.list = list;
 		this.context = context;
 	}
-	public void ChangeDate(List<TalkPersonInside> list){
+	public void ChangeDate(List<UserInfo> list){
 		this.list = list;
 		this.notifyDataSetChanged();
 	}

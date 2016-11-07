@@ -331,7 +331,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 	 * 获取数据
 	 */
 	private void getData() {
-		fList = FID.queryFileinfoAll(userId);
+		fList = FID.queryFileInfoAll(userId);
 		Log.e("fList", fList.size() + "");
 		ArrayList<FileInfo> seqList = new ArrayList<>();
 		if (fList != null && fList.size() > 0) {
@@ -431,23 +431,23 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 						//判断userId是否为空
 						mContent.setUserid(userId);
 						mContent.setDownloadtype("0");
-						FID.updatedownloadstatus(mContent.getContentPlay(), "0");//将所有数据设置
+						FID.updataDownloadStatus(mContent.getContentPlay(), "0");//将所有数据设置
 						urlList.add(mContent);
 					}
 				}
 				if (urlList.size() > 0) {
-					FID.insertfileinfo(urlList);
-					List<FileInfo> tempList = FID.queryFileinfo("false",userId);//查询表中未完成的任务
+					FID.insertFileInfo(urlList);
+					List<FileInfo> tempList = FID.queryFileInfo("false",userId);//查询表中未完成的任务
 					//未下载列表
 					for(int kk=0;kk<tempList.size();kk++){
 						if(tempList.get(kk).getDownloadtype()==1){
 							DownloadService.workStop(tempList.get(kk));
-							FID.updatedownloadstatus(tempList.get(kk).getUrl(), "2");
+							FID.updataDownloadStatus(tempList.get(kk).getUrl(), "2");
 							Log.e("测试下载问题"," 暂停下载的单体"+(tempList.get(kk).getFileName()));
 						}
 					}
 					tempList.get(0).setDownloadtype(1);
-					FID.updatedownloadstatus(tempList.get(0).getUrl(), "1");
+					FID.updataDownloadStatus(tempList.get(0).getUrl(), "1");
 					Log.e("数据库内数据", tempList.toString());
 					DownloadService.workStart(tempList.get(0));
 					//发送更新界面数据广播

@@ -38,47 +38,42 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
-import com.woting.ui.baseactivity.BaseActivity;
-import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
-import com.woting.ui.interphone.chat.fragment.ChatFragment;
-import com.woting.ui.interphone.chat.model.TalkListGP;
-import com.woting.ui.interphone.commom.service.InterPhoneControl;
-import com.woting.ui.interphone.group.creatgroup.creat.model.GroupInformation;
-import com.woting.ui.interphone.group.creatgroup.creat.util.ImageUploadReturnUtil;
-import com.woting.ui.interphone.group.groupcontrol.changegrouptype.ChangeGroupTypeActivity;
-import com.woting.ui.interphone.group.groupcontrol.groupnumdel.GroupMemberDelActivity;
-import com.woting.ui.interphone.group.groupcontrol.handlegroupapply.HandleGroupApplyActivity;
-import com.woting.ui.interphone.group.groupcontrol.joingrouplist.JoinGroupListActivity;
-import com.woting.ui.interphone.group.groupcontrol.modifygrouppassword.ModifyGroupPasswordActivity;
-import com.woting.ui.interphone.group.groupcontrol.transferauthority.TransferAuthorityActivity;
-import com.woting.ui.interphone.group.groupcontrol.groupnews.adapter.GroupTalkAdapter;
-import com.woting.ui.interphone.group.groupcontrol.groupnews.model.GroupTalkInside;
-import com.woting.ui.interphone.group.groupcontrol.grouppersonnews.GroupPersonNewsActivity;
-import com.woting.ui.interphone.group.groupcontrol.memberadd.GroupMemberAddActivity;
-import com.woting.ui.interphone.group.groupcontrol.membershow.GroupMembersActivity;
-import com.woting.ui.interphone.group.groupcontrol.personnews.TalkPersonNewsActivity;
-import com.woting.ui.interphone.find.findresult.model.FindGroupNews;
-import com.woting.ui.interphone.linkman.model.TalkGroupInside;
-import com.woting.ui.interphone.main.DuiJiangActivity;
-import com.woting.ui.interphone.message.model.GroupInfo;
-import com.woting.ui.mine.model.UserPortaitInside;
-import com.woting.ui.mine.photocut.PhotoCutActivity;
-import com.woting.ui.mine.qrcodes.EWMShowActivity;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.http.MyHttp;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
 import com.woting.common.helper.CreatQRImageHelper;
+import com.woting.common.http.MyHttp;
 import com.woting.common.manager.FileManager;
 import com.woting.common.manager.MyActivityManager;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
+import com.woting.common.util.ImageUploadReturnUtil;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
+import com.woting.ui.interphone.chat.fragment.ChatFragment;
+import com.woting.ui.interphone.commom.service.InterPhoneControl;
+import com.woting.ui.interphone.group.groupcontrol.changegrouptype.ChangeGroupTypeActivity;
+import com.woting.ui.interphone.group.groupcontrol.groupnews.adapter.GroupTalkAdapter;
+import com.woting.ui.interphone.group.groupcontrol.groupnumdel.GroupMemberDelActivity;
+import com.woting.ui.interphone.group.groupcontrol.grouppersonnews.GroupPersonNewsActivity;
+import com.woting.ui.interphone.group.groupcontrol.handlegroupapply.HandleGroupApplyActivity;
+import com.woting.ui.interphone.group.groupcontrol.joingrouplist.JoinGroupListActivity;
+import com.woting.ui.interphone.group.groupcontrol.memberadd.GroupMemberAddActivity;
+import com.woting.ui.interphone.group.groupcontrol.membershow.GroupMembersActivity;
+import com.woting.ui.interphone.group.groupcontrol.modifygrouppassword.ModifyGroupPasswordActivity;
+import com.woting.ui.interphone.group.groupcontrol.personnews.TalkPersonNewsActivity;
+import com.woting.ui.interphone.group.groupcontrol.transferauthority.TransferAuthorityActivity;
+import com.woting.ui.interphone.main.DuiJiangActivity;
+import com.woting.ui.common.model.GroupInfo;
+import com.woting.ui.mine.model.UserPortaitInside;
+import com.woting.ui.mine.photocut.PhotoCutActivity;
+import com.woting.ui.mine.qrcodes.EWMShowActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -93,11 +88,11 @@ import java.util.List;
  */
 public class TalkGroupNewsActivity extends BaseActivity implements OnClickListener, OnItemClickListener {
     private Bitmap bmp;
-    private FindGroupNews news;
+    private GroupInfo news;
     private GroupTalkAdapter adapter;
     private SearchTalkHistoryDao dbDao;
-    private List<GroupTalkInside> list;
-    private ArrayList<GroupTalkInside> lists = new ArrayList<>();
+    private List<GroupInfo> list;
+    private ArrayList<GroupInfo> lists = new ArrayList<>();
     private MessageReceivers receiver = new MessageReceivers();
     private Intent pushIntent = new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN);
 
@@ -194,7 +189,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
         }
         switch (type) {
             case "talkoldlistfragment":// 聊天界面传过来
-                TalkListGP talkListGP = (TalkListGP) getIntent().getSerializableExtra("data");
+                GroupInfo talkListGP = (GroupInfo) getIntent().getSerializableExtra("data");
                 groupNumber = talkListGP.getGroupNum();
                 groupName = talkListGP.getName();
                 headUrl = talkListGP.getPortrait();
@@ -210,7 +205,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
                 groupType = talkListGP.getGroupType();
                 break;
             case "talkpersonfragment":// 通讯录界面传过来
-                TalkGroupInside talkGroupInside = (TalkGroupInside) getIntent().getSerializableExtra("data");
+                GroupInfo talkGroupInside = (GroupInfo) getIntent().getSerializableExtra("data");
                 groupName = talkGroupInside.getGroupName();
                 headUrl = talkGroupInside.getGroupImg();
                 groupId = talkGroupInside.getGroupId();
@@ -220,13 +215,13 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
                     groupCreator = talkGroupInside.getGroupManager();
                 }
                 groupSignature = talkGroupInside.getGroupSignature();
-                groupIntroduce = talkGroupInside.getGroupMyDesc();
+                groupIntroduce = talkGroupInside.getGroupMyDescn();
                 groupAlias = talkGroupInside.getGroupMyAlias();
                 groupNumber = talkGroupInside.getGroupNum();
                 groupType = talkGroupInside.getGroupType();
                 break;
             case "groupaddactivity":// 添加群组搜索结果或申请加入组成功后进入
-                FindGroupNews findGroupNews = (FindGroupNews) getIntent().getSerializableExtra("data");
+                GroupInfo findGroupNews = (GroupInfo) getIntent().getSerializableExtra("data");
                 groupName = findGroupNews.getGroupName();
                 headUrl = findGroupNews.getGroupImg();
                 groupId = findGroupNews.getGroupId();
@@ -237,7 +232,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
                     groupCreator = findGroupNews.getGroupManager();
                 }
                 groupSignature = findGroupNews.getGroupSignature();
-                groupIntroduce = findGroupNews.getGroupOriDesc();
+                groupIntroduce = findGroupNews.getGroupOriDescn();
                 groupAlias = findGroupNews.getGroupMyAlias();
                 groupType = findGroupNews.getGroupType();
                 break;
@@ -256,7 +251,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
                 groupType = groupInfo.getGroupType();
                 break;
             case "CreateGroupContentActivity":// 创建群组成功时进入
-                GroupInformation groupInformation = (GroupInformation) getIntent().getSerializableExtra("news");
+                GroupInfo groupInformation = (GroupInfo) getIntent().getSerializableExtra("news");
                 headUrl = getIntent().getStringExtra("imageurl");
                 groupName = groupInformation.getGroupName();
                 groupId = groupInformation.getGroupId();
@@ -344,7 +339,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
             Picasso.with(context).load(headUrl.replace("\\/", "/")).into(imageHead);
         }
 
-        news = new FindGroupNews();
+        news = new GroupInfo();
         news.setGroupName(groupName);
         news.setGroupType(groupType);
         news.setGroupCreator(groupCreator);
@@ -413,7 +408,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
                     ToastUtils.show_allways(context, "对讲组内没有成员自动解散!");
                 } else {
                     try {
-                        list = new Gson().fromJson(result.getString("UserList"), new TypeToken<List<GroupTalkInside>>() {}.getType());
+                        list = new Gson().fromJson(result.getString("UserList"), new TypeToken<List<GroupInfo>>() {}.getType());
                         lists.clear();
                         String numString = "(" + list.size() + ")";
                         textGroupNumber.setText(numString);
@@ -428,12 +423,12 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
                         } else {
                             lists.addAll(list);
                         }
-                        GroupTalkInside groupTalkInsideType2 = new GroupTalkInside();// 添加
+                        GroupInfo groupTalkInsideType2 = new GroupInfo();// 添加
                         groupTalkInsideType2.setType(2);
                         lists.add(groupTalkInsideType2);
 
                         if (groupCreator.equals(CommonUtils.getUserId(context)) && list.size() >= 2) {
-                            GroupTalkInside groupTalkInsideType3 = new GroupTalkInside();// 删除
+                            GroupInfo groupTalkInsideType3 = new GroupInfo();// 删除
                             groupTalkInsideType3.setType(3);
                             lists.add(groupTalkInsideType3);
                         }

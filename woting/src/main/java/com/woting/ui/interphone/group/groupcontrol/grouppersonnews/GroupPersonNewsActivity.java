@@ -16,16 +16,15 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
-import com.woting.ui.interphone.chat.model.GroupTalkInside;
-import com.woting.ui.interphone.group.groupcontrol.membershow.model.UserInfo;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
 import com.woting.common.manager.MyActivityManager;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.ui.common.model.UserInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -98,7 +97,7 @@ public class GroupPersonNewsActivity extends Activity {
 		groupid = this.getIntent().getStringExtra("id");
 		if (type == null || type.equals("")) {
 		}  if (type.equals("talkoldlistfragment_p")) {
-			GroupTalkInside data = (GroupTalkInside) this.getIntent().getSerializableExtra("data");
+			UserInfo data = (UserInfo) this.getIntent().getSerializableExtra("data");
 			name = data.getUserName();
 			imageurl = data.getPortraitBig();
 			id = data.getUserId();
@@ -106,7 +105,7 @@ public class GroupPersonNewsActivity extends Activity {
 			num = data.getUserNum();
 			b_name = data.getUserAliasName();
 		} else if (type.equals("TalkGroupNewsActivity_p")) {
-			com.woting.ui.interphone.group.groupcontrol.groupnews.model.GroupTalkInside data = (com.woting.ui.interphone.group.groupcontrol.groupnews.model.GroupTalkInside) this.getIntent().getSerializableExtra("data");
+			UserInfo data = (UserInfo) this.getIntent().getSerializableExtra("data");
 			name = data.getUserName();
 			imageurl = data.getPortraitBig();
 			id = data.getUserId();

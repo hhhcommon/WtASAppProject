@@ -48,7 +48,7 @@ import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.home.player.timeset.activity.TimerPowerOffActivity;
 import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
-import com.woting.ui.interphone.group.creatgroup.creat.util.ImageUploadReturnUtil;
+import com.woting.common.util.ImageUploadReturnUtil;
 import com.woting.ui.mine.favorite.activity.FavoriteActivity;
 import com.woting.ui.mine.model.UserPortaitInside;
 import com.woting.ui.mine.modifypassword.ModifyPasswordActivity;

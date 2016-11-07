@@ -11,22 +11,22 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
-import com.woting.ui.interphone.chat.model.GroupTalkInside;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.BitmapUtils;
+import com.woting.ui.common.model.UserInfo;
 
 import java.util.List;
 
 public class GroupPersonAdapter extends BaseAdapter{
-	private List<GroupTalkInside> list;
+	private List<UserInfo> list;
 	private Context context;
 	//	private OnListener onListener;
-	private GroupTalkInside lists;
+	private UserInfo lists;
 	private Bitmap bmp;
 	private Bitmap bmps;
 	private Bitmap bmpa;
 	private Bitmap bmpb;
-	public GroupPersonAdapter(Context context,List<GroupTalkInside> list) {
+	public GroupPersonAdapter(Context context,List<UserInfo> list) {
 		super();
 		this.list = list;
 		this.context = context;
@@ -36,7 +36,7 @@ public class GroupPersonAdapter extends BaseAdapter{
 		 bmpb = BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_hy_gray);
 	}
 	
-	public void ChangeDate(List<GroupTalkInside> list){
+	public void ChangeDate(List<UserInfo> list){
 		this.list = list;
 		this.notifyDataSetChanged();
 	}
@@ -61,7 +61,7 @@ public class GroupPersonAdapter extends BaseAdapter{
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		ViewHolder holder=null;
+		ViewHolder holder;
 		if(convertView==null){
 			holder=new ViewHolder();
 			convertView=LayoutInflater.from(context).inflate(R.layout.adapter_groupperson, null);

@@ -1,4 +1,4 @@
-package com.woting.ui.interphone.group.creatgroup.creat.util;
+package com.woting.common.util;
 
 public class ImageUploadReturnUtil {
 	

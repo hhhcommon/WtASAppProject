@@ -27,7 +27,7 @@ public class DownloadService extends Service {
 	private static String TAG = "DownloadService";
 	private static DownloadService context;
 	private static DownloadTask mTask;
-	private static FileInfo filetemp = null;
+	private static FileInfo fileTemp = null;
 
 	@Override
 	public void onCreate() {
@@ -62,12 +62,12 @@ public class DownloadService extends Service {
 				Log.i(TAG, "Init:" + fileInfo);
 				// 启动下载任务
 				DownloadTask.isPause = false;
-				if(filetemp==null){
-					filetemp=fileInfo;
+				if(fileTemp==null){
+					fileTemp=fileInfo;
 					mTask = new DownloadTask(context, fileInfo);
 					mTask.downLoad();
 				}else{
-					if(filetemp.getUrl().equals(fileInfo.getUrl())){
+					if(fileTemp.getUrl().equals(fileInfo.getUrl())){
 
 					}else{
 						if (mTask != null) {

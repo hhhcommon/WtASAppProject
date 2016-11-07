@@ -1,12 +1,14 @@
 package com.woting.ui.interphone.group.groupcontrol.groupnews.model;
 
+import com.woting.ui.common.model.UserInfo;
+
 import java.util.List;
 
 public class GroupTalk {
 	private String ReturnType;
 	private String SessionId;
 	private String GroupId;
-	private List<GroupTalkInside> UserList;
+	private List<UserInfo> UserList;
 	
 	public String getGroupId() {
 		return GroupId;
@@ -14,10 +16,10 @@ public class GroupTalk {
 	public void setGroupId(String groupId) {
 		GroupId = groupId;
 	}
-	public List<GroupTalkInside> getUserList() {
+	public List<UserInfo> getUserList() {
 		return UserList;
 	}
-	public void setUserList(List<GroupTalkInside> userList) {
+	public void setUserList(List<UserInfo> userList) {
 		UserList = userList;
 	}
 	public String getReturnType() {

@@ -1,8 +1,5 @@
 package com.woting.ui.common.scanning.activity;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -15,9 +12,9 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
@@ -28,20 +25,23 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.Result;
 import com.woting.R;
-import com.woting.ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivity;
-import com.woting.ui.interphone.find.findresult.model.FindGroupNews;
-import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
-import com.woting.ui.interphone.find.friendadd.FriendAddActivity;
-import com.woting.ui.interphone.find.groupadd.GroupAddActivity;
+import com.woting.common.manager.MyActivityManager;
+import com.woting.common.util.CommonUtils;
+import com.woting.common.util.PhoneMessage;
 import com.woting.ui.common.scanning.DecodeThread;
 import com.woting.ui.common.scanning.InactivityTimer;
 import com.woting.ui.common.scanning.handle.CaptureActivityHandler;
 import com.woting.ui.common.scanning.manager.BeepManager;
 import com.woting.ui.common.scanning.manager.CameraManager;
 import com.woting.ui.common.scanning.model.MessageInfo;
-import com.woting.common.manager.MyActivityManager;
-import com.woting.common.util.CommonUtils;
-import com.woting.common.util.PhoneMessage;
+import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
+import com.woting.ui.interphone.find.friendadd.FriendAddActivity;
+import com.woting.ui.interphone.find.groupadd.GroupAddActivity;
+import com.woting.ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivity;
+import com.woting.ui.common.model.GroupInfo;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
 
 /**
  * 这个活动打开相机和实际扫描一个背景线程。
@@ -201,7 +201,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 							}
 						}else if(message.getType().equals("2")){
 							//添加群组
-							FindGroupNews groupnews = message.getFindGroupNews();
+							GroupInfo groupnews = message.getFindGroupNews();
 							if(groupnews!=null){
 								if(groupnews.getGroupCreator()!=null&&!groupnews.getGroupCreator().equals("")){
 									if(groupnews.getGroupCreator().equals(CommonUtils.getUserId(context))){

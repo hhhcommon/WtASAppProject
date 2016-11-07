@@ -17,15 +17,15 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
-import com.woting.ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivity;
-import com.woting.ui.interphone.find.findresult.model.FindGroupNews;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
 import com.woting.common.manager.MyActivityManager;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivity;
+import com.woting.ui.common.model.GroupInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,7 +51,7 @@ public class GroupAddActivity extends Activity implements OnClickListener {
 	private EditText et_news;
 	private String news;
 	private EditText et_password;
-	private FindGroupNews contact;
+	private GroupInfo contact;
 	private String psd = null;		// 密码
 	private LinearLayout lin_delete;
 	private GroupAddActivity context;
@@ -70,7 +70,7 @@ public class GroupAddActivity extends Activity implements OnClickListener {
 		mam.pushOneActivity(context);
 		sharedPreferences = this.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
 		username = sharedPreferences.getString(StringConstant.USERNAME, "");			// 当前登录账号的姓名
-		contact = (FindGroupNews) this.getIntent().getSerializableExtra("contact");
+		contact = (GroupInfo) this.getIntent().getSerializableExtra("contact");
 		GroupType = contact.getGroupType();	// 当前组的类型
 		setView();							// 设置界面
 		setListener();						// 设置监听
@@ -93,7 +93,7 @@ public class GroupAddActivity extends Activity implements OnClickListener {
 		lin_delete = (LinearLayout) findViewById(R.id.lin_delete);
 	}
 
-	private void setvalue(FindGroupNews contact) {
+	private void setvalue(GroupInfo contact) {
 		if (GroupType == null || GroupType.equals("")) {
 			tv_add.setVisibility(View.INVISIBLE);
 		} else {
@@ -126,10 +126,10 @@ public class GroupAddActivity extends Activity implements OnClickListener {
 		} else {
 			tv_id.setText("id:"+contact.getGroupNum());
 		}
-		if (contact.getGroupOriDesc() == null || contact.getGroupOriDesc().equals("")) {
+		if (contact.getGroupOriDescn() == null || contact.getGroupOriDescn().equals("")) {
 			tv_sign.setText("这家伙很懒，什么都没写");
 		} else {
-			tv_sign.setText(contact.getGroupOriDesc());
+			tv_sign.setText(contact.getGroupOriDescn());
 		}
 		if (contact.getGroupImg() == null || contact.getGroupImg().equals("")
 				|| contact.getGroupImg().equals("null") || contact.getGroupImg().trim().equals("")) {

@@ -13,7 +13,6 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -21,13 +20,13 @@ import com.woting.R;
 import com.woting.ui.interphone.group.groupcontrol.joingrouplist.adapter.JoinGroupAdapter;
 import com.woting.ui.interphone.group.groupcontrol.joingrouplist.adapter.JoinGroupAdapter.Callback;
 import com.woting.ui.interphone.group.groupcontrol.joingrouplist.model.CheckInfo;
-import com.woting.ui.interphone.group.groupcontrol.groupnews.model.GroupTalkInside;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.manager.MyActivityManager;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
+import com.woting.ui.common.model.GroupInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,7 +48,7 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 	protected JoinGroupAdapter adapter;
 	private List<CheckInfo> userlist ;
 	private Integer onclicktv;
-	private ArrayList<GroupTalkInside> list;
+	private ArrayList<GroupInfo> list;
 	private int dealtype=1;//1接受2拒绝
 	private Dialog DelDialog;
 	private int delposition;
@@ -97,7 +96,7 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 				DelDialog.dismiss();
 			}
 		});
-		
+
 		tv_confirm.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -116,7 +115,7 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 		Intent intent = context.getIntent();
 		Bundle bundle = intent.getExtras();
 		groupid = bundle.getString("GroupId");
-		list = (ArrayList<GroupTalkInside>) bundle.getSerializable("userlist");
+		list = (ArrayList<GroupInfo>) bundle.getSerializable("userlist");
 	}
 
 	private void send() {
@@ -126,7 +125,7 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 		VolleyRequest.RequestPost(GlobalConfig.checkVertifyUrl, tag, jsonObject, new VolleyCallback() {
 //			private String SessionId;
 			private String ReturnType;
@@ -149,7 +148,7 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				
+
 				if (ReturnType != null && ReturnType.equals("1001")) {
 					try {
 						userlist = new Gson().fromJson(userlist1,new TypeToken<List<CheckInfo>>() {}.getType());
@@ -162,8 +161,8 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 							if(userlist.get(i).getInviteUserId()!=null&&userlist.get(i).getInviteUserId().equals(list.get(j).getUserId())){
 								userlist.get(i).setInvitedUserName(list.get(j).getUserName());
 							}
-						}						
-					}										
+						}
+					}
 					adapter = new JoinGroupAdapter(context, userlist,context);
 					lv_jiaqun.setAdapter(adapter);
 					lv_jiaqun.setOnItemLongClickListener(new OnItemLongClickListener() {
@@ -187,7 +186,7 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 					}
 				}
 			}
-			
+
 			@Override
 			protected void requestError(VolleyError error) {
 				if (dialog != null) {
@@ -230,7 +229,7 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 		VolleyRequest.RequestPost(GlobalConfig.checkDealUrl, tag, jsonObject, new VolleyCallback() {
 			private String ReturnType;
 			private String Message;
@@ -281,7 +280,7 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 					}
 				}
 			}
-			
+
 			@Override
 			protected void requestError(VolleyError error) {
 				if (dialog != null) {

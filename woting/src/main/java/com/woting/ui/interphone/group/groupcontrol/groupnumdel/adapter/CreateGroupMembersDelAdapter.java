@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
-import com.woting.ui.interphone.group.groupcontrol.groupnumdel.model.UserInfo;
+import com.woting.ui.common.model.UserInfo;
 import com.woting.common.config.GlobalConfig;
 
 import java.util.List;

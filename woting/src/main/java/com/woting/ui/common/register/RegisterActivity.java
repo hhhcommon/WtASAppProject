@@ -11,20 +11,22 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.woting.R;
-import com.woting.ui.baseactivity.BaseActivity;
-import com.woting.ui.interphone.commom.service.InterPhoneControl;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.common.agreement.AgreementActivity;
+import com.woting.ui.interphone.commom.service.InterPhoneControl;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,6 +89,9 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
 
         textRegister = (TextView) findViewById(R.id.tv_register);// 注册
         textRegister.setOnClickListener(this);
+
+        LinearLayout agreement = (LinearLayout) findViewById(R.id.lin_agreement);// 注册协议
+        agreement.setOnClickListener(this);
     }
 
     @Override
@@ -100,6 +105,9 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
                 break;
             case R.id.tv_getyzm:// 检查手机号是否为空，或者是否是一个正常手机号
                 checkYzm();
+                break;
+            case R.id.lin_agreement:        // 注册协议
+                startActivity(new Intent(context, AgreementActivity.class));
                 break;
         }
     }

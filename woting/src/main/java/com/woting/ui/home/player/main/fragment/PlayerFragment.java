@@ -716,7 +716,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 						}
 						dataList.add(mcontent);
 						// 检查是否重复,如果不重复插入数据库，并且开始下载，重复了提示
-						List<FileInfo> fileDataList = FID.queryFileinfoAll(CommonUtils.getUserId(context));
+						List<FileInfo> fileDataList = FID.queryFileInfoAll(CommonUtils.getUserId(context));
 						if (fileDataList.size() != 0) {
 							/**
 							 * 此时有下载数据
@@ -733,21 +733,21 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 							if (isDownload) {
 								ToastUtils.show_allways(context,mcontent.getContentName() + "已经存在于下载列表");
 							} else {
-								FID.insertfileinfo(dataList);
+								FID.insertFileInfo(dataList);
 								ToastUtils.show_allways(context,mcontent.getContentName() + "已经插入了下载列表");
 								// 未下载列表
-								List<FileInfo> fileUnDownLoadList = FID.queryFileinfo("false",CommonUtils.getUserId(context));
+								List<FileInfo> fileUnDownLoadList = FID.queryFileInfo("false",CommonUtils.getUserId(context));
 								for (int kk = 0; kk < fileUnDownLoadList.size(); kk++) {
 									if (fileUnDownLoadList.get(kk).getDownloadtype() == 1) {
 										DownloadService.workStop(fileUnDownLoadList.get(kk));
-										FID.updatedownloadstatus(fileUnDownLoadList.get(kk).getUrl(), "2");
+										FID.updataDownloadStatus(fileUnDownLoadList.get(kk).getUrl(), "2");
 									}
 								}
 
 								for (int k = 0; k < fileUnDownLoadList.size(); k++) {
 									if (fileUnDownLoadList.get(k).getUrl().equals(mcontent.getContentPlay())) {
 										FileInfo file = fileUnDownLoadList.get(k);
-										FID.updatedownloadstatus(mcontent.getContentPlay(), "1");
+										FID.updataDownloadStatus(mcontent.getContentPlay(), "1");
 										DownloadService.workStart(file);
 										Intent p_intent = new Intent("push_down_uncompleted");
 										context.sendBroadcast(p_intent);
@@ -759,14 +759,14 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 							/**
 							 * 此时库里没数据
 							 */
-							FID.insertfileinfo(dataList);
+							FID.insertFileInfo(dataList);
 							ToastUtils.show_allways(context,mcontent.getContentName() + "已经插入了下载列表");
 							// 未下载列表
-							List<FileInfo> fileUnDownloadList = FID.queryFileinfo("false", CommonUtils.getUserId(context));
+							List<FileInfo> fileUnDownloadList = FID.queryFileInfo("false", CommonUtils.getUserId(context));
 							for (int k = 0; k < fileUnDownloadList.size(); k++) {
 								if (fileUnDownloadList.get(k).getUrl().equals(mcontent.getContentPlay())) {
 									FileInfo file = fileUnDownloadList.get(k);
-									FID.updatedownloadstatus(mcontent.getContentPlay(), "1");
+									FID.updataDownloadStatus(mcontent.getContentPlay(), "1");
 									DownloadService.workStart(file);
 									Intent p_intent = new Intent("push_down_uncompleted");
 									context.sendBroadcast(p_intent);

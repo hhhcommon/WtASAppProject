@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
-import com.woting.ui.interphone.linkman.model.TalkGroupInside;
 import com.woting.common.config.GlobalConfig;
+import com.woting.ui.common.model.GroupInfo;
 
 import java.util.List;
 
@@ -22,17 +22,17 @@ import java.util.List;
  *2016年3月25日
  */
 public class TalkGroupAdapter extends BaseAdapter{
-	private List<TalkGroupInside> list;
+	private List<GroupInfo> list;
 	private Context context;
 	private OnListener onListener;
-	private TalkGroupInside lists;
+	private GroupInfo lists;
 	private String url;
-	public TalkGroupAdapter(Context context,List<TalkGroupInside> list) {
+	public TalkGroupAdapter(Context context,List<GroupInfo> list) {
 		super();
 		this.list = list;
 		this.context = context;
 	}
-	public void ChangeDate(List<TalkGroupInside> list){
+	public void ChangeDate(List<GroupInfo> list){
 		this.list = list;
 		this.notifyDataSetChanged();
 	}

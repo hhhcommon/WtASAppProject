@@ -11,12 +11,12 @@ public class CatalogName implements Serializable{
 	private String CatalogId;
 	private String CatalogType;
 	private String truename;
-	private List<com.woting.ui.home.program.fenlei.model.CatalogName> SubCata;
+	private List<CatalogName> SubCata;
 	
-	public List<com.woting.ui.home.program.fenlei.model.CatalogName> getSubCata() {
+	public List<CatalogName> getSubCata() {
 		return SubCata;
 	}
-	public void setSubCata(List<com.woting.ui.home.program.fenlei.model.CatalogName> subCata) {
+	public void setSubCata(List<CatalogName> subCata) {
 		SubCata = subCata;
 	}
 	public String getName() {
