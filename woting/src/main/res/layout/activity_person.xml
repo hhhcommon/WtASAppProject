@@ -2,29 +2,47 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clipToPadding="true"
-    android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:scrollbars="none" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/app_bg"
+        android:background="@color/WHITE"
         android:orientation="vertical" >
 
         <!--用户登录状态-->
         <RelativeLayout
             android:id="@+id/lin_status_denglu"
             android:layout_width="match_parent"
-            android:layout_height="177dp"
+            android:layout_height="190dp"
             android:visibility="visible" >
 
-            <ImageView
-                android:id="@+id/lin_image"
+            <LinearLayout
+                android:id="@+id/view_background"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
+                android:layout_height="95dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/d_person_background_left"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/d_person_background_right"/>
+
+            </LinearLayout>
+
+            <!--<ImageView-->
+                <!--android:id="@+id/lin_image"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:scaleType="centerCrop" />-->
 
             <ImageView
                 android:id="@+id/imageView_ewm"
@@ -59,19 +77,15 @@
 
             <ImageView
                 android:id="@+id/image_touxiang"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_below="@id/tv_username"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_centerInParent="true"
                 android:scaleType="centerCrop" />
 
             <ImageView
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_below="@id/tv_username"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_centerInParent="true"
                 android:src="@mipmap/liubianxing_orange" />
 
             <TextView
@@ -79,21 +93,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="24岁 水瓶座 北京  "
-                android:textColor="@color/white"
+                android:textColor="@color/wt_login_third"
                 android:layout_below="@id/image_touxiang"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="11dp"
+                android:layout_marginTop="7dp"
                 android:textSize="13sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="11dp"
+                android:layout_marginTop="7dp"
                 android:text="少壮不努力，老大徒伤悲"
-                android:textColor="@color/white"
+                android:textColor="@color/wt_login_third"
                 android:layout_below="@id/tv_user"
                 android:layout_centerHorizontal="true"
                 android:textSize="13sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/view_color"/>
 
         </RelativeLayout>
 
@@ -101,33 +121,67 @@
         <RelativeLayout
             android:id="@+id/lin_status_nodenglu"
             android:layout_width="match_parent"
-            android:layout_height="134dp"
+            android:layout_height="144dp"
             android:visibility="gone" >
 
-            <ImageView
-                android:id="@+id/lin_image_0"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
+                android:layout_height="72dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/d_person_background_left"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/d_person_background_right"/>
+
+            </LinearLayout>
+
+            <!--<ImageView-->
+                <!--android:id="@+id/lin_image_0"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:scaleType="centerCrop" />-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/text_denglu"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="14dp"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:text="登 录"-->
+                <!--android:textColor="@color/WHITE"-->
+                <!--android:textSize="17sp" />-->
+
+            <ImageView
+                android:id="@+id/image_nodenglu"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/person_nologinimage" />
 
             <TextView
                 android:id="@+id/text_denglu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:layout_centerHorizontal="true"
-                android:text="登 录"
-                android:textColor="@color/WHITE"
-                android:textSize="17sp" />
+                android:text="点击登录"
+                android:textColor="@color/wt_login_third"
+                android:textSize="17sp"
+                android:layout_marginTop="10dp"
+                android:layout_below="@id/image_nodenglu"
+                android:layout_centerHorizontal="true"/>
 
-            <ImageView
-                android:id="@+id/image_nodenglu"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_below="@id/text_denglu"
-                android:layout_marginTop="5dp"
-                android:layout_centerHorizontal="true"
-                android:src="@mipmap/person_nologinimage" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/view_color" />
 
         </RelativeLayout>
 
@@ -135,7 +189,13 @@
             android:id="@+id/lin_playhistory"
             android:layout_width="match_parent"
             android:layout_height="43dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/person_color">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:background="@color/view_color" />
 
             <ImageView
                 android:id="@+id/image_play_history"
@@ -213,10 +273,131 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/lin_anchor"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@drawable/person_color">
+
+            <ImageView
+                android:id="@+id/image_anchor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19dp"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/wt_person_like" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:text="我的主播"
+                android:layout_toRightOf="@id/image_anchor"
+                android:layout_centerVertical="true"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="13dp"
+                android:src="@mipmap/live_more" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/view_color" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/lin_subscribe"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@drawable/person_color">
+
+            <ImageView
+                android:id="@+id/image_subscribe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19dp"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/wt_person_like" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:text="我的订阅"
+                android:layout_toRightOf="@id/image_subscribe"
+                android:layout_centerVertical="true"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="13dp"
+                android:src="@mipmap/live_more" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/view_color" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/lin_album"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@drawable/person_color">
+
+            <ImageView
+                android:id="@+id/image_album"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19dp"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/wt_person_like" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:text="我的专辑"
+                android:layout_toRightOf="@id/image_album"
+                android:layout_centerVertical="true"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="13dp"
+                android:src="@mipmap/live_more" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/view_color" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
             android:id="@+id/lin_bingding"
             android:layout_width="match_parent"
             android:layout_height="43dp"
             android:layout_marginTop="10dp"
+            android:visibility="gone"
             android:background="@drawable/person_color">
 
             <View
@@ -257,6 +438,7 @@
             android:id="@+id/lin_modifypassword"
             android:layout_width="match_parent"
             android:layout_height="43dp"
+            android:visibility="gone"
             android:background="@drawable/person_color">
 
             <View
@@ -297,6 +479,7 @@
             android:id="@+id/lin_timer"
             android:layout_width="match_parent"
             android:layout_height="43dp"
+            android:visibility="gone"
             android:background="@drawable/person_color" >
 
             <View
@@ -349,6 +532,7 @@
             android:id="@+id/lin_liuliang"
             android:layout_width="match_parent"
             android:layout_height="44dp"
+            android:layout_marginTop="20dp"
             android:background="@color/white">
 
             <View
@@ -368,7 +552,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="14dp"
-                android:text="2/3/4G网络流量提醒"
+                android:text="播放和下载"
                 android:layout_toRightOf="@id/image_liuliang"
                 android:layout_centerVertical="true"
                 android:textColor="@color/wt_login_third"
@@ -392,11 +576,97 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/lin_hardware"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@drawable/person_color"
+            android:layout_marginTop="20dp">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/view_color" />
+
+            <ImageView
+                android:id="@+id/image_hardware"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19dp"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/wt_person_set" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:text="智能硬件"
+                android:layout_toRightOf="@id/image_hardware"
+                android:layout_centerVertical="true"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="13dp"
+                android:src="@mipmap/live_more" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/view_color" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/lin_app"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@drawable/person_color">
+
+            <ImageView
+                android:id="@+id/image_app"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="19dp"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/wt_person_set" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:text="应用分享"
+                android:layout_toRightOf="@id/image_app"
+                android:layout_centerVertical="true"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="13dp"
+                android:src="@mipmap/live_more" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/view_color" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
             android:id="@+id/lin_set"
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:background="@drawable/person_color"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="20dp">
 
             <View
                 android:layout_width="match_parent"

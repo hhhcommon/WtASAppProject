@@ -11,7 +11,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,7 +38,6 @@ import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.http.MyHttp;
 import com.woting.common.manager.FileManager;
-import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.PhoneMessage;
@@ -51,8 +49,6 @@ import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
 import com.woting.ui.interphone.group.creatgroup.creat.util.ImageUploadReturnUtil;
 import com.woting.ui.mine.favorite.activity.FavoriteActivity;
 import com.woting.ui.mine.model.UserPortaitInside;
-import com.woting.ui.mine.modifypassword.ModifyPasswordActivity;
-import com.woting.ui.mine.phonecheck.PhoneCheckActivity;
 import com.woting.ui.mine.photocut.PhotoCutActivity;
 import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
 import com.woting.ui.mine.qrcodes.EWMShowActivity;
@@ -88,11 +84,13 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
 
     private Dialog dialog;
     private Dialog imageDialog;
-    private View linModifyPassword;             // 修改密码
-    private View linLike;                       // 我喜欢的
-    private View linBingDing;                   // 修改手机号
     private View linStatusNoLogin;              // 没有登录时的状态
     private View linStatusLogin;                // 登录时的状态
+    private View linLike;                       // 我喜欢的
+    private View linAnchor;                     // 我的主播
+    private View linSubscribe;                  // 我的订阅
+    private View linAlbum;                      // 我的专辑
+
     private TextView textTime;                  // 定时关闭的时间
     private TextView textUserName;              // 用户名
     private ImageView imageToggle;              // 流量提醒
@@ -130,7 +128,7 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
 
     // 设置 view
     private void setView() {
-        Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.img_person_background);
+//        Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.img_person_background);
         textTime = (TextView) findViewById(R.id.text_time);                 // 定时关闭的时间显示
 
         findViewById(R.id.imageView_ewm).setOnClickListener(this);          // 二维码
@@ -140,29 +138,34 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
         findViewById(R.id.lin_playhistory).setOnClickListener(this);        // 播放历史
         findViewById(R.id.lin_timer).setOnClickListener(this);              // 定时
         findViewById(R.id.lin_liuliang).setOnClickListener(this);           // 流量提醒
+        findViewById(R.id.lin_hardware).setOnClickListener(this);           // 智能硬件
+        findViewById(R.id.lin_app).setOnClickListener(this);                // 应用分享
         findViewById(R.id.lin_set).setOnClickListener(this);                // 设置
 
         linStatusNoLogin = findViewById(R.id.lin_status_nodenglu);          // 未登录时的状态
-        ImageView lin_image_0 = (ImageView) findViewById(R.id.lin_image_0); // 未登录时的背景图片
-        lin_image_0.setImageBitmap(bmp);
+//        ImageView lin_image_0 = (ImageView) findViewById(R.id.lin_image_0); // 未登录时的背景图片
+//        lin_image_0.setImageBitmap(bmp);
 
         linStatusLogin = findViewById(R.id.lin_status_denglu);              // 登录时的状态
         imageToggle = (ImageView) findViewById(R.id.wt_img_toggle);         // 流量提醒开关
         textUserName = (TextView) findViewById(R.id.tv_username);           // 用户名
-        ImageView lin_image = (ImageView) findViewById(R.id.lin_image);     // 登录时的背景图片
-        lin_image.setImageBitmap(bmp);
+//        ImageView lin_image = (ImageView) findViewById(R.id.lin_image);     // 登录时的背景图片
+//        lin_image.setImageBitmap(bmp);
 
         imageHead = (ImageView) findViewById(R.id.image_touxiang);          // 登录后的头像
         imageHead.setOnClickListener(this);
 
-        linBingDing = findViewById(R.id.lin_bingding);                      // 账户绑定
-        linBingDing.setOnClickListener(this);
-
-        linModifyPassword = findViewById(R.id.lin_modifypassword);          // 修改密码
-        linModifyPassword.setOnClickListener(this);
-
         linLike = findViewById(R.id.lin_like);                              // like
         linLike.setOnClickListener(this);
+
+        linAnchor = findViewById(R.id.lin_anchor);                          // 我的主播
+        linAnchor.setOnClickListener(this);
+
+        linSubscribe = findViewById(R.id.lin_subscribe);                    // 我的订阅
+        linSubscribe.setOnClickListener(this);
+
+        linAlbum = findViewById(R.id.lin_album);                            // 我的专辑
+        linAlbum.setOnClickListener(this);
 
         TextView textUser = (TextView) findViewById(R.id.tv_user);          // 用户信息
         textUser.setText("24岁  水瓶座  北京  ");
@@ -178,13 +181,6 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
                 break;
             case R.id.lin_playhistory:      // 播放历史
                 startActivity(new Intent(context, PlayHistoryActivity.class));
-                break;
-            case R.id.lin_modifypassword:   // 修改密码
-                startActivity(new Intent(context, ModifyPasswordActivity.class));
-                break;
-            case R.id.lin_bingding:         // 账户绑定
-//                PasswordIntent.putExtra("origin", 2);
-                startActivity(new Intent(context, PhoneCheckActivity.class));
                 break;
             case R.id.lin_timer:            // 定时
                 startActivity(new Intent(context, TimerPowerOffActivity.class));
@@ -228,6 +224,21 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
             case R.id.lin_like:             // 我喜欢的
                 startActivity(new Intent(context, FavoriteActivity.class));
                 break;
+            case R.id.lin_anchor:           // 我的主播
+                ToastUtils.show_allways(context, "我的主播!");
+                break;
+            case R.id.lin_subscribe:        // 我的订阅
+                ToastUtils.show_allways(context, "我的订阅!");
+                break;
+            case R.id.lin_album:            // 我的专辑
+                ToastUtils.show_allways(context, "我的专辑!");
+                break;
+            case R.id.lin_hardware:         // 智能硬件
+
+                break;
+            case R.id.lin_app:              // 应用分享
+
+                break;
             case R.id.image_nodenglu:       // 没有登录的默认头像
                 startActivity(new Intent(context, LoginActivity.class));
                 break;
@@ -265,15 +276,14 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
             linStatusNoLogin.setVisibility(View.GONE);      // 未登录状态
             linStatusLogin.setVisibility(View.VISIBLE);     // 登录状态
             linLike.setVisibility(View.VISIBLE);            // 我喜欢的
-            linBingDing.setVisibility(View.VISIBLE);        // 修改手机号
-            linModifyPassword.setVisibility(View.VISIBLE);  // 修改密码
+            linAnchor.setVisibility(View.VISIBLE);
+            linSubscribe.setVisibility(View.VISIBLE);
+            linAlbum.setVisibility(View.VISIBLE);
 
             userName = sharedPreferences.getString(StringConstant.USERNAME, "");// 用户名
             userId = sharedPreferences.getString(StringConstant.USERID, "");    // 用户 ID
             imageUrl = sharedPreferences.getString(StringConstant.IMAGEURL, "");// 用户头像
-//            if(userName.equals("")) {
-//                userName = (String) SharePreferenceManager.getSharePreferenceValue(context, "USER_NAME", "USER_NAME", "");
-//            }
+
             textUserName.setText(userName);
             if (!imageUrl.equals("")) {
                 if (imageUrl.startsWith("http:")) {
@@ -287,8 +297,9 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
             linStatusNoLogin.setVisibility(View.VISIBLE);
             linStatusLogin.setVisibility(View.GONE);
             linLike.setVisibility(View.GONE);
-            linBingDing.setVisibility(View.GONE);
-            linModifyPassword.setVisibility(View.GONE);
+            linAnchor.setVisibility(View.GONE);
+            linSubscribe.setVisibility(View.GONE);
+            linAlbum.setVisibility(View.GONE);
             imageHead.setImageResource(R.mipmap.reg_default_portrait);
         }
 
