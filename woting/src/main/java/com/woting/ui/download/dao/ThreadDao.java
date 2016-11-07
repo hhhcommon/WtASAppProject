@@ -5,17 +5,17 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.woting.ui.download.model.ThreadInfo;
-import com.woting.common.database.SQLitesHelper;
+import com.woting.common.database.SQLiteHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ThreadDao {
-	private SQLitesHelper helper;
+	private SQLiteHelper helper;
 
 	// 构造方法
 	public ThreadDao(Context context) {
-		helper = new SQLitesHelper(context);
+		helper = new SQLiteHelper(context);
 	}
 
 	public void insertThread(ThreadInfo threadInfo) {

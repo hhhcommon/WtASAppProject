@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.woting.ui.interphone.linkman.model.DBNotifyHistory;
-import com.woting.common.database.SQLitesHelper;
+import com.woting.common.database.SQLiteHelper;
 import com.woting.common.util.CommonUtils;
 
 import java.util.ArrayList;
@@ -17,12 +17,12 @@ import java.util.List;
  *2016年1月15日
  */
 public class NotifyHistoryDao {
-	private SQLitesHelper helper;
+	private SQLiteHelper helper;
 	private Context context;
 
 	//构造方法
 	public NotifyHistoryDao(Context context) {
-		helper = new SQLitesHelper(context);
+		helper = new SQLiteHelper(context);
 		this.context=context;
 	}
 
