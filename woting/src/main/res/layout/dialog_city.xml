@@ -15,31 +15,39 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="选择日期"
+            android:text="选择所在城市"
             android:gravity="center"
             android:textColor="@color/wt_login_third"
             android:textSize="16sp"
             />
-
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="4"
-            android:gravity="center" >
-            <DatePicker
-                   android:id="@+id/datePicker"
-                    android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                     android:calendarViewShown="false" />
+            android:gravity="center"
+            android:orientation="horizontal"
+            >
+          <ListView
+              android:id="@+id/lv_city"
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_weight="1"
+              android:scrollbars="none"
+              />
+            <ListView
+                android:id="@+id/lv_zone"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scrollbars="none"
+                />
         </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/dinglan_orange" />
-        <LinearLayout 
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -54,12 +62,12 @@
                 android:gravity="center"
                 />
 
-         <!--   <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/dinglan_orange"
+            <!--   <View
+                   android:layout_width="1dp"
+                   android:layout_height="match_parent"
+                   android:background="@color/dinglan_orange"
 
-                />-->
+                   />-->
             <TextView
                 android:id="@+id/tv_confirm"
                 android:layout_width="0dp"
@@ -69,8 +77,8 @@
                 android:gravity="center"
                 android:textColor="@color/dinglan_orange"
                 />
-            
-            
+
+
         </LinearLayout>
 
     </LinearLayout>
