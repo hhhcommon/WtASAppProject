@@ -56,7 +56,7 @@ import com.woting.ui.interphone.group.groupcontrol.personnews.TalkPersonNewsActi
 import com.woting.ui.interphone.linkman.model.LinkMan;
 import com.woting.ui.interphone.linkman.model.TalkGroupInside;
 import com.woting.ui.interphone.main.DuiJiangActivity;
-import com.woting.ui.common.login.activity.LoginActivity;
+import com.woting.ui.common.login.LoginActivity;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;

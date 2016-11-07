@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.woting.ui.common.splash.activity.SplashActivity;
+import com.woting.ui.common.splash.SplashActivity;
   
 /** 
  * 实现开机启动 

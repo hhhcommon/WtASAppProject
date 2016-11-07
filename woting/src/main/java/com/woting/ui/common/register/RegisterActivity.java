@@ -1,4 +1,4 @@
-package com.woting.ui.common.register.activity;
+package com.woting.ui.common.register;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -171,9 +171,9 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
                     dialog = DialogUtils.Dialogph(context, "注册中", dialog);
                     send();
                 } else if (ReturnType != null && ReturnType.equals("T")) {
-                    ToastUtils.show_allways(context, "异常返回值");
+                    ToastUtils.show_allways(context, "出错了，请您稍后再试!");
                 } else if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_allways(context, "验证码不匹配");
+                    ToastUtils.show_allways(context, "您输入的验证码不匹配!");
                 } else {
                     if (Message != null && !Message.trim().equals("")) {
                         ToastUtils.show_allways(context, Message + "");
@@ -237,9 +237,9 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
                     setResult(1);
                     finish();
                 } else if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_allways(context, "服务器端无此用户");
+                    ToastUtils.show_allways(context, "当前用户暂未注册!");
                 } else if (ReturnType != null && ReturnType.equals("1003")) {
-                    ToastUtils.show_allways(context, "用户名重复");
+                    ToastUtils.show_allways(context, "您输入的用户名重复了!");
                 } else if (ReturnType != null && ReturnType.equals("0000")) {
                     ToastUtils.show_allways(context, "发生未知错误，请稍后重试");
                 } else if (ReturnType != null && ReturnType.equals("T")) {
@@ -317,16 +317,16 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
                     e.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
-                    ToastUtils.show_allways(context, "验证码已经发送");
+                    ToastUtils.show_allways(context, "验证码已经发送!");
                     timerDown();
                     sendType = 2;
                     verifyStatus = 1;
                     textGetYzm.setVisibility(View.GONE);
                     textCxFaSong.setVisibility(View.VISIBLE);
                 } else if (ReturnType != null && ReturnType.equals("T")) {
-                    ToastUtils.show_allways(context, "异常返回值");
+                    ToastUtils.show_allways(context, "数据出错了,请您稍后再试!");
                 } else if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_allways(context, "此号码已经注册");
+                    ToastUtils.show_allways(context, "此号码已经注册!");
                 } else {
                     if (Message != null && !Message.trim().equals("")) {
                         ToastUtils.show_allways(context, Message + "");
@@ -373,7 +373,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
                 textNext.setVisibility(View.GONE);
                 textRegister.setVisibility(View.VISIBLE);
             } else {
-                ToastUtils.show_allways(context, "请点击获取验证码，获取验证码信息");
+                ToastUtils.show_allways(context, "请点击获取验证码，获取验证码信息!");
             }
         } else {
             textRegister.setVisibility(View.GONE);

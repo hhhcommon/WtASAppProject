@@ -35,7 +35,7 @@
 
         <!--  -->
         <activity
-            android:name=".ui.common.splash.activity.SplashActivity"
+            android:name=".ui.common.splash.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -130,7 +130,7 @@
 
         <!--  -->
         <activity
-            android:name=".ui.common.login.activity.LoginActivity"
+            android:name=".ui.common.login.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
@@ -165,7 +165,7 @@
 
         <!--  -->
         <activity
-            android:name=".ui.common.register.activity.RegisterActivity"
+            android:name=".ui.common.register.RegisterActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />

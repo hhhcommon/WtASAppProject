@@ -1,4 +1,4 @@
-package com.woting.ui.common.splash.model;
+package com.woting.ui.common.model;
 /**
  * splash的model
  * @author 辛龙

@@ -23,7 +23,7 @@ import com.woting.ui.interphone.group.creatgroup.CreateGroupActivity;
 import com.woting.ui.interphone.find.main.FindActivity;
 import com.woting.ui.interphone.linkman.fragment.LinkManFragment;
 import com.woting.ui.interphone.notify.activity.NotifyNewsActivity;
-import com.woting.ui.common.login.activity.LoginActivity;
+import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.scanning.activity.CaptureActivity;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.common.application.BSApplication;

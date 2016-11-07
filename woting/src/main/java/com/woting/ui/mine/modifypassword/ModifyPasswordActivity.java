@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.woting.R;
 import com.woting.ui.baseactivity.BaseActivity;
-import com.woting.ui.common.login.activity.LoginActivity;
+import com.woting.ui.common.login.LoginActivity;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;

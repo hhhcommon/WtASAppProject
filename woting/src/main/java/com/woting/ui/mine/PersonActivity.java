@@ -45,7 +45,7 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.ui.baseactivity.BaseActivity;
-import com.woting.ui.common.login.activity.LoginActivity;
+import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.home.player.timeset.activity.TimerPowerOffActivity;
 import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
 import com.woting.ui.interphone.group.creatgroup.creat.util.ImageUploadReturnUtil;

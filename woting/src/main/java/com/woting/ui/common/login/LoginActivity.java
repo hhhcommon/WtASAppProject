@@ -1,4 +1,4 @@
-package com.woting.ui.common.login.activity;
+package com.woting.ui.common.login;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -17,7 +17,7 @@ import com.woting.R;
 import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.interphone.commom.service.InterPhoneControl;
 import com.woting.ui.mine.forgetpassword.activity.ForgetPasswordActivity;
-import com.woting.ui.common.register.activity.RegisterActivity;
+import com.woting.ui.common.register.RegisterActivity;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
@@ -33,16 +33,13 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.util.Map;
-
 /**
  * 登录界面
- * @author 辛龙
- * 2016年2月23日
+ * 作者：xinlong on 2016/11/6 21:18
+ * 邮箱：645700751@qq.com
  */
 public class LoginActivity extends BaseActivity implements OnClickListener {
     private UMShareAPI mShareAPI;
-    private Intent pushDownIntent;
-    private Intent pushIntent;
 
     private Dialog dialog;// 加载数据对话框
     private EditText editUserName;// 输入 用户名
@@ -72,15 +69,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mShareAPI = UMShareAPI.get(context);// 初始化友盟
-
         setView();
     }
 
     // 初始化视图
     private void setView() {
-        pushDownIntent = new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED);// 刷新下载完成界面
-        pushIntent = new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN);// 刷新联系人界面
-
         findViewById(R.id.head_left_btn).setOnClickListener(this);// 返回按钮
         findViewById(R.id.tv_wjmm).setOnClickListener(this);// 忘记密码
         findViewById(R.id.btn_login).setOnClickListener(this);// 登录按钮
@@ -265,8 +258,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                             Log.v("commit", "数据 commit 失败!");
                         }
                     }
-                    sendBroadcast(pushIntent);
-                    sendBroadcast(pushDownIntent);// 刷新下载界面
+                    sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
+                    sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));// 刷新下载界面
 
                     String phoneName = editUserName.getText().toString().trim();
                     SharePreferenceManager.saveBatchSharedPreference(context, "USER_NAME", "USER_NAME", phoneName);
@@ -274,13 +267,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                     setResult(1);
                     finish();
                 } else if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_allways(context, "服务器端无此用户");
+                    ToastUtils.show_allways(context, "您输入的用户暂未注册!");
                 } else if (ReturnType != null && ReturnType.equals("1003")) {
-                    ToastUtils.show_allways(context, "密码错误");
+                    ToastUtils.show_allways(context, "您输入的密码错误!");
                 } else if (ReturnType != null && ReturnType.equals("0000")) {
-                    ToastUtils.show_allways(context, "发生未知错误，请稍后重试");
+                    ToastUtils.show_allways(context, "发生未知错误，请稍后重试!");
                 } else if (ReturnType != null && ReturnType.equals("T")) {
-                    ToastUtils.show_allways(context, "发生未知错误，请稍后重试");
+                    ToastUtils.show_allways(context, "发生未知错误，请稍后重试!");
                 } else {
                     if (Message != null && !Message.trim().equals("")) {
                         ToastUtils.show_allways(context, Message + "");
@@ -374,14 +367,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         if (!et.commit()) {
                             Log.v("commit", "数据 commit 失败!");
                         }
-                        context.sendBroadcast(pushIntent);
-                        context.sendBroadcast(pushDownIntent);// 刷新下载界面
+                        context.sendBroadcast( new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
+                        context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));// 刷新下载界面
                         InterPhoneControl.sendEntryMessage(context);
                         setResult(1);
                         finish();
                     }
                 } else if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_allways(context, "无法获取用户Id");
+                    ToastUtils.show_allways(context, "登录失败,请稍后再试!");
                 } else if (ReturnType != null && ReturnType.equals("T")) {
                     ToastUtils.show_allways(context, "异常返回值");
                 } else if (ReturnType != null && ReturnType.equals("1011")) {
@@ -421,10 +414,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         @Override
         public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
             if (data != null) {
-                ToastUtils.show_allways(context, "认证成功，已经获取到个人信息");
                 if (platform.equals(SHARE_MEDIA.SINA)) {
-                    JSONTokener jsonParser = new JSONTokener(data.get("result"));
                     try {
+                        JSONTokener jsonParser = new JSONTokener(data.get("result"));
                         JSONObject arg1 = (JSONObject) jsonParser.nextValue();
                         thirdNickName = arg1.getString("name");
                         thirdUserId = arg1.getString("idstr");
@@ -473,18 +465,18 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                     }
                 }
             } else {
-                ToastUtils.show_allways(context, "个人信息获取异常");
+                ToastUtils.show_allways(context, "个人信息获取异常!");
             }
         }
 
         @Override
         public void onError(SHARE_MEDIA platform, int action, Throwable t) {
-            ToastUtils.show_allways(context, "个人信息获取异常");
+            ToastUtils.show_allways(context, "个人信息获取异常!");
         }
 
         @Override
         public void onCancel(SHARE_MEDIA platform, int action) {
-            ToastUtils.show_allways(context, "您已取消操作，本程序无法获取到您的个人信息");
+            ToastUtils.show_allways(context, "您已取消操作，本程序无法获取到您的个人信息!");
         }
     };
 
