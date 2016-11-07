@@ -16,8 +16,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.woting.R;
-import com.woting.ui.common.login.activity.LoginActivity;
-import com.woting.ui.common.register.activity.RegisterActivity;
+import com.woting.ui.common.login.LoginActivity;
+import com.woting.ui.common.register.RegisterActivity;
 import com.woting.ui.main.MainActivity;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.BitmapUtils;

@@ -22,7 +22,7 @@ import java.util.List;
 public class DownLoadSequAdapter extends BaseAdapter {
 	private List<FileInfo> list;
 	private Context context;
-	private downloadsequCheck downloadcheck;
+	private downloadSequCheck downloadCheck;
 	private DecimalFormat df;
 	
 	public DownLoadSequAdapter(Context context, List<FileInfo> list) {
@@ -45,8 +45,8 @@ public class DownLoadSequAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return position;
 	}
-	public void setOnListener(downloadsequCheck downloadcheck) {
-		this.downloadcheck = downloadcheck;
+	public void setOnListener(downloadSequCheck downloadCheck) {
+		this.downloadCheck = downloadCheck;
 	}
 	
 	@Override
@@ -114,13 +114,13 @@ public class DownLoadSequAdapter extends BaseAdapter {
 			
 			@Override
 			public void onClick(View v) {
-				downloadcheck.checkposition(position);
+				downloadCheck.checkposition(position);
 			}
 		});
 		return convertView;
 	}
 
-	public interface downloadsequCheck {
+	public interface downloadSequCheck {
         void checkposition(int position);
 	 }
  

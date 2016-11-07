@@ -10,23 +10,23 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
-import com.woting.ui.interphone.find.findresult.model.FindGroupNews;
 import com.woting.common.config.GlobalConfig;
+import com.woting.ui.common.model.GroupInfo;
 
 import java.util.List;
 
 public class FindGroupResultAdapter extends BaseAdapter {
-	private List<FindGroupNews> list;
+	private List<GroupInfo> list;
 	private Context context;
 	private String url;
 
-	public FindGroupResultAdapter(Context context, List<FindGroupNews> list) {
+	public FindGroupResultAdapter(Context context, List<GroupInfo> list) {
 		super();
 		this.list = list;
 		this.context = context;
 	}
 
-	public void ChangeData(List<FindGroupNews> list) {
+	public void ChangeData(List<GroupInfo> list) {
 		this.list = list;
 		this.notifyDataSetChanged();
 	}
@@ -59,17 +59,17 @@ public class FindGroupResultAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		FindGroupNews Inviter = list.get(position);
+		GroupInfo Inviter = list.get(position);
 		if (Inviter.getGroupName() == null || Inviter.getGroupName().equals("")) {
 			 holder.textview_invitename.setText("未知"); 
 		} else {
 			holder.textview_invitename.setText(Inviter.getGroupName());
 		}
-		if (Inviter.getGroupOriDesc()== null || Inviter.getGroupOriDesc().equals("")) {
+		if (Inviter.getGroupOriDescn()== null || Inviter.getGroupOriDescn().equals("")) {
 			 holder.textview_invitemessage.setVisibility(View.GONE);
 		} else {
 			holder.textview_invitemessage.setVisibility(View.VISIBLE);
-		holder.textview_invitemessage.setText(Inviter.getGroupOriDesc());
+		holder.textview_invitemessage.setText(Inviter.getGroupOriDescn());
 		}
 		if (Inviter.getGroupImg() == null || Inviter.getGroupImg().equals("")
 				|| Inviter.getGroupImg().equals("null") || Inviter.getGroupImg().trim().equals("")) {

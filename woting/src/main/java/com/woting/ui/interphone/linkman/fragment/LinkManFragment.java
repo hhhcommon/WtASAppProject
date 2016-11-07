@@ -31,6 +31,16 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
+import com.woting.common.application.BSApplication;
+import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.StringConstant;
+import com.woting.common.util.DialogUtils;
+import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.HeightListView;
+import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.interphone.alert.CallAlertActivity;
 import com.woting.ui.interphone.chat.fragment.ChatFragment;
 import com.woting.ui.interphone.commom.service.InterPhoneControl;
@@ -42,24 +52,14 @@ import com.woting.ui.interphone.linkman.adapter.TalkGroupAdapter;
 import com.woting.ui.interphone.linkman.adapter.TalkGroupAdapter.OnListener;
 import com.woting.ui.interphone.linkman.adapter.TalkPersonNoAdapter;
 import com.woting.ui.interphone.linkman.model.LinkMan;
-import com.woting.ui.interphone.linkman.model.TalkGroupInside;
-import com.woting.ui.interphone.linkman.model.TalkPersonInside;
 import com.woting.ui.interphone.linkman.view.CharacterParser;
 import com.woting.ui.interphone.linkman.view.PinyinComparator;
 import com.woting.ui.interphone.linkman.view.SideBar;
 import com.woting.ui.interphone.linkman.view.SideBar.OnTouchingLetterChangedListener;
 import com.woting.ui.interphone.main.DuiJiangActivity;
 import com.woting.ui.interphone.message.activity.NewsActivity;
-import com.woting.ui.common.login.activity.LoginActivity;
-import com.woting.common.application.BSApplication;
-import com.woting.common.config.GlobalConfig;
-import com.woting.common.constant.BroadcastConstants;
-import com.woting.common.constant.StringConstant;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
-import com.woting.common.util.DialogUtils;
-import com.woting.common.util.ToastUtils;
-import com.woting.common.widgetui.HeightListView;
+import com.woting.ui.common.model.GroupInfo;
+import com.woting.ui.common.model.UserInfo;
 
 import org.json.JSONObject;
 
@@ -95,11 +95,11 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 	private Dialog confirmdialog;
 	private Dialog dialogs;
 	private int type = 1;			//1.个人2.组
-	private TalkGroupInside group;
+	private GroupInfo group;
 	private TalkGroupAdapter adapter_group;
-	private List<TalkGroupInside> grouplist = new ArrayList<>();
-	private List<TalkGroupInside> srclist_g;
-	private List<TalkPersonInside> srclist_p;
+	private List<GroupInfo> grouplist = new ArrayList<>();
+	private List<GroupInfo> srclist_g;
+	private List<UserInfo> srclist_p;
 	private String id;
 	private EditText et_search;
 	private ImageView image_clear;
@@ -108,7 +108,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 	private ListView listView_group;
 	private LinearLayout relative;
 	private LinearLayout lin_second;
-	private List<TalkPersonInside> list;
+	private List<UserInfo> list;
 	private TextView tvdialog;
 	private String tag = "FRIENDS_VOLLEY_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
@@ -197,7 +197,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 	/**
 	 * 为ListView填充数据
 	 */
-	private  void  filledData(List<TalkPersonInside> person) {
+	private  void  filledData(List<UserInfo> person) {
 		//		String py,headChar;
 		//		int i=0,j=0;
 		//		TalkPersonInside oneElement1,oneElement2;
@@ -238,10 +238,10 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 	 * 根据输入框中的值来过滤数据并更新ListView
 	 * @param filterStr
 	 */
-	private List<TalkPersonInside> filterData(String filterStr) {
-		List<TalkPersonInside> filterDateList = new ArrayList<>();
+	private List<UserInfo> filterData(String filterStr) {
+		List<UserInfo> filterDateList = new ArrayList<>();
 		filterDateList.clear();
-		for (TalkPersonInside sortModel : srclist_p) {
+		for (UserInfo sortModel : srclist_p) {
 			String name = sortModel.getName();
 			if (name.indexOf(filterStr.toString()) != -1|| characterParser.getSelling(name).startsWith(filterStr.toString())) {
 				filterDateList.add(sortModel);
@@ -674,7 +674,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 		adapter.setOnListeners(new OnListeners() {
 			@Override
 			public void add(int position) {
-				id = ((TalkPersonInside) adapter.getItem(position)).getUserId();
+				id = ((UserInfo) adapter.getItem(position)).getUserId();
 				//此时的对讲状态
 				if(ChatFragment.iscalling){
 					if(ChatFragment.interphonetype.equals("user")){

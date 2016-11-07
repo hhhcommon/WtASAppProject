@@ -1,11 +1,11 @@
 package com.woting.ui.interphone.linkman.view;
 
-import com.woting.ui.interphone.linkman.model.TalkPersonInside;
+import com.woting.ui.common.model.UserInfo;
 
 import java.util.Comparator;
-public class PinyinComparator implements Comparator<TalkPersonInside> {
+public class PinyinComparator implements Comparator<UserInfo> {
 
-	public int compare(TalkPersonInside o1, TalkPersonInside o2) {
+	public int compare(UserInfo o1, UserInfo o2) {
 		if (o1.getSortLetters().equals("@")
 				|| o2.getSortLetters().equals("#")) {
 			return -1;

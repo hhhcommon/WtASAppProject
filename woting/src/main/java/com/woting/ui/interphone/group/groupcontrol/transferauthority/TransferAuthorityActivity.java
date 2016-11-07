@@ -25,10 +25,10 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.interphone.group.groupcontrol.transferauthority.adapter.TransferAuthorityAdapter;
 import com.woting.ui.interphone.group.groupcontrol.transferauthority.adapter.TransferAuthorityAdapter.friendCheck;
-import com.woting.ui.interphone.group.groupcontrol.transferauthority.model.UserInfo;
 import com.woting.ui.interphone.linkman.view.CharacterParser;
-import com.woting.ui.interphone.linkman.view.PinyinComparator_c;
+import com.woting.ui.interphone.linkman.view.PinyinComparator;
 import com.woting.ui.interphone.linkman.view.SideBar;
+import com.woting.ui.common.model.UserInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +44,7 @@ import java.util.List;
  */
 public class TransferAuthorityActivity extends BaseActivity implements OnClickListener, TextWatcher {
     private CharacterParser characterParser = CharacterParser.getInstance();// 实例化汉字转拼音类
-    private PinyinComparator_c pinyinComparator = new PinyinComparator_c();
+    private PinyinComparator pinyinComparator = new PinyinComparator();
     private TransferAuthorityAdapter adapter;
     private SideBar sideBar;
     private List<UserInfo> userList;

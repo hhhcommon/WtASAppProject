@@ -16,19 +16,19 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
-import com.woting.ui.baseactivity.BaseActivity;
-import com.woting.ui.interphone.group.groupcontrol.groupnumdel.adapter.CreateGroupMembersDelAdapter;
-import com.woting.ui.interphone.group.groupcontrol.groupnumdel.adapter.CreateGroupMembersDelAdapter.friendCheck;
-import com.woting.ui.interphone.group.groupcontrol.groupnumdel.model.UserInfo;
-import com.woting.ui.interphone.linkman.view.CharacterParser;
-import com.woting.ui.interphone.linkman.view.PinyinComparator_b;
-import com.woting.ui.interphone.linkman.view.SideBar;
 import com.woting.common.config.GlobalConfig;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.interphone.group.groupcontrol.groupnumdel.adapter.CreateGroupMembersDelAdapter;
+import com.woting.ui.interphone.group.groupcontrol.groupnumdel.adapter.CreateGroupMembersDelAdapter.friendCheck;
+import com.woting.ui.common.model.UserInfo;
+import com.woting.ui.interphone.linkman.view.CharacterParser;
+import com.woting.ui.interphone.linkman.view.PinyinComparator;
+import com.woting.ui.interphone.linkman.view.SideBar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +44,7 @@ import java.util.List;
  */
 public class GroupMemberDelActivity extends BaseActivity implements OnClickListener, TextWatcher {
     private CharacterParser characterParser = CharacterParser.getInstance();// 实例化汉字转拼音类
-    private PinyinComparator_b pinyinComparator = new PinyinComparator_b();
+    private PinyinComparator pinyinComparator = new PinyinComparator();
     private CreateGroupMembersDelAdapter adapter;
     private List<UserInfo> userList;
     private List<UserInfo> userList2 = new ArrayList<>();

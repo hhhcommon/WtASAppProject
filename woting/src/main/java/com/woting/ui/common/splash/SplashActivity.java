@@ -1,4 +1,4 @@
-package com.woting.ui.common.splash.activity;
+package com.woting.ui.common.splash;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,11 +7,10 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.woting.ui.common.splash.model.UserInfo;
+import com.woting.ui.common.model.UserInfo;
 import com.woting.ui.common.welcome.activity.WelcomeActivity;
 import com.woting.ui.main.MainActivity;
 import com.woting.common.application.BSApplication;

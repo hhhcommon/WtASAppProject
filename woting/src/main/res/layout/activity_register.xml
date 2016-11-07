@@ -250,28 +250,54 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/lin_agreement"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/wt_login_default_margin_left"
+            android:layout_marginLeft="12dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="15dp"
-            android:gravity="left"
+            android:layout_marginTop="5dp"
+            android:gravity="left|center"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/image_all_check"/>
+                android:src="@mipmap/image_all_check" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="25dp"
-                android:layout_marginLeft="8dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="本人已阅读并同意注册协议"
-                android:textColor="@color/gray"
-                android:textSize="@dimen/wt_regist_text_xieyi"/>
+                android:orientation="vertical">
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="我已同意"
+                        android:textColor="@color/black"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="《我听用户协议》"
+                        android:textColor="@color/black"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="1dp"
+                    android:background="@color/black" />
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

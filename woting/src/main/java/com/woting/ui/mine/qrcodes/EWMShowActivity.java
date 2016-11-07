@@ -9,13 +9,13 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
-import com.woting.ui.baseactivity.BaseActivity;
-import com.woting.ui.interphone.find.findresult.model.FindGroupNews;
-import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.helper.CreatQRImageHelper;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.ToastUtils;
+import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
+import com.woting.ui.common.model.GroupInfo;
 
 /**
  * 展示二维码
@@ -73,7 +73,7 @@ public class EWMShowActivity extends BaseActivity implements OnClickListener {
             UserInviteMeInside meInside = (UserInviteMeInside) getIntent().getSerializableExtra("person");
             bmp = CreatQRImageHelper.getInstance().createQRImage(type, null, meInside, 600, 600);
         } else if (type == 2) {
-            FindGroupNews groupNews = (FindGroupNews) getIntent().getSerializableExtra("group");
+            GroupInfo groupNews = (GroupInfo) getIntent().getSerializableExtra("group");
             bmp = CreatQRImageHelper.getInstance().createQRImage(type, groupNews, null, 400, 400);
         }
         if (name != null && !name.equals("")) {

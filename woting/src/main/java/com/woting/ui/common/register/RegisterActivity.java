@@ -1,4 +1,4 @@
-package com.woting.ui.common.register.activity;
+package com.woting.ui.common.register;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -11,20 +11,22 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.woting.R;
-import com.woting.ui.baseactivity.BaseActivity;
-import com.woting.ui.interphone.commom.service.InterPhoneControl;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.common.agreement.AgreementActivity;
+import com.woting.ui.interphone.commom.service.InterPhoneControl;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,6 +89,9 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
 
         textRegister = (TextView) findViewById(R.id.tv_register);// 注册
         textRegister.setOnClickListener(this);
+
+        LinearLayout agreement = (LinearLayout) findViewById(R.id.lin_agreement);// 注册协议
+        agreement.setOnClickListener(this);
     }
 
     @Override
@@ -100,6 +105,9 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
                 break;
             case R.id.tv_getyzm:// 检查手机号是否为空，或者是否是一个正常手机号
                 checkYzm();
+                break;
+            case R.id.lin_agreement:        // 注册协议
+                startActivity(new Intent(context, AgreementActivity.class));
                 break;
         }
     }
@@ -171,9 +179,9 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
                     dialog = DialogUtils.Dialogph(context, "注册中", dialog);
                     send();
                 } else if (ReturnType != null && ReturnType.equals("T")) {
-                    ToastUtils.show_allways(context, "异常返回值");
+                    ToastUtils.show_allways(context, "出错了，请您稍后再试!");
                 } else if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_allways(context, "验证码不匹配");
+                    ToastUtils.show_allways(context, "您输入的验证码不匹配!");
                 } else {
                     if (Message != null && !Message.trim().equals("")) {
                         ToastUtils.show_allways(context, Message + "");
@@ -237,9 +245,9 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
                     setResult(1);
                     finish();
                 } else if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_allways(context, "服务器端无此用户");
+                    ToastUtils.show_allways(context, "当前用户暂未注册!");
                 } else if (ReturnType != null && ReturnType.equals("1003")) {
-                    ToastUtils.show_allways(context, "用户名重复");
+                    ToastUtils.show_allways(context, "您输入的用户名重复了!");
                 } else if (ReturnType != null && ReturnType.equals("0000")) {
                     ToastUtils.show_allways(context, "发生未知错误，请稍后重试");
                 } else if (ReturnType != null && ReturnType.equals("T")) {
@@ -317,16 +325,16 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
                     e.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
-                    ToastUtils.show_allways(context, "验证码已经发送");
+                    ToastUtils.show_allways(context, "验证码已经发送!");
                     timerDown();
                     sendType = 2;
                     verifyStatus = 1;
                     textGetYzm.setVisibility(View.GONE);
                     textCxFaSong.setVisibility(View.VISIBLE);
                 } else if (ReturnType != null && ReturnType.equals("T")) {
-                    ToastUtils.show_allways(context, "异常返回值");
+                    ToastUtils.show_allways(context, "数据出错了,请您稍后再试!");
                 } else if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_allways(context, "此号码已经注册");
+                    ToastUtils.show_allways(context, "此号码已经注册!");
                 } else {
                     if (Message != null && !Message.trim().equals("")) {
                         ToastUtils.show_allways(context, Message + "");
@@ -373,7 +381,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
                 textNext.setVisibility(View.GONE);
                 textRegister.setVisibility(View.VISIBLE);
             } else {
-                ToastUtils.show_allways(context, "请点击获取验证码，获取验证码信息");
+                ToastUtils.show_allways(context, "请点击获取验证码，获取验证码信息!");
             }
         } else {
             textRegister.setVisibility(View.GONE);

@@ -1,5 +1,7 @@
 package com.woting.ui.interphone.linkman.model;
 
+import com.woting.ui.common.model.UserInfo;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -8,7 +10,7 @@ public class TalkPerson implements Serializable{
 	private String PageSize;
 	private String AllSize;
 	private String Name;
-	private List<TalkPersonInside> Friends;
+	private List<UserInfo> Friends;
 	
 	public String getType() {
 		return Type;
@@ -34,10 +36,10 @@ public class TalkPerson implements Serializable{
 	public void setName(String name) {
 		Name = name;
 	}
-	public List<TalkPersonInside> getFriends() {
+	public List<UserInfo> getFriends() {
 		return Friends;
 	}
-	public void setFriends(List<TalkPersonInside> friends) {
+	public void setFriends(List<UserInfo> friends) {
 		Friends = friends;
 	}
 }

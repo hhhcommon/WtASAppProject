@@ -36,14 +36,23 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.StringConstant;
+import com.woting.common.util.CommonUtils;
+import com.woting.common.util.DialogUtils;
+import com.woting.common.util.ToastUtils;
+import com.woting.common.util.VibratorUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.MyLinearLayout;
+import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.interphone.alert.CallAlertActivity;
 import com.woting.ui.interphone.chat.adapter.ChatListAdapter;
 import com.woting.ui.interphone.chat.adapter.ChatListAdapter.OnListener;
 import com.woting.ui.interphone.chat.adapter.GroupPersonAdapter;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
 import com.woting.ui.interphone.chat.model.DBTalkHistorary;
-import com.woting.ui.interphone.chat.model.GroupTalkInside;
-import com.woting.ui.interphone.chat.model.TalkListGP;
 import com.woting.ui.interphone.commom.message.MessageUtils;
 import com.woting.ui.interphone.commom.message.MsgNormal;
 import com.woting.ui.interphone.commom.message.content.MapContent;
@@ -54,19 +63,9 @@ import com.woting.ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivi
 import com.woting.ui.interphone.group.groupcontrol.grouppersonnews.GroupPersonNewsActivity;
 import com.woting.ui.interphone.group.groupcontrol.personnews.TalkPersonNewsActivity;
 import com.woting.ui.interphone.linkman.model.LinkMan;
-import com.woting.ui.interphone.linkman.model.TalkGroupInside;
 import com.woting.ui.interphone.main.DuiJiangActivity;
-import com.woting.ui.common.login.activity.LoginActivity;
-import com.woting.common.config.GlobalConfig;
-import com.woting.common.constant.BroadcastConstants;
-import com.woting.common.constant.StringConstant;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
-import com.woting.common.util.CommonUtils;
-import com.woting.common.util.DialogUtils;
-import com.woting.common.util.ToastUtils;
-import com.woting.common.util.VibratorUtils;
-import com.woting.common.widgetui.MyLinearLayout;
+import com.woting.ui.common.model.GroupInfo;
+import com.woting.ui.common.model.UserInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -123,9 +122,9 @@ public class ChatFragment extends Fragment implements OnClickListener{
 	private static String groupid;
 	public static String interphonetype;
 	public static String interphoneid;
-	private static List<GroupTalkInside> grouppersonlist =new ArrayList<GroupTalkInside>();//组成员
-	private static ArrayList<GroupTalkInside> grouppersonlists = new ArrayList<GroupTalkInside>();
-	private static ArrayList<TalkListGP> alllist = new ArrayList<TalkListGP>();//所有数据库数据
+	private static List<UserInfo> grouppersonlist =new ArrayList<UserInfo>();//组成员
+	private static ArrayList<UserInfo> grouppersonlists = new ArrayList<UserInfo>();
+	private static ArrayList<GroupInfo> alllist = new ArrayList<GroupInfo>();//所有数据库数据
 	private static int entergrouptype;
 	private static int dialogtype;
 	private boolean istalking = false;
@@ -481,7 +480,7 @@ public class ChatFragment extends Fragment implements OnClickListener{
 	/**
 	 * 设置对讲组为激活状态
 	 */
-	public static void zhidinggroup(TalkGroupInside talkGroupInside) {
+	public static void zhidinggroup(GroupInfo talkGroupInside) {
 		Intent intent = new Intent();
 		intent.setAction(BroadcastConstants.UP_DATA_GROUP);
 		context.sendBroadcast(intent);
@@ -496,7 +495,7 @@ public class ChatFragment extends Fragment implements OnClickListener{
 	/**
 	 * 设置对讲组2为激活状态
 	 */
-	public static void zhidinggroups(TalkGroupInside talkGroupInside) {
+	public static void zhidinggroups(GroupInfo talkGroupInside) {
 		Intent intent = new Intent();
 		intent.setAction(BroadcastConstants.UP_DATA_GROUP);
 		context.sendBroadcast(intent);
@@ -605,7 +604,7 @@ public class ChatFragment extends Fragment implements OnClickListener{
 					if(isCancelRequest){
 						return ;
 					}
-					LinkMan list = new LinkMan();
+					LinkMan list ;
 					list = new Gson().fromJson(result.toString(), new TypeToken<LinkMan>(){}.getType());
 					try {
 						try {
@@ -702,7 +701,7 @@ public class ChatFragment extends Fragment implements OnClickListener{
 		lin_foot.setVisibility(View.VISIBLE);
 		GlobalConfig.isactive=true;
 		lin_second.setVisibility(View.GONE);
-		TalkListGP firstdate = alllist.remove(0);
+		GroupInfo firstdate = alllist.remove(0);
 		interphonetype= firstdate.getTyPe();//对讲类型，个人跟群组
 		interphoneid=firstdate.getId();//对讲组：groupid
 		tv_groupname.setText(firstdate.getName());
@@ -740,7 +739,7 @@ public class ChatFragment extends Fragment implements OnClickListener{
 	public static void setdateperson() {
 		//设置个人为激活状态
 		iscalling=true;
-		TalkListGP firstdate = alllist.remove(0);
+		GroupInfo firstdate = alllist.remove(0);
 		interphonetype= firstdate.getTyPe();//
 		interphoneid=firstdate.getId();//
 		lin_notalk.setVisibility(View.GONE);
@@ -784,7 +783,7 @@ public class ChatFragment extends Fragment implements OnClickListener{
 							for(int j=0;j<GlobalConfig.list_person.size();j++){
 								String id = historydatabaselist.get(i).getID();
 								if(id!=null&&!id.equals("")&&id.equals(GlobalConfig.list_person.get(j).getUserId())){
-									TalkListGP ListGP = new TalkListGP();
+									GroupInfo ListGP = new GroupInfo();
 									ListGP.setTruename(GlobalConfig.list_person.get(j).getTruename());
 									ListGP.setId(GlobalConfig.list_person.get(j).getUserId());
 									ListGP.setName(GlobalConfig.list_person.get(j).getUserName());
@@ -804,11 +803,11 @@ public class ChatFragment extends Fragment implements OnClickListener{
 							for(int j=0;j<GlobalConfig.list_group.size();j++){
 								String id = historydatabaselist.get(i).getID();
 								if(id!=null&&!id.equals("")&&id.equals(GlobalConfig.list_group.get(j).getGroupId())){
-									TalkListGP ListGP = new TalkListGP();
+									GroupInfo ListGP = new GroupInfo();
 									ListGP.setCreateTime(GlobalConfig.list_group.get(j).getCreateTime());
 									ListGP.setGroupCount(GlobalConfig.list_group.get(j).getGroupCount());
 									ListGP.setGroupCreator(GlobalConfig.list_group.get(j).getGroupCreator());
-									ListGP.setGroupDesc(GlobalConfig.list_group.get(j).getGroupDesc());
+									ListGP.setGroupDesc(GlobalConfig.list_group.get(j).getGroupDescn());
 									ListGP.setId(GlobalConfig.list_group.get(j).getGroupId());
 									ListGP.setPortrait(GlobalConfig.list_group.get(j).getGroupImg());
 									ListGP.setGroupManager(GlobalConfig.list_group.get(j).getGroupManager());
@@ -853,9 +852,9 @@ public class ChatFragment extends Fragment implements OnClickListener{
 				if(grouppersonlist!=null){
 					grouppersonlist .clear();
 				}else{
-					grouppersonlist =new ArrayList<GroupTalkInside>();
+					grouppersonlist =new ArrayList<UserInfo>();
 				}
-				grouppersonlist=gson.fromJson(UserList, new TypeToken<List<GroupTalkInside>>(){}.getType());
+				grouppersonlist=gson.fromJson(UserList, new TypeToken<List<UserInfo>>(){}.getType());
 				if(grouppersonlist!=null&&grouppersonlist.size()>0){
 					tv_allnum.setText("/"+grouppersonlist.size());
 				}else{

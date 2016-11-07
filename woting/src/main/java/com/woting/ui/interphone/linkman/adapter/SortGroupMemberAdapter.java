@@ -12,19 +12,19 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
-import com.woting.ui.interphone.linkman.model.TalkPersonInside;
 import com.woting.common.config.GlobalConfig;
+import com.woting.ui.common.model.UserInfo;
 
 import java.util.List;
 
 public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexer {
-	private List<TalkPersonInside> list = null;
+	private List<UserInfo> list = null;
 	private Context mContext;
-	private TalkPersonInside lists;
+	private UserInfo lists;
 	private OnListeners onListeners;
 	private String url;
 
-	public SortGroupMemberAdapter(Context mContext, List<TalkPersonInside> list) {
+	public SortGroupMemberAdapter(Context mContext, List<UserInfo> list) {
 		this.mContext = mContext;
 		this.list = list;
 	}
@@ -38,7 +38,7 @@ public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexe
 	 * 
 	 * @param list
 	 */
-	public void updateListView(List<TalkPersonInside> list) {
+	public void updateListView(List<UserInfo> list) {
 		this.list = list;
 		notifyDataSetChanged();
 	}

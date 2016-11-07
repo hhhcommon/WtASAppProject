@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
-import com.woting.ui.interphone.group.groupcontrol.memberadd.model.UserInfo;
 import com.woting.common.config.GlobalConfig;
+import com.woting.ui.common.model.UserInfo;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;

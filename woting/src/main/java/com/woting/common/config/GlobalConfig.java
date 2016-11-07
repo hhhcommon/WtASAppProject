@@ -1,8 +1,8 @@
 package com.woting.common.config;
 
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
-import com.woting.ui.interphone.linkman.model.TalkGroupInside;
-import com.woting.ui.interphone.linkman.model.TalkPersonInside;
+import com.woting.ui.common.model.GroupInfo;
+import com.woting.ui.common.model.UserInfo;
 
 import java.util.List;
 /**
@@ -25,8 +25,8 @@ public class GlobalConfig {
     public static int CURRENT_NETWORK_STATE_TYPE = NETWORK_STATE_IDLE;
     //volley请求超时 时间
     public static final int HTTP_CONNECTION_TIMEOUT = 0 * 1000;
-    public static List<TalkGroupInside> list_group;
-    public static List<TalkPersonInside> list_person;
+    public static List<GroupInfo> list_group;
+    public static List<UserInfo> list_person;
     public static LanguageSearchInside playerobject;//播放器播放对象
     /**
      * 数据库版本号
