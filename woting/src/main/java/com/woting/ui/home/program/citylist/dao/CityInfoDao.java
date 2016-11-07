@@ -5,18 +5,18 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.woting.ui.home.program.fenlei.model.CatalogName;
-import com.woting.common.database.SQLiteHelper;
+import com.woting.common.database.SQLiteHelpe;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CityInfoDao {
 
-	private SQLiteHelper helper;
+	private SQLiteHelpe helper;
 	private Context context;
 
 	public CityInfoDao(Context context){
-		helper=new SQLiteHelper(context);
+		helper=new SQLiteHelpe(context);
 		this.context=context;
 	}
 	//查

@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.woting.ui.home.player.main.model.PlayerHistory;
-import com.woting.common.database.SQLiteHelper;
+import com.woting.common.database.SQLiteHelpe;
 import com.woting.common.util.CommonUtils;
 
 import java.util.ArrayList;
@@ -17,12 +17,12 @@ import java.util.List;
  *2016年1月15日
  */
 public class SearchPlayerHistoryDao {
-	private SQLiteHelper helper;
+	private SQLiteHelpe helper;
 	private Context context;
 
 	//构造方法
 	public SearchPlayerHistoryDao(Context context) {
-		helper = new SQLiteHelper(context);
+		helper = new SQLiteHelpe(context);
 		this.context=context;
 	}
 
