@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.woting.ui.download.model.FileInfo;
 import com.woting.ui.download.service.DownloadService;
 import com.woting.ui.home.program.album.model.ContentInfo;
-import com.woting.common.database.SQLiteHelpe;
+import com.woting.common.database.SQLiteHelper;
 import com.woting.common.util.SequenceUUID;
 
 import java.util.ArrayList;
@@ -19,14 +19,14 @@ import java.util.List;
  * 3：修改功能已经完成，目前支持根据文件名对完成状态进行修改 4:删除功能本业务暂不涉及，未处理
  */
 public class FileInfoDao {
-	private SQLiteHelpe helper;
+	private SQLiteHelper helper;
 	private String url = null;
 	private ContentInfo content;
 	private Context context;
 
 	// 构造方法
 	public FileInfoDao(Context context) {
-		helper = new SQLiteHelpe(context);
+		helper = new SQLiteHelper(context);
 		this.context=context;
 	}
 

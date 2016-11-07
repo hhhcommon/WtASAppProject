@@ -8,9 +8,9 @@ import com.woting.common.config.GlobalConfig;
  * 作者：xinlong on 2016/8/29 11:29
  * 邮箱：645700751@qq.com
  */
-public class SQLiteHelpe extends SQLiteOpenHelper {
+public class SQLiteHelper extends SQLiteOpenHelper {
 
-	public SQLiteHelpe(Context paramContext) {
+	public SQLiteHelper(Context paramContext) {
 		super(paramContext, "woting.db", null, GlobalConfig.dbVersonCode);
 	}
 
