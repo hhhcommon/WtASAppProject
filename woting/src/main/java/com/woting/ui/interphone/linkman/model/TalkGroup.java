@@ -1,5 +1,7 @@
 package com.woting.ui.interphone.linkman.model;
 
+import com.woting.ui.common.model.GroupInfo;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -8,7 +10,7 @@ public class TalkGroup implements Serializable{
 	private String PageSize;
 	private String AllSize;
 	private String Name;
-	private List<TalkGroupInside> Groups;
+	private List<GroupInfo> Groups;
 	
 	public String getType() {
 		return Type;
@@ -34,10 +36,10 @@ public class TalkGroup implements Serializable{
 	public void setName(String name) {
 		Name = name;
 	}
-	public List<TalkGroupInside> getGroups() {
+	public List<GroupInfo> getGroups() {
 		return Groups;
 	}
-	public void setGroups(List<TalkGroupInside> groups) {
+	public void setGroups(List<GroupInfo> groups) {
 		Groups = groups;
 	}
 }

@@ -94,10 +94,8 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
     }
 
     private void handleIntent() {
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        sequName = bundle.getString("sequname");
-        sequId = bundle.getString("sequid");
+        sequName = getIntent().getExtras().getString("sequname");
+        sequId = getIntent().getExtras().getString("sequid");
     }
 
     @Override
@@ -112,7 +110,7 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
             case R.id.tv_confirm:
                 confirmDialog.dismiss();
                 try {
-                    FID.deletefileinfo(fileInfoList.get(positionNow).getLocalurl(), CommonUtils.getUserId(context));
+                    FID.deleteFileInfo(fileInfoList.get(positionNow).getLocalurl(), CommonUtils.getUserId(context));
                     setListValue();
                     context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));
                     ToastUtils.show_allways(context, "此目录内已经没有内容");
@@ -159,7 +157,7 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
             @Override
             public void onClick(View v) {
                 confirmDialog1.dismiss();
-                FID.deletefileinfo(fileInfoList.get(position).getLocalurl(), CommonUtils.getUserId(context));
+                FID.deleteFileInfo(fileInfoList.get(position).getLocalurl(), CommonUtils.getUserId(context));
                 setListValue();
                 sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));
             }
@@ -168,7 +166,7 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
 
     private void setListValue() {
         int sum = 0;
-        fileInfoList = FID.queryFileinfo(sequId, CommonUtils.getUserId(context), 0);
+        fileInfoList = FID.queryFileInfo(sequId, CommonUtils.getUserId(context), 0);
         if (fileInfoList.size() != 0) {
             linearTop.setVisibility(View.VISIBLE);
             mListView.setVisibility(View.VISIBLE);

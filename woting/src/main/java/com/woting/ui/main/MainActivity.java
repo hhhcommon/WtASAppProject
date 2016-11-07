@@ -247,7 +247,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                         intent1.putExtras(bundle);
                         startActivity(intent1);
                     } else {
-                        ToastUtils.show_allways(context, "返回的host值不属于AUDIO或者SEQU，请检查返回值");
+                        ToastUtils.show_short(context, "返回的host值不属于AUDIO或者SEQU，请检查返回值");
                     }
                 }
             }

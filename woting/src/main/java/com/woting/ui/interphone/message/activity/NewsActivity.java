@@ -19,7 +19,7 @@ import com.woting.R;
 import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.interphone.message.adapter.NewsAdapter;
 import com.woting.ui.interphone.message.adapter.NewsAdapter.OnListener;
-import com.woting.ui.interphone.message.model.GroupInfo;
+import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.interphone.message.model.MessageInFo;
 import com.woting.ui.interphone.message.model.UserInviteMeInside;
 import com.woting.common.config.GlobalConfig;
@@ -278,7 +278,7 @@ public class NewsActivity extends BaseActivity implements OnClickListener {
                 msInfo.setGroupName(GroupList.get(i).getGroupName());
                 msInfo.setGroupId(GroupList.get(i).getGroupId());
                 msInfo.setUserName(GroupList.get(i).getUserName());
-                msInfo.setPortraitMini(GroupList.get(i).getProtraitMini());
+                msInfo.setPortraitMini(GroupList.get(i).getPortraitMini());
                 msInfo.setUserId(GroupList.get(i).getUserId());
                 msInfo.setInviteTime(GroupList.get(i).getInviteTime());
                 mes.add(msInfo);

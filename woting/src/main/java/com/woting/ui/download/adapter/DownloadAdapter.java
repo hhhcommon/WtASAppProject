@@ -49,10 +49,10 @@ public class DownloadAdapter extends BaseAdapter {
 
 	@Override
 	public View getView( int position, View convertView, ViewGroup parent) {
-		ViewHolder holder = null;
+		ViewHolder holder ;
 		if (convertView == null) {
-			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_uncompelete, null);
 			holder = new ViewHolder();
+			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_uncompelete, null);
 			holder.textview_ranktitle = (TextView)convertView.findViewById(R.id.RankTitle);		// 台名
 			holder.imageview_rankimage = (ImageView)convertView.findViewById(R.id.img_touxiang);// 电台图标
 //			holder.pro_bar = (ProgressBar) convertView.findViewById(R.id.pb_progress);

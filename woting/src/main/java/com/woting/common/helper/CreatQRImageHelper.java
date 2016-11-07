@@ -1,4 +1,5 @@
 package com.woting.common.helper;
+
 import android.graphics.Bitmap;
 import android.util.Log;
 
@@ -7,8 +8,8 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import com.woting.ui.interphone.find.findresult.model.FindGroupNews;
 import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
+import com.woting.ui.common.model.GroupInfo;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -61,7 +62,7 @@ public class CreatQRImageHelper {
 	 * @param QR_HEIGHT
 	 * @return
 	 */
-	public  Bitmap createQRImage(int type,FindGroupNews news,UserInviteMeInside newss,int QR_WIDTH,int QR_HEIGHT ){
+	public  Bitmap createQRImage(int type, GroupInfo news, UserInviteMeInside newss, int QR_WIDTH, int QR_HEIGHT ){
 		try	{
 		Map<String, Object> map = new HashMap<String, Object>();
 		String url;

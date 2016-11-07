@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
-import com.woting.ui.interphone.group.groupcontrol.membershow.model.UserInfo;
 import com.woting.common.config.GlobalConfig;
+import com.woting.ui.common.model.UserInfo;
 
 import java.util.List;
 /**
@@ -51,7 +51,7 @@ public class CreateGroupMembersAdapter extends BaseAdapter  implements SectionIn
 	
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		ViewHolder holder=null;
+		ViewHolder holder;
 		if(convertView==null){
 			convertView=LayoutInflater.from(context).inflate(R.layout.adapter_group_members, null);
 			holder=new ViewHolder();

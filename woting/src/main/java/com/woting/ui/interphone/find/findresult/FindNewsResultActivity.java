@@ -15,22 +15,22 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
-import com.woting.ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivity;
-import com.woting.ui.interphone.find.findresult.adapter.FindFriendResultAdapter;
-import com.woting.ui.interphone.find.findresult.adapter.FindGroupResultAdapter;
-import com.woting.ui.interphone.find.findresult.model.FindGroupNews;
-import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
-import com.woting.ui.interphone.find.friendadd.FriendAddActivity;
-import com.woting.ui.interphone.find.groupadd.GroupAddActivity;
 import com.woting.common.config.GlobalConfig;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
 import com.woting.common.manager.MyActivityManager;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
+import com.woting.ui.interphone.find.findresult.adapter.FindFriendResultAdapter;
+import com.woting.ui.interphone.find.findresult.adapter.FindGroupResultAdapter;
+import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
+import com.woting.ui.interphone.find.friendadd.FriendAddActivity;
+import com.woting.ui.interphone.find.groupadd.GroupAddActivity;
+import com.woting.ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivity;
+import com.woting.ui.common.model.GroupInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,7 +50,7 @@ public class FindNewsResultActivity extends Activity implements OnClickListener 
 	private Dialog dialog;
 	private String searchstr;
 	private ArrayList<UserInviteMeInside> UserList;
-	private ArrayList<FindGroupNews> GroupList;
+	private ArrayList<GroupInfo> GroupList;
 	private String type;
 	private int PageNum;
 	private FindFriendResultAdapter adapter;
@@ -354,7 +354,7 @@ public class FindNewsResultActivity extends Activity implements OnClickListener 
 					e1.printStackTrace();
 				}
 				if (ReturnType != null && ReturnType.equals("1001")) {
-					GroupList = new Gson().fromJson(GroupMeString, new TypeToken<List<FindGroupNews>>() {}.getType());
+					GroupList = new Gson().fromJson(GroupMeString, new TypeToken<List<GroupInfo>>() {}.getType());
 					if (GroupList != null && GroupList.size() > 0) {
 						if (RefreshType == 1) {
 							adapters = new FindGroupResultAdapter(FindNewsResultActivity.this, GroupList);

@@ -16,19 +16,19 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.DialogUtils;
+import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.interphone.group.groupcontrol.memberadd.adapter.CreateGroupMembersAddAdapter;
 import com.woting.ui.interphone.group.groupcontrol.memberadd.adapter.CreateGroupMembersAddAdapter.friendCheck;
-import com.woting.ui.interphone.group.groupcontrol.memberadd.model.UserInfo;
 import com.woting.ui.interphone.linkman.view.CharacterParser;
-import com.woting.ui.interphone.linkman.view.PinyinComparator_u;
+import com.woting.ui.interphone.linkman.view.PinyinComparator;
 import com.woting.ui.interphone.linkman.view.SideBar;
 import com.woting.ui.interphone.linkman.view.SideBar.OnTouchingLetterChangedListener;
-import com.woting.common.config.GlobalConfig;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
-import com.woting.common.util.DialogUtils;
-import com.woting.common.util.ToastUtils;
+import com.woting.ui.common.model.UserInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,7 +46,7 @@ public class GroupMemberAddActivity extends BaseActivity implements
         OnClickListener, TextWatcher, OnTouchingLetterChangedListener {
 
     private CharacterParser characterParser = CharacterParser.getInstance();// 实例化汉字转拼音类
-    private PinyinComparator_u pinyinComparator = new PinyinComparator_u();
+    private PinyinComparator pinyinComparator = new PinyinComparator();
     private List<UserInfo> userList;
     private List<UserInfo> userList2 = new ArrayList<>();
     private List<String> delList = new ArrayList<>();

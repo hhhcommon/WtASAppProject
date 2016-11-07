@@ -20,21 +20,18 @@ import java.util.List;
  */
 public class FileInfoDao {
 	private SQLiteHelper helper;
-	private String url = null;
 	private ContentInfo content;
-	private Context context;
 
 	// 构造方法
 	public FileInfoDao(Context context) {
 		helper = new SQLiteHelper(context);
-		this.context=context;
 	}
 
 	/**
 	 *  传递进来的下载地址 对下载地址进行处理使之变成一个list，对其进行保存，默认的finished设置为false；
 	 */
-	public List<FileInfo> queryFileinfo(String s, String useridnow) {
-		List<FileInfo> mylist = new ArrayList<>();
+	public List<FileInfo> queryFileInfo(String s, String useridnow) {
+		List<FileInfo> m = new ArrayList<>();
 		SQLiteDatabase db = helper.getReadableDatabase();
 		Cursor cursor = null;
 		try {
@@ -73,8 +70,8 @@ public class FileInfoDao {
 				h.setContentFavorite(playfavorite);;
 				h.setContentId(contentid);
 				/*	h.setFinished(finished);*/
-				// 网mylist里储存每个history对象
-				mylist.add(h);
+				// 往m里储存每个history对象
+				m.add(h);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -86,12 +83,12 @@ public class FileInfoDao {
 				db.close();
 			}
 		}
-		return mylist;
+		return m;
 	}
 
 	//type无意义可传任意int数，存在为实现重载
-	public List<FileInfo> queryFileinfo(String sequid,String userid,int type) {
-		List<FileInfo> mylist = new ArrayList<>();
+	public List<FileInfo> queryFileInfo(String sequid,String userid,int type) {
+		List<FileInfo> m = new ArrayList<>();
 		SQLiteDatabase db = helper.getReadableDatabase();
 		Cursor cursor = null;
 		try {
@@ -125,8 +122,8 @@ public class FileInfoDao {
 				h.setContentShareURL(playcontentshareurl);
 				h.setContentFavorite(playfavorite);;
 				h.setContentId(contentid);
-				// 网mylist里储存每个history对象
-				mylist.add(h);
+				// 往m里储存每个history对象
+				m.add(h);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -138,15 +135,15 @@ public class FileInfoDao {
 				db.close();
 			}
 		}
-		return mylist;
+		return m;
 	}
 
 	/**
 	 * 查询所有数据
 	 * @return
 	 */
-	public List<FileInfo> queryFileinfoAll(String userid) {
-		List<FileInfo> mylist = new ArrayList<FileInfo>();
+	public List<FileInfo> queryFileInfoAll(String userid) {
+		List<FileInfo> m = new ArrayList<FileInfo>();
 		SQLiteDatabase db = helper.getReadableDatabase();
 		Cursor cursor = null;
 		try {
@@ -160,8 +157,8 @@ public class FileInfoDao {
 				String seqimageurl = cursor.getString(cursor.getColumnIndex("sequimgurl"));
 				// 把每个对象都放到history对象里
 				FileInfo h = new FileInfo(url, filename,id,seqimageurl);
-				// 网mylist里储存每个history对象
-				mylist.add(h);
+				// 网m里储存每个history对象
+				m.add(h);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -173,16 +170,16 @@ public class FileInfoDao {
 				db.close();
 			}
 		}
-		return mylist;
+		return m;
 	}
 
 
-	public void insertfileinfo(List<ContentInfo> urllist) {
+	public void insertFileInfo(List<ContentInfo> urlList) {
 		SQLiteDatabase db = helper.getWritableDatabase();
 		// 通过helper的实现对象获取可操作的数据库db
-		for (urllist.size(); urllist.size() > 0;) {
-			content = urllist.remove(0);
-			//			String playname = content.getContentName() + ".mp3".replaceAll("/", "").replaceAll(" ", "").replaceAll("", "");
+		for (urlList.size(); urlList.size() > 0;) {
+			content = urlList.remove(0);
+			//String playname = content.getContentName() + ".mp3".replaceAll("/", "").replaceAll(" ", "").replaceAll("", "");
 			String name = content.getContentName();
 			String playname;
 			String sequid=content.getSequid();
@@ -209,11 +206,11 @@ public class FileInfoDao {
 	}
 
 	// 改
-	public void updatefileinfo(String filename) {
+	public void updataFileInfo(String filename) {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String localurl= DownloadService.DOWNLOAD_PATH+filename;
+		String localUrl= DownloadService.DOWNLOAD_PATH+filename;
 		db.execSQL("update fileinfo set finished=?,localurl=? where filename=?",
-				new Object[] {"true",localurl,filename});
+				new Object[] {"true",localUrl,filename});
 		db.close();
 	}
 
@@ -222,7 +219,7 @@ public class FileInfoDao {
 	 * @param  url 文件下载url
 	 *  @param  url 下载状态 0为未下载 1为下载中 2为等待
 	 */
-	public void updatedownloadstatus(String url,String downloadtype) {
+	public void updataDownloadStatus(String url,String downloadtype) {
 		SQLiteDatabase db = helper.getWritableDatabase();
 		db.execSQL("update fileinfo set downloadtype=? where url=?",
 				new Object[] {downloadtype,url});
@@ -234,7 +231,7 @@ public class FileInfoDao {
 	 * @param start
 	 * @param end
 	 */
-	public void updatefileprogress(String url,int start,int end){
+	public void updataFileProgress(String url,int start,int end){
 		SQLiteDatabase db = helper.getWritableDatabase();
 		db.execSQL("update fileinfo set start=?,end =? where url=?",
 				new Object[] { start,end,url});
@@ -244,19 +241,19 @@ public class FileInfoDao {
 	/**
 	 *  删实现两个方法 一种依据url删除 一种依据完成状态删除
 	 */
-	public void deletefilebyuserid(String userid) {
+	public void deleteFileByUserId(String userid) {
 		SQLiteDatabase db = helper.getWritableDatabase();
 		db.execSQL("delete from fileinfo where finished='false' and userid=?",new Object[]{userid});
 		db.close();
 	}
 	//删除已经不存在的项目
-	public void deletefileinfo(String localurl,String userid) {
+	public void deleteFileInfo(String localurl,String userid) {
 		SQLiteDatabase db = helper.getWritableDatabase();
 		db.execSQL("delete from fileinfo where finished='true' and localurl=? and userid=?",new Object[]{localurl,userid});
 		db.close();
 	}
 	//删除专辑信息
-	public void deletesequ(String sequname,String userid) {
+	public void deleteSequ(String sequname,String userid) {
 		SQLiteDatabase db = helper.getWritableDatabase();
 	/*	db.execSQL("delete from fileinfo where finished='true' and sequname=? and userid=?",new Object[]{sequname,userid});*/
 		db.execSQL("delete from fileinfo where sequname=? and userid=?",new Object[]{sequname,userid});
@@ -265,8 +262,8 @@ public class FileInfoDao {
 
 
 	//对表中标记ture的数据进行分组
-	public List<FileInfo> GroupFileinfoAll(String userid) {
-		List<FileInfo> mylist = new ArrayList<FileInfo>();
+	public List<FileInfo> GroupFileInfoAll(String userid) {
+		List<FileInfo> m = new ArrayList<FileInfo>();
 		SQLiteDatabase db = helper.getReadableDatabase();
 		Cursor cursor = null;
 		try {
@@ -294,8 +291,8 @@ public class FileInfoDao {
 				h.setAuthor(author);
 				h.setCount(count);
 				h.setSum(sum);
-				// 网mylist里储存每个history对象
-				mylist.add(h);
+				// 网m里储存每个history对象
+				m.add(h);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -307,14 +304,14 @@ public class FileInfoDao {
 				db.close();
 			}
 		}
-		return mylist;
+		return m;
 	}
 
 	/*
 	 *关闭目前打开的所有数据库对象
 	 *
 	 */
-	public void closedb(){
+	public void closeDB(){
 		helper.close();
 	}
 }

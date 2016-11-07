@@ -1,7 +1,7 @@
 package com.woting.ui.common.scanning.model;
 
-import com.woting.ui.interphone.find.findresult.model.FindGroupNews;
 import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
+import com.woting.ui.common.model.GroupInfo;
 
 import java.io.Serializable;
 
@@ -13,7 +13,7 @@ import java.io.Serializable;
 public class MessageInfo implements Serializable{
 	public String Type;
 	public UserInviteMeInside UserInviteMeInside;
-	public FindGroupNews FindGroupNews;
+	public GroupInfo FindGroupNews;
 	
 	public String getType() {
 		return Type;
@@ -27,10 +27,10 @@ public class MessageInfo implements Serializable{
 	public void setUserInviteMeInside(UserInviteMeInside userInviteMeInside) {
 		UserInviteMeInside = userInviteMeInside;
 	}
-	public FindGroupNews getFindGroupNews() {
+	public GroupInfo getFindGroupNews() {
 		return FindGroupNews;
 	}
-	public void setFindGroupNews(FindGroupNews findGroupNews) {
+	public void setFindGroupNews(GroupInfo findGroupNews) {
 		FindGroupNews = findGroupNews;
 	}
 }

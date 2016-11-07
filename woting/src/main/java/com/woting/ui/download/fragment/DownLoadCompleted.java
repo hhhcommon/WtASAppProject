@@ -104,11 +104,11 @@ public class DownLoadCompleted extends Fragment implements OnClickListener {
         linearAllCheck.setVisibility(View.INVISIBLE);
         imageAllCheck.setImageResource(R.mipmap.wt_group_nochecked);
         allCheckFlag = false;
-        List<FileInfo> fileinfolist = FID.queryFileinfo("true", userId);
-        if (fileinfolist.size() > 0) {
+        List<FileInfo> f = FID.queryFileInfo("true", userId);
+        if (f.size() > 0) {
             linearNoData.setVisibility(View.GONE);
-            fileSequList = FID.GroupFileinfoAll(userId);
-            Log.e("fileSequList", fileSequList.size() + "");
+            fileSequList = FID.GroupFileInfoAll(userId);
+            Log.e("f", fileSequList.size() + "");
             if (fileSequList.size() > 0) {
                 for (int i = 0; i < fileSequList.size(); i++) {
                     if (fileSequList.get(i).getSequid().equals("woting")) {
@@ -229,7 +229,7 @@ public class DownLoadCompleted extends Fragment implements OnClickListener {
                 break;
             case R.id.tv_confirm:
                 for (int i = 0; i < fileDellList.size(); i++) {
-                    FID.deletesequ(fileDellList.get(i).getSequname(), userId);
+                    FID.deleteSequ(fileDellList.get(i).getSequname(), userId);
                 }
                 setDownLoadSource();// 重新适配界面操作
                 allCheckFlag = false;// 全选flag

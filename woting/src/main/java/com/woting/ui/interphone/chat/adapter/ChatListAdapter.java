@@ -11,9 +11,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
-import com.woting.ui.interphone.chat.model.TalkListGP;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.TimeUtils;
+import com.woting.ui.common.model.GroupInfo;
 
 import java.util.List;
 
@@ -22,17 +22,17 @@ public class ChatListAdapter extends BaseAdapter {
 	private OnListener onListener;
 	private String url;
 	private String id;
-	private List<TalkListGP> list;
-	private TalkListGP lists;
+	private List<GroupInfo> list;
+	private GroupInfo lists;
 
-	public ChatListAdapter(Context context, List<TalkListGP> alllist, String ids) {
+	public ChatListAdapter(Context context, List<GroupInfo> alllist, String ids) {
 		super();
 		this.list = alllist;
 		this.id = ids;
 		this.context = context;
 	}
 
-	public void ChangeDate(List<TalkListGP> list, String ids) {
+	public void ChangeDate(List<GroupInfo> list, String ids) {
 		this.list = list;
 		this.id = ids;
 		this.notifyDataSetChanged();
@@ -59,7 +59,7 @@ public class ChatListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		ViewHolder holder = null;
+		ViewHolder holder ;
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_talk_oldlist, null);

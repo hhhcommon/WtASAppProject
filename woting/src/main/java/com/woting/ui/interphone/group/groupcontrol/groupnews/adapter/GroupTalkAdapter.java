@@ -11,25 +11,25 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
-import com.woting.ui.interphone.group.groupcontrol.groupnews.model.GroupTalkInside;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.BitmapUtils;
+import com.woting.ui.common.model.GroupInfo;
 
 import java.util.List;
 
 public class GroupTalkAdapter extends BaseAdapter{
-	private List<GroupTalkInside> list;
+	private List<GroupInfo> list;
 	private Context context;
-	private GroupTalkInside lists;
+	private GroupInfo lists;
 	private String url;
 	
-	public GroupTalkAdapter(Context context,List<GroupTalkInside> list) {
+	public GroupTalkAdapter(Context context,List<GroupInfo> list) {
 		super();
 		this.list = list;
 		this.context = context;
 	}
 	
-	public void ChangeDate(List<GroupTalkInside> list){
+	public void ChangeDate(List<GroupInfo> list){
 		this.list = list;
 	}
 	

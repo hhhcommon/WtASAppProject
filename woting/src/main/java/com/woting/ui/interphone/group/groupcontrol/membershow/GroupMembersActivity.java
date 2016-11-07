@@ -20,22 +20,21 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
-import com.woting.ui.baseactivity.BaseActivity;
-import com.woting.ui.interphone.group.groupcontrol.grouppersonnews.GroupPersonNewsActivity;
-import com.woting.ui.interphone.group.groupcontrol.membershow.adapter.CreateGroupMembersAdapter;
-import com.woting.ui.interphone.group.groupcontrol.membershow.model.UserInfo;
-import com.woting.ui.interphone.group.groupcontrol.personnews.TalkPersonNewsActivity;
-import com.woting.ui.interphone.linkman.model.TalkPersonInside;
-import com.woting.ui.interphone.linkman.view.CharacterParser;
-import com.woting.ui.interphone.linkman.view.PinyinComparator_a;
-import com.woting.ui.interphone.linkman.view.SideBar;
-import com.woting.ui.interphone.linkman.view.SideBar.OnTouchingLetterChangedListener;
 import com.woting.common.config.GlobalConfig;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.interphone.group.groupcontrol.grouppersonnews.GroupPersonNewsActivity;
+import com.woting.ui.interphone.group.groupcontrol.membershow.adapter.CreateGroupMembersAdapter;
+import com.woting.ui.interphone.group.groupcontrol.personnews.TalkPersonNewsActivity;
+import com.woting.ui.interphone.linkman.view.CharacterParser;
+import com.woting.ui.interphone.linkman.view.PinyinComparator;
+import com.woting.ui.interphone.linkman.view.SideBar;
+import com.woting.ui.interphone.linkman.view.SideBar.OnTouchingLetterChangedListener;
+import com.woting.ui.common.model.UserInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,7 +52,7 @@ public class GroupMembersActivity extends BaseActivity implements
         OnClickListener, TextWatcher, OnItemClickListener, OnTouchingLetterChangedListener {
 
     private CharacterParser characterParser = CharacterParser.getInstance();// 实例化汉字转拼音类
-    private PinyinComparator_a pinyinComparator = new PinyinComparator_a();
+    private PinyinComparator pinyinComparator = new PinyinComparator();
     private CreateGroupMembersAdapter adapter;
     private SideBar sideBar;
     private List<UserInfo> srcList;
@@ -249,7 +248,7 @@ public class GroupMembersActivity extends BaseActivity implements
                 isFriend = false;// 不是我的好友
             }
             if (isFriend) {
-                TalkPersonInside tp = new TalkPersonInside();
+                UserInfo tp = new UserInfo();
                 tp.setPortraitBig(userList.get(position).getPortraitBig());
                 tp.setPortraitMini(userList.get(position).getPortraitMini());
                 tp.setUserName(userList.get(position).getUserName());
