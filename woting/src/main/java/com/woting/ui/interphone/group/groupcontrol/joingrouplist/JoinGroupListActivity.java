@@ -69,7 +69,7 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 		setlistener();
 		if (groupid != null && !groupid.equals("")) {
 			if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-				dialog = DialogUtils.Dialogph(context, "正在获取群成员信息", dialog);
+				dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
 				send();
 			} else {
 				ToastUtils.show_allways(context, "网络失败，请检查网络");
@@ -295,7 +295,7 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 	public void click(View v) {
 		onclicktv = (Integer) v.getTag();
 		if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-			dialog = DialogUtils.Dialogph(context, "正在获取数据", dialog);
+			dialog = DialogUtils.Dialogph(context, "正在获取数据");
 			sendrequest();
 		} else {
 			ToastUtils.show_allways(this, "网络连接失败，请稍后重试");

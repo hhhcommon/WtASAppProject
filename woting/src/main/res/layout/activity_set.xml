@@ -28,7 +28,88 @@
             android:textSize="@dimen/activity_head_center_s" />
 
     </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/lin_IsLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_bg"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        >
+    <RelativeLayout
+        android:id="@+id/lin_bindPhone"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:background="@drawable/person_color">
 
+        <ImageView
+            android:id="@+id/img_bindPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="19dp"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/wt_person_modifypassword"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:text="绑定手机号"
+            android:layout_toRightOf="@id/img_bindPhone"
+            android:layout_centerVertical="true"
+            android:textColor="@color/wt_login_third"
+            android:textSize="@dimen/list_text_size" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="13dp"
+            android:src="@mipmap/live_more" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/lin_reset_password"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:layout_marginTop="1dp"
+        android:background="@drawable/person_color">
+
+        <ImageView
+            android:id="@+id/img_reset_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="19dp"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/wt_person_modify"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:text="重置密码"
+            android:layout_toRightOf="@id/img_reset_password"
+            android:layout_centerVertical="true"
+            android:textColor="@color/wt_login_third"
+            android:textSize="@dimen/list_text_size" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="13dp"
+            android:src="@mipmap/live_more" />
+
+    </RelativeLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/app_bg"
+        />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -39,6 +120,7 @@
             android:id="@+id/lin_downloadposition"
             android:layout_width="match_parent"
             android:layout_height="43dp"
+
             android:background="@drawable/person_color">
 
             <ImageView

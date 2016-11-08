@@ -68,7 +68,7 @@ public class HandleGroupApplyActivity extends BaseActivity implements OnClickLis
         listGroupMember.setOnItemLongClickListener(this);
 
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在获取群成员信息", dialog);
+            dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
             send();
         } else {
             ToastUtils.show_allways(context, "网络失败，请检查网络");

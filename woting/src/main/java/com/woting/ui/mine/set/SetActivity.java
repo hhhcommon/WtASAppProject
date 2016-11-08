@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.android.volley.VolleyError;
 import com.woting.R;
 import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.mine.feedback.activity.FeedbackActivity;
+import com.woting.ui.mine.phonecheck.PhoneCheckActivity;
 import com.woting.ui.mine.set.about.AboutActivity;
 import com.woting.ui.mine.set.contactus.ContactUsActivity;
 import com.woting.ui.mine.set.downloadposition.DownloadPositionActivity;
@@ -59,6 +61,8 @@ public class SetActivity extends BaseActivity implements OnClickListener {
     private String cachePath;           // 缓存路径
     private String tag = "SET_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
+    private String phoneNumber;//　用户当前的手机号
+    private View lin_IsLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +76,8 @@ public class SetActivity extends BaseActivity implements OnClickListener {
     // 初始化控件
     private void initViews() {
         findViewById(R.id.head_left_btn).setOnClickListener(this);          // 返回
+        findViewById(R.id.lin_bindPhone).setOnClickListener(this);          // 绑定手机号
+        findViewById(R.id.lin_reset_password).setOnClickListener(this);     // 重置密码
         findViewById(R.id.lin_clear).setOnClickListener(this);              // 清除缓存
         findViewById(R.id.lin_update).setOnClickListener(this);             // 检查更新
         findViewById(R.id.lin_help).setOnClickListener(this);               // 我听帮助
@@ -80,11 +86,14 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         findViewById(R.id.lin_downloadposition).setOnClickListener(this);   // 下载位置
         findViewById(R.id.lin_contactus).setOnClickListener(this);          // 联系我们
 
+        lin_IsLogin= findViewById(R.id.lin_IsLogin);                        //未登录时需要隐藏的绑定手机号和重置密码布局
+
         logOut = (Button) findViewById(R.id.lin_zhuxiao);                   // 注销
         logOut.setOnClickListener(this);
         if(getIntent() != null) {
             if (!getIntent().getStringExtra("LOGIN_STATE").equals("true")) {
                 logOut.setVisibility(View.GONE);
+                lin_IsLogin.setVisibility(View.GONE);
             }
         }
 
@@ -93,6 +102,11 @@ public class SetActivity extends BaseActivity implements OnClickListener {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        phoneNumber = BSApplication.SharedPreferences.getString(StringConstant.PHONENUMBER, ""); // 用户手机号
+    }
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_left_btn:        // 返回
@@ -100,7 +114,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 break;
             case R.id.lin_zhuxiao:          // 注销登录
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                    dialog = DialogUtils.Dialogph(context, "正在获取数据", dialog);
+                    dialog = DialogUtils.Dialogph(context, "正在获取数据");
                     sendRequestLogout();    // 清空数据
                 } else {
                     ToastUtils.show_short(context, "网络失败，请检查网络");
@@ -117,7 +131,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 break;
             case R.id.lin_update:           // 检查更新
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                    dialog = DialogUtils.Dialogph(context, "通讯中", dialog);
+                    dialog = DialogUtils.Dialogph(context, "通讯中");
                     sendRequestUpdate();
                 } else {
                     ToastUtils.show_short(context, "网络失败，请检查网络");
@@ -148,6 +162,21 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 new ClearCacheTask().execute();
                 break;
             case R.id.tv_cancle:            // 取消清除
+                clearCacheDialog.dismiss();
+                break;
+            case R.id.lin_bindPhone:        // 绑定手机号
+                Intent intent =new Intent(context, PhoneCheckActivity.class);
+                if(!TextUtils.isEmpty(phoneNumber)){
+                    //已经有存在的手机号
+                    intent.putExtra("PhoneType","1");
+                    intent.putExtra("PhoneNumber",phoneNumber);
+                }else{
+                    //手机号为空
+                    intent.putExtra("PhoneType","2");
+                }
+                startActivity(intent);
+                break;
+            case R.id.lin_reset_password:   // 重置密码
                 clearCacheDialog.dismiss();
                 break;
         }
@@ -207,6 +236,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                     Log.v("commit", "数据 commit 失败!");
                 }
                 logOut.setVisibility(View.INVISIBLE);
+                lin_IsLogin.setVisibility(View.GONE);
                 sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));// 发送广播 更新已下载和未下载界面
                 Toast.makeText(context, "注销成功", Toast.LENGTH_SHORT).show();
             }
@@ -340,7 +370,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
 
         @Override
         protected void onPreExecute() {
-            dialog = DialogUtils.Dialogph(context, "正在清除缓存", dialog);
+            dialog = DialogUtils.Dialogph(context, "正在清除缓存");
         }
 
         @Override
@@ -364,6 +394,8 @@ public class SetActivity extends BaseActivity implements OnClickListener {
             }
         }
     }
+
+
 
     @Override
     protected void onDestroy() {

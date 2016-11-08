@@ -180,14 +180,14 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 			} else {
 				shareUrl = "http://www.wotingfm.com/";
 			}
-			dialog1 = DialogUtils.Dialogph(context, "通讯中", dialog1);
+			dialog1 = DialogUtils.Dialogph(context, "通讯中");
 			Config.dialog = dialog1;
 			new ShareAction(context).setPlatform(Platform).setCallback(umShareListener).withMedia(image)
 					.withText(shareDesc).withTitle(shareName).withTargetUrl(shareUrl).share();
 		} else {
 			ToastUtils.show_allways(context, "专辑列表获取异常正在重新获取");
 			if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-				dialog = DialogUtils.Dialogph(context, "正在获取数据", dialog);
+				dialog = DialogUtils.Dialogph(context, "正在获取数据");
 				programFragment.send();
 			} else {
 				ToastUtils.show_short(context, "网络失败，请检查网络");
@@ -286,7 +286,7 @@ public class AlbumActivity extends FragmentActivity implements OnClickListener {
 			case R.id.lin_favorite: // 喜欢
 				if (ContentFavorite != null && !ContentFavorite.equals("")) {
 					if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-						dialog = DialogUtils.Dialogph(context, "正在获取数据", dialog);
+						dialog = DialogUtils.Dialogph(context, "正在获取数据");
 						sendFavorite();
 					} else {
 						ToastUtils.show_allways(context, "网络失败，请检查网络");

@@ -139,7 +139,7 @@ public class ModifyGroupPasswordActivity extends Activity {
 	}
 
 	protected void send() {
-		dialog = DialogUtils.Dialogph(this, "修改群密码提交请求", dialog);
+		dialog = DialogUtils.Dialogph(this, "修改群密码提交请求");
 		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
 			jsonObject.put("OldPassword", oldpassword);

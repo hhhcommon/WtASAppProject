@@ -78,7 +78,7 @@ public class CityListActivity extends BaseActivity implements OnClickListener {
 		setView();
 		setListener();
 		if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-			dialog = DialogUtils.Dialogph(context, "正在获取信息", dialog);
+			dialog = DialogUtils.Dialogph(context, "正在获取信息");
 			sendRequest();
 		} else {
 			ToastUtils.show_allways(context, "网络失败，请检查网络");

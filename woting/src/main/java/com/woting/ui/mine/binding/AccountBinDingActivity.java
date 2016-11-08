@@ -123,7 +123,7 @@ public class AccountBinDingActivity extends BaseActivity implements OnClickListe
             }
         }
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "绑定中，请稍等", dialog);
+            dialog = DialogUtils.Dialogph(context, "绑定中，请稍等");
             send();
         } else {
             ToastUtils.show_short(context, "网络失败，请检查网络");

@@ -95,7 +95,7 @@ public class GroupMemberDelActivity extends BaseActivity implements OnClickListe
         groupId = getIntent().getStringExtra("GroupId");
         if (groupId != null && !groupId.equals("")) {
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                dialog = DialogUtils.Dialogph(context, "正在获取群成员信息", dialog);
+                dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
                 send();
             } else {
                 ToastUtils.show_allways(context, "网络失败，请检查网络");
@@ -246,7 +246,7 @@ public class GroupMemberDelActivity extends BaseActivity implements OnClickListe
                 }
                 if (delList != null && delList.size() > 0) {
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(context, "正在发送邀请", dialog);
+                        dialog = DialogUtils.Dialogph(context, "正在发送邀请");
                         sendMemberDelete();
                     } else {
                         ToastUtils.show_allways(context, "网络失败，请检查网络");

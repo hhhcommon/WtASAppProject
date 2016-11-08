@@ -43,6 +43,7 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
     private int screenWidth;
     private String dateTime;
     private Dialog cityDialog;
+    private String phoneNumber;
 
 
     @Override
@@ -83,6 +84,14 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
         setContentView(R.layout.activity_updateperson);
         initView();
     }
+
+    //电话号码获取 根据电话号码的储存情况，判断是否可以修改手机号
+    /*@Override
+    protected void onResume() {
+        super.onResume();
+        phoneNumber = BSApplication.SharedPreferences.getString(StringConstant.USERPHONENUMBER, ""); // 用户手机号
+        textPhoneNumber.setText(phoneNumber);
+    }*/
 
     // 初始化性别选择对话框
     private void genderDialog() {

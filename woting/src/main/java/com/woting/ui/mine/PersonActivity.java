@@ -183,7 +183,6 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
                 startActivity(new Intent(context, ModifyPasswordActivity.class));
                 break;
             case R.id.lin_bingding:         // 账户绑定
-//                PasswordIntent.putExtra("origin", 2);
                 startActivity(new Intent(context, PhoneCheckActivity.class));
                 break;
             case R.id.lin_timer:            // 定时
@@ -354,7 +353,7 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
                 if (resultCode == 1) {
                     imageNum = 1;
                     photoCutAfterImagePath = data.getStringExtra("return");
-                    dialog = DialogUtils.Dialogph(context, "头像上传中", dialog);
+                    dialog = DialogUtils.Dialogph(context, "头像上传中");
                     dealt();
                 }
                 break;

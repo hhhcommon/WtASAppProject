@@ -23,7 +23,7 @@ import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.ui.download.adapter.DownLoadSequAdapter;
-import com.woting.ui.download.adapter.DownLoadSequAdapter.downloadsequCheck;
+import com.woting.ui.download.adapter.DownLoadSequAdapter.downloadSequCheck;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.downloadlist.activity.DownLoadListActivity;
 import com.woting.ui.download.model.FileInfo;
@@ -139,7 +139,7 @@ public class DownLoadCompleted extends Fragment implements OnClickListener {
 
     // 设置接口回调方法
     private void setInterface() {
-        adapter.setOnListener(new downloadsequCheck() {
+        adapter.setOnListener(new downloadSequCheck() {
             @Override
             public void checkposition(int position) {
                 if (fileSequList.get(position).getChecktype() == 0) {
