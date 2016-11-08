@@ -87,6 +87,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
         String phoneName = (String) SharePreferenceManager.getSharePreferenceValue(context, "USER_NAME", "USER_NAME", "");
         editUserName.setText(phoneName);
+        editUserName.setSelection(editUserName.getText().length());
     }
 
     @Override
