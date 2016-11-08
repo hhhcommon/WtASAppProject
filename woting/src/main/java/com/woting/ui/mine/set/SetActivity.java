@@ -29,9 +29,9 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.mine.feedback.activity.FeedbackActivity;
+import com.woting.ui.mine.modifypassword.ModifyPasswordActivity;
 import com.woting.ui.mine.phonecheck.PhoneCheckActivity;
 import com.woting.ui.mine.set.about.AboutActivity;
-import com.woting.ui.mine.set.contactus.ContactUsActivity;
 import com.woting.ui.mine.set.downloadposition.DownloadPositionActivity;
 import com.woting.ui.mine.set.help.HelpActivity;
 import com.woting.ui.mine.set.update.UpdateManager;
@@ -83,7 +83,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         findViewById(R.id.lin_about).setOnClickListener(this);              // 关于
         findViewById(R.id.lin_feedback).setOnClickListener(this);           // 意见反馈
         findViewById(R.id.lin_downloadposition).setOnClickListener(this);   // 下载位置
-        findViewById(R.id.lin_contactus).setOnClickListener(this);          // 联系我们
+//        findViewById(R.id.lin_contactus).setOnClickListener(this);          // 联系我们
 
         lin_IsLogin= findViewById(R.id.lin_IsLogin);                        //未登录时需要隐藏的绑定手机号和重置密码布局
 
@@ -137,9 +137,9 @@ public class SetActivity extends BaseActivity implements OnClickListener {
             case R.id.lin_downloadposition: // 下载位置
                 startActivity(new Intent(context, DownloadPositionActivity.class));
                 break;
-            case R.id.lin_contactus:        // 联系我们
-                startActivity(new Intent(context, ContactUsActivity.class));
-                break;
+//            case R.id.lin_contactus:        // 联系我们
+//                startActivity(new Intent(context, ContactUsActivity.class));
+//                break;
             case R.id.tv_update:            // 更新
                 okUpdate();
                 updateDialog.dismiss();
@@ -169,7 +169,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.lin_reset_password:   // 重置密码
-                clearCacheDialog.dismiss();
+                startActivity(new Intent(context, ModifyPasswordActivity.class));
                 break;
         }
     }
