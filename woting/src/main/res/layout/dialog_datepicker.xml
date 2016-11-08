@@ -20,19 +20,30 @@
             android:textColor="@color/wt_login_third"
             android:textSize="16sp"
             />
-
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="4"
-            android:gravity="center" >
-            <DatePicker
-                   android:id="@+id/datePicker"
-                    android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                     android:calendarViewShown="false" />
+            android:gravity="center"
+            android:orientation="horizontal"
+            >
+            <com.woting.common.widgetui.pickview.LoopView
+                android:id="@+id/pick_year"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:paddingRight="40dp"
+                />
+            <com.woting.common.widgetui.pickview.LoopView
+                android:id="@+id/pick_month"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                />
+            <com.woting.common.widgetui.pickview.LoopView
+                android:id="@+id/pick_day"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:paddingLeft="10dp"
+                />
         </LinearLayout>
 
         <TextView

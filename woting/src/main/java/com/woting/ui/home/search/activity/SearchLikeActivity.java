@@ -330,7 +330,7 @@ public class SearchLikeActivity extends FragmentActivity implements OnClickListe
 		tv_radio=(TextView)findViewById(R.id.tv_radio);//电台
 		tv_tts=(TextView)findViewById(R.id.tv_tts);//TTS
 		mPager = (ViewPager)findViewById(R.id.viewpager);
-		mPager.setOffscreenPageLimit(1);
+		mPager.setOffscreenPageLimit(5);
 	}
 
 	private void setListener() {
