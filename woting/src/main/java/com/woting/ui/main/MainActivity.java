@@ -26,6 +26,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.umeng.analytics.MobclickAgent;
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.util.PhoneMessage;
+import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.wheelview.ui.CitiesActivity;
 import com.woting.ui.download.activity.DownloadActivity;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
@@ -36,12 +43,6 @@ import com.woting.ui.home.program.fenlei.model.CatalogName;
 import com.woting.ui.interphone.main.DuiJiangActivity;
 import com.woting.ui.mine.PersonActivity;
 import com.woting.ui.mine.set.update.UpdateManager;
-import com.woting.common.config.GlobalConfig;
-import com.woting.common.constant.BroadcastConstants;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
-import com.woting.common.util.PhoneMessage;
-import com.woting.common.util.ToastUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -91,6 +92,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         InitDao();
         tabHost.setCurrentTabByTag("one");
         handleIntent();
+        startActivity(new Intent(this, CitiesActivity.class));
     }
 
     //初始化数据库并且发送获取地理位置的请求

@@ -1,7 +1,7 @@
 <resources>
-<!-- Default screen margins, per the Android Design guidelines. -->
+    <!-- Default screen margins, per the Android Design guidelines. -->
 
-<dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="margin_xlarge">16dp</dimen>
     <dimen name="margin_xxxlarge">40dp</dimen>
@@ -12,20 +12,20 @@
     <dimen name="margin_tiny">5.0dip</dimen>
     <dimen name="text_size_medium">15sp</dimen>
     <dimen name="text_size_large">18sp</dimen>
-   <dimen name="calendar_day_headers_paddingbottom">10dp</dimen>
-   <dimen name="calendar_month_topmargin">20dp</dimen>
-   <dimen name="calendar_month_title_bottommargin">16dp</dimen>
-   <dimen name="calendar_text_medium">18sp</dimen>
-   <dimen name="calendar_text_small">14sp</dimen>
-   <dimen name="game_text_sixteen">16sp</dimen>
-   <dimen name="game_text_fifteen">15sp</dimen>
-   
-   <dimen name="scroll_offset">200dip</dimen>
-   <dimen name="time_offset">136dip</dimen>
-   
-   <dimen name="pop_width">500dip</dimen>
-   
-   
+    <dimen name="calendar_day_headers_paddingbottom">10dp</dimen>
+    <dimen name="calendar_month_topmargin">20dp</dimen>
+    <dimen name="calendar_month_title_bottommargin">16dp</dimen>
+    <dimen name="calendar_text_medium">18sp</dimen>
+    <dimen name="calendar_text_small">14sp</dimen>
+    <dimen name="game_text_sixteen">16sp</dimen>
+    <dimen name="game_text_fifteen">15sp</dimen>
+
+    <dimen name="scroll_offset">200dip</dimen>
+    <dimen name="time_offset">136dip</dimen>
+
+    <dimen name="pop_width">500dip</dimen>
+
+
     <dimen name="activity_horizontal_margin1">5dp</dimen>
     <dimen name="activity_vertical_margin1">5dp</dimen>
     <dimen name="activity_verticalone_margin">5dp</dimen>
@@ -36,47 +36,47 @@
     <dimen name="activity_head_right">15sp</dimen>
     <dimen name="activity_normal_text">18sp</dimen>
     <dimen name="activity_normal_textone">12sp</dimen>
-     <dimen name="list_text_size">14sp</dimen>
-     <dimen name="text_size_13">13sp</dimen>
-     <dimen name="text_size_10">10sp</dimen>
-     <dimen name="text_size_9">9sp</dimen>
-     <dimen name="text_size_11">11sp</dimen>
-     
-     <dimen name="menu_pop_top">60dp</dimen>
-     <dimen name="menu_pop_width">100dp</dimen>
-     <dimen name="common_text_size_middle_2">14dp</dimen>
-     <dimen name="page_margin_width">12dp</dimen>
-  <dimen name="size5">5dip</dimen>
-     <!-- notice -->
-     <dimen name="size">14dp</dimen>
-     <dimen name="size10">10dp</dimen>
-     <dimen name="size8">8dp</dimen>
-     <dimen name="size9">9dp</dimen>
-     <dimen name="size11">11dp</dimen>
-     <dimen name="size12">12dp</dimen>
-     <dimen name="sizeone">15dp</dimen>
-     <dimen name="sizetwo">15dp</dimen>
-     <dimen name="size18">18dp</dimen>
-     <dimen name="size16">16sp</dimen>
-     <!-- 回复 -->
-     <dimen name="replylist">5dp</dimen>
-     <dimen name="replylistone">10dp</dimen>
-     <dimen name="replylisttwo">18dp</dimen>
-     <dimen name="replylistthree">16dp</dimen>
-     <dimen name="replylistfour">14dp</dimen>
-     <!-- 回复 -->
-     <dimen name="headview">27dp</dimen>
-     <!-- 内容滑动高度 -->
-     <dimen name="noticeliebiao">150dip</dimen>
-     
-     <!-- 侧滑 -->
- 	<dimen name="slidingmenu_offset">60dp</dimen>
+    <dimen name="list_text_size">14sp</dimen>
+    <dimen name="text_size_13">13sp</dimen>
+    <dimen name="text_size_10">10sp</dimen>
+    <dimen name="text_size_9">9sp</dimen>
+    <dimen name="text_size_11">11sp</dimen>
+
+    <dimen name="menu_pop_top">60dp</dimen>
+    <dimen name="menu_pop_width">100dp</dimen>
+    <dimen name="common_text_size_middle_2">14dp</dimen>
+    <dimen name="page_margin_width">12dp</dimen>
+    <dimen name="size5">5dip</dimen>
+    <!-- notice -->
+    <dimen name="size">14dp</dimen>
+    <dimen name="size10">10dp</dimen>
+    <dimen name="size8">8dp</dimen>
+    <dimen name="size9">9dp</dimen>
+    <dimen name="size11">11dp</dimen>
+    <dimen name="size12">12dp</dimen>
+    <dimen name="sizeone">15dp</dimen>
+    <dimen name="sizetwo">15dp</dimen>
+    <dimen name="size18">18dp</dimen>
+    <dimen name="size16">16sp</dimen>
+    <!-- 回复 -->
+    <dimen name="replylist">5dp</dimen>
+    <dimen name="replylistone">10dp</dimen>
+    <dimen name="replylisttwo">18dp</dimen>
+    <dimen name="replylistthree">16dp</dimen>
+    <dimen name="replylistfour">14dp</dimen>
+    <!-- 回复 -->
+    <dimen name="headview">27dp</dimen>
+    <!-- 内容滑动高度 -->
+    <dimen name="noticeliebiao">150dip</dimen>
+
+    <!-- 侧滑 -->
+    <dimen name="slidingmenu_offset">60dp</dimen>
     <dimen name="list_padding">10dp</dimen>
     <dimen name="shadow_width">5dp</dimen>
-    
-     <dimen name="min_Height">64dip</dimen>
+
+    <dimen name="min_Height">64dip</dimen>
     <dimen name="image_width">60dip</dimen>
-    
+
     <dimen name="dp">10dp</dimen>
 
     <dimen name="wt_dinglan_high">48dp</dimen>

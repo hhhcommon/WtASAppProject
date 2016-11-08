@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rotate xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <shape
+        android:innerRadiusRatio="3"
+        android:shape="oval">
+
+        <solid android:color="#000000"/>
+
+        <stroke android:color="#000000"/>
+
+    </shape>
+
+</rotate>

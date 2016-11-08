@@ -113,6 +113,19 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
+        <!--  -->
+        <activity
+            android:name="com.woting.common.widgetui.wheelview.ui.TimeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" />
+
+        <!--  -->
+        <activity
+            android:name="com.woting.common.widgetui.wheelview.ui.CitiesActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
@@ -442,6 +455,20 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
+
+        <!-- 智能硬件 -->
+        <activity
+            android:name=".ui.mine.hardware.HardwareIntroduceActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+
+        <!--应用分享-->
+        <activity
+            android:name=".ui.mine.shapeapp.ShapeAppActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
         <!-- 友盟activity -->
         <activity
