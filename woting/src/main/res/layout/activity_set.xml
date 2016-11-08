@@ -32,7 +32,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/WHITE"
+        android:background="@color/app_bg"
         android:scrollbars="none">
 
         <LinearLayout
@@ -46,8 +46,8 @@
                 android:layout_height="wrap_content"
                 android:background="@color/app_bg"
                 android:orientation="vertical"
-                android:paddingBottom="10dp"
-                >
+                android:paddingBottom="10dp">
+
                 <RelativeLayout
                     android:id="@+id/lin_bindPhone"
                     android:layout_width="match_parent"
@@ -116,6 +116,7 @@
                         android:src="@mipmap/live_more" />
 
                 </RelativeLayout>
+
             </LinearLayout>
 
             <RelativeLayout
