@@ -95,7 +95,7 @@ public class TotalFragment extends Fragment {
 			myfileter.addAction(FavoriteActivity.VIEW_UPDATE);
 			context.registerReceiver(mBroadcastReceiver, myfileter);
 			if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-				dialog = DialogUtils.Dialogph(context, "正在获取全部喜欢信息", dialog);
+				dialog = DialogUtils.Dialogph(context, "正在获取全部喜欢信息");
 				send();
 			} else {
 				ToastUtils.show_allways(context, "网络失败，请检查网络");
@@ -177,7 +177,7 @@ public class TotalFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-					dialog = DialogUtils.Dialogph(context, "正在删除", dialog);
+					dialog = DialogUtils.Dialogph(context, "正在删除");
 					if (dellist == null) {
 						dellist = new ArrayList<String>();
 						String type = list.get(delgroupposition).getList().get(delchildposition).getMediaType();
@@ -537,7 +537,7 @@ public class TotalFragment extends Fragment {
 	 */
 	public void delitem() {
 		if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-			dialog = DialogUtils.Dialogph(context, "正在删除", dialog);
+			dialog = DialogUtils.Dialogph(context, "正在删除");
 			for (int i = 0; i < SubList.size(); i++) {
 				if (dellist == null) {
 					dellist = new ArrayList<String>();

@@ -181,7 +181,7 @@ public class SearchLikeActivity extends FragmentActivity implements OnClickListe
 		stepVolume = maxVolume / 100;
 		// 此处获取热门搜索 对应接口HotKey
 		if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-			dialog = DialogUtils.Dialogph(SearchLikeActivity.this, "通讯中", dialog);
+			dialog = DialogUtils.Dialogph(SearchLikeActivity.this, "通讯中");
 			send();
 		} else {
 			ToastUtils.show_short(SearchLikeActivity.this, "网络失败，请检查网络");

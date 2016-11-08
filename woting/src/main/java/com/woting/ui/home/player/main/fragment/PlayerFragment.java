@@ -621,7 +621,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				}
 				ToastUtils.show_allways(context, "点击了路况TTS按钮");
 				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-					dialogs = DialogUtils.Dialogph(context, "通讯中", dialogs);
+					dialogs = DialogUtils.Dialogph(context, "通讯中");
 					getLuKuangTTS();// 获取路况数据播报
 				} else {
 					ToastUtils.show_allways(context, "网络连接失败，请稍后重试");
@@ -973,7 +973,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				et.commit();
 			} else {
 				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-					dialogs = DialogUtils.Dialogph(context, "通讯中", dialogs);
+					dialogs = DialogUtils.Dialogph(context, "通讯中");
 					firstSend();// 搜索第一次数据
 				} else {
 					ToastUtils.show_allways(context, "网络连接失败，请稍后重试");
@@ -1829,7 +1829,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 	}
 
 	private static void sendFavorite() {
-		dialogs = DialogUtils.Dialogph(context, "通讯中", dialogs);
+		dialogs = DialogUtils.Dialogph(context, "通讯中");
 		JSONObject jsonObject =VolleyRequest.getJsonObject(context);
 		try {
 			// MediaType

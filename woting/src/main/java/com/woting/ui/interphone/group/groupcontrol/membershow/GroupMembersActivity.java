@@ -100,7 +100,7 @@ public class GroupMembersActivity extends BaseActivity implements
         textHeadName = (TextView) findViewById(R.id.head_name_tv);// 更新当前组员人数的控件
 
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在获取群成员信息", dialog);
+            dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
             send();
         } else {
             ToastUtils.show_allways(context, "网络失败，请检查网络");

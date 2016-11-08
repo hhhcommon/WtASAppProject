@@ -242,7 +242,7 @@ public class TTSFragment extends Fragment {
 				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 					searchStr=intent.getStringExtra("searchStr");
 					if(searchStr!=null&&!searchStr.equals("")){
-						dialog = DialogUtils.Dialogph(context, "通讯中", dialog);
+						dialog = DialogUtils.Dialogph(context, "通讯中");
 						sendRequest();
 					}else{
 					}

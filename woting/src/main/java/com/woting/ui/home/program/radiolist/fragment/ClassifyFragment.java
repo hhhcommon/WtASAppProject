@@ -115,7 +115,7 @@ public class ClassifyFragment extends Fragment{
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		if(isVisibleToUser && adapter == null && getActivity() != null){
 			if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-				dialog = DialogUtils.Dialogph(context, "正在获取数据", dialog);
+				dialog = DialogUtils.Dialogph(context, "正在获取数据");
 				newList = new ArrayList<>();
 				sendRequest();
 			} else {

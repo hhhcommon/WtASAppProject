@@ -99,7 +99,7 @@ public class ForgetPasswordActivity extends BaseActivity implements OnClickListe
             return;
         }
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在验证手机号", dialog);
+            dialog = DialogUtils.Dialogph(context, "正在验证手机号");
             sendFindPassword();
         } else {
             ToastUtils.show_allways(context, "网络失败，请检查网络");
@@ -123,7 +123,7 @@ public class ForgetPasswordActivity extends BaseActivity implements OnClickListe
             return;
         }
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在验证手机号", dialog);
+            dialog = DialogUtils.Dialogph(context, "正在验证手机号");
             sendRequest();
         } else {
             ToastUtils.show_allways(context, "网络失败，请检查网络");
@@ -247,7 +247,7 @@ public class ForgetPasswordActivity extends BaseActivity implements OnClickListe
 
     // 确定修改密码请求
     protected void sendModifyPassword(String userId) {
-        dialog = DialogUtils.Dialogph(context, "正在提交请求", dialog);
+        dialog = DialogUtils.Dialogph(context, "正在提交请求");
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("RetrieveUserId", userId);

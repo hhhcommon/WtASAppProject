@@ -365,7 +365,7 @@ public class SequFragment extends Fragment {
 	 */
 	public void delitem() {
 		if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-			dialog = DialogUtils.Dialogph(context, "正在删除", dialog);
+			dialog = DialogUtils.Dialogph(context, "正在删除");
 			for (int i = 0; i < newlist.size(); i++) {
 				if (newlist.get(i).getChecktype() == 1) {
 					if (dellist == null) {

@@ -318,7 +318,7 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 					checkEdit();
 				} else if (RequestStatus == 1 || RequestStatus == 3) {
 					if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-						dialog = DialogUtils.Dialogph(context, "正在为您创建群组", dialog);
+						dialog = DialogUtils.Dialogph(context, "正在为您创建群组");
 						send();
 					} else {
 						ToastUtils.show_allways(context, "网络失败，请检查网络");
@@ -345,7 +345,7 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 		}
 		// 提交数据
 		if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-			dialog = DialogUtils.Dialogph(context, "正在为您创建群组", dialog);
+			dialog = DialogUtils.Dialogph(context, "正在为您创建群组");
 			send();
 		} else {
 			ToastUtils.show_allways(context, "网络失败，请检查网络");

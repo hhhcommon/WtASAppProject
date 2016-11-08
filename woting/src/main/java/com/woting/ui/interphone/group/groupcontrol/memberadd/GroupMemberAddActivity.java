@@ -94,7 +94,7 @@ public class GroupMemberAddActivity extends BaseActivity implements
 
         groupId = getIntent().getStringExtra("GroupId");// 获取传递给当前用户组的 GroupId
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在获取群成员信息", dialog);
+            dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
             send();
         } else {
             ToastUtils.show_allways(context, "网络失败，请检查网络");
@@ -237,7 +237,7 @@ public class GroupMemberAddActivity extends BaseActivity implements
                 if (delList != null && delList.size() > 0) {
                     // 发送进入组的邀请
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(context, "正在发送邀请", dialog);
+                        dialog = DialogUtils.Dialogph(context, "正在发送邀请");
                         sendGroupInvited();
                     } else {
                         ToastUtils.show_allways(context, "网络失败，请检查网络");

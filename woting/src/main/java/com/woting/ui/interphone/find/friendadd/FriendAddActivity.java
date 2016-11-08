@@ -139,7 +139,7 @@ public class FriendAddActivity extends Activity implements OnClickListener {
 			}else{
 				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 					//发送验证请求
-					dialog = DialogUtils.Dialogph(FriendAddActivity.this, "申请中",dialog);
+					dialog = DialogUtils.Dialogph(FriendAddActivity.this, "申请中");
 					sendRequest();
 				} else {
 					ToastUtils.show_allways(getApplicationContext(),"网络连接失败，请稍后重试");

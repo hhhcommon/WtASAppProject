@@ -77,7 +77,7 @@ public class RecommendLikeListActivity extends BaseActivity implements OnClickLi
 		setListener();
 		initDao();
 		if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-			dialog = DialogUtils.Dialogph(context, "正在获取数据", dialog);
+			dialog = DialogUtils.Dialogph(context, "正在获取数据");
 			sendRequest();
 		} else {
 			ToastUtils.show_short(this, "网络连接失败，请稍后重试");

@@ -39,7 +39,7 @@ public class HardwareIntroduceActivity extends BaseActivity implements View.OnCl
 
     // 设置 WebView
     private void setWeb() {
-        dialog = DialogUtils.Dialogph(context, "正在加载", dialog);
+        dialog = DialogUtils.Dialogph(context, "正在加载");
         String url = GlobalConfig.wthelpUrl;// 需要 URL
         WebSettings setting = webView.getSettings();
         setting.setJavaScriptEnabled(true);                               // 支持js

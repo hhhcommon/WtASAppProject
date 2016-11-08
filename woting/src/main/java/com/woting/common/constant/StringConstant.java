@@ -11,7 +11,7 @@ public class StringConstant {
 //	public static final String SESSIONID="sessionid";//sessionid
 	public static final String IMAGEURL="imageurl";//头像Image地址
 	public static final String IMAGEURBIG="imageurlbig";//头像Image地址
-    public static final String USERPHONENUMBER = "userPhoneNumber";// 用户注册手机号
+    public static final String PHONENUMBER = "userPhoneNumber";// 用户注册手机号
 	//性别
 	public static final String GENDER="GENDER";
 

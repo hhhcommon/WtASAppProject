@@ -18,26 +18,20 @@ public class DialogUtils {
 
 	/**
 	 * 暂时把传递的数据隐藏，只是展示转圈提示
-	 * @param ctx
+	 * @param context
 	 * @param str
-	 * @param dialog
 	 * @return
 	 */
-	public static Dialog Dialogph(Context ctx,String str,Dialog dialog){
-		//		Context context=ctx;
-		//		String str1=str;
-		View dialog1=LayoutInflater.from(ctx).inflate(R.layout.dialog, null);	
-		//		LinearLayout linear = (LinearLayout)dialog1.findViewById(R.id.main_dialog_layout);
-		TextView text_wenzi = (TextView)dialog1.findViewById(R.id.text_wenzi);
-		text_wenzi.setText(str);
-		//text_wenzi.setText("loading");
-		dialog = new Dialog(ctx, R.style.MyDialog1);
-		dialog.setContentView(dialog1);
+	public static Dialog Dialogph(Context context,String str){
+		View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog, null);
+		TextView loadText = (TextView) dialogView.findViewById(R.id.text_wenzi);
+		loadText.setText(str);
+		Dialog dialog = new Dialog(context, R.style.MyDialog1);
+		dialog.setContentView(dialogView);
 		dialog.setCanceledOnTouchOutside(false);
 		dialog.getWindow().setGravity(Gravity.CENTER);
 		dialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
 		dialog.show();
-		//		 android:background="@drawable/dialog_ph"
 		return dialog;
 	}
 	

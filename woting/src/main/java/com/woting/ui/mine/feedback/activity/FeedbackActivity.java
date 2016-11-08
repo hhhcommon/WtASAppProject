@@ -70,7 +70,7 @@ public class FeedbackActivity extends BaseActivity implements OnClickListener {
             Toast.makeText(context, "请您输入您的意见", Toast.LENGTH_LONG).show();
         } else {
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                dialog = DialogUtils.Dialogph(context, "反馈中", dialog);
+                dialog = DialogUtils.Dialogph(context, "反馈中");
                 send();
             } else {
                 ToastUtils.show_short(context, "网络失败，请检查网络");

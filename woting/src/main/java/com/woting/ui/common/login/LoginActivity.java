@@ -177,7 +177,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
             return;
         }
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "登录中", dialog);
+            dialog = DialogUtils.Dialogph(context, "登录中");
             send();
         } else {
             ToastUtils.show_allways(context, "网络失败，请检查网络");
@@ -253,7 +253,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         et.putString(StringConstant.IMAGEURL, imageUrl);
                         et.putString(StringConstant.IMAGEURBIG, imageUrlBig);
                         et.putString(StringConstant.PERSONREFRESHB, "true");
-                        et.putString(StringConstant.USERPHONENUMBER, phoneNumber);
+                        et.putString(StringConstant.PHONENUMBER, phoneNumber);
                         if (!et.commit()) {
                             Log.v("commit", "数据 commit 失败!");
                         }
@@ -430,7 +430,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         e.printStackTrace();
                     }
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(context, "正在用新浪信息注册", dialog);
+                        dialog = DialogUtils.Dialogph(context, "正在用新浪信息注册");
                         sendThird();
                     } else {
                         ToastUtils.show_allways(context, "网络失败，请检查网络");
@@ -444,7 +444,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                     province = data.get("province");
                     city = data.get("city");
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(context, "正在用微信信息注册", dialog);
+                        dialog = DialogUtils.Dialogph(context, "正在用微信信息注册");
                         sendThird();
                     } else {
                         ToastUtils.show_allways(context, "网络失败，请检查网络");
@@ -458,7 +458,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                     province = data.get("province");
                     city = data.get("city");
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(context, "正在用qq信息注册", dialog);
+                        dialog = DialogUtils.Dialogph(context, "正在用qq信息注册");
                         sendThird();
                     } else {
                         ToastUtils.show_allways(context, "网络失败，请检查网络");
