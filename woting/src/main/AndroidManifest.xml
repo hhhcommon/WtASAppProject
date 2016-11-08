@@ -106,10 +106,22 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
-
         <!--  -->
         <activity
             android:name="com.woting.ui.mine.PersonActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" />
+        <!--  -->
+        <activity
+            android:name="com.woting.common.widgetui.wheelview.ui.TimeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" />
+
+        <!--  -->
+        <activity
+            android:name="com.woting.common.widgetui.wheelview.ui.CitiesActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
