@@ -2,7 +2,6 @@ package com.woting.ui.mine.phonecheck;
 
 import android.app.Dialog;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -22,7 +21,7 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.baseactivity.AppBaseActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +31,7 @@ import org.json.JSONObject;
  * @author 辛龙
  * 2016年7月19日
  */
-public class PhoneCheckActivity extends BaseActivity implements OnClickListener {
+public class PhoneCheckActivity extends AppBaseActivity implements OnClickListener {
     private CountDownTimer mCountDownTimer;         // 计时器
 
     private Dialog dialog;                          // 加载数据对话框
@@ -55,14 +54,6 @@ public class PhoneCheckActivity extends BaseActivity implements OnClickListener 
     private TextView tv_Phone;
 
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_modify_phone_number);
-        initView();
-        handleIntent();
-
-    }
 
     private void handleIntent() {
         String phoneType=getIntent().getStringExtra("PhoneType");
@@ -99,7 +90,13 @@ public class PhoneCheckActivity extends BaseActivity implements OnClickListener 
         }
     }
 
-    protected void  initView() {
+    @Override
+    protected int setViewId() {
+        return R.layout.activity_modify_phone_number;
+    }
+
+    @Override
+    protected void init() {
         setTitle("绑定手机号");
         editPhoneNumber = (EditText) findViewById(R.id.edit_phone_number);                  // 新手机号码
         editVerificationCode = (EditText) findViewById(R.id.edit_verification_code);        // 验证码
@@ -115,8 +112,7 @@ public class PhoneCheckActivity extends BaseActivity implements OnClickListener 
 
         tv_Phone_Desc=(TextView) findViewById(R.id.tv_Phone_Desc);
         tv_Phone=(TextView) findViewById(R.id.tv_phone);
-
-
+        handleIntent();
     }
 
     // 验证码手机号正确就获取验证码
@@ -254,7 +250,7 @@ public class PhoneCheckActivity extends BaseActivity implements OnClickListener 
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.bindExtUserUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.RequestPost(GlobalConfig.updateUserUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
@@ -266,7 +262,10 @@ public class PhoneCheckActivity extends BaseActivity implements OnClickListener 
                         SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
                         et.putString(StringConstant.PHONENUMBER, phoneNumber);
                         if (!et.commit()) {
-                         /*   L.w(" 数据 commit 失败!");*/
+                         /*   L.w
+
+
+                         (" 数据 commit 失败!");*/
                         }
                         setResult(1);
                     } else {

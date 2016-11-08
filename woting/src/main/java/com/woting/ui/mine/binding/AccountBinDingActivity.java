@@ -157,7 +157,7 @@ public class AccountBinDingActivity extends BaseActivity implements OnClickListe
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.bindExtUserUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.RequestPost(GlobalConfig.updateUserUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String Message;
 
