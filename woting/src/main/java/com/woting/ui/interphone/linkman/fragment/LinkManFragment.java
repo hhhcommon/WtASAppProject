@@ -358,7 +358,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 		//第一次获取群成员跟组
 		if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 			if(!isVisible()){
-				dialogs = DialogUtils.Dialogph(context, "正在获取数据", dialogs);
+				dialogs = DialogUtils.Dialogph(context, "正在获取数据");
 			}
 			JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 

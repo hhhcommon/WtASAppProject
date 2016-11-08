@@ -197,7 +197,7 @@ public class GroupPersonNewsActivity extends Activity {
 						groupSignature = "";
 					}
 					if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-						 dialogs = DialogUtils.Dialogph(context, "提交中", dialogs);
+						 dialogs = DialogUtils.Dialogph(context, "提交中");
 						update(biename, groupSignature);
 					} else {
 						ToastUtils.show_allways(context, "网络失败，请检查网络");
@@ -255,7 +255,7 @@ public class GroupPersonNewsActivity extends Activity {
 				}else{
 					if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 						//发送验证请求
-						dialog = DialogUtils.Dialogph(context, "申请中",dialog);
+						dialog = DialogUtils.Dialogph(context, "申请中");
 						send();
 					} else {
 						ToastUtils.show_allways(getApplicationContext(),"网络连接失败，请稍后重试");

@@ -374,7 +374,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
     // 获取网络数据
     public void send() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "通讯中", dialog);
+            dialog = DialogUtils.Dialogph(context, "通讯中");
             sendNet();
         } else {
             ToastUtils.show_allways(context, "网络失败，请检查网络");
@@ -496,7 +496,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
                     groupName = name;
                     groupSignature = signature;
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(context, "正在提交本次修改", dialog);
+                        dialog = DialogUtils.Dialogph(context, "正在提交本次修改");
                         update(groupName, groupSignature);
                     } else {
                         ToastUtils.show_allways(context, "网络失败，请检查网络");
@@ -767,7 +767,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
             case PHOTO_REQUEST_CUT:
                 if (resultCode == 1) {
                     photoCutAfterImagePath = data.getStringExtra("return");
-                    dialog = DialogUtils.Dialogph(context, "提交中", dialog);
+                    dialog = DialogUtils.Dialogph(context, "提交中");
                     dealt();
                 }
                 break;

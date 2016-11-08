@@ -591,7 +591,7 @@ public class ChatFragment extends Fragment implements OnClickListener{
 	public void gettxl() {
 		//第一次获取群成员跟组
 		if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-			dialog = DialogUtils.Dialogph(context, "正在获取数据", dialog);
+			dialog = DialogUtils.Dialogph(context, "正在获取数据");
 			JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 
 			VolleyRequest.RequestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {

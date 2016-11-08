@@ -140,7 +140,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
             return;
         }
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在验证手机号", dialog);
+            dialog = DialogUtils.Dialogph(context, "正在验证手机号");
             sendRequest();
         } else {
             ToastUtils.show_allways(context, "网络失败，请检查网络");
@@ -176,7 +176,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
                     e.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
-                    dialog = DialogUtils.Dialogph(context, "注册中", dialog);
+                    dialog = DialogUtils.Dialogph(context, "注册中");
                     send();
                 } else if (ReturnType != null && ReturnType.equals("T")) {
                     ToastUtils.show_allways(context, "出错了，请您稍后再试!");
@@ -234,7 +234,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
                     Editor et = BSApplication.SharedPreferences.edit();
                     et.putString(StringConstant.USERID, userId);
                     et.putString(StringConstant.USERNAME, userName);
-                    et.putString(StringConstant.USERPHONENUMBER, phoneNum);
+                    et.putString(StringConstant.PHONENUMBER, phoneNum);
                     et.putString(StringConstant.ISLOGIN, "true");
                     et.putString(StringConstant.PERSONREFRESHB, "true");
                     if (!et.commit()) {
@@ -281,7 +281,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
             return;
         }
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在验证手机号", dialog);
+            dialog = DialogUtils.Dialogph(context, "正在验证手机号");
             getVerifyCode();
         } else {
             ToastUtils.show_short(context, "网络失败，请检查网络");

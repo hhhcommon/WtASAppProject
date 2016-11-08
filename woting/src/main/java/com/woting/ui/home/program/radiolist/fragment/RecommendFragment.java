@@ -99,7 +99,7 @@ public class RecommendFragment extends Fragment{
 		if(isVisibleToUser && adapter == null && getActivity() != null){
 			if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 				if(!isFirst){
-					dialog = DialogUtils.Dialogph(context, "正在获取数据", dialog);
+					dialog = DialogUtils.Dialogph(context, "正在获取数据");
 				}
 				sendRequest();
 				isFirst = false;

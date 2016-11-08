@@ -77,7 +77,7 @@ public class FindNewsResultActivity extends Activity implements OnClickListener 
 				// 搜索好友
 				if (searchstr.trim() != null && !searchstr.trim().equals("")) {
 					if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-						dialog = DialogUtils.Dialogph(FindNewsResultActivity.this,"正在获取数据", dialog);
+						dialog = DialogUtils.Dialogph(FindNewsResultActivity.this,"正在获取数据");
 						PageNum = 1;
 						RefreshType = 1;
 						getfriend();
@@ -92,7 +92,7 @@ public class FindNewsResultActivity extends Activity implements OnClickListener 
 				// 搜索群组
 				if (searchstr.trim() != null && !searchstr.trim().equals("")) {
 					if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-						dialog = DialogUtils.Dialogph(FindNewsResultActivity.this,"正在获取数据", dialog);
+						dialog = DialogUtils.Dialogph(FindNewsResultActivity.this,"正在获取数据");
 						PageNum = 1;
 						RefreshType = 1;
 						getgroup();

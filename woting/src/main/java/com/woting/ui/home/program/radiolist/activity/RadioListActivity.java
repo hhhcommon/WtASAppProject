@@ -79,7 +79,7 @@ public class RadioListActivity extends FragmentActivity implements OnClickListen
 			fragments.add( recommend);
 		}
 		sendRequest();
-		dialog = DialogUtils.Dialogph(this, "正在获取数据", dialog);
+		dialog = DialogUtils.Dialogph(this, "正在获取数据");
 	}
 
 	/**

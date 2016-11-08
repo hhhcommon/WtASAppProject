@@ -369,7 +369,7 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
                 if (resultCode == 1) {
                     imageNum = 1;
                     photoCutAfterImagePath = data.getStringExtra("return");
-                    dialog = DialogUtils.Dialogph(context, "头像上传中", dialog);
+                    dialog = DialogUtils.Dialogph(context, "头像上传中");
                     dealt();
                 }
                 break;

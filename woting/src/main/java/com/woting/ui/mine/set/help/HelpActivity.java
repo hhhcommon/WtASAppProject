@@ -32,7 +32,7 @@ public class HelpActivity extends BaseActivity implements OnClickListener {
     }
 
     private void initView() {
-        dialog = DialogUtils.Dialogph(context, "正在加载", dialog);
+        dialog = DialogUtils.Dialogph(context, "正在加载");
 
         findViewById(R.id.head_left_btn).setOnClickListener(this);
         webview = (WebView) findViewById(R.id.webView);

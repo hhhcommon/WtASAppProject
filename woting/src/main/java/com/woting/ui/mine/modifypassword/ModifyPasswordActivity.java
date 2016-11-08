@@ -176,7 +176,7 @@ public class ModifyPasswordActivity extends BaseActivity implements OnClickListe
     }
 
     protected void send() {
-        dialog = DialogUtils.Dialogph(context, "正在提交请求", dialog);
+        dialog = DialogUtils.Dialogph(context, "正在提交请求");
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("OldPassword", oldPassword);// 待改
