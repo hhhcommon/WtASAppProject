@@ -3,11 +3,9 @@ package com.woting.ui.mine;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
@@ -34,7 +32,6 @@ import com.umeng.analytics.MobclickAgent;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
-import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.http.MyHttp;
 import com.woting.common.manager.FileManager;
@@ -48,11 +45,13 @@ import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.home.player.timeset.activity.TimerPowerOffActivity;
 import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
 import com.woting.ui.mine.favorite.activity.FavoriteActivity;
+import com.woting.ui.mine.hardware.HardwareIntroduceActivity;
 import com.woting.ui.mine.model.UserPortaitInside;
 import com.woting.ui.mine.photocut.PhotoCutActivity;
 import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
 import com.woting.ui.mine.qrcodes.EWMShowActivity;
 import com.woting.ui.mine.set.SetActivity;
+import com.woting.ui.mine.shapeapp.ShapeAppActivity;
 import com.woting.ui.mine.updatepersonnews.UpdatePersonActivity;
 
 import java.io.File;
@@ -79,7 +78,7 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
     private String outputFilePath;
     private String filePath;
     private String url;                         // 完整用户头像地址
-    private String imageUrl;                    // 用户头像地址
+//    private String imageUrl;                    // 用户头像地址
     private String photoCutAfterImagePath;
 
     private Dialog dialog;
@@ -91,7 +90,8 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
     private View linSubscribe;                  // 我的订阅
     private View linAlbum;                      // 我的专辑
 
-    private TextView textTime;                  // 定时关闭的时间
+    private TextView textUserId;                // 显示用户 ID
+//    private TextView textTime;                  // 定时关闭的时间
     private TextView textUserName;              // 用户名
     private ImageView imageToggle;              // 流量提醒
     private ImageView imageHead;                // 用户头像
@@ -102,10 +102,10 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
         setContentView(R.layout.activity_person);
 
         // 注册广播
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BroadcastConstants.TIMER_UPDATE);
-        filter.addAction(BroadcastConstants.TIMER_STOP);
-        registerReceiver(timerBroadcast, filter);
+//        IntentFilter filter = new IntentFilter();
+//        filter.addAction(BroadcastConstants.TIMER_UPDATE);
+//        filter.addAction(BroadcastConstants.TIMER_STOP);
+//        registerReceiver(timerBroadcast, filter);
 
         // 获取数据存储对象
         sharedPreferences = BSApplication.SharedPreferences;
@@ -129,7 +129,7 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
     // 设置 view
     private void setView() {
 //        Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.img_person_background);
-        textTime = (TextView) findViewById(R.id.text_time);                 // 定时关闭的时间显示
+//        textTime = (TextView) findViewById(R.id.text_time);                 // 定时关闭的时间显示
 
         findViewById(R.id.imageView_ewm).setOnClickListener(this);          // 二维码
         findViewById(R.id.lin_xiugai).setOnClickListener(this);             // 修改个人资料
@@ -167,8 +167,13 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
         linAlbum = findViewById(R.id.lin_album);                            // 我的专辑
         linAlbum.setOnClickListener(this);
 
-        TextView textUser = (TextView) findViewById(R.id.tv_user);          // 用户信息
-        textUser.setText("24岁  水瓶座  北京  ");
+        TextView textUserArea = (TextView) findViewById(R.id.text_user_area);
+        textUserArea.setText("北京朝阳");                                   // 用户信息
+
+        textUserId = (TextView) findViewById(R.id.text_user_id);            // 显示用户 ID
+
+        TextView textUserAutograph = (TextView) findViewById(R.id.text_user_autograph);
+        textUserAutograph.setText("Anyone can give up, but you can't.");    // 用户签名
     }
 
     @Override
@@ -207,7 +212,7 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
                 break;
             case R.id.imageView_ewm:        // 展示二维码
                 UserInviteMeInside news = new UserInviteMeInside();
-                news.setPortraitMini(imageUrl);
+                news.setPortraitMini(url);
                 news.setUserId(userId);
                 news.setUserName(userName);
                 Intent intent = new Intent(context, EWMShowActivity.class);
@@ -234,10 +239,10 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
                 ToastUtils.show_allways(context, "我的专辑!");
                 break;
             case R.id.lin_hardware:         // 智能硬件
-
+                startActivity(new Intent(context, HardwareIntroduceActivity.class));
                 break;
             case R.id.lin_app:              // 应用分享
-
+                startActivity(new Intent(context, ShapeAppActivity.class));
                 break;
             case R.id.image_nodenglu:       // 没有登录的默认头像
                 startActivity(new Intent(context, LoginActivity.class));
@@ -282,14 +287,13 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
 
             userName = sharedPreferences.getString(StringConstant.USERNAME, "");// 用户名
             userId = sharedPreferences.getString(StringConstant.USERID, "");    // 用户 ID
-            imageUrl = sharedPreferences.getString(StringConstant.IMAGEURL, "");// 用户头像
+            url = sharedPreferences.getString(StringConstant.IMAGEURL, "");// 用户头像
 
+            textUserId.setText(userId);
             textUserName.setText(userName);
-            if (!imageUrl.equals("")) {
-                if (imageUrl.startsWith("http:")) {
-                    url = imageUrl;
-                } else {
-                    url = GlobalConfig.imageurl + imageUrl;
+            if (!url.equals("")) {
+                if (!url.startsWith("http:")) {
+                    url = GlobalConfig.imageurl + url;
                 }
                 Picasso.with(context).load(url.replace("\\/", "/")).into(imageHead);
             }
@@ -572,8 +576,7 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
-    public static String getDataColumn(Context context, Uri uri, String selection,
-                                       String[] selectionArgs) {
+    public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
         Cursor cursor = null;
         final String column = "_data";
         final String[] projection = {column};
@@ -647,21 +650,28 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
     }
 
     // 广播接收  接收来自定时服务的时间更新广播
-    private BroadcastReceiver timerBroadcast = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(BroadcastConstants.TIMER_UPDATE)) {
-                String s = intent.getStringExtra("update");
-                if (textTime != null) {
-                    textTime.setVisibility(View.VISIBLE);
-                    textTime.setText(s);
-                }
-            } else if (action.equals(BroadcastConstants.TIMER_STOP)) {
-                if (textTime != null) {
-                    textTime.setVisibility(View.GONE);
-                }
-            }
-        }
-    };
+//    private BroadcastReceiver timerBroadcast = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            String action = intent.getAction();
+//            if (action.equals(BroadcastConstants.TIMER_UPDATE)) {
+//                String s = intent.getStringExtra("update");
+//                if (textTime != null) {
+//                    textTime.setVisibility(View.VISIBLE);
+//                    textTime.setText(s);
+//                }
+//            } else if (action.equals(BroadcastConstants.TIMER_STOP)) {
+//                if (textTime != null) {
+//                    textTime.setVisibility(View.GONE);
+//                }
+//            }
+//        }
+//    };
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+//        unregisterReceiver(timerBroadcast);
+    }
 }
