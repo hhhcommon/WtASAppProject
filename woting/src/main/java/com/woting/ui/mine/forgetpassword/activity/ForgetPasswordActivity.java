@@ -33,20 +33,21 @@ import java.util.regex.Pattern;
 public class ForgetPasswordActivity extends BaseActivity implements OnClickListener, TextWatcher {
     private CountDownTimer mCountDownTimer;// 再次获取验证码时间
 
-    private Dialog dialog;// 加载数据对话框
-    private EditText editPhoneNum;// 输入 手机号
-    private EditText editPassWord;// 输入 密码
-    private EditText editVerifyCode;// 输入 验证码
-    private TextView textGetVerifyCode;// 获取验证码
-    private TextView textCxFaSong;// 重新获取验证码
-    private TextView textNext;// 不可点击的确定
-    private TextView textConfirm;// 确定
+    private Dialog dialog;                 // 加载数据对话框
+    private EditText editPhoneNum;         // 输入 手机号
+    private EditText editPassWord;         // 输入 密码
+    private EditText editPassWordqz;       // 确认 密码
+    private EditText editVerifyCode;       // 输入 验证码
+    private TextView textGetVerifyCode;    // 获取验证码
+    private TextView textCxFaSong;         // 重新获取验证码
+    private TextView textNext;             // 不可点击的确定
+    private TextView textConfirm;          // 确定
 
-    private int verifyType = -1;// == -1 未点击获取验证码或未正常发验证码
-    private int sendType = 1;// sendType == 1 首次获取验证码  sendType == 2 重发验证码
-    private String phoneNum;// 手机号
-    private String password;// 密码
-    private String verifyCode;// 验证码
+    private int verifyType = -1;           // == -1 未点击获取验证码或未正常发验证码
+    private int sendType = 1;              // sendType == 1 首次获取验证码  sendType == 2 重发验证码
+    private String phoneNum;               // 手机号
+    private String password;               // 密码
+    private String verifyCode;             // 验证码
     private String tag = "FORGET_PASSWORD_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
 
@@ -78,7 +79,7 @@ public class ForgetPasswordActivity extends BaseActivity implements OnClickListe
 
         editPhoneNum = (EditText) findViewById(R.id.edittext_userphone);// 输入 手机号
         editPassWord = (EditText) findViewById(R.id.edittext_password);// 输入 密码
-
+        editPassWordqz = (EditText) findViewById(R.id.edittext_passwordqz);// 确认密码
         editVerifyCode = (EditText) findViewById(R.id.et_yzm);// 输入 验证码
         editVerifyCode.addTextChangedListener(this);
 
@@ -110,6 +111,7 @@ public class ForgetPasswordActivity extends BaseActivity implements OnClickListe
     private void checkValue() {
         verifyCode = editVerifyCode.getText().toString().trim();
         password = editPassWord.getText().toString().trim();
+        String passwordqz = editPassWordqz.getText().toString().trim();
         if ("".equalsIgnoreCase(phoneNum) || !isMobile(phoneNum)) {
             ToastUtils.show_allways(context, "请输入正确的手机号码!");
             return;
@@ -120,6 +122,14 @@ public class ForgetPasswordActivity extends BaseActivity implements OnClickListe
         }
         if ("".equalsIgnoreCase(password) || password.length() != 6) {
             ToastUtils.show_allways(context, "请输入长度六位以上的密码!");
+            return;
+        }
+        if ("".equalsIgnoreCase(passwordqz) || passwordqz.length() != 6) {
+            ToastUtils.show_allways(context, "请输入长度六位以上的确认密码!");
+            return;
+        }
+        if (password.equalsIgnoreCase(passwordqz)) {
+            ToastUtils.show_allways(context, "您两次输入的密码不一样!");
             return;
         }
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {

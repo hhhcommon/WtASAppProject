@@ -32,7 +32,6 @@ import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.common.widgetui.wheelview.ui.CitiesActivity;
 import com.woting.ui.download.activity.DownloadActivity;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
@@ -92,7 +91,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         InitDao();
         tabHost.setCurrentTabByTag("one");
         handleIntent();
-        startActivity(new Intent(this, CitiesActivity.class));
     }
 
     //初始化数据库并且发送获取地理位置的请求
