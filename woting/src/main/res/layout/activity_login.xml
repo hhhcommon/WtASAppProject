@@ -5,7 +5,7 @@
     android:background="@color/dinglan_orange"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,15 +16,15 @@
             android:id="@+id/head_left_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="6dp"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
             android:background="@mipmap/back_images" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="登录"
             android:layout_centerInParent="true"
+            android:text="登录"
             android:textColor="@color/WHITE"
             android:textSize="@dimen/wt_dinglan_text_center" />
 
@@ -32,9 +32,9 @@
             android:id="@+id/btn_register"
             android:layout_width="48dp"
             android:layout_height="match_parent"
-            android:text="注册"
             android:layout_alignParentRight="true"
             android:gravity="center"
+            android:text="注册"
             android:textColor="@color/WHITE"
             android:textSize="@dimen/activity_head_right" />
 
@@ -44,91 +44,99 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/app_bg"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/linear_name"
+            android:id="@+id/linear_et"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/wt_edittext_default_high"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginTop="15dp"
-            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
+            android:layout_marginTop="18dp"
             android:background="@drawable/bg_edittext_normal"
-            android:orientation="horizontal"
-            android:padding="5dip" >
+            android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="19dp"
-                android:src="@mipmap/img_username" />
+            <LinearLayout
+                android:id="@+id/linear_name"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/wt_edittext_default_high"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="5dip">
 
-            <EditText
-                android:id="@+id/edittext_username"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/WHITE"
-                android:ems="10"
-                android:hint="手机号/用户名"
-                android:singleLine="true"
-                android:textColor="@color/wt_login_third"
-                android:textColorHint="@color/gray"
-                android:textCursorDrawable="@drawable/wt_edittext_cursor"
-                android:textSize="@dimen/wt_edittext_default_text" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="12dp"
+                    android:src="@mipmap/img_username" />
 
-        </LinearLayout>
+                <EditText
+                    android:id="@+id/edittext_username"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/WHITE"
+                    android:ems="10"
+                    android:hint="手机号/用户名"
+                    android:singleLine="true"
+                    android:textColor="@color/wt_login_third"
+                    android:textColorHint="@color/gray"
+                    android:textCursorDrawable="@drawable/wt_edittext_cursor"
+                    android:textSize="@dimen/wt_edittext_default_text" />
 
-        <LinearLayout
-            android:id="@+id/linear_password"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/wt_edittext_default_high"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginTop="15dp"
-            android:gravity="center"
-            android:layout_below="@id/linear_name"
-            android:background="@drawable/bg_edittext_normal"
-            android:orientation="horizontal"
-            android:padding="5dip" >
+            </LinearLayout>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="19dp"
-                android:src="@mipmap/img_password" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/view_color" />
 
-            <EditText
-                android:id="@+id/edittext_password"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/WHITE"
-                android:ems="10"
-                android:gravity="left|center"
-                android:hint="密码"
-                android:password="true"
-                android:singleLine="true"
-                android:textColor="@color/wt_login_third"
-                android:textColorHint="@color/gray"
-                android:textCursorDrawable="@drawable/wt_edittext_cursor"
-                android:textSize="@dimen/wt_edittext_default_text" />
+            <LinearLayout
+                android:id="@+id/linear_password"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/wt_edittext_default_high"
+                android:layout_below="@id/linear_name"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="5dip">
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="12dp"
+                    android:src="@mipmap/img_password" />
+
+                <EditText
+                    android:id="@+id/edittext_password"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/WHITE"
+                    android:ems="10"
+                    android:gravity="left|center"
+                    android:hint="密码"
+                    android:password="true"
+                    android:singleLine="true"
+                    android:textColor="@color/wt_login_third"
+                    android:textColorHint="@color/gray"
+                    android:textCursorDrawable="@drawable/wt_edittext_cursor"
+                    android:textSize="@dimen/wt_edittext_default_text" />
+
+            </LinearLayout>
         </LinearLayout>
 
         <Button
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:layout_below="@id/linear_et"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
+            android:layout_marginTop="18dp"
             android:background="@drawable/zhuxiao_press"
             android:text="登录"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_below="@id/linear_password"
             android:textColor="@color/WHITE"
             android:textSize="@dimen/wt_button_default_text" />
 
@@ -136,71 +144,109 @@
             android:id="@+id/tv_wjmm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="忘记密码?"
-            android:layout_marginTop="15dp"
             android:layout_below="@id/btn_login"
-            android:textColor="@color/dinglan_orange"
-            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
             android:layout_marginRight="12dp"
+            android:layout_marginTop="40dp"
+            android:text="忘记密码?"
+            android:textColor="@color/black"
             android:textSize="@dimen/wt_login_text_wjmm" />
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/relative_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="30dp">
+            android:layout_marginBottom="30dp"
+            android:orientation="horizontal">
 
-            <TextView
+            <LinearLayout
                 android:id="@+id/lin_login_wx"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="微信登录"
-                android:gravity="center"
-                android:drawableTop="@mipmap/img_loginwx"
-                android:drawablePadding="6dp"
-                android:layout_marginLeft="48dp"
-                android:textColor="@color/group_item_text2"
-                android:textSize="@dimen/wt_login_third_text" />
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="18dp"
+                android:layout_weight="1"
+                android:background="@drawable/zhuxiao_press"
+                android:gravity="center">
 
-            <TextView
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@mipmap/img_loginwx" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="微信"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/wt_button_default_text" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/lin_login_qq"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="QQ登录"
-                android:gravity="center"
-                android:layout_centerInParent="true"
-                android:drawableTop="@mipmap/img_loginqq"
-                android:drawablePadding="6dp"
-                android:textColor="@color/group_item_text2"
-                android:textSize="@dimen/wt_login_third_text" />
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/zhuxiao_press"
+                android:gravity="center">
 
-            <TextView
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@mipmap/img_loginqq" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="QQ"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/wt_button_default_text" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/lin_login_wb"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="微博登录"
-                android:gravity="center"
-                android:drawableTop="@mipmap/img_loginwb"
-                android:drawablePadding="6dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="48dp"
-                android:textColor="@color/group_item_text2"
-                android:textSize="@dimen/wt_login_third_text" />
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="18dp"
+                android:layout_weight="1"
+                android:background="@drawable/zhuxiao_press"
+                android:gravity="center">
 
-        </RelativeLayout>
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@mipmap/img_loginwb" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="微博"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/wt_button_default_text" />
+            </LinearLayout>
+
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/relative_login"
             android:layout_marginBottom="18dp"
-            android:gravity="center" >
+            android:gravity="center">
 
             <TextView
-                android:layout_width="40dp"
+                android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:background="@color/wt_login_third" />
+                android:layout_marginLeft="18dp"
+                android:layout_weight="1"
+                android:background="@color/gray" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -208,14 +254,16 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:text="第三方登录"
-                android:textColor="@color/wt_login_third"
+                android:text="其它登录方式"
+                android:textColor="@color/gray"
                 android:textSize="@dimen/wt_login_third_title" />
 
             <TextView
-                android:layout_width="40dp"
+                android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:background="@color/wt_login_third" />
+                android:layout_marginRight="18dp"
+                android:layout_weight="1"
+                android:background="@color/gray" />
 
         </LinearLayout>
 
