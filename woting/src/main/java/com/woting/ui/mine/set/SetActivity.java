@@ -328,6 +328,8 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 }
             } else if (versionNew == versionOld) {
                 ToastUtils.show_allways(context, "已经是最新版本");
+            }else{
+                ToastUtils.show_allways(context, "已经是最新版本");
             }
         } catch (Exception e) {
             e.printStackTrace();
