@@ -1,4 +1,4 @@
-package com.woting.ui.mine.modifypassword;
+package com.woting.ui.mine.person.modifypassword;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

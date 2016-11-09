@@ -40,7 +40,7 @@ import com.woting.ui.home.program.citylist.dao.CityInfoDao;
 import com.woting.ui.home.program.fenlei.model.Catalog;
 import com.woting.ui.home.program.fenlei.model.CatalogName;
 import com.woting.ui.interphone.main.DuiJiangActivity;
-import com.woting.ui.mine.PersonActivity;
+import com.woting.ui.mine.MineActivity;
 import com.woting.ui.mine.set.update.UpdateManager;
 
 import org.json.JSONException;
@@ -443,7 +443,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         tabHost.addTab(tabHost.newTabSpec("four").setIndicator("four")
                 .setContent(new Intent(this, DownloadActivity.class)));
         tabHost.addTab(tabHost.newTabSpec("five").setIndicator("five")
-                .setContent(new Intent(this, PersonActivity.class)));
+                .setContent(new Intent(this, MineActivity.class)));
     }
 
     public static void change() {

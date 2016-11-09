@@ -1,4 +1,4 @@
-package com.woting.ui.mine.updatepersonnews;
+package com.woting.ui.mine.person.updatepersonnews;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -22,7 +22,7 @@ import com.woting.common.application.BSApplication;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.ToastUtils;
 import com.woting.ui.baseactivity.BaseActivity;
-import com.woting.ui.mine.updatepersonnews.datepicker.PickerUtils;
+import com.woting.ui.mine.person.updatepersonnews.datepicker.PickerUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

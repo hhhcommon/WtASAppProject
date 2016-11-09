@@ -16,7 +16,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.woting.R;
 import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.interphone.commom.service.InterPhoneControl;
-import com.woting.ui.mine.forgetpassword.activity.ForgetPasswordActivity;
+import com.woting.ui.mine.person.forgetpassword.ForgetPasswordActivity;
 import com.woting.ui.common.register.RegisterActivity;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
