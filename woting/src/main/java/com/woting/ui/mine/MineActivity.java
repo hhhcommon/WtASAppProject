@@ -308,7 +308,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             } else {
                 circleView.setVisibility(View.VISIBLE);
                 textUserId.setVisibility(View.VISIBLE);
-                textUserId.setText(userNum);
+                textUserId.setText("ID：(" + userNum + ")");
             }
             if(!userSign.equals("")) {
                 textUserAutograph.setText(userSign);
