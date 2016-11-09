@@ -8,6 +8,7 @@ public class StringConstant {
 	public static final String USERNAME="username";
 	public static final String ISLOGIN="islogin";
 	public static final String FIRST="first";//引导页
+	public static final String PREFERENCE = "preference";//偏好设置页
 //	public static final String SESSIONID="sessionid";//sessionid
 	public static final String IMAGEURL="imageurl";//头像Image地址
 	public static final String IMAGEURBIG="imageurlbig";//头像Image地址

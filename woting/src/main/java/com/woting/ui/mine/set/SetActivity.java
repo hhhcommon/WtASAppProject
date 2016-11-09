@@ -34,6 +34,7 @@ import com.woting.ui.mine.person.phonecheck.PhoneCheckActivity;
 import com.woting.ui.mine.set.about.AboutActivity;
 import com.woting.ui.mine.set.downloadposition.DownloadPositionActivity;
 import com.woting.ui.mine.set.help.HelpActivity;
+import com.woting.ui.mine.set.preference.activity.PreferenceActivity;
 import com.woting.ui.mine.set.update.UpdateManager;
 
 import org.json.JSONException;
@@ -82,7 +83,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         findViewById(R.id.lin_about).setOnClickListener(this);              // 关于
         findViewById(R.id.lin_feedback).setOnClickListener(this);           // 意见反馈
         findViewById(R.id.lin_downloadposition).setOnClickListener(this);   // 下载位置
-
+        findViewById(R.id.lin_preference).setOnClickListener(this);         // 偏好设置
         lin_IsLogin= findViewById(R.id.lin_IsLogin);                        // 未登录时需要隐藏的绑定手机号和重置密码布局
 
         logOut = (Button) findViewById(R.id.lin_zhuxiao);                   // 注销
@@ -123,6 +124,11 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 break;
             case R.id.lin_about:            // 关于
                 startActivity(new Intent(context, AboutActivity.class));
+                break;
+            case R.id.lin_preference:       // 偏好设置
+                Intent p = new Intent(context, PreferenceActivity.class);
+                p.putExtra("type", 2);
+                startActivity(p);
                 break;
             case R.id.lin_feedback:         // 意见反馈
                 startActivity(new Intent(context, FeedbackActivity.class));
