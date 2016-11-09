@@ -13,11 +13,7 @@
 
         <ImageView
             android:id="@+id/head_left_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:background="@mipmap/back_images"
-            android:layout_marginLeft="6dp"/>
+            style="@style/LeftImageStyle"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -49,6 +45,28 @@
                 android:paddingBottom="20dp">
 
                 <RelativeLayout
+                    android:id="@+id/lin_id_name"
+                    style="@style/PersonAndSetRelativeStyle">
+
+                    <ImageView
+                        android:id="@+id/img_id_name"
+                        style="@style/PersonAndSetLeftStyle"
+                        android:src="@mipmap/wt_person_modifypassword"/>
+
+                    <TextView
+                        style="@style/PersonAndSetTextStyle"
+                        android:text="ID"
+                        android:layout_toRightOf="@id/img_id_name" />
+
+                    <ImageView style="@style/PersonAndSetRightStyle"/>
+
+                    <View
+                        style="@style/LineStyle"
+                        android:layout_alignParentBottom="true"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:id="@+id/lin_bindPhone"
                     style="@style/PersonAndSetRelativeStyle">
 
@@ -59,7 +77,7 @@
 
                     <TextView
                         style="@style/PersonAndSetTextStyle"
-                        android:text="绑定手机号"
+                        android:text="绑定手机"
                         android:layout_toRightOf="@id/img_bindPhone" />
 
                     <ImageView style="@style/PersonAndSetRightStyle"/>
@@ -228,43 +246,6 @@
                     android:layout_toRightOf="@id/image_feedback" />
 
                 <ImageView style="@style/PersonAndSetRightStyle"/>
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/lin_contactus"
-                android:layout_width="match_parent"
-                android:layout_height="43dp"
-                android:visibility="gone"
-                android:background="@drawable/person_color">
-
-                <View style="@style/LineStyle"/>
-
-                <ImageView
-                    android:id="@+id/image_contact"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="19dp"
-                    android:layout_centerVertical="true"
-                    android:src="@mipmap/wt_person_timercontactus"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:text="联系我们"
-                    android:layout_toRightOf="@id/image_contact"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/wt_login_third"
-                    android:textSize="@dimen/list_text_size" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="13dp"
-                    android:src="@mipmap/live_more" />
 
             </RelativeLayout>
 

@@ -24,7 +24,7 @@ import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.helper.CreatQRImageHelper;
+import com.woting.common.helper.CreateQRImageHelper;
 import com.woting.common.manager.MyActivityManager;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
@@ -271,7 +271,7 @@ public class TalkPersonNewsActivity extends Activity {
 		news.setPortraitMini(imageurl);
 		news.setUserId(id);
 		news.setUserName(name);
-		 bmp = CreatQRImageHelper.getInstance().createQRImage( 1, null,news,300, 300);
+		 bmp = CreateQRImageHelper.getInstance().createQRImage( 1, null,news,300, 300);
 		if(bmp!=null){
 			imageView_ewm.setImageBitmap(bmp);
 		}else{

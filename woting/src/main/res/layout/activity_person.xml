@@ -6,235 +6,227 @@
     android:background="@color/app_bg"
     android:orientation="vertical">
 
-    <View
-        android:id="@+id/view_back"
+    <!--用户登录状态-->
+    <RelativeLayout
+        android:id="@+id/lin_status_denglu"
         android:layout_width="match_parent"
-        android:background="@color/dinglan_orange"
-        android:layout_height="24dp"/>
+        android:background="@color/WHITE"
+        android:layout_height="177dp"
+        android:visibility="visible" >
 
-    <com.woting.common.widgetui.MyScrollView
-        android:id="@+id/scroll_view"
+        <LinearLayout
+            android:id="@+id/view_background"
+            android:layout_width="match_parent"
+            android:layout_height="87.5dp"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/d_person_background_left"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/d_person_background_right"/>
+
+        </LinearLayout>
+
+        <!--<ImageView-->
+        <!--android:id="@+id/lin_image"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:scaleType="centerCrop" />-->
+
+        <ImageView
+            android:id="@+id/imageView_ewm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="14dp"
+            android:src="@mipmap/ewm_white" />
+
+        <TextView
+            android:id="@+id/tv_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:layout_marginTop="16dp"
+            android:layout_centerHorizontal="true"
+            android:maxWidth="200dp"
+            android:text="小茉莉"
+            android:textColor="@color/white"
+            android:textSize="17sp" />
+
+        <ImageView
+            android:id="@+id/lin_xiugai"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:scaleType="centerCrop"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="14dp"
+            android:src="@mipmap/image_edit_profile" />
+
+        <ImageView
+            android:id="@+id/image_touxiang"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_centerInParent="true"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/liubianxing_orange" />
+
+        <LinearLayout
+            android:id="@+id/linear_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/wt_login_third"
+            android:layout_below="@id/image_touxiang"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="7dp"
+            android:gravity="center"
+            android:textSize="13sp">
+
+            <TextView
+                android:id="@+id/text_user_area"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="北京东城"
+                android:textColor="@color/wt_login_third"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="2dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:background="@drawable/d_circle_black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ID  ("
+                android:textColor="@color/wt_login_third"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/text_user_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="123456"
+                android:textColor="@color/wt_login_third"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=")"
+                android:textColor="@color/wt_login_third"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_user_autograph"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Anyone can give up, but you can't."
+            android:textColor="@color/wt_login_third"
+            android:layout_below="@id/linear_user"
+            android:layout_centerHorizontal="true"
+            android:textSize="14sp" />
+
+        <View
+            style="@style/ViewStyle"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
+
+    <!--用户未登录状态-->
+    <RelativeLayout
+        android:id="@+id/lin_status_nodenglu"
+        android:layout_width="match_parent"
+        android:layout_height="134dp"
+        android:background="@color/WHITE"
+        android:visibility="gone" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="67dp"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/d_person_background_left"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/d_person_background_right"/>
+
+        </LinearLayout>
+
+        <!--<ImageView-->
+        <!--android:id="@+id/lin_image_0"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:scaleType="centerCrop" />-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/text_denglu"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="14dp"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:text="登 录"-->
+        <!--android:textColor="@color/WHITE"-->
+        <!--android:textSize="17sp" />-->
+
+        <ImageView
+            android:id="@+id/image_nodenglu"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/person_nologinimage" />
+
+        <TextView
+            android:id="@+id/text_denglu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="点击登录"
+            android:textColor="@color/wt_login_third"
+            android:textSize="17sp"
+            android:layout_marginTop="7dp"
+            android:layout_below="@id/image_nodenglu"
+            android:layout_centerHorizontal="true"/>
+
+        <View
+            style="@style/ViewStyle"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/app_bg"
         android:orientation="vertical" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <!--用户登录状态-->
-            <RelativeLayout
-                android:id="@+id/lin_status_denglu"
-                android:layout_width="match_parent"
-                android:background="@color/WHITE"
-                android:layout_height="177dp"
-                android:visibility="visible" >
-
-                <LinearLayout
-                    android:id="@+id/view_background"
-                    android:layout_width="match_parent"
-                    android:layout_height="87.5dp"
-                    android:orientation="horizontal">
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/d_person_background_left"/>
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/d_person_background_right"/>
-
-                </LinearLayout>
-
-                <!--<ImageView-->
-                <!--android:id="@+id/lin_image"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:scaleType="centerCrop" />-->
-
-                <ImageView
-                    android:id="@+id/imageView_ewm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginTop="14dp"
-                    android:src="@mipmap/ewm_white" />
-
-                <TextView
-                    android:id="@+id/tv_username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:layout_marginTop="16dp"
-                    android:layout_centerHorizontal="true"
-                    android:maxWidth="200dp"
-                    android:text="小茉莉"
-                    android:textColor="@color/white"
-                    android:textSize="17sp" />
-
-                <ImageView
-                    android:id="@+id/lin_xiugai"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="30dp"
-                    android:scaleType="centerCrop"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginTop="14dp"
-                    android:src="@mipmap/image_edit_profile" />
-
-                <ImageView
-                    android:id="@+id/image_touxiang"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_centerInParent="true"
-                    android:scaleType="centerCrop" />
-
-                <ImageView
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_centerInParent="true"
-                    android:src="@mipmap/liubianxing_orange" />
-
-                <LinearLayout
-                    android:id="@+id/linear_user"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/wt_login_third"
-                    android:layout_below="@id/image_touxiang"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="7dp"
-                    android:gravity="center"
-                    android:textSize="13sp">
-
-                    <TextView
-                        android:id="@+id/text_user_area"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="北京东城"
-                        android:textColor="@color/wt_login_third"
-                        android:textSize="14sp" />
-
-                    <View
-                        android:layout_width="2dp"
-                        android:layout_height="2dp"
-                        android:layout_marginLeft="4dp"
-                        android:layout_marginRight="4dp"
-                        android:background="@drawable/d_circle_black"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="ID  ("
-                        android:textColor="@color/wt_login_third"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/text_user_id"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="123456"
-                        android:textColor="@color/wt_login_third"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=")"
-                        android:textColor="@color/wt_login_third"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/text_user_autograph"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="Anyone can give up, but you can't."
-                    android:textColor="@color/wt_login_third"
-                    android:layout_below="@id/linear_user"
-                    android:layout_centerHorizontal="true"
-                    android:textSize="14sp" />
-
-                <View
-                    style="@style/ViewStyle"
-                    android:layout_alignParentBottom="true" />
-
-            </RelativeLayout>
-
-            <!--用户未登录状态-->
-            <RelativeLayout
-                android:id="@+id/lin_status_nodenglu"
-                android:layout_width="match_parent"
-                android:layout_height="134dp"
-                android:background="@color/WHITE"
-                android:visibility="gone" >
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="67dp"
-                    android:orientation="horizontal">
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/d_person_background_left"/>
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/d_person_background_right"/>
-
-                </LinearLayout>
-
-                <!--<ImageView-->
-                <!--android:id="@+id/lin_image_0"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:scaleType="centerCrop" />-->
-
-                <!--<TextView-->
-                <!--android:id="@+id/text_denglu"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginTop="14dp"-->
-                <!--android:layout_centerHorizontal="true"-->
-                <!--android:text="登 录"-->
-                <!--android:textColor="@color/WHITE"-->
-                <!--android:textSize="17sp" />-->
-
-                <ImageView
-                    android:id="@+id/image_nodenglu"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_centerInParent="true"
-                    android:src="@mipmap/person_nologinimage" />
-
-                <TextView
-                    android:id="@+id/text_denglu"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="点击登录"
-                    android:textColor="@color/wt_login_third"
-                    android:textSize="17sp"
-                    android:layout_marginTop="7dp"
-                    android:layout_below="@id/image_nodenglu"
-                    android:layout_centerHorizontal="true"/>
-
-                <View
-                    style="@style/ViewStyle"
-                    android:layout_alignParentBottom="true" />
-
-            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/lin_playhistory"
@@ -496,6 +488,6 @@
 
         </LinearLayout>
 
-    </com.woting.common.widgetui.MyScrollView>
+    </ScrollView>
 
 </LinearLayout>
