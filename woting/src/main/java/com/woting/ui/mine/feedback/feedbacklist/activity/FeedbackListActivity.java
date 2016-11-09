@@ -26,6 +26,7 @@ import java.util.List;
 
 /**
  * 意见反馈列表
+ *
  * @author 辛龙
  *         2016年8月1日
  */
@@ -72,38 +73,32 @@ public class FeedbackListActivity extends BaseActivity implements OnClickListene
         }
 
         VolleyRequest.RequestPost(GlobalConfig.FeedBackListUrl, tag, jsonObject, new VolleyCallback() {
-            private String ReturnType;
-            private String Message;
 
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 try {
-                    ReturnType = result.getString("ReturnType");
-                    Message = result.getString("Message");
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        try {
+                            String list = result.getString("OpinionList");
+                            List<OpinionMessage> OM = new Gson().fromJson(list, new TypeToken<List<OpinionMessage>>() {
+                            }.getType());
+                            if (OM == null || OM.size() == 0) {
+                                return;
+                            }
+                            FeedBackExpandAdapter adapter = new FeedBackExpandAdapter(context, OM);
+                            mListView.setAdapter(adapter);
+                            for (int i = 0; i < adapter.getGroupCount(); i++) {
+                                mListView.expandGroup(i);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }
-                if (ReturnType != null && ReturnType.equals("1001")) {
-                    try {
-                        List<OpinionMessage> OM = new Gson().fromJson(result.getString("OpinionList"), new TypeToken<List<OpinionMessage>>() {}.getType());
-                        if (OM == null || OM.size() == 0) {
-                            ToastUtils.show_allways(context, "数据获取异常请重试");
-                            return;
-                        }
-                        FeedBackExpandAdapter adapter = new FeedBackExpandAdapter(context, OM);
-                        mListView.setAdapter(adapter);
-                        for (int i = 0; i < adapter.getGroupCount(); i++) {
-                            mListView.expandGroup(i);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_short(getApplicationContext(), Message + "提交意见反馈失败");
-                    }
                 }
             }
 

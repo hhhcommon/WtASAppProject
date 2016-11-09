@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
+    android:layout_height="wrap_content"
     android:background="@color/app_bg"
     android:orientation="vertical" >
 
@@ -23,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:text="我听" />
+                android:text="我听科技" />
 
             <TextView
                 android:id="@+id/tv_repeat"
@@ -33,20 +33,18 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center_vertical"
-                android:lineSpacingExtra="2dp"
-                android:minHeight="30dp"
-                android:text="有大吗。。。"/>
+                android:text="感谢您提出的宝贵建议!"/>
         </LinearLayout>
 
         <RelativeLayout
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:padding="10dp" >
+            android:layout_width="45dp"
+            android:layout_margin="10dp"
+            android:layout_height="45dp">
 
             <ImageView
                 android:id="@+id/image_touxiang"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_centerInParent="true"
                 android:scaleType="centerCrop"
                 android:src="@mipmap/app_logo" />
