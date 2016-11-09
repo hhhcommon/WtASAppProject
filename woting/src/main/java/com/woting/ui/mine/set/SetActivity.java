@@ -53,6 +53,8 @@ public class SetActivity extends BaseActivity implements OnClickListener {
     private Dialog clearCacheDialog;    // 清除缓存对话框
     private Button logOut;              // 注销
     private TextView textCache;         // 缓存
+    private View lin_IsLogin;
+    private View linearIdName;
 
     private int updateType = 1;         // 版本更新类型
     private String updateNews;          // 版本更新内容
@@ -60,8 +62,6 @@ public class SetActivity extends BaseActivity implements OnClickListener {
     private String cachePath;           // 缓存路径
     private String tag = "SET_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
-//    private String phoneNumber;//　用户当前的手机号
-    private View lin_IsLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,9 +83,8 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         findViewById(R.id.lin_about).setOnClickListener(this);              // 关于
         findViewById(R.id.lin_feedback).setOnClickListener(this);           // 意见反馈
         findViewById(R.id.lin_downloadposition).setOnClickListener(this);   // 下载位置
-//        findViewById(R.id.lin_contactus).setOnClickListener(this);          // 联系我们
 
-        lin_IsLogin= findViewById(R.id.lin_IsLogin);                        //未登录时需要隐藏的绑定手机号和重置密码布局
+        lin_IsLogin= findViewById(R.id.lin_IsLogin);                        // 未登录时需要隐藏的绑定手机号和重置密码布局
 
         logOut = (Button) findViewById(R.id.lin_zhuxiao);                   // 注销
         logOut.setOnClickListener(this);
@@ -95,6 +94,9 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 lin_IsLogin.setVisibility(View.GONE);
             }
         }
+
+        linearIdName = findViewById(R.id.lin_id_name);// 用户可以且仅可以设置一次的唯一标识 ID
+        linearIdName.setOnClickListener(this);
 
         textCache = (TextView) findViewById(R.id.text_cache);               // 缓存
         initCache();
@@ -137,9 +139,6 @@ public class SetActivity extends BaseActivity implements OnClickListener {
             case R.id.lin_downloadposition: // 下载位置
                 startActivity(new Intent(context, DownloadPositionActivity.class));
                 break;
-//            case R.id.lin_contactus:        // 联系我们
-//                startActivity(new Intent(context, ContactUsActivity.class));
-//                break;
             case R.id.tv_update:            // 更新
                 okUpdate();
                 updateDialog.dismiss();
@@ -170,6 +169,9 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 break;
             case R.id.lin_reset_password:   // 重置密码
                 startActivity(new Intent(context, ModifyPasswordActivity.class));
+                break;
+            case R.id.lin_id_name:// ID
+
                 break;
         }
     }
@@ -209,7 +211,6 @@ public class SetActivity extends BaseActivity implements OnClickListener {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
-                // 如果网络请求已经执行取消操作 就表示就算请求成功也不需要数据返回了 所以方法就此结束
                 if (isCancelRequest) return;
                 try {
                     String returnType = result.getString("ReturnType");
@@ -228,7 +229,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 if (!et.commit()) {
                     Log.v("commit", "数据 commit 失败!");
                 }
-                logOut.setVisibility(View.INVISIBLE);
+                logOut.setVisibility(View.GONE);
                 lin_IsLogin.setVisibility(View.GONE);
                 sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));// 发送广播 更新已下载和未下载界面
                 Toast.makeText(context, "注销成功", Toast.LENGTH_SHORT).show();
@@ -302,11 +303,8 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         }
 
         // 版本更新比较
-//        String version = Version;
         String[] strArray = version.split("\\.");
-//        String versionBuild;
         try {
-//            versionBuild = strArray[4];
             int versionOld = PhoneMessage.versionCode;
             int versionNew = Integer.parseInt(strArray[4]);
             if (versionNew > versionOld) {

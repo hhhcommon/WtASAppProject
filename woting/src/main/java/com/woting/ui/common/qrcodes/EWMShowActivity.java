@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
-import com.woting.common.helper.CreatQRImageHelper;
+import com.woting.common.helper.CreateQRImageHelper;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.ui.baseactivity.BaseActivity;
@@ -71,10 +71,10 @@ public class EWMShowActivity extends BaseActivity implements OnClickListener {
     private void setData(int type, String imageUrl, String news, String name) {
         if (type == 1) {
             UserInviteMeInside meInside = (UserInviteMeInside) getIntent().getSerializableExtra("person");
-            bmp = CreatQRImageHelper.getInstance().createQRImage(type, null, meInside, 600, 600);
+            bmp = CreateQRImageHelper.getInstance().createQRImage(type, null, meInside, 600, 600);
         } else if (type == 2) {
             GroupInfo groupNews = (GroupInfo) getIntent().getSerializableExtra("group");
-            bmp = CreatQRImageHelper.getInstance().createQRImage(type, groupNews, null, 400, 400);
+            bmp = CreateQRImageHelper.getInstance().createQRImage(type, groupNews, null, 400, 400);
         }
         if (name != null && !name.equals("")) {
             textName.setText(name);

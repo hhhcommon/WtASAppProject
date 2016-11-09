@@ -24,7 +24,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -43,19 +42,18 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ImageUploadReturnUtil;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
-import com.woting.common.widgetui.MyScrollView;
 import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.common.login.LoginActivity;
+import com.woting.ui.common.photocut.PhotoCutActivity;
+import com.woting.ui.common.qrcodes.EWMShowActivity;
 import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
 import com.woting.ui.mine.favorite.activity.FavoriteActivity;
 import com.woting.ui.mine.hardware.HardwareIntroduceActivity;
 import com.woting.ui.mine.model.UserPortaitInside;
-import com.woting.ui.common.photocut.PhotoCutActivity;
+import com.woting.ui.mine.person.updatepersonnews.UpdatePersonActivity;
 import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
-import com.woting.ui.common.qrcodes.EWMShowActivity;
 import com.woting.ui.mine.set.SetActivity;
 import com.woting.ui.mine.shapeapp.ShapeAppActivity;
-import com.woting.ui.mine.person.updatepersonnews.UpdatePersonActivity;
 
 import java.io.File;
 
@@ -81,7 +79,6 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     private String outputFilePath;
     private String filePath;
     private String url;                         // 完整用户头像地址
-//    private String imageUrl;                    // 用户头像地址
     private String photoCutAfterImagePath;
 
     private Dialog dialog;
@@ -92,9 +89,6 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     private View linAnchor;                     // 我的主播  我关注的主播
     private View linSubscribe;                  // 我的订阅
     private View linAlbum;                      // 我的专辑  我上传的专辑
-    private View viewBackground;
-
-    private MyScrollView scrollView;
 
     private TextView textUserId;                // 显示用户 ID
 //    private TextView textTime;                  // 定时关闭的时间
@@ -180,22 +174,6 @@ public class MineActivity extends BaseActivity implements OnClickListener {
 
         TextView textUserAutograph = (TextView) findViewById(R.id.text_user_autograph);
         textUserAutograph.setText("Anyone can give up, but you can't.");    // 用户签名
-
-        viewBackground = findViewById(R.id.view_back);
-        scrollView = (MyScrollView) findViewById(R.id.scroll_view);
-        scrollView.setOnScrollChangedListener(new MyScrollView.OnScrollChangedListener() {
-            @Override
-            public void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt) {
-                if (viewBackground != null && viewBackground.getHeight() > 0) {
-                    int height = viewBackground.getHeight();
-                    if (t < height) {
-                        int alpha = (int) (new Float(t) / new Float(height) * 200);
-                        Log.e("YJL", "" + alpha);
-                        viewBackground.getBackground().setAlpha(255 - alpha);
-                    }
-                }
-            }
-        });
     }
 
     @Override
@@ -311,7 +289,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
 
             userName = sharedPreferences.getString(StringConstant.USERNAME, "");// 用户名
             userId = sharedPreferences.getString(StringConstant.USERID, "");    // 用户 ID
-            url = sharedPreferences.getString(StringConstant.IMAGEURL, "");// 用户头像
+            url = sharedPreferences.getString(StringConstant.IMAGEURL, "");     // 用户头像
 
             textUserId.setText(userId);
             textUserName.setText(userName);

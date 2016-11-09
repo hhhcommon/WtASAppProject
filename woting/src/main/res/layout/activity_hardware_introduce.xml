@@ -14,11 +14,7 @@
 
         <ImageView
             android:id="@+id/image_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/back_images"
-            android:layout_marginLeft="6dp"
-            android:layout_centerVertical="true"/>
+            style="@style/LeftImageStyle"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -27,6 +23,17 @@
             android:textColor="@color/WHITE"
             android:textSize="17sp"
             android:layout_centerInParent="true"/>
+
+        <TextView
+            android:id="@+id/text_shape"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:text="分享"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="@color/WHITE"
+            android:layout_marginRight="6dp"
+            android:layout_alignParentRight="true"/>
 
     </RelativeLayout>
 

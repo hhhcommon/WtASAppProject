@@ -5,25 +5,21 @@
     android:background="@color/dinglan_orange"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:orientation="vertical" >
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="48dp" >
 
         <ImageView
             android:id="@+id/head_left_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="6dp"
-            android:background="@mipmap/back_images" />
+            style="@style/LeftImageStyle"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:text="设置"
+            android:layout_centerInParent="true"
             android:textColor="@color/WHITE"
             android:textSize="@dimen/activity_head_center_s" />
 
@@ -49,20 +45,42 @@
                 android:paddingBottom="20dp">
 
                 <RelativeLayout
+                    android:id="@+id/lin_id_name"
+                    style="@style/PersonAndSetRelativeStyle">
+
+                    <ImageView
+                        android:id="@+id/img_id_name"
+                        style="@style/PersonAndSetLeftStyle"
+                        android:src="@mipmap/wt_person_modifypassword"/>
+
+                    <TextView
+                        style="@style/PersonAndSetTextStyle"
+                        android:text="ID"
+                        android:layout_toRightOf="@id/img_id_name" />
+
+                    <ImageView style="@style/PersonAndSetRightStyle"/>
+
+                    <View
+                        style="@style/LineStyle"
+                        android:layout_alignParentBottom="true"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:id="@+id/lin_bindPhone"
                     style="@style/PersonAndSetRelativeStyle">
 
                     <ImageView
                         android:id="@+id/img_bindPhone"
                         style="@style/PersonAndSetLeftStyle"
-                        android:src="@mipmap/wt_person_modifypassword" />
+                        android:src="@mipmap/wt_person_modifypassword"/>
 
                     <TextView
                         style="@style/PersonAndSetTextStyle"
-                        android:layout_toRightOf="@id/img_bindPhone"
-                        android:text="绑定手机号" />
+                        android:text="绑定手机"
+                        android:layout_toRightOf="@id/img_bindPhone" />
 
-                    <ImageView style="@style/PersonAndSetRightStyle" />
+                    <ImageView style="@style/PersonAndSetRightStyle"/>
 
                 </RelativeLayout>
 
@@ -70,19 +88,19 @@
                     android:id="@+id/lin_reset_password"
                     style="@style/PersonAndSetRelativeStyle">
 
-                    <View style="@style/LineStyle" />
+                    <View style="@style/LineStyle"/>
 
                     <ImageView
                         android:id="@+id/img_reset_password"
                         style="@style/PersonAndSetLeftStyle"
-                        android:src="@mipmap/wt_person_modify" />
+                        android:src="@mipmap/wt_person_modify"/>
 
                     <TextView
                         style="@style/PersonAndSetTextStyle"
-                        android:layout_toRightOf="@id/img_reset_password"
-                        android:text="重置密码" />
+                        android:text="重置密码"
+                        android:layout_toRightOf="@id/img_reset_password"/>
 
-                    <ImageView style="@style/PersonAndSetRightStyle" />
+                    <ImageView style="@style/PersonAndSetRightStyle"/>
 
                 </RelativeLayout>
 
@@ -97,14 +115,14 @@
                 <ImageView
                     android:id="@+id/image_position"
                     style="@style/PersonAndSetLeftStyle"
-                    android:src="@mipmap/wt_person_download" />
+                    android:src="@mipmap/wt_person_download"/>
 
                 <TextView
                     style="@style/PersonAndSetTextStyle"
-                    android:layout_toRightOf="@id/image_position"
-                    android:text="下载路径" />
+                    android:text="下载路径"
+                    android:layout_toRightOf="@id/image_position" />
 
-                <ImageView style="@style/PersonAndSetRightStyle" />
+                <ImageView style="@style/PersonAndSetRightStyle"/>
 
             </RelativeLayout>
 
@@ -112,7 +130,7 @@
                 android:id="@+id/lin_clear"
                 style="@style/PersonAndSetRelativeStyle">
 
-                <View style="@style/LineStyle" />
+                <View style="@style/LineStyle"/>
 
                 <ImageView
                     android:id="@+id/image_clear1"
@@ -121,20 +139,20 @@
 
                 <TextView
                     style="@style/PersonAndSetTextStyle"
-                    android:layout_toRightOf="@id/image_clear1"
-                    android:text="清除缓存" />
+                    android:text="清除缓存"
+                    android:layout_toRightOf="@id/image_clear1" />
 
                 <ImageView
                     android:id="@+id/image_more"
-                    style="@style/PersonAndSetRightStyle" />
+                    style="@style/PersonAndSetRightStyle"/>
 
                 <TextView
                     android:id="@+id/text_cache"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="5dp"
                     android:layout_toLeftOf="@id/image_more"
+                    android:layout_centerVertical="true"
                     android:text="0MB"
                     android:textColor="@color/beijing"
                     android:textSize="@dimen/text_size_13" />
@@ -143,9 +161,9 @@
 
             <RelativeLayout
                 android:id="@+id/lin_update"
-                style="@style/PersonAndSetRelativeStyle">
+                style="@style/PersonAndSetRelativeStyle" >
 
-                <View style="@style/LineStyle" />
+                <View style="@style/LineStyle"/>
 
                 <ImageView
                     android:id="@+id/image_update"
@@ -154,14 +172,14 @@
 
                 <TextView
                     style="@style/PersonAndSetTextStyle"
-                    android:layout_toRightOf="@id/image_update"
-                    android:text="检查更新" />
+                    android:text="检查更新"
+                    android:layout_toRightOf="@id/image_update" />
 
-                <ImageView style="@style/PersonAndSetRightStyle" />
+                <ImageView style="@style/PersonAndSetRightStyle"/>
 
                 <View
                     style="@style/ViewStyle"
-                    android:layout_alignParentBottom="true" />
+                    android:layout_alignParentBottom="true"/>
 
             </RelativeLayout>
 
@@ -170,7 +188,7 @@
                 style="@style/PersonAndSetRelativeStyle"
                 android:layout_marginTop="20dp">
 
-                <View style="@style/ViewStyle" />
+                <View style="@style/ViewStyle"/>
 
                 <ImageView
                     android:id="@+id/image_preference"
@@ -179,14 +197,14 @@
 
                 <TextView
                     style="@style/PersonAndSetTextStyle"
-                    android:layout_toRightOf="@id/image_preference"
-                    android:text="偏好设置" />
+                    android:text="偏好设置"
+                    android:layout_toRightOf="@id/image_preference" />
 
-                <ImageView style="@style/PersonAndSetRightStyle" />
+                <ImageView style="@style/PersonAndSetRightStyle"/>
 
                 <View
                     style="@style/ViewStyle"
-                    android:layout_alignParentBottom="true" />
+                    android:layout_alignParentBottom="true"/>
 
             </RelativeLayout>
 
@@ -195,7 +213,7 @@
                 style="@style/PersonAndSetRelativeStyle"
                 android:layout_marginTop="20dp">
 
-                <View style="@style/ViewStyle" />
+                <View style="@style/ViewStyle"/>
 
                 <ImageView
                     android:id="@+id/image_help"
@@ -204,18 +222,18 @@
 
                 <TextView
                     style="@style/PersonAndSetTextStyle"
-                    android:layout_toRightOf="@id/image_help"
-                    android:text="使用帮助" />
+                    android:text="使用帮助"
+                    android:layout_toRightOf="@id/image_help" />
 
-                <ImageView style="@style/PersonAndSetRightStyle" />
+                <ImageView style="@style/PersonAndSetRightStyle"/>
 
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/lin_feedback"
-                style="@style/PersonAndSetRelativeStyle">
+                style="@style/PersonAndSetRelativeStyle" >
 
-                <View style="@style/LineStyle" />
+                <View style="@style/LineStyle"/>
 
                 <ImageView
                     android:id="@+id/image_feedback"
@@ -224,55 +242,18 @@
 
                 <TextView
                     style="@style/PersonAndSetTextStyle"
-                    android:layout_toRightOf="@id/image_feedback"
-                    android:text="反馈建议" />
+                    android:text="反馈建议"
+                    android:layout_toRightOf="@id/image_feedback" />
 
-                <ImageView style="@style/PersonAndSetRightStyle" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/lin_contactus"
-                android:layout_width="match_parent"
-                android:layout_height="43dp"
-                android:background="@drawable/person_color"
-                android:visibility="gone">
-
-                <View style="@style/LineStyle" />
-
-                <ImageView
-                    android:id="@+id/image_contact"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="19dp"
-                    android:src="@mipmap/wt_person_timercontactus" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="14dp"
-                    android:layout_toRightOf="@id/image_contact"
-                    android:text="联系我们"
-                    android:textColor="@color/wt_login_third"
-                    android:textSize="@dimen/list_text_size" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="13dp"
-                    android:src="@mipmap/live_more" />
+                <ImageView style="@style/PersonAndSetRightStyle"/>
 
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/lin_about"
-                style="@style/PersonAndSetRelativeStyle">
+                style="@style/PersonAndSetRelativeStyle" >
 
-                <View style="@style/LineStyle" />
+                <View style="@style/LineStyle"/>
 
                 <ImageView
                     android:id="@+id/image_about"
@@ -281,14 +262,14 @@
 
                 <TextView
                     style="@style/PersonAndSetTextStyle"
-                    android:layout_toRightOf="@id/image_about"
-                    android:text="关于我听" />
+                    android:text="关于我听"
+                    android:layout_toRightOf="@id/image_about" />
 
-                <ImageView style="@style/PersonAndSetRightStyle" />
+                <ImageView style="@style/PersonAndSetRightStyle"/>
 
                 <View
                     style="@style/ViewStyle"
-                    android:layout_alignParentBottom="true" />
+                    android:layout_alignParentBottom="true"/>
 
             </RelativeLayout>
 
@@ -296,10 +277,10 @@
                 android:id="@+id/lin_zhuxiao"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginBottom="80dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
                 android:layout_marginTop="40dp"
+                android:layout_marginBottom="80dp"
                 android:background="@drawable/zhuxiao_press"
                 android:text="注销登录"
                 android:textColor="@color/WHITE"
