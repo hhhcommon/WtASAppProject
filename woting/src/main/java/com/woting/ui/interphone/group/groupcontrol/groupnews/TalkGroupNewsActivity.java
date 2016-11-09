@@ -72,8 +72,8 @@ import com.woting.ui.interphone.group.groupcontrol.transferauthority.TransferAut
 import com.woting.ui.interphone.main.DuiJiangActivity;
 import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.mine.model.UserPortaitInside;
-import com.woting.ui.mine.photocut.PhotoCutActivity;
-import com.woting.ui.mine.qrcodes.EWMShowActivity;
+import com.woting.ui.common.photocut.PhotoCutActivity;
+import com.woting.ui.common.qrcodes.EWMShowActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;

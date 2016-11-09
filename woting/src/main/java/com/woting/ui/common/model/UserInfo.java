@@ -28,6 +28,8 @@ public class UserInfo implements Serializable {
     private String Url;
 
 
+
+
     public String getUrl() {
         return Url;
     }

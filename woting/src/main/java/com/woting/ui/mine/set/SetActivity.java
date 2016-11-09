@@ -29,8 +29,8 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.mine.feedback.activity.FeedbackActivity;
-import com.woting.ui.mine.modifypassword.ModifyPasswordActivity;
-import com.woting.ui.mine.phonecheck.PhoneCheckActivity;
+import com.woting.ui.mine.person.modifypassword.ModifyPasswordActivity;
+import com.woting.ui.mine.person.phonecheck.PhoneCheckActivity;
 import com.woting.ui.mine.set.about.AboutActivity;
 import com.woting.ui.mine.set.downloadposition.DownloadPositionActivity;
 import com.woting.ui.mine.set.help.HelpActivity;
@@ -327,6 +327,8 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                     updateDialog.show();
                 }
             } else if (versionNew == versionOld) {
+                ToastUtils.show_allways(context, "已经是最新版本");
+            }else{
                 ToastUtils.show_allways(context, "已经是最新版本");
             }
         } catch (Exception e) {

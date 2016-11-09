@@ -1,4 +1,4 @@
-package com.woting.ui.mine.phonecheck;
+package com.woting.ui.mine.person.phonecheck;
 
 import android.app.Dialog;
 import android.content.SharedPreferences;

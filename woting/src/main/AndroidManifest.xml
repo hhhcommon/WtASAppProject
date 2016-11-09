@@ -76,7 +76,7 @@
 
         <!--  -->
         <activity
-            android:name="com.woting.ui.mine.qrcodes.EWMShowActivity"
+            android:name=".ui.common.qrcodes.EWMShowActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar" />
 
@@ -109,7 +109,7 @@
 
         <!--  -->
         <activity
-            android:name="com.woting.ui.mine.PersonActivity"
+            android:name=".ui.mine.MineActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
@@ -170,7 +170,7 @@
 
         <!--  -->
         <activity
-            android:name=".ui.mine.photocut.PhotoCutActivity"
+            android:name=".ui.common.photocut.PhotoCutActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
@@ -198,7 +198,7 @@
 
         <!--  -->
         <activity
-            android:name=".ui.mine.forgetpassword.activity.ForgetPasswordActivity"
+            android:name=".ui.mine.person.forgetpassword.ForgetPasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
@@ -233,7 +233,7 @@
 
         <!--  -->
         <activity
-            android:name=".ui.mine.modifypassword.ModifyPasswordActivity"
+            android:name=".ui.mine.person.modifypassword.ModifyPasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
@@ -423,14 +423,14 @@
 
         <!--  -->
         <activity
-            android:name=".ui.mine.phonecheck.PhoneCheckActivity"
+            android:name=".ui.mine.person.phonecheck.PhoneCheckActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
-            android:name=".ui.mine.updatepersonnews.UpdatePersonActivity"
+            android:name=".ui.mine.person.updatepersonnews.UpdatePersonActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />

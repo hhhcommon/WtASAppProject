@@ -37,7 +37,7 @@ import com.woting.ui.interphone.chat.fragment.ChatFragment;
 import com.woting.ui.interphone.message.model.UserInviteMeInside;
 import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.common.model.UserInfo;
-import com.woting.ui.mine.qrcodes.EWMShowActivity;
+import com.woting.ui.common.qrcodes.EWMShowActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -50,12 +50,12 @@ import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
 import com.woting.ui.mine.favorite.activity.FavoriteActivity;
 import com.woting.ui.mine.hardware.HardwareIntroduceActivity;
 import com.woting.ui.mine.model.UserPortaitInside;
-import com.woting.ui.mine.photocut.PhotoCutActivity;
+import com.woting.ui.common.photocut.PhotoCutActivity;
 import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
-import com.woting.ui.mine.qrcodes.EWMShowActivity;
+import com.woting.ui.common.qrcodes.EWMShowActivity;
 import com.woting.ui.mine.set.SetActivity;
 import com.woting.ui.mine.shapeapp.ShapeAppActivity;
-import com.woting.ui.mine.updatepersonnews.UpdatePersonActivity;
+import com.woting.ui.mine.person.updatepersonnews.UpdatePersonActivity;
 
 import java.io.File;
 
@@ -64,7 +64,7 @@ import java.io.File;
  * 作者：xinlong on 2016/11/6 21:18
  * 邮箱：645700751@qq.com
  */
-public class PersonActivity extends BaseActivity implements OnClickListener {
+public class MineActivity extends BaseActivity implements OnClickListener {
     private SharedPreferences sharedPreferences;
 
     private final int TO_GALLERY = 1;           // 标识 打开系统图库

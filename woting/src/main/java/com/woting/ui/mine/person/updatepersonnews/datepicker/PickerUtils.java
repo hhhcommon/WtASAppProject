@@ -1,4 +1,4 @@
-package com.woting.ui.mine.updatepersonnews.datepicker;
+package com.woting.ui.mine.person.updatepersonnews.datepicker;
 
 import android.content.Context;
 

@@ -1,4 +1,4 @@
-package com.woting.ui.mine.qrcodes;
+package com.woting.ui.common.qrcodes;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
