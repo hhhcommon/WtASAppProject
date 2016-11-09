@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.common.application.BSApplication;
+import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.widgetui.pickview.LoopView;
@@ -63,7 +64,64 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
     private String Day;
     private TextView tv_age;
     private TextView tv_xingzuo;
+    private LoopView pick_Province;
+    private LoopView pick_City;
+    private String tag = "UPDATE_PERSON_VOLLEY_REQUEST_CANCEL_TAG";
+    private boolean isCancelRequest;
+    private Dialog dialog;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_updateperson);
+        initView();
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            send();//获取用户信息
+        } else {
+            ToastUtils.show_short(context, "网络连接失败，请稍后重试");
+        }
+
+    }
+
+    //电话号码获取 根据电话号码的储存情况，判断是否可以修改手机号
+    /*@Override
+    protected void onResume() {
+        super.onResume();
+        phoneNumber = BSApplication.SharedPreferences.getString(StringConstant.USERPHONENUMBER, ""); // 用户手机号
+        textPhoneNumber.setText(phoneNumber);
+    }*/
+
+    // 设置界面
+    private void initView() {
+        findViewById(R.id.head_left_btn).setOnClickListener(this);
+        findViewById(R.id.lin_age).setOnClickListener(this);
+        findViewById(R.id.lin_area).setOnClickListener(this);
+
+        lin_gender_man=(LinearLayout) findViewById(R.id.lin_gender_man);
+        lin_gender_man.setOnClickListener(this);
+        lin_gender_woman= (LinearLayout)findViewById(R.id.lin_gender_woman);
+        lin_gender_woman.setOnClickListener(this);
+
+        tv_age=(TextView)findViewById(R.id.tv_age);
+        tv_xingzuo=(TextView)findViewById(R.id.tv_xingzuo);
+
+
+        String userId = BSApplication.SharedPreferences.getString(StringConstant.USERID, "");// 账号 用户 ID
+        TextView textAccount  = (TextView) findViewById(R.id.tv_zhanghu);
+        textAccount.setText(userId);
+
+        String userName = BSApplication.SharedPreferences.getString(StringConstant.USERNAME, "");// 用户昵称
+        TextView textName = (TextView) findViewById(R.id.tv_name);
+
+        gender=BSApplication.SharedPreferences.getString(StringConstant.GENDER,"M");
+        changViewGender();
+        textName.setText(userName);
+
+
+        datePickerDialog();
+        cityPickerDialog();
+
+    }
 
     @Override
     public void onClick(View v) {
@@ -87,53 +145,55 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
                     genderFlag=true;
                     changViewGender();
                 }
-
+                break;
+            case R.id.lin_area:
+                cityDialog.show();
                 break;
         }
     }
+    private void send() {
+       /* dialog = DialogUtils.Dialogph(context, "正在提交请求");
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("OldPassword", oldPassword);// 待改
+            jsonObject.put("newPassword", newPassword);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_updateperson);
-        initView();
-    }
+        VolleyRequest.RequestPost(GlobalConfig.modifyPasswordUrl, tag, jsonObject, new VolleyCallback() {
+            private String ReturnType;
+            private String Message;
 
-    //电话号码获取 根据电话号码的储存情况，判断是否可以修改手机号
-    /*@Override
-    protected void onResume() {
-        super.onResume();
-        phoneNumber = BSApplication.SharedPreferences.getString(StringConstant.USERPHONENUMBER, ""); // 用户手机号
-        textPhoneNumber.setText(phoneNumber);
-    }*/
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (dialog != null) dialog.dismiss();
+                if (isCancelRequest) return;
+                try {
+                    ReturnType = result.getString("ReturnType");
+                    Message = result.getString("Message");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (ReturnType != null && ReturnType.equals("1001")) {
+                    ToastUtils.show_allways(context, "密码修改成功");
+                    finish();
+                }
+                if (ReturnType != null && ReturnType.equals("1002")) {
+                    ToastUtils.show_allways(context, "" + Message);
+                } else {
+                    if (Message != null && !Message.trim().equals("")) {
+                        ToastUtils.show_allways(context, Message + "");
+                    }
+                }
+            }
 
-    // 设置界面
-    private void initView() {
-        findViewById(R.id.head_left_btn).setOnClickListener(this);
-        findViewById(R.id.lin_age).setOnClickListener(this);
-
-        lin_gender_man=(LinearLayout) findViewById(R.id.lin_gender_man);
-        lin_gender_man.setOnClickListener(this);
-        lin_gender_woman= (LinearLayout)findViewById(R.id.lin_gender_woman);
-        lin_gender_woman.setOnClickListener(this);
-
-        tv_age=(TextView)findViewById(R.id.tv_age);
-        tv_xingzuo=(TextView)findViewById(R.id.tv_xingzuo);
-
-        String userId = BSApplication.SharedPreferences.getString(StringConstant.USERID, "");// 账号 用户 ID
-        TextView textAccount  = (TextView) findViewById(R.id.tv_zhanghu);
-        textAccount.setText(userId);
-
-        String userName = BSApplication.SharedPreferences.getString(StringConstant.USERNAME, "");// 用户昵称
-        TextView textName = (TextView) findViewById(R.id.tv_name);
-
-        gender=BSApplication.SharedPreferences.getString(StringConstant.GENDER,"M");
-        changViewGender();
-        textName.setText(userName);
-
-
-        datePickerDialog();
-        cityPickerDialog();
+            @Override
+            protected void requestError(VolleyError error) {
+                if (dialog != null) dialog.dismiss();
+                ToastUtils.showVolleyError(context);
+            }
+        });*/
 
     }
 
@@ -297,8 +357,10 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
      * */
     private void cityPickerDialog() {
         final View dialog = LayoutInflater.from(context).inflate(R.layout.dialog_city, null);
-/*        ListView lv_city = (ListView) dialog.findViewById(R.id.lv_city);
-        ListView lv_zone = (ListView) dialog.findViewById(R.id.lv_zone);*/
+
+        pick_Province=(LoopView)dialog.findViewById(R.id.pick_province);
+        pick_City=(LoopView)dialog.findViewById(R.id.pick_city);
+
         TextView tv_confirm = (TextView) dialog.findViewById(R.id.tv_confirm);
         TextView tv_cancel = (TextView) dialog.findViewById(R.id.tv_cancel);
         cityDialog = new Dialog(context, R.style.MyDialog);

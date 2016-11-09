@@ -64,8 +64,45 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
             android:background="@color/gray_z"
             />
+        <LinearLayout
+            android:id="@+id/lin_nick"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/person_color"
+            android:clickable="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="19dp"
+                android:gravity="center"
+                android:text=" ID"
+                android:layout_centerVertical="true"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
+
+            <TextView
+                android:id="@+id/tv_nick"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="left|center"
+                android:layout_marginLeft="50dp"
+                android:hint="ID是账号的唯一凭证，只能修改一次"
+                android:textColorHint="@color/gray"
+                android:textColor="#5e6471" />
+
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_z"
+            />
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -340,6 +377,39 @@
             </LinearLayout>
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_z"
+            />
+        <LinearLayout
+        android:id="@+id/lin_mail"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/person_color"
+        android:clickable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="19dp"
+            android:gravity="center"
+            android:text="邮箱"
+            android:layout_centerVertical="true"
+            android:textColor="@color/wt_login_third"
+            android:textSize="@dimen/list_text_size" />
+
+        <TextView
+            android:id="@+id/tv_mail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="left|center"
+            android:layout_marginLeft="39dp"
+            android:hint="wotingfm@163.com"
+            android:textColorHint="@color/gray"
+            android:textColor="#5e6471" />
+
+    </LinearLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

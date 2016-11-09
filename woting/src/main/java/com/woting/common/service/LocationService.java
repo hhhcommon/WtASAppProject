@@ -36,10 +36,12 @@ public class LocationService extends Service implements GDLocation.Location {
     @Override
     public void locationSuccess(AMapLocation amapLocation) {
         String City = amapLocation.getCity();
+        String District=amapLocation.getDistrict();
         String Address = amapLocation.getAddress();
         String AdCode = amapLocation.getAdCode();//地区编码
         String Latitude = String.valueOf(amapLocation.getLatitude());
         String Longitude = String.valueOf(amapLocation.getLongitude());
+        GlobalConfig.District=District;
         if (GlobalConfig.latitude == null) {
             GlobalConfig.latitude = Latitude;
         } else {
