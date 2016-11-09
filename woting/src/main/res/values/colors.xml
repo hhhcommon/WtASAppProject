@@ -5,6 +5,7 @@
     <color name="dinglan_orange">#ff6600</color>
     <color name="dinglan_orange_light">#ffce8f</color>
     <color name="item_common">#F111</color>
+    <color name="main_tab_bg">#fff5ef</color>
     <color name="item_1">#F222</color>
     <color name="item_2">#F000</color>
     <color name="transparent_gray">#A000</color>
@@ -143,7 +144,7 @@
     <color name="tomato">#FF6347</color>
     <!-- 西红柿色 -->
     <color name="orangered">#FF6600</color>
-    <color name="dinglanorangered">#f09c30</color>
+    <color name="dinglanorangered">#d05300</color>
     <!-- 红橙色 -->
     <color name="deeppink">#FF1493</color>
     <!-- 深粉红色 -->
