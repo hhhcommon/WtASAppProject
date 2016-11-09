@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 /**
  * 提交意见反馈
+ *
  * @author 辛龙
  *         2016年8月1日
  */
@@ -87,30 +88,23 @@ public class FeedbackActivity extends BaseActivity implements OnClickListener {
         }
 
         VolleyRequest.RequestPost(GlobalConfig.FeedBackUrl, tag, jsonObject, new VolleyCallback() {
-            private String ReturnType;
-            private String Message;
 
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 try {
-                    ReturnType = result.getString("ReturnType");
-                    Message = result.getString("Message");
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        ToastUtils.show_allways(getApplicationContext(), "提交成功");
+                        Intent intent = new Intent(FeedbackActivity.this, FeedbackListActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        ToastUtils.show_allways(FeedbackActivity.this, "提交失败,请稍后再试!");
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }
-                if (ReturnType != null && ReturnType.equals("1001")) {
-                    ToastUtils.show_short(getApplicationContext(), "提交成功");
-                    Intent intent = new Intent(FeedbackActivity.this, FeedbackListActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_short(FeedbackActivity.this, "提交失败，失败原因");
-                } else {
-                    if (Message != null && !Message.trim().equals("")) {
-                        Toast.makeText(FeedbackActivity.this, "提交意见反馈失败, " + Message, Toast.LENGTH_SHORT).show();
-                    }
                 }
             }
 

@@ -7,6 +7,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -70,21 +71,45 @@ public class SplashActivity extends Activity {
                         if (UserInfo == null || UserInfo.trim().equals("")) {
                             et.putString(StringConstant.USERID, "userid");
                             et.putString(StringConstant.USERNAME, "username");
+                            et.putString(StringConstant.USER_NUM, "usernum");
                             et.putString(StringConstant.IMAGEURL, "imageurl");
                             et.putString(StringConstant.IMAGEURBIG, "imageurlbig");
                             if (!et.commit()) {
                                 Log.v("commit", "数据 commit 失败!");
                             }
                         } else {
-                            UserInfo list = new Gson().fromJson(UserInfo, new TypeToken<UserInfo>() {}.getType());
+                            UserInfo list = new Gson().fromJson(UserInfo, new TypeToken<UserInfo>() {
+                            }.getType());
                             String userId = list.getUserId();
                             String userName = list.getUserName();
+                            String userNum = list.getUserNum();
                             String imageUrl = list.getPortraitMini();
                             String imageUrlBig = list.getPortraitBig();
-                            et.putString(StringConstant.USERID, userId);
-                            et.putString(StringConstant.IMAGEURL, imageUrl);
-                            et.putString(StringConstant.IMAGEURBIG, imageUrlBig);
-                            et.putString(StringConstant.USERNAME, userName);
+                            if (userId != null && !userId.equals("")) {
+                                et.putString(StringConstant.USERID, userId);
+                            } else {
+                                et.putString(StringConstant.USERID, "userid");
+                            }
+                            if (userName != null && !userName.equals("")) {
+                                et.putString(StringConstant.USERNAME, userName);
+                            } else {
+                                et.putString(StringConstant.USERNAME, "username");
+                            }
+                            if (userNum != null && !userNum.equals("")) {
+                                et.putString(StringConstant.USER_NUM, userNum);
+                            } else {
+                                et.putString(StringConstant.USER_NUM, "usernum");
+                            }
+                            if (imageUrl != null && !imageUrl.equals("")) {
+                                et.putString(StringConstant.IMAGEURL, imageUrl);
+                            } else {
+                                et.putString(StringConstant.IMAGEURL, "imageurl");
+                            }
+                            if (imageUrlBig != null && !imageUrlBig.equals("")) {
+                                et.putString(StringConstant.IMAGEURBIG, imageUrlBig);
+                            } else {
+                                et.putString(StringConstant.IMAGEURBIG, "imageurlbig");
+                            }
                             if (!et.commit()) {
                                 Log.v("commit", "数据 commit 失败!");
                             }

@@ -224,6 +224,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 Editor et = BSApplication.SharedPreferences.edit();
                 et.putString(StringConstant.ISLOGIN, "false");
                 et.putString(StringConstant.USERID, "");
+                et.putString(StringConstant.USER_NUM, "");
                 et.putString(StringConstant.IMAGEURL, "");
                 if (!et.commit()) {
                     Log.v("commit", "数据 commit 失败!");
