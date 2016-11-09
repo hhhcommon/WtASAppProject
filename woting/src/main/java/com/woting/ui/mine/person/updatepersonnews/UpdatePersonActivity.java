@@ -108,10 +108,17 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
         textPhoneNumber.setText(phoneNumber);
     }*/
 
+    // 初始化性别选择对话框
+    private void genderDialog() {
+        final View dialog = LayoutInflater.from(context).inflate(R.layout.dialog_datepicker, null);
+
+    }
+
     // 设置界面
     private void initView() {
         findViewById(R.id.head_left_btn).setOnClickListener(this);
         findViewById(R.id.lin_age).setOnClickListener(this);
+        findViewById(R.id.lin_xingzuo).setOnClickListener(this);
 
         lin_gender_man=(LinearLayout) findViewById(R.id.lin_gender_man);
         lin_gender_man.setOnClickListener(this);
@@ -131,7 +138,6 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
         gender=BSApplication.SharedPreferences.getString(StringConstant.GENDER,"M");
         changViewGender();
         textName.setText(userName);
-
 
         datePickerDialog();
         cityPickerDialog();
@@ -376,8 +382,4 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
     }
-
-
-
-
 }

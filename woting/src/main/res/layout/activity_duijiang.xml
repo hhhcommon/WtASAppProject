@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_bg"
+    android:background="@color/dinglan_orange"
+    android:paddingTop="24dp"
     android:orientation="vertical" >
     <LinearLayout
         android:layout_width="match_parent"
@@ -90,7 +91,8 @@
         <android.support.v4.view.ViewPager  
         android:id="@+id/viewpager"  
         android:layout_width="match_parent"  
-        android:layout_height="match_parent"  
+        android:layout_height="match_parent"
+        android:background="@color/WHITE"
         android:flipInterval="30"  
         android:persistentDrawingCache="animation"/>
 

@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Html;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,24 +17,24 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.woting.R;
-import com.woting.ui.baseactivity.BaseActivity;
-import com.woting.ui.mine.feedback.activity.FeedbackActivity;
-import com.woting.ui.mine.phonecheck.PhoneCheckActivity;
-import com.woting.ui.mine.set.about.AboutActivity;
-import com.woting.ui.mine.set.contactus.ContactUsActivity;
-import com.woting.ui.mine.set.downloadposition.DownloadPositionActivity;
-import com.woting.ui.mine.set.help.HelpActivity;
-import com.woting.ui.mine.set.update.UpdateManager;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
 import com.woting.common.manager.CacheManager;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.mine.feedback.activity.FeedbackActivity;
+import com.woting.ui.mine.person.modifypassword.ModifyPasswordActivity;
+import com.woting.ui.mine.person.phonecheck.PhoneCheckActivity;
+import com.woting.ui.mine.set.about.AboutActivity;
+import com.woting.ui.mine.set.downloadposition.DownloadPositionActivity;
+import com.woting.ui.mine.set.help.HelpActivity;
+import com.woting.ui.mine.set.update.UpdateManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,7 +60,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
     private String cachePath;           // 缓存路径
     private String tag = "SET_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
-    private String phoneNumber;//　用户当前的手机号
+//    private String phoneNumber;//　用户当前的手机号
     private View lin_IsLogin;
 
     @Override
@@ -84,7 +83,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         findViewById(R.id.lin_about).setOnClickListener(this);              // 关于
         findViewById(R.id.lin_feedback).setOnClickListener(this);           // 意见反馈
         findViewById(R.id.lin_downloadposition).setOnClickListener(this);   // 下载位置
-        findViewById(R.id.lin_contactus).setOnClickListener(this);          // 联系我们
+//        findViewById(R.id.lin_contactus).setOnClickListener(this);          // 联系我们
 
         lin_IsLogin= findViewById(R.id.lin_IsLogin);                        //未登录时需要隐藏的绑定手机号和重置密码布局
 
@@ -101,11 +100,6 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         initCache();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        phoneNumber = BSApplication.SharedPreferences.getString(StringConstant.PHONENUMBER, ""); // 用户手机号
-    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -143,9 +137,9 @@ public class SetActivity extends BaseActivity implements OnClickListener {
             case R.id.lin_downloadposition: // 下载位置
                 startActivity(new Intent(context, DownloadPositionActivity.class));
                 break;
-            case R.id.lin_contactus:        // 联系我们
-                startActivity(new Intent(context, ContactUsActivity.class));
-                break;
+//            case R.id.lin_contactus:        // 联系我们
+//                startActivity(new Intent(context, ContactUsActivity.class));
+//                break;
             case R.id.tv_update:            // 更新
                 okUpdate();
                 updateDialog.dismiss();
@@ -154,30 +148,28 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 if (updateType == 1) {
                     updateDialog.dismiss();
                 } else {
-                    ToastUtils.show_short(context, "本次需要更新");
+                    ToastUtils.show_allways(context, "本次需要更新");
                 }
                 break;
             case R.id.tv_confirm:           // 确定清除
-                clearCacheDialog.dismiss();
                 new ClearCacheTask().execute();
                 break;
             case R.id.tv_cancle:            // 取消清除
                 clearCacheDialog.dismiss();
                 break;
             case R.id.lin_bindPhone:        // 绑定手机号
-                Intent intent =new Intent(context, PhoneCheckActivity.class);
-                if(!TextUtils.isEmpty(phoneNumber)){
-                    //已经有存在的手机号
+                String phoneNumber = BSApplication.SharedPreferences.getString(StringConstant.PHONENUMBER, ""); // 用户手机号
+                Intent intent = new Intent(context, PhoneCheckActivity.class);
+                if(!phoneNumber.equals("")){// 已经有存在的手机号
                     intent.putExtra("PhoneType","1");
                     intent.putExtra("PhoneNumber",phoneNumber);
-                }else{
-                    //手机号为空
+                }else{// 手机号为空
                     intent.putExtra("PhoneType","2");
                 }
                 startActivity(intent);
                 break;
             case R.id.lin_reset_password:   // 重置密码
-                clearCacheDialog.dismiss();
+                startActivity(new Intent(context, ModifyPasswordActivity.class));
                 break;
         }
     }
@@ -336,6 +328,8 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 }
             } else if (versionNew == versionOld) {
                 ToastUtils.show_allways(context, "已经是最新版本");
+            }else{
+                ToastUtils.show_allways(context, "已经是最新版本");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -370,6 +364,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
 
         @Override
         protected void onPreExecute() {
+            clearCacheDialog.dismiss();
             dialog = DialogUtils.Dialogph(context, "正在清除缓存");
         }
 
@@ -381,7 +376,6 @@ public class SetActivity extends BaseActivity implements OnClickListener {
 
         @Override
         protected void onPostExecute(Void result) {
-            clearCacheDialog.dismiss();
             if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
             }

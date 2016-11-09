@@ -1,4 +1,4 @@
-package com.woting.ui.mine.photocut;
+package com.woting.ui.common.photocut;
 
 import android.content.Intent;
 import android.graphics.Bitmap;

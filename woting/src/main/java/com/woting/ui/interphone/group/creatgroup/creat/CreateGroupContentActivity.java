@@ -44,7 +44,7 @@ import com.woting.common.util.ImageUploadReturnUtil;
 import com.woting.ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivity;
 import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.mine.model.UserPortaitInside;
-import com.woting.ui.mine.photocut.PhotoCutActivity;
+import com.woting.ui.common.photocut.PhotoCutActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;

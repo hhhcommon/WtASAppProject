@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -35,24 +37,25 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.http.MyHttp;
 import com.woting.common.manager.FileManager;
+import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ImageUploadReturnUtil;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
+import com.woting.common.widgetui.MyScrollView;
 import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.common.login.LoginActivity;
-import com.woting.ui.home.player.timeset.activity.TimerPowerOffActivity;
 import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
 import com.woting.ui.mine.favorite.activity.FavoriteActivity;
 import com.woting.ui.mine.hardware.HardwareIntroduceActivity;
 import com.woting.ui.mine.model.UserPortaitInside;
-import com.woting.ui.mine.photocut.PhotoCutActivity;
+import com.woting.ui.common.photocut.PhotoCutActivity;
 import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
-import com.woting.ui.mine.qrcodes.EWMShowActivity;
+import com.woting.ui.common.qrcodes.EWMShowActivity;
 import com.woting.ui.mine.set.SetActivity;
 import com.woting.ui.mine.shapeapp.ShapeAppActivity;
-import com.woting.ui.mine.updatepersonnews.UpdatePersonActivity;
+import com.woting.ui.mine.person.updatepersonnews.UpdatePersonActivity;
 
 import java.io.File;
 
@@ -61,7 +64,7 @@ import java.io.File;
  * 作者：xinlong on 2016/11/6 21:18
  * 邮箱：645700751@qq.com
  */
-public class PersonActivity extends BaseActivity implements OnClickListener {
+public class MineActivity extends BaseActivity implements OnClickListener {
     private SharedPreferences sharedPreferences;
 
     private final int TO_GALLERY = 1;           // 标识 打开系统图库
@@ -86,9 +89,12 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
     private View linStatusNoLogin;              // 没有登录时的状态
     private View linStatusLogin;                // 登录时的状态
     private View linLike;                       // 我喜欢的
-    private View linAnchor;                     // 我的主播
+    private View linAnchor;                     // 我的主播  我关注的主播
     private View linSubscribe;                  // 我的订阅
-    private View linAlbum;                      // 我的专辑
+    private View linAlbum;                      // 我的专辑  我上传的专辑
+    private View viewBackground;
+
+    private MyScrollView scrollView;
 
     private TextView textUserId;                // 显示用户 ID
 //    private TextView textTime;                  // 定时关闭的时间
@@ -136,7 +142,7 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
         findViewById(R.id.text_denglu).setOnClickListener(this);            // 点击登录
         findViewById(R.id.image_nodenglu).setOnClickListener(this);         // 没有登录时的头像
         findViewById(R.id.lin_playhistory).setOnClickListener(this);        // 播放历史
-        findViewById(R.id.lin_timer).setOnClickListener(this);              // 定时
+//        findViewById(R.id.lin_timer).setOnClickListener(this);              // 定时
         findViewById(R.id.lin_liuliang).setOnClickListener(this);           // 流量提醒
         findViewById(R.id.lin_hardware).setOnClickListener(this);           // 智能硬件
         findViewById(R.id.lin_app).setOnClickListener(this);                // 应用分享
@@ -168,12 +174,28 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
         linAlbum.setOnClickListener(this);
 
         TextView textUserArea = (TextView) findViewById(R.id.text_user_area);
-        textUserArea.setText("北京朝阳");                                   // 用户信息
+        textUserArea.setText("北京东城");                                   // 用户信息
 
         textUserId = (TextView) findViewById(R.id.text_user_id);            // 显示用户 ID
 
         TextView textUserAutograph = (TextView) findViewById(R.id.text_user_autograph);
         textUserAutograph.setText("Anyone can give up, but you can't.");    // 用户签名
+
+        viewBackground = findViewById(R.id.view_back);
+        scrollView = (MyScrollView) findViewById(R.id.scroll_view);
+        scrollView.setOnScrollChangedListener(new MyScrollView.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt) {
+                if (viewBackground != null && viewBackground.getHeight() > 0) {
+                    int height = viewBackground.getHeight();
+                    if (t < height) {
+                        int alpha = (int) (new Float(t) / new Float(height) * 200);
+                        Log.e("YJL", "" + alpha);
+                        viewBackground.getBackground().setAlpha(255 - alpha);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -187,9 +209,9 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
             case R.id.lin_playhistory:      // 播放历史
                 startActivity(new Intent(context, PlayHistoryActivity.class));
                 break;
-            case R.id.lin_timer:            // 定时
-                startActivity(new Intent(context, TimerPowerOffActivity.class));
-                break;
+//            case R.id.lin_timer:            // 定时
+//                startActivity(new Intent(context, TimerPowerOffActivity.class));
+//                break;
             case R.id.text_denglu:          // 登陆
                 startActivity(new Intent(context, LoginActivity.class));
                 break;
@@ -197,10 +219,12 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
                 String wifiSet = sharedPreferences.getString(StringConstant.WIFISET, "true");
                 Editor et = sharedPreferences.edit();
                 if (wifiSet.equals("true")) {
-                    imageToggle.setImageResource(R.mipmap.wt_person_close);
+                    Bitmap bitmap = BitmapUtils.readBitMap(context, R.mipmap.wt_person_close);
+                    imageToggle.setImageBitmap(bitmap);
                     et.putString(StringConstant.WIFISET, "false");
                 } else {
-                    imageToggle.setImageResource(R.mipmap.wt_person_on);
+                    Bitmap bitmap = BitmapUtils.readBitMap(context, R.mipmap.wt_person_on);
+                    imageToggle.setImageBitmap(bitmap);
                     et.putString(StringConstant.WIFISET, "true");
                 }
                 if (et.commit()) {
@@ -304,15 +328,19 @@ public class PersonActivity extends BaseActivity implements OnClickListener {
             linAnchor.setVisibility(View.GONE);
             linSubscribe.setVisibility(View.GONE);
             linAlbum.setVisibility(View.GONE);
-            imageHead.setImageResource(R.mipmap.reg_default_portrait);
+
+            Bitmap bitmap = BitmapUtils.readBitMap(context, R.mipmap.reg_default_portrait);
+            imageHead.setImageBitmap(bitmap);
         }
 
         // 获取当前的流量提醒按钮状态
         String wifiSet = sharedPreferences.getString(StringConstant.WIFISET, "true");
         if (wifiSet.equals("true")) {
-            imageToggle.setImageResource(R.mipmap.wt_person_on);
+            Bitmap bitmap = BitmapUtils.readBitMap(context, R.mipmap.wt_person_on);
+            imageToggle.setImageBitmap(bitmap);
         } else {
-            imageToggle.setImageResource(R.mipmap.wt_person_close);
+            Bitmap bitmap = BitmapUtils.readBitMap(context, R.mipmap.wt_person_close);
+            imageToggle.setImageBitmap(bitmap);
         }
     }
 

@@ -1,4 +1,4 @@
-package com.woting.ui.mine.updatepersonnews.util;
+package com.woting.ui.mine.person.updatepersonnews.util;
 
 import java.util.ArrayList;
 import java.util.List;

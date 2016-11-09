@@ -28,414 +28,285 @@
             android:textSize="@dimen/activity_head_center_s" />
 
     </RelativeLayout>
-    <LinearLayout
-        android:id="@+id/lin_IsLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/app_bg"
-        android:orientation="vertical"
-        android:paddingBottom="10dp"
-        >
-    <RelativeLayout
-        android:id="@+id/lin_bindPhone"
-        android:layout_width="match_parent"
-        android:layout_height="43dp"
-        android:background="@drawable/person_color">
 
-        <ImageView
-            android:id="@+id/img_bindPhone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="19dp"
-            android:layout_centerVertical="true"
-            android:src="@mipmap/wt_person_modifypassword"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:text="绑定手机号"
-            android:layout_toRightOf="@id/img_bindPhone"
-            android:layout_centerVertical="true"
-            android:textColor="@color/wt_login_third"
-            android:textSize="@dimen/list_text_size" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="13dp"
-            android:src="@mipmap/live_more" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/lin_reset_password"
-        android:layout_width="match_parent"
-        android:layout_height="43dp"
-        android:layout_marginTop="1dp"
-        android:background="@drawable/person_color">
-
-        <ImageView
-            android:id="@+id/img_reset_password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="19dp"
-            android:layout_centerVertical="true"
-            android:src="@mipmap/wt_person_modify"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:text="重置密码"
-            android:layout_toRightOf="@id/img_reset_password"
-            android:layout_centerVertical="true"
-            android:textColor="@color/wt_login_third"
-            android:textSize="@dimen/list_text_size" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="13dp"
-            android:src="@mipmap/live_more" />
-
-    </RelativeLayout>
-    </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/app_bg"
-        />
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/app_bg"
-        android:orientation="vertical" >
+        android:scrollbars="none">
 
-        <RelativeLayout
-            android:id="@+id/lin_downloadposition"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="43dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            android:background="@drawable/person_color">
-
-            <ImageView
-                android:id="@+id/image_position"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="19dp"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/wt_person_download"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:text="下载路径"
-                android:layout_toRightOf="@id/image_position"
-                android:layout_centerVertical="true"
-                android:textColor="@color/wt_login_third"
-                android:textSize="@dimen/list_text_size" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="13dp"
-                android:src="@mipmap/live_more" />
-
-        </RelativeLayout>
-        
-        <RelativeLayout
-            android:id="@+id/lin_clear"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_below="@id/lin_downloadposition"
-            android:background="@drawable/person_color">
-
-            <View
+            <LinearLayout
+                android:id="@+id/lin_IsLogin"
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/view_color"/>
-
-            <ImageView
-                android:id="@+id/image_clear"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="19dp"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/wt_person_cache" />
+                android:background="@color/app_bg"
+                android:orientation="vertical"
+                android:paddingBottom="20dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:text="清除缓存"
-                android:layout_toRightOf="@id/image_clear"
-                android:layout_centerVertical="true"
-                android:textColor="@color/wt_login_third"
-                android:textSize="@dimen/list_text_size" />
+                <RelativeLayout
+                    android:id="@+id/lin_bindPhone"
+                    style="@style/PersonAndSetRelativeStyle">
 
-            <ImageView
-                android:id="@+id/image_more"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="13dp"
-                android:src="@mipmap/live_more"/>
+                    <ImageView
+                        android:id="@+id/img_bindPhone"
+                        style="@style/PersonAndSetLeftStyle"
+                        android:src="@mipmap/wt_person_modifypassword"/>
 
-            <TextView
-                android:id="@+id/text_cache"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:layout_toLeftOf="@id/image_more"
-                android:layout_centerVertical="true"
-                android:text="0MB"
-                android:textColor="@color/beijing"
-                android:textSize="@dimen/text_size_13" />
+                    <TextView
+                        style="@style/PersonAndSetTextStyle"
+                        android:text="绑定手机号"
+                        android:layout_toRightOf="@id/img_bindPhone" />
 
-            <View
+                    <ImageView style="@style/PersonAndSetRightStyle"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/lin_reset_password"
+                    style="@style/PersonAndSetRelativeStyle">
+
+                    <View style="@style/LineStyle"/>
+
+                    <ImageView
+                        android:id="@+id/img_reset_password"
+                        style="@style/PersonAndSetLeftStyle"
+                        android:src="@mipmap/wt_person_modify"/>
+
+                    <TextView
+                        style="@style/PersonAndSetTextStyle"
+                        android:text="重置密码"
+                        android:layout_toRightOf="@id/img_reset_password"/>
+
+                    <ImageView style="@style/PersonAndSetRightStyle"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/lin_downloadposition"
+                style="@style/PersonAndSetRelativeStyle">
+
+                <View style="@style/ViewStyle" />
+
+                <ImageView
+                    android:id="@+id/image_position"
+                    style="@style/PersonAndSetLeftStyle"
+                    android:src="@mipmap/wt_person_download"/>
+
+                <TextView
+                    style="@style/PersonAndSetTextStyle"
+                    android:text="下载路径"
+                    android:layout_toRightOf="@id/image_position" />
+
+                <ImageView style="@style/PersonAndSetRightStyle"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lin_clear"
+                style="@style/PersonAndSetRelativeStyle">
+
+                <View style="@style/LineStyle"/>
+
+                <ImageView
+                    android:id="@+id/image_clear1"
+                    style="@style/PersonAndSetLeftStyle"
+                    android:src="@mipmap/wt_person_cache" />
+
+                <TextView
+                    style="@style/PersonAndSetTextStyle"
+                    android:text="清除缓存"
+                    android:layout_toRightOf="@id/image_clear1" />
+
+                <ImageView
+                    android:id="@+id/image_more"
+                    style="@style/PersonAndSetRightStyle"/>
+
+                <TextView
+                    android:id="@+id/text_cache"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@id/image_more"
+                    android:layout_centerVertical="true"
+                    android:text="0MB"
+                    android:textColor="@color/beijing"
+                    android:textSize="@dimen/text_size_13" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lin_update"
+                style="@style/PersonAndSetRelativeStyle" >
+
+                <View style="@style/LineStyle"/>
+
+                <ImageView
+                    android:id="@+id/image_update"
+                    style="@style/PersonAndSetLeftStyle"
+                    android:src="@mipmap/wt_person_update" />
+
+                <TextView
+                    style="@style/PersonAndSetTextStyle"
+                    android:text="检查更新"
+                    android:layout_toRightOf="@id/image_update" />
+
+                <ImageView style="@style/PersonAndSetRightStyle"/>
+
+                <View
+                    style="@style/ViewStyle"
+                    android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lin_preference"
+                style="@style/PersonAndSetRelativeStyle"
+                android:layout_marginTop="20dp">
+
+                <View style="@style/ViewStyle"/>
+
+                <ImageView
+                    android:id="@+id/image_preference"
+                    style="@style/PersonAndSetLeftStyle"
+                    android:src="@mipmap/wt_person_help" />
+
+                <TextView
+                    style="@style/PersonAndSetTextStyle"
+                    android:text="偏好设置"
+                    android:layout_toRightOf="@id/image_preference" />
+
+                <ImageView style="@style/PersonAndSetRightStyle"/>
+
+                <View
+                    style="@style/ViewStyle"
+                    android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lin_help"
+                style="@style/PersonAndSetRelativeStyle"
+                android:layout_marginTop="20dp">
+
+                <View style="@style/ViewStyle"/>
+
+                <ImageView
+                    android:id="@+id/image_help"
+                    style="@style/PersonAndSetLeftStyle"
+                    android:src="@mipmap/wt_person_help" />
+
+                <TextView
+                    style="@style/PersonAndSetTextStyle"
+                    android:text="使用帮助"
+                    android:layout_toRightOf="@id/image_help" />
+
+                <ImageView style="@style/PersonAndSetRightStyle"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lin_feedback"
+                style="@style/PersonAndSetRelativeStyle" >
+
+                <View style="@style/LineStyle"/>
+
+                <ImageView
+                    android:id="@+id/image_feedback"
+                    style="@style/PersonAndSetLeftStyle"
+                    android:src="@mipmap/wt_person_feedback" />
+
+                <TextView
+                    style="@style/PersonAndSetTextStyle"
+                    android:text="反馈建议"
+                    android:layout_toRightOf="@id/image_feedback" />
+
+                <ImageView style="@style/PersonAndSetRightStyle"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lin_contactus"
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/view_color"/>
+                android:layout_height="43dp"
+                android:visibility="gone"
+                android:background="@drawable/person_color">
 
-        </RelativeLayout>
+                <View style="@style/LineStyle"/>
 
-        <RelativeLayout
-            android:id="@+id/lin_help"
-            android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:layout_below="@id/lin_clear"
-            android:background="@drawable/person_color"
-            android:layout_marginTop="10dp">
+                <ImageView
+                    android:id="@+id/image_contact"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="19dp"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/wt_person_timercontactus"/>
 
-            <View
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:text="联系我们"
+                    android:layout_toRightOf="@id/image_contact"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/wt_login_third"
+                    android:textSize="@dimen/list_text_size" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="13dp"
+                    android:src="@mipmap/live_more" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lin_about"
+                style="@style/PersonAndSetRelativeStyle" >
+
+                <View style="@style/LineStyle"/>
+
+                <ImageView
+                    android:id="@+id/image_about"
+                    style="@style/PersonAndSetLeftStyle"
+                    android:src="@mipmap/wt_person_aboutus" />
+
+                <TextView
+                    style="@style/PersonAndSetTextStyle"
+                    android:text="关于我听"
+                    android:layout_toRightOf="@id/image_about" />
+
+                <ImageView style="@style/PersonAndSetRightStyle"/>
+
+                <View
+                    style="@style/ViewStyle"
+                    android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/lin_zhuxiao"
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/view_color"/>
+                android:layout_height="40dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="80dp"
+                android:background="@drawable/zhuxiao_press"
+                android:text="注销登录"
+                android:textColor="@color/WHITE"
+                android:textSize="@dimen/activity_head_right" />
 
-            <ImageView
-                android:id="@+id/image_help"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="19dp"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/wt_person_help" />
-            
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:text="使用帮助"
-                android:layout_toRightOf="@id/image_help"
-                android:layout_centerVertical="true"
-                android:textColor="@color/wt_login_third"
-                android:textSize="@dimen/list_text_size" />
+        </LinearLayout>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="13dp"
-                android:src="@mipmap/live_more" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/lin_feedback"
-            android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:layout_below="@id/lin_help"
-            android:background="@drawable/person_color" >
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/view_color"/>
-
-            <ImageView
-                android:id="@+id/image_feedback"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="19dp"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/wt_person_feedback" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:text="反馈建议"
-                android:layout_toRightOf="@id/image_feedback"
-                android:layout_centerVertical="true"
-                android:textColor="@color/wt_login_third"
-                android:textSize="@dimen/list_text_size" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="13dp"
-                android:src="@mipmap/live_more" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/view_color"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/lin_contactus"
-            android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:layout_below="@id/lin_feedback"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/person_color">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/view_color"/>
-
-            <ImageView
-                android:id="@+id/image_contact"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="19dp"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/wt_person_timercontactus"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:text="联系我们"
-                android:layout_toRightOf="@id/image_contact"
-                android:layout_centerVertical="true"
-                android:textColor="@color/wt_login_third"
-                android:textSize="@dimen/list_text_size" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="13dp"
-                android:src="@mipmap/live_more" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/lin_update"
-            android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:layout_below="@id/lin_contactus"
-            android:background="@drawable/person_color" >
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/view_color"/>
-
-            <ImageView
-                android:id="@+id/image_update"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="19dp"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/wt_person_update" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:text="检查更新"
-                android:layout_toRightOf="@id/image_update"
-                android:layout_centerVertical="true"
-                android:textColor="@color/wt_login_third"
-                android:textSize="@dimen/list_text_size" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="13dp"
-                android:src="@mipmap/live_more" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/lin_about"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_below="@id/lin_update"
-            android:background="@drawable/person_color" >
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/view_color"/>
-
-            <ImageView
-                android:id="@+id/image_about"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="19dp"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/wt_person_aboutus" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:text="关于我听"
-                android:layout_toRightOf="@id/image_about"
-                android:layout_centerVertical="true"
-                android:textColor="@color/wt_login_third"
-                android:textSize="@dimen/list_text_size" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="13dp"
-                android:src="@mipmap/live_more" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/view_color"/>
-
-        </RelativeLayout>
-
-        <Button
-            android:id="@+id/lin_zhuxiao"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:background="@drawable/zhuxiao_press"
-            android:text="注销登录"
-            android:textColor="@color/WHITE"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="30dp"
-            android:textSize="@dimen/activity_head_right" />
-
-    </RelativeLayout>
+    </ScrollView>
 
 </LinearLayout>

@@ -1,4 +1,4 @@
-package com.woting.ui.mine.phonecheck;
+package com.woting.ui.mine.person.phonecheck;
 
 import android.app.Dialog;
 import android.content.SharedPreferences;
@@ -6,6 +6,7 @@ import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -49,18 +50,41 @@ public class PhoneCheckActivity extends AppBaseActivity implements OnClickListen
     private boolean isCancelRequest;
     private boolean isGetCode;                      // 判断是否已经获取验证码
     private String phoneNumberNew;
-    private int ViewType=2;                           // ==1为已经有手机号 ==2为无手机号
+//    private int ViewType = 2;                       // == 1 为已经有手机号  == 2 为无手机号
     private TextView tv_Phone_Desc;
     private TextView tv_Phone;
 
+    @Override
+    protected int setViewId() {
+        return R.layout.activity_modify_phone_number;
+    }
 
+    @Override
+    protected void init() {
+        setTitle("绑定手机号");
+        editPhoneNumber = (EditText) findViewById(R.id.edit_phone_number);                  // 新手机号码
+        editVerificationCode = (EditText) findViewById(R.id.edit_verification_code);        // 验证码
+        editPhoneNumber.addTextChangedListener(new MyEditListener());
+        editVerificationCode.addTextChangedListener(new MyEditListener());
+        textGetVerificationCode = (TextView) findViewById(R.id.text_get_verification_code); // 获取验证码
+        textGetVerificationCode.setOnClickListener(this);
+
+        textResend = (TextView) findViewById(R.id.text_resend);                             // 重新发送验证码
+        textResend.setOnClickListener(this);
+        btUpdate = (Button) findViewById(R.id.btn_confirm);                                 // 确定修改
+        btUpdate.setOnClickListener(this);
+
+        tv_Phone_Desc=(TextView) findViewById(R.id.tv_Phone_Desc);
+        tv_Phone=(TextView) findViewById(R.id.tv_phone);
+        handleIntent();
+    }
 
     private void handleIntent() {
-        String phoneType=getIntent().getStringExtra("PhoneType");
+        String phoneType = getIntent().getStringExtra("PhoneType");
         if(!TextUtils.isEmpty(phoneType)){
            if(phoneType.equals("1")){
-               phoneNumber=getIntent().getStringExtra("PhoneNumber");//有手机号
-               ViewType=1;
+               phoneNumber = getIntent().getStringExtra("PhoneNumber");// 有手机号
+//               ViewType = 1;
                tv_Phone_Desc.setText("当前绑定的手机号码为："+phoneNumber.replaceAll("(\\d{3})\\d{6}(\\d{2})","$1******$2")
                        + "\n更换手机号后，下次登录可以使用新手机号码登录。");
                tv_Phone.setText("新手机号");
@@ -88,31 +112,6 @@ public class PhoneCheckActivity extends AppBaseActivity implements OnClickListen
                 checkVerificationCode();
                 break;
         }
-    }
-
-    @Override
-    protected int setViewId() {
-        return R.layout.activity_modify_phone_number;
-    }
-
-    @Override
-    protected void init() {
-        setTitle("绑定手机号");
-        editPhoneNumber = (EditText) findViewById(R.id.edit_phone_number);                  // 新手机号码
-        editVerificationCode = (EditText) findViewById(R.id.edit_verification_code);        // 验证码
-        editPhoneNumber.addTextChangedListener(new MyEditListener());
-        editVerificationCode.addTextChangedListener(new MyEditListener());
-        textGetVerificationCode = (TextView) findViewById(R.id.text_get_verification_code); // 获取验证码
-        textGetVerificationCode.setOnClickListener(this);
-
-        textResend = (TextView) findViewById(R.id.text_resend);                             // 重新发送验证码
-        textResend.setOnClickListener(this);
-        btUpdate = (Button) findViewById(R.id.btn_confirm);                                 // 确定修改
-        btUpdate.setOnClickListener(this);
-
-        tv_Phone_Desc=(TextView) findViewById(R.id.tv_Phone_Desc);
-        tv_Phone=(TextView) findViewById(R.id.tv_phone);
-        handleIntent();
     }
 
     // 验证码手机号正确就获取验证码
@@ -262,10 +261,7 @@ public class PhoneCheckActivity extends AppBaseActivity implements OnClickListen
                         SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
                         et.putString(StringConstant.PHONENUMBER, phoneNumber);
                         if (!et.commit()) {
-                         /*   L.w
-
-
-                         (" 数据 commit 失败!");*/
+                            Log.w("commit", " 数据 commit 失败!");
                         }
                         setResult(1);
                     } else {
@@ -313,18 +309,15 @@ public class PhoneCheckActivity extends AppBaseActivity implements OnClickListen
         phoneNumber = editPhoneNumber.getText().toString().trim();
 
         if ("".equalsIgnoreCase(phoneNumber) || phoneNumber.length() != 11) {// 检查输入数字是否为手机号
-            if(type==1) ToastUtils.show_allways(context, "请输入新的正确的手机号码!");
+            if(type == 1) ToastUtils.show_allways(context, "请输入新的正确的手机号码!");
             return false;
         } else if ("".equalsIgnoreCase(verificationCode) || verificationCode.length() != 6) {
-            if(type==1) ToastUtils.show_allways(context, "验证码不正确!");
+            if(type == 1) ToastUtils.show_allways(context, "验证码不正确!");
             return false;
         } else {
             return true;
         }
     }
-
-
-
 
     // 输入框监听
     class MyEditListener implements TextWatcher {

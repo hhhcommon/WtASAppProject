@@ -1,4 +1,4 @@
-package com.woting.ui.mine.forgetpassword.activity;
+package com.woting.ui.mine.person.forgetpassword;
 
 import android.app.Dialog;
 import android.os.Bundle;
