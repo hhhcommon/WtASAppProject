@@ -35,12 +35,12 @@
                 />
             <com.woting.common.widgetui.pickview.LoopView
                 android:id="@+id/pick_month"
-                android:layout_width="40dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 />
             <com.woting.common.widgetui.pickview.LoopView
                 android:id="@+id/pick_day"
-                android:layout_width="40dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:paddingLeft="10dp"
                 />

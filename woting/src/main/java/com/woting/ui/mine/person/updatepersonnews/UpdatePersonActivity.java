@@ -1,4 +1,4 @@
-package com.woting.ui.mine.updatepersonnews;
+package com.woting.ui.mine.person.updatepersonnews;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.woting.R;
@@ -24,7 +23,7 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.widgetui.pickview.LoopView;
 import com.woting.common.widgetui.pickview.OnItemSelectedListener;
 import com.woting.ui.baseactivity.BaseActivity;
-import com.woting.ui.mine.updatepersonnews.util.DateUtil;
+import com.woting.ui.mine.person.updatepersonnews.util.DateUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -108,17 +107,10 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
         textPhoneNumber.setText(phoneNumber);
     }*/
 
-    // 初始化性别选择对话框
-    private void genderDialog() {
-        final View dialog = LayoutInflater.from(context).inflate(R.layout.dialog_datepicker, null);
-
-    }
-
     // 设置界面
     private void initView() {
         findViewById(R.id.head_left_btn).setOnClickListener(this);
         findViewById(R.id.lin_age).setOnClickListener(this);
-        findViewById(R.id.lin_xingzuo).setOnClickListener(this);
 
         lin_gender_man=(LinearLayout) findViewById(R.id.lin_gender_man);
         lin_gender_man.setOnClickListener(this);
@@ -138,6 +130,7 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
         gender=BSApplication.SharedPreferences.getString(StringConstant.GENDER,"M");
         changViewGender();
         textName.setText(userName);
+
 
         datePickerDialog();
         cityPickerDialog();
@@ -278,7 +271,7 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
                 }
 
                 String Constellation=DateUtil.getConstellation(Integer.valueOf(Month.substring(0,Month.length()-1).trim()),
-                                          Integer.valueOf(Day.substring(0,Day.length()-1).trim()));
+                        Integer.valueOf(Day.substring(0,Day.length()-1).trim()));
 
                 tv_xingzuo.setText(Constellation);
                 tv_age.setText(Year+Month+Day);
@@ -304,8 +297,8 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
      * */
     private void cityPickerDialog() {
         final View dialog = LayoutInflater.from(context).inflate(R.layout.dialog_city, null);
-        ListView lv_city = (ListView) dialog.findViewById(R.id.lv_city);
-        ListView lv_zone = (ListView) dialog.findViewById(R.id.lv_zone);
+/*        ListView lv_city = (ListView) dialog.findViewById(R.id.lv_city);
+        ListView lv_zone = (ListView) dialog.findViewById(R.id.lv_zone);*/
         TextView tv_confirm = (TextView) dialog.findViewById(R.id.tv_confirm);
         TextView tv_cancel = (TextView) dialog.findViewById(R.id.tv_cancel);
         cityDialog = new Dialog(context, R.style.MyDialog);
@@ -345,8 +338,8 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
     }
 
     /**
-    * 根据share存储值 修改性别
-    * */
+     * 根据share存储值 修改性别
+     * */
     private void changViewGender() {
         if(gender.equals("M")){
             lin_gender_man.setBackgroundColor(getResources().getColor(R.color.dinglan_orange));
@@ -361,11 +354,11 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
     protected void onDestroy() {
         super.onDestroy();
         if (genderFlag = true) {
-        SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
-        et.putString(StringConstant.GENDER, gender);
-        if (!et.commit()) {
-            Log.v("commit", "数据 commit 失败!");
-        }
+            SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
+            et.putString(StringConstant.GENDER, gender);
+            if (!et.commit()) {
+                Log.v("commit", "数据 commit 失败!");
+            }
         }
 
     }
@@ -382,4 +375,8 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
     }
+
+
+
+
 }

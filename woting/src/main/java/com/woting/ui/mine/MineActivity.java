@@ -46,16 +46,16 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.widgetui.MyScrollView;
 import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.common.login.LoginActivity;
+import com.woting.ui.common.photocut.PhotoCutActivity;
+import com.woting.ui.common.qrcodes.EWMShowActivity;
 import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
 import com.woting.ui.mine.favorite.activity.FavoriteActivity;
 import com.woting.ui.mine.hardware.HardwareIntroduceActivity;
 import com.woting.ui.mine.model.UserPortaitInside;
-import com.woting.ui.common.photocut.PhotoCutActivity;
+import com.woting.ui.mine.person.updatepersonnews.UpdatePersonActivity;
 import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
-import com.woting.ui.common.qrcodes.EWMShowActivity;
 import com.woting.ui.mine.set.SetActivity;
 import com.woting.ui.mine.shapeapp.ShapeAppActivity;
-import com.woting.ui.mine.person.updatepersonnews.UpdatePersonActivity;
 
 import java.io.File;
 
