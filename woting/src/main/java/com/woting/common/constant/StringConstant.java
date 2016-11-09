@@ -14,6 +14,7 @@ public class StringConstant {
     public static final String PHONENUMBER = "userPhoneNumber";// 用户注册手机号
 	//性别
 	public static final String GENDER="GENDER";
+	public static final String USER_NUM= "usernum";
 
 	/*
 	 * 电台城市列表

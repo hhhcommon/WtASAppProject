@@ -35,6 +35,7 @@ import com.woting.ui.mine.set.about.AboutActivity;
 import com.woting.ui.mine.set.downloadposition.DownloadPositionActivity;
 import com.woting.ui.mine.set.help.HelpActivity;
 import com.woting.ui.mine.set.update.UpdateManager;
+import com.woting.ui.mine.set.updateUserNumActivity.updateUserNumActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -74,6 +75,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
 
     // 初始化控件
     private void initViews() {
+
         findViewById(R.id.head_left_btn).setOnClickListener(this);          // 返回
         findViewById(R.id.lin_bindPhone).setOnClickListener(this);          // 绑定手机号
         findViewById(R.id.lin_reset_password).setOnClickListener(this);     // 重置密码
@@ -83,6 +85,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         findViewById(R.id.lin_about).setOnClickListener(this);              // 关于
         findViewById(R.id.lin_feedback).setOnClickListener(this);           // 意见反馈
         findViewById(R.id.lin_downloadposition).setOnClickListener(this);   // 下载位置
+        findViewById(R.id.lin_id_name).setOnClickListener(this);            // ID号
 
         lin_IsLogin= findViewById(R.id.lin_IsLogin);                        // 未登录时需要隐藏的绑定手机号和重置密码布局
 
@@ -171,7 +174,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 startActivity(new Intent(context, ModifyPasswordActivity.class));
                 break;
             case R.id.lin_id_name:// ID
-
+                startActivity(new Intent(context, updateUserNumActivity.class));
                 break;
         }
     }
