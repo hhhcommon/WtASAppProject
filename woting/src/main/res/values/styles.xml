@@ -144,4 +144,16 @@
         <item name="android:src">@mipmap/back_images</item>
     </style>
 
+    <!--左上角返回图片 Style-->
+    <style name="ButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:background">@drawable/zhuxiao_press</item>
+        <item name="android:layout_marginLeft">12dp</item>
+        <item name="android:layout_marginRight">12dp</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:textColor">@color/WHITE</item>
+        <item name="android:textSize">@dimen/activity_head_right</item>
+    </style>
+
 </resources>

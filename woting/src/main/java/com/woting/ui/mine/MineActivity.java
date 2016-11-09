@@ -42,6 +42,7 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ImageUploadReturnUtil;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.photocut.PhotoCutActivity;
@@ -261,6 +262,10 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                 imageDialog.show();
                 break;
         }
+    }
+
+    private void getUserInfo() {
+        VolleyRequest.getJsonObject(context);
     }
 
     @Override

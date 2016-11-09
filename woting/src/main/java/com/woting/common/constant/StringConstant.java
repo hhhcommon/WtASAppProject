@@ -12,8 +12,14 @@ public class StringConstant {
 	public static final String IMAGEURL="imageurl";//头像Image地址
 	public static final String IMAGEURBIG="imageurlbig";//头像Image地址
     public static final String PHONENUMBER = "userPhoneNumber";// 用户注册手机号
-	//性别
-	public static final String GENDER="GENDER";
+
+    public static final String EMAIL = "EMAIL";// 用户邮箱
+    public static final String AREA = "AREA";// 用户地区
+    public static final String BIRTHDAY = "BIRTHDAY";// 用户生日
+    public static final String USER_NUM = "USER_NUM";// 用户可以且仅可以修改一次的 ID
+    public static final String AUTOGRAPH = "AUTOGRAPH";// 用户签名
+    public static final String CONSTELLATION = "CONSTELLATION";// 用户星座
+	public static final String GENDER = "GENDER";// 性别
 
 	/*
 	 * 电台城市列表
