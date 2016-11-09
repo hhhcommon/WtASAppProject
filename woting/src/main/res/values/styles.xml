@@ -43,13 +43,6 @@
         <item name="@android:windowExitAnimation">@anim/umeng_socialize_slide_out_from_bottom</item>
     </style>
 
-    <style name="publicloadingProgressStyle">
-        <item name="android:maxWidth">100dp</item>
-        <item name="android:maxHeight">100dp</item>
-        <item name="android:indeterminateDrawable">@drawable/wb_loading_frame</item>
-        <item name="android:minWidth">100dp</item>
-        <item name="android:minHeight">100dp</item>
-    </style>
 
     <style name="MyDialog1" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
@@ -142,6 +135,18 @@
         <item name="android:paddingTop">12dp</item>
         <item name="android:paddingBottom">12dp</item>
         <item name="android:src">@mipmap/back_images</item>
+    </style>
+
+    <!--左上角返回图片 Style-->
+    <style name="ButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:background">@drawable/zhuxiao_press</item>
+        <item name="android:layout_marginLeft">12dp</item>
+        <item name="android:layout_marginRight">12dp</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:textColor">@color/WHITE</item>
+        <item name="android:textSize">@dimen/activity_head_right</item>
     </style>
 
 </resources>

@@ -37,6 +37,15 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/app_bg"
+        android:gravity="center"
+        android:text="WebView 加载分享内容"
+        android:textSize="30sp"
+        android:textColor="@color/wt_login_third"/>
+
     <WebView
         android:id="@+id/web_view"
         android:layout_width="match_parent"

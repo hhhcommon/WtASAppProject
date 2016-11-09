@@ -172,7 +172,7 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@mipmap/img_loginwx" />
+                    android:src="@mipmap/wt_login_wx" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -195,7 +195,7 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@mipmap/img_loginqq" />
+                    android:src="@mipmap/wt_login_qq" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -220,7 +220,7 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@mipmap/img_loginwb" />
+                    android:src="@mipmap/wt_login_wb" />
 
                 <TextView
                     android:layout_width="wrap_content"

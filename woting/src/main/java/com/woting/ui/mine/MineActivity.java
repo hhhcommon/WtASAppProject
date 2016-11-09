@@ -89,7 +89,10 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     private View linAnchor;                     // 我的主播  我关注的主播
     private View linSubscribe;                  // 我的订阅
     private View linAlbum;                      // 我的专辑  我上传的专辑
+    private View circleView;
 
+    private TextView textUserAutograph;
+    private TextView textUserArea;
     private TextView textUserId;                // 显示用户 ID
 //    private TextView textTime;                  // 定时关闭的时间
     private TextView textUserName;              // 用户名
@@ -167,13 +170,15 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         linAlbum = findViewById(R.id.lin_album);                            // 我的专辑
         linAlbum.setOnClickListener(this);
 
-        TextView textUserArea = (TextView) findViewById(R.id.text_user_area);
+        textUserArea = (TextView) findViewById(R.id.text_user_area);
         textUserArea.setText("北京东城");                                   // 用户信息
 
         textUserId = (TextView) findViewById(R.id.text_user_id);            // 显示用户 ID
 
-        TextView textUserAutograph = (TextView) findViewById(R.id.text_user_autograph);
+        textUserAutograph = (TextView) findViewById(R.id.text_user_autograph);
         textUserAutograph.setText("Anyone can give up, but you can't.");    // 用户签名
+
+        circleView = findViewById(R.id.circle_view);
     }
 
     @Override
@@ -290,9 +295,24 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             userName = sharedPreferences.getString(StringConstant.USERNAME, "");// 用户名
             userId = sharedPreferences.getString(StringConstant.USERID, "");    // 用户 ID
             url = sharedPreferences.getString(StringConstant.IMAGEURL, "");     // 用户头像
+            String userNum = sharedPreferences.getString(StringConstant.USER_NUM, "");// 用户号
+            String userSign = sharedPreferences.getString(StringConstant.USER_SIGN, "");// 签名
+            String region = sharedPreferences.getString(StringConstant.REGION, "北京东城");
 
             textUserId.setText(userId);
             textUserName.setText(userName);
+            textUserArea.setText(region);
+            if(userNum.equals("")) {
+                circleView.setVisibility(View.GONE);
+                textUserId.setVisibility(View.GONE);
+            } else {
+                circleView.setVisibility(View.VISIBLE);
+                textUserId.setVisibility(View.VISIBLE);
+                textUserId.setText(userNum);
+            }
+            if(!userSign.equals("")) {
+                textUserAutograph.setText(userSign);
+            }
             if (!url.equals("")) {
                 if (!url.startsWith("http:")) {
                     url = GlobalConfig.imageurl + url;

@@ -1,7 +1,6 @@
 package com.woting.ui.mine.feedback.feedbacklist.adapter;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +11,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
-import com.woting.ui.mine.feedback.feedbacklist.model.OpinionMessage;
+import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
+import com.woting.ui.mine.feedback.feedbacklist.model.OpinionMessage;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,7 +24,6 @@ public class FeedBackExpandAdapter extends BaseExpandableListAdapter {
 	private Context context;
 	List<OpinionMessage> OM;
 	private OpinionMessage opinion;
-	private SharedPreferences sharedPreferences;
 	private String username;
 	private String userImg;
 	private String url;
@@ -34,7 +33,6 @@ public class FeedBackExpandAdapter extends BaseExpandableListAdapter {
 		super();
 		this.context = context;
 		this.OM = OM;
-		sharedPreferences = context.getSharedPreferences("wotingfm",Context.MODE_PRIVATE);
 		sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
 	}
 
@@ -132,10 +130,12 @@ public class FeedBackExpandAdapter extends BaseExpandableListAdapter {
 			long time = Long.parseLong(opinion.getOpinionTime());
 			holder.opiniontime.setText(sdf.format(new Date(time)));
 		}
-		username = sharedPreferences.getString(StringConstant.USERNAME, "");
-		userImg = sharedPreferences.getString(StringConstant.IMAGEURL, "");
+		username = BSApplication.SharedPreferences.getString(StringConstant.USERNAME, "");
+		userImg = BSApplication.SharedPreferences.getString(StringConstant.IMAGEURL, "");
 		if(username != null && !username.equals("")){
 			holder.opinionname.setText(username);
+		}else{
+			holder.opinionname.setText("您");
 		}
 		
 		if(userImg != null && !userImg.equals("")){
@@ -145,6 +145,8 @@ public class FeedBackExpandAdapter extends BaseExpandableListAdapter {
 				url = GlobalConfig.imageurl+userImg;
 			}
 			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.OpinionImage);
+		}else{
+
 		}
 		return convertView;
 	}

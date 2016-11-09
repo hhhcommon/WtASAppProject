@@ -33,6 +33,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.util.Map;
+
 /**
  * 登录界面
  * 作者：xinlong on 2016/11/6 21:18
@@ -198,7 +199,15 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         VolleyRequest.RequestPost(GlobalConfig.loginUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String Message;
+            private String UserNum;
             private String phoneNumber;
+            private String gender;// 性别
+            private String region;// 区域
+            private String birthday;// 生日
+            private String age;// 年龄
+            private String starSign;// 星座
+            private String email;// 邮箱
+            private String userSign;// 签名
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -215,69 +224,121 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                     e1.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
-                    JSONObject arg1 = null;
-                    try {
-                        arg1 = (JSONObject) new JSONTokener(result.getString("UserInfo")).nextValue();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    if (arg1 != null) {
-                        try {
-                            returnUserName = arg1.getString("UserName");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            userId = arg1.getString("UserId");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            imageUrl = arg1.getString("PortraitMini");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            imageUrlBig = arg1.getString("PortraitBig");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            phoneNumber = arg1.getString("PhoneNum");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        ToastUtils.show_allways(context, "登陆成功");
                         Editor et = BSApplication.SharedPreferences.edit();
-                        et.putString(StringConstant.USERID, userId);
                         et.putString(StringConstant.ISLOGIN, "true");
-                        et.putString(StringConstant.USERNAME, returnUserName);
-                        et.putString(StringConstant.IMAGEURL, imageUrl);
-                        et.putString(StringConstant.IMAGEURBIG, imageUrlBig);
                         et.putString(StringConstant.PERSONREFRESHB, "true");
-                        et.putString(StringConstant.PHONENUMBER, phoneNumber);
-                        if (!et.commit()) {
-                            Log.v("commit", "数据 commit 失败!");
+                        JSONObject ui;
+                        try {
+                            String u = result.getString("UserInfo");
+                            ui = (JSONObject) new JSONTokener(u).nextValue();
+                            if (ui != null) {
+                                try {
+                                    imageUrl = ui.getString("PortraitMini");
+                                    et.putString(StringConstant.IMAGEURL, imageUrl);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    returnUserName = ui.getString("UserName");
+                                    et.putString(StringConstant.USERNAME, returnUserName);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    UserNum = ui.getString("UserNum");
+                                    et.putString(StringConstant.USER_NUM, UserNum);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    imageUrlBig = ui.getString("PortraitBig");
+                                    et.putString(StringConstant.IMAGEURBIG, imageUrlBig);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    userId = ui.getString("UserId");
+                                    et.putString(StringConstant.USERID, userId);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    phoneNumber = ui.getString("PhoneNum");
+                                    et.putString(StringConstant.PHONENUMBER, phoneNumber);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    gender = ui.getString("Sex");
+                                    et.putString(StringConstant.GENDER, gender);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    region = ui.getString("Region");
+                                    et.putString(StringConstant.REGION, region);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    birthday = ui.getString("Birthday");
+                                    et.putString(StringConstant.BIRTHDAY, birthday);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    age = ui.getString("Age");
+                                    et.putString(StringConstant.AGE, age);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    starSign = ui.getString("StarSign");
+                                    et.putString(StringConstant.START_SIGN, starSign);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    email = ui.getString("Email");
+                                    et.putString(StringConstant.EMAIL, email);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    userSign = ui.getString("UserSign");
+                                    et.putString(StringConstant.USER_SIGN, userSign);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                if (!et.commit()) {
+                                    Log.v("commit", "数据 commit 失败!");
+                                }
+                                context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
+                                context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));// 刷新下载界面
+                                String phoneName = editUserName.getText().toString().trim();
+                                SharePreferenceManager.saveBatchSharedPreference(context, "USER_NAME", "USER_NAME", phoneName);
+                                InterPhoneControl.sendEntryMessage(context);
+                                setResult(1);
+                                finish();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    }
-                    sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
-                    sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));// 刷新下载界面
 
-                    String phoneName = editUserName.getText().toString().trim();
-                    SharePreferenceManager.saveBatchSharedPreference(context, "USER_NAME", "USER_NAME", phoneName);
-                    InterPhoneControl.sendEntryMessage(context);
-                    setResult(1);
-                    finish();
-                } else if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_allways(context, "您输入的用户暂未注册!");
-                } else if (ReturnType != null && ReturnType.equals("1003")) {
-                    ToastUtils.show_allways(context, "您输入的密码错误!");
-                } else if (ReturnType != null && ReturnType.equals("0000")) {
-                    ToastUtils.show_allways(context, "发生未知错误，请稍后重试!");
-                } else if (ReturnType != null && ReturnType.equals("T")) {
-                    ToastUtils.show_allways(context, "发生未知错误，请稍后重试!");
-                } else {
-                    if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_allways(context, Message + "");
+                    } else if (ReturnType != null && ReturnType.equals("1002")) {
+                        ToastUtils.show_allways(context, "您输入的用户暂未注册!");
+                    } else if (ReturnType != null && ReturnType.equals("1003")) {
+                        ToastUtils.show_allways(context, "您输入的密码错误!");
+                    } else if (ReturnType != null && ReturnType.equals("0000")) {
+                        ToastUtils.show_allways(context, "发生未知错误，请稍后重试!");
+                    } else if (ReturnType != null && ReturnType.equals("T")) {
+                        ToastUtils.show_allways(context, "发生未知错误，请稍后重试!");
+                    } else {
+                        if (Message != null && !Message.trim().equals("")) {
+                            ToastUtils.show_allways(context, Message + "");
+                        }
                     }
                 }
             }
@@ -314,6 +375,15 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         VolleyRequest.RequestPost(GlobalConfig.afterThirdAuthUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String Message;
+            private String UserNum;
+            private String phoneNumber;
+            private String gender;// 性别
+            private String region;// 区域
+            private String birthday;// 生日
+            private String age;// 年龄
+            private String starSign;// 星座
+            private String email;// 邮箱
+            private String userSign;// 签名
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -330,50 +400,106 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                     e1.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
-                    JSONObject arg1 = null;
+                    ToastUtils.show_allways(context, "登陆成功");
+                    Editor et = BSApplication.SharedPreferences.edit();
+                    et.putString(StringConstant.ISLOGIN, "true");
+                    et.putString(StringConstant.PERSONREFRESHB, "true");
+                    JSONObject ui;
                     try {
-                        arg1 = (JSONObject) new JSONTokener(result.getString("UserInfo")).nextValue();
+                        String u = result.getString("UserInfo");
+                        ui = (JSONObject) new JSONTokener(u).nextValue();
+                        if (ui != null) {
+                            try {
+                                imageUrl = ui.getString("PortraitMini");
+                                et.putString(StringConstant.IMAGEURL, imageUrl);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                returnUserName = ui.getString("UserName");
+                                et.putString(StringConstant.USERNAME, returnUserName);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                UserNum = ui.getString("UserNum");
+                                et.putString(StringConstant.USER_NUM, UserNum);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                imageUrlBig = ui.getString("PortraitBig");
+                                et.putString(StringConstant.IMAGEURBIG, imageUrlBig);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                userId = ui.getString("UserId");
+                                et.putString(StringConstant.USERID, userId);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                phoneNumber = ui.getString("PhoneNum");
+                                et.putString(StringConstant.PHONENUMBER, phoneNumber);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                gender = ui.getString("Sex");
+                                et.putString(StringConstant.GENDER, gender);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                region = ui.getString("Region");
+                                et.putString(StringConstant.REGION, region);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                birthday = ui.getString("Birthday");
+                                et.putString(StringConstant.BIRTHDAY, birthday);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                age = ui.getString("Age");
+                                et.putString(StringConstant.AGE, age);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                starSign = ui.getString("StarSign");
+                                et.putString(StringConstant.START_SIGN, starSign);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                email = ui.getString("Email");
+                                et.putString(StringConstant.EMAIL, email);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                userSign = ui.getString("UserSign");
+                                et.putString(StringConstant.USER_SIGN, userSign);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if (!et.commit()) {
+                                Log.v("commit", "数据 commit 失败!");
+                            }
+                            context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
+                            context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));// 刷新下载界面
+                            InterPhoneControl.sendEntryMessage(context);
+                            setResult(1);
+                            finish();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    if(arg1 != null) {
-                        try {
-                            imageUrl = arg1.getString("PortraitMini");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            returnUserName = arg1.getString("UserName");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            imageUrlBig = arg1.getString("PortraitBig");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            userId = arg1.getString("UserId");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        ToastUtils.show_allways(context, "登陆成功");
-                        Editor et = BSApplication.SharedPreferences.edit();
-                        et.putString(StringConstant.USERID, userId);
-                        et.putString(StringConstant.ISLOGIN, "true");
-                        et.putString(StringConstant.USERNAME, returnUserName);
-                        et.putString(StringConstant.IMAGEURL, imageUrl);
-                        et.putString(StringConstant.IMAGEURBIG, imageUrlBig);
-                        et.putString(StringConstant.PERSONREFRESHB, "true");
-                        if (!et.commit()) {
-                            Log.v("commit", "数据 commit 失败!");
-                        }
-                        context.sendBroadcast( new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
-                        context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));// 刷新下载界面
-                        InterPhoneControl.sendEntryMessage(context);
-                        setResult(1);
-                        finish();
-                    }
+
                 } else if (ReturnType != null && ReturnType.equals("1002")) {
                     ToastUtils.show_allways(context, "登录失败,请稍后再试!");
                 } else if (ReturnType != null && ReturnType.equals("T")) {
