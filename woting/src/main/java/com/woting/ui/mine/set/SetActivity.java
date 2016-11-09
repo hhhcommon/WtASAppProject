@@ -54,7 +54,6 @@ public class SetActivity extends BaseActivity implements OnClickListener {
     private Button logOut;              // 注销
     private TextView textCache;         // 缓存
     private View lin_IsLogin;
-    private View linearIdName;
 
     private int updateType = 1;         // 版本更新类型
     private String updateNews;          // 版本更新内容
@@ -92,11 +91,14 @@ public class SetActivity extends BaseActivity implements OnClickListener {
             if (!getIntent().getStringExtra("LOGIN_STATE").equals("true")) {
                 logOut.setVisibility(View.GONE);
                 lin_IsLogin.setVisibility(View.GONE);
+                View linearIdName = findViewById(R.id.lin_id_name);// 用户可以且仅可以设置一次的唯一标识 ID
+                if(BSApplication.SharedPreferences.getString(StringConstant.USER_NUM, "").equals("")) {
+                    linearIdName.setOnClickListener(this);
+                } else {
+                    linearIdName.setVisibility(View.GONE);
+                }
             }
         }
-
-        linearIdName = findViewById(R.id.lin_id_name);// 用户可以且仅可以设置一次的唯一标识 ID
-        linearIdName.setOnClickListener(this);
 
         textCache = (TextView) findViewById(R.id.text_cache);               // 缓存
         initCache();

@@ -201,6 +201,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
             private String Message;
             private String UserNum;
             private String phoneNumber;
+            private String gender;// 性别
+            private String region;// 区域
+            private String birthday;// 生日
+            private String age;// 年龄
+            private String starSign;// 星座
+            private String email;// 邮箱
+            private String userSign;// 签名
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -260,6 +267,48 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                                 try {
                                     phoneNumber = ui.getString("PhoneNum");
                                     et.putString(StringConstant.PHONENUMBER, phoneNumber);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    gender = ui.getString("Sex");
+                                    et.putString(StringConstant.GENDER, gender);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    region = ui.getString("Region");
+                                    et.putString(StringConstant.REGION, region);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    birthday = ui.getString("Birthday");
+                                    et.putString(StringConstant.BIRTHDAY, birthday);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    age = ui.getString("Age");
+                                    et.putString(StringConstant.AGE, age);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    starSign = ui.getString("StarSign");
+                                    et.putString(StringConstant.START_SIGN, starSign);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    email = ui.getString("Email");
+                                    et.putString(StringConstant.EMAIL, email);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    userSign = ui.getString("UserSign");
+                                    et.putString(StringConstant.USER_SIGN, userSign);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -327,6 +376,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
             private String ReturnType;
             private String Message;
             private String UserNum;
+            private String phoneNumber;
+            private String gender;// 性别
+            private String region;// 区域
+            private String birthday;// 生日
+            private String age;// 年龄
+            private String starSign;// 星座
+            private String email;// 邮箱
+            private String userSign;// 签名
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -379,6 +436,54 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                             try {
                                 userId = ui.getString("UserId");
                                 et.putString(StringConstant.USERID, userId);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                phoneNumber = ui.getString("PhoneNum");
+                                et.putString(StringConstant.PHONENUMBER, phoneNumber);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                gender = ui.getString("Sex");
+                                et.putString(StringConstant.GENDER, gender);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                region = ui.getString("Region");
+                                et.putString(StringConstant.REGION, region);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                birthday = ui.getString("Birthday");
+                                et.putString(StringConstant.BIRTHDAY, birthday);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                age = ui.getString("Age");
+                                et.putString(StringConstant.AGE, age);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                starSign = ui.getString("StarSign");
+                                et.putString(StringConstant.START_SIGN, starSign);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                email = ui.getString("Email");
+                                et.putString(StringConstant.EMAIL, email);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                userSign = ui.getString("UserSign");
+                                et.putString(StringConstant.USER_SIGN, userSign);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
