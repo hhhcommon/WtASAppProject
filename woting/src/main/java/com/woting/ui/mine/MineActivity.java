@@ -90,6 +90,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     private View linSubscribe;                  // 我的订阅
     private View linAlbum;                      // 我的专辑  我上传的专辑
     private View circleView;
+    private View viewLine;
 
     private TextView textUserAutograph;
     private TextView textUserArea;
@@ -170,15 +171,11 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         linAlbum = findViewById(R.id.lin_album);                            // 我的专辑
         linAlbum.setOnClickListener(this);
 
-        textUserArea = (TextView) findViewById(R.id.text_user_area);
-        textUserArea.setText("北京东城");                                   // 用户信息
-
+        textUserArea = (TextView) findViewById(R.id.text_user_area);        // 用户信息
         textUserId = (TextView) findViewById(R.id.text_user_id);            // 显示用户 ID
-
-        textUserAutograph = (TextView) findViewById(R.id.text_user_autograph);
-        textUserAutograph.setText("Anyone can give up, but you can't.");    // 用户签名
-
+        textUserAutograph = (TextView) findViewById(R.id.text_user_autograph);// 用户签名
         circleView = findViewById(R.id.circle_view);
+        viewLine = findViewById(R.id.view_line);
     }
 
     @Override
@@ -291,6 +288,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             linAnchor.setVisibility(View.VISIBLE);
             linSubscribe.setVisibility(View.VISIBLE);
             linAlbum.setVisibility(View.VISIBLE);
+            viewLine.setVisibility(View.GONE);
 
             userName = sharedPreferences.getString(StringConstant.USERNAME, "");// 用户名
             userId = sharedPreferences.getString(StringConstant.USERID, "");    // 用户 ID
@@ -302,6 +300,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             textUserId.setText(userId);
             textUserName.setText(userName);
             textUserArea.setText(region);
+            textUserAutograph.setText(userSign);
             if(userNum.equals("")) {
                 circleView.setVisibility(View.GONE);
                 textUserId.setVisibility(View.GONE);
@@ -309,9 +308,6 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                 circleView.setVisibility(View.VISIBLE);
                 textUserId.setVisibility(View.VISIBLE);
                 textUserId.setText("ID：(" + userNum + ")");
-            }
-            if(!userSign.equals("")) {
-                textUserAutograph.setText(userSign);
             }
             if (!url.equals("")) {
                 if (!url.startsWith("http:")) {
@@ -326,6 +322,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             linAnchor.setVisibility(View.GONE);
             linSubscribe.setVisibility(View.GONE);
             linAlbum.setVisibility(View.GONE);
+            viewLine.setVisibility(View.VISIBLE);
 
             Bitmap bitmap = BitmapUtils.readBitMap(context, R.mipmap.reg_default_portrait);
             imageHead.setImageBitmap(bitmap);

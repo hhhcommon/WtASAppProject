@@ -126,7 +126,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="Anyone can give up, but you can't."
             android:textColor="@color/wt_login_third"
             android:layout_below="@id/linear_user"
             android:layout_centerHorizontal="true"
@@ -235,6 +234,11 @@
                     android:layout_toRightOf="@id/image_play_history"/>
 
                 <ImageView style="@style/PersonAndSetRightStyle" />
+
+                <View
+                    android:id="@+id/view_line"
+                    style="@style/ViewStyle"
+                    android:layout_alignParentBottom="true"/>
 
             </RelativeLayout>
 
