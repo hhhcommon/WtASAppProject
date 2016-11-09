@@ -42,7 +42,7 @@ import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.helper.CreatQRImageHelper;
+import com.woting.common.helper.CreateQRImageHelper;
 import com.woting.common.http.MyHttp;
 import com.woting.common.manager.FileManager;
 import com.woting.common.manager.MyActivityManager;
@@ -346,7 +346,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
         news.setGroupImg(headUrl);
         news.setGroupId(groupId);
         news.setGroupNum(groupNumber);
-        bmp = CreatQRImageHelper.getInstance().createQRImage(2, news, null, 300, 300);// 群二维码
+        bmp = CreateQRImageHelper.getInstance().createQRImage(2, news, null, 300, 300);// 群二维码
         if (bmp == null) {
             bmp = BitmapUtils.readBitMap(context, R.mipmap.ewm);
         }

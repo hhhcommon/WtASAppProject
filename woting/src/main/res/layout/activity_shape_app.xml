@@ -24,18 +24,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="分享应用"
+            android:text="应用分享"
             android:textColor="@color/WHITE"
             android:textSize="17sp"/>
 
+        <TextView
+            android:id="@+id/text_save"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:text="分享"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="@color/WHITE"
+            android:layout_alignParentRight="true"/>
+
     </RelativeLayout>
 
-    <TextView
+    <ImageView
+        android:id="@+id/image_qr"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/app_bg"
-        android:gravity="center"
-        android:text="将应用分享给朋友圈好友"
-        android:textSize="20sp"/>
+        android:background="@color/WHITE"/>
 
 </LinearLayout>
