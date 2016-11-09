@@ -63,6 +63,7 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
     private String Month;
     private String Day;
     private TextView tv_age;
+    private TextView tv_xingzuo;
 
 
     @Override
@@ -73,7 +74,6 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
                 break;
             case R.id.lin_age:// 年龄
                 dateDialog.show();
-
                 break;
             case R.id.lin_gender_man:
                 if(!gender.equals("M")){
@@ -119,6 +119,7 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
         lin_gender_woman.setOnClickListener(this);
 
         tv_age=(TextView)findViewById(R.id.tv_age);
+        tv_xingzuo=(TextView)findViewById(R.id.tv_xingzuo);
 
         String userId = BSApplication.SharedPreferences.getString(StringConstant.USERID, "");// 账号 用户 ID
         TextView textAccount  = (TextView) findViewById(R.id.tv_zhanghu);
@@ -130,6 +131,7 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
         gender=BSApplication.SharedPreferences.getString(StringConstant.GENDER,"M");
         changViewGender();
         textName.setText(userName);
+
 
         datePickerDialog();
         cityPickerDialog();
@@ -268,9 +270,14 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
                 }else{
                     Day="25日";
                 }
-                dateDialog.dismiss();
 
+                String Constellation=DateUtil.getConstellation(Integer.valueOf(Month.substring(0,Month.length()-1).trim()),
+                                          Integer.valueOf(Day.substring(0,Day.length()-1).trim()));
+
+                tv_xingzuo.setText(Constellation);
                 tv_age.setText(Year+Month+Day);
+
+                dateDialog.dismiss();
             }
         });
 
@@ -368,7 +375,9 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
 
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
-
     }
+
+
+
+
 }
