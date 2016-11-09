@@ -58,7 +58,7 @@ public class ModifyPasswordActivity extends BaseActivity implements OnClickListe
                             sendModifyPassword();
                         }
                     } else {
-                        ToastUtils.show_short(ModifyPasswordActivity.this, "网络连接失败，请稍后重试");
+                        ToastUtils.show_allways(context, "网络连接失败，请稍后重试");
                     }
                 }
                 break;

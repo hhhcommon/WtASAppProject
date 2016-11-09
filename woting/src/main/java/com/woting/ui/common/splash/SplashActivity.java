@@ -11,14 +11,14 @@ import android.util.Log;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.woting.ui.common.model.UserInfo;
-import com.woting.ui.common.welcome.activity.WelcomeActivity;
-import com.woting.ui.main.MainActivity;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.ui.common.model.UserInfo;
+import com.woting.ui.common.welcome.activity.WelcomeActivity;
+import com.woting.ui.main.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,47 +68,56 @@ public class SplashActivity extends Activity {
                     if (ReturnType != null && ReturnType.equals("1001")) {
                         Editor et = sharedPreferences.edit();
                         String UserInfo = result.getString("UserInfo");
-                        if (UserInfo == null || UserInfo.trim().equals("")) {
-                            et.putString(StringConstant.USERID, "userid");
-                            et.putString(StringConstant.USERNAME, "username");
-                            et.putString(StringConstant.USER_NUM, "usernum");
-                            et.putString(StringConstant.IMAGEURL, "imageurl");
-                            et.putString(StringConstant.IMAGEURBIG, "imageurlbig");
-                            if (!et.commit()) {
-                                Log.v("commit", "数据 commit 失败!");
-                            }
-                        } else {
-                            UserInfo list = new Gson().fromJson(UserInfo, new TypeToken<UserInfo>() {
-                            }.getType());
-                            String userId = list.getUserId();
-                            String userName = list.getUserName();
-                            String userNum = list.getUserNum();
-                            String imageUrl = list.getPortraitMini();
-                            String imageUrlBig = list.getPortraitBig();
+                        if (UserInfo != null && !UserInfo.trim().equals("")) {
+                            com.woting.ui.common.model.UserInfo list = new Gson().fromJson(UserInfo, new TypeToken<UserInfo>() {}.getType());
+                            String userId = list.getUserId();// ID
+                            String userName = list.getUserName();// 用户名
+                            String userNum = list.getUserNum();// 用户号
+                            String imageUrl = list.getPortraitMini();// 用户头像
+                            String imageUrlBig = list.getPortraitBig();// 用户大头像
+                            String gender = list.getSex();// 性别
+                            String region = list.getRegion();// 区域
+                            String birthday = list.getBirthday();// 生日
+                            String age = list.getAge();// 年龄
+                            String starSign = list.getStarSign();// 星座
+                            String email = list.getEmail();// 邮箱
+                            String userSign = list.getUserSign();// 签名
+
                             if (userId != null && !userId.equals("")) {
                                 et.putString(StringConstant.USERID, userId);
-                            } else {
-                                et.putString(StringConstant.USERID, "userid");
                             }
                             if (userName != null && !userName.equals("")) {
                                 et.putString(StringConstant.USERNAME, userName);
-                            } else {
-                                et.putString(StringConstant.USERNAME, "username");
-                            }
-                            if (userNum != null && !userNum.equals("")) {
-                                et.putString(StringConstant.USER_NUM, userNum);
-                            } else {
-                                et.putString(StringConstant.USER_NUM, "usernum");
                             }
                             if (imageUrl != null && !imageUrl.equals("")) {
                                 et.putString(StringConstant.IMAGEURL, imageUrl);
-                            } else {
-                                et.putString(StringConstant.IMAGEURL, "imageurl");
                             }
                             if (imageUrlBig != null && !imageUrlBig.equals("")) {
                                 et.putString(StringConstant.IMAGEURBIG, imageUrlBig);
-                            } else {
-                                et.putString(StringConstant.IMAGEURBIG, "imageurlbig");
+                            }
+                            if (userNum != null && !userNum.equals("")) {
+                                et.putString(StringConstant.USER_NUM, userNum);
+                            }
+                            if (gender != null && !gender.equals("")) {
+                                et.putString(StringConstant.GENDER, gender);
+                            }
+                            if (region != null && !region.equals("")) {
+                                et.putString(StringConstant.REGION, region);
+                            }
+                            if (birthday != null && !birthday.equals("")) {
+                                et.putString(StringConstant.BIRTHDAY, birthday);
+                            }
+                            if (age != null && !age.equals("")) {
+                                et.putString(StringConstant.AGE, age);
+                            }
+                            if (starSign != null && !starSign.equals("")) {
+                                et.putString(StringConstant.START_SIGN, starSign);
+                            }
+                            if (email != null && !email.equals("")) {
+                                et.putString(StringConstant.EMAIL, email);
+                            }
+                            if (userSign != null && !userSign.equals("")) {
+                                et.putString(StringConstant.USER_SIGN, userSign);
                             }
                             if (!et.commit()) {
                                 Log.v("commit", "数据 commit 失败!");

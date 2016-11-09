@@ -104,6 +104,7 @@
                 android:textSize="14sp" />
 
             <View
+                android:id="@+id/circle_view"
                 android:layout_width="2dp"
                 android:layout_height="2dp"
                 android:layout_marginLeft="4dp"
@@ -111,24 +112,10 @@
                 android:background="@drawable/d_circle_black"/>
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ID  ("
-                android:textColor="@color/wt_login_third"
-                android:textSize="14sp" />
-
-            <TextView
                 android:id="@+id/text_user_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="123456"
-                android:textColor="@color/wt_login_third"
-                android:textSize="14sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=")"
+                android:text="ID  (123456)"
                 android:textColor="@color/wt_login_third"
                 android:textSize="14sp" />
 
@@ -226,6 +213,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:scrollbars="none"
             android:orientation="vertical">
 
             <RelativeLayout

@@ -37,7 +37,7 @@ public class HardwareIntroduceActivity extends BaseActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shape_app);
+        setContentView(R.layout.activity_hardware_introduce);
 
         shareDialog();
         initView();

@@ -14,6 +14,12 @@ public class StringConstant {
     public static final String PHONENUMBER = "userPhoneNumber";// 用户注册手机号
 	public static final String USER_NUM="usernum";//woting号
 	public static final String GENDER="GENDER";//性别
+    public static final String EMAIL = "EMAIL";// 用户邮箱
+    public static final String REGION = "Region";// 用户地区
+    public static final String BIRTHDAY = "BIRTHDAY";// 用户生日
+    public static final String USER_SIGN = "UserSign";// 用户签名
+    public static final String START_SIGN = "StarSign";// 用户星座
+    public static final String AGE = "age";// 年龄
 
 	/*
 	 * 电台城市列表
