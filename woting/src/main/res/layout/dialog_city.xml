@@ -27,20 +27,6 @@
             android:gravity="center"
             android:orientation="horizontal"
             >
-          <ListView
-              android:id="@+id/lv_city"
-              android:layout_width="0dp"
-              android:layout_height="match_parent"
-              android:layout_weight="1"
-              android:scrollbars="none"
-              />
-            <ListView
-                android:id="@+id/lv_zone"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:scrollbars="none"
-                />
         </LinearLayout>
 
         <TextView

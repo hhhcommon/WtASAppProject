@@ -215,7 +215,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="19dp"
                 android:gravity="center"
-                android:text="年龄"
+                android:text="生日"
                 android:textColor="@color/wt_login_third"
                 android:textSize="@dimen/list_text_size"/>
 
@@ -284,7 +284,9 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/live_more" />
+                    android:src="@mipmap/live_more"
+                    android:visibility="gone"
+                    />
             </LinearLayout>
         </LinearLayout>
 
