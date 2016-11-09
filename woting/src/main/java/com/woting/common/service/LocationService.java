@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.text.TextUtils;
 
 import com.amap.api.location.AMapLocation;
 import com.woting.common.application.BSApplication;
@@ -37,9 +38,13 @@ public class LocationService extends Service implements GDLocation.Location {
     public void locationSuccess(AMapLocation amapLocation) {
         String City = amapLocation.getCity();
         String Address = amapLocation.getAddress();
+        String District=amapLocation.getDistrict();
         String AdCode = amapLocation.getAdCode();//地区编码
         String Latitude = String.valueOf(amapLocation.getLatitude());
         String Longitude = String.valueOf(amapLocation.getLongitude());
+        if(!TextUtils.isEmpty(District)){
+            GlobalConfig.District = District;
+        }
         if (GlobalConfig.latitude == null) {
             GlobalConfig.latitude = Latitude;
         } else {

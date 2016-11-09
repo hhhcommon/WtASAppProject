@@ -295,12 +295,22 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             url = sharedPreferences.getString(StringConstant.IMAGEURL, "");     // 用户头像
             String userNum = sharedPreferences.getString(StringConstant.USER_NUM, "");// 用户号
             String userSign = sharedPreferences.getString(StringConstant.USER_SIGN, "");// 签名
-            String region = sharedPreferences.getString(StringConstant.REGION, "北京东城");
-
+            String region = sharedPreferences.getString(StringConstant.REGION, "");// 区域
             textUserId.setText(userId);
             textUserName.setText(userName);
             textUserArea.setText(region);
             textUserAutograph.setText(userSign);
+
+            if(region.equals("")) {
+                if(GlobalConfig.CityName != null && !GlobalConfig.CityName.equals("null")
+                        && GlobalConfig.District != null && !GlobalConfig.District.equals("null")) {
+
+                    region = GlobalConfig.CityName + GlobalConfig.District;
+                } else {
+                    region = "北京东城";
+                }
+            }
+            textUserArea.setText(region);
             if(userNum.equals("")) {
                 circleView.setVisibility(View.GONE);
                 textUserId.setVisibility(View.GONE);

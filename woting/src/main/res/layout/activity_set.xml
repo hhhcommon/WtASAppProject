@@ -51,7 +51,7 @@
                     <ImageView
                         android:id="@+id/img_id_name"
                         style="@style/PersonAndSetLeftStyle"
-                        android:src="@mipmap/wt_person_modifypassword"/>
+                        android:src="@mipmap/wt_image_set_user_num"/>
 
                     <TextView
                         style="@style/PersonAndSetTextStyle"
@@ -73,7 +73,7 @@
                     <ImageView
                         android:id="@+id/img_bindPhone"
                         style="@style/PersonAndSetLeftStyle"
-                        android:src="@mipmap/wt_person_modifypassword"/>
+                        android:src="@mipmap/wt_image_set_user_phone"/>
 
                     <TextView
                         style="@style/PersonAndSetTextStyle"
@@ -193,7 +193,7 @@
                 <ImageView
                     android:id="@+id/image_preference"
                     style="@style/PersonAndSetLeftStyle"
-                    android:src="@mipmap/wt_person_help" />
+                    android:src="@mipmap/wt_image_set_preference" />
 
                 <TextView
                     style="@style/PersonAndSetTextStyle"

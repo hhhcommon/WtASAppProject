@@ -185,7 +185,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         dialog1.findViewById(R.id.tv_confirm).setOnClickListener(this); // 清空
         dialog1.findViewById(R.id.tv_cancle).setOnClickListener(this);  // 取消
         TextView textTitle = (TextView) dialog1.findViewById(R.id.tv_title);
-        textTitle.setText("是否删除本地存储缓存");
+        textTitle.setText("是否删除本地存储缓存?");
 
         clearCacheDialog = new Dialog(context, R.style.MyDialog);
         clearCacheDialog.setContentView(dialog1);
