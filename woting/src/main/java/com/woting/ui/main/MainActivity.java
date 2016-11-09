@@ -368,7 +368,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
                     upDataDialog.show();
                 }
             }else{
-                ToastUtils.show_allways(context, "已经是最新版本");
+                Log.v("检查版本更新", "已经是最新版本");
+//                ToastUtils.show_allways(context, "已经是最新版本");
             }
         } catch (Exception e) {
             e.printStackTrace();

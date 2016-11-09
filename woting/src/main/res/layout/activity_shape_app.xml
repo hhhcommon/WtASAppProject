@@ -14,11 +14,7 @@
 
         <ImageView
             android:id="@+id/image_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="6dp"
-            android:src="@mipmap/back_images"/>
+            style="@style/LeftImageStyle"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -29,21 +25,22 @@
             android:textSize="17sp"/>
 
         <TextView
-            android:id="@+id/text_save"
+            android:id="@+id/text_shape"
             android:layout_width="48dp"
             android:layout_height="match_parent"
             android:text="分享"
             android:gravity="center"
             android:textSize="16sp"
             android:textColor="@color/WHITE"
+            android:layout_marginRight="6dp"
             android:layout_alignParentRight="true"/>
 
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/image_qr"
+    <WebView
+        android:id="@+id/web_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/WHITE"/>
+        android:background="@color/app_bg"/>
 
 </LinearLayout>
