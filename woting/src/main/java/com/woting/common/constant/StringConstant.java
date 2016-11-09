@@ -5,7 +5,7 @@ package com.woting.common.constant;
 */
 public class StringConstant {
 	public static final String USERID="userid";
-	public static final String USERNAME="username";
+	public static final String USERNAME="username";//昵称
 	public static final String ISLOGIN="islogin";
 	public static final String FIRST="first";//引导页
 //	public static final String SESSIONID="sessionid";//sessionid
@@ -13,13 +13,15 @@ public class StringConstant {
 	public static final String IMAGEURBIG="imageurlbig";//头像Image地址
     public static final String PHONENUMBER = "userPhoneNumber";// 用户注册手机号
 	public static final String USER_NUM="usernum";//woting号
-	public static final String GENDER="GENDER";//性别
+	public static final String GENDERUSR="GENDERUSR";//性别
     public static final String EMAIL = "EMAIL";// 用户邮箱
     public static final String REGION = "Region";// 用户地区
     public static final String BIRTHDAY = "BIRTHDAY";// 用户生日
     public static final String USER_SIGN = "UserSign";// 用户签名
-    public static final String START_SIGN = "StarSign";// 用户星座
+    public static final String STAR_SIGN = "StarSign";// 用户星座
     public static final String AGE = "age";// 年龄
+	public static final String NICK_NAME = "nick_Name";// 年龄
+
 
 	/*
 	 * 电台城市列表

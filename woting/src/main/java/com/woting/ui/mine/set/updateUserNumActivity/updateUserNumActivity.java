@@ -29,8 +29,6 @@ import org.json.JSONObject;
  * Created by Administrator on 2016/11/9 0009.
  */
 public class updateUserNumActivity extends AppBaseActivity implements View.OnClickListener {
-
-
     private EditText et_UsrNum;
     private Button btn_Confirm;
     private String userNum;    // 用户输入的用户号码
