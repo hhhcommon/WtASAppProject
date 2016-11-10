@@ -135,8 +135,8 @@
 
         <ImageView
             android:id="@+id/image_nodenglu"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerInParent="true"
             android:src="@mipmap/person_nologinimage" />
 

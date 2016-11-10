@@ -471,6 +471,7 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
             intent.putExtras(bundle);
             setResult(1,intent);
         }
+        setResult(RESULT_OK);
         super.onDestroy();
     }
 

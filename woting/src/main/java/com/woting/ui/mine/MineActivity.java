@@ -80,6 +80,9 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     private String filePath;
     private String url;                         // 完整用户头像地址
     private String photoCutAfterImagePath;
+    private String userNum;
+    private String userSign;
+    private String region;
 
     private Dialog dialog;
     private Dialog imageDialog;
@@ -184,7 +187,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             case R.id.lin_set:              // 设置
                 Intent intentSet = new Intent(context, SetActivity.class);
                 intentSet.putExtra("LOGIN_STATE", isLogin);
-                startActivity(intentSet);
+                startActivityForResult(intentSet, 0x222);
                 break;
             case R.id.lin_playhistory:      // 播放历史
                 startActivity(new Intent(context, PlayHistoryActivity.class));
@@ -212,7 +215,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                 }
                 break;
             case R.id.lin_xiugai:           // 修改个人资料
-                startActivity(new Intent(context, UpdatePersonActivity.class));
+                startActivityForResult(new Intent(context, UpdatePersonActivity.class), 0x333);
                 break;
             case R.id.imageView_ewm:        // 展示二维码
                 UserInviteMeInside news = new UserInviteMeInside();
@@ -271,6 +274,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         initLoginStates();
     }
 
+
     // 初始化状态  登陆 OR 未登录
     private void initLoginStates() {
         if(isFirst) {                   // 避免重复加载
@@ -293,9 +297,8 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             userName = sharedPreferences.getString(StringConstant.USERNAME, "");// 用户名
             userId = sharedPreferences.getString(StringConstant.USERID, "");    // 用户 ID
             url = sharedPreferences.getString(StringConstant.IMAGEURL, "");     // 用户头像
-            String userNum = sharedPreferences.getString(StringConstant.USER_NUM, "");// 用户号
-            String userSign = sharedPreferences.getString(StringConstant.USER_SIGN, "");// 签名
-            String region = sharedPreferences.getString(StringConstant.REGION, "");// 区域
+            userSign = sharedPreferences.getString(StringConstant.USER_SIGN, "");// 签名
+            region = sharedPreferences.getString(StringConstant.REGION, "");// 区域
             textUserName.setText(userName);
             textUserArea.setText(region);
             textUserAutograph.setText(userSign);
@@ -310,19 +313,24 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                 }
             }
             textUserArea.setText(region);
-            if(userNum.equals("")) {
-                circleView.setVisibility(View.GONE);
-                textUserId.setVisibility(View.GONE);
-            } else {
-                circleView.setVisibility(View.VISIBLE);
-                textUserId.setVisibility(View.VISIBLE);
-                textUserId.setText("ID：(" + userNum + ")");
-            }
             if (!url.equals("")) {
                 if (!url.startsWith("http:")) {
                     url = GlobalConfig.imageurl + url;
                 }
                 Picasso.with(context).load(url.replace("\\/", "/")).into(imageHead);
+            } else {
+                Bitmap bitmap = BitmapUtils.readBitMap(context, R.mipmap.wt_image_default_head);
+                imageHead.setImageBitmap(bitmap);
+            }
+
+            if(!sharedPreferences.getString(StringConstant.USER_NUM, "").equals("")) {
+                userNum = sharedPreferences.getString(StringConstant.USER_NUM, "");
+                textUserId.setText("ID：(" + userNum + ")");
+                circleView.setVisibility(View.VISIBLE);
+                textUserId.setVisibility(View.VISIBLE);
+            } else {
+                circleView.setVisibility(View.GONE);
+                textUserId.setVisibility(View.GONE);
             }
         } else {                        // 未登录
             linStatusNoLogin.setVisibility(View.VISIBLE);
@@ -382,7 +390,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                     int sdkVersion = Integer.valueOf(Build.VERSION.SDK);
                     Log.d("sdkVersion:", String.valueOf(sdkVersion));
                     String path;
-                    if (sdkVersion >= 19) { // 或者 android.os.Build.VERSION_CODES.KITKAT这个常量的值是19
+                    if (sdkVersion >= 19) { // 或者 android.os.Build.VERSION_CODES.KITKAT 这个常量的值是 19
                         path = getPath_above19(context, uri);
                     } else {
                         path = getFilePath_below19(uri);
@@ -403,6 +411,44 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                     photoCutAfterImagePath = data.getStringExtra("return");
                     dialog = DialogUtils.Dialogph(context, "头像上传中");
                     dealt();
+                }
+                break;
+            case 0x222:// USER_NUM
+                if(resultCode == RESULT_OK) {
+                    boolean isTrue = getIntent().getBooleanExtra("SET_USER_NUM_SUCCESS", true);
+                    if(isTrue) {
+                        userNum = sharedPreferences.getString(StringConstant.USER_NUM, "");
+                        circleView.setVisibility(View.VISIBLE);
+                        textUserId.setVisibility(View.VISIBLE);
+                        userNum = sharedPreferences.getString(StringConstant.USER_NUM, "");
+                        textUserId.setText("ID：(" + userNum + ")");
+                    }
+                }
+                break;
+            case 0x333:// 签名、地区
+                if(resultCode == RESULT_OK) {
+                    if(!userSign.equals(sharedPreferences.getString(StringConstant.USER_SIGN, ""))) {
+                        userSign = sharedPreferences.getString(StringConstant.USER_SIGN, "");// 签名
+                        textUserAutograph.setText(userSign);
+
+                        Log.v("update", "用户个性签名修改!");
+                    }
+
+                    if(!region.equals(sharedPreferences.getString(StringConstant.REGION, ""))) {
+                        region = sharedPreferences.getString(StringConstant.REGION, "");// 区域
+                        if(region.equals("")) {
+                            if(GlobalConfig.CityName != null && !GlobalConfig.CityName.equals("null")
+                                    && GlobalConfig.District != null && !GlobalConfig.District.equals("null")) {
+
+                                region = GlobalConfig.CityName + GlobalConfig.District;
+                            } else {
+                                region = "北京东城";
+                            }
+                        }
+                        textUserArea.setText(region);
+
+                        Log.v("update", "用户所在区域修改!");
+                    }
                 }
                 break;
         }
