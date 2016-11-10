@@ -56,6 +56,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
     private Button logOut;              // 注销
     private TextView textCache;         // 缓存
     private View lin_IsLogin;
+    private View linearIdName;
 
     private int updateType = 1;         // 版本更新类型
     private String updateNews;          // 版本更新内容
@@ -88,6 +89,8 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         findViewById(R.id.lin_id_name).setOnClickListener(this);            // ID号
 
         lin_IsLogin= findViewById(R.id.lin_IsLogin);                        // 未登录时需要隐藏的绑定手机号和重置密码布局
+        linearIdName = findViewById(R.id.lin_id_name);                      // 用户可以且仅可以设置一次的唯一标识 ID
+        linearIdName.setOnClickListener(this);
 
         logOut = (Button) findViewById(R.id.lin_zhuxiao);                   // 注销
         logOut.setOnClickListener(this);
@@ -95,17 +98,19 @@ public class SetActivity extends BaseActivity implements OnClickListener {
             if (!getIntent().getStringExtra("LOGIN_STATE").equals("true")) {
                 logOut.setVisibility(View.GONE);
                 lin_IsLogin.setVisibility(View.GONE);
-                View linearIdName = findViewById(R.id.lin_id_name);// 用户可以且仅可以设置一次的唯一标识 ID
-                if(BSApplication.SharedPreferences.getString(StringConstant.USER_NUM, "").equals("")) {
-                    linearIdName.setOnClickListener(this);
-                } else {
-                    linearIdName.setVisibility(View.GONE);
-                }
             }
         }
 
         textCache = (TextView) findViewById(R.id.text_cache);               // 缓存
         initCache();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!BSApplication.SharedPreferences.getString(StringConstant.USER_NUM, "").equals("")) {
+            linearIdName.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -182,7 +187,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 startActivity(new Intent(context, ModifyPasswordActivity.class));
                 break;
             case R.id.lin_id_name:// ID
-                startActivity(new Intent(context, updateUserNumActivity.class));
+                startActivityForResult(new Intent(context, updateUserNumActivity.class), 0x111);
                 break;
         }
     }
@@ -237,6 +242,16 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 et.putString(StringConstant.USERID, "");
                 et.putString(StringConstant.USER_NUM, "");
                 et.putString(StringConstant.IMAGEURL, "");
+                et.putString(StringConstant.PHONENUMBER, "");
+                et.putString(StringConstant.USER_NUM, "");
+                et.putString(StringConstant.GENDERUSR, "");
+                et.putString(StringConstant.EMAIL, "");
+                et.putString(StringConstant.REGION, "");
+                et.putString(StringConstant.BIRTHDAY, "");
+                et.putString(StringConstant.USER_SIGN, "");
+                et.putString(StringConstant.STAR_SIGN, "");
+                et.putString(StringConstant.AGE, "");
+                et.putString(StringConstant.NICK_NAME, "");
                 if (!et.commit()) {
                     Log.v("commit", "数据 commit 失败!");
                 }
@@ -402,6 +417,14 @@ public class SetActivity extends BaseActivity implements OnClickListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 0x111) {
+            if(resultCode == 1) {
+                Intent intent = new Intent();
+                intent.putExtra("SET_USER_NUM_SUCCESS", true);
+                setResult(RESULT_OK);
+                finish();
+            }
+        }
     }
 
     @Override
