@@ -2,8 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/dinglan_orange"
+    android:paddingTop="24dp"
     android:orientation="vertical" >
-    <LinearLayout
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/dinglan_orange"
@@ -14,21 +17,21 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@drawable/head_press"
-            android:gravity="right|center"
-            android:orientation="vertical" >
+            android:gravity="center"
+            android:layout_marginLeft="18dp"
+            android:orientation="vertical">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
                 android:src="@mipmap/news" />
+
         </LinearLayout>
         
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
             
             <LinearLayout
 	            android:layout_width="81dp"
@@ -50,7 +53,7 @@
 	        <LinearLayout
 	            android:layout_width="81dp"
 	            android:layout_height="28dp"
-	            android:layout_marginLeft="8dp"
+                android:layout_marginLeft="8dp"
 	            android:gravity="center" >
 	
 	            <TextView
@@ -71,8 +74,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@drawable/head_press"
-            android:gravity="right|center"
-            android:orientation="vertical" >
+            android:layout_alignParentRight="true"
+            android:gravity="center" >
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -80,7 +83,7 @@
                 android:src="@mipmap/wt_more_white"
                 android:layout_marginRight="18dp"/>
         </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

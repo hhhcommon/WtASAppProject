@@ -12,7 +12,8 @@ public class AssembleImageUrlUtils {
      */
     public static String assembleImageUrl150(String srcUrl) {
         String result = srcUrl.substring(0, srcUrl.indexOf("."));
-        return result + "." + "150_150.png";
+//        return result + "." + "150_150.png";
+        return srcUrl;
     }
 
     /**
@@ -20,7 +21,8 @@ public class AssembleImageUrlUtils {
      */
     public static String assembleImageUrl180(String srcUrl) {
         String result = srcUrl.substring(0, srcUrl.indexOf("."));
-        return result + "." + "180_180.png";
+//        return result + "." + "180_180.png";
+        return srcUrl;
     }
 
     /**
@@ -28,7 +30,8 @@ public class AssembleImageUrlUtils {
      */
     public static String assembleImageUrl300(String srcUrl) {
         String result = srcUrl.substring(0, srcUrl.indexOf("."));
-        return result + "." + "300_300.png";
+//        return result + "." + "300_300.png";
+        return srcUrl;
     }
 
     /**
@@ -36,7 +39,8 @@ public class AssembleImageUrlUtils {
      */
     public static String assembleImageUrl450(String srcUrl) {
         String result = srcUrl.substring(0, srcUrl.indexOf("."));
-        return result + "." + "450_450.png";
+//        return result + "." + "450_450.png";
+        return srcUrl;
     }
 
     /**
@@ -44,7 +48,8 @@ public class AssembleImageUrlUtils {
      */
     public static String assembleImageUrl(String srcUrl, String size) {
         String result = srcUrl.substring(0, srcUrl.indexOf("."));
-        return result + "." + size + ".png";
+//        return result + "." + size + ".png";
+        return srcUrl;
     }
 
 }

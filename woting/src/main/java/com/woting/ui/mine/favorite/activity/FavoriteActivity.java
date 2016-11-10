@@ -64,7 +64,6 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
     private static TextView tv_bianji;    // 加一个bol值，如果key值为0是为编辑状态，为1时显示完成
     private Dialog confirmDialog;
     private Dialog DelDialog;
-    private LinearLayout head_left;
     private ImageView image;
     private ImageView imageAllCheck;
 
@@ -122,22 +121,21 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
 
     // 初始化视图
     private void setView() {
-        head_left = (LinearLayout) findViewById(R.id.head_left_btn);    // 返回按钮
-        head_left.setOnClickListener(this);
+        findViewById(R.id.head_left_btn).setOnClickListener(this);      // 返回按钮
         
-        tv_total = (TextView) findViewById(R.id.tv_total);                // 全部
+        tv_total = (TextView) findViewById(R.id.tv_total);              // 全部
         tv_total.setOnClickListener(new txListener(0));
         
         tv_sequ = (TextView) findViewById(R.id.tv_sequ);                // 专辑
         tv_sequ.setOnClickListener(new txListener(1));
         
-        tv_sound = (TextView) findViewById(R.id.tv_sound);                // 声音
+        tv_sound = (TextView) findViewById(R.id.tv_sound);              // 声音
         tv_sound.setOnClickListener(new txListener(2));
         
-        tv_radio = (TextView) findViewById(R.id.tv_radio);                // 电台
+        tv_radio = (TextView) findViewById(R.id.tv_radio);              // 电台
         tv_radio.setOnClickListener(new txListener(3));
         
-        tv_tts = (TextView) findViewById(R.id.tv_tts);                    // TTS
+        tv_tts = (TextView) findViewById(R.id.tv_tts);                  // TTS
         tv_tts.setOnClickListener(new txListener(4));
         
         mPager = (ViewPager) findViewById(R.id.viewpager);
@@ -631,7 +629,6 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
         tv_tts = null;
         tv_qingkong = null;
         tv_bianji = null;
-        head_left = null;
         imageAllCheck = null;
         mPager = null;
         DelDialog = null;
