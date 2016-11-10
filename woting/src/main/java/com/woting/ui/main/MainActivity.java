@@ -143,6 +143,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                 String ResultList = result.getString("CatalogData");
                                 Catalog SubList_all = new Gson().fromJson(ResultList, new TypeToken<Catalog>() {
                                 }.getType());
+
                                 List<CatalogName> s = SubList_all.getSubCata();
                                 if (s != null && s.size() > 0) {
                                     //将数据写入数据库
