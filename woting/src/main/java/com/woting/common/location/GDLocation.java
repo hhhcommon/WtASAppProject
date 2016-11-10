@@ -1,8 +1,5 @@
 package com.woting.common.location;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
@@ -11,6 +8,9 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 使用高德地图获取位置信息
@@ -116,7 +116,7 @@ public class GDLocation {
 						break;
 					}
 
-					Log.i("Location",
+				/*	Log.i("Location",
 							"--------- 定位信息  ---------" + "\n 定位结果来源:" + locationType + "\n 纬度:"
 									+ amapLocation.getLatitude() + "\n 精度:" + amapLocation.getLongitude() + "\n 城市:"
 									+ amapLocation.getCity() + "\n 城区:" + amapLocation.getDistrict() + "\n 街道:"
@@ -124,7 +124,7 @@ public class GDLocation {
 									+ amapLocation.getStreetNum() + "\n 城市编码:" + amapLocation.getCityCode() + "\n 地区编码:"
 									+ amapLocation.getAdCode() + "\n AOI:" + amapLocation.getAoiName() + "\n 地址:"
 									+ amapLocation.getAddress() + "\n 纬度:" + amapLocation.getLatitude() + "\n 经度:"
-									+ amapLocation.getLongitude() + "\n 定位时间:" + df.format(date));
+									+ amapLocation.getLongitude() + "\n 定位时间:" + df.format(date));*/
 
 					if(locations!= null){
 						locations.locationSuccess(amapLocation);

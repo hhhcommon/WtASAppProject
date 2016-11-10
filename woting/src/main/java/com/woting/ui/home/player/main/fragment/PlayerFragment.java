@@ -1410,6 +1410,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				if (dialogs != null) {
 					dialogs.dismiss();
 				}
+
 				try {
 					ReturnType = result.getString("ReturnType");
 				} catch (JSONException e) {

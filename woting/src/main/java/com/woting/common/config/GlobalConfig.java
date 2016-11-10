@@ -15,6 +15,7 @@ public class GlobalConfig {
     public static String longitude;
     public static String latitude;
     public static String CityName;
+    public static String District;
     public static String AdCode;
     // 网络情况 1为成功WiFi已连接，2为cmnet，3为cmwap，4为ctwap， -1为网络未连接
     public static final int NETWORK_STATE_IDLE = -1;

@@ -2,10 +2,10 @@ package com.woting.ui.mine.person.updatepersonnews;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,16 +13,19 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.constant.StringConstant;
+import com.woting.common.util.TimeUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.widgetui.pickview.LoopView;
 import com.woting.common.widgetui.pickview.OnItemSelectedListener;
 import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.mine.person.updatepersonnews.model.personModel;
 import com.woting.ui.mine.person.updatepersonnews.util.DateUtil;
 
 import java.text.SimpleDateFormat;
@@ -63,77 +66,190 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
     private String Day;
     private TextView tv_age;
     private TextView tv_xingzuo;
-
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.head_left_btn:// 返回
-                finish();
-                break;
-            case R.id.lin_age:// 年龄
-                dateDialog.show();
-                break;
-            case R.id.lin_gender_man:
-                if(!gender.equals("M")){
-                    gender="M";
-                    genderFlag=true;
-                    changViewGender();
-                }
-                break;
-            case R.id.lin_gender_woman:
-                if(!gender.equals("F")){
-                    gender="F";
-                    genderFlag=true;
-                    changViewGender();
-                }
-
-                break;
-        }
-    }
+    private LoopView pick_Province;
+    private LoopView pick_City;
+    private Dialog dialog;
+    private String userCount;
+    private String nickName;
+    private String birthday;
+    private String starSign;
+    private String region;
+    private String Email;
+    private String userSign;
+    private TextView textAccount;
+    private EditText textName;
+    private TextView tv_region;
+    private EditText tv_mail;
+    private EditText tv_signature;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_updateperson);
         initView();
+        setValueByPrefer();
+
     }
 
-    //电话号码获取 根据电话号码的储存情况，判断是否可以修改手机号
-    /*@Override
-    protected void onResume() {
-        super.onResume();
-        phoneNumber = BSApplication.SharedPreferences.getString(StringConstant.USERPHONENUMBER, ""); // 用户手机号
-        textPhoneNumber.setText(phoneNumber);
-    }*/
+    private void setValueByPrefer() {
+        // 账号
+        userCount=BSApplication.SharedPreferences.getString(StringConstant.PHONENUMBER, " ");
+        if(userCount.equals("")){
+            userCount=BSApplication.SharedPreferences.getString(StringConstant.USERNAME, " ");
+            textAccount.setText(userCount);
+        }else{
+            textAccount.setText(userCount.replaceAll("(\\d{3})\\d{6}(\\d{2})","$1 * * * * * * $2"));
+        }
+
+        // 昵称
+        nickName=BSApplication.SharedPreferences.getString(StringConstant.NICK_NAME, "");
+        textName.setText(nickName);
+
+        // 性别
+        gender=BSApplication.SharedPreferences.getString(StringConstant.GENDERUSR, "xb001");
+
+        changViewGender();
+
+        // 生日
+        birthday=BSApplication.SharedPreferences.getString(StringConstant.BIRTHDAY, "");
+        tv_age.setText(TimeUtils.timeStamp2Date(birthday));
+
+        // 星座
+        starSign=BSApplication.SharedPreferences.getString(StringConstant.STAR_SIGN, "");
+        tv_xingzuo.setText(starSign);
+
+        // 地区
+        region=BSApplication.SharedPreferences.getString(StringConstant.REGION, "");
+        tv_region.setText(region);
+
+        // 邮箱
+        Email=BSApplication.SharedPreferences.getString(StringConstant.EMAIL, "");
+        tv_mail.setText(Email);
+
+        // 个性签名
+        userSign=BSApplication.SharedPreferences.getString(StringConstant.USER_SIGN, "");
+        tv_signature.setText(userSign);
+
+    }
+
 
     // 设置界面
     private void initView() {
         findViewById(R.id.head_left_btn).setOnClickListener(this);
         findViewById(R.id.lin_age).setOnClickListener(this);
+        findViewById(R.id.lin_area).setOnClickListener(this);
 
         lin_gender_man=(LinearLayout) findViewById(R.id.lin_gender_man);
         lin_gender_man.setOnClickListener(this);
         lin_gender_woman= (LinearLayout)findViewById(R.id.lin_gender_woman);
         lin_gender_woman.setOnClickListener(this);
 
+        textAccount  = (TextView) findViewById(R.id.tv_zhanghu);
+        textName = (EditText) findViewById(R.id.tv_name);
         tv_age=(TextView)findViewById(R.id.tv_age);
         tv_xingzuo=(TextView)findViewById(R.id.tv_xingzuo);
-
-        String userId = BSApplication.SharedPreferences.getString(StringConstant.USERID, "");// 账号 用户 ID
-        TextView textAccount  = (TextView) findViewById(R.id.tv_zhanghu);
-        textAccount.setText(userId);
-
-        String userName = BSApplication.SharedPreferences.getString(StringConstant.USERNAME, "");// 用户昵称
-        TextView textName = (TextView) findViewById(R.id.tv_name);
-
-        gender=BSApplication.SharedPreferences.getString(StringConstant.GENDER,"M");
-        changViewGender();
-        textName.setText(userName);
-
+        tv_region=(TextView)findViewById(R.id.tv_region);
+        tv_mail=(EditText)findViewById(R.id.tv_mail);
+        tv_signature=(EditText)findViewById(R.id.tv_signature);
 
         datePickerDialog();
         cityPickerDialog();
+
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.head_left_btn:// 返回
+                saveData();
+                finish();
+                break;
+            case R.id.lin_age:// 年龄
+                dateDialog.show();
+                break;
+            case R.id.lin_gender_man:
+                if(!gender.equals("xb001")){
+                    gender="xb001";
+                    genderFlag=true;
+                    changViewGender();
+                }
+                break;
+            case R.id.lin_gender_woman:
+                if(!gender.equals("xb002")){
+                    gender="xb002";
+                    genderFlag=true;
+                    changViewGender();
+                }
+                break;
+            case R.id.lin_area:
+                cityDialog.show();
+                break;
+        }
+    }
+
+    // 此方法用来保存当前页面的数据
+    private void saveData() {
+        nickName=textName.getText().toString().trim();
+        //birthday已经有值了
+        starSign=tv_xingzuo.getText().toString();
+        region=tv_region.getText().toString().trim();
+        Email=tv_mail.getText().toString().trim();
+        userSign=tv_signature.getText().toString().trim();
+        if(TextUtils.isEmpty(nickName)||TextUtils.isEmpty(starSign)||TextUtils.isEmpty(birthday)
+                ||TextUtils.isEmpty(region) ||TextUtils.isEmpty(Email)||TextUtils.isEmpty(userSign)||genderFlag==true){
+            Intent intent=new Intent();
+            personModel pM=new personModel(nickName,birthday,starSign,region,userSign,gender,Email);
+            Bundle bundle =new Bundle();
+            bundle.putSerializable("data",pM);
+            intent.putExtras(bundle);
+            setResult(1,intent);
+        }
+    }
+
+    private void send() {
+       /* dialog = DialogUtils.Dialogph(context, "正在提交请求");
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("OldPassword", oldPassword);// 待改
+            jsonObject.put("newPassword", newPassword);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        VolleyRequest.RequestPost(GlobalConfig.modifyPasswordUrl, tag, jsonObject, new VolleyCallback() {
+            private String ReturnType;
+            private String Message;
+
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (dialog != null) dialog.dismiss();
+                if (isCancelRequest) return;
+                try {
+                    ReturnType = result.getString("ReturnType");
+                    Message = result.getString("Message");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (ReturnType != null && ReturnType.equals("1001")) {
+                    ToastUtils.show_allways(context, "密码修改成功");
+                    finish();
+                }
+                if (ReturnType != null && ReturnType.equals("1002")) {
+                    ToastUtils.show_allways(context, "" + Message);
+                } else {
+                    if (Message != null && !Message.trim().equals("")) {
+                        ToastUtils.show_allways(context, Message + "");
+                    }
+                }
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+                if (dialog != null) dialog.dismiss();
+                ToastUtils.showVolleyError(context);
+            }
+        });*/
 
     }
 
@@ -274,7 +390,8 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
                         Integer.valueOf(Day.substring(0,Day.length()-1).trim()));
 
                 tv_xingzuo.setText(Constellation);
-                tv_age.setText(Year+Month+Day);
+                birthday=Year+Month+Day;
+                tv_age.setText(birthday);
 
                 dateDialog.dismiss();
             }
@@ -297,8 +414,10 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
      * */
     private void cityPickerDialog() {
         final View dialog = LayoutInflater.from(context).inflate(R.layout.dialog_city, null);
-/*        ListView lv_city = (ListView) dialog.findViewById(R.id.lv_city);
-        ListView lv_zone = (ListView) dialog.findViewById(R.id.lv_zone);*/
+
+        pick_Province=(LoopView)dialog.findViewById(R.id.pick_province);
+        pick_City=(LoopView)dialog.findViewById(R.id.pick_city);
+
         TextView tv_confirm = (TextView) dialog.findViewById(R.id.tv_confirm);
         TextView tv_cancel = (TextView) dialog.findViewById(R.id.tv_cancel);
         cityDialog = new Dialog(context, R.style.MyDialog);
@@ -341,7 +460,7 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
      * 根据share存储值 修改性别
      * */
     private void changViewGender() {
-        if(gender.equals("M")){
+        if(gender.equals("xb001")){
             lin_gender_man.setBackgroundColor(getResources().getColor(R.color.dinglan_orange));
             lin_gender_woman.setBackgroundColor(getResources().getColor(R.color.up_bg_unselected));
         }else{
@@ -351,16 +470,15 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (genderFlag = true) {
-            SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
-            et.putString(StringConstant.GENDER, gender);
-            if (!et.commit()) {
-                Log.v("commit", "数据 commit 失败!");
-            }
-        }
+    protected void onDestroy(){
 
+        super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        saveData();
+        super.onBackPressed();
     }
 
     @Override

@@ -147,7 +147,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                 if (s != null && s.size() > 0) {
                                     //将数据写入数据库
                                     list = CID.queryCityInfo();
-                                    List<CatalogName> m = new ArrayList<CatalogName>();
+                                    List<CatalogName> m = new ArrayList<>();
                                     for (int i = 0; i < s.size(); i++) {
                                         CatalogName mFenLeiName = new CatalogName();
                                         mFenLeiName.setCatalogId(s.get(i).getCatalogId());

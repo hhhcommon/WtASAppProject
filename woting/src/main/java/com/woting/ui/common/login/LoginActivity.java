@@ -64,6 +64,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
     private String description;
     private String tag = "LOGIN_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
+    private String nickName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -272,7 +273,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                                 }
                                 try {
                                     gender = ui.getString("Sex");
-                                    et.putString(StringConstant.GENDER, gender);
+                                    et.putString(StringConstant.GENDERUSR, gender);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -296,7 +297,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                                 }
                                 try {
                                     starSign = ui.getString("StarSign");
-                                    et.putString(StringConstant.START_SIGN, starSign);
+                                    et.putString(StringConstant.STAR_SIGN, starSign);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -312,6 +313,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
+                                try {
+                                    nickName = ui.getString("NickName");
+                                    et.putString(StringConstant.NICK_NAME, nickName);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
                                 if (!et.commit()) {
                                     Log.v("commit", "数据 commit 失败!");
                                 }
@@ -447,7 +455,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                             }
                             try {
                                 gender = ui.getString("Sex");
-                                et.putString(StringConstant.GENDER, gender);
+                                et.putString(StringConstant.GENDERUSR, gender);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -471,7 +479,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                             }
                             try {
                                 starSign = ui.getString("StarSign");
-                                et.putString(StringConstant.START_SIGN, starSign);
+                                et.putString(StringConstant.STAR_SIGN, starSign);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -484,6 +492,12 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                             try {
                                 userSign = ui.getString("UserSign");
                                 et.putString(StringConstant.USER_SIGN, userSign);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                nickName = ui.getString("NickName");
+                                et.putString(StringConstant.NICK_NAME, nickName);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
