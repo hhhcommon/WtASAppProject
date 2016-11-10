@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
@@ -89,9 +91,9 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     private String filePath;
     private String url;                         // 完整用户头像地址
     private String photoCutAfterImagePath;
-    private String userNum;
-    private String userSign;
-    private String region;
+//    private String userNum;
+//    private String userSign;
+//    private String region;
 
     private Dialog dialog;
     private Dialog imageDialog;
