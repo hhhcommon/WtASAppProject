@@ -43,7 +43,6 @@ import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ImageUploadReturnUtil;
 import com.woting.common.util.PhoneMessage;
-import com.woting.common.util.TimeUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
@@ -729,7 +728,8 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                 jsonObject.put("SexDictId", pM.getGender());
             }
             if(!TextUtils.isEmpty(pM.getBirthday())){
-                jsonObject.put("Birthday",  Long.valueOf(TimeUtils.date2TimeStamp(pM.getBirthday())));
+                String s=pM.getBirthday();
+                jsonObject.put("Birthday",  Long.valueOf(s));
             }
             if(!TextUtils.isEmpty(pM.getStarSign())){
                 jsonObject.put("StarSign", pM.getStarSign());
@@ -759,8 +759,8 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                         if(!TextUtils.isEmpty(pModel.getStarSign())){
                             et.putString(StringConstant.STAR_SIGN, pModel.getStarSign());
                         }
-                        if(!TextUtils.isEmpty(TimeUtils.date2TimeStamp(pModel.getBirthday()))){
-                            et.putString(StringConstant.BIRTHDAY, TimeUtils.date2TimeStamp(pModel.getBirthday()));
+                        if(!TextUtils.isEmpty(pModel.getBirthday())){
+                            et.putString(StringConstant.BIRTHDAY, pModel.getBirthday());
                         }
                         if(!TextUtils.isEmpty(pModel.getGender())){
                             et.putString(StringConstant.GENDERUSR, pModel.getGender());
