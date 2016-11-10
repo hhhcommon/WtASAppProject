@@ -82,6 +82,7 @@ public class SplashActivity extends Activity {
                             String starSign = list.getStarSign();// 星座
                             String email = list.getEmail();// 邮箱
                             String userSign = list.getUserSign();// 签名
+                            String nickName=list.getNickName();
 
                             if (userId != null && !userId.equals("")) {
                                 et.putString(StringConstant.USERID, userId);
@@ -99,7 +100,7 @@ public class SplashActivity extends Activity {
                                 et.putString(StringConstant.USER_NUM, userNum);
                             }
                             if (gender != null && !gender.equals("")) {
-                                et.putString(StringConstant.GENDER, gender);
+                                et.putString(StringConstant.GENDERUSR, gender);
                             }
                             if (region != null && !region.equals("")) {
                                 et.putString(StringConstant.REGION, region);
@@ -111,13 +112,16 @@ public class SplashActivity extends Activity {
                                 et.putString(StringConstant.AGE, age);
                             }
                             if (starSign != null && !starSign.equals("")) {
-                                et.putString(StringConstant.START_SIGN, starSign);
+                                et.putString(StringConstant.STAR_SIGN, starSign);
                             }
                             if (email != null && !email.equals("")) {
                                 et.putString(StringConstant.EMAIL, email);
                             }
                             if (userSign != null && !userSign.equals("")) {
                                 et.putString(StringConstant.USER_SIGN, userSign);
+                            }
+                            if (nickName != null && !nickName.equals("")) {
+                                et.putString(StringConstant.NICK_NAME, nickName);
                             }
                             if (!et.commit()) {
                                 Log.v("commit", "数据 commit 失败!");

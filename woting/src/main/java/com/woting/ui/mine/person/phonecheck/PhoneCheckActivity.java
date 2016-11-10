@@ -50,7 +50,7 @@ public class PhoneCheckActivity extends AppBaseActivity implements OnClickListen
     private boolean isCancelRequest;
     private boolean isGetCode;                      // 判断是否已经获取验证码
     private String phoneNumberNew;
-//    private int ViewType = 2;                       // == 1 为已经有手机号  == 2 为无手机号
+//  private int ViewType = 2;                       // == 1 为已经有手机号  == 2 为无手机号
     private TextView tv_Phone_Desc;
 
     @Override
@@ -261,6 +261,7 @@ public class PhoneCheckActivity extends AppBaseActivity implements OnClickListen
                             Log.w("commit", " 数据 commit 失败!");
                         }
                         setResult(1);
+                        finish();
                     } else {
                         ToastUtils.show_allways(context, "手机号修改失败!");
                     }

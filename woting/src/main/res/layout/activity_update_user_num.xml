@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dinglan_orange"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include android:id="@+id/include_title" layout="@layout/base_activity_title"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/app_bg"
+        android:orientation="vertical"
+        android:paddingLeft="17dp"
+        android:paddingRight="17dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginTop="3dp"
+                android:layout_gravity="center"
+                android:src="@mipmap/img_update_usernum"
+                />
+        <TextView
+            android:id="@+id/tv_Phone_Desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:textSize="14sp"
+            android:text="用户号是账号的唯一凭证，只能修改一次"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="15dp"
+            android:gravity="left|center"
+            android:background="@drawable/bg_edittext_normal">
+
+            <TextView
+                android:id="@+id/tv_phone"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/BLACK"
+                android:layout_marginLeft="10dp"
+                android:text="用户号"/>
+
+            <EditText
+                android:id="@+id/edit_usr_num"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="left|center"
+                android:hint="请输入您要使用的用户号"
+                android:layout_marginLeft="20dp"
+                android:digits="0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@."
+                android:maxLength="18"
+                android:inputType="date"
+                android:singleLine="true"
+                android:textColor="@color/wt_login_third"
+                android:textColorHint="@color/gray"
+                android:background="@null"
+                android:textCursorDrawable="@drawable/wt_edittext_cursor"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/btn_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_graybutton"
+            android:text="确定"
+            android:textColor="@color/WHITE"
+            android:layout_marginTop="30dp"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

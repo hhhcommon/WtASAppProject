@@ -33,6 +33,15 @@ public class UserInfo implements Serializable {
     private String Region;// 区域
     private String Birthday;// 生日
     private String Age;// 年龄
+    private String NickName; //昵称
+
+    public String getNickName() {
+        return NickName;
+    }
+
+    public void setNickName(String nickName) {
+        NickName = nickName;
+    }
 
     public String getUserSign() {
         return UserSign;

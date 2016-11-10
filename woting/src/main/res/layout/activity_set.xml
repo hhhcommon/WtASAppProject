@@ -55,7 +55,7 @@
 
                     <TextView
                         style="@style/PersonAndSetTextStyle"
-                        android:text="ID"
+                        android:text="用户号"
                         android:layout_toRightOf="@id/img_id_name" />
 
                     <ImageView style="@style/PersonAndSetRightStyle"/>

@@ -36,6 +36,7 @@ import com.woting.ui.mine.set.downloadposition.DownloadPositionActivity;
 import com.woting.ui.mine.set.help.HelpActivity;
 import com.woting.ui.mine.set.preference.activity.PreferenceActivity;
 import com.woting.ui.mine.set.update.UpdateManager;
+import com.woting.ui.mine.set.updateUserNumActivity.updateUserNumActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -84,6 +85,8 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         findViewById(R.id.lin_feedback).setOnClickListener(this);           // 意见反馈
         findViewById(R.id.lin_downloadposition).setOnClickListener(this);   // 下载位置
         findViewById(R.id.lin_preference).setOnClickListener(this);         // 偏好设置
+        findViewById(R.id.lin_id_name).setOnClickListener(this);            // ID号
+
         lin_IsLogin= findViewById(R.id.lin_IsLogin);                        // 未登录时需要隐藏的绑定手机号和重置密码布局
 
         logOut = (Button) findViewById(R.id.lin_zhuxiao);                   // 注销
@@ -179,7 +182,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 startActivity(new Intent(context, ModifyPasswordActivity.class));
                 break;
             case R.id.lin_id_name:// ID
-
+                startActivity(new Intent(context, updateUserNumActivity.class));
                 break;
         }
     }
@@ -396,7 +399,10 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         }
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     protected void onDestroy() {

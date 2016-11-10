@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.text.TextUtils;
 
 import com.amap.api.location.AMapLocation;
 import com.woting.common.application.BSApplication;

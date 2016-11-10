@@ -27,6 +27,18 @@
             android:gravity="center"
             android:orientation="horizontal"
             >
+            <com.woting.common.widgetui.pickview.LoopView
+                android:id="@+id/pick_province"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:paddingRight="40dp"
+                />
+            <com.woting.common.widgetui.pickview.LoopView
+                android:id="@+id/pick_city"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:paddingRight="40dp"
+                />
         </LinearLayout>
 
         <TextView
