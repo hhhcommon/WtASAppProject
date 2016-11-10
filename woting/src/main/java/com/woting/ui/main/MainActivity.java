@@ -81,7 +81,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wt_main);
+        setContentView(R.layout.activity_wt_main );
         registerReceiver();        // 注册广播
         tabHost = extracted();
         context = this;
