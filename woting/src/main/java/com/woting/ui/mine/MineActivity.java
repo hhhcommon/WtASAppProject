@@ -132,7 +132,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
 
     // 设置 view
     private void setView() {
-//        Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.img_person_background);
+        Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.img_person_background);
 //        textTime = (TextView) findViewById(R.id.text_time);                 // 定时关闭的时间显示
 
         findViewById(R.id.imageView_ewm).setOnClickListener(this);          // 二维码
@@ -147,14 +147,14 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         findViewById(R.id.lin_set).setOnClickListener(this);                // 设置
 
         linStatusNoLogin = findViewById(R.id.lin_status_nodenglu);          // 未登录时的状态
-//        ImageView lin_image_0 = (ImageView) findViewById(R.id.lin_image_0); // 未登录时的背景图片
-//        lin_image_0.setImageBitmap(bmp);
+        ImageView lin_image_0 = (ImageView) findViewById(R.id.lin_image_0); // 未登录时的背景图片
+        lin_image_0.setImageBitmap(bmp);
 
         linStatusLogin = findViewById(R.id.lin_status_denglu);              // 登录时的状态
         imageToggle = (ImageView) findViewById(R.id.wt_img_toggle);         // 流量提醒开关
         textUserName = (TextView) findViewById(R.id.tv_username);           // 用户名
-//        ImageView lin_image = (ImageView) findViewById(R.id.lin_image);     // 登录时的背景图片
-//        lin_image.setImageBitmap(bmp);
+        ImageView lin_image = (ImageView) findViewById(R.id.lin_image);     // 登录时的背景图片
+        lin_image.setImageBitmap(bmp);
 
         imageHead = (ImageView) findViewById(R.id.image_touxiang);          // 登录后的头像
         imageHead.setOnClickListener(this);
@@ -296,10 +296,10 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             String userNum = sharedPreferences.getString(StringConstant.USER_NUM, "");// 用户号
             String userSign = sharedPreferences.getString(StringConstant.USER_SIGN, "");// 签名
             String region = sharedPreferences.getString(StringConstant.REGION, "");// 区域
-            textUserId.setText(userId);
             textUserName.setText(userName);
             textUserArea.setText(region);
             textUserAutograph.setText(userSign);
+//            textUserAutograph.setText("Anyone can give up, but you can't!");
 
             if(region.equals("")) {
                 if(GlobalConfig.CityName != null && !GlobalConfig.CityName.equals("null")
@@ -519,10 +519,10 @@ public class MineActivity extends BaseActivity implements OnClickListener {
 
     // API19以下获取图片路径的方法
     private String getFilePath_below19(Uri uri) {
-        // 这里开始的第二部分，获取图片的路径：低版本的是没问题的，但是sdk>19会获取不到
+        // 这里开始的第二部分，获取图片的路径：低版本的是没问题的，但是 sdk > 19 会获取不到
         String[] proj = {MediaStore.Images.Media.DATA};
 
-        // 好像是android多媒体数据库的封装接口，具体的看Android文档
+        // 好像是 android 多媒体数据库的封装接口，具体的看 Android 文档
         Cursor cursor = getContentResolver().query(uri, proj, null, null, null);
 
         // 获得用户选择的图片的索引值
@@ -557,16 +557,11 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                 if ("primary".equalsIgnoreCase(type)) {
                     return Environment.getExternalStorageDirectory() + "/" + split[1];
                 }
-            }
-            // DownloadsProvider
-            else if (isDownloadsDocument(uri)) {
+            } else if (isDownloadsDocument(uri)) {
                 final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
                 return getDataColumn(context, contentUri, null, null);
-            }
-            // MediaProvider
-            else if (isMediaDocument(uri)) {
+            } else if (isMediaDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
@@ -579,21 +574,15 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                     contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
                 }
                 final String selection = "_id=?";
-                final String[] selectionArgs = new String[]{
-                        split[1]
-                };
+                final String[] selectionArgs = new String[]{split[1]};
                 return getDataColumn(context, contentUri, selection, selectionArgs);
             }
-        }
-        // MediaStore (and general)
-        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
             // Return the remote address
             if (isGooglePhotosUri(uri))
                 return uri.getLastPathSegment();
             return getDataColumn(context, uri, null, null);
-        }
-        // File
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
             return uri.getPath();
         }
         return null;
@@ -614,8 +603,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         final String column = "_data";
         final String[] projection = {column};
         try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
-                    null);
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
             if (cursor != null && cursor.moveToFirst()) {
                 final int index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(index);
