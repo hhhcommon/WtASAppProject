@@ -123,21 +123,32 @@
     <RelativeLayout
         android:id="@+id/lin_status_nodenglu"
         android:layout_width="match_parent"
-        android:layout_height="134dp"
+        android:layout_height="176dp"
         android:background="@color/WHITE"
         android:visibility="gone" >
 
         <ImageView
             android:id="@+id/lin_image_0"
             android:layout_width="match_parent"
-            android:layout_height="67dp"
+            android:layout_height="100dp"
             android:scaleType="centerCrop" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_centerHorizontal="true"
+            android:text="我的"
+            android:textColor="@color/white"
+            android:textSize="17sp" />
 
         <ImageView
             android:id="@+id/image_nodenglu"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_centerInParent="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="51dp"
             android:src="@mipmap/person_nologinimage" />
 
         <TextView
@@ -146,10 +157,21 @@
             android:layout_height="wrap_content"
             android:text="点击登录"
             android:textColor="@color/wt_login_third"
-            android:textSize="17sp"
-            android:layout_marginTop="7dp"
-            android:layout_below="@id/image_nodenglu"
+            android:textSize="12sp"
+            android:layout_above="@+id/text_wt"
             android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/text_wt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/wt_login_third"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="3dp"
+            android:text="用我听，听我想听，说我想说!"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:textSize="12sp" />
 
         <View
             style="@style/ViewStyle"
