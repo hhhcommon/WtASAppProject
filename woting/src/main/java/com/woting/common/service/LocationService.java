@@ -41,8 +41,12 @@ public class LocationService extends Service implements GDLocation.Location {
         String AdCode = amapLocation.getAdCode();//地区编码
         String Latitude = String.valueOf(amapLocation.getLatitude());
         String Longitude = String.valueOf(amapLocation.getLongitude());
-        if(!TextUtils.isEmpty(District)){
+        if(GlobalConfig.District == null) {
             GlobalConfig.District = District;
+        } else {
+            if(!GlobalConfig.District.equals(District)) {
+                GlobalConfig.District = District;
+            }
         }
         if (GlobalConfig.latitude == null) {
             GlobalConfig.latitude = Latitude;

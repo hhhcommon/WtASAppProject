@@ -299,7 +299,6 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             textUserName.setText(userName);
             textUserArea.setText(region);
             textUserAutograph.setText(userSign);
-//            textUserAutograph.setText("Anyone can give up, but you can't!");
 
             if(region.equals("")) {
                 if(GlobalConfig.CityName != null && !GlobalConfig.CityName.equals("null")
