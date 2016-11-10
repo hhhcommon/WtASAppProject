@@ -390,8 +390,8 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
                         Integer.valueOf(Day.substring(0,Day.length()-1).trim()));
 
                 tv_xingzuo.setText(Constellation);
-                birthday=Year+Month+Day;
-                tv_age.setText(birthday);
+                birthday=TimeUtils.date2TimeStamp(Year+Month+Day);
+                tv_age.setText(Year+Month+Day);
 
                 dateDialog.dismiss();
             }
