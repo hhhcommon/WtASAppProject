@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
@@ -41,7 +43,10 @@ import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ImageUploadReturnUtil;
 import com.woting.common.util.PhoneMessage;
+import com.woting.common.util.TimeUtils;
 import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.photocut.PhotoCutActivity;
@@ -51,9 +56,13 @@ import com.woting.ui.mine.favorite.activity.FavoriteActivity;
 import com.woting.ui.mine.hardware.HardwareIntroduceActivity;
 import com.woting.ui.mine.model.UserPortaitInside;
 import com.woting.ui.mine.person.updatepersonnews.UpdatePersonActivity;
+import com.woting.ui.mine.person.updatepersonnews.model.personModel;
 import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
 import com.woting.ui.mine.set.SetActivity;
 import com.woting.ui.mine.shapeapp.ShapeAppActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 
@@ -63,11 +72,13 @@ import java.io.File;
  * 邮箱：645700751@qq.com
  */
 public class MineActivity extends BaseActivity implements OnClickListener {
-    private SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences = BSApplication.SharedPreferences;
 
     private final int TO_GALLERY = 1;           // 标识 打开系统图库
     private final int TO_CAMERA = 2;            // 标识 打开系统照相机
     private final int PHOTO_REQUEST_CUT = 7;    // 标识 跳转到图片裁剪界面
+    private final int UPDATE_USER=3;            // 标识 跳转到修改个人信息界面
+
     private int imageNum;
     private boolean isFirst = true;             // 第一次加载界面
 
@@ -98,6 +109,10 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     private TextView textUserName;              // 用户名
     private ImageView imageToggle;              // 流量提醒
     private ImageView imageHead;                // 用户头像
+
+    private String tag = "UPDATE_PERSON_VOLLEY_REQUEST_CANCEL_TAG";
+    private boolean isCancelRequest;
+    private personModel pModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -215,7 +230,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                 }
                 break;
             case R.id.lin_xiugai:           // 修改个人资料
-                startActivity(new Intent(context, UpdatePersonActivity.class));
+                startActivityForResult(new Intent(context, UpdatePersonActivity.class),UPDATE_USER);
                 break;
             case R.id.imageView_ewm:        // 展示二维码
                 UserInviteMeInside news = new UserInviteMeInside();
@@ -399,6 +414,20 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                     dealt();
                 }
                 break;
+            case UPDATE_USER:
+                if(resultCode ==1){
+                    Bundle bundle =data.getExtras();
+                    pModel=(personModel)bundle.getSerializable("data");
+      /*              ToastUtils.show_allways(context,pM.getBirthday()+pM.getGender()
+                            +pM.getStarSign()+pM.getNickName())*/;
+                    if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
+                        ToastUtils.show_allways(context, "网络失败，请检查网络");
+                        return;
+                    }
+                    sendUpdate(pModel);
+                }
+
+
         }
     }
 
@@ -693,6 +722,82 @@ public class MineActivity extends BaseActivity implements OnClickListener {
 //            }
 //        }
 //    };
+    private void sendUpdate(personModel pM) {
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            if(!TextUtils.isEmpty(pM.getNickName())){
+                jsonObject.put("NickName", pM.getNickName());
+            }
+            if(!TextUtils.isEmpty(pM.getUserSign())){
+                jsonObject.put("UserSign", pM.getUserSign());
+            }
+            if(!TextUtils.isEmpty(pM.getGender())){
+                jsonObject.put("SexDictId", pM.getGender());
+            }
+            if(!TextUtils.isEmpty(pM.getBirthday())){
+                jsonObject.put("Birthday",  Long.valueOf(TimeUtils.date2TimeStamp(pM.getBirthday())));
+            }
+            if(!TextUtils.isEmpty(pM.getStarSign())){
+                jsonObject.put("StarSign", pM.getStarSign());
+            }
+            if(!TextUtils.isEmpty(pM.getEmail())){
+                jsonObject.put("MailAddr", pM.getEmail());
+            }
+            //差个地区
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        VolleyRequest.RequestPost(GlobalConfig.updateUserUrl, tag, jsonObject, new VolleyCallback() {
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (dialog != null)
+                    dialog.dismiss();
+                if (isCancelRequest)
+                    return;
+                try {
+                    String returnType = result.getString("ReturnType");
+                    if (returnType != null && returnType.equals("1001")) {
+                        SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
+                        if(!TextUtils.isEmpty(pModel.getNickName())){
+                            et.putString(StringConstant.NICK_NAME, pModel.getNickName());
+                        }
+                        if(!TextUtils.isEmpty(pModel.getStarSign())){
+                            et.putString(StringConstant.STAR_SIGN, pModel.getStarSign());
+                        }
+                        if(!TextUtils.isEmpty(TimeUtils.date2TimeStamp(pModel.getBirthday()))){
+                            et.putString(StringConstant.BIRTHDAY, TimeUtils.date2TimeStamp(pModel.getBirthday()));
+                        }
+                        if(!TextUtils.isEmpty(pModel.getGender())){
+                            et.putString(StringConstant.GENDERUSR, pModel.getGender());
+                        }
+                        if(!TextUtils.isEmpty(pModel.getEmail())){
+                            et.putString(StringConstant.EMAIL, pModel.getEmail());
+                        }
+                        if(!TextUtils.isEmpty(pModel.getUserSign())){
+                            et.putString(StringConstant.USER_SIGN, pModel.getUserSign());
+                        }
+                        if(!TextUtils.isEmpty(pModel.getRegion())){
+                            et.putString(StringConstant.REGION, pModel.getRegion());
+                        }
+                        if (!et.commit()) {
+                            Log.w("commit", " 数据 commit 失败!");
+                        }
+                    } else {
+                        ToastUtils.show_allways(context, "信息修改失败!");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+                if (dialog != null) dialog.dismiss();
+                ToastUtils.showVolleyError(context);
+            }
+        });
+    }
 
 
     @Override
