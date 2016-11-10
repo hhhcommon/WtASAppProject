@@ -107,6 +107,11 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
 
         // 性别
         gender=BSApplication.SharedPreferences.getString(StringConstant.GENDERUSR, "xb001");
+        if(gender.equals("男")){
+            gender="xb001";
+        }else{
+            gender="xb002";
+        }
 
         changViewGender();
 
