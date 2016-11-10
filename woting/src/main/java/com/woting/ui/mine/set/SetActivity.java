@@ -34,6 +34,7 @@ import com.woting.ui.mine.person.phonecheck.PhoneCheckActivity;
 import com.woting.ui.mine.set.about.AboutActivity;
 import com.woting.ui.mine.set.downloadposition.DownloadPositionActivity;
 import com.woting.ui.mine.set.help.HelpActivity;
+import com.woting.ui.mine.set.preference.activity.PreferenceActivity;
 import com.woting.ui.mine.set.update.UpdateManager;
 import com.woting.ui.mine.set.updateUserNumActivity.updateUserNumActivity;
 
@@ -74,7 +75,6 @@ public class SetActivity extends BaseActivity implements OnClickListener {
 
     // 初始化控件
     private void initViews() {
-
         findViewById(R.id.head_left_btn).setOnClickListener(this);          // 返回
         findViewById(R.id.lin_bindPhone).setOnClickListener(this);          // 绑定手机号
         findViewById(R.id.lin_reset_password).setOnClickListener(this);     // 重置密码
@@ -84,6 +84,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         findViewById(R.id.lin_about).setOnClickListener(this);              // 关于
         findViewById(R.id.lin_feedback).setOnClickListener(this);           // 意见反馈
         findViewById(R.id.lin_downloadposition).setOnClickListener(this);   // 下载位置
+        findViewById(R.id.lin_preference).setOnClickListener(this);         // 偏好设置
         findViewById(R.id.lin_id_name).setOnClickListener(this);            // ID号
 
         lin_IsLogin= findViewById(R.id.lin_IsLogin);                        // 未登录时需要隐藏的绑定手机号和重置密码布局
@@ -126,6 +127,11 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 break;
             case R.id.lin_about:            // 关于
                 startActivity(new Intent(context, AboutActivity.class));
+                break;
+            case R.id.lin_preference:       // 偏好设置
+                Intent p = new Intent(context, PreferenceActivity.class);
+                p.putExtra("type", 2);
+                startActivity(p);
                 break;
             case R.id.lin_feedback:         // 意见反馈
                 startActivity(new Intent(context, FeedbackActivity.class));

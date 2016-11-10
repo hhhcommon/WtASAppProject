@@ -52,7 +52,6 @@ public class PhoneCheckActivity extends AppBaseActivity implements OnClickListen
     private String phoneNumberNew;
 //  private int ViewType = 2;                       // == 1 为已经有手机号  == 2 为无手机号
     private TextView tv_Phone_Desc;
-    private TextView tv_Phone;
 
     @Override
     protected int setViewId() {
@@ -75,7 +74,6 @@ public class PhoneCheckActivity extends AppBaseActivity implements OnClickListen
         btUpdate.setOnClickListener(this);
 
         tv_Phone_Desc=(TextView) findViewById(R.id.tv_Phone_Desc);
-        tv_Phone=(TextView) findViewById(R.id.tv_phone);
         handleIntent();
     }
 
@@ -87,7 +85,6 @@ public class PhoneCheckActivity extends AppBaseActivity implements OnClickListen
 //               ViewType = 1;
                tv_Phone_Desc.setText("当前绑定的手机号码为："+phoneNumber.replaceAll("(\\d{3})\\d{6}(\\d{2})","$1******$2")
                        + "\n更换手机号后，下次登录可以使用新手机号码登录。");
-               tv_Phone.setText("新手机号");
                editPhoneNumber.setHint("请输入新的手机号码");
            }
         }

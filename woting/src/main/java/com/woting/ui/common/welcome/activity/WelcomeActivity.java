@@ -41,7 +41,7 @@ public class WelcomeActivity extends FragmentActivity {
         for (int i = 0; i < 3; i++) {
             imageView = new ImageView(this);
             imageView.setLayoutParams(new LayoutParams(20, 20));
-            imageView.setPadding(20, 0, 20, 0);
+            imageView.setPadding(0, 0, 0, 0);
             imageViews[i] = imageView;
             if (i == 0) {
                 imageViews[i].setImageBitmap(bmp);

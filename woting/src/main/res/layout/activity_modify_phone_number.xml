@@ -7,16 +7,18 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <include android:id="@+id/include_title" layout="@layout/base_activity_title"/>
+    <include
+        android:id="@+id/include_title"
+        layout="@layout/base_activity_title" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/app_bg"
         android:orientation="vertical"
-        android:paddingLeft="17dp"
-        android:paddingRight="17dp"
         android:paddingBottom="5dp"
+        android:paddingLeft="18dp"
+        android:paddingRight="18dp"
         android:paddingTop="5dp">
 
         <TextView
@@ -24,38 +26,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:textSize="14sp"
-            android:text="为了账号安全，建议您绑定手机号。进行绑定操作后，一旦忘记密码可以通过短信快速找回，下次登录也可以通过短信快速找回，下次登录也可以使用手机号码登录。"/>
+            android:text="为了账号安全，建议您绑定手机号。进行绑定操作后，一旦忘记密码可以通过短信快速找回，下次登录也可以通过短信快速找回，下次登录也可以使用手机号码登录。"
+            android:textSize="14sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="15dp"
-            android:gravity="left|center"
-            android:background="@drawable/bg_edittext_normal">
+            android:background="@drawable/bg_edittext_normal"
+            android:gravity="left|center">
 
-            <TextView
+            <ImageView
                 android:id="@+id/tv_phone"
-                android:layout_width="60dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="@color/BLACK"
-                android:layout_marginLeft="5dp"
-                android:text="手机号"/>
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="12dp"
+                android:src="@mipmap/img_telephone" />
+
 
             <EditText
                 android:id="@+id/edit_phone_number"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@null"
                 android:gravity="left|center"
                 android:hint="请输入手机号码"
-                android:layout_marginLeft="20dp"
-                android:maxLength="18"
                 android:inputType="phone"
+                android:maxLength="18"
                 android:singleLine="true"
                 android:textColor="@color/wt_login_third"
                 android:textColorHint="@color/gray"
-                android:background="@null"
                 android:textCursorDrawable="@drawable/wt_edittext_cursor"
                 android:textSize="14sp" />
 
@@ -67,30 +68,26 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/bg_edittext_normal">
 
-            <TextView
+            <ImageView
                 android:id="@+id/text_code"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="验证码"
-                android:textSize="14sp"
-                android:textColor="@color/BLACK"
-                android:layout_marginLeft="5dp"/>
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="12dp"
+                android:src="@mipmap/wt_group_vertify" />
 
             <EditText
                 android:id="@+id/edit_verification_code"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_toRightOf="@id/text_code"
+                android:background="@null"
                 android:hint="请输入验证码"
-                android:layout_marginLeft="20dp"
-                android:gravity="left|center"
                 android:inputType="number"
-                android:singleLine="true"
                 android:maxLength="6"
+                android:singleLine="true"
                 android:textColor="@color/wt_login_third"
                 android:textColorHint="@color/gray"
-                android:background="@null"
                 android:textCursorDrawable="@drawable/wt_edittext_cursor"
                 android:textSize="14sp" />
 
@@ -98,21 +95,21 @@
                 android:id="@+id/text_get_verification_code"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:layout_alignParentRight="true"
+                android:background="@drawable/et_bg_yanzhengma"
+                android:gravity="center"
                 android:text="获取验证码"
                 android:textColor="@color/WHITE"
                 android:textSize="12sp"
-                android:background="@drawable/et_bg_yanzhengma"
                 android:visibility="visible" />
 
             <TextView
                 android:id="@+id/text_resend"
                 android:layout_width="79dp"
                 android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
                 android:gravity="center"
                 android:padding="2dp"
-                android:layout_alignParentRight="true"
                 android:text="重新发送"
                 android:textColor="@color/gray"
                 android:textSize="10sp"
@@ -132,12 +129,11 @@
             android:id="@+id/btn_confirm"
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/bg_graybutton"
             android:text="确定"
-            android:gravity="center"
             android:textColor="@color/WHITE"
-            android:layout_marginTop="30dp"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
     </LinearLayout>
 
