@@ -1,10 +1,10 @@
 package com.woting.common.util;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import android.annotation.SuppressLint;
 import android.util.Log;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 时间工具类
@@ -94,5 +94,35 @@ public class TimeUtils {
 		String    addtime    =    formatter.format(curDate); 
 		return addtime;
 	}
-	
+
+
+	/**
+	 * 戳转时间
+	 */
+	public static String date2TimeStamp(String year){
+
+		String date_str=year.replaceAll("年","-").replaceAll("月","-").replaceAll(" ","").replaceAll("日","");
+
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			return String.valueOf(sdf.parse(date_str).getTime()/1000);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+
+
+	/**
+	 * 时间转戳
+	 */
+	public static String timeStamp2Date(String seconds) {
+		String format="yyyy-MM-dd";
+		if(seconds == null || seconds.isEmpty() || seconds.equals("null")){
+			return "";
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		String s=sdf.format(new Date(Long.valueOf(seconds+"000")));
+		return s.replaceFirst("-","年").replaceFirst("-","月")+"日";
+	}
 }

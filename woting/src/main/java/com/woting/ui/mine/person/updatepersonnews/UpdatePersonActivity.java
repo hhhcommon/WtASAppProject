@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.constant.StringConstant;
+import com.woting.common.util.TimeUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.widgetui.pickview.LoopView;
 import com.woting.common.widgetui.pickview.OnItemSelectedListener;
@@ -67,8 +68,6 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
     private TextView tv_xingzuo;
     private LoopView pick_Province;
     private LoopView pick_City;
-    private String tag = "UPDATE_PERSON_VOLLEY_REQUEST_CANCEL_TAG";
-    private boolean isCancelRequest;
     private Dialog dialog;
     private String userCount;
     private String nickName;
@@ -88,11 +87,6 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_updateperson);
         initView();
-      /*  if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            send();//获取用户信息
-        } else {
-            ToastUtils.show_short(context, "网络连接失败，请稍后重试");
-        }*/
         setValueByPrefer();
 
     }
@@ -118,7 +112,7 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
 
         // 生日
         birthday=BSApplication.SharedPreferences.getString(StringConstant.BIRTHDAY, "");
-        tv_age.setText(birthday);
+        tv_age.setText(TimeUtils.timeStamp2Date(birthday));
 
         // 星座
         starSign=BSApplication.SharedPreferences.getString(StringConstant.STAR_SIGN, "");
@@ -168,6 +162,7 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_left_btn:// 返回
+                saveData();
                 finish();
                 break;
             case R.id.lin_age:// 年龄
@@ -192,6 +187,26 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
                 break;
         }
     }
+
+    // 此方法用来保存当前页面的数据
+    private void saveData() {
+        nickName=textName.getText().toString().trim();
+        //birthday已经有值了
+        starSign=tv_xingzuo.getText().toString();
+        region=tv_region.getText().toString().trim();
+        Email=tv_mail.getText().toString().trim();
+        userSign=tv_signature.getText().toString().trim();
+        if(TextUtils.isEmpty(nickName)||TextUtils.isEmpty(starSign)||TextUtils.isEmpty(birthday)
+                ||TextUtils.isEmpty(region) ||TextUtils.isEmpty(Email)||TextUtils.isEmpty(userSign)||genderFlag==true){
+            Intent intent=new Intent();
+            personModel pM=new personModel(nickName,birthday,starSign,region,userSign,gender,Email);
+            Bundle bundle =new Bundle();
+            bundle.putSerializable("data",pM);
+            intent.putExtras(bundle);
+            setResult(1,intent);
+        }
+    }
+
     private void send() {
        /* dialog = DialogUtils.Dialogph(context, "正在提交请求");
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
@@ -456,23 +471,14 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
 
     @Override
     protected void onDestroy(){
-        nickName=textName.getText().toString().trim();
-        //birthday已经有值了
-        starSign=tv_xingzuo.getText().toString();
-        region=tv_region.getText().toString().trim();
-        Email=tv_mail.getText().toString().trim();
-        userSign=tv_signature.getText().toString().trim();
-        if(TextUtils.isEmpty(nickName)||TextUtils.isEmpty(starSign)||TextUtils.isEmpty(birthday)
-                ||TextUtils.isEmpty(region) ||TextUtils.isEmpty(Email)||TextUtils.isEmpty(userSign)||genderFlag==true){
-            Intent intent=new Intent();
-            personModel pM=new personModel(nickName,birthday,starSign,region,userSign,gender,Email);
-            Bundle bundle =new Bundle();
-            bundle.putSerializable("data",pM);
-            intent.putExtras(bundle);
-            setResult(1,intent);
-        }
-        setResult(RESULT_OK);
+
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        saveData();
+        super.onBackPressed();
     }
 
     @Override
