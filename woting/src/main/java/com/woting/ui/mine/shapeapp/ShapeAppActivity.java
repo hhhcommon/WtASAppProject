@@ -15,8 +15,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 
+import com.umeng.socialize.Config;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
 import com.woting.R;
-import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ShareUtils;
 import com.woting.common.widgetui.HorizontalListView;
@@ -55,10 +58,11 @@ public class ShapeAppActivity extends BaseActivity implements View.OnClickListen
     // 设置 WebView
     private void setWeb() {
         dialog = DialogUtils.Dialogph(context, "正在加载");
-        String url = GlobalConfig.wthelpUrl;// 需要 URL
         WebSettings setting = webView.getSettings();
         setting.setJavaScriptEnabled(true);                               // 支持js
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);    // 解决缓存问题
+
+        String url = "http://www.wotingfm.com/";
         webView.loadUrl(url);
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -115,6 +119,7 @@ public class ShapeAppActivity extends BaseActivity implements View.OnClickListen
         window.setWindowAnimations(R.style.sharestyle);
         shareDialog.setCanceledOnTouchOutside(true);
         shareDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
+        Config.dialog = DialogUtils.Dialogphnoshow(context, "Loading...", new Dialog(context));
         final List<ShareModel> mList = ShareUtils.getShareModelList();
         ImageAdapter shareAdapter = new ImageAdapter(context, mList);
         mGallery.setAdapter(shareAdapter);
@@ -122,8 +127,8 @@ public class ShapeAppActivity extends BaseActivity implements View.OnClickListen
         mGallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                SHARE_MEDIA Platform = mList.get(position).getSharePlatform();
-                callShare();
+                SHARE_MEDIA Platform = mList.get(position).getSharePlatform();
+                callShare(Platform);
                 shareDialog.dismiss();
             }
         });
@@ -135,7 +140,15 @@ public class ShapeAppActivity extends BaseActivity implements View.OnClickListen
         });
     }
 
-    protected void callShare() {
+    protected void callShare(SHARE_MEDIA Platform) {
+        String shareName = "我听科技";
+        String shareDesc = "我听科技分享内容!";
 
+        String shareContentImg = "http://182.92.175.134/img/logo-web.png";
+        UMImage image = new UMImage(context, shareContentImg);
+
+        String shareUrl = "http://www.wotingfm.com/";
+        new ShareAction(ShapeAppActivity.this).setPlatform(Platform).withMedia(image)
+                .withText(shareDesc).withTitle(shareName).withTargetUrl(shareUrl).share();
     }
 }

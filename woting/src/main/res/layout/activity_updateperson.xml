@@ -99,7 +99,9 @@
                     android:textColor="@color/up_tv_default"
                     android:textColorHint="@color/gray"/>
 
-                <View style="@style/ViewStyle"/>
+                <View
+                    style="@style/ViewStyle"
+                    android:layout_alignParentBottom="true"/>
 
             </RelativeLayout>
 
