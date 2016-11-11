@@ -455,7 +455,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                             }
                             try {
                                 gender = ui.getString("Sex");
-                                et.putString(StringConstant.GENDERUSR, gender);
+                                if(gender.equals("男")) {
+                                    et.putString(StringConstant.GENDERUSR, "xb001");
+                                } else if(gender.equals("女")) {
+                                    et.putString(StringConstant.GENDERUSR, "xb002");
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
