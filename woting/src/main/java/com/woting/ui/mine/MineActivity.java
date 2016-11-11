@@ -787,13 +787,18 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             }
 
             email = pM.getEmail();
-            if(isEmail(email)) {
-                if(!email.equals(sharedPreferences.getString(StringConstant.EMAIL, ""))){
+            if(!email.equals(sharedPreferences.getString(StringConstant.EMAIL, ""))){
+                if(!email.trim().equals("")) {
+                    if(isEmail(email)) {
+                        jsonObject.put("MailAddr", email);
+                        isUpdate = true;
+                    } else {
+                        ToastUtils.show_allways(context, "邮箱格式不正确，请重新修改!");
+                    }
+                } else {
                     jsonObject.put("MailAddr", email);
                     isUpdate = true;
                 }
-            } else {
-                ToastUtils.show_allways(context, "邮箱格式不正确，请重新修改!");
             }
 
             // 差个地区

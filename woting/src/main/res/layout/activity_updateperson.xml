@@ -85,10 +85,11 @@
 
                 <EditText
                     android:id="@+id/tv_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="39dp"
                     android:layout_centerVertical="true"
+                    android:gravity="left|center"
                     android:layout_toRightOf="@id/text_nc"
                     android:maxLines="1"
                     android:maxLength="20"
@@ -278,11 +279,12 @@
                 <EditText
                     android:id="@+id/tv_mail"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="39dp"
                     android:hint="请设置您的邮箱"
                     android:textColorHint="@color/gray"
                     android:textColor="#5e6471"
+                    android:gravity="left|center"
                     android:background="@null"
                     android:maxLines="1"
                     android:maxLength="20"
