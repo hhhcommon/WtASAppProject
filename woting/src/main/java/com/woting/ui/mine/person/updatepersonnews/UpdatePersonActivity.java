@@ -220,8 +220,6 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
                                 }.getType());
                                 List<CatalogName> s = SubList_all.getSubCata();
                                 if (s != null && s.size() > 0) {
-                                    cityPickerDialog();
-                                    lin_Area.setOnClickListener(UpdatePersonActivity.this);
                                     TempMap=new HashMap<>();
                                     provinceList=new ArrayList<>();
                                     for(int i = 0; i < s.size(); i++){
@@ -250,6 +248,8 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
                                                 positionMap.put(provinceList.get(i),cityList);
                                             }
                                     }
+                                    cityPickerDialog();
+                                    lin_Area.setOnClickListener(UpdatePersonActivity.this);
                                 } else {
                                     Log.e("", "获取城市列表为空");
                                 }
@@ -496,8 +496,15 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
         pick_Province=(LoopView)dialog.findViewById(R.id.pick_province);
         pick_City=(LoopView)dialog.findViewById(R.id.pick_city);
 
-        pick_Province.setItems(provinceList);
-        pick_City.setItems(provinceList);
+   /*     ToastUtils.show_allways(context,"province"+ provinceList.size()+provinceList.get(0));*/
+/*        List<String> LIST = positionMap.get(provinceList.get(15));
+        String s=LIST.get(0);
+        ToastUtils.show_allways(context,""+s);*/
+      /*  pick_Province.setItems(provinceList);
+        pick_City.setItems(positionMap.get(provinceList.get(0)));
+
+        pick_Province.setTextSize(30);
+        pick_City.setTextSize(30);*/
 
 
         TextView tv_confirm = (TextView) dialog.findViewById(R.id.tv_confirm);
