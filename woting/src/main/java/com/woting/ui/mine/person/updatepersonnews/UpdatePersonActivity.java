@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -107,6 +108,10 @@ public class UpdatePersonActivity extends BaseActivity implements
     private int wheelTypeYear = -1;
     private int wheelTypeMonth = -1;
     private int wheelTypeDay = -1;
+    private int ProvinceIndex;        // 选中的省级角标
+    private int CityIndex;            // 选中的市级角标
+    private RelativeLayout lin_area;
+    private List<CatalogName> myList=new ArrayList<>(); // 存储临时组装的list数据
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -166,7 +171,7 @@ public class UpdatePersonActivity extends BaseActivity implements
     private void initView() {
         findViewById(R.id.head_left_btn).setOnClickListener(this);
         findViewById(R.id.lin_age).setOnClickListener(this);
-        findViewById(R.id.lin_area).setOnClickListener(this);
+        lin_area=(RelativeLayout)findViewById(R.id.lin_area);
 
         lin_gender_man = findViewById(R.id.lin_gender_man);
         lin_gender_man.setOnClickListener(this);
@@ -213,16 +218,48 @@ public class UpdatePersonActivity extends BaseActivity implements
                             provinceList = new ArrayList<>();
                             for (int i = 0; i < s.size(); i++) {
                                 if (!TextUtils.isEmpty(s.get(i).getCatalogId()) && !TextUtils.isEmpty(s.get(i).getCatalogName())
-                                        && s.get(i).getSubCata() != null && s.get(i).getSubCata().size() > 0) {
-//                                            CatalogName  mFenLeiName=new CatalogName();
-//                                            mFenLeiName.setCatalogId(s.get(i).getCatalogId());
-//                                            mFenLeiName.setCatalogName(s.get(i).getCatalogName());
-//                                            provinceCatalogNameList.add(mFenLeiName);
-                                    provinceList.add(s.get(i).getCatalogName());
-                                    List<CatalogName> myList = s.get(i).getSubCata();
-                                    TempMap.put(s.get(i).getCatalogName(), myList);
+                                        ) {
+                                   if(s.get(i).getSubCata() != null && s.get(i).getSubCata().size() > 0) {
+                                       //所返回的list有下一级的且不为0
+                                       if(!s.get(i).getSubCata().get(0).getCatalogName().equals("市辖区")){
+                                           //不是直辖市
+                                           provinceList.add(s.get(i).getCatalogName());
+                                           myList = s.get(i).getSubCata();
+                                           TempMap.put(s.get(i).getCatalogName(),myList);
+                                       }else{
+                                           //直辖市
+                                           List<CatalogName> myList1=new ArrayList<>();
+                                           if(myList1.size()>0){
+                                               myList1.clear();
+                                           }
+                                           provinceList.add(s.get(i).getCatalogName());
+                                           myList1.addAll(s.get(i).getSubCata().get(0).getSubCata());
+                                           myList1.addAll(s.get(i).getSubCata().get(1).getSubCata());
+                                           TempMap.put(s.get(i).getCatalogName(),myList1);
+                                       }
+                                   }else{
+                                       //港澳台
+                                       List<CatalogName> myList1=new ArrayList<CatalogName>();
+                                       for(int t=0;t<4;t++){
+                                           CatalogName mCatalog=new CatalogName();
+                                           mCatalog.setCatalogId(s.get(i).getCatalogId());
+                                           mCatalog.setCatalogName(" ");
+                                           myList1.add(mCatalog);
+                                       }
+                                       if(s.get(i).getCatalogId().equals("710000")){
+                                           provinceList.add("台湾");
+                                           TempMap.put("台湾",myList1);
+                                       }else if(s.get(i).getCatalogId().equals("810000")){
+                                           provinceList.add("香港");
+                                           TempMap.put("香港",myList1);
+                                       }else if(s.get(i).getCatalogId().equals("820000")){
+                                           provinceList.add("澳门");
+                                           TempMap.put("澳门",myList1);
+                                       }
+                                   }
                                 }
                             }
+
                             if (TempMap.size() > 0) {
                                 for (int i = 0; i < provinceList.size(); i++) {
                                     List<CatalogName> mList = TempMap.get(provinceList.get(i));
@@ -236,6 +273,13 @@ public class UpdatePersonActivity extends BaseActivity implements
                                 }
                             }
                             cityPickerDialog();
+                            lin_area.setOnClickListener(new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    cityDialog.show();
+                                }
+                            });
+
                         } else {
                             Log.e("", "获取城市列表为空");
                         }
@@ -276,9 +320,6 @@ public class UpdatePersonActivity extends BaseActivity implements
                     changViewGender();
                 }
                 break;
-            case R.id.lin_area:
-                cityDialog.show();
-                break;
         }
     }
 
@@ -286,7 +327,7 @@ public class UpdatePersonActivity extends BaseActivity implements
     private void saveData() {
         nickName = textName.getText().toString().trim();// 昵称
         starSign = tv_xingzuo.getText().toString();// 星座
-        region = tv_region.getText().toString().trim();// 地区
+       // region = tv_region.getText().toString().trim();// 地区
         Email = tv_mail.getText().toString().trim();// 邮箱
         userSign = tv_signature.getText().toString().trim();// 签名
 
@@ -395,9 +436,9 @@ public class UpdatePersonActivity extends BaseActivity implements
         pick_Month.setInitPosition(4);
         pick_Day.setInitPosition(24);
 
-        pick_Year.setTextSize(30);
-        pick_Month.setTextSize(30);
-        pick_Day.setTextSize(30);
+        pick_Year.setTextSize(20);
+        pick_Month.setTextSize(20);
+        pick_Day.setTextSize(20);
 
         dateDialog = new Dialog(context, R.style.MyDialog);
         // 从底部上升到一个位置
@@ -462,19 +503,32 @@ public class UpdatePersonActivity extends BaseActivity implements
         pick_Province = (LoopView) dialog.findViewById(R.id.pick_province);
         pick_City = (LoopView) dialog.findViewById(R.id.pick_city);
 
-//        ToastUtils.show_allways(context,"province"+ provinceList.size()+provinceList.get(0));
-//        List<String> LIST = positionMap.get(provinceList.get(15));
-//        String s=LIST.get(0);
-//        ToastUtils.show_allways(context,""+s);
-//        pick_Province.setItems(provinceList);
-//        pick_City.setItems(positionMap.get(provinceList.get(0)));
-//
-//        pick_Province.setTextSize(30);
-//        pick_City.setTextSize(30);
+        pick_Province.setListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(int index) {
+                ProvinceIndex=index;
+                List<String> tempList1=positionMap.get(provinceList.get(index));
+                pick_City.setItems(tempList1);
+                pick_City.setInitPosition(0);
+            }
+        });
+        pick_City.setListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(int index) {
+                CityIndex=index;
+            }
+        });
+         pick_Province.setItems(provinceList);
+         List<String> tempList=positionMap.get(provinceList.get(4));
 
+        pick_City.setItems(tempList);
 
-//        TextView tv_confirm = (TextView) dialog.findViewById(R.id.tv_confirm);
-//        TextView tv_cancel = (TextView) dialog.findViewById(R.id.tv_cancel);
+        pick_Province.setInitPosition(4);
+
+        pick_Province.setTextSize(15);
+        pick_City.setTextSize(15);
+//      TextView tv_confirm = (TextView) dialog.findViewById(R.id.tv_confirm);
+//      TextView tv_cancel = (TextView) dialog.findViewById(R.id.tv_cancel);
         cityDialog = new Dialog(context, R.style.MyDialog);
         cityDialog.setContentView(dialog);
         Window window = dateDialog.getWindow();
@@ -493,6 +547,10 @@ public class UpdatePersonActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 // 打印结果
+                //ToastUtils.show_allways(context,TempMap.get(provinceList.get(ProvinceIndex)).get(CityIndex).getCatalogId());
+                region=TempMap.get(provinceList.get(ProvinceIndex)).get(CityIndex).getCatalogId();
+                tv_region.setText(provinceList.get(ProvinceIndex)+" "+TempMap.get(provinceList.get(ProvinceIndex)).get(CityIndex).getCatalogName());
+                cityDialog.dismiss();
             }
         });
 
