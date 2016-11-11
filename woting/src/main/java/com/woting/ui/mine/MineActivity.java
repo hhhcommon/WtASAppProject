@@ -44,7 +44,6 @@ import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ImageUploadReturnUtil;
 import com.woting.common.util.PhoneMessage;
-import com.woting.common.util.TimeUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
@@ -92,6 +91,9 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     private String filePath;
     private String url;                         // 完整用户头像地址
     private String photoCutAfterImagePath;
+    private String userNum;
+    private String userSign;
+    private String region;
 
     private Dialog dialog;
     private Dialog imageDialog;
@@ -216,7 +218,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             case R.id.lin_set:              // 设置
                 Intent intentSet = new Intent(context, SetActivity.class);
                 intentSet.putExtra("LOGIN_STATE", isLogin);
-                startActivity(intentSet);
+                startActivityForResult(intentSet, 0x222);
                 break;
             case R.id.lin_playhistory:      // 播放历史
                 startActivity(new Intent(context, PlayHistoryActivity.class));
@@ -244,7 +246,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                 }
                 break;
             case R.id.lin_xiugai:           // 修改个人资料
-                startActivityForResult(new Intent(context, UpdatePersonActivity.class),UPDATE_USER);
+                startActivityForResult(new Intent(context, UpdatePersonActivity.class), UPDATE_USER);
                 break;
             case R.id.imageView_ewm:        // 展示二维码
                 UserInviteMeInside news = new UserInviteMeInside();
@@ -325,9 +327,9 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             userName = sharedPreferences.getString(StringConstant.USERNAME, "");// 用户名
             userId = sharedPreferences.getString(StringConstant.USERID, "");    // 用户 ID
             url = sharedPreferences.getString(StringConstant.IMAGEURL, "");     // 用户头像
-            String userNum = sharedPreferences.getString(StringConstant.USER_NUM, "");// 用户号
-            String userSign = sharedPreferences.getString(StringConstant.USER_SIGN, "");// 签名
-            String region = sharedPreferences.getString(StringConstant.REGION, "");// 区域
+            userNum = sharedPreferences.getString(StringConstant.USER_NUM, "");// 用户号
+            userSign = sharedPreferences.getString(StringConstant.USER_SIGN, "");// 签名
+            region = sharedPreferences.getString(StringConstant.REGION, "");// 区域
             textUserName.setText(userName);
             textUserArea.setText(region);
             textUserAutograph.setText(userSign);
@@ -438,19 +440,25 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                 }
                 break;
             case UPDATE_USER:
-                if(resultCode ==1){
-                    Bundle bundle =data.getExtras();
-                    pModel=(personModel)bundle.getSerializable("data");
-      /*              ToastUtils.show_allways(context,pM.getBirthday()+pM.getGender()
-                            +pM.getStarSign()+pM.getNickName())*/;
+                if(resultCode == 1){
+                    Bundle bundle = data.getExtras();
+                    pModel = (personModel)bundle.getSerializable("data");
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
                         ToastUtils.show_allways(context, "网络失败，请检查网络");
                         return;
                     }
                     sendUpdate(pModel);
                 }
-
-
+            case 0x222:
+                if(resultCode == RESULT_OK) {
+                    userNum = sharedPreferences.getString(StringConstant.USER_NUM, "");// 用户号
+                    if(!userNum.equals("")) {
+                        circleView.setVisibility(View.VISIBLE);
+                        textUserId.setVisibility(View.VISIBLE);
+                        textUserId.setText("ID：(" + userNum + ")");
+                    }
+                }
+                break;
         }
     }
 
@@ -746,7 +754,8 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                 jsonObject.put("SexDictId", pM.getGender());
             }
             if(!TextUtils.isEmpty(pM.getBirthday())){
-                jsonObject.put("Birthday",  Long.valueOf(TimeUtils.date2TimeStamp(pM.getBirthday())));
+                String s=pM.getBirthday();
+                jsonObject.put("Birthday",  Long.valueOf(s));
             }
             if(!TextUtils.isEmpty(pM.getStarSign())){
                 jsonObject.put("StarSign", pM.getStarSign());
@@ -776,8 +785,8 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                         if(!TextUtils.isEmpty(pModel.getStarSign())){
                             et.putString(StringConstant.STAR_SIGN, pModel.getStarSign());
                         }
-                        if(!TextUtils.isEmpty(TimeUtils.date2TimeStamp(pModel.getBirthday()))){
-                            et.putString(StringConstant.BIRTHDAY, TimeUtils.date2TimeStamp(pModel.getBirthday()));
+                        if(!TextUtils.isEmpty(pModel.getBirthday())){
+                            et.putString(StringConstant.BIRTHDAY, pModel.getBirthday());
                         }
                         if(!TextUtils.isEmpty(pModel.getGender())){
                             et.putString(StringConstant.GENDERUSR, pModel.getGender());
@@ -793,6 +802,25 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                         }
                         if (!et.commit()) {
                             Log.w("commit", " 数据 commit 失败!");
+                        }
+
+                        if(!userSign.equals(pModel.getUserSign())) {// 签名
+                            userSign = pModel.getUserSign();
+                            textUserAutograph.setText(userSign);
+                        }
+
+                        if(!region.equals(pModel.getRegion())) {// 区域
+                            region = pModel.getRegion();
+                            if(region.equals("")) {
+                                if(GlobalConfig.CityName != null && !GlobalConfig.CityName.equals("null")
+                                        && GlobalConfig.District != null && !GlobalConfig.District.equals("null")) {
+
+                                    region = GlobalConfig.CityName + GlobalConfig.District;
+                                } else {
+                                    region = "北京东城";
+                                }
+                            }
+                            textUserArea.setText(region);
                         }
                     } else {
                         ToastUtils.show_allways(context, "信息修改失败!");
@@ -815,5 +843,6 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
 //        unregisterReceiver(timerBroadcast);
+        isCancelRequest = VolleyRequest.cancelRequest(tag);
     }
 }

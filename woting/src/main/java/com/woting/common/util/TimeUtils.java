@@ -105,7 +105,7 @@ public class TimeUtils {
 
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			return String.valueOf(sdf.parse(date_str).getTime()/1000);
+			return String.valueOf(sdf.parse(date_str).getTime());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -122,7 +122,7 @@ public class TimeUtils {
 			return "";
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat(format);
-		String s=sdf.format(new Date(Long.valueOf(seconds+"000")));
+		String s=sdf.format(new Date(Long.valueOf(seconds)));
 		return s.replaceFirst("-","年").replaceFirst("-","月")+"日";
 	}
 }
