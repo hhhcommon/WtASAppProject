@@ -100,7 +100,11 @@ public class SplashActivity extends Activity {
                                 et.putString(StringConstant.USER_NUM, userNum);
                             }
                             if (gender != null && !gender.equals("")) {
-                                et.putString(StringConstant.GENDERUSR, gender);
+                                if(gender.equals("男")) {
+                                    et.putString(StringConstant.GENDERUSR, "xb001");
+                                } else if(gender.equals("女")) {
+                                    et.putString(StringConstant.GENDERUSR, "xb002");
+                                }
                             }
                             if (region != null && !region.equals("")) {
                                 et.putString(StringConstant.REGION, region);

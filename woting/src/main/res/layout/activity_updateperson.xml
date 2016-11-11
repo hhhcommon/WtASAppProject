@@ -25,385 +25,318 @@
 
     </RelativeLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/app_bg"
-        android:orientation="vertical" >
+        android:scrollbars="none">
 
         <LinearLayout
-            android:id="@+id/lin_zhanghu"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@drawable/person_color"
-            android:clickable="true">
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="19dp"
-                android:gravity="center"
-                android:text="账号"
-                android:layout_centerVertical="true"
-                android:textColor="@color/wt_login_third"
-                android:textSize="@dimen/list_text_size" />
-
-            <TextView
-                android:id="@+id/tv_zhanghu"
+            <RelativeLayout
+                android:id="@+id/lin_zhanghu"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="left|center"
-                android:layout_marginLeft="39dp"
-                android:textColor="@color/up_tv_default" />
+                android:layout_height="48dp"
+                android:background="@drawable/person_color"
+                android:clickable="true">
 
-        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="35dp"
-            android:layout_marginRight="35dp"
-            android:background="@color/gray_z"
-            />
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@drawable/person_color"
-            android:gravity="left|center"
-            android:orientation="horizontal"
-            android:clickable="true"
-           >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="19dp"
-                android:gravity="center"
-                android:text="昵称"
-                android:singleLine="true"
-                android:textColor="@color/wt_login_third"
-                android:textSize="@dimen/list_text_size"/>
-
-            <EditText
-                android:id="@+id/tv_name"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="39dp"
-                android:layout_weight="8"
-                android:maxLines="1"
-                android:maxLength="20"
-                android:textSize="14sp"
-                android:gravity="left|center"
-                android:background="@null"
-                android:hint="请设置您的昵称"
-                android:textColor="@color/up_tv_default"
-                android:textColorHint="@color/gray"
-               />
-
-        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray_z"
-            />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/gray_z"
-            />
-        <LinearLayout
-            android:id="@+id/lin_gender"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@drawable/person_color"
-            android:gravity="left|center"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="19dp"
-                android:gravity="center"
-                android:text="性别"
-                android:textColor="@color/wt_login_third"
-                android:textSize="@dimen/list_text_size"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/lin_gender_man"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="13dp"
-                android:layout_marginLeft="39dp"
-                android:gravity="right|center"
-                android:background="@color/dinglan_orange"
-                android:layout_marginBottom="8dp"
-                >
-
-                <ImageView
+                <TextView
+                    android:id="@+id/text_zh"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:src="@mipmap/wt_img_gender_men"
-                    />
+                    android:layout_marginLeft="19dp"
+                    android:text="账号"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/wt_login_third"
+                    android:textSize="@dimen/list_text_size" />
 
-                 <TextView
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:text="男"
-                     android:textSize="16sp"
-                     android:layout_marginLeft="10dp"
-                     android:layout_marginRight="15dp"
-                     android:textColor="@color/white"
-                     />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="13dp"
-                android:layout_marginLeft="20dp"
-                android:gravity="right|center"
-                android:id="@+id/lin_gender_woman"
-                android:background="@color/up_bg_unselected"
-                android:layout_marginBottom="8dp"
-                >
-
-                <ImageView
+                <TextView
+                    android:id="@+id/tv_zhanghu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:src="@mipmap/wt_img_gender_woman"
-                    />
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/text_zh"
+                    android:layout_marginLeft="39dp"
+                    android:textColor="@color/up_tv_default" />
+
+                <View
+                    style="@style/LineStyle"
+                    android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/person_color">
+
+                <TextView
+                    android:id="@+id/text_nc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="19dp"
+                    android:layout_centerVertical="true"
+                    android:text="昵称"
+                    android:textColor="@color/wt_login_third"
+                    android:textSize="@dimen/list_text_size"/>
+
+                <EditText
+                    android:id="@+id/tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="39dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/text_nc"
+                    android:maxLines="1"
+                    android:maxLength="20"
+                    android:textSize="14sp"
+                    android:background="@null"
+                    android:hint="请设置您的昵称"
+                    android:textColor="@color/up_tv_default"
+                    android:textColorHint="@color/gray"/>
+
+                <View style="@style/ViewStyle"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lin_gender"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/person_color" >
+
+                <View style="@style/ViewStyle"/>
+
+                <TextView
+                    android:id="@+id/text_xb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="19dp"
+                    android:layout_centerVertical="true"
+                    android:text="性别"
+                    android:textColor="@color/wt_login_third"
+                    android:textSize="@dimen/list_text_size"/>
+
+                <TextView
+                    android:id="@+id/lin_gender_man"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:gravity="center"
+                    android:layout_toRightOf="@id/text_xb"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="39dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:drawablePadding="10dp"
+                    android:background="@color/dinglan_orange"
+                    android:text="男"
+                    android:textSize="16sp"
+                    android:drawableLeft="@mipmap/wt_img_gender_men"
+                    android:textColor="@color/white"/>
+
+                <TextView
+                    android:id="@+id/lin_gender_woman"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:text="女"
+                    android:textSize="16sp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:drawablePadding="10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/lin_gender_man"
+                    android:layout_marginLeft="30dp"
+                    android:gravity="center"
+                    android:background="@color/up_bg_unselected"
+                    android:drawableLeft="@mipmap/wt_img_gender_woman"
+                    android:textColor="@color/white"/>
+
+                <View
+                    style="@style/LineStyle"
+                    android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lin_age"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/person_color">
+
+                <TextView
+                    android:id="@+id/text_sr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="19dp"
+                    android:text="生日"
+                    android:textColor="@color/wt_login_third"
+                    android:textSize="@dimen/list_text_size"/>
+
+                <TextView
+                    android:id="@+id/tv_age"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="39dp"
+                    android:hint="请设置您的生日"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/text_sr"
+                    android:textColorHint="@color/gray"
+                    android:textColor="@color/up_tv_default" />
+
+                <View
+                    style="@style/LineStyle"
+                    android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lin_xingzuo"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/person_color">
+
+                <TextView
+                    android:id="@+id/text_xz"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="19dp"
+                    android:text="星座"
+                    android:textColor="@color/wt_login_third"
+                    android:textSize="@dimen/list_text_size"/>
+
+                <TextView
+                    android:id="@+id/tv_xingzuo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="39dp"
+                    android:text="水瓶座"
+                    android:layout_toRightOf="@id/text_xz"
+                    android:textColor="@color/up_tv_default" />
+
+                <View
+                    style="@style/LineStyle"
+                    android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lin_area"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/person_color">
+
+                <TextView
+                    android:id="@+id/text_dq"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="19dp"
+                    android:layout_centerVertical="true"
+                    android:text="地区"
+                    android:textColor="@color/wt_login_third"
+                    android:textSize="@dimen/list_text_size"/>
+
+                <TextView
+                    android:id="@+id/tv_region"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="39dp"
+                    android:hint="请设置您的所在地"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/text_dq"
+                    android:textColorHint="@color/gray"
+                    android:textColor="@color/up_tv_default" />
+
+                <View
+                    style="@style/LineStyle"
+                    android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lin_mail"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/person_color">
+
+                <TextView
+                    android:id="@+id/text_yx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="19dp"
+                    android:text="邮箱"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/wt_login_third"
+                    android:textSize="@dimen/list_text_size" />
+
+                <EditText
+                    android:id="@+id/tv_mail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="39dp"
+                    android:hint="请设置您的邮箱"
+                    android:textColorHint="@color/gray"
+                    android:textColor="#5e6471"
+                    android:background="@null"
+                    android:maxLines="1"
+                    android:maxLength="20"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/text_yx"
+                    android:textSize="14sp"/>
+
+                <View
+                    style="@style/LineStyle"
+                    android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/lin_signature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:background="@drawable/person_color"
+                android:gravity="left|center"
+                android:orientation="horizontal"
+                android:clickable="true">
 
                 <TextView
                     android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="19dp"
+                    android:gravity="center"
+                    android:text="个性签名"
+                    android:singleLine="true"
+                    android:textColor="@color/wt_login_third"
+                    android:textSize="@dimen/list_text_size"/>
+
+                <EditText
+                    android:id="@+id/tv_signature"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="女"
-                    android:textSize="16sp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="15dp"
-                    android:textColor="@color/white"
-                    />
+                    android:minHeight="43dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:layout_marginLeft="11dp"
+                    android:layout_weight="8"
+                    android:gravity="left|center"
+                    android:background="@null"
+                    android:maxLines="1"
+                    android:maxLength="20"
+                    android:textSize="14sp"
+                    android:textColorHint="@color/gray"
+                    android:hint="请设置您的个性签名"/>
 
             </LinearLayout>
 
-
-        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray_z"
-            />
-        <LinearLayout
-            android:id="@+id/lin_age"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@drawable/person_color"
-            android:gravity="left|center"
-            android:orientation="horizontal"
-           >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="19dp"
-                android:gravity="center"
-                android:text="生日"
-                android:textColor="@color/wt_login_third"
-                android:textSize="@dimen/list_text_size"/>
-
-            <TextView
-                android:id="@+id/tv_age"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="39dp"
-                android:layout_weight="1"
-                android:gravity="left|center"
-                android:hint="请设置您的生日"
-                android:textColorHint="@color/gray"
-                android:textColor="@color/up_tv_default" />
-
-
-        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray_z"
-            />
-
-        <LinearLayout
-            android:id="@+id/lin_xingzuo"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@drawable/person_color"
-            android:gravity="left|center"
-            android:orientation="horizontal"
-         >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="19dp"
-                android:gravity="center"
-                android:text="星座"
-                android:textColor="@color/wt_login_third"
-                android:textSize="@dimen/list_text_size"/>
-
-            <TextView
-                android:id="@+id/tv_xingzuo"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="39dp"
-                android:layout_weight="1"
-                android:gravity="left|center"
-                android:text="水瓶座"
-                android:textColor="@color/up_tv_default" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginRight="13dp"
-                android:gravity="right|center" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/live_more"
-                    android:visibility="gone"
-                    />
-            </LinearLayout>
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray_z"
-            />
-        <LinearLayout
-            android:id="@+id/lin_area"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@drawable/person_color"
-            android:gravity="left|center"
-            android:orientation="horizontal"
-            android:clickable="true"
-           >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="19dp"
-                android:gravity="center"
-                android:text="地区"
-                android:textColor="@color/wt_login_third"
-                android:textSize="@dimen/list_text_size"/>
-
-            <TextView
-                android:id="@+id/tv_region"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="39dp"
-                android:layout_weight="1"
-                android:gravity="left|center"
-                android:hint="请设置您的所在地"
-                android:textColorHint="@color/gray"
-                android:textColor="@color/up_tv_default" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray_z"
-            />
-        <LinearLayout
-        android:id="@+id/lin_mail"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@drawable/person_color"
-        android:clickable="true">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="19dp"
-            android:gravity="center"
-            android:text="邮箱"
-            android:layout_centerVertical="true"
-            android:textColor="@color/wt_login_third"
-            android:textSize="@dimen/list_text_size" />
-
-        <EditText
-            android:id="@+id/tv_mail"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="left|center"
-            android:layout_marginLeft="39dp"
-            android:hint="请设置您的邮箱"
-            android:textColorHint="@color/gray"
-            android:textColor="#5e6471"
-            android:background="@null"
-            android:maxLines="1"
-            android:maxLength="20"
-            android:textSize="14sp"
-            />
-
-    </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray_z"
-            />
-        <LinearLayout
-            android:id="@+id/lin_signature"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="48dp"
-            android:background="@drawable/person_color"
-            android:gravity="left|center"
-            android:orientation="horizontal"
-            android:clickable="true">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="19dp"
-                android:gravity="center"
-                android:text="个性签名"
-                android:singleLine="true"
-                android:textColor="@color/wt_login_third"
-                android:textSize="@dimen/list_text_size"/>
-
-            <EditText
-                android:id="@+id/tv_signature"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:minHeight="43dp"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
-                android:layout_marginLeft="11dp"
-                android:layout_weight="8"
-                android:gravity="left|center"
-                android:background="@null"
-                android:maxLines="1"
-                android:maxLength="20"
-                android:textSize="14sp"
-                android:textColorHint="@color/gray"
-                android:hint="请设置您的个性签名"
-                />
-
-        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray_z"
-            />
-
-    </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

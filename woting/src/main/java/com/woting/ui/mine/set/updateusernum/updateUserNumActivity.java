@@ -1,4 +1,4 @@
-package com.woting.ui.mine.set.updateUserNumActivity;
+package com.woting.ui.mine.set.updateusernum;
 
 import android.app.Dialog;
 import android.content.SharedPreferences;
@@ -31,13 +31,12 @@ import org.json.JSONObject;
 public class updateUserNumActivity extends AppBaseActivity implements View.OnClickListener {
     private EditText et_UsrNum;
     private Button btn_Confirm;
+    private TextView tv_desc;
     private String userNum;    // 用户输入的用户号码
     private Dialog confirmDialog;
-    private TextView tv_desc;
-    private String tag = "UPDATE_USRNUM_VOLLEY_REQUEST_CANCEL_TAG";
-    private boolean isCancelRequest;
     private Dialog dialog;
-
+    private String tag = "UPDATE_USER_NUM_VOLLEY_REQUEST_CANCEL_TAG";
+    private boolean isCancelRequest;
 
     @Override
     protected int setViewId() {
@@ -59,12 +58,12 @@ public class updateUserNumActivity extends AppBaseActivity implements View.OnCli
     }
 
     private void initDialog() {
-        View dialog1 = LayoutInflater.from(context).inflate(R.layout.dialog_usernumber, null);
+        View dialog1 = LayoutInflater.from(this).inflate(R.layout.dialog_usernumber, null);
         dialog1.findViewById(R.id.tv_cancel).setOnClickListener(this);
         dialog1.findViewById(R.id.tv_confirm).setOnClickListener(this);
 
         tv_desc=(TextView)dialog1.findViewById(R.id.tv_desc);
-        confirmDialog = new Dialog(context, R.style.MyDialog);
+        confirmDialog = new Dialog(this, R.style.MyDialog);
         confirmDialog.setContentView(dialog1);
         confirmDialog.setCanceledOnTouchOutside(true);
         confirmDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
@@ -82,15 +81,11 @@ public class updateUserNumActivity extends AppBaseActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
-            ToastUtils.show_allways(context, "网络失败，请检查网络");
-            return;
-        }
         switch (v.getId()) {
             case R.id.btn_confirm:      // 确定修改
                 if (isComplete()) {
                     //呼出对话框
-                    tv_desc.setText("用户号是账号的唯一凭证，只能修改一次，请再次确认.\n\n用户号"+userNum);
+                    tv_desc.setText("用户号是账号的唯一凭证,只能修改一次.\n\n请再次确认,用户号:"+userNum);
                     confirmDialog.show();
                     return;
                 }else{

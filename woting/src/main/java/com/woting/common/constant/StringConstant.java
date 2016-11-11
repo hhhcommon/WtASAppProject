@@ -21,7 +21,7 @@ public class StringConstant {
     public static final String USER_SIGN = "UserSign";// 用户签名
     public static final String STAR_SIGN = "StarSign";// 用户星座
     public static final String AGE = "age";// 年龄
-	public static final String NICK_NAME = "nick_Name";// 年龄
+	public static final String NICK_NAME = "nick_Name";// 昵称
 
 
 	/*

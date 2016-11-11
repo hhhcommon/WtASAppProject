@@ -24,6 +24,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -64,6 +65,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 个人信息主页
@@ -72,14 +75,13 @@ import java.io.File;
  */
 public class MineActivity extends BaseActivity implements OnClickListener {
     private SharedPreferences sharedPreferences = BSApplication.SharedPreferences;
+    private personModel pModel;
 
     private final int TO_GALLERY = 1;           // 标识 打开系统图库
     private final int TO_CAMERA = 2;            // 标识 打开系统照相机
     private final int PHOTO_REQUEST_CUT = 7;    // 标识 跳转到图片裁剪界面
     private final int UPDATE_USER=3;            // 标识 跳转到修改个人信息界面
-
     private int imageNum;
-    private boolean isFirst = true;             // 第一次加载界面
 
     private String returnType;
     private String miniUri;
@@ -113,9 +115,10 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     private ImageView imageToggle;              // 流量提醒
     private ImageView imageHead;                // 用户头像
 
-    private String tag = "UPDATE_PERSON_VOLLEY_REQUEST_CANCEL_TAG";
+    private String tag = "PERSON_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
-    private personModel pModel;
+    private boolean isFirst = true;             // 第一次加载界面
+    private boolean isUpdate;                   // 个人资料有改动
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -131,8 +134,24 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         // 获取数据存储对象
         sharedPreferences = BSApplication.SharedPreferences;
         imageDialog();
-
         setView();
+        setType();
+    }
+
+    private void setType() {
+        String a = android.os.Build.VERSION.RELEASE;
+        Log.e("系统版本号", a + "");
+        Log.e("系统版本号截取", a.substring(0, a.indexOf(".")) + "");
+        boolean v = false;
+        if (Integer.parseInt(a.substring(0, a.indexOf("."))) >= 5) {
+            v = true;
+        }
+        if (v) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        //透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    //透明导航栏
+        }else{
+        }
+
     }
 
     // 登陆状态下 用户设置头像对话框
@@ -724,65 +743,108 @@ public class MineActivity extends BaseActivity implements OnClickListener {
 //            }
 //        }
 //    };
+
+    String nickName;
+    String sign;
+    String gender;
+    String birthday;
+    String starSign;
+    String email;
+
+    // 判断个人资料是否有修改过  有则将数据提交服务器
     private void sendUpdate(personModel pM) {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            if(!TextUtils.isEmpty(pM.getNickName())){
-                jsonObject.put("NickName", pM.getNickName());
+            nickName = pM.getNickName();
+            if(!nickName.equals(sharedPreferences.getString(StringConstant.NICK_NAME, ""))) {
+                jsonObject.put("NickName", nickName);
+                isUpdate = true;
             }
-            if(!TextUtils.isEmpty(pM.getUserSign())){
-                jsonObject.put("UserSign", pM.getUserSign());
+
+            sign = pM.getUserSign();
+            if(!sign.equals(sharedPreferences.getString(StringConstant.USER_SIGN, ""))) {
+                jsonObject.put("UserSign", sign);
+                isUpdate = true;
             }
-            if(!TextUtils.isEmpty(pM.getGender())){
-                jsonObject.put("SexDictId", pM.getGender());
+
+            gender = pM.getGender();
+            Log.v("gender", "gender -- > > " + gender);
+            if(!gender.equals(sharedPreferences.getString(StringConstant.GENDERUSR, "xb001"))) {
+                jsonObject.put("SexDictId", gender);
+                isUpdate = true;
             }
-            if(!TextUtils.isEmpty(pM.getBirthday())){
-                String s=pM.getBirthday();
-                jsonObject.put("Birthday",  Long.valueOf(s));
+
+            birthday = pM.getBirthday();
+            if(!birthday.equals(sharedPreferences.getString(StringConstant.BIRTHDAY, ""))) {
+                jsonObject.put("Birthday",  Long.valueOf(birthday));
+                isUpdate = true;
             }
-            if(!TextUtils.isEmpty(pM.getStarSign())){
-                jsonObject.put("StarSign", pM.getStarSign());
+
+            starSign = pM.getStarSign();
+            if(!starSign.equals(sharedPreferences.getString(StringConstant.STAR_SIGN, ""))){
+                jsonObject.put("StarSign", starSign);
+                isUpdate = true;
             }
-            if(!TextUtils.isEmpty(pM.getEmail())){
-                jsonObject.put("MailAddr", pM.getEmail());
+
+            email = pM.getEmail();
+            if(isEmail(email)) {
+                if(!email.equals(sharedPreferences.getString(StringConstant.EMAIL, ""))){
+                    jsonObject.put("MailAddr", email);
+                    isUpdate = true;
+                }
+            } else {
+                ToastUtils.show_allways(context, "邮箱格式不正确，请重新修改!");
             }
-            //差个地区
+
+            // 差个地区
         } catch (JSONException e) {
             e.printStackTrace();
+            isUpdate = false;
         }
+
+        // 个人资料没有修改过则不需要将数据提交服务器
+        if(!isUpdate) {
+            return ;
+        }
+        isUpdate = false;
+        ToastUtils.show_allways(context, "数据有改动，将数据提交到服务器!");
 
         VolleyRequest.RequestPost(GlobalConfig.updateUserUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
-                if (dialog != null)
-                    dialog.dismiss();
-                if (isCancelRequest)
-                    return;
+                if (dialog != null) dialog.dismiss();
+                if (isCancelRequest) return ;
                 try {
                     String returnType = result.getString("ReturnType");
+                    Log.v("returnType", "returnType -- > > " + returnType);
+
                     if (returnType != null && returnType.equals("1001")) {
                         SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
-                        if(!TextUtils.isEmpty(pModel.getNickName())){
-                            et.putString(StringConstant.NICK_NAME, pModel.getNickName());
+                        if(!nickName.equals(sharedPreferences.getString(StringConstant.NICK_NAME, ""))) {
+                            et.putString(StringConstant.NICK_NAME, nickName);
                         }
-                        if(!TextUtils.isEmpty(pModel.getStarSign())){
-                            et.putString(StringConstant.STAR_SIGN, pModel.getStarSign());
+                        if(!sign.equals(sharedPreferences.getString(StringConstant.USER_SIGN, ""))) {
+                            et.putString(StringConstant.USER_SIGN, sign);
                         }
-                        if(!TextUtils.isEmpty(pModel.getBirthday())){
-                            et.putString(StringConstant.BIRTHDAY, pModel.getBirthday());
+                        if(!gender.equals(sharedPreferences.getString(StringConstant.GENDERUSR, ""))) {
+                            et.putString(StringConstant.GENDERUSR, gender);
                         }
-                        if(!TextUtils.isEmpty(pModel.getGender())){
-                            et.putString(StringConstant.GENDERUSR, pModel.getGender());
+                        if(!birthday.equals(sharedPreferences.getString(StringConstant.BIRTHDAY, ""))) {
+                            et.putString(StringConstant.BIRTHDAY, birthday);
                         }
-                        if(!TextUtils.isEmpty(pModel.getEmail())){
-                            et.putString(StringConstant.EMAIL, pModel.getEmail());
+                        if(!starSign.equals(sharedPreferences.getString(StringConstant.STAR_SIGN, ""))){
+                            et.putString(StringConstant.STAR_SIGN, starSign);
                         }
-                        if(!TextUtils.isEmpty(pModel.getUserSign())){
-                            et.putString(StringConstant.USER_SIGN, pModel.getUserSign());
+                        if(isEmail(email)) {
+                            if(!email.equals(sharedPreferences.getString(StringConstant.EMAIL, ""))){
+                                et.putString(StringConstant.EMAIL, email);
+                            }
                         }
-                        if(!TextUtils.isEmpty(pModel.getRegion())){
+
+                        if(!TextUtils.isEmpty(pModel.getRegion())) {
                             et.putString(StringConstant.REGION, pModel.getRegion());
                         }
+
                         if (!et.commit()) {
                             Log.w("commit", " 数据 commit 失败!");
                         }
@@ -821,6 +883,12 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         });
     }
 
+    // 验证邮箱的方法
+    private boolean isEmail(String str) {
+        Pattern pattern = Pattern.compile("^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$"); // 验证邮箱格式
+        Matcher matcher = pattern.matcher(str);
+        return matcher.matches();
+    }
 
     @Override
     protected void onDestroy() {

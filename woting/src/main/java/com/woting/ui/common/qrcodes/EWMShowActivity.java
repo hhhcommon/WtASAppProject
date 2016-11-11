@@ -11,16 +11,18 @@ import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.helper.CreateQRImageHelper;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.ui.baseactivity.BaseActivity;
-import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
 import com.woting.ui.common.model.GroupInfo;
+import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
 
 /**
  * 展示二维码
+ *
  * @author 辛龙
- * 2016年4月28日
+ *         2016年4月28日
  */
 public class EWMShowActivity extends BaseActivity implements OnClickListener {
     private ImageView imageEwm;
@@ -58,7 +60,7 @@ public class EWMShowActivity extends BaseActivity implements OnClickListener {
         textName = (TextView) findViewById(R.id.name);
         textNews = (TextView) findViewById(R.id.news);
 
-        if(getIntent() != null) {
+        if (getIntent() != null) {
             String image = getIntent().getStringExtra("image");
             String news = getIntent().getStringExtra("news");
             String name = getIntent().getStringExtra("name");
@@ -84,9 +86,11 @@ public class EWMShowActivity extends BaseActivity implements OnClickListener {
         }
         if (imageUrl != null && !imageUrl.equals("null") && !imageUrl.trim().equals("")) {
             if (!imageUrl.startsWith("http:")) {
-                imageUrl = GlobalConfig.imageurl + imageUrl;
+                imageUrl = AssembleImageUrlUtils.assembleImageUrl150(GlobalConfig.imageurl + imageUrl);
             }
             Picasso.with(context).load(imageUrl.replace("\\/", "/")).resize(100, 100).centerCrop().into(imageHead);
+        } else {
+            imageHead.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_hy));
         }
         if (bmp == null) {
             bmp = BitmapUtils.readBitMap(context, R.mipmap.ewm);
@@ -105,6 +109,6 @@ public class EWMShowActivity extends BaseActivity implements OnClickListener {
             bmp.recycle();
             bmp = null;
         }
-        setContentView(R.layout.activity_null);
-    }
+    setContentView(R.layout.activity_null);
+}
 }
