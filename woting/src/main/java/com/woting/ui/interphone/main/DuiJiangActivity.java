@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,17 +19,17 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 import com.woting.R;
-import com.woting.ui.interphone.chat.fragment.ChatFragment;
-import com.woting.ui.interphone.group.creatgroup.CreateGroupActivity;
-import com.woting.ui.interphone.find.main.FindActivity;
-import com.woting.ui.interphone.linkman.fragment.LinkManFragment;
-import com.woting.ui.interphone.notify.activity.NotifyNewsActivity;
-import com.woting.ui.common.login.LoginActivity;
-import com.woting.ui.common.scanning.activity.CaptureActivity;
-import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.common.application.BSApplication;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.ToastUtils;
+import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
+import com.woting.ui.common.login.LoginActivity;
+import com.woting.ui.common.scanning.activity.CaptureActivity;
+import com.woting.ui.interphone.chat.fragment.ChatFragment;
+import com.woting.ui.interphone.find.main.FindActivity;
+import com.woting.ui.interphone.group.creatgroup.CreateGroupActivity;
+import com.woting.ui.interphone.linkman.fragment.LinkManFragment;
+import com.woting.ui.interphone.notify.activity.NotifyNewsActivity;
 
 import java.util.ArrayList;
 
@@ -38,8 +39,7 @@ import java.util.ArrayList;
  * 邮箱：645700751@qq.com
  */
 public class DuiJiangActivity extends FragmentActivity {
-	private static TextView view1;
-	private static TextView view2;
+	private static TextView view1,view2;
 	private ArrayList<Fragment> fragmentList;
 	private LinearLayout lin_more;
 	private SharedPreferences sharedPreferences= BSApplication.SharedPreferences;
@@ -55,6 +55,25 @@ public class DuiJiangActivity extends FragmentActivity {
 		InitTextView();		// 初始化视图
 		InitViewPager();	// 初始化ViewPager
 		dialog(); 			// 初始化功能弹出框
+		setType();          // 适配顶栏样式
+	}
+
+	// 适配顶栏样式
+	private void setType() {
+		String a = android.os.Build.VERSION.RELEASE;
+		Log.e("系统版本号", a + "");
+		Log.e("系统版本号截取", a.substring(0, a.indexOf(".")) + "");
+		boolean v = false;
+		if (Integer.parseInt(a.substring(0, a.indexOf("."))) >= 5) {
+			v = true;
+		}
+		TextView tv_main= (TextView) findViewById(R.id.tv_main);
+		if (v) {
+
+			tv_main.setVisibility(View.VISIBLE);
+		}else{
+			tv_main.setVisibility(View.GONE);
+		}
 	}
 
 	/*

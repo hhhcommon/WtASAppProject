@@ -65,7 +65,7 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
     private String Month;
     private String Day;
     private TextView tv_age;
-    private TextView tv_xingzuo;
+    private TextView tv_xing_zuo;
     private LoopView pick_Province;
     private LoopView pick_City;
     private Dialog dialog;
@@ -116,7 +116,7 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
 
         // 星座
         starSign=BSApplication.SharedPreferences.getString(StringConstant.STAR_SIGN, "");
-        tv_xingzuo.setText(starSign);
+        tv_xing_zuo.setText(starSign);
 
         // 地区
         region=BSApplication.SharedPreferences.getString(StringConstant.REGION, "");
@@ -147,7 +147,7 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
         textAccount  = (TextView) findViewById(R.id.tv_zhanghu);
         textName = (EditText) findViewById(R.id.tv_name);
         tv_age=(TextView)findViewById(R.id.tv_age);
-        tv_xingzuo=(TextView)findViewById(R.id.tv_xingzuo);
+        tv_xing_zuo=(TextView)findViewById(R.id.tv_xingzuo);
         tv_region=(TextView)findViewById(R.id.tv_region);
         tv_mail=(EditText)findViewById(R.id.tv_mail);
         tv_signature=(EditText)findViewById(R.id.tv_signature);
@@ -192,7 +192,7 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
     private void saveData() {
         nickName=textName.getText().toString().trim();
         //birthday已经有值了
-        starSign=tv_xingzuo.getText().toString();
+        starSign=tv_xing_zuo.getText().toString();
         region=tv_region.getText().toString().trim();
         Email=tv_mail.getText().toString().trim();
         userSign=tv_signature.getText().toString().trim();
@@ -389,7 +389,7 @@ public class UpdatePersonActivity extends BaseActivity implements OnClickListene
                 String Constellation=DateUtil.getConstellation(Integer.valueOf(Month.substring(0,Month.length()-1).trim()),
                         Integer.valueOf(Day.substring(0,Day.length()-1).trim()));
 
-                tv_xingzuo.setText(Constellation);
+                tv_xing_zuo.setText(Constellation);
                 birthday=Year+Month+Day;
                 tv_age.setText(birthday);
 

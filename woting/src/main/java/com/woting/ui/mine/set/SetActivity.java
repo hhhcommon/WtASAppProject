@@ -36,7 +36,7 @@ import com.woting.ui.mine.set.downloadposition.DownloadPositionActivity;
 import com.woting.ui.mine.set.help.HelpActivity;
 import com.woting.ui.mine.set.preference.activity.PreferenceActivity;
 import com.woting.ui.mine.set.update.UpdateManager;
-import com.woting.ui.mine.set.updateUserNumActivity.updateUserNumActivity;
+import com.woting.ui.mine.set.updateusernum.updateUserNumActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;

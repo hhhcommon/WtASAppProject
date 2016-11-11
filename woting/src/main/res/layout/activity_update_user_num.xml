@@ -47,14 +47,12 @@
             android:gravity="left|center"
             android:background="@drawable/bg_edittext_normal">
 
-            <TextView
-                android:id="@+id/tv_phone"
-                android:layout_width="60dp"
+            <ImageView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="@color/BLACK"
                 android:layout_marginLeft="10dp"
-                android:text="用户号"/>
+                android:layout_marginRight="12dp"
+                android:src="@mipmap/img_username" />
 
             <EditText
                 android:id="@+id/edit_usr_num"
@@ -62,7 +60,6 @@
                 android:layout_height="match_parent"
                 android:gravity="left|center"
                 android:hint="请输入您要使用的用户号"
-                android:layout_marginLeft="20dp"
                 android:digits="0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@."
                 android:maxLength="18"
                 android:inputType="date"
