@@ -170,6 +170,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 	public static int timerService; // 当前节目播放剩余时间长度
 	private static long currPosition=-1;//当前的播放时间
 	private static Boolean PlayFlag=false; //是否首次播放的控制
+	private RelativeLayout rv_details;
+	private TextView tv_details_flag;
+	private Boolean details_flag=false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -231,6 +234,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		image_liu = (ImageView)headView.findViewById(R.id.image_liu);
 		Bitmap bmp1 = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
 		image_liu.setImageBitmap(bmp1);
+		tv_details_flag=(TextView)headView.findViewById(R.id.tv_details_flag); // 展开或者隐藏按钮
+        rv_details=(RelativeLayout)headView.findViewById(R.id.rv_details);    // 节目详情布局
+
 		lin_time = (LinearLayout) headView.findViewById(R.id.lin_time);
 		lin_left = (LinearLayout) headView.findViewById(R.id.lin_left);
 		tv_name = (TextView) headView.findViewById(R.id.tv_name);
@@ -264,6 +270,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		lin_VoiceSearch.setOnClickListener(this);
 		lin_download.setOnClickListener(this);
 		lin_share.setOnClickListener(this);
+		tv_details_flag.setOnClickListener(this);
 
 		imageView_voice.setOnTouchListener(new OnTouchListener() {
 			@Override
@@ -648,6 +655,18 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				break;
 			case R.id.lin_left:
 				playLast();
+				break;
+			case R.id.tv_details_flag:
+			    if(details_flag==false){
+					details_flag=true;
+					tv_details_flag.setText("隐藏");
+					rv_details.setVisibility(View.VISIBLE);
+				}else{
+					details_flag=false;
+					tv_details_flag.setText("显示");
+					rv_details.setVisibility(View.GONE);
+				}
+
 				break;
 			case R.id.lin_center:
 				enterCenter();

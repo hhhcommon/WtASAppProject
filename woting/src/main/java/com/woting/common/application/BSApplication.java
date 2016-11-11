@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.umeng.socialize.PlatformConfig;
+import com.woting.common.config.GlobalConfig;
 import com.woting.common.config.SocketClientConfig;
 import com.woting.common.constant.KeyConstant;
 import com.woting.common.helper.CommonHelper;
@@ -38,6 +39,7 @@ public class BSApplication extends Application {
     private static Intent Socket, record, voicePlayer, Subclass, download, Location, Notification;
     public static SocketClientConfig scc;
     public static SharedPreferences SharedPreferences;
+    private ArrayList<String> staticFacesList;
 
     @Override
     public void onCreate() {
@@ -47,6 +49,7 @@ public class BSApplication extends Application {
         queues = Volley.newRequestQueue(this);
         InitThird();                        //第三方使用的相关方法
         PhoneMessage.getPhoneInfo(instance);//获取手机信息
+        initStaticFaces();                  //读取assets里的图片资源
 
         List<String> _l = new ArrayList<String>();//其中每个间隔要是0.5秒的倍数
         _l.add("INTE::500");                 //第1次检测到未连接成功，隔0.5秒重连
@@ -81,6 +84,24 @@ public class BSApplication extends Application {
 
     public static Context getAppContext() {
         return instance;
+    }
+
+    private void initStaticFaces() {
+        try {
+            staticFacesList = new ArrayList<String>();
+            String[] faces = getAssets().list("face/png");
+            //将Assets中的表情名称转为字符串一一添加进staticFacesList
+            for (int i = 0; i < faces.length; i++) {
+                staticFacesList.add(faces[i]);
+            }
+            //去掉删除图片
+            staticFacesList.remove("emotion_del_normal.png");
+            GlobalConfig.staticFacesList=staticFacesList;
+            int a=staticFacesList.size();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
