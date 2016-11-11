@@ -52,6 +52,7 @@ import org.json.JSONTokener;
 
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * 主页
  * 作者：xinlong on 2016/11/6 21:18
@@ -86,11 +87,10 @@ public class MainActivity extends TabActivity implements OnClickListener {
         tabHost = extracted();
         context = this;
         MobclickAgent.openActivityDurationTrack(false);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        //透明状态栏
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    //透明导航栏
         upDataType = 1;    //不需要强制升级
         update();          //获取版本数据
         InitTextView();    //设置界面
+        setType();         //设置顶栏样式
         InitDao();
         tabHost.setCurrentTabByTag("one");
         handleIntent();
@@ -104,6 +104,21 @@ public class MainActivity extends TabActivity implements OnClickListener {
             intent.putExtras(bundle);
             startActivity(intent);
         }
+    }
+
+    private void setType() {
+        String a = android.os.Build.VERSION.RELEASE;
+        Log.e("系统版本号", a + "");
+        Log.e("系统版本号截取", a.substring(0, a.indexOf(".")) + "");
+        boolean v = false;
+        if (Integer.parseInt(a.substring(0, a.indexOf("."))) >= 5) {
+            v = true;
+        }
+        if (v) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        //透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    //透明导航栏
+        }
+
     }
 
     //初始化数据库并且发送获取地理位置的请求
@@ -381,7 +396,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                     UpdateDialog();
                     upDataDialog.show();
                 }
-            }else{
+            } else {
                 Log.v("检查版本更新", "已经是最新版本");
 //                ToastUtils.show_allways(context, "已经是最新版本");
             }

@@ -224,9 +224,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                 } catch (JSONException e1) {
                     e1.printStackTrace();
                 }
-                if (ReturnType != null && ReturnType.equals("1001")) {
                     if (ReturnType != null && ReturnType.equals("1001")) {
-                        ToastUtils.show_allways(context, "登陆成功");
                         Editor et = BSApplication.SharedPreferences.edit();
                         et.putString(StringConstant.ISLOGIN, "true");
                         et.putString(StringConstant.PERSONREFRESHB, "true");
@@ -349,7 +347,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         }
                     }
                 }
-            }
 
             @Override
             protected void requestError(VolleyError error) {
@@ -408,7 +405,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                     e1.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
-                    ToastUtils.show_allways(context, "登陆成功");
                     Editor et = BSApplication.SharedPreferences.edit();
                     et.putString(StringConstant.ISLOGIN, "true");
                     et.putString(StringConstant.PERSONREFRESHB, "true");

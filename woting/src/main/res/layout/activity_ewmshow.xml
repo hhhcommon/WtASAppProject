@@ -73,8 +73,7 @@
                                 android:id="@+id/image"
                                 android:layout_width="45dp"
                                 android:layout_height="45dp"
-                                android:scaleType="centerCrop"
-                                android:src="@mipmap/wt_image_tx_hy"/>
+                                android:scaleType="centerCrop"/>
 
                             <ImageView
                                 android:layout_width="45dp"

@@ -444,7 +444,7 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
         <activity
-            android:name="com.woting.ui.mine.set.updateUserNumActivity.updateUserNumActivity"
+            android:name="com.woting.ui.mine.set.updateusernum.updateUserNumActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />

@@ -24,6 +24,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -133,8 +134,24 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         // 获取数据存储对象
         sharedPreferences = BSApplication.SharedPreferences;
         imageDialog();
-
         setView();
+        setType();
+    }
+
+    private void setType() {
+        String a = android.os.Build.VERSION.RELEASE;
+        Log.e("系统版本号", a + "");
+        Log.e("系统版本号截取", a.substring(0, a.indexOf(".")) + "");
+        boolean v = false;
+        if (Integer.parseInt(a.substring(0, a.indexOf("."))) >= 5) {
+            v = true;
+        }
+        if (v) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        //透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    //透明导航栏
+        }else{
+        }
+
     }
 
     // 登陆状态下 用户设置头像对话框
