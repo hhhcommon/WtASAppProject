@@ -327,7 +327,7 @@ public class UpdatePersonActivity extends BaseActivity implements
     private void saveData() {
         nickName = textName.getText().toString().trim();// 昵称
         starSign = tv_xingzuo.getText().toString();// 星座
-        region = tv_region.getText().toString().trim();// 地区
+       // region = tv_region.getText().toString().trim();// 地区
         Email = tv_mail.getText().toString().trim();// 邮箱
         userSign = tv_signature.getText().toString().trim();// 签名
 
@@ -436,9 +436,9 @@ public class UpdatePersonActivity extends BaseActivity implements
         pick_Month.setInitPosition(4);
         pick_Day.setInitPosition(24);
 
-        pick_Year.setTextSize(25);
-        pick_Month.setTextSize(25);
-        pick_Day.setTextSize(25);
+        pick_Year.setTextSize(20);
+        pick_Month.setTextSize(20);
+        pick_Day.setTextSize(20);
 
         dateDialog = new Dialog(context, R.style.MyDialog);
         // 从底部上升到一个位置
@@ -525,8 +525,8 @@ public class UpdatePersonActivity extends BaseActivity implements
 
         pick_Province.setInitPosition(4);
 
-        pick_Province.setTextSize(25);
-        pick_City.setTextSize(25);
+        pick_Province.setTextSize(15);
+        pick_City.setTextSize(15);
 //      TextView tv_confirm = (TextView) dialog.findViewById(R.id.tv_confirm);
 //      TextView tv_cancel = (TextView) dialog.findViewById(R.id.tv_cancel);
         cityDialog = new Dialog(context, R.style.MyDialog);
@@ -547,7 +547,10 @@ public class UpdatePersonActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 // 打印结果
-                ToastUtils.show_allways(context,TempMap.get(provinceList.get(ProvinceIndex)).get(CityIndex).getCatalogId());
+                //ToastUtils.show_allways(context,TempMap.get(provinceList.get(ProvinceIndex)).get(CityIndex).getCatalogId());
+                region=TempMap.get(provinceList.get(ProvinceIndex)).get(CityIndex).getCatalogId();
+                tv_region.setText(provinceList.get(ProvinceIndex)+" "+TempMap.get(provinceList.get(ProvinceIndex)).get(CityIndex).getCatalogName());
+                cityDialog.dismiss();
             }
         });
 
