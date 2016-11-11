@@ -4,6 +4,7 @@ import com.woting.ui.home.player.main.model.LanguageSearchInside;
 import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.common.model.UserInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 /**
  * GlobalConfig
@@ -17,6 +18,8 @@ public class GlobalConfig {
     public static String CityName;
     public static String District;
     public static String AdCode;
+
+    public static ArrayList<String> staticFacesList;   //从Asset中取出的表情list
     // 网络情况 1为成功WiFi已连接，2为cmnet，3为cmwap，4为ctwap， -1为网络未连接
     public static final int NETWORK_STATE_IDLE = -1;
     public static final int NETWORK_STATE_WIFI = 1;
@@ -241,4 +244,11 @@ public class GlobalConfig {
     public static final String getFavoriteListUrl = baseUrl + "wt/content/getFavoriteList.do";
     //删除喜欢列表
     public static final String delFavoriteListUrl = baseUrl + "wt/content/delFavorites.do";
+    // 获取当前内容的评论列表
+    public static final String getMyCommentListUrl = baseUrl + "wt/discuss/article/getList.do";
+    // 发表评论
+    public static final String pushCommentUrl=baseUrl+"wt/discuss/add.do";
+    // 删除评论
+    public static final String delCommentUrl=baseUrl+"wt/discuss/del.do";
+
 }

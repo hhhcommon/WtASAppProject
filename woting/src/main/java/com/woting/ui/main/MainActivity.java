@@ -94,6 +94,9 @@ public class MainActivity extends TabActivity implements OnClickListener {
         InitDao();
         tabHost.setCurrentTabByTag("one");
         handleIntent();
+     /*   String a = android.os.Build.VERSION.RELEASE;
+        Log.e("系统版本号", a + "");
+        Log.e("系统版本号截取",a.substring(0,a.indexOf("."))  + "");*/
         String first = BSApplication.SharedPreferences.getString(StringConstant.PREFERENCE, "0");//是否是第一次打开偏好设置界面
         if (first != null && first.equals("1")) {
             // 此时已经进行过偏好设置
