@@ -312,11 +312,10 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="48dp"
                     android:layout_marginLeft="19dp"
                     android:gravity="center"
                     android:text="个性签名"
-                    android:singleLine="true"
                     android:textColor="@color/wt_login_third"
                     android:textSize="@dimen/list_text_size"/>
 
@@ -327,12 +326,13 @@
                     android:minHeight="43dp"
                     android:paddingTop="2dp"
                     android:paddingBottom="2dp"
+                    android:paddingRight="10dp"
                     android:layout_marginLeft="11dp"
                     android:layout_weight="8"
                     android:gravity="left|center"
                     android:background="@null"
-                    android:maxLines="1"
-                    android:maxLength="20"
+                    android:maxLines="4"
+                    android:maxLength="81"
                     android:textSize="14sp"
                     android:textColorHint="@color/gray"
                     android:hint="请设置您的个性签名"/>
