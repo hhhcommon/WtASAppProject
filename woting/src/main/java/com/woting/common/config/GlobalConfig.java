@@ -51,19 +51,19 @@ public class GlobalConfig {
     /**
      * socket请求端口
      */
-    public static final int socketport = 15678;
+    public static final int socketport = 16789;
     /**
      * socket请求ip
      */
 //	public static final String socketUrl = "182.92.175.134";//生产服务器地址
-    public static final String socketUrl = "123.56.254.75";//测试服务器地址
-//			public static final String socketUrl = "192.168.1.3";//
+//  public static final String socketUrl = "123.56.254.75";//测试服务器地址
+	public static final String socketUrl = "192.168.5.17";//
     /**
      * http请求总url
      */
 //	public static final String baseUrl = "http://182.92.175.134:808/";//生产服务器地址
-    public static final String baseUrl = "http://123.56.254.75:808/";//测试服务器地址
-//    public static final String baseUrl = "http://192.168.1.3:808/";
+  public static final String baseUrl = "http://123.56.254.75:808/";//测试服务器地址
+//    public static final String baseUrl = "http://192.168.5.17:808/";
 
     /**
      * image请求路径前缀

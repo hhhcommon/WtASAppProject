@@ -40,7 +40,7 @@ public class DownloadTask{
 		mContext = mContexts;
 		this.mFileInfo = mFileInfo;
 		mDao = new ThreadDao(mContext);
-		FID = new FileInfoDao(mContext);
+		FID  = new FileInfoDao(mContext);
 	
 	}
 
@@ -83,7 +83,7 @@ public class DownloadTask{
 				int start = mThreadInfo.getStart() + mThreadInfo.getFinished();
 				connection.setRequestProperty("Range","bytes=" + start + "-" + mThreadInfo.getEnd());
 				// 设置文件写入位置
-				 String name = mFileInfo.getFileName();
+				String name = mFileInfo.getFileName();
 				File file = new File(DownloadService.DOWNLOAD_PATH,name);
 				raf = new RandomAccessFile(file, "rwd");
 				raf.seek(start);

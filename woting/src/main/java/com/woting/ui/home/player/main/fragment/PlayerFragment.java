@@ -25,6 +25,8 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
@@ -47,6 +49,22 @@ import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.StringConstant;
+import com.woting.common.helper.CommonHelper;
+import com.woting.common.util.BitmapUtils;
+import com.woting.common.util.CommonUtils;
+import com.woting.common.util.DialogUtils;
+import com.woting.common.util.ShareUtils;
+import com.woting.common.util.TimeUtils;
+import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.HorizontalListView;
+import com.woting.common.widgetui.MyLinearLayout;
+import com.woting.common.widgetui.xlistview.XListView;
+import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.model.FileInfo;
 import com.woting.ui.download.service.DownloadService;
@@ -60,26 +78,12 @@ import com.woting.ui.home.player.main.model.ShareModel;
 import com.woting.ui.home.player.timeset.activity.TimerPowerOffActivity;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.album.model.ContentInfo;
-import com.woting.common.config.GlobalConfig;
-import com.woting.common.constant.BroadcastConstants;
-import com.woting.common.constant.StringConstant;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
-import com.woting.common.helper.CommonHelper;
-import com.woting.common.util.BitmapUtils;
-import com.woting.common.util.CommonUtils;
-import com.woting.common.util.DialogUtils;
-import com.woting.common.util.ShareUtils;
-import com.woting.common.util.TimeUtils;
-import com.woting.common.util.ToastUtils;
+import com.woting.ui.home.program.comment.CommentActivity;
+import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
 import com.woting.video.TtsPlayer;
 import com.woting.video.VlcPlayer;
 import com.woting.video.VoiceRecognizer;
 import com.woting.video.WtAudioPlay;
-import com.woting.common.widgetui.HorizontalListView;
-import com.woting.common.widgetui.MyLinearLayout;
-import com.woting.common.widgetui.xlistview.XListView;
-import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -119,9 +123,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 	public static TextView time_start;
 	public static TextView time_end;
 	private LinearLayout lin_VoiceSearch;
-	private LinearLayout lin_time;
+	private LinearLayout lin_comment;
 	private static XListView mListView;
 	private static LinearLayout lin_tuijian;
+	private LinearLayout lin_chose;
 	private ImageView image_liu;
 	private static MyLinearLayout rl_voice;
 	private ImageView imageView_voice;
@@ -221,9 +226,27 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		mListView = (XListView) rootView.findViewById(R.id.listView);
 		mListView.setPullLoadEnable(false);
 		mListView.setXListViewListener(this);
+
+		lin_chose = (LinearLayout) rootView.findViewById(R.id.lin_chose);
+		LinearLayout lin_ly_ckzj = (LinearLayout) rootView.findViewById(R.id.lin_ly_ckzj);
+		LinearLayout lin_other = (LinearLayout) rootView.findViewById(R.id.lin_other);
+		LinearLayout lin_ly_ckzb = (LinearLayout) rootView.findViewById(R.id.lin_ly_ckzb);
+		LinearLayout lin_ly_history = (LinearLayout) rootView.findViewById(R.id.lin_ly_history);
+		LinearLayout lin_ly_timeover = (LinearLayout) rootView.findViewById(R.id.lin_ly_timeover);
+		TextView tv_ly_qx = (TextView) rootView.findViewById(R.id.tv_ly_qx);
+		tv_ly_qx.setOnClickListener(this);
+		lin_other.setOnClickListener(this);
+		lin_ly_timeover.setOnClickListener(this);
+		lin_ly_history.setOnClickListener(this);
+		lin_ly_ckzb.setOnClickListener(this);
+		lin_ly_ckzj.setOnClickListener(this);
+
 		headView = LayoutInflater.from(context).inflate(R.layout.headview_fragment_play, null);
 		lin_center = (RelativeLayout) headView.findViewById(R.id.lin_center);
 		lin_tuijian = (LinearLayout) headView.findViewById(R.id.lin_tuijian);
+		lin_comment = (LinearLayout) headView.findViewById(R.id.lin_comment);
+		LinearLayout lin_more = (LinearLayout) headView.findViewById(R.id.lin_more);
+		lin_more.setOnClickListener(this);
 		lin_lukuangtts = (LinearLayout) headView.findViewById(R.id.lin_lukuangtts);
 		lin_like = (LinearLayout) headView.findViewById(R.id.lin_like);
 		img_like = (ImageView) headView.findViewById(R.id.img_like);
@@ -232,12 +255,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		img_news = (ImageView) headView.findViewById(R.id.img_news);
 		img_play = (ImageView) headView.findViewById(R.id.img_play);
 		image_liu = (ImageView)headView.findViewById(R.id.image_liu);
-		Bitmap bmp1 = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
+		Bitmap bmp1 = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_bd);
 		image_liu.setImageBitmap(bmp1);
 		tv_details_flag=(TextView)headView.findViewById(R.id.tv_details_flag); // 展开或者隐藏按钮
         rv_details=(RelativeLayout)headView.findViewById(R.id.rv_details);    // 节目详情布局
-
-		lin_time = (LinearLayout) headView.findViewById(R.id.lin_time);
+		tv_details_flag.setText("  显示  ");
 		lin_left = (LinearLayout) headView.findViewById(R.id.lin_left);
 		tv_name = (TextView) headView.findViewById(R.id.tv_name);
 		seekBar = (SeekBar) headView.findViewById(R.id.seekBar);
@@ -260,11 +282,12 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 	}
 
 	private void setListener() {
-		lin_time.setOnClickListener(this);
+
 		lin_like.setOnClickListener(this);
 		lin_left.setOnClickListener(this);
 		lin_center.setOnClickListener(this);
 		lin_lukuangtts.setOnClickListener(this);
+		lin_comment.setOnClickListener(this);
 		lin_right.setOnClickListener(this);
 		tv_cancel.setOnClickListener(this);
 		lin_VoiceSearch.setOnClickListener(this);
@@ -659,11 +682,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			case R.id.tv_details_flag:
 			    if(details_flag==false){
 					details_flag=true;
-					tv_details_flag.setText("隐藏");
+					tv_details_flag.setText("  隐藏  ");
 					rv_details.setVisibility(View.VISIBLE);
 				}else{
 					details_flag=false;
-					tv_details_flag.setText("显示");
+					tv_details_flag.setText("  显示  ");
 					rv_details.setVisibility(View.GONE);
 				}
 
@@ -684,8 +707,37 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 					stopCurrentTimer();
 				}
 				break;
-			case R.id.lin_time:
+			case R.id.lin_more:
+				if(lin_chose.getVisibility()==View.VISIBLE){
+					linChoseClose();
+				}else{
+					linChoseOpen();
+				}
+			break;
+			case R.id.tv_ly_qx:
+				linChoseClose();
+				break;
+			case R.id.lin_other:
+				linChoseClose();
+				break;
+			case R.id.lin_ly_timeover:
+				linChoseClose();
 				startActivity(new Intent(context, TimerPowerOffActivity.class));
+				break;
+			case R.id.lin_ly_history:
+				linChoseClose();
+				startActivity(new Intent(context, PlayHistoryActivity.class));
+				break;
+			case R.id.lin_ly_ckzb:
+				linChoseClose();
+				ToastUtils.show_allways(context,"查看主播");
+				break;
+			case R.id.lin_ly_ckzj:
+				linChoseClose();
+				ToastUtils.show_allways(context,"查看专辑");
+				break;
+			case R.id.lin_comment:
+				startActivity(new Intent(context, CommentActivity.class));
 				break;
 			case R.id.lin_download:
 				if (GlobalConfig.playerobject != null) {
@@ -803,6 +855,18 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		}
 	}
 
+	private void linChoseClose() {
+		Animation mAnimation = AnimationUtils.loadAnimation(context, R.anim.umeng_socialize_slide_out_from_bottom);
+		lin_chose.setAnimation(mAnimation);
+		lin_chose.setVisibility(View.GONE);
+	}
+
+	private void linChoseOpen() {
+		Animation mAnimation = AnimationUtils.loadAnimation(context, R.anim.umeng_socialize_slide_in_from_bottom);
+		lin_chose.setAnimation(mAnimation);
+		lin_chose.setVisibility(View.VISIBLE);
+	}
+
 	public  static void playLast() {
 		if (num - 1 >= 0) {
 			num = num - 1;
@@ -831,7 +895,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 					e.printStackTrace();
 				}
 				if (Message != null && Message.trim().length() > 0) {
-					img_news.setImageResource(R.mipmap.wt_image_lktts);
+					img_news.setImageResource(R.mipmap.wt_icon_lktts);
 					musicPlay(Message);
 				}
 			}

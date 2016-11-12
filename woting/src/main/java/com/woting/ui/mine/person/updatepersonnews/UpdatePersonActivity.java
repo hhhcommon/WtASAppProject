@@ -350,9 +350,9 @@ public class UpdatePersonActivity extends BaseActivity implements
         pick_Month = (LoopView) dialog.findViewById(R.id.pick_month);
         pick_Day = (LoopView) dialog.findViewById(R.id.pick_day);
 
-        yearList = DateUtil.getYearList();
+        yearList  = DateUtil.getYearList();
         monthList = DateUtil.getMonthList();
-        dateList = DateUtil.getDayList31();
+        dateList  = DateUtil.getDayList31();
 
         pick_Year.setListener(new OnItemSelectedListener() {
             @Override

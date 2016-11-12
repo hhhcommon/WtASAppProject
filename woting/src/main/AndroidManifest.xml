@@ -127,6 +127,15 @@
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
 
+
+        <!--  -->
+        <activity
+            android:name="com.woting.ui.home.program.comment.CommentActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" />
+
+
         <!--  -->
         <activity
             android:name="com.woting.common.widgetui.wheelview.ui.CitiesActivity"

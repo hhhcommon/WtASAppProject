@@ -34,13 +34,13 @@ import com.woting.common.util.CommonUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.MyEditText;
 import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.home.program.comment.adapter.ChatLVAdapter;
 import com.woting.ui.home.program.comment.adapter.ContentNoAdapter;
 import com.woting.ui.home.program.comment.adapter.FaceGVAdapter;
 import com.woting.ui.home.program.comment.adapter.FaceVPAdapter;
 import com.woting.ui.home.program.comment.model.opinion;
-import com.woting.ui.home.program.comment.view.MyEditText;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -37,8 +37,8 @@ public class DownloadService extends Service {
 	public static void workStart(FileInfo fileInfo) {
 		/*		Log.i(TAG, "Start:" + fileInfo.toString());*/
 		// 启动初始化线程
-		String s=fileInfo.getFileName();
-		String s1=fileInfo.getUrl();
+        // String s=fileInfo.getFileName();
+        // String s1=fileInfo.getUrl();
 		new InitThread(fileInfo).start();//http://audio.xmcdn.com/group13/M05/02/9E/wKgDXVbBJY3QZQkmABblyjUSkbI912.m4a
 	}
 
