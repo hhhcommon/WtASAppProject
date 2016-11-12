@@ -106,7 +106,22 @@ public class SplashActivity extends Activity {
                                     et.putString(StringConstant.GENDERUSR, "xb002");
                                 }
                             }
+
+                            /**
+                             * 地区的三种格式
+                             * 1、行政区划\/**市\/市辖区\/**区   或者  行政区划\/**省\/市辖区\/**市
+                             * 2、行政区划\/**特别行政区  港澳台三地区
+                             * 3、行政区划\/**自治区\/通辽市  自治区地区
+                             */
                             if (region != null && !region.equals("")) {
+                                String[] subRegion = region.split("/");
+                                if(subRegion.length > 3) {
+                                    region = subRegion[1] + " " + subRegion[3];
+                                } else if(subRegion.length == 3) {
+                                    region = subRegion[1] + " " + subRegion[2];
+                                } else {
+                                    region = subRegion[1].substring(0, 2);
+                                }
                                 et.putString(StringConstant.REGION, region);
                             }
                             if (birthday != null && !birthday.equals("")) {

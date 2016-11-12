@@ -188,12 +188,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/lin_playhistory"
-                style="@style/PersonAndSetRelativeStyle"
-                android:layout_marginTop="20dp">
+                style="@style/PersonAndSetRelativeStyle">
 
                 <View style="@style/ViewStyle" />
 
@@ -430,7 +430,7 @@
             <RelativeLayout
                 android:id="@+id/lin_set"
                 style="@style/PersonAndSetRelativeStyle"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="40dp"
                 android:layout_marginTop="20dp">
 
                 <View style="@style/ViewStyle"/>
