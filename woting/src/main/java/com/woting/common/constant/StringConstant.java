@@ -59,4 +59,6 @@ public class StringConstant {
 	 * 保存下载界面是否有未展示的下载完成的数据
 	 */
 //	public static final String REFRESHDOWNLOAD="refreshdownload";//
+
+    public static final String FAVORITE_PROGRAM_TYPE = "FavoriteProgramType";// 保存是否已经选择喜欢的节目
 }

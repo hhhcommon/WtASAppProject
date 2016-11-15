@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.woting"
-        minSdkVersion 9
+        minSdkVersion 10
         targetSdkVersion 21
         versionCode 21
         versionName "0.1.0.X.021"
@@ -29,4 +29,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile files('libs/picasso-2.5.2.jar')
+    compile 'com.zhy:flowlayout-lib:1.0.3'
 }

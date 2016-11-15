@@ -74,6 +74,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     private Dialog confirmDialog;
     private String discussId;
     private long time2 = 0;
+    private String mediaType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +91,8 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void handleIntent() {
-        contentId = this.getIntent().getStringExtra("contentid");
+        contentId = this.getIntent().getStringExtra("contentId");
+        mediaType=this.getIntent().getStringExtra("MediaType");
     }
 
     private void handleFace() {
@@ -248,6 +250,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     private void send() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
+            jsonObject.put("MediaType",mediaType);
             jsonObject.put("ContentId", contentId);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -329,8 +332,9 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     private void sendComment(String opinion) {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
+            jsonObject.put("MediaType",mediaType);
             jsonObject.put("ContentId", contentId);
-            jsonObject.put("Opinion", opinion);
+            jsonObject.put("Discuss", opinion);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
+ * 设置用户号  只能设置一次
  * Created by Administrator on 2016/11/9 0009.
  */
 public class updateUserNumActivity extends AppBaseActivity implements View.OnClickListener {
@@ -54,16 +55,15 @@ public class updateUserNumActivity extends AppBaseActivity implements View.OnCli
         btn_Confirm.setOnClickListener(this);
 
         initDialog();
-
     }
 
     private void initDialog() {
-        View dialog1 = LayoutInflater.from(this).inflate(R.layout.dialog_usernumber, null);
+        View dialog1 = LayoutInflater.from(context).inflate(R.layout.dialog_usernumber, null);
         dialog1.findViewById(R.id.tv_cancel).setOnClickListener(this);
         dialog1.findViewById(R.id.tv_confirm).setOnClickListener(this);
 
         tv_desc=(TextView)dialog1.findViewById(R.id.tv_desc);
-        confirmDialog = new Dialog(this, R.style.MyDialog);
+        confirmDialog = new Dialog(context, R.style.MyDialog);
         confirmDialog.setContentView(dialog1);
         confirmDialog.setCanceledOnTouchOutside(true);
         confirmDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
@@ -72,11 +72,7 @@ public class updateUserNumActivity extends AppBaseActivity implements View.OnCli
     // 判断数据是否填写完整
     private boolean isComplete() {
         userNum =et_UsrNum.getText().toString().trim();
-        if ("".equalsIgnoreCase(userNum)) {
-            return false;
-        } else {
-            return true;
-        }
+        return "".equalsIgnoreCase(userNum);
     }
 
     @Override
@@ -84,7 +80,6 @@ public class updateUserNumActivity extends AppBaseActivity implements View.OnCli
         switch (v.getId()) {
             case R.id.btn_confirm:      // 确定修改
                 if (isComplete()) {
-                    //呼出对话框
                     tv_desc.setText("用户号是账号的唯一凭证,只能修改一次.\n\n请再次确认,用户号:"+userNum);
                     confirmDialog.show();
                     return;
@@ -102,7 +97,7 @@ public class updateUserNumActivity extends AppBaseActivity implements View.OnCli
                     dialog = DialogUtils.Dialogph(context, "正在获取数据");
                     send();
                 } else {
-                    ToastUtils.show_short(context, "网络失败，请检查网络");
+                    ToastUtils.show_allways(context, "网络失败，请检查网络");
                 }
                 break;
         }
@@ -119,10 +114,8 @@ public class updateUserNumActivity extends AppBaseActivity implements View.OnCli
         VolleyRequest.RequestPost(GlobalConfig.updateUserUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
-                if (dialog != null)
-                    dialog.dismiss();
-                if (isCancelRequest)
-                    return;
+                if (dialog != null) dialog.dismiss();
+                if (isCancelRequest) return;
                 try {
                     String returnType = result.getString("ReturnType");
                     if (returnType != null && returnType.equals("1001")) {
@@ -148,7 +141,6 @@ public class updateUserNumActivity extends AppBaseActivity implements View.OnCli
                 ToastUtils.showVolleyError(context);
             }
         });
-
     }
 
     // 输入框监听
@@ -176,5 +168,4 @@ public class updateUserNumActivity extends AppBaseActivity implements View.OnCli
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);// 根据 TAG 取消网络请求
     }
-
 }

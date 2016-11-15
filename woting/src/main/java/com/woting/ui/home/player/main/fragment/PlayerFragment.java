@@ -737,7 +737,14 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				ToastUtils.show_allways(context,"查看专辑");
 				break;
 			case R.id.lin_comment:
-				startActivity(new Intent(context, CommentActivity.class));
+				if(!TextUtils.isEmpty(GlobalConfig.playerobject.getContentId())&&!TextUtils.isEmpty(GlobalConfig.playerobject.getMediaType())){
+				Intent intent=new Intent(context, CommentActivity.class);
+				intent.putExtra("contentId",GlobalConfig.playerobject.getContentId());
+				intent.putExtra("MediaType",GlobalConfig.playerobject.getMediaType());
+				startActivity(intent);
+				}else{
+					ToastUtils.show_allways(context,"当前播放的节目的信息有误，无法获取评论列表");
+				}
 				break;
 			case R.id.lin_download:
 				if (GlobalConfig.playerobject != null) {

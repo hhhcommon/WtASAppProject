@@ -228,107 +228,120 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         Editor et = BSApplication.SharedPreferences.edit();
                         et.putString(StringConstant.ISLOGIN, "true");
                         et.putString(StringConstant.PERSONREFRESHB, "true");
-                        JSONObject ui;
                         try {
-                            String u = result.getString("UserInfo");
-                            ui = (JSONObject) new JSONTokener(u).nextValue();
-                            if (ui != null) {
-                                try {
-                                    imageUrl = ui.getString("PortraitMini");
-                                    et.putString(StringConstant.IMAGEURL, imageUrl);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                try {
-                                    returnUserName = ui.getString("UserName");
-                                    et.putString(StringConstant.USERNAME, returnUserName);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                try {
-                                    UserNum = ui.getString("UserNum");
-                                    et.putString(StringConstant.USER_NUM, UserNum);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                try {
-                                    imageUrlBig = ui.getString("PortraitBig");
-                                    et.putString(StringConstant.IMAGEURBIG, imageUrlBig);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                try {
-                                    userId = ui.getString("UserId");
-                                    et.putString(StringConstant.USERID, userId);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                try {
-                                    phoneNumber = ui.getString("PhoneNum");
-                                    et.putString(StringConstant.PHONENUMBER, phoneNumber);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                try {
-                                    gender = ui.getString("Sex");
-                                    et.putString(StringConstant.GENDERUSR, gender);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                try {
-                                    region = ui.getString("Region");
-                                    et.putString(StringConstant.REGION, region);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                try {
-                                    birthday = ui.getString("Birthday");
-                                    et.putString(StringConstant.BIRTHDAY, birthday);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                try {
-                                    age = ui.getString("Age");
-                                    et.putString(StringConstant.AGE, age);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                try {
-                                    starSign = ui.getString("StarSign");
-                                    et.putString(StringConstant.STAR_SIGN, starSign);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                try {
-                                    email = ui.getString("Email");
-                                    et.putString(StringConstant.EMAIL, email);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                try {
-                                    userSign = ui.getString("UserSign");
-                                    et.putString(StringConstant.USER_SIGN, userSign);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                try {
-                                    nickName = ui.getString("NickName");
-                                    et.putString(StringConstant.NICK_NAME, nickName);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                                if (!et.commit()) {
-                                    Log.v("commit", "数据 commit 失败!");
-                                }
-                                context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
-                                context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));// 刷新下载界面
-                                String phoneName = editUserName.getText().toString().trim();
-                                SharePreferenceManager.saveBatchSharedPreference(context, "USER_NAME", "USER_NAME", phoneName);
-                                InterPhoneControl.sendEntryMessage(context);
-                                setResult(1);
-                                finish();
+                            JSONObject ui = (JSONObject) new JSONTokener(result.getString("UserInfo")).nextValue();
+                            try {
+                                imageUrl = ui.getString("PortraitMini");
+                                et.putString(StringConstant.IMAGEURL, imageUrl);
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
+                            try {
+                                returnUserName = ui.getString("UserName");
+                                et.putString(StringConstant.USERNAME, returnUserName);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                UserNum = ui.getString("UserNum");
+                                et.putString(StringConstant.USER_NUM, UserNum);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                imageUrlBig = ui.getString("PortraitBig");
+                                et.putString(StringConstant.IMAGEURBIG, imageUrlBig);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                userId = ui.getString("UserId");
+                                et.putString(StringConstant.USERID, userId);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                phoneNumber = ui.getString("PhoneNum");
+                                et.putString(StringConstant.PHONENUMBER, phoneNumber);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                gender = ui.getString("Sex");
+                                et.putString(StringConstant.GENDERUSR, gender);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                region = ui.getString("Region");
+                                et.putString(StringConstant.REGION, region);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                birthday = ui.getString("Birthday");
+
+                                /**
+                                 * 地区的三种格式
+                                 * 1、行政区划\/**市\/市辖区\/**区
+                                 * 2、行政区划\/**特别行政区  港澳台三地区
+                                 * 3、行政区划\/**自治区\/通辽市  自治区地区
+                                 */
+                                if (region != null && !region.equals("")) {
+                                    String[] subRegion = region.split("/");
+                                    if(subRegion.length > 3) {
+                                        region = subRegion[1] + " " + subRegion[3];
+                                    } else if(subRegion.length == 3) {
+                                        region = subRegion[1] + " " + subRegion[2];
+                                    } else {
+                                        region = subRegion[1].substring(0, 2);
+                                    }
+                                    et.putString(StringConstant.REGION, region);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                age = ui.getString("Age");
+                                et.putString(StringConstant.AGE, age);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                starSign = ui.getString("StarSign");
+                                et.putString(StringConstant.STAR_SIGN, starSign);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                email = ui.getString("Email");
+                                et.putString(StringConstant.EMAIL, email);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                userSign = ui.getString("UserSign");
+                                et.putString(StringConstant.USER_SIGN, userSign);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                nickName = ui.getString("NickName");
+                                et.putString(StringConstant.NICK_NAME, nickName);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            if (!et.commit()) {
+                                Log.v("commit", "数据 commit 失败!");
+                            }
+                            context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
+                            context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));// 刷新下载界面
+                            String phoneName = editUserName.getText().toString().trim();
+                            SharePreferenceManager.saveBatchSharedPreference(context, "USER_NAME", "USER_NAME", phoneName);
+                            InterPhoneControl.sendEntryMessage(context);
+                            setResult(1);
+                            finish();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -408,108 +421,104 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                     Editor et = BSApplication.SharedPreferences.edit();
                     et.putString(StringConstant.ISLOGIN, "true");
                     et.putString(StringConstant.PERSONREFRESHB, "true");
-                    JSONObject ui;
                     try {
-                        String u = result.getString("UserInfo");
-                        ui = (JSONObject) new JSONTokener(u).nextValue();
-                        if (ui != null) {
-                            try {
-                                imageUrl = ui.getString("PortraitMini");
-                                et.putString(StringConstant.IMAGEURL, imageUrl);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                returnUserName = ui.getString("UserName");
-                                et.putString(StringConstant.USERNAME, returnUserName);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                UserNum = ui.getString("UserNum");
-                                et.putString(StringConstant.USER_NUM, UserNum);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                imageUrlBig = ui.getString("PortraitBig");
-                                et.putString(StringConstant.IMAGEURBIG, imageUrlBig);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                userId = ui.getString("UserId");
-                                et.putString(StringConstant.USERID, userId);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                phoneNumber = ui.getString("PhoneNum");
-                                et.putString(StringConstant.PHONENUMBER, phoneNumber);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                gender = ui.getString("Sex");
-                                if(gender.equals("男")) {
-                                    et.putString(StringConstant.GENDERUSR, "xb001");
-                                } else if(gender.equals("女")) {
-                                    et.putString(StringConstant.GENDERUSR, "xb002");
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                region = ui.getString("Region");
-                                et.putString(StringConstant.REGION, region);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                birthday = ui.getString("Birthday");
-                                et.putString(StringConstant.BIRTHDAY, birthday);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                age = ui.getString("Age");
-                                et.putString(StringConstant.AGE, age);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                starSign = ui.getString("StarSign");
-                                et.putString(StringConstant.STAR_SIGN, starSign);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                email = ui.getString("Email");
-                                et.putString(StringConstant.EMAIL, email);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                userSign = ui.getString("UserSign");
-                                et.putString(StringConstant.USER_SIGN, userSign);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                nickName = ui.getString("NickName");
-                                et.putString(StringConstant.NICK_NAME, nickName);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            if (!et.commit()) {
-                                Log.v("commit", "数据 commit 失败!");
-                            }
-                            context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
-                            context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));// 刷新下载界面
-                            InterPhoneControl.sendEntryMessage(context);
-                            setResult(1);
-                            finish();
+                        JSONObject ui = (JSONObject) new JSONTokener(result.getString("UserInfo")).nextValue();
+                        try {
+                            imageUrl = ui.getString("PortraitMini");
+                            et.putString(StringConstant.IMAGEURL, imageUrl);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
+                        try {
+                            returnUserName = ui.getString("UserName");
+                            et.putString(StringConstant.USERNAME, returnUserName);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            UserNum = ui.getString("UserNum");
+                            et.putString(StringConstant.USER_NUM, UserNum);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            imageUrlBig = ui.getString("PortraitBig");
+                            et.putString(StringConstant.IMAGEURBIG, imageUrlBig);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            userId = ui.getString("UserId");
+                            et.putString(StringConstant.USERID, userId);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            phoneNumber = ui.getString("PhoneNum");
+                            et.putString(StringConstant.PHONENUMBER, phoneNumber);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            gender = ui.getString("Sex");
+                            if(gender.equals("男")) {
+                                et.putString(StringConstant.GENDERUSR, "xb001");
+                            } else if(gender.equals("女")) {
+                                et.putString(StringConstant.GENDERUSR, "xb002");
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            region = ui.getString("Region");
+                            et.putString(StringConstant.REGION, region);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            birthday = ui.getString("Birthday");
+                            et.putString(StringConstant.BIRTHDAY, birthday);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            age = ui.getString("Age");
+                            et.putString(StringConstant.AGE, age);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            starSign = ui.getString("StarSign");
+                            et.putString(StringConstant.STAR_SIGN, starSign);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            email = ui.getString("Email");
+                            et.putString(StringConstant.EMAIL, email);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            userSign = ui.getString("UserSign");
+                            et.putString(StringConstant.USER_SIGN, userSign);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            nickName = ui.getString("NickName");
+                            et.putString(StringConstant.NICK_NAME, nickName);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (!et.commit()) {
+                            Log.v("commit", "数据 commit 失败!");
+                        }
+                        context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
+                        context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));// 刷新下载界面
+                        InterPhoneControl.sendEntryMessage(context);
+                        setResult(1);
+                        finish();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

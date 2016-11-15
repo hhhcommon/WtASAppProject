@@ -10,17 +10,24 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.CommonUtils;
+import com.woting.common.util.DialogUtils;
+import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.fragment.PlayerFragment;
@@ -30,13 +37,6 @@ import com.woting.ui.home.search.activity.SearchLikeActivity;
 import com.woting.ui.main.MainActivity;
 import com.woting.ui.mine.favorite.adapter.FavorListAdapter;
 import com.woting.ui.mine.favorite.adapter.FavorListAdapter.favorCheck;
-import com.woting.common.config.GlobalConfig;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
-import com.woting.common.util.CommonUtils;
-import com.woting.common.util.DialogUtils;
-import com.woting.common.util.ToastUtils;
-import com.woting.common.widgetui.xlistview.XListView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,27 +45,40 @@ import org.json.JSONTokener;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 搜索电台界面
+ */
 public class RadioFragment extends Fragment {
 	private FragmentActivity context;
+    protected FavorListAdapter adapter;
+    private SearchPlayerHistoryDao dbDao;
+    private List<RankInfo> SubList;
+    private ArrayList<RankInfo> newList = new ArrayList<>();
+
 	private Dialog dialog;
-	private List<RankInfo> SubList;
-	private ListView mListView;
-	private ArrayList<RankInfo> newList = new ArrayList<>();
-	private View rootView;
-	protected FavorListAdapter adapter;
-	private Intent mIntent;
-	private SearchPlayerHistoryDao dbDao;
+    private View rootView;
+	private XListView mListView;
+
 	protected String searchStr;
 	private String tag = "RADIO_VOLLEY_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
+    private int refreshType = 1;
+    private int page = 1;
+    private int pageSizeNum;
+
+    // 初始化数据库对象
+    private void initDao() {
+        dbDao = new SearchPlayerHistoryDao(context);
+    }
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		context = this.getActivity();
-		//数据变化后广播
-		mIntent = new Intent();
-		mIntent.setAction(SearchLikeActivity.SEARCH_VIEW_UPDATE);
+		context = getActivity();
+
+        IntentFilter mFilter = new IntentFilter();
+        mFilter.addAction(SearchLikeActivity.SEARCH_VIEW_UPDATE);
+        context.registerReceiver(mBroadcastReceiver, mFilter);
 		initDao();
 	}
 
@@ -75,21 +88,36 @@ public class RadioFragment extends Fragment {
 			rootView = inflater.inflate(R.layout.fragment_search_sound, container, false);
 			mListView = (XListView) rootView.findViewById(R.id.listView);
 			mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-			IntentFilter mFilter = new IntentFilter();
-			mFilter.addAction(SearchLikeActivity.SEARCH_VIEW_UPDATE);
-			context.registerReceiver(mBroadcastReceiver, mFilter);
-		}
+            setLoadListener();
+        }
 		return rootView;
 	}
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-	}
+    // 设置加载监听  刷新加载更多加载
+    private void setLoadListener() {
+        mListView.setPullRefreshEnable(true);
+        mListView.setPullLoadEnable(true);
+        mListView.setXListViewListener(new XListView.IXListViewListener() {
+            @Override
+            public void onRefresh() {
+                refreshType = 1;
+                page = 1;
+                sendRequest();
+            }
 
-	private void initDao() {
-		dbDao = new SearchPlayerHistoryDao(context);
-	}
+            @Override
+            public void onLoadMore() {
+                if (page <= pageSizeNum) {
+                    refreshType = 2;
+                    sendRequest();
+                } else {
+                    mListView.stopLoadMore();
+                    mListView.setPullLoadEnable(false);
+                    ToastUtils.show_allways(context, "已经是最后一页了");
+                }
+            }
+        });
+    }
 
 	private void setListener() {
 		adapter.setOnListener(new favorCheck() {
@@ -148,7 +176,7 @@ public class RadioFragment extends Fragment {
 						PlayerFragment.SendTextRequest(newList.get(position - 1).getContentName(),context);
 						context.finish();
 					}  else {
-						ToastUtils.show_short(context, "暂不支持的Type类型");
+						ToastUtils.show_allways(context, "暂不支持的Type类型");
 					}
 				}
 			}
@@ -156,67 +184,82 @@ public class RadioFragment extends Fragment {
 	}
 
 	private void sendRequest(){
+        if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
+            ToastUtils.show_allways(context, "连接网络失败，请检查网络设置!");
+            if(refreshType == 1) {
+                mListView.stopRefresh();
+            } else {
+                mListView.stopLoadMore();
+            }
+            return ;
+        }
 		VolleyRequest.RequestPost(GlobalConfig.getSearchByText, tag, setParam(), new VolleyCallback() {
-			private String ResultList;
-			private String StringSubList;
 			private String ReturnType;
 
 			@Override
 			protected void requestSuccess(JSONObject result) {
-				if (dialog != null) {
-					dialog.dismiss();
-				}
-				if(isCancelRequest){
-					return ;
-				}
+				if (dialog != null) dialog.dismiss();
+				if(isCancelRequest) return ;
+                page++;
 				try {
 					ReturnType = result.getString("ReturnType");
+                    Log.v("ReturnType", "ReturnType -- > > " + ReturnType);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				if (ReturnType != null) {
-					if (ReturnType.equals("1001")) {
-						try {
-							// 获取列表
-							ResultList = result.getString("ResultList");
-							JSONTokener jsonParser = new JSONTokener(ResultList);
-							JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-							StringSubList = arg1.getString("List");
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-						SubList = new Gson().fromJson(StringSubList,new TypeToken<List<RankInfo>>() {}.getType());
-						newList.clear();
-						newList.addAll(SubList);
-						if(adapter == null){
-							adapter = new FavorListAdapter(context, newList);
-							mListView.setAdapter(adapter);
-						}else{
-							adapter.notifyDataSetChanged();
-						}
-						setListener();
-					} else {
-						if (ReturnType.equals("0000")) {
-							ToastUtils.show_short(context, "无法获取相关的参数");
-						} else if (ReturnType.equals("1002")) {
-							ToastUtils.show_short(context, "无此分类信息");
-						} else if (ReturnType.equals("1003")) {
-							ToastUtils.show_short(context, "无法获得列表");
-						} else if (ReturnType.equals("1011")) {
-							ToastUtils.show_short(context, "无数据");
-							mListView.setVisibility(View.GONE);
-						}
-					}
-				} else {
-					ToastUtils.show_short(context, "ReturnType不能为空");
+				if (ReturnType != null && ReturnType.equals("1001")) {
+                    try {
+                        JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
+                        SubList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
+
+                        try {
+                            String allCountString = arg1.getString("AllCount");
+                            String pageSizeString = arg1.getString("pageSize");
+                            if (allCountString != null && !allCountString.equals("") && pageSizeString != null && !pageSizeString.equals("")) {
+                                int allCountInt = Integer.valueOf(allCountString);
+                                int pageSizeInt = Integer.valueOf(allCountString);
+                                if (allCountInt < 10 || pageSizeInt < 10) {
+                                    mListView.stopLoadMore();
+                                    mListView.setPullLoadEnable(false);
+                                } else {
+                                    mListView.setPullLoadEnable(true);
+                                    if (allCountInt % pageSizeInt == 0) {
+                                        pageSizeNum = allCountInt / pageSizeInt;
+                                    } else {
+                                        pageSizeNum = allCountInt / pageSizeInt + 1;
+                                    }
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        if (refreshType == 1) {
+                            newList.clear();
+                        }
+                        newList.addAll(SubList);
+                        if (adapter == null) {
+                            mListView.setAdapter(adapter = new FavorListAdapter(context, newList));
+                        } else {
+                            adapter.notifyDataSetChanged();
+                        }
+                        setListener();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 				}
+
+                if(refreshType == 1) {
+                    mListView.stopRefresh();
+                } else {
+                    mListView.stopLoadMore();
+                }
 			}
 
 			@Override
 			protected void requestError(VolleyError error) {
-				if (dialog != null) {
-					dialog.dismiss();
-				}
+				if (dialog != null) dialog.dismiss();
+                ToastUtils.showVolleyError(context);
 			}
 		});
 	}
@@ -227,6 +270,8 @@ public class RadioFragment extends Fragment {
 			jsonObject.put("MediaType", "RADIO");
 			if(searchStr != null && !searchStr.equals("")){
 				jsonObject.put("SearchStr", searchStr);
+                jsonObject.put("Page", String.valueOf(page));
+                jsonObject.put("PageSize", "10");
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -240,16 +285,11 @@ public class RadioFragment extends Fragment {
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
 			if (action.equals(SearchLikeActivity.SEARCH_VIEW_UPDATE)) {
-				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-					searchStr=intent.getStringExtra("searchStr");
-					if(searchStr!=null&&!searchStr.equals("")){
-						dialog = DialogUtils.Dialogph(context, "通讯中");
-						sendRequest();
-					}else{
-					}
-				} else {
-					ToastUtils.show_allways(context, "网络失败，请检查网络");
-				}
+                searchStr=intent.getStringExtra("searchStr");
+                if(searchStr!=null&&!searchStr.equals("")){
+                    dialog = DialogUtils.Dialogph(context, "通讯中");
+                    sendRequest();
+                }
 			}
 		}
 	};
@@ -275,7 +315,6 @@ public class RadioFragment extends Fragment {
 		newList = null;
 		rootView = null;
 		adapter = null;
-		mIntent = null;
 		searchStr = null;
 		tag = null;
 		if(dbDao != null){
