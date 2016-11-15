@@ -3,6 +3,7 @@
 
     <color name="dinglan_orange_z">#de6300</color>
     <color name="dinglan_orange">#ff6600</color>
+    <color name="dinglan_orange_old">#ffa634</color>
     <color name="dinglan_orange_light">#ffce8f</color>
     <color name="item_common">#F111</color>
     <color name="main_tab_bg">#fff5ef</color>

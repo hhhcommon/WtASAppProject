@@ -33,27 +33,6 @@
                 android:textSize="13sp" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/linear_more"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/setting_bg_color"
-            android:gravity="right|center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="更多"
-                android:textColor="@color/wt_login_third"
-                android:textSize="13sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="18dp"
-                android:src="@mipmap/live_more" />
-        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

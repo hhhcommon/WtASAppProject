@@ -1,6 +1,5 @@
 package com.woting.ui.main;
 
-import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.TabActivity;
 import android.content.BroadcastReceiver;
@@ -8,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
@@ -38,12 +36,12 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.common.favoritetype.FavoriteProgramTypeActivity;
 import com.woting.ui.download.activity.DownloadActivity;
+import com.woting.ui.home.common.model.Catalog;
+import com.woting.ui.home.common.model.CatalogName;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.citylist.dao.CityInfoDao;
-import com.woting.ui.home.program.fenlei.model.Catalog;
-import com.woting.ui.home.program.fenlei.model.CatalogName;
 import com.woting.ui.interphone.main.DuiJiangActivity;
 import com.woting.ui.mine.MineActivity;
 import com.woting.ui.mine.set.update.UpdateManager;
@@ -62,7 +60,7 @@ import java.util.List;
  */
 public class MainActivity extends TabActivity implements OnClickListener {
 
-    private MainActivity context;
+    private static MainActivity context;
     public static TabHost tabHost;
 
     private static ImageView image1;
@@ -96,11 +94,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
         InitDao();
         tabHost.setCurrentTabByTag("one");
         handleIntent();
-     /*   String a = android.os.Build.VERSION.RELEASE;
-        Log.e("系统版本号", a + "");
-        Log.e("系统版本号截取",a.substring(0,a.indexOf("."))  + "");*/
 //        String first = BSApplication.SharedPreferences.getString(StringConstant.PREFERENCE, "0");//是否是第一次打开偏好设置界面
-//        if (first.equals("1")) {
+//        if (first != null && first.equals("1")) {
 //            // 此时已经进行过偏好设置
 //        } else {// 1：第一次进入  其它：其它界面进入
 //            Intent intent = new Intent(this, PreferenceActivity.class);
@@ -115,7 +110,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     private void setType() {
         String a = android.os.Build.VERSION.RELEASE;
         Log.e("系统版本号", a + "");
@@ -477,9 +471,9 @@ public class MainActivity extends TabActivity implements OnClickListener {
          * 主页跳转的4个界面
 		 */
         tabHost.addTab(tabHost.newTabSpec("one").setIndicator("one")
-                .setContent(new Intent(this, DuiJiangActivity.class)));
-        tabHost.addTab(tabHost.newTabSpec("two").setIndicator("two")
                 .setContent(new Intent(this, HomeActivity.class)));
+        tabHost.addTab(tabHost.newTabSpec("two").setIndicator("two")
+                .setContent(new Intent(this, DuiJiangActivity.class)));
         tabHost.addTab(tabHost.newTabSpec("four").setIndicator("four")
                 .setContent(new Intent(this, DownloadActivity.class)));
         tabHost.addTab(tabHost.newTabSpec("five").setIndicator("five")
@@ -487,45 +481,57 @@ public class MainActivity extends TabActivity implements OnClickListener {
     }
 
     public static void change() {
-        tabHost.setCurrentTabByTag("two");
-        image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
-        image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_selected);
-        image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
-        image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+        setViewOne();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.main_lin_1:
-                tabHost.setCurrentTabByTag("one");
-                image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_selected);
-                image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
-                image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
-                image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+                setViewOne();
                 break;
             case R.id.main_lin_2:
-                tabHost.setCurrentTabByTag("two");
-                image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
-                image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_selected);
-                image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
-                image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+                setViewTwo();
                 break;
             case R.id.main_lin_4:
-                tabHost.setCurrentTabByTag("four");
-                image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
-                image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
-                image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_selected);
-                image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+                setViewFour();
                 break;
             case R.id.main_lin_5:
-                tabHost.setCurrentTabByTag("five");
-                image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
-                image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
-                image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
-                image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_selected);
+                setViewFive();
                 break;
         }
+    }
+
+    private static void setViewOne() {
+        tabHost.setCurrentTabByTag("one");
+        image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_selected);
+        image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
+        image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
+        image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+    }
+
+    private void setViewTwo() {
+        tabHost.setCurrentTabByTag("two");
+        image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
+        image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_selected);
+        image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
+        image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+    }
+
+    private void setViewFour() {
+        tabHost.setCurrentTabByTag("four");
+        image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
+        image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
+        image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_selected);
+        image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+    }
+
+    private void setViewFive() {
+        tabHost.setCurrentTabByTag("five");
+        image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
+        image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
+        image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
+        image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_selected);
     }
 
     private TabHost extracted() {

@@ -27,11 +27,11 @@ import java.util.List;
 /**
  * expandableListView适配器
  */
-public class onlineAdapter extends BaseExpandableListAdapter  {
+public class OnLinesAdapter extends BaseExpandableListAdapter  {
 	private Context context;
 	private List<RadioPlay> group;
 
-	public onlineAdapter(Context context, List<RadioPlay> group) {
+	public OnLinesAdapter(Context context, List<RadioPlay> group) {
 		this.context = context;
 		this.group = group;
  	}

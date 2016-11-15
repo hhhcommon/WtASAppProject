@@ -51,7 +51,7 @@ public class GlobalConfig {
     /**
      * socket请求端口
      */
-    public static final int socketport = 16789;
+    public static final int socketport = 15678;
     /**
      * socket请求ip
      */

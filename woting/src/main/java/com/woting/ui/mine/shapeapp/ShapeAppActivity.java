@@ -62,7 +62,7 @@ public class ShapeAppActivity extends BaseActivity implements View.OnClickListen
         setting.setJavaScriptEnabled(true);                               // 支持js
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);    // 解决缓存问题
 
-        String url = "http://www.wotingfm.com/";
+        String url = "http://www.wotingfm.com/download/download.html";
         webView.loadUrl(url);
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -147,7 +147,7 @@ public class ShapeAppActivity extends BaseActivity implements View.OnClickListen
         String shareContentImg = "http://182.92.175.134/img/logo-web.png";
         UMImage image = new UMImage(context, shareContentImg);
 
-        String shareUrl = "http://www.wotingfm.com/";
+        String shareUrl = "http://www.wotingfm.com/download/download.html";
         new ShareAction(ShapeAppActivity.this).setPlatform(Platform).withMedia(image)
                 .withText(shareDesc).withTitle(shareName).withTargetUrl(shareUrl).share();
     }

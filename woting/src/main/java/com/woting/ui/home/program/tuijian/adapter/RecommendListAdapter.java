@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.BitmapUtils;
@@ -55,27 +56,35 @@ public class RecommendListAdapter extends BaseAdapter {
 			holder.mTv_number = (TextView) convertView.findViewById(R.id.tv_num);
 			holder.textRankContent = (TextView) convertView.findViewById(R.id.RankContent);
 			holder.textTotal = (TextView) convertView.findViewById(R.id.tv_total);
-			holder.imageHintVisibility = (ImageView) convertView.findViewById(R.id.image_hint_visibility);
 			holder.imageNumberTime = (ImageView) convertView.findViewById(R.id.image_number_time);
-			//			holder.mImg_play = (ImageView) convertView.findViewById(R.id.img_play);
+
+			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
+			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
+			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
+			
+			holder.imageHintVisibility = (ImageView) convertView.findViewById(R.id.image_hint_visibility);
+			if(isHintVisibility){
+				holder.imageHintVisibility.setVisibility(View.GONE);
+			}else{
+				holder.imageHintVisibility.setVisibility(View.VISIBLE);
+			}
 			 bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		if(isHintVisibility){
-			holder.imageHintVisibility.setVisibility(View.GONE);
-		}else{
-			holder.imageHintVisibility.setVisibility(View.VISIBLE);
-		}
+
+	
+
 		RankInfo lists = list.get(position);
+
 		if (lists.getContentName() == null || lists.getContentName().equals("")) {
 			holder.textview_ranktitle.setText("未知");
 		} else {
 			holder.textview_ranktitle.setText(lists.getContentName());
 		}
-		if (lists.getContentImg() == null || lists.getContentImg().equals("null")
-				|| lists.getContentImg().trim().equals("")) {
+
+		if (lists.getContentImg() == null || lists.getContentImg().equals("null")|| lists.getContentImg().trim().equals("")) {
 			holder.imageview_rankimage.setImageBitmap(bmp);
 		} else {
 			String url;
@@ -84,22 +93,23 @@ public class RecommendListAdapter extends BaseAdapter {
 			}else{
 				url = GlobalConfig.imageurl + lists.getContentImg();
 			}
+			url=AssembleImageUrlUtils.assembleImageUrl150(url);
 			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 		}
+
 		if(lists != null || lists.getMediaType() != null){
 			if (lists.getMediaType().equals("SEQU")) {
 				holder.imageNumberTime.setImageResource(R.mipmap.image_program_number);
 				if (lists.getContentSubCount() == null || lists.getContentSubCount().equals("")
 						|| lists.getContentSubCount().equals("null")) {
-					holder.textTotal.setText("8000" + "集");
+					holder.textTotal.setText("0" + "集");
 				} else {
 					holder.textTotal.setText(lists.getContentSubCount() + "集");
 				}
 			} else if(lists.getMediaType().equals("RADIO") || lists.getMediaType().equals("AUDIO")) {
 				holder.imageNumberTime.setImageResource(R.mipmap.image_program_time);
 				//节目时长
-				if (lists.getContentTimes() == null
-						|| lists.getContentTimes().equals("") || lists.getContentTimes().equals("null")) {
+				if (lists.getContentTimes() == null|| lists.getContentTimes().equals("") || lists.getContentTimes().equals("null")) {
 					holder.textTotal.setText(context.getString(R.string.play_time));
 				} else {
 					int minute = Integer.valueOf(lists.getContentTimes()) / (1000 * 60);
@@ -113,7 +123,7 @@ public class RecommendListAdapter extends BaseAdapter {
 			}
 		}
 		if (lists.getPlayCount() == null || lists.getPlayCount().equals("") || lists.getPlayCount().equals("null")) {
-			holder.mTv_number.setText("8000");
+			holder.mTv_number.setText("0");
 		} else {
 			holder.mTv_number.setText(lists.getPlayCount());
 		}
@@ -133,5 +143,7 @@ public class RecommendListAdapter extends BaseAdapter {
 		public TextView textTotal;
 		public ImageView imageHintVisibility;
 		public ImageView imageNumberTime;
+		public ImageView img_zhezhao;
 	}
+	
 }

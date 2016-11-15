@@ -40,14 +40,14 @@
                         android:id="@+id/main_image_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_main_navi_action_bar_tab_discover_selected" />
+                        android:src="@mipmap/ic_main_navi_action_bar_tab_feed_selected" />
 
                     <TextView
                         android:id="@+id/tv_guid1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="享讲"
+                        android:text="享听"
                         android:textColor="@color/dinglan_orange"
                         android:textSize="11sp" />
                 </LinearLayout>
@@ -64,13 +64,13 @@
                         android:id="@+id/main_image_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_main_navi_action_bar_tab_feed_normal" />
+                        android:src="@mipmap/ic_main_navi_action_bar_tab_discover_normal" />
 
                     <TextView
                       android:id="@+id/tv_guid2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="享听"
+                        android:text="享讲"
                         android:textColor="@color/dinglan_orange"
                         android:layout_marginTop="2dp"
                         android:textSize="11sp" />

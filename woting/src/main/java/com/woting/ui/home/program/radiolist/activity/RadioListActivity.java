@@ -21,7 +21,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
-import com.woting.ui.home.program.fenlei.model.CatalogName;
+import com.woting.ui.home.program.fenlei.model.FenLeiName;
 import com.woting.ui.home.program.radiolist.adapter.MyPagerAdaper;
 import com.woting.ui.home.program.radiolist.fragment.ClassifyFragment;
 import com.woting.ui.home.program.radiolist.fragment.RecommendFragment;
@@ -88,11 +88,20 @@ public class RadioListActivity extends FragmentActivity implements OnClickListen
 	private void handleRequestType() {
 		Intent listIntent = getIntent();
 		if (listIntent != null) {
-			CatalogName list = (CatalogName) listIntent.getSerializableExtra("Catalog");
-			catalogName = list.getCatalogName();
-			catalogType = list.getCatalogType();
-			id = list.getCatalogId();
-			mTextView_Head.setText(catalogName);
+			String type=listIntent.getStringExtra("type");
+			if(type!=null&&type.trim().equals("fenLeiAdapter")){
+				try {
+					FenLeiName list = (FenLeiName) listIntent.getSerializableExtra("Catalog");
+					catalogName = list.getName();
+					catalogType = list.getAttributes().getmId();
+					id = list.getAttributes().getId();
+					mTextView_Head.setText(catalogName);
+				} catch (Exception e) {
+					e.printStackTrace();
+					mTextView_Head.setText("分类");
+				}
+			}
+
 		}
 	}
 
