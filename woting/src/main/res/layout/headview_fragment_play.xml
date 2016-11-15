@@ -459,7 +459,9 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/textView2"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    >
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -473,6 +475,18 @@
                         android:textColor="@color/gray"
                         android:textSize="12sp" />
 
+                    <GridView
+                        android:id="@+id/gv_tag"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:horizontalSpacing="5dp"
+                        android:numColumns="4"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="11dp"
+                        android:paddingRight="11dp"
+                        android:paddingTop="2dp"
+                        android:scrollbars="none"
+                        android:verticalSpacing="4dp"/>
                 </LinearLayout>
 
                 <TextView
@@ -496,7 +510,7 @@
                     android:layout_alignStart="@+id/tv_sequ"
                     android:layout_below="@+id/linearLayout2"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="10dp"
                     android:text="内容简介"
                     android:textColor="@color/black"
                     android:textSize="12sp" />

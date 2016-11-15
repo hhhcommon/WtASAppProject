@@ -86,11 +86,13 @@ public class PlayerListAdapter extends BaseAdapter {
 					holder.draw.stop(); 
 				} 
 			}
+
 			if (searchlist.getPlayCount() == null || searchlist.getPlayCount().equals("")) {
 				holder.mTv_number.setText("未知");
 			} else {
 				holder.mTv_number.setText(searchlist.getPlayCount());
 			}
+
 			if(searchlist.getContentImg()!=null&&!searchlist.getContentImg().equals("")){
 				String url;
 				if(searchlist.getContentImg().startsWith("http")){
@@ -114,27 +116,39 @@ public class PlayerListAdapter extends BaseAdapter {
 			}
 
 			if(searchlist.getPlayerAllTime()!=null&&!searchlist.getPlayerAllTime().equals("")) {
-
-				int minute = Integer.valueOf(searchlist.getPlayerAllTime()) / (1000 * 60);
+               try {
+ 				int minute = Integer.valueOf(searchlist.getPlayerAllTime()) / (1000 * 60);
 				int second = (Integer.valueOf(searchlist.getPlayerAllTime()) / 1000) % 60;
 				if(second < 10){
 					holder.textPlayTime.setText(minute + "\'" + " " + "0" + second + "\"");
 				}else{
 					holder.textPlayTime.setText(minute + "\'" + " " + second + "\"");
 				}
+			   }catch(Exception e){
+				   e.printStackTrace();
+			   }
 			}else{
 				//节目时长
+
 			if (searchlist.getContentTimes() == null
 					|| searchlist.getContentTimes().equals("")
 					|| searchlist.getContentTimes().equals("null")) {
 				holder.textPlayTime.setText(context.getString(R.string.play_time));
 			} else {
+				try{
+				if(searchlist.getContentTimes().contains(":")){
+					holder.textPlayTime.setText(searchlist.getContentTimes());
+				}else{
 				int minute = Integer.valueOf(searchlist.getContentTimes()) / (1000 * 60);
 				int second = (Integer.valueOf(searchlist.getContentTimes()) / 1000) % 60;
 				if(second < 10){
 					holder.textPlayTime.setText(minute + "\'" + " " + "0" + second + "\"");
 				}else{
 					holder.textPlayTime.setText(minute + "\'" + " " + second + "\"");
+				}
+				}
+			}catch(Exception e){
+                 e.printStackTrace();
 				}
 			}
 			}

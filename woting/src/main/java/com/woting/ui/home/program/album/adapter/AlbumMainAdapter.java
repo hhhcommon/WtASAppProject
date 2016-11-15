@@ -86,12 +86,20 @@ public class AlbumMainAdapter extends BaseAdapter {
 				|| lists.getContentTimes().equals("null")) {
 			holder.textTime.setText(context.getString(R.string.play_time));
 		} else {
+			try{
+			if(lists.getContentTimes().contains(":")){
+				holder.textTime.setText(lists.getContentTimes());
+			} else{
 			int minute = Integer.valueOf(lists.getContentTimes()) / (1000 * 60);
 			int second = (Integer.valueOf(lists.getContentTimes()) / 1000) % 60;
 			if(second < 10){
 				holder.textTime.setText(minute + "\'" + " " + "0" + second + "\"");
 			}else{
 				holder.textTime.setText(minute + "\'" + " " + second + "\"");
+			}
+			}
+			}catch (Exception e){
+				e.printStackTrace();
 			}
 		}
 		return convertView;

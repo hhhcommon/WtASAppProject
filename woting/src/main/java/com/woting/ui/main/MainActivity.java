@@ -141,7 +141,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         try {
             jsonObject.put("CatalogType", "2");
             jsonObject.put("ResultType", "1");
-            jsonObject.put("RelLevel", "0");
+            jsonObject.put("RelLevel", "3");
             jsonObject.put("Page", "1");
         } catch (JSONException e) {
             e.printStackTrace();

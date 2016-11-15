@@ -29,6 +29,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -77,8 +78,10 @@ import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.player.main.model.ShareModel;
 import com.woting.ui.home.player.timeset.activity.TimerPowerOffActivity;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
+import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.album.model.ContentInfo;
 import com.woting.ui.home.program.comment.CommentActivity;
+import com.woting.ui.home.search.adapter.SearchHotAdapter;
 import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
 import com.woting.video.TtsPlayer;
 import com.woting.video.VlcPlayer;
@@ -178,6 +181,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 	private RelativeLayout rv_details;
 	private TextView tv_details_flag;
 	private Boolean details_flag=false;
+	private GridView flowTag;
+	private ArrayList<String> testList;
+	private static TextView tv_sequ;
+	private static TextView tv_desc;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -259,7 +266,20 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		image_liu.setImageBitmap(bmp1);
 		tv_details_flag=(TextView)headView.findViewById(R.id.tv_details_flag); // 展开或者隐藏按钮
         rv_details=(RelativeLayout)headView.findViewById(R.id.rv_details);    // 节目详情布局
+		tv_like = (TextView) headView.findViewById(R.id.tv_like);
+		tv_sequ=(TextView)headView.findViewById(R.id.tv_sequ);
+		tv_desc=(TextView)headView.findViewById(R.id.tv_desc);
+
 		tv_details_flag.setText("  显示  ");
+		flowTag = (GridView)headView.findViewById(R.id.gv_tag);                    // 展示热门搜索词
+	    testList=new ArrayList<>();
+		testList.add("逻辑思维");
+		testList.add("不是我不明白");
+		testList.add("今天你吃饭了吗");
+		testList.add("看世界");
+		testList.add("影视资讯");
+		flowTag.setAdapter(new SearchHotAdapter(context,testList));
+
 		lin_left = (LinearLayout) headView.findViewById(R.id.lin_left);
 		tv_name = (TextView) headView.findViewById(R.id.tv_name);
 		seekBar = (SeekBar) headView.findViewById(R.id.seekBar);
@@ -375,7 +395,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			historyNews = new LanguageSearchInside();
 			historyNews.setType("1");
 			historyNews.setContentURI(historyNew.getPlayerUrI());
-			historyNews.setContentPersons("");
+			historyNews.setContentPersons(historyNew.getPlayerNum());
 			historyNews.setContentKeyWord("");
 			historyNews.setcTime("");
 			historyNews.setContentSubjectWord("");
@@ -405,6 +425,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			historyNews.setContentShareURL(historyNew.getPlayContentShareUrl());
 			historyNews.setContentFavorite(historyNew.getContentFavorite());
 			historyNews.setLocalurl(historyNew.getLocalurl());
+			historyNews.setSequId(historyNew.getSequId());
+			historyNews.setSequName(historyNew.getSequName());
+			historyNews.setSequDesc(historyNew.getSequDesc());
+			historyNews.setSequImg(historyNew.getSequImg());
 		}
 		return historyNews;
 	}
@@ -429,7 +453,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		String playerAllTime = languageSearchInside.getPlayerAllTime();
 		String playerInTime =languageSearchInside.getPlayerInTime();
 		String playerContentDesc = languageSearchInside.getContentDesc();
-		String playerNum = "999";
+		String playerNum = languageSearchInside.getPlayCount();
 		String playerZanType = "false";
 		String playerFrom = languageSearchInside.getContentPub();
 		String playerFromId = "";
@@ -734,7 +758,18 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				break;
 			case R.id.lin_ly_ckzj:
 				linChoseClose();
-				ToastUtils.show_allways(context,"查看专辑");
+				if(GlobalConfig.playerobject.getSequId()!=null){
+					Intent intent =new Intent(context, AlbumActivity.class);
+					intent.putExtra("type","player");
+					Bundle bundle=new Bundle();
+					bundle.putSerializable("list",GlobalConfig.playerobject);
+                    intent.putExtras(bundle);
+					startActivity(intent);
+				}else{
+					ToastUtils.show_allways(context,"本节目没有所属专辑");
+				}
+
+			/*	ToastUtils.show_allways(context,"查看专辑");*/
 				break;
 			case R.id.lin_comment:
 				if(!TextUtils.isEmpty(GlobalConfig.playerobject.getContentId())&&!TextUtils.isEmpty(GlobalConfig.playerobject.getMediaType())){
@@ -853,7 +888,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 							}
 						}
 					} else {
-						ToastUtils.show_allways(context, "您现在播放的是电台节目，不支持下载");
+						ToastUtils.show_allways(context, "您现在播放的节目，目前不支持下载");
 					}
 				} else {
 					ToastUtils.show_allways(context, "当前播放器播放对象为空");
@@ -1085,6 +1120,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			Receiver = null;
 		}
 	}
+
 
 	/**
 	 * 广播接收器
@@ -1724,6 +1760,12 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			} else {
 				// 支持分享
 				// 设置回界面
+			}
+			if(GlobalConfig.playerobject.getSequName()!=null){
+				tv_sequ.setText(GlobalConfig.playerobject.getSequName());
+			}
+			if(GlobalConfig.playerobject.getSequDesc()!=null){
+				tv_desc.setText(GlobalConfig.playerobject.getSequDesc());
 			}
 			if (GlobalConfig.playerobject.getContentFavorite() != null
 					&& !GlobalConfig.playerobject.equals("")) {
