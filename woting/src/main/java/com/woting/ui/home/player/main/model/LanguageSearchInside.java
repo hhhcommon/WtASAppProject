@@ -13,7 +13,6 @@ public class LanguageSearchInside implements Serializable{
 	private String ContentName;
 	private String ContentPubTime;
 	private String ContentPub;
-
 	private String ContentPlay;
 	private String MediaType;
 	private String ContentId;

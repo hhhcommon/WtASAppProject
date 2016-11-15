@@ -250,5 +250,9 @@ public class GlobalConfig {
     public static final String pushCommentUrl=baseUrl+"wt/discuss/add.do";
     // 删除评论
     public static final String delCommentUrl=baseUrl+"wt/discuss/del.do";
+    // 获取偏好列表
+    public static final String getPreferenceUrl=baseUrl+"wt/getPreferenceCatalog.do";
+    // 设置偏好列表
+    public static final String setPreferenceUrl=baseUrl+"wt/setPreference.do";
 
 }

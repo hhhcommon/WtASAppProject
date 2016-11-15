@@ -320,7 +320,7 @@ public class OnLineFragment extends Fragment {
 						String playAllTime = "0";
 						String playInTime = "0";
 						String playContentDesc = mainLists.get(position).getCurrentContent();
-						String playerNum =mainLists.get(position).getWatchPlayerNum();
+						String playerNum =mainLists.get(position).getPlayCount();
 						String playZanType = "0";
 						String playFrom = "";
 						String playFromId = "";
@@ -447,9 +447,9 @@ public class OnLineFragment extends Fragment {
 						String playAllTime = "0";
 						String playInTime = "0";
 						String playContentDesc = newList.get(groupPosition).getList().get(childPosition).getCurrentContent();
-						String playerNum = newList.get(groupPosition).getList().get(childPosition).getWatchPlayerNum();
+						String playerNum = newList.get(groupPosition).getList().get(childPosition).getPlayCount();
 						String playZanType = "0";
-						String playFrom = newList.get(groupPosition).getList().get(childPosition).getContentPub();;
+						String playFrom = newList.get(groupPosition).getList().get(childPosition).getContentPub();
 						String playFromId = "";
 						String playFromUrl = "";
 						String playAddTime = Long.toString(System.currentTimeMillis());

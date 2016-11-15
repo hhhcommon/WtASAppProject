@@ -404,7 +404,7 @@
                 android:id="@+id/rv_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/textView"
@@ -459,7 +459,9 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/textView2"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    >
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -508,7 +510,7 @@
                     android:layout_alignStart="@+id/tv_sequ"
                     android:layout_below="@+id/linearLayout2"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="10dp"
                     android:text="内容简介"
                     android:textColor="@color/black"
                     android:textSize="12sp" />

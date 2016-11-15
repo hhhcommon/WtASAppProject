@@ -84,11 +84,11 @@ public class RankInfoAdapter extends BaseAdapter   {
 			}
 			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 		}
-		if (lists.getWatchPlayerNum() == null
-				|| lists.getWatchPlayerNum().equals("") || lists.getWatchPlayerNum().equals("null")) {
+		if (lists.getPlayCount() == null
+				|| lists.getPlayCount().equals("") || lists.getPlayCount().equals("null")) {
 			holder.mTv_number.setText("8000");
 		} else {
-			holder.mTv_number.setText(lists.getWatchPlayerNum());
+			holder.mTv_number.setText(lists.getPlayCount());
 		}
 		return convertView;
 	}
