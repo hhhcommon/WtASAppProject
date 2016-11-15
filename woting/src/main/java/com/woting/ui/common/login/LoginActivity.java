@@ -280,7 +280,24 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                             }
                             try {
                                 birthday = ui.getString("Birthday");
-                                et.putString(StringConstant.BIRTHDAY, birthday);
+
+                                /**
+                                 * 地区的三种格式
+                                 * 1、行政区划\/**市\/市辖区\/**区
+                                 * 2、行政区划\/**特别行政区  港澳台三地区
+                                 * 3、行政区划\/**自治区\/通辽市  自治区地区
+                                 */
+                                if (region != null && !region.equals("")) {
+                                    String[] subRegion = region.split("/");
+                                    if(subRegion.length > 3) {
+                                        region = subRegion[1] + " " + subRegion[3];
+                                    } else if(subRegion.length == 3) {
+                                        region = subRegion[1] + " " + subRegion[2];
+                                    } else {
+                                        region = subRegion[1].substring(0, 2);
+                                    }
+                                    et.putString(StringConstant.REGION, region);
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
