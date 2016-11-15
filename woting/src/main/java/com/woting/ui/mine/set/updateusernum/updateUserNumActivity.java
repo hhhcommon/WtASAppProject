@@ -72,7 +72,7 @@ public class updateUserNumActivity extends AppBaseActivity implements View.OnCli
     // 判断数据是否填写完整
     private boolean isComplete() {
         userNum =et_UsrNum.getText().toString().trim();
-        return "".equalsIgnoreCase(userNum);
+        return !"".equalsIgnoreCase(userNum)&&userNum.length()>=6&&userNum.length()<=20;
     }
 
     @Override
@@ -83,8 +83,6 @@ public class updateUserNumActivity extends AppBaseActivity implements View.OnCli
                     tv_desc.setText("用户号是账号的唯一凭证,只能修改一次.\n\n请再次确认,用户号:"+userNum);
                     confirmDialog.show();
                     return;
-                }else{
-                    ToastUtils.show_allways(context, "用户账号不能为空");
                 }
                 break;
             case R.id.tv_cancel:

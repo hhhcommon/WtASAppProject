@@ -34,6 +34,7 @@ import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.ui.common.favoritetype.FavoriteProgramTypeActivity;
 import com.woting.ui.download.activity.DownloadActivity;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
@@ -43,7 +44,6 @@ import com.woting.ui.home.program.fenlei.model.Catalog;
 import com.woting.ui.home.program.fenlei.model.CatalogName;
 import com.woting.ui.interphone.main.DuiJiangActivity;
 import com.woting.ui.mine.MineActivity;
-import com.woting.ui.mine.set.preference.activity.PreferenceActivity;
 import com.woting.ui.mine.set.update.UpdateManager;
 
 import org.json.JSONException;
@@ -94,15 +94,19 @@ public class MainActivity extends TabActivity implements OnClickListener {
         InitDao();
         tabHost.setCurrentTabByTag("one");
         handleIntent();
-        String first = BSApplication.SharedPreferences.getString(StringConstant.PREFERENCE, "0");//是否是第一次打开偏好设置界面
-        if (first != null && first.equals("1")) {
-            // 此时已经进行过偏好设置
-        } else {// 1：第一次进入  其它：其它界面进入
-            Intent intent = new Intent(this, PreferenceActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("type", "1");
-            intent.putExtras(bundle);
-            startActivity(intent);
+//        String first = BSApplication.SharedPreferences.getString(StringConstant.PREFERENCE, "0");//是否是第一次打开偏好设置界面
+//        if (first != null && first.equals("1")) {
+//            // 此时已经进行过偏好设置
+//        } else {// 1：第一次进入  其它：其它界面进入
+//            Intent intent = new Intent(this, PreferenceActivity.class);
+//            Bundle bundle = new Bundle();
+//            bundle.putString("type", "1");
+//            intent.putExtras(bundle);
+//            startActivity(intent);
+//        }
+
+        if(!BSApplication.SharedPreferences.getBoolean(StringConstant.FAVORITE_PROGRAM_TYPE, false)) {
+            startActivity(new Intent(context, FavoriteProgramTypeActivity.class));
         }
     }
 
