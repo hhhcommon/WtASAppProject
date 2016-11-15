@@ -6,10 +6,17 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.android.volley.VolleyError;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
+import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
+import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.baseactivity.BaseActivity;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +36,9 @@ public class FavoriteProgramTypeActivity extends BaseActivity implements View.On
     private View viewTaste;// 有情趣
 
     private Button btnFinish;// 完成
+
+    private String tag = "FAVORITE_PROGRAM_TYPE_VOLLEY_REQUEST_CANCEL_TAG";
+    private boolean isCancelRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +82,8 @@ public class FavoriteProgramTypeActivity extends BaseActivity implements View.On
 
         btnFinish = (Button) findViewById(R.id.btn_finish);// 完成
         btnFinish.setOnClickListener(this);
+
+        getPreferenceDataRequest();
     }
 
     @Override
@@ -126,5 +138,34 @@ public class FavoriteProgramTypeActivity extends BaseActivity implements View.On
         for(int i=0; i<addList.size(); i++) {
             Log.v("selectOk", addList.get(i));
         }
+    }
+
+    // 获取偏好分类数据
+    private void getPreferenceDataRequest() {
+        if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
+            ToastUtils.show_allways(context, "网络连接失败，请检查网络设置!");
+            return ;
+        }
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        VolleyRequest.RequestPost(GlobalConfig.getPreferenceCatalogUrl, tag, jsonObject, new VolleyCallback() {
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if(isCancelRequest) {
+                    return ;
+                }
+                ToastUtils.show_allways(context, "获取成功!");
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+                ToastUtils.showVolleyError(context);
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isCancelRequest = VolleyRequest.cancelRequest(tag);
     }
 }
