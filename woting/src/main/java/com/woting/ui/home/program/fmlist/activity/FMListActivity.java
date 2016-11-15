@@ -196,7 +196,7 @@ public class FMListActivity extends BaseActivity implements OnClickListener {
 						String plaplayeralltime = "0";
 						String playerintime = "0";
 						String playercontentdesc = newList.get(position-1).getCurrentContent();
-						String playernum = newList.get(position-1).getWatchPlayerNum();
+						String playernum = newList.get(position-1).getPlayCount();
 						String playerzantype = "0";
 						String playerfrom = newList.get(position-1).getContentPub();
 						String playerfromid = "";

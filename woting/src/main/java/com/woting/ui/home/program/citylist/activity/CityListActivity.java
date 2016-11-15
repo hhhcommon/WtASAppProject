@@ -22,20 +22,20 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.StringConstant;
+import com.woting.common.util.DialogUtils;
+import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.home.common.model.Catalog;
+import com.woting.ui.home.common.model.CatalogName;
 import com.woting.ui.home.program.citylist.adapter.CityListAdapter;
-import com.woting.ui.home.program.fenlei.model.Catalog;
-import com.woting.ui.home.program.fenlei.model.CatalogName;
 import com.woting.ui.interphone.linkman.view.CharacterParser;
 import com.woting.ui.interphone.linkman.view.PinyinComparator_d;
 import com.woting.ui.interphone.linkman.view.SideBar;
 import com.woting.ui.interphone.linkman.view.SideBar.OnTouchingLetterChangedListener;
-import com.woting.common.config.GlobalConfig;
-import com.woting.common.constant.StringConstant;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
-import com.woting.common.util.DialogUtils;
-import com.woting.common.util.ToastUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -182,7 +182,7 @@ public class CityListActivity extends BaseActivity implements OnClickListener {
 		try {
 			jsonObject.put("CatalogType", "2");
 			jsonObject.put("ResultType", "1");
-			jsonObject.put("RelLevel", "0");
+			jsonObject.put("RelLevel", "3");
 			jsonObject.put("Page", "1");
 		} catch (JSONException e) {
 			e.printStackTrace();

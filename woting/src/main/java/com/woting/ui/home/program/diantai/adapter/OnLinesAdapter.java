@@ -27,11 +27,11 @@ import java.util.List;
 /**
  * expandableListView适配器
  */
-public class onlineAdapter extends BaseExpandableListAdapter  {
+public class OnLinesAdapter extends BaseExpandableListAdapter  {
 	private Context context;
 	private List<RadioPlay> group;
 
-	public onlineAdapter(Context context, List<RadioPlay> group) {
+	public OnLinesAdapter(Context context, List<RadioPlay> group) {
 		this.context = context;
 		this.group = group;
  	}
@@ -183,12 +183,12 @@ public class onlineAdapter extends BaseExpandableListAdapter  {
 			}else{
 				ToastUtils.show_allways(context, "服务器返回数据MediaType为空");
 			}
-			if (lists.getWatchPlayerNum() == null
-					|| lists.getWatchPlayerNum().equals("")
-					|| lists.getWatchPlayerNum().equals("null")) {
+			if (lists.getPlayCount() == null
+					|| lists.getPlayCount().equals("")
+					|| lists.getPlayCount().equals("null")) {
 				holder.mTv_number.setText("8000");
 			} else {
-				holder.mTv_number.setText(lists.getWatchPlayerNum());
+				holder.mTv_number.setText(lists.getPlayCount());
 			}
 		}
 		//		if (lists.getType() == 1) {

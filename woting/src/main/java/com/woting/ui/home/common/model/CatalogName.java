@@ -1,4 +1,4 @@
-package com.woting.ui.home.program.fenlei.model;
+package com.woting.ui.home.common.model;
 
 import java.io.Serializable;
 import java.util.List;

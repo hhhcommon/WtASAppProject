@@ -1,13 +1,11 @@
 package com.woting.ui.home.program.main;
 
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +16,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.woting.R;
+import com.woting.common.util.PhoneMessage;
+import com.woting.ui.baseadapter.MyFragmentChildPagerAdapter;
 import com.woting.ui.home.program.diantai.fragment.OnLineFragment;
 import com.woting.ui.home.program.fenlei.fragment.FenLeiFragment;
 import com.woting.ui.home.program.tuijian.fragment.RecommendFragment;
-import com.woting.ui.baseadapter.MyFragmentChildPagerAdapter;
-import com.woting.common.util.PhoneMessage;
 
 import java.util.ArrayList;
 
@@ -39,7 +37,6 @@ public class ProgramFragment extends Fragment {
 	private TextView view3;
 	private ImageView image;
 	private LayoutParams lp;
-	private int bmpW;
 	private int offset;
 	private ViewPager mPager;
 
@@ -95,13 +92,9 @@ public class ProgramFragment extends Fragment {
 	public void InitImage() {
 		image = (ImageView)rootView.findViewById(R.id.cursor);
 		lp=image.getLayoutParams();
-		lp.width= (PhoneMessage.ScreenWidth/3);
+		lp.width= PhoneMessage.ScreenWidth/3;
 		image.setLayoutParams(lp);
-		bmpW = BitmapFactory.decodeResource(getResources(),R.mipmap.left_personal_bg).getWidth();
-		DisplayMetrics dm = new DisplayMetrics();
-		context.getWindowManager().getDefaultDisplay().getMetrics(dm);
-		int screenW = dm.widthPixels;
-		offset = (screenW / 3 - bmpW) / 2;
+		offset = PhoneMessage.ScreenWidth / 3;
 		// imgageview设置平移，使下划线平移到初始位置（平移一个offset）
 		Matrix matrix = new Matrix();
 		matrix.postTranslate(offset, 0);
@@ -115,12 +108,12 @@ public class ProgramFragment extends Fragment {
 		mPager = (ViewPager) rootView.findViewById(R.id.viewpager);
 		mPager.setOffscreenPageLimit(1);
 		ArrayList<Fragment> fragmentList = new ArrayList<Fragment>();
-		RecommendFragment recomdfragment = new RecommendFragment();
-		OnLineFragment onlinefragment = new OnLineFragment();
-		FenLeiFragment fenleifragment = new FenLeiFragment();
-		fragmentList.add(recomdfragment);
-		fragmentList.add(onlinefragment);
-		fragmentList.add(fenleifragment);
+		RecommendFragment rf = new RecommendFragment();
+		OnLineFragment of = new OnLineFragment();
+		FenLeiFragment ff = new FenLeiFragment();
+		fragmentList.add(rf);
+		fragmentList.add(of);
+		fragmentList.add(ff);
 		mPager.setAdapter(new MyFragmentChildPagerAdapter(getChildFragmentManager(), fragmentList));
 		mPager.setOnPageChangeListener(new MyOnPageChangeListener());// 页面变化时的监听器
 		mPager.setCurrentItem(0);// 设置当前显示标签页为第一页mPager
@@ -128,7 +121,7 @@ public class ProgramFragment extends Fragment {
 	}
 
 	public class MyOnPageChangeListener implements OnPageChangeListener {
-		private int one = offset * 2+ bmpW;// 两个相邻页面的偏移量
+		private int one = offset ;// 两个相邻页面的偏移量
 		private int currIndex;
 
 		@Override
@@ -144,16 +137,16 @@ public class ProgramFragment extends Fragment {
 			animation.setFillAfter(true);// 动画终止时停留在最后一帧，不然会回到没有执行前的状态
 			animation.setDuration(200);// 动画持续时间0.2秒
 			image.startAnimation(animation);// 是用ImageView来显示动画的
-			int i = currIndex + 1;
-			if (i == 1) {
+			int i = currIndex ;
+			if (i == 0) {
 				view1.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
 				view2.setTextColor(context.getResources().getColor(R.color.group_item_text2));
 				view3.setTextColor(context.getResources().getColor(R.color.group_item_text2));
-			} else if (i == 2) {
+			} else if (i == 1) {
 				view1.setTextColor(context.getResources().getColor(R.color.group_item_text2));
 				view2.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
 				view3.setTextColor(context.getResources().getColor(R.color.group_item_text2));
-			} else if (i == 3) {
+			} else if (i == 2) {
 				view1.setTextColor(context.getResources().getColor(R.color.group_item_text2));
 				view2.setTextColor(context.getResources().getColor(R.color.group_item_text2));
 				view3.setTextColor(context.getResources().getColor(R.color.dinglan_orange));

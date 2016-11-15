@@ -79,6 +79,10 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 	private String userId;
 	private boolean isCancelRequest;
 	private String tag = "PROGRAM_VOLLEY_REQUEST_CANCEL_TAG";
+	protected String sequId;
+	protected String sequName;
+	protected String sequImg;
+	protected String sequDesc;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -148,7 +152,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 						String playMediaType = SubList.get(position).getMediaType();
 						String playContentShareUrl = SubList.get(position).getContentShareURL();
 						String ContentId = SubList.get(position).getContentId();
-						String playAllTime = "0";
+						String playAllTime = SubList.get(position).getContentTimes();
 						String playInTime = "0";
 						String playContentDesc = SubList.get(position).getContentDesc();
 						String playNum = SubList.get(position).getPlayCount();
@@ -161,16 +165,16 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 						String ContentFavorite = SubList.get(position).getContentFavorite();
 						String localUrl=SubList.get(position).getLocalurl();
 						//name id desc img
-						String sequName=SubList.get(position).getSequname();
-						String sequId=SubList.get(position).getSequid();
-						String sequDesc=SubList.get(position).getSequdesc();
-						String sequImg=SubList.get(position).getSequimgurl();
+						String sequName1=sequName;
+						String sequId1=sequId;
+						String sequDesc1=sequDesc;
+						String sequImg1=sequImg;
 
 						PlayerHistory history = new PlayerHistory(
 								playerName,  playerImage, playUrl, playUrI,playMediaType,
 								playAllTime, playInTime, playContentDesc, playNum,
 								playZanType, playFrom , playFromId,playFromUrl,playAddTime,bjUserId,playContentShareUrl,
-								ContentFavorite,ContentId,localUrl,sequName,sequId,sequDesc,sequImg);
+								ContentFavorite,ContentId,localUrl,sequName1,sequId1,sequDesc1,sequImg1);
 						dbDao.deleteHistory(playUrl);
 						dbDao.addHistory(history);
 						if(PlayerFragment.context!=null){
@@ -228,7 +232,34 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 							arg1 = (JSONObject) jsonParser.nextValue();
 
 							// 此处后期需要用typeToken将字符串StringSubList 转化成为一个list集合
-							StringSubList = arg1.getString("SubList");
+
+							try {
+								StringSubList = arg1.getString("SubList");
+							}catch (Exception e){
+
+							}
+							try {
+								sequId=arg1.getString("ContentId");
+							}catch (Exception e){
+
+							}
+							try {
+								sequImg=arg1.getString("ContentImg");
+							}catch (Exception e){
+
+							}
+							try {
+								sequName=arg1.getString("ContentName");
+							}catch (Exception e){
+
+							}
+							try {
+								sequDesc=arg1.getString("ContentDescn");
+							}catch (Exception e){
+
+							}
+
+
 							Gson gson = new Gson();
 							SubList = gson.fromJson(StringSubList, new TypeToken<List<ContentInfo>>() {}.getType());
 							if (SubList != null && SubList.size() > 0) {

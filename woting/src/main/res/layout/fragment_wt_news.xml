@@ -62,21 +62,30 @@
                     android:textColor="@color/group_item_text2" />
             </LinearLayout>
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/cursor"
-            android:layout_width="38dp"
-            android:layout_height="2dp"
-            android:scaleType="matrix"
-            android:src="@mipmap/left_personal_bg" />
-
-        <TextView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="0.1dip"
-            android:background="@color/text_line_1" />
+            android:layout_height="2dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_centerInParent="true"
+                android:layout_height="0.5dip"
+                android:background="@color/gray" />
+            <ImageView
+                android:id="@+id/cursor"
+                android:layout_width="38dp"
+                android:layout_height="2dp"
+                android:scaleType="matrix"
+                android:background="@mipmap/left_personal_bg" />
+        </RelativeLayout>
+
+
+
 
     </LinearLayout>
-    <android.support.v4.view.ViewPager  
+
+
+
+    <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"  
           android:layout_width="fill_parent"
         android:layout_height="0dip"

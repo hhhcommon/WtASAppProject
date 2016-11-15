@@ -18,6 +18,7 @@ import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
+import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
@@ -60,6 +61,13 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
         initView();
         setListener();
         setData();
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            dialog = DialogUtils.Dialogph(context, "正在获取信息");
+            send();
+        } else {
+            ToastUtils.show_allways(context, "网络失败，请检查网络");
+        }
+
     }
 
     private void receiveData() {
@@ -123,7 +131,7 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
     private void send() {
 
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        VolleyRequest.RequestPost(GlobalConfig.logoutUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.RequestPost(GlobalConfig.getPreferenceUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             @Override
             protected void requestSuccess(JSONObject result) {

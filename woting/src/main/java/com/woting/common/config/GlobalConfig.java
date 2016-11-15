@@ -51,7 +51,7 @@ public class GlobalConfig {
     /**
      * socket请求端口
      */
-    public static final int socketport = 16789;
+    public static final int socketport = 15678;
     /**
      * socket请求ip
      */
@@ -250,9 +250,9 @@ public class GlobalConfig {
     public static final String pushCommentUrl=baseUrl+"wt/discuss/add.do";
     // 删除评论
     public static final String delCommentUrl=baseUrl+"wt/discuss/del.do";
-    // 获取偏好设置类型
-    public static final String getPreferenceCatalogUrl = baseUrl + "wt/getPreferenceCatalog.do";
-    // 设置偏好
-    public static final String setPreferenceUrl = baseUrl + "wt/setPreference.do";
+    // 获取偏好列表
+    public static final String getPreferenceUrl=baseUrl+"wt/getPreferenceCatalog.do";
+    // 设置偏好列表
+    public static final String setPreferenceUrl=baseUrl+"wt/setPreference.do";
 
 }

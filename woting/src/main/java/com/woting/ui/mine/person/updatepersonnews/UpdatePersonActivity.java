@@ -31,8 +31,8 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.pickview.LoopView;
 import com.woting.common.widgetui.pickview.OnItemSelectedListener;
 import com.woting.ui.baseactivity.BaseActivity;
-import com.woting.ui.home.program.fenlei.model.Catalog;
-import com.woting.ui.home.program.fenlei.model.CatalogName;
+import com.woting.ui.home.common.model.Catalog;
+import com.woting.ui.home.common.model.CatalogName;
 import com.woting.ui.mine.person.updatepersonnews.model.personModel;
 import com.woting.ui.mine.person.updatepersonnews.util.DateUtil;
 
@@ -186,7 +186,7 @@ public class UpdatePersonActivity extends BaseActivity implements
         try {
             jsonObject.put("CatalogType", "2");
             jsonObject.put("ResultType", "1");
-            jsonObject.put("RelLevel", "0");
+            jsonObject.put("RelLevel", "3");
             jsonObject.put("Page", "1");
         } catch (JSONException e) {
             e.printStackTrace();

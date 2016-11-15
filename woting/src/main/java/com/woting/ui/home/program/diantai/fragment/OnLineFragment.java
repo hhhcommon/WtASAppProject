@@ -35,7 +35,7 @@ import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.citylist.activity.CityListActivity;
 import com.woting.ui.home.program.diantai.adapter.CityNewAdapter;
-import com.woting.ui.home.program.diantai.adapter.onlineAdapter;
+import com.woting.ui.home.program.diantai.adapter.OnLinesAdapter;
 import com.woting.ui.home.program.diantai.model.RadioPlay;
 import com.woting.ui.home.program.fmlist.activity.FMListActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
@@ -66,7 +66,7 @@ public class OnLineFragment extends Fragment {
 	private FragmentActivity context;
 	private View rootView;
 	private String ReturnType;
-	private onlineAdapter adapter;
+	private OnLinesAdapter adapter;
 	private List<RadioPlay> mainList;
 	private ExpandableListView listView_Main;
 	private int RefreshType;// refreshType 1为下拉加载 2为上拉加载更多
@@ -320,7 +320,7 @@ public class OnLineFragment extends Fragment {
 						String playAllTime = "0";
 						String playInTime = "0";
 						String playContentDesc = mainLists.get(position).getCurrentContent();
-						String playerNum =mainLists.get(position).getWatchPlayerNum();
+						String playerNum =mainLists.get(position).getPlayCount();
 						String playZanType = "0";
 						String playFrom = "";
 						String playFromId = "";
@@ -395,7 +395,7 @@ public class OnLineFragment extends Fragment {
 								newList.clear();
 								newList.addAll(mainList);
 								if (adapter == null) {
-									adapter = new onlineAdapter(context, newList);
+									adapter = new OnLinesAdapter(context, newList);
 									listView_Main.setAdapter(adapter);
 								} else {
 									adapter.notifyDataSetChanged();
@@ -447,9 +447,9 @@ public class OnLineFragment extends Fragment {
 						String playAllTime = "0";
 						String playInTime = "0";
 						String playContentDesc = newList.get(groupPosition).getList().get(childPosition).getCurrentContent();
-						String playerNum = newList.get(groupPosition).getList().get(childPosition).getWatchPlayerNum();
+						String playerNum = newList.get(groupPosition).getList().get(childPosition).getPlayCount();
 						String playZanType = "0";
-						String playFrom = newList.get(groupPosition).getList().get(childPosition).getContentPub();;
+						String playFrom = newList.get(groupPosition).getList().get(childPosition).getContentPub();
 						String playFromId = "";
 						String playFromUrl = "";
 						String playAddTime = Long.toString(System.currentTimeMillis());
