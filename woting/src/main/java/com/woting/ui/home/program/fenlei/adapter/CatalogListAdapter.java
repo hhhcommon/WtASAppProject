@@ -14,18 +14,18 @@ import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.common.widgetui.MyGridView;
-import com.woting.ui.home.program.fenlei.model.CatalogName;
+import com.woting.ui.home.program.fenlei.model.FenLei;
 import com.woting.ui.home.program.radiolist.activity.RadioListActivity;
 
 import java.util.List;
 
 public class CatalogListAdapter extends BaseAdapter {
-    private List<CatalogName> list;
+    private List<FenLei> list;
     private Context context;
     private ViewHolder holder;
     private CatalogGridAdapter adapters;
 
-    public CatalogListAdapter(Context context, List<CatalogName> list) {
+    public CatalogListAdapter(Context context, List<FenLei> list) {
         super();
         this.list = list;
         this.context = context;
@@ -47,7 +47,7 @@ public class CatalogListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.adapter_fenlei_group, null);
             holder = new ViewHolder();
@@ -58,17 +58,18 @@ public class CatalogListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.tv_name.setText(list.get(position).getCatalogName());
+        holder.tv_name.setText(list.get(position).getName());
 
-        adapters = new CatalogGridAdapter(context, list);
+        adapters = new CatalogGridAdapter(context, list.get(position).getChildren());
         holder.gv.setAdapter(adapters);
 
         holder.gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int positions, long id) {
                 Intent intent = new Intent(context, RadioListActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("Catalog", list.get(position));
+                bundle.putString("type","fenLeiAdapter");
+                bundle.putSerializable("Catalog", list.get(position).getChildren().get(positions));
                 intent.putExtras(bundle);
                 context.startActivity(intent);
             }

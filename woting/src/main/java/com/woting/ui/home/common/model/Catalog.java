@@ -1,4 +1,4 @@
-package com.woting.ui.home.program.fenlei.model;
+package com.woting.ui.home.common.model;
 
 import java.io.Serializable;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class Catalog implements Serializable{
 	private String CatalogName;
-	private List<com.woting.ui.home.program.fenlei.model.CatalogName> SubCata;
+	private List<CatalogName> SubCata;
 	private String CatalogType;
 	public String getCatalogName() {
 		return CatalogName;
@@ -22,10 +22,10 @@ public class Catalog implements Serializable{
 	public void setCatalogType(String catalogType) {
 		CatalogType = catalogType;
 	}
-	public List<com.woting.ui.home.program.fenlei.model.CatalogName> getSubCata() {
+	public List<CatalogName> getSubCata() {
 		return SubCata;
 	}
-	public void setSubCata(List<com.woting.ui.home.program.fenlei.model.CatalogName> subCata) {
+	public void setSubCata(List<CatalogName> subCata) {
 		SubCata = subCata;
 	}
 }

@@ -10,7 +10,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.ui.home.program.fenlei.model.CatalogName;
+import com.woting.ui.home.common.model.CatalogName;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class CityListAdapter extends BaseAdapter implements SectionIndexer{
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		ViewHolder holder=null;
+		ViewHolder holder;
 		if(convertView==null){
 			convertView=LayoutInflater.from(context).inflate(R.layout.adapter_city, null);
 			holder=new ViewHolder();

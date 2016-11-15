@@ -1,6 +1,6 @@
 package com.woting.ui.interphone.linkman.view;
 
-import com.woting.ui.home.program.fenlei.model.CatalogName;
+import com.woting.ui.home.common.model.CatalogName;
 
 import java.util.Comparator;
 

@@ -8,16 +8,16 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.ui.home.program.fenlei.model.CatalogName;
+import com.woting.ui.home.program.fenlei.model.FenLeiName;
 
 import java.util.List;
 
 public class CatalogGridAdapter extends BaseAdapter {
-	private List<CatalogName> list;
+	private List<FenLeiName> list;
 	private Context context;
 	private ViewHolder holder;
 
-	public CatalogGridAdapter(Context context, List<CatalogName> list) {
+	public CatalogGridAdapter(Context context, List<FenLeiName> list) {
 		super();
 		this.list = list;
 		this.context = context;
@@ -48,7 +48,7 @@ public class CatalogGridAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		holder.tv_name.setText(list.get(position).getCatalogName());
+		holder.tv_name.setText(list.get(position).getName());
 
 		return convertView;
 	}

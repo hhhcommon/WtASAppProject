@@ -47,7 +47,7 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="群组信息"
+                android:text="分类"
                 android:textColor="@color/WHITE_1"
                 android:textSize="@dimen/activity_head_center_s" />
         </LinearLayout>

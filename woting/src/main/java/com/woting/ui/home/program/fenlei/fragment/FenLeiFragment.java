@@ -18,18 +18,20 @@ import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.home.program.fenlei.adapter.CatalogListAdapter;
-import com.woting.ui.home.program.fenlei.model.Catalog;
-import com.woting.ui.home.program.fenlei.model.CatalogName;
+import com.woting.ui.home.program.fenlei.model.FenLei;
+import com.woting.ui.home.program.fenlei.model.FenLeiName;
 import com.woting.ui.home.program.radiolist.rollviewpager.RollPagerView;
 import com.woting.ui.home.program.radiolist.rollviewpager.adapter.LoopPagerAdapter;
 import com.woting.ui.home.program.radiolist.rollviewpager.hintview.IconHintView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,8 +53,7 @@ public class FenLeiFragment extends Fragment {
     private String tag = "CATALOG_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
 
-    protected List<CatalogName> SubList;
-    List<CatalogName> CatalogList = new ArrayList<>();
+    List<FenLeiName> CatalogList = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,18 +91,21 @@ public class FenLeiFragment extends Fragment {
      * 发送网络请求
      */
     private void sendRequest() {
-        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("CatalogType", "3");
-            jsonObject.put("ResultType", "1");
-            // 以001类型的分类为基础，获得0001结点下的2级分类的树形分类数据（实际上是森林）
-            jsonObject.put("RelLevel", "0");
-            // 页数信息，第一页为1，若不设置，则返回第一页信息
-            jsonObject.put("Page", "1");
+            jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
+            jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
+            jsonObject.put("IMEI", PhoneMessage.imei);
+            PhoneMessage.getGps(context);
+            jsonObject.put("GPS-longitude", PhoneMessage.longitude);
+            jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
+            jsonObject.put("PCDType", GlobalConfig.PCDType);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        VolleyRequest.RequestPost(GlobalConfig.getCatalogUrl, tag, jsonObject, new VolleyCallback() {
+
+        VolleyRequest.RequestPost(GlobalConfig.getPreferenceUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String ResultList;
 
@@ -123,20 +127,17 @@ public class FenLeiFragment extends Fragment {
                 if (ReturnType != null) {
                     if (ReturnType.equals("1001")) {
                         try {
-                            ResultList = result.getString("CatalogData");
-                            Catalog SubList_all = new Gson().fromJson(ResultList, new TypeToken<Catalog>() {
+
+                            JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("PrefTree")).nextValue();
+                            ResultList = arg1.getString("children");
+                            List<FenLei> c = new Gson().fromJson(ResultList, new TypeToken<List<FenLei>>() {
                             }.getType());
-                            SubList = SubList_all.getSubCata();
-                            if (SubList != null) {
-                                if (SubList.size() == 0) {
+                            if (c != null) {
+                                if (c.size() == 0) {
                                     ToastUtils.show_allways(context, "获取分类列表为空");
                                 } else {
-                                    List<CatalogName> s = new ArrayList<>();
-                                    for (int i = 0; i < 8; i++) {
-                                        s.add(SubList.get(i));
-                                    }
                                     if (adapter == null) {
-                                        adapter = new CatalogListAdapter(context, s);
+                                        adapter = new CatalogListAdapter(context, c);
                                         EBL_Catalog.setAdapter(adapter);
                                     } else {
                                         adapter.notifyDataSetChanged();
@@ -222,7 +223,6 @@ public class FenLeiFragment extends Fragment {
         CatalogList = null;
         adapter = null;
         dialog = null;
-        SubList = null;
         tag = null;
     }
 }
