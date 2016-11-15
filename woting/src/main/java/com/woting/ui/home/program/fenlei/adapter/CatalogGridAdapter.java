@@ -41,14 +41,15 @@ public class CatalogGridAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			holder = new ViewHolder();
 			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_fenlei_child_grid, null);
-			holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);// 台名
+			holder = new ViewHolder();
+			holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		holder.tv_name.setText(list.get(position).getCatalogName());
+
 		return convertView;
 	}
 

@@ -24,10 +24,9 @@
                 android:scaleType="centerCrop" />
 
             <ImageView
+                android:id="@+id/img_zhezhao"
                 android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:layout_centerInParent="true"
-                android:src="@mipmap/wt_6_b_y_b" />
+                android:layout_height="65dp" />
         </RelativeLayout>
 
         <LinearLayout
@@ -59,7 +58,7 @@
 	                android:layout_height="wrap_content"
 	                android:src="@mipmap/image_program_album"
 	                android:layout_marginRight="6dp"
-	                android:visibility="gone"/>
+	                android:visibility="visible"/>
 	
 	            <TextView
 	                android:id="@+id/RankContent"
@@ -91,7 +90,7 @@
                     android:layout_marginLeft="6dp"
                     android:textSize="9sp"
                     android:textColor="@color/beijing"
-                    android:text="6666" />
+                    android:text="0" />
                 
                 <ImageView
                     android:id="@+id/image_number_time"
@@ -107,7 +106,7 @@
                     android:layout_marginLeft="4dp"
                     android:textSize="9sp"
                     android:textColor="@color/beijing"
-                    android:text="88集"/>
+                    android:text="0集"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

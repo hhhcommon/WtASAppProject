@@ -60,7 +60,7 @@ import java.util.List;
  */
 public class MainActivity extends TabActivity implements OnClickListener {
 
-    private MainActivity context;
+    private static MainActivity context;
     public static TabHost tabHost;
 
     private static ImageView image1;
@@ -94,9 +94,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         InitDao();
         tabHost.setCurrentTabByTag("one");
         handleIntent();
-     /*   String a = android.os.Build.VERSION.RELEASE;
-        Log.e("系统版本号", a + "");
-        Log.e("系统版本号截取",a.substring(0,a.indexOf("."))  + "");*/
         String first = BSApplication.SharedPreferences.getString(StringConstant.PREFERENCE, "0");//是否是第一次打开偏好设置界面
         if (first != null && first.equals("1")) {
             // 此时已经进行过偏好设置
@@ -470,9 +467,9 @@ public class MainActivity extends TabActivity implements OnClickListener {
          * 主页跳转的4个界面
 		 */
         tabHost.addTab(tabHost.newTabSpec("one").setIndicator("one")
-                .setContent(new Intent(this, DuiJiangActivity.class)));
-        tabHost.addTab(tabHost.newTabSpec("two").setIndicator("two")
                 .setContent(new Intent(this, HomeActivity.class)));
+        tabHost.addTab(tabHost.newTabSpec("two").setIndicator("two")
+                .setContent(new Intent(this, DuiJiangActivity.class)));
         tabHost.addTab(tabHost.newTabSpec("four").setIndicator("four")
                 .setContent(new Intent(this, DownloadActivity.class)));
         tabHost.addTab(tabHost.newTabSpec("five").setIndicator("five")
@@ -480,45 +477,57 @@ public class MainActivity extends TabActivity implements OnClickListener {
     }
 
     public static void change() {
-        tabHost.setCurrentTabByTag("two");
-        image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
-        image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_selected);
-        image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
-        image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+        setViewOne();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.main_lin_1:
-                tabHost.setCurrentTabByTag("one");
-                image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_selected);
-                image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
-                image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
-                image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+                setViewOne();
                 break;
             case R.id.main_lin_2:
-                tabHost.setCurrentTabByTag("two");
-                image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
-                image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_selected);
-                image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
-                image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+                setViewTwo();
                 break;
             case R.id.main_lin_4:
-                tabHost.setCurrentTabByTag("four");
-                image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
-                image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
-                image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_selected);
-                image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+                setViewFour();
                 break;
             case R.id.main_lin_5:
-                tabHost.setCurrentTabByTag("five");
-                image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
-                image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
-                image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
-                image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_selected);
+                setViewFive();
                 break;
         }
+    }
+
+    private static void setViewOne() {
+        tabHost.setCurrentTabByTag("one");
+        image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_selected);
+        image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
+        image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
+        image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+    }
+
+    private void setViewTwo() {
+        tabHost.setCurrentTabByTag("two");
+        image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
+        image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_selected);
+        image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
+        image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+    }
+
+    private void setViewFour() {
+        tabHost.setCurrentTabByTag("four");
+        image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
+        image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
+        image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_selected);
+        image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+    }
+
+    private void setViewFive() {
+        tabHost.setCurrentTabByTag("five");
+        image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
+        image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
+        image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
+        image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_selected);
     }
 
     private TabHost extracted() {

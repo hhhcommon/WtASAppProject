@@ -8,9 +8,11 @@
                 android:id="@+id/gv_fenlei"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:numColumns="3"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
+                android:numColumns="4"
                 android:scrollbars="none" >
             </GridView>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="@color/gray" />
 </LinearLayout>
