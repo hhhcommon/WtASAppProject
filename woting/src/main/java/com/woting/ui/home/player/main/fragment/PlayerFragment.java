@@ -29,6 +29,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -79,6 +80,7 @@ import com.woting.ui.home.player.timeset.activity.TimerPowerOffActivity;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.album.model.ContentInfo;
 import com.woting.ui.home.program.comment.CommentActivity;
+import com.woting.ui.home.search.adapter.SearchHotAdapter;
 import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
 import com.woting.video.TtsPlayer;
 import com.woting.video.VlcPlayer;
@@ -178,6 +180,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 	private RelativeLayout rv_details;
 	private TextView tv_details_flag;
 	private Boolean details_flag=false;
+	private GridView flowTag;
+	private ArrayList<String> testList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -260,6 +264,15 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		tv_details_flag=(TextView)headView.findViewById(R.id.tv_details_flag); // 展开或者隐藏按钮
         rv_details=(RelativeLayout)headView.findViewById(R.id.rv_details);    // 节目详情布局
 		tv_details_flag.setText("  显示  ");
+		flowTag = (GridView)headView.findViewById(R.id.gv_tag);                    // 展示热门搜索词
+	    testList=new ArrayList<>();
+		testList.add("逻辑思维");
+		testList.add("不是我不明白");
+		testList.add("今天你吃饭了吗");
+		testList.add("看世界");
+		testList.add("影视资讯");
+		flowTag.setAdapter(new SearchHotAdapter(context,testList));
+
 		lin_left = (LinearLayout) headView.findViewById(R.id.lin_left);
 		tv_name = (TextView) headView.findViewById(R.id.tv_name);
 		seekBar = (SeekBar) headView.findViewById(R.id.seekBar);
@@ -1085,6 +1098,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			Receiver = null;
 		}
 	}
+
 
 	/**
 	 * 广播接收器
