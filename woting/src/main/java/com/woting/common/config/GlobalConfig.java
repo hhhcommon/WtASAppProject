@@ -252,5 +252,7 @@ public class GlobalConfig {
     public static final String delCommentUrl=baseUrl+"wt/discuss/del.do";
     // 获取偏好设置类型
     public static final String getPreferenceCatalogUrl = baseUrl + "wt/getPreferenceCatalog.do";
+    // 设置偏好
+    public static final String setPreferenceUrl = baseUrl + "wt/setPreference.do";
 
 }
