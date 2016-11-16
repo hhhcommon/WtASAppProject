@@ -38,6 +38,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.http.MyHttp;
 import com.woting.common.manager.FileManager;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -355,7 +356,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             }
             if (!url.equals("")) {
                 if (!url.startsWith("http:")) {
-                    url = GlobalConfig.imageurl + url;
+                    url = AssembleImageUrlUtils.assembleImageUrl150(GlobalConfig.imageurl + url);
                 }
                 Picasso.with(context).load(url.replace("\\/", "/")).into(imageHead);
             }
