@@ -3,6 +3,7 @@ package com.woting.ui.mine.set.preference.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,6 +83,7 @@ public class PianHaoAdapter extends BaseAdapter {
                 ToastUtils.show_allways( context,list.get(position).getChildren().get(positions).getName());
             }
         });
+
         if(list.get(position).getTag()==position){
             if(list.get(position).getTagType()==1){
                 holder.tv_quanxuan.setText("取消全选");
@@ -97,25 +99,25 @@ public class PianHaoAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if(list.get(position).getChildren().get(0).getchecked().equals("false")){
-
                     for(int i=0;i<list.get(position).getChildren().size();i++){
                         list.get(position).getChildren().get(i).setchecked("true");
                         list.get(position).setTag(position);
                         list.get(position).setTagType(1);
+                        Log.e("prefer","position"+position+list.get(position).getChildren().get(0).getName());
                     }
-
                 }else{
-
                     for(int i=0;i<list.get(position).getChildren().size();i++){
                         list.get(position).getChildren().get(i).setchecked("false");
                         list.get(position).setTag(position);
                         list.get(position).setTagType(0);
+                        Log.e("prefer","position"+position+list.get(position).getChildren().get(0).getName());
                     }
 
                 }
                 PreferenceActivity.RefreshView(list);
             }
         });
+      /*  Log.e("prefer","position"+position+list.get(position).getChildren().get(0).getName());*/
         return convertView;
     }
 

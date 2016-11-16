@@ -40,7 +40,7 @@ import java.util.List;
 public class PreferenceActivity extends BaseActivity implements View.OnClickListener {
 
     private LinearLayout head_left_btn;
-    private String tag = "PREFERENCE_REQUEST_CANCEL_TAG"; // 取消网络请求标签
+    private String tag = "PREFERENCE_SET_REQUEST_CANCEL_TAG"; // 取消网络请求标签
     private PreferenceActivity context;
     private Dialog dialog;
     private boolean isCancelRequest;
@@ -105,7 +105,7 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                     //dialog = DialogUtils.Dialogph(context, "通讯中...");
                     //send(); 还没有接口
-                    ToastUtils.show_allways(context,"测试点击"+preferenceList.toString());
+                    ToastUtils.show_allways(context,preferenceList.toString());
                 } else {
                     ToastUtils.show_allways(context, "网络失败，请检查网络");
                 }
@@ -207,12 +207,10 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
     }
 
     public static void RefreshView(List<FenLei> list){
-
         if(adapter!=null){
             tempList=list;
             adapter.notifyDataSetChanged();
         }
-
     }
 
 
@@ -235,5 +233,7 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
         et.putString(StringConstant.PREFERENCE, "1");
         et.commit();
         setContentView(R.layout.activity_null);
+        adapter=null;
+        tempList=null;
     }
 }
