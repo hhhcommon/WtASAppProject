@@ -15,8 +15,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="8dp"
             android:gravity="left|center"
             android:orientation="horizontal">
 
@@ -38,11 +38,12 @@
 
             <TextView
                 android:id="@+id/tv_Quan_Xuan"
-                  android:layout_width="wrap_content"
+                  android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:text="全选"
                   android:textSize="14sp"
-                  android:layout_marginLeft="220dp"
+                  android:gravity="right"
+                  android:layout_marginRight="10dp"
                   android:textColor="@color/dinglan_orange"/>
         </LinearLayout>
 
@@ -51,11 +52,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:numColumns="4"
-            android:horizontalSpacing="15dp"
+            android:horizontalSpacing="10dp"
             android:verticalSpacing="5dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:layout_marginBottom="5dp"
+            android:paddingLeft="15dp"
+            android:layout_marginBottom="15dp"
             android:scrollbars="none">
         </com.woting.common.widgetui.MyGridView>
 

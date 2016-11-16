@@ -60,10 +60,10 @@ public class PreferGridAdapter extends BaseAdapter {
         String s1= list.get(position).getName();
         String s= list.get(position).getchecked();
         if(list.get(position).getchecked().equals("false")){
-            holder.img_prefer.setImageResource(R.mipmap.wt_dianzan_nomal);
+            holder.img_prefer.setImageResource(R.mipmap.wt_img_unprefer);
             holder.rv_all.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.bg_edittext_stroke_gray));
         }else{
-            holder.img_prefer.setImageResource(R.mipmap.wt_dianzan_select);
+            holder.img_prefer.setImageResource(R.mipmap.wt_img_prefer);
             holder.rv_all.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.bg_edittext_stroke_dinglan));
         }
         return convertView;

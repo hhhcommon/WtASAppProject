@@ -94,7 +94,6 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
                                     +tempList.get(i).getChildren().get(j).getAttributes().getId()+"::"+tempList.get(i).getChildren().get(j).getName();
                             preferenceList.add(s);
                         }
-
                     }
                 }
                 }catch (Exception e){
@@ -157,7 +156,6 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
                 if (ReturnType != null) {
                     if (ReturnType.equals("1001")) {
                         try {
-
                             JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("PrefTree")).nextValue();
                             ResultList = arg1.getString("children");
                             tempList = new Gson().fromJson(ResultList, new TypeToken<List<FenLei>>() {
@@ -173,6 +171,7 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
                                     } else {
                                         adapter.notifyDataSetChanged();
                                     }
+                                    setInterface();
                                 }
                             } else {
                                 ToastUtils.show_allways(context, "获取分类列表为空");
@@ -204,6 +203,29 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
                 }
             }
         });
+    }
+
+    private void setInterface() {
+        adapter.setOnListener(new PianHaoAdapter.preferCheck() {
+            @Override
+            public void clickPosition(int position) {
+                if(tempList.get(position).getChildren().get(0).getchecked().equals("false")){
+                    for(int i=0;i<tempList.get(position).getChildren().size();i++){
+                        tempList.get(position).getChildren().get(i).setchecked("true");
+                    }
+                    tempList.get(position).setTag(position);
+                    tempList.get(position).setTagType(1);
+                }else{
+                    for(int i=0;i<tempList.get(position).getChildren().size();i++){
+                        tempList.get(position).getChildren().get(i).setchecked("false");
+                    }
+                    tempList.get(position).setTag(position);
+                    tempList.get(position).setTagType(0);
+             }
+                adapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
     public static void RefreshView(List<FenLei> list){
