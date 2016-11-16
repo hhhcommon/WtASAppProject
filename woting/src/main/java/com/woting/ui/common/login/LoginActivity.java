@@ -273,13 +273,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                                 e.printStackTrace();
                             }
                             try {
-                                region = ui.getString("Region");
-                                et.putString(StringConstant.REGION, region);
+                                birthday = ui.getString("Birthday");
+                                et.putString(StringConstant.BIRTHDAY, birthday);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                             try {
-                                birthday = ui.getString("Birthday");
+                                region = ui.getString("Region");
 
                                 /**
                                  * 地区的三种格式
@@ -315,19 +315,31 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                             }
                             try {
                                 email = ui.getString("Email");
-                                et.putString(StringConstant.EMAIL, email);
+                                if(email.equals("&null")) {
+                                    et.putString(StringConstant.EMAIL, "");
+                                } else {
+                                    et.putString(StringConstant.EMAIL, email);
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                             try {
                                 userSign = ui.getString("UserSign");
-                                et.putString(StringConstant.USER_SIGN, userSign);
+                                if(userSign.equals("&null")) {
+                                    et.putString(StringConstant.USER_SIGN, "");
+                                } else {
+                                    et.putString(StringConstant.USER_SIGN, userSign);
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                             try {
                                 nickName = ui.getString("NickName");
-                                et.putString(StringConstant.NICK_NAME, nickName);
+                                if(nickName.equals("&null")) {
+                                    et.putString(StringConstant.NICK_NAME, "");
+                                } else {
+                                    et.putString(StringConstant.NICK_NAME, nickName);
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -471,7 +483,23 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         }
                         try {
                             region = ui.getString("Region");
-                            et.putString(StringConstant.REGION, region);
+                            /**
+                             * 地区的三种格式
+                             * 1、行政区划\/**市\/市辖区\/**区
+                             * 2、行政区划\/**特别行政区  港澳台三地区
+                             * 3、行政区划\/**自治区\/通辽市  自治区地区
+                             */
+                            if (region != null && !region.equals("")) {
+                                String[] subRegion = region.split("/");
+                                if(subRegion.length > 3) {
+                                    region = subRegion[1] + " " + subRegion[3];
+                                } else if(subRegion.length == 3) {
+                                    region = subRegion[1] + " " + subRegion[2];
+                                } else {
+                                    region = subRegion[1].substring(0, 2);
+                                }
+                                et.putString(StringConstant.REGION, region);
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -495,19 +523,31 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         }
                         try {
                             email = ui.getString("Email");
-                            et.putString(StringConstant.EMAIL, email);
+                            if(email.equals("&null")) {
+                                et.putString(StringConstant.EMAIL, "");
+                            } else {
+                                et.putString(StringConstant.EMAIL, email);
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                         try {
                             userSign = ui.getString("UserSign");
-                            et.putString(StringConstant.USER_SIGN, userSign);
+                            if(userSign.equals("&null")) {
+                                et.putString(StringConstant.USER_SIGN, "");
+                            } else {
+                                et.putString(StringConstant.USER_SIGN, userSign);
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                         try {
                             nickName = ui.getString("NickName");
-                            et.putString(StringConstant.NICK_NAME, nickName);
+                            if(nickName.equals("&null")) {
+                                et.putString(StringConstant.NICK_NAME, "");
+                            } else {
+                                et.putString(StringConstant.NICK_NAME, nickName);
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

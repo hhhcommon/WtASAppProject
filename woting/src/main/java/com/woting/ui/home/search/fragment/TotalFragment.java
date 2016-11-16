@@ -19,6 +19,12 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.CommonUtils;
+import com.woting.common.util.DialogUtils;
+import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.fragment.PlayerFragment;
@@ -29,12 +35,6 @@ import com.woting.ui.home.search.activity.SearchLikeActivity;
 import com.woting.ui.home.search.adapter.SearchContentAdapter;
 import com.woting.ui.home.search.model.SuperRankInfo;
 import com.woting.ui.main.MainActivity;
-import com.woting.common.config.GlobalConfig;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
-import com.woting.common.util.CommonUtils;
-import com.woting.common.util.DialogUtils;
-import com.woting.common.util.ToastUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,60 +43,53 @@ import org.json.JSONTokener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TotalFragment extends Fragment {
-    private View rootView;
+/**
+ * 搜索结果全部列表
+ */
+public class TotalFragment extends Fragment implements OnGroupClickListener {
     private FragmentActivity context;
-    private Dialog dialog;
-    private ExpandableListView ex_ListView;
     private ArrayList<RankInfo> playList;// 节目list
     private ArrayList<RankInfo> sequList;// 专辑list
-    private ArrayList<RankInfo> ttsList;//tts
+    private ArrayList<RankInfo> ttsList;// tts
     private ArrayList<RankInfo> radioList;// radio
     private ArrayList<SuperRankInfo> list = new ArrayList<>();// 返回的节目 list，拆分之前的 list
-    private List<RankInfo> SubList;
+    private ArrayList<RankInfo> subList;
     private SearchContentAdapter searchAdapter;
     private SearchPlayerHistoryDao dbDao;
-    private Intent mIntent;
+
+    private Dialog dialog;
+    private View rootView;
+    private ExpandableListView expandListView;
+
     protected String searchStr;
     private String tag = "TOTAL_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
+
+    // 初始化数据库对象
+    private void initDao() {
+        dbDao = new SearchPlayerHistoryDao(context);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
         initDao();
-        mIntent = new Intent();
-        mIntent.setAction(SearchLikeActivity.SEARCH_VIEW_UPDATE);
+
+        IntentFilter mFilter = new IntentFilter();
+        mFilter.addAction(SearchLikeActivity.SEARCH_VIEW_UPDATE);
+        context.registerReceiver(mBroadcastReceiver, mFilter);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_favorite_total, container, false);
-            ex_ListView = (ExpandableListView) rootView.findViewById(R.id.ex_listview);
-            // 去除indicator
-            ex_ListView.setGroupIndicator(null);
-            setListener();
-            IntentFilter mFilter = new IntentFilter();
-            mFilter.addAction(SearchLikeActivity.SEARCH_VIEW_UPDATE);
-            context.registerReceiver(mBroadcastReceiver, mFilter);
+            expandListView = (ExpandableListView) rootView.findViewById(R.id.ex_listview);
+            expandListView.setGroupIndicator(null);
+            expandListView.setOnGroupClickListener(this);
         }
         return rootView;
-    }
-
-    private void initDao() {
-        dbDao = new SearchPlayerHistoryDao(context);
-    }
-
-    private void setListener() {
-        ex_ListView.setOnGroupClickListener(new OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                SearchLikeActivity.updateViewPage(list.get(groupPosition).getKey());
-                return true;
-            }
-        });
     }
 
     private void sendRequest() {
@@ -117,7 +110,7 @@ public class TotalFragment extends Fragment {
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     try {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        SubList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
+                        subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -134,43 +127,43 @@ public class TotalFragment extends Fragment {
                     if(radioList != null) {
                         radioList.clear();
                     }
-                    if (SubList.size() >= 0) {
-                        for (int i = 0; i < SubList.size(); i++) {
-                            if (SubList.get(i).getMediaType() != null && !SubList.get(i).getMediaType().equals("")) {
-                                if (SubList.get(i).getMediaType().equals("AUDIO")) {
+                    if (subList.size() >= 0) {
+                        for (int i = 0; i < subList.size(); i++) {
+                            if (subList.get(i).getMediaType() != null && !subList.get(i).getMediaType().equals("")) {
+                                if (subList.get(i).getMediaType().equals("AUDIO")) {
                                     if (playList == null) {
                                         playList = new ArrayList<>();
-                                        playList.add(SubList.get(i));
+                                        playList.add(subList.get(i));
                                     } else {
                                         if (playList.size() < 3) {
-                                            playList.add(SubList.get(i));
+                                            playList.add(subList.get(i));
                                         }
                                     }
-                                } else if (SubList.get(i).getMediaType().equals("SEQU")) {
+                                } else if (subList.get(i).getMediaType().equals("SEQU")) {
                                     if (sequList == null) {
                                         sequList = new ArrayList<>();
-                                        sequList.add(SubList.get(i));
+                                        sequList.add(subList.get(i));
                                     } else {
                                         if (sequList.size() < 3) {
-                                            sequList.add(SubList.get(i));
+                                            sequList.add(subList.get(i));
                                         }
                                     }
-                                } else if (SubList.get(i).getMediaType().equals("TTS")) {
+                                } else if (subList.get(i).getMediaType().equals("TTS")) {
                                     if (ttsList == null) {
                                         ttsList = new ArrayList<>();
-                                        ttsList.add(SubList.get(i));
+                                        ttsList.add(subList.get(i));
                                     } else {
                                         if (ttsList.size() < 3) {
-                                            ttsList.add(SubList.get(i));
+                                            ttsList.add(subList.get(i));
                                         }
                                     }
-                                } else if (SubList.get(i).getMediaType().equals("RADIO")) {
+                                } else if (subList.get(i).getMediaType().equals("RADIO")) {
                                     if (radioList == null) {
                                         radioList = new ArrayList<>();
-                                        radioList.add(SubList.get(i));
+                                        radioList.add(subList.get(i));
                                     } else {
                                         if (radioList.size() < 3) {
-                                            radioList.add(SubList.get(i));
+                                            radioList.add(subList.get(i));
                                         }
                                     }
                                 }
@@ -201,13 +194,17 @@ public class TotalFragment extends Fragment {
                             list.add(mSuperRankInfo1);
                         }
                         if (list.size() != 0) {
-                            searchAdapter = new SearchContentAdapter(context, list);
-                            ex_ListView.setAdapter(searchAdapter);
+                            if(searchAdapter == null) {
+                                expandListView.setAdapter(searchAdapter = new SearchContentAdapter(context, list));
+                            } else {
+                                searchAdapter.setList(list);
+                            }
                             for (int i = 0; i < list.size(); i++) {
-                                ex_ListView.expandGroup(i);
+                                expandListView.expandGroup(i);
                             }
                             setItemListener();
                         } else {
+                            searchAdapter.setList(list);
                             ToastUtils.show_allways(context, "没有数据");
                         }
                     } else {
@@ -217,7 +214,13 @@ public class TotalFragment extends Fragment {
                     ToastUtils.show_allways(context, "" + Message);
                 } else if (ReturnType != null && ReturnType.equals("1011")) {
                     ToastUtils.show_allways(context, "" + Message);
-                    ex_ListView.setVisibility(View.GONE);
+                    list.clear();
+                    if(searchAdapter == null) {
+                        expandListView.setAdapter(searchAdapter = new SearchContentAdapter(context, list));
+                    } else {
+                        searchAdapter.setList(list);
+                    }
+//                    expandListView.setVisibility(View.GONE);
                 } else {
                     if (Message != null && !Message.trim().equals("")) {
                         ToastUtils.show_allways(context, Message + "");
@@ -247,7 +250,7 @@ public class TotalFragment extends Fragment {
     }
 
     protected void setItemListener() {
-        ex_ListView.setOnChildClickListener(new OnChildClickListener() {
+        expandListView.setOnChildClickListener(new OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 String MediaType = null;
@@ -256,7 +259,7 @@ public class TotalFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (MediaType != null && MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
+                if (MediaType != null && MediaType.equals("RADIO") || MediaType != null && MediaType.equals("AUDIO")) {
                     String playName = list.get(groupPosition).getList().get(childPosition).getContentName();
                     String playImage = list.get(groupPosition).getList().get(childPosition).getContentImg();
                     String playUrl = list.get(groupPosition).getList().get(childPosition).getContentPlay();
@@ -294,7 +297,7 @@ public class TotalFragment extends Fragment {
                     HomeActivity.UpdateViewPager();
                     PlayerFragment.SendTextRequest(list.get(groupPosition).getList().get(childPosition).getContentName(), context.getApplicationContext());
                     context.finish();
-                } else if (MediaType.equals("SEQU")) {
+                } else if (MediaType != null && MediaType.equals("SEQU")) {
                     Intent intent = new Intent(context, AlbumActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("type", "search");
@@ -307,6 +310,12 @@ public class TotalFragment extends Fragment {
                 return true;
             }
         });
+    }
+
+    @Override
+    public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+        SearchLikeActivity.updateViewPage(list.get(groupPosition).getKey());
+        return true;
     }
 
     // 广播接收器
@@ -341,7 +350,7 @@ public class TotalFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
-        ex_ListView = null;
+        expandListView = null;
         dbDao = null;
         context.unregisterReceiver(mBroadcastReceiver);
         rootView = null;
@@ -352,9 +361,8 @@ public class TotalFragment extends Fragment {
         ttsList = null;
         radioList = null;
         list = null;
-        SubList = null;
+        subList = null;
         searchAdapter = null;
-        mIntent = null;
         searchStr = null;
         tag = null;
     }
