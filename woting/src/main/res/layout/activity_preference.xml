@@ -76,8 +76,8 @@
         android:background="@color/white"
         android:layout_height="match_parent">
 
-        <GridView
-            android:id="@+id/gv_pianhao"
+        <ListView
+            android:id="@+id/lv_prefer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -86,16 +86,7 @@
             android:numColumns="4"
             android:scrollbars="none"
             android:verticalSpacing="18dp" >
-        </GridView>
+        </ListView>
 
-    <TextView
-        android:id="@+id/tv_over"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/dinglan_orange"
-        android:gravity="center"
-        android:text="完成"
-        android:textColor="@color/WHITE"
-        android:textSize="@dimen/activity_head_center_s" />
     </LinearLayout>
 </LinearLayout>
