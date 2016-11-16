@@ -3,7 +3,6 @@ package com.woting.ui.mine.set.preference.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +29,17 @@ public class PianHaoAdapter extends BaseAdapter {
     private Context context;
     private ViewHolder holder;
     private PreferGridAdapter adapters;
+    private preferCheck preferCheck;
+    private View.OnClickListener onClickListener;
 
     public PianHaoAdapter(Context context, List<FenLei> list) {
         super();
         this.list = list;
         this.context = context;
+    }
+
+    public void setOnListener(preferCheck friendcheck) {
+        this.preferCheck = friendcheck;
     }
 
     @Override
@@ -83,22 +88,28 @@ public class PianHaoAdapter extends BaseAdapter {
                 ToastUtils.show_allways( context,list.get(position).getChildren().get(positions).getName());
             }
         });
-
+        int a=list.get(position).getTag();
         if(list.get(position).getTag()==position){
             if(list.get(position).getTagType()==1){
                 holder.tv_quanxuan.setText("取消全选");
                 holder.tv_quanxuan.setTextColor(context.getResources().getColor(R.color.gray));
+                holder.tv_name.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
             }else{
                 holder.tv_quanxuan.setText("全选");
                 holder.tv_quanxuan.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
+                holder.tv_name.setTextColor(context.getResources().getColor(R.color.black));
             }
+        }else{
+            holder.tv_quanxuan.setText("全选");
+            holder.tv_quanxuan.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
+            holder.tv_name.setTextColor(context.getResources().getColor(R.color.black));
         }
-
+/*
         holder.tv_quanxuan.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                if(list.get(position).getChildren().get(0).getchecked().equals("false")){
+           *//*     if(list.get(position).getChildren().get(0).getchecked().equals("false")){
                     for(int i=0;i<list.get(position).getChildren().size();i++){
                         list.get(position).getChildren().get(i).setchecked("true");
                         list.get(position).setTag(position);
@@ -113,14 +124,22 @@ public class PianHaoAdapter extends BaseAdapter {
                         Log.e("prefer","position"+position+list.get(position).getChildren().get(0).getName());
                     }
 
-                }
+                }*//*
                 PreferenceActivity.RefreshView(list);
             }
-        });
+        });*/
       /*  Log.e("prefer","position"+position+list.get(position).getChildren().get(0).getName());*/
+        holder.tv_quanxuan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                preferCheck.clickPosition(position);
+            }
+        });
         return convertView;
     }
-
+    public interface preferCheck {
+        public void clickPosition(int position);
+    }
 
     class ViewHolder {
         public TextView tv_name;
