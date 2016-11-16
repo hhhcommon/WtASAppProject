@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
+        android:layout_marginBottom="5dp"
         android:background="@color/white"
         android:orientation="vertical">
 
@@ -23,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="5dp"
                 android:src="@mipmap/wt_icon_music_fenlei_group" />
 
             <TextView
@@ -32,8 +33,17 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="排行榜"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_Quan_Xuan"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="全选"
+                  android:textSize="14sp"
+                  android:layout_marginLeft="220dp"
+                  android:textColor="@color/dinglan_orange"/>
         </LinearLayout>
 
         <com.woting.common.widgetui.MyGridView
@@ -46,7 +56,8 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:layout_marginBottom="5dp"
-            android:scrollbars="none"/>
+            android:scrollbars="none">
+        </com.woting.common.widgetui.MyGridView>
 
     </LinearLayout>
 </LinearLayout>

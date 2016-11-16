@@ -57,14 +57,12 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/tv_tiaoguo"
+                android:id="@+id/tv_save"
                 android:layout_width="48dp"
                 android:gravity="center"
                 android:textColor="@color/white"
                 android:layout_height="match_parent"
-                android:text="跳过">
-
-            </TextView>
+                android:text="保存"/>
 
     </LinearLayout>
 
@@ -73,19 +71,16 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:background="@color/white"
+        android:background="@color/app_bg"
         android:layout_height="match_parent">
 
         <ListView
             android:id="@+id/lv_prefer"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_margin="10dp"
-            android:horizontalSpacing="18dp"
-            android:numColumns="4"
-            android:scrollbars="none"
-            android:verticalSpacing="18dp" >
+            android:layout_height="match_parent"
+            android:divider="@color/white"
+            android:layout_marginBottom="10dp"
+            android:scrollbars="none" >
         </ListView>
 
     </LinearLayout>
