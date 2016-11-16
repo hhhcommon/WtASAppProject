@@ -13,7 +13,7 @@
         <ImageView
             android:layout_width="8dp"
             android:layout_height="8dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="5dp"
             android:src="@mipmap/wt_icon_music_fenlei_child" />
         <TextView

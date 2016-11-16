@@ -29,14 +29,13 @@
                 android:layout_width="65dip"
                 android:layout_height="65dip"
                 android:layout_centerInParent="true"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/wt_image_playertx" />
+                android:scaleType="centerCrop" />
 
             <ImageView
+                android:id="@+id/img_liu"
                 android:layout_width="65dip"
                 android:layout_height="65dip"
-                android:layout_centerInParent="true"
-                android:src="@mipmap/wt_6_b_y_b" />
+                android:layout_centerInParent="true" />
         </RelativeLayout>
 
             <LinearLayout
@@ -66,8 +65,8 @@
                     android:gravity="left|center" >
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
                         android:layout_marginRight="6dp"
                         android:src="@mipmap/image_program_album" />
 
@@ -90,8 +89,8 @@
                     android:gravity="left|center" >
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
                         android:layout_marginRight="6dp"
                         android:src="@mipmap/image_program_listener" />
 
@@ -99,22 +98,22 @@
                         android:id="@+id/tv_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="8888"
+                        android:text="0"
                         android:textColor="@color/beijing"
                         android:textSize="9sp" />
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
                         android:layout_marginLeft="14dp"
                         android:layout_marginRight="6dp"
-                        android:src="@mipmap/image_program_time" />
+                        android:src="@mipmap/image_program_size" />
 
                     <TextView
                         android:id="@+id/tv_sum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="播放时长"
+                        android:text="MB"
                         android:textColor="@color/beijing"
                         android:textSize="9sp" />
                 </LinearLayout>

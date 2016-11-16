@@ -18,7 +18,6 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="18dp"
         	android:layout_marginLeft="18dp"
-            android:src="@mipmap/wt_image_playertx"
             android:padding="2dp"
             android:background="@drawable/bg_imgview_radioitem"/>
 

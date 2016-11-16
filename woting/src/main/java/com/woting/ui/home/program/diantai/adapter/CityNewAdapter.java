@@ -7,12 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
-import com.woting.ui.home.program.fmlist.model.RankInfo;
+import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
+import com.woting.common.util.ToastUtils;
+import com.woting.ui.home.program.fmlist.model.RankInfo;
 
 import java.util.List;
 
@@ -45,31 +49,85 @@ public class CityNewAdapter extends BaseAdapter {
 		ViewHolder holder;
 		if (convertView == null) {
 			holder = new ViewHolder();
-			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_fragment_radio_grid, null);
-			holder.textview_ranktitle = (TextView) convertView.findViewById(R.id.tv_name);// 台名
+			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_rankinfo, null);
+			holder.textview_ranktitle = (TextView) convertView.findViewById(R.id.RankTitle);// 台名
+			holder.textview_rankplaying = (TextView) convertView.findViewById(R.id.RankPlaying);// 正在播放的节目
 			holder.imageview_rankimage = (ImageView) convertView.findViewById(R.id.RankImageUrl);// 电台图标
+			holder.mTv_number = (TextView) convertView.findViewById(R.id.tv_num);
+			holder.lin_CurrentPlay = (LinearLayout) convertView.findViewById(R.id.lin_currentplay);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		RankInfo lists = list.get(position);
-		holder.textview_ranktitle.setText(lists.getContentName());
-		if (lists.getContentImg() == null || lists.getContentImg().equals("")
-				|| lists.getContentImg().equals("null") || lists.getContentImg().trim().equals("")) {
-			
-			Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
-			holder.imageview_rankimage.setImageBitmap(bmp);
-		} else {
-			String url = /*GlobalConfig.imageurl +*/ lists.getContentImg();
-			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
+		if(lists.getMediaType()!=null&&!lists.getMediaType().equals("")){
+			if (lists.getMediaType().equals("RADIO")) {
+				if (lists.getContentName() == null|| lists.getContentName().equals("")) {
+					holder.textview_ranktitle.setText("未知");
+				} else {
+					holder.textview_ranktitle.setText(lists.getContentName());
+				}
+				if (lists.getContentPub() == null|| lists.getContentPub().equals("")) {
+					holder.textview_rankplaying.setText("未知");
+				} else {
+					holder.textview_rankplaying.setText(lists.getContentPub());
+				}
+				if (lists.getContentImg() == null
+						|| lists.getContentImg().equals("")
+						|| lists.getContentImg().equals("null")
+						|| lists.getContentImg().trim().equals("")) {
+					Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
+					holder.imageview_rankimage.setImageBitmap(bmp);
+				} else {
+					String url;
+					if(lists.getContentImg().startsWith("http")){
+						url =  lists.getContentImg();
+					}else{
+						url = GlobalConfig.imageurl + lists.getContentImg();
+					}
+					url=AssembleImageUrlUtils.assembleImageUrl150(url);
+					Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
+				}
+			} else {// 判断mediatype==AUDIO的情况
+				if (lists.getContentName() == null|| lists.getContentName().equals("")) {
+					holder.textview_ranktitle.setText("未知");
+				} else {
+					holder.textview_ranktitle.setText(lists.getContentName());
+				}
+				if (lists.getContentImg() == null
+						|| lists.getContentImg().equals("")
+						|| lists.getContentImg().equals("null")
+						|| lists.getContentImg().trim().equals("")) {
+					Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
+					holder.imageview_rankimage.setImageBitmap(bmp);
+				} else {
+					String url;
+					if(lists.getContentImg().startsWith("http")){
+						url =  lists.getContentImg();
+					}else{
+						url = GlobalConfig.imageurl + lists.getContentImg();
+					}
+					url=AssembleImageUrlUtils.assembleImageUrl150(url);
+					Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
+				}
+				holder.lin_CurrentPlay.setVisibility(View.INVISIBLE);
+			}
+		}else{
+			ToastUtils.show_allways(context, "服务器返回数据MediaType为空");
 		}
-		
+		if (lists.getPlayCount() == null
+				|| lists.getPlayCount().equals("")
+				|| lists.getPlayCount().equals("null")) {
+			holder.mTv_number.setText("8000");
+		} else {
+			holder.mTv_number.setText(lists.getPlayCount());
+		}
 		return convertView;
 	}
 
-
 	private class ViewHolder {
+		public TextView textview_ranktitle,mTv_number,textview_rankplaying;
 		public ImageView imageview_rankimage;
-		public TextView textview_ranktitle;
+		public LinearLayout lin_CurrentPlay;
 	}
 }

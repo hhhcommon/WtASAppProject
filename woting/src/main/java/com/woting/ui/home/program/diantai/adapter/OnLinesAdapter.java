@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.ui.home.program.diantai.model.RadioPlay;
 import com.woting.ui.home.program.fmlist.activity.FMListActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
@@ -155,6 +156,7 @@ public class OnLinesAdapter extends BaseExpandableListAdapter  {
 						}else{
 							url = GlobalConfig.imageurl + lists.getContentImg();
 						}
+						url=AssembleImageUrlUtils.assembleImageUrl150(url);
 						Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 					}
 				} else {// 判断mediatype==AUDIO的情况
@@ -176,6 +178,7 @@ public class OnLinesAdapter extends BaseExpandableListAdapter  {
 						}else{
 							url = GlobalConfig.imageurl + lists.getContentImg();
 						}
+						url= AssembleImageUrlUtils.assembleImageUrl150(url);
 						Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 					}
 					holder.lin_CurrentPlay.setVisibility(View.INVISIBLE);

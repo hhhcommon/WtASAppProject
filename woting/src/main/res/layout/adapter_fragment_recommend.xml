@@ -54,8 +54,8 @@
             
 	            <ImageView
 	                android:id="@+id/image_hint_visibility"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
+	                android:layout_width="15dp"
+	                android:layout_height="15dp"
 	                android:src="@mipmap/image_program_album"
 	                android:layout_marginRight="6dp"
 	                android:visibility="visible"/>
@@ -75,12 +75,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="left|center"
+                android:gravity="center_vertical"
                 android:layout_marginBottom="11dp">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
                     android:src="@mipmap/image_program_listener" />
 
                 <TextView
@@ -94,8 +94,8 @@
                 
                 <ImageView
                     android:id="@+id/image_number_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
                     android:src="@mipmap/image_program_number"
                     android:layout_marginLeft="14dp"/>
 

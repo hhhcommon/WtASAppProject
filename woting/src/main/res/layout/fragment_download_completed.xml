@@ -12,29 +12,13 @@
         android:background="#f7f7f7"
         android:orientation="horizontal"
         android:visibility="visible" >
-
-        <LinearLayout
-            android:id="@+id/lin_clear"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="15dp"
-            android:layout_weight="1"
-            android:gravity="center|left" >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:src="@mipmap/wt_download_clear" />
-        </LinearLayout>
-
         <LinearLayout
             android:id="@+id/lin_quanxuan"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
             android:layout_weight="1"
-            android:gravity="center|right"
+            android:gravity="center|left"
             android:visibility="invisible" >
 
             <ImageView
@@ -49,6 +33,22 @@
                 android:layout_marginLeft="5dp"
                 android:text="全选" />
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/lin_clear"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginRight="15dp"
+            android:gravity="center|right" >
+
+            <ImageView
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:layout_marginRight="10dp"
+                android:src="@mipmap/wt_download_clear" />
+        </LinearLayout>
+
+
     </LinearLayout>
 
     <RelativeLayout
