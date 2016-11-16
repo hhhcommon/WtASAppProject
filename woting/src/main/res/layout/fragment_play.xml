@@ -16,7 +16,7 @@
             android:animationCache="false"
             android:divider="@color/WHITE"
             android:scrollbars="none"
-            android:scrollingCache="false"></com.woting.common.widgetui.xlistview.XListView>
+            android:scrollingCache="false"/>
 
         <LinearLayout
             android:id="@+id/lin_chose"
@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical"></LinearLayout>
+                android:orientation="vertical"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

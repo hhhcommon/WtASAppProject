@@ -214,13 +214,6 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                     ToastUtils.show_allways(context, "" + Message);
                 } else if (ReturnType != null && ReturnType.equals("1011")) {
                     ToastUtils.show_allways(context, "" + Message);
-                    list.clear();
-                    if(searchAdapter == null) {
-                        expandListView.setAdapter(searchAdapter = new SearchContentAdapter(context, list));
-                    } else {
-                        searchAdapter.setList(list);
-                    }
-//                    expandListView.setVisibility(View.GONE);
                 } else {
                     if (Message != null && !Message.trim().equals("")) {
                         ToastUtils.show_allways(context, Message + "");
@@ -328,6 +321,13 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                     searchStr = intent.getStringExtra("searchStr");
                     if (searchStr != null && !searchStr.equals("")) {
+                        list.clear();
+                        if(searchAdapter == null) {
+                            expandListView.setAdapter(searchAdapter = new SearchContentAdapter(context, list));
+                        } else {
+                            searchAdapter.setList(list);
+                        }
+
                         dialog = DialogUtils.Dialogph(context, "通讯中");
                         sendRequest();
                     }
