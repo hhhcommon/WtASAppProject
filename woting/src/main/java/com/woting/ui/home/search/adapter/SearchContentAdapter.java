@@ -28,6 +28,11 @@ public class SearchContentAdapter extends BaseExpandableListAdapter {
 		this.mSuperRankInfo = mSuperRankInfo;
 	}
 
+    public void setList(List<SuperRankInfo> mSuperRankInfo) {
+        this.mSuperRankInfo = mSuperRankInfo;
+        notifyDataSetChanged();
+    }
+
 	@Override
 	public int getGroupCount() {
 		return mSuperRankInfo.size();

@@ -238,11 +238,12 @@ public class SoundFragment extends Fragment {
                             newList.clear();
                         }
                         newList.addAll(SubList);
-                        if (adapter == null) {
-                            mListView.setAdapter(adapter = new FavorListAdapter(context, newList));
-                        } else {
-                            adapter.notifyDataSetChanged();
-                        }
+                        adapter.notifyDataSetChanged();
+//                        if (adapter == null) {
+//                            mListView.setAdapter(adapter = new FavorListAdapter(context, newList));
+//                        } else {
+//                            adapter.notifyDataSetChanged();
+//                        }
                         setListener();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -286,7 +287,15 @@ public class SoundFragment extends Fragment {
             String action = intent.getAction();
             if (action.equals(SearchLikeActivity.SEARCH_VIEW_UPDATE)) {
                 searchStr=intent.getStringExtra("searchStr");
-                if(searchStr!=null&&!searchStr.equals("")){
+                if(searchStr!=null&&!searchStr.equals("")){refreshType = 1;
+                    page = 1;
+                    newList.clear();
+                    if (adapter == null) {
+                        mListView.setAdapter(adapter = new FavorListAdapter(context, newList));
+                    } else {
+                        adapter.notifyDataSetChanged();
+                    }
+
                     dialog = DialogUtils.Dialogph(context, "通讯中");
                     sendRequest();
                 }

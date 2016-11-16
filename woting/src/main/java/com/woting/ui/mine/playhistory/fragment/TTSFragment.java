@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.woting.R;
+import com.woting.common.constant.StringConstant;
+import com.woting.common.util.CommonUtils;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.fragment.PlayerFragment;
@@ -23,9 +25,6 @@ import com.woting.ui.main.MainActivity;
 import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
 import com.woting.ui.mine.playhistory.adapter.PlayHistoryAdapter;
 import com.woting.ui.mine.playhistory.adapter.PlayHistoryAdapter.playhistorycheck;
-import com.woting.common.constant.StringConstant;
-import com.woting.common.util.CommonUtils;
-import com.woting.common.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,9 +111,9 @@ public class TTSFragment extends Fragment{
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
-		if(isVisibleToUser && isLoad && !isData){
-			ToastUtils.show_allways(context, "没有历史播放记录");
-		}
+//		if(isVisibleToUser && isLoad && !isData){
+//			ToastUtils.show_allways(context, "没有历史播放记录");
+//		}
 		if(isVisibleToUser && TotalFragment.isDeleteTTS){
 			getData();
 			TotalFragment.isDeleteTTS = false;
