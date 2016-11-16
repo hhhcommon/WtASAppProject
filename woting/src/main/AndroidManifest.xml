@@ -551,11 +551,11 @@
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
         <!--  -->
-        <activity
-            android:name=".ui.home.program.tuijian.activity.RecommendLikeListActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+        <!--<activity-->
+            <!--android:name=".ui.home.program.tuijian.activity.RecommendLikeListActivity"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:theme="@android:style/Theme.Light.NoTitleBar"-->
+            <!--android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>-->
 
         <!-- 智能硬件 -->
         <activity

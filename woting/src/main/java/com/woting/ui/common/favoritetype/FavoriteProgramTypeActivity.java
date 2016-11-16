@@ -63,7 +63,7 @@ public class FavoriteProgramTypeActivity extends BaseActivity implements View.On
     private void initView() {
         // 保存是否已经选择过喜欢的节目类型  进入此界面之后即表示选择过  只有安装应用第一次打开时会进入到此界面
         SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
-        et.putBoolean(StringConstant.FAVORITE_PROGRAM_TYPE, false);
+        et.putBoolean(StringConstant.FAVORITE_PROGRAM_TYPE, true);
         if(!et.commit()) {
             Log.w("commit", "数据 commit 失败!");
         }
@@ -215,7 +215,7 @@ public class FavoriteProgramTypeActivity extends BaseActivity implements View.On
         for(int i=0; i<addList.size(); i++) {
             for(int j=0; j<subList.size(); j++) {
                 if(addList.get(i).equals(subList.get(j).getCatalogName())) {
-                    builder.append(subList.get(j).getCatalogName() + "::" + subList.get(j).getCatalogId() + ",");
+                    builder.append("6::" + subList.get(j).getCatalogId() + ",");
                 }
             }
             Log.v("selectOk", addList.get(i));
@@ -288,12 +288,14 @@ public class FavoriteProgramTypeActivity extends BaseActivity implements View.On
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                finish();
             }
 
             @Override
             protected void requestError(VolleyError error) {
                 if(dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
+                finish();
             }
         });
     }

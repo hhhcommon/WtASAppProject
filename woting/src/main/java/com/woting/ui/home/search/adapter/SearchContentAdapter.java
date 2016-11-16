@@ -12,10 +12,11 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.AssembleImageUrlUtils;
+import com.woting.common.util.BitmapUtils;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.home.search.model.SuperRankInfo;
-import com.woting.common.config.GlobalConfig;
-import com.woting.common.util.BitmapUtils;
 
 import java.util.List;
 
@@ -27,6 +28,11 @@ public class SearchContentAdapter extends BaseExpandableListAdapter {
 		this.context = context;
 		this.mSuperRankInfo = mSuperRankInfo;
 	}
+
+    public void setList(List<SuperRankInfo> mSuperRankInfo) {
+        this.mSuperRankInfo = mSuperRankInfo;
+        notifyDataSetChanged();
+    }
 
 	@Override
 	public int getGroupCount() {
@@ -132,6 +138,7 @@ public class SearchContentAdapter extends BaseExpandableListAdapter {
 				}else{
 					url1 = GlobalConfig.imageurl + lists.getContentImg();
 				}
+                url1 = AssembleImageUrlUtils.assembleImageUrl150(url1);
 				Picasso.with(context).load(url1.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 			}
 		} else if(lists.getMediaType().equals("AUDIO")){

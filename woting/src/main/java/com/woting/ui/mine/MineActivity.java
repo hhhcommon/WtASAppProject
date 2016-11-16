@@ -38,6 +38,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.http.MyHttp;
 import com.woting.common.manager.FileManager;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -355,7 +356,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             }
             if (!url.equals("")) {
                 if (!url.startsWith("http:")) {
-                    url = GlobalConfig.imageurl + url;
+                    url = AssembleImageUrlUtils.assembleImageUrl150(GlobalConfig.imageurl + url);
                 }
                 Picasso.with(context).load(url.replace("\\/", "/")).into(imageHead);
             }
@@ -758,13 +759,21 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         try {
             nickName = pM.getNickName();
             if(!nickName.equals(sharedPreferences.getString(StringConstant.NICK_NAME, ""))) {
-                jsonObject.put("NickName", nickName);
+                if(nickName.trim().equals("")) {
+                    jsonObject.put("NickName", "&null");
+                } else {
+                    jsonObject.put("NickName", nickName);
+                }
                 isUpdate = true;
             }
 
             sign = pM.getUserSign();
             if(!sign.equals(sharedPreferences.getString(StringConstant.USER_SIGN, ""))) {
-                jsonObject.put("UserSign", sign);
+                if(sign.trim().equals("")) {
+                    jsonObject.put("UserSign", "&null");
+                } else {
+                    jsonObject.put("UserSign", sign);
+                }
                 isUpdate = true;
             }
 
@@ -797,7 +806,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                         ToastUtils.show_allways(context, "邮箱格式不正确，请重新修改!");
                     }
                 } else {
-                    jsonObject.put("MailAddr", email);
+                    jsonObject.put("MailAddr", "&null");
                     isUpdate = true;
                 }
             }

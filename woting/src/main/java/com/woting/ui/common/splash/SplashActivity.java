@@ -20,7 +20,6 @@ import com.woting.ui.common.model.UserInfo;
 import com.woting.ui.common.welcome.activity.WelcomeActivity;
 import com.woting.ui.main.MainActivity;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -134,20 +133,32 @@ public class SplashActivity extends Activity {
                                 et.putString(StringConstant.STAR_SIGN, starSign);
                             }
                             if (email != null && !email.equals("")) {
-                                et.putString(StringConstant.EMAIL, email);
+                                if(email.equals("&null")) {
+                                    et.putString(StringConstant.EMAIL, "");
+                                } else {
+                                    et.putString(StringConstant.EMAIL, email);
+                                }
                             }
                             if (userSign != null && !userSign.equals("")) {
-                                et.putString(StringConstant.USER_SIGN, userSign);
+                                if(userSign.equals("&null")) {
+                                    et.putString(StringConstant.USER_SIGN, "");
+                                } else {
+                                    et.putString(StringConstant.USER_SIGN, userSign);
+                                }
                             }
                             if (nickName != null && !nickName.equals("")) {
-                                et.putString(StringConstant.NICK_NAME, nickName);
+                                if(nickName.equals("&null")) {
+                                    et.putString(StringConstant.NICK_NAME, "");
+                                } else {
+                                    et.putString(StringConstant.NICK_NAME, nickName);
+                                }
                             }
                             if (!et.commit()) {
                                 Log.v("commit", "数据 commit 失败!");
                             }
                         }
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 

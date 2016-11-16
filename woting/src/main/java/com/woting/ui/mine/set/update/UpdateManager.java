@@ -64,8 +64,6 @@ public class UpdateManager extends Activity {
                     break;
             }
         }
-
-        ;
     };
 
     /**

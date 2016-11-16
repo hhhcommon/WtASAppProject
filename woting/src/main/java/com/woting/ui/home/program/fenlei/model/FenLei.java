@@ -9,6 +9,24 @@ import java.util.List;
 public class FenLei implements Serializable{
 	private String name;
 	private List<FenLeiName> children;
+	private int tag; //存全选tag的位置
+	private int tagType ; //存全选的类型
+
+	public int getTag() {
+		return tag;
+	}
+
+	public void setTag(int tag) {
+		this.tag = tag;
+	}
+
+	public int getTagType() {
+		return tagType;
+	}
+
+	public void setTagType(int tagType) {
+		this.tagType = tagType;
+	}
 
 	public String getName() {
 		return name;
