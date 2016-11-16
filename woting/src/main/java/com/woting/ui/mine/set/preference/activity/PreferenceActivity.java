@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
@@ -23,9 +22,8 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.baseactivity.BaseActivity;
-import com.woting.ui.home.program.fenlei.adapter.CatalogListAdapter;
 import com.woting.ui.home.program.fenlei.model.FenLei;
-import com.woting.ui.mine.set.preference.model.pianhao;
+import com.woting.ui.mine.set.preference.adapter.PianHaoAdapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,20 +38,17 @@ import java.util.List;
  * 邮箱：645700751@qq.com
  */
 public class PreferenceActivity extends BaseActivity implements View.OnClickListener {
-    private TextView tv_over;
-    private TextView tv_tiao_guo;
+
     private LinearLayout head_left_btn;
-
-    private int type = 1;
-    private ArrayList<pianhao> list;
-
     private String tag = "PREFERENCE_REQUEST_CANCEL_TAG"; // 取消网络请求标签
     private PreferenceActivity context;
     private Dialog dialog;
     private boolean isCancelRequest;
     private List<String> preferenceList=new ArrayList<>();
     private ListView lv_prefer;
-    private CatalogListAdapter adapter;
+    private static PianHaoAdapter adapter;
+    private static List<FenLei> tempList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,19 +68,13 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
 
     private void initView() {
         head_left_btn = (LinearLayout) findViewById(R.id.head_left_btn);
-        tv_tiao_guo = (TextView) findViewById(R.id.tv_tiaoguo);
         lv_prefer=(ListView)findViewById(R.id.lv_prefer);
-        if (type == 1) {
-            head_left_btn.setVisibility(View.INVISIBLE);
-        } else {
-            tv_tiao_guo.setVisibility(View.INVISIBLE);
-        }
-
+        findViewById(R.id.tv_save).setOnClickListener(this);//保存
     }
 
     private void setListener() {
         head_left_btn.setOnClickListener(this);
-        tv_tiao_guo.setOnClickListener(this);
+
     }
 
     @Override
@@ -94,16 +83,22 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
             case R.id.head_left_btn:
                 finish();
                 break;
-            case R.id.tv_tiaoguo:
-                finish();
-                break;
-            case R.id.tv_over:
+            case R.id.tv_save:
                 //判断点选
                 preferenceList.clear();
-                for(int i=0;i<list.size();i++){
-                    if(list.get(i).getType()==2){
-                        preferenceList.add(list.get(i).getName());
+                try{
+                for(int i=0;i<tempList.size();i++){
+                    for(int j=0;j<tempList.get(i).getChildren().size();j++){
+                        if(tempList.get(i).getChildren().get(j).getchecked().equals("true")){
+                            String s=tempList.get(i).getChildren().get(j).getAttributes().getmId()+"::"
+                                    +tempList.get(i).getChildren().get(j).getAttributes().getId()+"::"+tempList.get(i).getChildren().get(j).getName();
+                            preferenceList.add(s);
+                        }
+
                     }
+                }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
                 if(preferenceList.size()!=0){
                 //发送网络请求
@@ -115,7 +110,7 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
                     ToastUtils.show_allways(context, "网络失败，请检查网络");
                 }
                 }else{
-                    ToastUtils.show_allways(context,"您还没有选择偏好，是否跳过？");
+                    ToastUtils.show_allways(context,"您还没有选择偏好");
                 }
                 break;
         }
@@ -140,6 +135,7 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
         }
 
         VolleyRequest.RequestPost(GlobalConfig.getPreferenceUrl, tag, jsonObject, new VolleyCallback() {
+
             private String ReturnType;
             private String ResultList;
 
@@ -164,14 +160,15 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
 
                             JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("PrefTree")).nextValue();
                             ResultList = arg1.getString("children");
-                            List<FenLei> c = new Gson().fromJson(ResultList, new TypeToken<List<FenLei>>() {
+                            tempList = new Gson().fromJson(ResultList, new TypeToken<List<FenLei>>() {
                             }.getType());
-                            if (c != null) {
-                                if (c.size() == 0) {
+                            if ( tempList != null) {
+                                if ( tempList.size() == 0) {
                                     ToastUtils.show_allways(context, "获取分类列表为空");
                                 } else {
+                                    //对每个返回的分类做设置 默认为全部未选中状态 此时获取的为是所有的列表内容
                                     if (adapter == null) {
-                                        adapter = new CatalogListAdapter(context, c);
+                                        adapter = new PianHaoAdapter(context,tempList);
                                         lv_prefer.setAdapter(adapter);
                                     } else {
                                         adapter.notifyDataSetChanged();
@@ -208,6 +205,16 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
             }
         });
     }
+
+    public static void RefreshView(List<FenLei> list){
+
+        if(adapter!=null){
+            tempList=list;
+            adapter.notifyDataSetChanged();
+        }
+
+    }
+
 
     @Override
     public Resources getResources() {

@@ -20,7 +20,6 @@ import com.woting.ui.common.model.UserInfo;
 import com.woting.ui.common.welcome.activity.WelcomeActivity;
 import com.woting.ui.main.MainActivity;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -113,7 +112,7 @@ public class SplashActivity extends Activity {
                              * 2、行政区划\/**特别行政区  港澳台三地区
                              * 3、行政区划\/**自治区\/通辽市  自治区地区
                              */
-                           /* if (region != null && !region.equals("")) {
+                            if (region != null && !region.equals("")) {
                                 String[] subRegion = region.split("/");
                                 if(subRegion.length > 3) {
                                     region = subRegion[1] + " " + subRegion[3];
@@ -123,7 +122,7 @@ public class SplashActivity extends Activity {
                                     region = subRegion[1].substring(0, 2);
                                 }
                                 et.putString(StringConstant.REGION, region);
-                            }*/
+                            }
                             if (birthday != null && !birthday.equals("")) {
                                 et.putString(StringConstant.BIRTHDAY, birthday);
                             }
