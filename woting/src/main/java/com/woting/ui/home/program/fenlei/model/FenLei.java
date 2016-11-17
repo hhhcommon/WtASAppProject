@@ -11,6 +11,15 @@ public class FenLei implements Serializable{
 	private List<FenLeiName> children;
 	private int tag; //存全选tag的位置
 	private int tagType ; //存全选的类型
+	private String id;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public int getTag() {
 		return tag;
