@@ -411,8 +411,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			historyNews.setContentId(historyNew.getContentID());
 			historyNews.setContentDesc(historyNew.getPlayerContentDesc());
 			historyNews.setContentImg(historyNew.getPlayerImage());
-			String s=historyNew.getPlayerAllTime();
-			String s1=historyNew.getPlayerAllTime();
             if(historyNew.getPlayerAllTime().equals("")){
                 historyNews.setPlayerAllTime("0");
             }else{
@@ -423,8 +421,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
             }else{
                 historyNews.setPlayerInTime(historyNew.getPlayerInTime());
             }
-			/*historyNews.setPlayerAllTime(historyNew.getPlayerAllTime());
-			historyNews.setPlayerInTime(historyNew.getPlayerInTime());*/
 			historyNews.setContentShareURL(historyNew.getPlayContentShareUrl());
 			historyNews.setContentFavorite(historyNew.getContentFavorite());
 			historyNews.setLocalurl(historyNew.getLocalurl());
@@ -1767,9 +1763,13 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 
 			if(GlobalConfig.playerobject.getSequName()!=null){
 				tv_sequ.setText(GlobalConfig.playerobject.getSequName());
+			}else{
+				tv_sequ.setText("暂无专辑");
 			}
-			if(GlobalConfig.playerobject.getSequDesc()!=null){
-				tv_desc.setText(GlobalConfig.playerobject.getSequDesc());
+			if(GlobalConfig.playerobject.getContentDesc()!=null){
+				tv_desc.setText(GlobalConfig.playerobject.getContentDesc());
+			}else{
+				tv_desc.setText("暂无介绍");
 			}
 			if (GlobalConfig.playerobject.getContentFavorite() != null
 					&& !GlobalConfig.playerobject.equals("")) {
