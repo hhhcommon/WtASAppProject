@@ -307,8 +307,7 @@ public class RadioFragment extends Fragment {
                 } else if (ReturnType != null && ReturnType.equals("1003")) {
                     ToastUtils.show_short(context, "无法获得列表");
                 } else if (ReturnType != null && ReturnType.equals("1011")) {
-                    ToastUtils.show_allways(context, "无数据");
-                    mListView.setVisibility(View.GONE);
+                    ToastUtils.show_short(context, "无数据");
                 }
                 // 无论何种返回值，都需要终止掉上拉刷新及下拉加载的滚动状态
                 if (refreshType == 1) {

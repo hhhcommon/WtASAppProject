@@ -121,12 +121,32 @@ public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
             holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
             Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
             holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
-            //holder.lin_clear = (LinearLayout) convertView.findViewById(R.id.lin_clear);
+            holder.imageLast = (ImageView) convertView.findViewById(R.id.image_last);
+            holder.imageNum = (ImageView) convertView.findViewById(R.id.image_num);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         PlayerHistory lists = mSuperRankInfo.get(groupPosition).getHistoryList().get(childPosition);
+
+        if(lists.getPlayerMediaType() != null) {
+            if(lists.getPlayerMediaType().equals("RADIO")) {
+                holder.imageLast.setVisibility(View.GONE);
+                holder.textView_PlayIntroduce.setVisibility(View.GONE);
+            } else {
+                holder.imageLast.setVisibility(View.VISIBLE);
+                holder.textView_PlayIntroduce.setVisibility(View.VISIBLE);
+            }
+
+            if(lists.getPlayerMediaType().equals("TTS")) {
+                holder.imageNum.setVisibility(View.GONE);
+                holder.textNumber.setVisibility(View.GONE);
+            } else {
+                holder.imageNum.setVisibility(View.VISIBLE);
+                holder.textNumber.setVisibility(View.VISIBLE);
+            }
+        }
+
         if (lists.getPlayerMediaType().equals("RADIO")) {
             if (lists.getPlayerName() == null || lists.getPlayerName().equals("")) {
                 holder.textView_playName.setText("未知");
@@ -134,7 +154,7 @@ public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
                 holder.textView_playName.setText(lists.getPlayerName());
             }
             if (lists.getPlayerNum() == null || lists.getPlayerNum().equals("")) {
-                holder.textNumber.setText("8888");
+                holder.textNumber.setText("0");
             } else {
                 holder.textNumber.setText(lists.getPlayerNum());
             }
@@ -205,41 +225,7 @@ public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
                 url = AssembleImageUrlUtils.assembleImageUrl150(url);
                 Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageView_playImage);
             }
-
-        }/*else if(lists.getPlayerMediaType().equals("SEQU")){// 判断mediatype==sequ的情况
-            if (lists.getPlayerName() == null || lists.getPlayerName().equals("")) {
-				holder.textView_playName.setText("未知");
-			} else {
-				holder.textView_playName.setText(lists.getPlayerName());
-			}
-			if (lists.getPlayerNum() == null || lists.getPlayerNum().equals("")) {
-				holder.textNumber.setText("8888");
-			} else {
-				holder.textNumber.setText(lists.getPlayerNum());
-			}
-			if (lists.getContentPub() == null || lists.getContentPub().equals("")) {
-				holder.textRankContent.setText("我听科技");
-			} else {
-				holder.textRankContent.setText(lists.getContentPub());
-			}
-			if (lists.getPlayerInTime() == null | lists.getPlayerInTime().equals("")) {
-				holder.textView_PlayIntroduce.setText("未知");
-			} else {
-				format = new SimpleDateFormat("mm:ss");
-				format.setTimeZone(TimeZone.getTimeZone("GMT"));
-				a = Integer.valueOf(lists.getPlayerInTime());
-				String s = format.format(a);
-				holder.textView_PlayIntroduce.setText("上次播放至" + s);
-			}
-			if (lists.getPlayerImage() == null || lists.getPlayerImage().equals("") 
-					|| lists.getPlayerImage().equals("null") || lists.getPlayerImage().trim().equals("")) {
-				holder.imageView_playImage.setImageResource(R.drawable.wt_image_playertx_80);
-			} else {
-				// GlobalConfig.imageurl+ 
-				url = lists.getPlayerImage();
-				imageLoader.DisplayImage(url.replace("\\/", "/"), holder.imageView_playImage, false, false, null);
-			}
-		}*/ else if (lists.getPlayerMediaType().equals("TTS")) {
+        } else if (lists.getPlayerMediaType().equals("TTS")) {
             if (lists.getPlayerName() == null || lists.getPlayerName().equals("")) {
                 holder.textView_playName.setText("未知");
             } else {
@@ -300,6 +286,7 @@ public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
         public TextView textNumber;
         public TextView textRankContent;
         public ImageView img_zhezhao;
-        //public LinearLayout lin_clear;
+        public ImageView imageLast;
+        public ImageView imageNum;
     }
 }

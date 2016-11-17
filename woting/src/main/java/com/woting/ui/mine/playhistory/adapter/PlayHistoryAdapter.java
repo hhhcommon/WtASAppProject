@@ -77,12 +77,32 @@ public class PlayHistoryAdapter extends BaseAdapter {
 			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
 			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
 			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
-			//holder.lin_clear = (LinearLayout) convertView.findViewById(R.id.lin_clear);
+            holder.imageLast = (ImageView) convertView.findViewById(R.id.image_last);
+            holder.imageNum = (ImageView) convertView.findViewById(R.id.image_num);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		lists = list.get(position);
+
+        if(list.get(position).getPlayerMediaType() != null) {
+            if(list.get(position).getPlayerMediaType().equals("RADIO")) {
+                holder.imageLast.setVisibility(View.GONE);
+                holder.textView_PlayIntroduce.setVisibility(View.GONE);
+            } else {
+                holder.imageLast.setVisibility(View.VISIBLE);
+                holder.textView_PlayIntroduce.setVisibility(View.VISIBLE);
+            }
+
+            if(list.get(position).getPlayerMediaType().equals("TTS")) {
+                holder.imageNum.setVisibility(View.GONE);
+                holder.textNumber.setVisibility(View.GONE);
+            } else {
+                holder.imageNum.setVisibility(View.VISIBLE);
+                holder.textNumber.setVisibility(View.VISIBLE);
+            }
+        }
+
 		if (lists.getPlayerName() == null || lists.getPlayerName().equals("")) {
 			holder.textView_playName.setText("未知");
 		} else {
@@ -153,5 +173,7 @@ public class PlayHistoryAdapter extends BaseAdapter {
 		public TextView textNumber;
 		public TextView textRankContent;
 		public ImageView img_zhezhao;
+        public ImageView imageLast;
+        public ImageView imageNum;
 	}
 }

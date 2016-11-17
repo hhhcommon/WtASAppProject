@@ -300,7 +300,6 @@ public class TTSFragment extends Fragment {
                         ToastUtils.show_short(context, "无法获得列表");
                     } else if (ReturnType != null && ReturnType.equals("1011")) {
                         ToastUtils.show_short(context, "无数据");
-                        mListView.setVisibility(View.GONE);
                     } else {
                         ToastUtils.show_short(context, "ReturnType不能为空");
                     }
