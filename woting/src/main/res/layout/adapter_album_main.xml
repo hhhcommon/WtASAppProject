@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="朋友"
+                android:text="wtkj"
                 android:textColor="@color/wt_login_third"
                 android:textSize="@dimen/list_text_size" />
 
@@ -37,8 +37,8 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
                     android:src="@mipmap/image_program_listener" />
 
                 <TextView
@@ -46,13 +46,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="6dp"
-                    android:text="3755"
+                    android:text="0"
                     android:textColor="@color/beijing"
                     android:textSize="12sp" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
                     android:layout_marginLeft="14dp"
                     android:src="@mipmap/image_program_time" />
 
@@ -61,7 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="6dp"
-                    android:text="3755"
+                    android:text="0"
                     android:textColor="@color/beijing"
                     android:textSize="12sp" />
 
@@ -75,7 +75,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="18dp"
             android:gravity="center"
-            android:text="2016-3-15"
+            android:text="0"
             android:textColor="@color/beijing"
             android:textSize="12sp" />
     </LinearLayout>

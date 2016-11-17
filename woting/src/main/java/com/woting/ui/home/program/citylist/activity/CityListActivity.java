@@ -28,7 +28,7 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.common.model.Catalog;
 import com.woting.ui.home.common.model.CatalogName;
 import com.woting.ui.home.program.citylist.adapter.CityListAdapter;
@@ -49,7 +49,7 @@ import java.util.List;
  * @author 辛龙
  *  2016年4月7日
  */
-public class CityListActivity extends BaseActivity implements OnClickListener {
+public class CityListActivity extends AppBaseActivity implements OnClickListener {
 
 	private CityListActivity context;
 	private CharacterParser characterParser;

@@ -68,7 +68,7 @@ public class AlbumMainAdapter extends BaseAdapter {
 			holder.tv_name.setText(lists.getContentName());
 		}
 		if (lists.getPlayCount() == null || lists.getPlayCount().equals("")) {
-			holder.tv_playnum.setText("000");
+			holder.tv_playnum.setText("0");
 		} else {
 			holder.tv_playnum.setText(lists.getPlayCount());
 		}

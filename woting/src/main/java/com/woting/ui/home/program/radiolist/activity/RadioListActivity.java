@@ -23,7 +23,7 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.PagerSlidingTabStrip;
-import com.woting.ui.baseactivity.BaseFragmentActivity;
+import com.woting.ui.baseactivity.AppBaseFragmentActivity;
 import com.woting.ui.home.program.fenlei.model.FenLeiName;
 import com.woting.ui.home.program.radiolist.adapter.MyPagerAdaper;
 import com.woting.ui.home.program.radiolist.fragment.ClassifyFragment;
@@ -42,7 +42,7 @@ import java.util.List;
  * @author 辛龙
  * 2016年4月5日
  */
-public class RadioListActivity extends BaseFragmentActivity implements OnClickListener {
+public class RadioListActivity extends AppBaseFragmentActivity implements OnClickListener {
 	private LinearLayout head_left_btn;		// 返回
 	private TextView mTextView_Head;
 	public static String catalogName;

@@ -35,7 +35,7 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.MyEditText;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.program.comment.adapter.ChatLVAdapter;
 import com.woting.ui.home.program.comment.adapter.ContentNoAdapter;
 import com.woting.ui.home.program.comment.adapter.FaceGVAdapter;
@@ -52,7 +52,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CommentActivity extends BaseActivity implements View.OnClickListener {
+public class CommentActivity extends AppBaseActivity implements View.OnClickListener {
 
     private CommentActivity context;
     private ImageView image_face;

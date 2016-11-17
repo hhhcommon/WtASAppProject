@@ -581,7 +581,7 @@
     <string name="updated_at">上次更新于%1$s前</string>
     <string name="updated_just_now">刚刚更新</string>
     <string name="time_error">时间有问题</string>
-    <string name="play_time">59\' 59\"</string>
+    <string name="play_time">0\' 0\"</string>
 
     <array name="array_guide_tips">
         <item>@string/tip_guide_first</item>

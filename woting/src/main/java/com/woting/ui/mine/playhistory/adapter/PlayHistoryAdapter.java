@@ -1,6 +1,7 @@
 package com.woting.ui.mine.playhistory.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.util.BitmapUtils;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 
 import java.text.SimpleDateFormat;
@@ -71,6 +73,9 @@ public class PlayHistoryAdapter extends BaseAdapter {
 			holder.check = (ImageView) convertView.findViewById(R.id.img_check);
 			holder.textNumber = (TextView) convertView.findViewById(R.id.text_number);
 			holder.textRankContent = (TextView) convertView.findViewById(R.id.RankContent);
+			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
+			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
+			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
 			//holder.lin_clear = (LinearLayout) convertView.findViewById(R.id.lin_clear);
 			convertView.setTag(holder);
 		} else {
@@ -92,7 +97,7 @@ public class PlayHistoryAdapter extends BaseAdapter {
 		} else {
 			holder.textRankContent.setText(lists.getPlayerFrom());
 		}
-		if (lists.getPlayerInTime() == null | lists.getPlayerInTime().equals("")) {
+		if (lists.getPlayerInTime() == null || lists.getPlayerInTime().equals("")) {
 			holder.textView_PlayIntroduce.setText("未知");
 		} else {
 			format = new SimpleDateFormat("mm:ss");
@@ -139,5 +144,6 @@ public class PlayHistoryAdapter extends BaseAdapter {
 		public LinearLayout layoutCheck;
 		public TextView textNumber;
 		public TextView textRankContent;
+		public ImageView img_zhezhao;
 	}
 }

@@ -19,7 +19,6 @@ import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.manager.MyActivityManager;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
@@ -27,7 +26,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.fragment.PlayerFragment;
@@ -49,7 +48,7 @@ import java.util.List;
  * @author 辛龙
  *         2016年8月8日
  */
-public class FMListActivity extends BaseActivity implements OnClickListener {
+public class FMListActivity extends AppBaseActivity implements OnClickListener {
     private FMListActivity context;
     private LinearLayout head_left_btn;
     private XListView mListView;
@@ -76,8 +75,6 @@ public class FMListActivity extends BaseActivity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fmlist);
         context = this;
-        MyActivityManager mam = MyActivityManager.getInstance();
-        mam.pushOneActivity(this);
         RefreshType = 1;
         setView();
         setListener();
@@ -316,8 +313,6 @@ public class FMListActivity extends BaseActivity implements OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
-        MyActivityManager mam = MyActivityManager.getInstance();
-        mam.popOneActivity(context);
         head_left_btn = null;
         mListView = null;
         dialog = null;
