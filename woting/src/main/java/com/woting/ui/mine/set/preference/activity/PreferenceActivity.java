@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -16,6 +17,7 @@ import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
+import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
@@ -91,7 +93,7 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
                     for(int j=0;j<tempList.get(i).getChildren().size();j++){
                         if(tempList.get(i).getChildren().get(j).getchecked().equals("true")){
                             String s=tempList.get(i).getChildren().get(j).getAttributes().getmId()+"::"
-                                    +tempList.get(i).getChildren().get(j).getAttributes().getId()+"::"+tempList.get(i).getChildren().get(j).getName();
+                                    +tempList.get(i).getChildren().get(j).getAttributes().getId();
                             preferenceList.add(s);
                         }
                     }
@@ -102,8 +104,8 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
                 if(preferenceList.size()!=0){
                 //发送网络请求
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                    //dialog = DialogUtils.Dialogph(context, "通讯中...");
-                    //send(); 还没有接口
+                    dialog = DialogUtils.Dialogph(context, "通讯中...");
+                    sendRequest();
                     ToastUtils.show_allways(context,preferenceList.toString());
                 } else {
                     ToastUtils.show_allways(context, "网络失败，请检查网络");
@@ -115,12 +117,89 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
         }
     }
 
+    private void sendRequest() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if(!TextUtils.isEmpty(CommonUtils.getUserIdNoImei(context))){
+                jsonObject.put("UserId",CommonUtils.getUserId(context));
+            }
+            String s=preferenceList.toString();
+            jsonObject.put("PrefStr", s.substring(1,s.length()-1));
+            jsonObject.put("IsOnlyCata",2);
+            jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
+            jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
+            jsonObject.put("IMEI", PhoneMessage.imei);
+            PhoneMessage.getGps(context);
+            jsonObject.put("GPS-longitude", PhoneMessage.longitude);
+            jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
+            jsonObject.put("PCDType", GlobalConfig.PCDType);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        VolleyRequest.RequestPost(GlobalConfig.setPreferenceUrl, tag, jsonObject, new VolleyCallback() {
+
+            private String ReturnType;
+            private String ResultList;
+
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+                if (isCancelRequest) {
+                    return;
+                }
+                try {
+                    ReturnType = result.getString("ReturnType");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                // 根据返回值来对程序进行解析
+                if (ReturnType != null) {
+                    if (ReturnType.equals("1001")) {
+                        try {
+                         ToastUtils.show_allways(context,"偏好已经设置成功");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else if (ReturnType.equals("1002")) {
+                        ToastUtils.show_allways(context, "无此分类信息");
+                    } else if (ReturnType.equals("1003")) {
+                        ToastUtils.show_allways(context, "分类不存在");
+                    } else if (ReturnType.equals("1011")) {
+                        ToastUtils.show_allways(context, "当前暂无分类");
+                    } else if (ReturnType.equals("T")) {
+                        ToastUtils.show_allways(context, "获取列表异常");
+                    } else {
+                        ToastUtils.show_allways(context, "获取列表异常");
+                    }
+
+                } else {
+                    ToastUtils.show_allways(context, "数据获取异常，请稍候重试");
+                }
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+    }
+
     /**
      * 发送网络请求
      */
     private void send() {
         JSONObject jsonObject = new JSONObject();
         try {
+            if(!TextUtils.isEmpty(CommonUtils.getUserIdNoImei(context))){
+                jsonObject.put("UserId",CommonUtils.getUserIdNoImei(context));
+            }
             jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
             jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
             jsonObject.put("IMEI", PhoneMessage.imei);
