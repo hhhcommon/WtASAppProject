@@ -70,8 +70,8 @@ public class FenLeiFragment extends Fragment {
             headView = LayoutInflater.from(context).inflate(R.layout.headview_fragment_fenlei, null);
             View footView = LayoutInflater.from(context).inflate(R.layout.footview_fragment_fenlei, null);
             EBL_Catalog.addHeaderView(headView);
-            EBL_Catalog.addFooterView(footView);
             EBL_Catalog.setSelector(new ColorDrawable(Color.TRANSPARENT));
+            EBL_Catalog.addFooterView(footView);
 
             // 轮播图
             RollPagerView mLoopViewPager = (RollPagerView) headView.findViewById(R.id.slideshowView);

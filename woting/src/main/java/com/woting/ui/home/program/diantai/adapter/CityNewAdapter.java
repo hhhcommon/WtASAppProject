@@ -55,6 +55,9 @@ public class CityNewAdapter extends BaseAdapter {
 			holder.imageview_rankimage = (ImageView) convertView.findViewById(R.id.RankImageUrl);// 电台图标
 			holder.mTv_number = (TextView) convertView.findViewById(R.id.tv_num);
 			holder.lin_CurrentPlay = (LinearLayout) convertView.findViewById(R.id.lin_currentplay);
+			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
+			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
+			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -67,11 +70,15 @@ public class CityNewAdapter extends BaseAdapter {
 				} else {
 					holder.textview_ranktitle.setText(lists.getContentName());
 				}
-				if (lists.getContentPub() == null|| lists.getContentPub().equals("")) {
-					holder.textview_rankplaying.setText("未知");
-				} else {
-					holder.textview_rankplaying.setText(lists.getContentPub());
-				}
+
+//				if (lists.getContentPub() == null|| lists.getContentPub().equals("")) {
+//					holder.textview_rankplaying.setText("未知");
+//				} else {
+//					holder.textview_rankplaying.setText(lists.getContentPub());
+//				}
+
+				holder.textview_rankplaying.setText("测试-无节目单数据");
+
 				if (lists.getContentImg() == null
 						|| lists.getContentImg().equals("")
 						|| lists.getContentImg().equals("null")
@@ -88,7 +95,8 @@ public class CityNewAdapter extends BaseAdapter {
 					url=AssembleImageUrlUtils.assembleImageUrl150(url);
 					Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 				}
-			} else {// 判断mediatype==AUDIO的情况
+			} else {
+				// 判断mediatype==AUDIO的情况
 				if (lists.getContentName() == null|| lists.getContentName().equals("")) {
 					holder.textview_ranktitle.setText("未知");
 				} else {
@@ -129,5 +137,6 @@ public class CityNewAdapter extends BaseAdapter {
 		public TextView textview_ranktitle,mTv_number,textview_rankplaying;
 		public ImageView imageview_rankimage;
 		public LinearLayout lin_CurrentPlay;
+		public ImageView img_zhezhao;
 	}
 }

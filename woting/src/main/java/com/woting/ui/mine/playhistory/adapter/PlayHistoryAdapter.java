@@ -1,6 +1,7 @@
 package com.woting.ui.mine.playhistory.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,6 +13,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.AssembleImageUrlUtils;
+import com.woting.common.util.BitmapUtils;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 
 import java.text.SimpleDateFormat;
@@ -22,7 +26,6 @@ public class PlayHistoryAdapter extends BaseAdapter {
 	private List<PlayerHistory> list;
 	private Context context;
 	private PlayerHistory lists;
-	private String url;
 	private SimpleDateFormat format;
 	private Object a;
 	private playhistorycheck playcheck;
@@ -71,6 +74,9 @@ public class PlayHistoryAdapter extends BaseAdapter {
 			holder.check = (ImageView) convertView.findViewById(R.id.img_check);
 			holder.textNumber = (TextView) convertView.findViewById(R.id.text_number);
 			holder.textRankContent = (TextView) convertView.findViewById(R.id.RankContent);
+			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
+			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
+			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
 			//holder.lin_clear = (LinearLayout) convertView.findViewById(R.id.lin_clear);
 			convertView.setTag(holder);
 		} else {
@@ -83,7 +89,7 @@ public class PlayHistoryAdapter extends BaseAdapter {
 			holder.textView_playName.setText(lists.getPlayerName());
 		}
 		if (lists.getPlayerNum() == null || lists.getPlayerNum().equals("")) {
-			holder.textNumber.setText("8888");
+			holder.textNumber.setText("0");
 		} else {
 			holder.textNumber.setText(lists.getPlayerNum());
 		}
@@ -100,11 +106,18 @@ public class PlayHistoryAdapter extends BaseAdapter {
 			a = Integer.valueOf(lists.getPlayerInTime());
 			holder.textView_PlayIntroduce.setText("上次播放至" + format.format(a));
 		}
-		if (lists.getPlayerImage() == null || lists.getPlayerImage().equals("") 
+		if (lists.getPlayerImage() == null || lists.getPlayerImage().equals("")
 				|| lists.getPlayerImage().equals("null") || lists.getPlayerImage().trim().equals("")) {
-			holder.imageView_playImage.setImageResource(R.mipmap.wt_image_playertx);
+			Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
+			holder.imageView_playImage.setImageBitmap(bmp);
 		} else {
-			url = lists.getPlayerImage();
+			String url;
+			if (lists.getPlayerImage().startsWith("http")) {
+				url = lists.getPlayerImage();
+			} else {
+				url = GlobalConfig.imageurl + lists.getPlayerImage();
+			}
+			url = AssembleImageUrlUtils.assembleImageUrl150(url);
 			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageView_playImage);
 		}
 		if(lists.isCheck()){
@@ -139,5 +152,6 @@ public class PlayHistoryAdapter extends BaseAdapter {
 		public LinearLayout layoutCheck;
 		public TextView textNumber;
 		public TextView textRankContent;
+		public ImageView img_zhezhao;
 	}
 }

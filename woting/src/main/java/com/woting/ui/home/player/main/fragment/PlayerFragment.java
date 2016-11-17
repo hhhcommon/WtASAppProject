@@ -185,6 +185,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 	private ArrayList<String> testList;
 	private static TextView tv_sequ;
 	private static TextView tv_desc;
+	private static ImageView img_download;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -264,6 +265,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		image_liu = (ImageView)headView.findViewById(R.id.image_liu);
 		Bitmap bmp1 = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_bd);
 		image_liu.setImageBitmap(bmp1);
+		img_download= (ImageView) headView.findViewById(R.id.img_download);
+
 		tv_details_flag=(TextView)headView.findViewById(R.id.tv_details_flag); // 展开或者隐藏按钮
         rv_details=(RelativeLayout)headView.findViewById(R.id.rv_details);    // 节目详情布局
 		tv_like = (TextView) headView.findViewById(R.id.tv_like);
@@ -408,20 +411,16 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			historyNews.setContentId(historyNew.getContentID());
 			historyNews.setContentDesc(historyNew.getPlayerContentDesc());
 			historyNews.setContentImg(historyNew.getPlayerImage());
-			String s=historyNew.getPlayerAllTime();
-			String s1=historyNew.getPlayerAllTime();
-            if(historyNew.getPlayerAllTime() == null || historyNew.getPlayerAllTime().equals("")){
+            if(historyNew.getPlayerAllTime().equals("")){
                 historyNews.setPlayerAllTime("0");
             }else{
                 historyNews.setPlayerAllTime(historyNew.getPlayerAllTime());
             }
-            if(historyNew.getPlayerInTime() == null || historyNew.getPlayerInTime().equals("")){
+            if(historyNew.getPlayerInTime().equals("")){
                 historyNews.setPlayerInTime("0");
             }else{
                 historyNews.setPlayerInTime(historyNew.getPlayerInTime());
             }
-			/*historyNews.setPlayerAllTime(historyNew.getPlayerAllTime());
-			historyNews.setPlayerInTime(historyNew.getPlayerInTime());*/
 			historyNews.setContentShareURL(historyNew.getPlayContentShareUrl());
 			historyNews.setContentFavorite(historyNew.getContentFavorite());
 			historyNews.setLocalurl(historyNew.getLocalurl());
@@ -1752,20 +1751,25 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 
 	protected static void resetHeadView() {
 		if (GlobalConfig.playerobject != null) {
-			if (GlobalConfig.playerobject.getMediaType().equals("Radio")) {
-				// 不支持分享
-				ToastUtils.show_allways(context, "电台节目目前不支持分享");
-				return;
-				// 设置灰色界面
-			} else {
-				// 支持分享
-				// 设置回界面
+			//判断下载类型的方法
+			if (GlobalConfig.playerobject.getMediaType().equals("RADIO")||
+					GlobalConfig.playerobject.getMediaType().equals("TTS")) {
+
+				img_download.setImageResource(R.mipmap.wt_play_xiazai_no);
+			}else{
+				img_download.setImageResource(R.mipmap.wt_play_xiazai);
 			}
+
+
 			if(GlobalConfig.playerobject.getSequName()!=null){
 				tv_sequ.setText(GlobalConfig.playerobject.getSequName());
+			}else{
+				tv_sequ.setText("暂无专辑");
 			}
-			if(GlobalConfig.playerobject.getSequDesc()!=null){
-				tv_desc.setText(GlobalConfig.playerobject.getSequDesc());
+			if(GlobalConfig.playerobject.getContentDesc()!=null){
+				tv_desc.setText(GlobalConfig.playerobject.getContentDesc());
+			}else{
+				tv_desc.setText("暂无介绍");
 			}
 			if (GlobalConfig.playerobject.getContentFavorite() != null
 					&& !GlobalConfig.playerobject.equals("")) {

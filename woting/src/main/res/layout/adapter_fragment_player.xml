@@ -56,8 +56,8 @@
 	            android:gravity="left|center">
             
 	            <ImageView
-		             android:layout_width="15dp"
-		             android:layout_height="15dp"
+		             android:layout_width="12dp"
+		             android:layout_height="12dp"
 		             android:src="@mipmap/image_program_album"
 		             android:layout_marginRight="6dp"/>
 	

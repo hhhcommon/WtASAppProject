@@ -40,7 +40,7 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.HorizontalListView;
-import com.woting.ui.baseactivity.BaseFragmentActivity;
+import com.woting.ui.baseactivity.AppBaseFragmentActivity;
 import com.woting.ui.baseadapter.MyFragmentChildPagerAdapter;
 import com.woting.ui.home.player.main.adapter.ImageAdapter;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
@@ -49,8 +49,10 @@ import com.woting.ui.home.program.album.fragment.DetailsFragment;
 import com.woting.ui.home.program.album.fragment.ProgramFragment;
 import com.woting.ui.home.program.comment.CommentActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +61,7 @@ import java.util.List;
  * 作者：xinlong on 2016/4/1 17:40
  * 邮箱：645700751@qq.com
  */
-public class AlbumActivity extends BaseFragmentActivity implements OnClickListener {
+public class AlbumActivity extends AppBaseFragmentActivity implements OnClickListener {
     private AlbumActivity context;
     private String RadioName;
     public static TextView tv_album_name;

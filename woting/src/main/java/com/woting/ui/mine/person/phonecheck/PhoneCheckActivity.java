@@ -22,7 +22,7 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.baseactivity.AppActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +32,7 @@ import org.json.JSONObject;
  * @author 辛龙
  * 2016年7月19日
  */
-public class PhoneCheckActivity extends AppBaseActivity implements OnClickListener {
+public class PhoneCheckActivity extends AppActivity implements OnClickListener {
     private CountDownTimer mCountDownTimer;         // 计时器
 
     private Dialog dialog;                          // 加载数据对话框
