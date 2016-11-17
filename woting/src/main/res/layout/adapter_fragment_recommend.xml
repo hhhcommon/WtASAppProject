@@ -54,8 +54,8 @@
             
 	            <ImageView
 	                android:id="@+id/image_hint_visibility"
-	                android:layout_width="15dp"
-	                android:layout_height="15dp"
+	                android:layout_width="12dp"
+	                android:layout_height="12dp"
 	                android:src="@mipmap/image_program_album"
 	                android:layout_marginRight="6dp"
 	                android:visibility="visible"/>
