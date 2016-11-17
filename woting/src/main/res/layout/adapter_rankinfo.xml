@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/setting_bg_color"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,31 +22,31 @@
                 android:layout_width="65dp"
                 android:layout_height="65dp"
                 android:layout_centerInParent="true"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop" />
 
             <ImageView
+                android:id="@+id/img_zhezhao"
                 android:layout_width="65dp"
                 android:layout_height="65dp"
-                android:layout_centerInParent="true"
-                android:src="@mipmap/wt_6_b_y_b" />
+                android:layout_centerInParent="true" />
 
         </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginLeft="13dp" >
+            android:layout_marginLeft="13dp"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/RankTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="CNR中国之声"
+                android:layout_marginTop="11dp"
                 android:singleLine="true"
+                android:text="CNR中国之声"
                 android:textColor="@color/dinglan_orange"
-                android:textSize="@dimen/activity_head_right"
-                android:layout_marginTop="11dp"/>
+                android:textSize="@dimen/activity_head_right" />
 
             <LinearLayout
                 android:id="@+id/lin_currentplay"
@@ -54,12 +54,12 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="left|center"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="正在直播: " 
+                    android:text="正在直播: "
                     android:textColor="@color/beijing"
                     android:textSize="@dimen/text_size_13" />
 
@@ -76,8 +76,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="left|center"
-                android:layout_marginBottom="11dp">
+                android:layout_marginBottom="11dp"
+                android:gravity="left|center">
 
                 <ImageView
                     android:layout_width="12dp"
@@ -89,10 +89,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="6dp"
-                    android:text="2356"
+                    android:text="0"
                     android:textColor="@color/beijing"
-                    android:textSize="@dimen/text_size_9"/>
-                
+                    android:textSize="@dimen/text_size_9" />
+
             </LinearLayout>
 
             <TextView

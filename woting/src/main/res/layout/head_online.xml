@@ -59,7 +59,7 @@
         
     </LinearLayout>
 
-    <GridView
+    <com.woting.common.widgetui.MyGridView
         android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
