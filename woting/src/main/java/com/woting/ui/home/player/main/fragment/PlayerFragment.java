@@ -185,6 +185,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 	private ArrayList<String> testList;
 	private static TextView tv_sequ;
 	private static TextView tv_desc;
+	private static ImageView img_download;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -264,6 +265,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		image_liu = (ImageView)headView.findViewById(R.id.image_liu);
 		Bitmap bmp1 = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_bd);
 		image_liu.setImageBitmap(bmp1);
+		img_download= (ImageView) headView.findViewById(R.id.img_download);
+
 		tv_details_flag=(TextView)headView.findViewById(R.id.tv_details_flag); // 展开或者隐藏按钮
         rv_details=(RelativeLayout)headView.findViewById(R.id.rv_details);    // 节目详情布局
 		tv_like = (TextView) headView.findViewById(R.id.tv_like);
@@ -1752,15 +1755,16 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 
 	protected static void resetHeadView() {
 		if (GlobalConfig.playerobject != null) {
-			if (GlobalConfig.playerobject.getMediaType().equals("Radio")) {
-				// 不支持分享
-				ToastUtils.show_allways(context, "电台节目目前不支持分享");
-				return;
-				// 设置灰色界面
-			} else {
-				// 支持分享
-				// 设置回界面
+			//判断下载类型的方法
+			if (GlobalConfig.playerobject.getMediaType().equals("RADIO")||
+					GlobalConfig.playerobject.getMediaType().equals("TTS")) {
+
+				img_download.setImageResource(R.mipmap.wt_play_xiazai_no);
+			}else{
+				img_download.setImageResource(R.mipmap.wt_play_xiazai);
 			}
+
+
 			if(GlobalConfig.playerobject.getSequName()!=null){
 				tv_sequ.setText(GlobalConfig.playerobject.getSequName());
 			}
