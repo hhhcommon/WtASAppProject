@@ -5,11 +5,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,6 +25,14 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
+import com.woting.common.application.BSApplication;
+import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.StringConstant;
+import com.woting.common.util.CommonUtils;
+import com.woting.common.util.DialogUtils;
+import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.fragment.PlayerFragment;
@@ -35,13 +43,6 @@ import com.woting.ui.home.search.adapter.SearchContentAdapter;
 import com.woting.ui.home.search.model.SuperRankInfo;
 import com.woting.ui.main.MainActivity;
 import com.woting.ui.mine.favorite.activity.FavoriteActivity;
-import com.woting.common.config.GlobalConfig;
-import com.woting.common.constant.StringConstant;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
-import com.woting.common.util.CommonUtils;
-import com.woting.common.util.DialogUtils;
-import com.woting.common.util.ToastUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,34 +55,37 @@ import java.util.List;
  * 我喜欢的 全部界面
  */
 public class TotalFragment extends Fragment {
-	private View rootView;
 	private FragmentActivity context;
-	private ExpandableListView ex_listview;
+    private SearchContentAdapter searchadapter;
+    private SearchPlayerHistoryDao dbdao;
+
 	private ArrayList<RankInfo> playlist; 	// 节目list
 	private ArrayList<RankInfo> sequlist; 	// 专辑list
 	private ArrayList<RankInfo> ttslist; 	// tts
 	private ArrayList<RankInfo> radiolist; 	// radio
-	private ArrayList<SuperRankInfo> list = new ArrayList<SuperRankInfo>();// 返回的节目list，拆分之前的list
+	private ArrayList<SuperRankInfo> list = new ArrayList<>();// 返回的节目list，拆分之前的list
 	private List<RankInfo> SubList;
 	private List<String> dellist;
-	private SearchContentAdapter searchadapter;
-	private SearchPlayerHistoryDao dbdao;
-	private Dialog DelDialog;
-	private Dialog dialog;
+
+    private Dialog DelDialog;
+    private Dialog dialog;
+    private View rootView;
+    private ExpandableListView ex_listview;
 	private int delchildposition = -1;
 	private int delgroupposition = -1;
-	private Intent mintent;
 	private String tag = "TOTAL_VOLLEY_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		context = this.getActivity();
+		context = getActivity();
 		initDao();
-		DelDialog();
-		mintent = new Intent();
-		mintent.setAction(FavoriteActivity.VIEW_UPDATE);
+        DelDialog();
+
+        IntentFilter mFilter = new IntentFilter();
+        mFilter.addAction(FavoriteActivity.VIEW_UPDATE);
+        context.registerReceiver(mBroadcastReceiver, mFilter);
 	}
 
 	@Override
@@ -89,11 +93,9 @@ public class TotalFragment extends Fragment {
 		if (rootView == null) {
 			rootView = inflater.inflate(R.layout.fragment_favorite_total, container, false);
 			ex_listview = (ExpandableListView) rootView.findViewById(R.id.ex_listview);
-			ex_listview.setGroupIndicator(null);			// 去除indicator
+			ex_listview.setGroupIndicator(null);
 			setListener();
-			IntentFilter myfileter = new IntentFilter();
-			myfileter.addAction(FavoriteActivity.VIEW_UPDATE);
-			context.registerReceiver(mBroadcastReceiver, myfileter);
+
 			if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 				dialog = DialogUtils.Dialogph(context, "正在获取全部喜欢信息");
 				send();
@@ -104,20 +106,14 @@ public class TotalFragment extends Fragment {
 		return rootView;
 	}
 
-	/**
-	 * 初始化数据库
-	 */
+	// 初始化数据库
 	private void initDao() {
 		dbdao = new SearchPlayerHistoryDao(context);
 	}
 
-	/**
-	 * 控件点击事件监听
-	 */
+	// 控件点击事件监听
 	private void setListener() {
-		/**
-		 * 屏蔽group点击事件
-		 */
+		// 屏蔽 group 点击事件
 		ex_listview.setOnGroupClickListener(new OnGroupClickListener() {
 			@Override
 			public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
@@ -126,9 +122,7 @@ public class TotalFragment extends Fragment {
 			}
 		});
 
-		/**
-		 * 长按删除喜欢
-		 */
+		// 长按删除喜欢
 		ex_listview.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View childView, int flatPos, long id) {
@@ -146,9 +140,7 @@ public class TotalFragment extends Fragment {
 		});
 	}
 
-	/**
-	 * 长按单条删除数据对话框
-	 */
+	// 长按单条删除数据对话框
 	private void DelDialog() {
 		final View dialog1 = LayoutInflater.from(context).inflate(R.layout.dialog_exit_confirm, null);
 		TextView tv_cancle = (TextView) dialog1.findViewById(R.id.tv_cancle);
@@ -160,9 +152,7 @@ public class TotalFragment extends Fragment {
 		DelDialog.setCanceledOnTouchOutside(false);
 		DelDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
 
-		/**
-		 * 取消
-		 */
+		// 取消
 		tv_cancle.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -170,16 +160,14 @@ public class TotalFragment extends Fragment {
 			}
 		});
 
-		/**
-		 * 删除
-		 */
+		// 删除
 		tv_confirm.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 					dialog = DialogUtils.Dialogph(context, "正在删除");
 					if (dellist == null) {
-						dellist = new ArrayList<String>();
+						dellist = new ArrayList<>();
 						String type = list.get(delgroupposition).getList().get(delchildposition).getMediaType();
 						String contentid = list.get(delgroupposition).getList().get(delchildposition).getContentId();
 						dellist.add(type + "::" + contentid);
@@ -197,13 +185,10 @@ public class TotalFragment extends Fragment {
 		});
 	}
 
-	/**
-	 * 执行删除单条喜欢的方法
-	 */
+	// 执行删除单条喜欢的方法
 	protected void sendrequest() {
 		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			// 对s进行处理 去掉"[]"符号
 			String s = dellist.toString();
 			jsonObject.put("DelInfos", s.substring(1, s.length() - 1).replaceAll(" ", ""));
 		} catch (JSONException e) {
@@ -213,36 +198,19 @@ public class TotalFragment extends Fragment {
 		VolleyRequest.RequestPost(GlobalConfig.delFavoriteListUrl, tag, jsonObject, new VolleyCallback() {
 			private String ReturnType;
 			private String Message;
-//			private String SessionId;
 
 			@Override
 			protected void requestSuccess(JSONObject result) {
 				dellist.clear();
-				if(isCancelRequest){
-					return ;
-				}
+				if(isCancelRequest) return ;
 				try {
 					ReturnType = result.getString("ReturnType");
-//					SessionId = result.getString("SessionId");
 					Message = result.getString("Message");
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 				if (ReturnType != null && ReturnType.equals("1001")) {
-					if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-						send();
-						context.sendBroadcast(mintent);
-					} else {
-						ToastUtils.show_allways(context, "网络失败，请检查网络");
-					}
-				} else if (ReturnType != null && ReturnType.equals("1002")) {
-					ToastUtils.show_allways(context, "无法获取用户Id");
-				} else if (ReturnType != null && ReturnType.equals("T")) {
-					ToastUtils.show_allways(context, "异常返回值");
-				} else if (ReturnType != null && ReturnType.equals("200")) {
-					ToastUtils.show_allways(context, "尚未登录");
-				} else if (ReturnType != null && ReturnType.equals("1003")) {
-					ToastUtils.show_allways(context, "异常返回值");
+                    context.sendBroadcast(new Intent(FavoriteActivity.VIEW_UPDATE));
 				} else {
 					if (Message != null && !Message.trim().equals("")) {
 						ToastUtils.show_allways(context, Message + "");
@@ -252,17 +220,13 @@ public class TotalFragment extends Fragment {
 			
 			@Override
 			protected void requestError(VolleyError error) {
-				if (dialog != null) {
-					dialog.dismiss();
-				}
+				if (dialog != null) dialog.dismiss();
 				dellist.clear();
 			}
 		});
 	}
 
-	/**
-	 * 请求网络获取数据
-	 */
+	// 请求网络获取数据
 	private void send() {
 		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
@@ -272,23 +236,14 @@ public class TotalFragment extends Fragment {
 		}
 
 		VolleyRequest.RequestPost(GlobalConfig.getFavoriteListUrl, tag, jsonObject, new VolleyCallback() {
-//			private String SessionId;
 			private String ReturnType;
 			private String Message;
-			private String resultlist;
-			private JSONObject arg1;
-			private String StringSubList;
 
 			@Override
 			protected void requestSuccess(JSONObject result) {
-				if (dialog != null) {
-					dialog.dismiss();
-				}
-				if(isCancelRequest){
-					return ;
-				}
+				if (dialog != null) dialog.dismiss();
+				if(isCancelRequest) return ;
 				try {
-//					SessionId = result.getString("SessionId");
 					ReturnType = result.getString("ReturnType");
 					Message = result.getString("Message");
 				} catch (JSONException e) {
@@ -296,11 +251,8 @@ public class TotalFragment extends Fragment {
 				}
 				if (ReturnType != null && ReturnType.equals("1001")) {
 					try {
-						resultlist = result.getString("ResultList");
-						JSONTokener jsonParser = new JSONTokener(resultlist);
-						arg1 = (JSONObject) jsonParser.nextValue();
-						StringSubList = arg1.getString("FavoriteList");
-						SubList = new Gson().fromJson(StringSubList, new TypeToken<List<RankInfo>>() {}.getType());
+                        JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
+						SubList = new Gson().fromJson(arg1.getString("FavoriteList"), new TypeToken<List<RankInfo>>() {}.getType());
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -316,7 +268,7 @@ public class TotalFragment extends Fragment {
 							if (SubList.get(i).getMediaType() != null && !SubList.get(i).getMediaType().equals("")) {
 								if (SubList.get(i).getMediaType().equals("AUDIO")) {
 									if (playlist == null) {
-										playlist = new ArrayList<RankInfo>();
+										playlist = new ArrayList<>();
 										playlist.add(SubList.get(i));
 									} else {
 										if (playlist.size() < 3) {
@@ -325,7 +277,7 @@ public class TotalFragment extends Fragment {
 									}
 								} else if (SubList.get(i).getMediaType().equals("SEQU")) {
 									if (sequlist == null) {
-										sequlist = new ArrayList<RankInfo>();
+										sequlist = new ArrayList<>();
 										sequlist.add(SubList.get(i));
 									} else {
 										if (sequlist.size() < 3) {
@@ -334,7 +286,7 @@ public class TotalFragment extends Fragment {
 									}
 								} else if (SubList.get(i).getMediaType().equals("TTS")) {
 									if (ttslist == null) {
-										ttslist = new ArrayList<RankInfo>();
+										ttslist = new ArrayList<>();
 										ttslist.add(SubList.get(i));
 									} else {
 										if (ttslist.size() < 3) {
@@ -343,7 +295,7 @@ public class TotalFragment extends Fragment {
 									}
 								} else if (SubList.get(i).getMediaType().equals("RADIO")) {
 									if (radiolist == null) {
-										radiolist = new ArrayList<RankInfo>();
+										radiolist = new ArrayList<>();
 										radiolist.add(SubList.get(i));
 									} else {
 										if (radiolist.size() < 3) {
@@ -383,18 +335,13 @@ public class TotalFragment extends Fragment {
 							for (int i = 0; i < list.size(); i++) {
 								ex_listview.expandGroup(i);
 							}
-							setitemListener();
+                            setItemListener();
 						} else {
 							ToastUtils.show_short(context, "没有数据");
 						}
 					} else {
 						ToastUtils.show_short(context, "数据获取异常");
 					}
-				} else if (ReturnType != null && ReturnType.equals("1002")) {
-					ToastUtils.show_allways(context, "" + Message);
-				} else if (ReturnType != null && ReturnType.equals("1011")) {
-					ToastUtils.show_allways(context, "" + Message);
-					ex_listview.setVisibility(View.GONE);
 				} else {
 					if (Message != null && !Message.trim().equals("")) {
 						ToastUtils.show_allways(context, "加载失败" + Message);
@@ -404,17 +351,14 @@ public class TotalFragment extends Fragment {
 			
 			@Override
 			protected void requestError(VolleyError error) {
-				if (dialog != null) {
-					dialog.dismiss();
-				}
+				if (dialog != null) dialog.dismiss();
+                ToastUtils.showVolleyError(context);
 			}
 		});
 	}
 
-	/**
-	 * ExpandableListView Item 点击事件监听
-	 */
-	protected void setitemListener() {
+	// ExpandableListView Item 点击事件监听
+	protected void setItemListener() {
 		ex_listview.setOnChildClickListener(new OnChildClickListener() {
 
 			@Override
@@ -425,7 +369,7 @@ public class TotalFragment extends Fragment {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				if (MediaType != null && MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
+				if (MediaType != null && MediaType.equals("RADIO") || MediaType != null && MediaType.equals("AUDIO")) {
 					String playername = list.get(groupPosition).getList().get(childPosition).getContentName();
 					String playerimage = list.get(groupPosition).getList().get(childPosition).getContentImg();
 					String playerurl = list.get(groupPosition).getList().get(childPosition).getContentPlay();
@@ -451,7 +395,7 @@ public class TotalFragment extends Fragment {
 					String sequDesc=list.get(groupPosition).getList().get(childPosition).getSequDesc();
 					String sequImg=list.get(groupPosition).getList().get(childPosition).getSequImg();
 
-					//如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+					// 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
 					PlayerHistory history = new PlayerHistory(
 							playername,  playerimage, playerurl, playerurI,playermediatype,
 							plaplayeralltime, playerintime, playercontentdesc, playernum,
@@ -465,16 +409,17 @@ public class TotalFragment extends Fragment {
 						PlayerFragment.SendTextRequest(list.get(groupPosition).getList().get(childPosition).getContentName(), context);
 						getActivity().finish();
 					} else {
-						SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
-						Editor et = sp.edit();
+						Editor et = BSApplication.SharedPreferences.edit();
 						et.putString(StringConstant.PLAYHISTORYENTER, "true");
 						et.putString(StringConstant.PLAYHISTORYENTERNEWS, list.get(groupPosition).getList().get(childPosition).getContentName());
-						et.commit();
+                        if(!et.commit()) {
+                            Log.w("commit", "数据 commit 失败!");
+                        }
 						MainActivity.change();
 						HomeActivity.UpdateViewPager();
 						getActivity().finish();
 					}
-				} else if (MediaType!=null&&MediaType.equals("SEQU")) {	
+				} else if (MediaType != null && MediaType.equals("SEQU")) {
 					Intent intent = new Intent(context, AlbumActivity.class);
 					Bundle bundle = new Bundle();
 					bundle.putString("type", "search");
@@ -501,9 +446,7 @@ public class TotalFragment extends Fragment {
 		}
 	}
 
-	/**
-	 * 广播接收器 用于刷新界面
-	 */
+	// 广播接收器 用于刷新界面
 	private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 
 		@Override
@@ -519,9 +462,7 @@ public class TotalFragment extends Fragment {
 		}
 	};
 
-	/**
-	 * 获取当前页面选中的为选中的数目
-	 */
+	// 获取当前页面选中的为选中的数目
 	public int getdelitemsum() {
 		int sum = 0;
 		if (SubList == null) {
@@ -532,15 +473,13 @@ public class TotalFragment extends Fragment {
 		return sum;
 	}
 
-	/**
-	 * 删除
-	 */
+	// 删除
 	public void delitem() {
 		if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 			dialog = DialogUtils.Dialogph(context, "正在删除");
 			for (int i = 0; i < SubList.size(); i++) {
 				if (dellist == null) {
-					dellist = new ArrayList<String>();
+					dellist = new ArrayList<>();
 					String type = SubList.get(i).getMediaType();
 					String contentid = SubList.get(i).getContentId();
 					dellist.add(type + "::" + contentid);
@@ -582,7 +521,6 @@ public class TotalFragment extends Fragment {
 		dellist = null;
 		searchadapter = null;
 		dialog = null;
-		mintent = null;
 		tag = null;
 		if(dbdao != null){
 			dbdao.closedb();

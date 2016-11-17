@@ -235,7 +235,7 @@ public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
 			} else {
 				holder.textRankContent.setText(lists.getContentPub());
 			}
-			if (lists.getPlayerInTime() == null | lists.getPlayerInTime().equals("")) {
+			if (lists.getPlayerInTime() == null || lists.getPlayerInTime().equals("")) {
 				holder.textView_PlayIntroduce.setText("未知");
 			} else {
 				format = new SimpleDateFormat("mm:ss");

@@ -92,7 +92,7 @@ public class PlayHistoryAdapter extends BaseAdapter {
 		} else {
 			holder.textRankContent.setText(lists.getPlayerFrom());
 		}
-		if (lists.getPlayerInTime() == null | lists.getPlayerInTime().equals("")) {
+		if (lists.getPlayerInTime() == null || lists.getPlayerInTime().equals("")) {
 			holder.textView_PlayIntroduce.setText("未知");
 		} else {
 			format = new SimpleDateFormat("mm:ss");

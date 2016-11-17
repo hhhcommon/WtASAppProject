@@ -236,7 +236,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
         imageView_voice.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
                     ToastUtils.show_allways(context, "网络失败，请检查网络");
                     return true;
                 }

@@ -410,12 +410,12 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			historyNews.setContentImg(historyNew.getPlayerImage());
 			String s=historyNew.getPlayerAllTime();
 			String s1=historyNew.getPlayerAllTime();
-            if(historyNew.getPlayerAllTime().equals("")){
+            if(historyNew.getPlayerAllTime() == null || historyNew.getPlayerAllTime().equals("")){
                 historyNews.setPlayerAllTime("0");
             }else{
                 historyNews.setPlayerAllTime(historyNew.getPlayerAllTime());
             }
-            if(historyNew.getPlayerInTime().equals("")){
+            if(historyNew.getPlayerInTime() == null || historyNew.getPlayerInTime().equals("")){
                 historyNews.setPlayerInTime("0");
             }else{
                 historyNews.setPlayerInTime(historyNew.getPlayerInTime());
