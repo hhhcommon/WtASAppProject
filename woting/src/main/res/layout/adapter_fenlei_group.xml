@@ -23,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="5dp"
                 android:src="@mipmap/wt_icon_music_fenlei_group" />
 
             <TextView
@@ -46,8 +46,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:layout_marginBottom="5dp"
-            android:scrollbars="none">
-        </com.woting.common.widgetui.MyGridView>
+            android:scrollbars="none"/>
 
     </LinearLayout>
 </LinearLayout>

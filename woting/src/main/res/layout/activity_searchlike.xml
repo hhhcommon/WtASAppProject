@@ -209,7 +209,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center|right"
                                     android:layout_marginRight="2dp"
-                                    android:src="@mipmap/wt_delete_rubbish_orange" />
+                                    android:src="@mipmap/wt_person_cache" />
 
                                 <TextView
                                     android:layout_width="match_parent"

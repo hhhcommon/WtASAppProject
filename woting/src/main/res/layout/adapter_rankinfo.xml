@@ -80,8 +80,8 @@
                 android:layout_marginBottom="11dp">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
                     android:src="@mipmap/image_program_listener" />
 
                 <TextView
@@ -104,8 +104,4 @@
                 android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
-   <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"   
-        android:background="@color/view_color" />
 </LinearLayout>

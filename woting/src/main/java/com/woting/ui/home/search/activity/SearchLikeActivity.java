@@ -218,9 +218,9 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
         Window window = yuyinDialog.getWindow();
         DisplayMetrics dm = new DisplayMetrics();
         context.getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int screenw = dm.widthPixels;
+        int scrEnw = dm.widthPixels;
         LayoutParams params = dialog.getLayoutParams();
-        params.width = screenw;
+        params.width = scrEnw;
         dialog.setLayoutParams(params);
         window.setGravity(Gravity.BOTTOM);
         window.setWindowAnimations(R.style.sharestyle);
@@ -236,7 +236,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
         imageView_voice.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
                     ToastUtils.show_allways(context, "网络失败，请检查网络");
                     return true;
                 }

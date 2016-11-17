@@ -56,8 +56,8 @@
 	            android:gravity="left|center">
             
 	            <ImageView
-		             android:layout_width="wrap_content"
-		             android:layout_height="wrap_content"
+		             android:layout_width="12dp"
+		             android:layout_height="12dp"
 		             android:src="@mipmap/image_program_album"
 		             android:layout_marginRight="6dp"/>
 	
@@ -80,8 +80,8 @@
                 android:layout_marginBottom="11dp">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
                     android:src="@mipmap/image_program_listener"
                     android:layout_marginRight="6dp"/>
 
@@ -94,8 +94,8 @@
                     android:text="8888"/>
                 
                 <ImageView
-		             android:layout_width="wrap_content"
-		             android:layout_height="wrap_content"
+		             android:layout_width="12dp"
+		             android:layout_height="12dp"
 		             android:src="@mipmap/image_program_time"
 		             android:layout_marginRight="6dp"
 		             android:layout_marginLeft="14dp"/>

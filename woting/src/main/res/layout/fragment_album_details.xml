@@ -23,12 +23,12 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="18dp">
+            android:layout_marginTop="15dp">
             
             <com.woting.common.widgetui.RoundImageView
                 android:id="@+id/round_image_head"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:src="@mipmap/reg_default_portrait"/>
             
             <TextView
@@ -55,8 +55,8 @@
                 
                 <ImageView
 	                android:id="@+id/image_concern"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
+	                android:layout_width="22dp"
+	                android:layout_height="22dp"
 	                android:src="@mipmap/focus"
 	                android:layout_gravity="center_horizontal"/>
                 
@@ -79,7 +79,7 @@
             android:text="内容介绍"
             android:textSize="@dimen/text_size_13"
             android:textColor="@color/beijing"
-            android:layout_marginTop="30dp"/>
+            android:layout_marginTop="20dp"/>
         
         <TextView
             android:id="@+id/text_content"
@@ -88,7 +88,7 @@
             android:text="我听我享听"
             android:textSize="@dimen/list_text_size"
             android:textColor="@color/wt_login_third"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="15dp"
             android:ellipsize="end"/>
         
         <TextView
@@ -97,7 +97,7 @@
             android:text="标签"
             android:textSize="@dimen/text_size_13"
             android:textColor="@color/beijing"
-            android:layout_marginTop="30dp"/>
+            android:layout_marginTop="20dp"/>
         
         <TextView
             android:id="@+id/text_label"
@@ -106,7 +106,7 @@
             android:text="我听我享听"
             android:textSize="@dimen/list_text_size"
             android:textColor="@color/wt_login_third"
-            android:layout_marginTop="18dp"/>
+            android:layout_marginTop="15dp"/>
         
         <View
 	        android:layout_width="match_parent"

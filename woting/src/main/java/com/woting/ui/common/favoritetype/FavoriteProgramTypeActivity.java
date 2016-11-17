@@ -215,7 +215,7 @@ public class FavoriteProgramTypeActivity extends BaseActivity implements View.On
         for(int i=0; i<addList.size(); i++) {
             for(int j=0; j<subList.size(); j++) {
                 if(addList.get(i).equals(subList.get(j).getCatalogName())) {
-                    builder.append(subList.get(j).getCatalogName() + "::" + subList.get(j).getCatalogId() + ",");
+                    builder.append("6::" + subList.get(j).getCatalogId() + ",");
                 }
             }
             Log.v("selectOk", addList.get(i));

@@ -525,7 +525,7 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 				handler.sendMessage(msg);
 			}
 		}.start();
-	};
+	}
 
 	/**
 	 * API19以下获取图片路径的方法

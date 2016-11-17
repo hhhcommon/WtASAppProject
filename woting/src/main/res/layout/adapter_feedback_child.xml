@@ -23,6 +23,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/dinglan_orange"
                 android:layout_gravity="right"
                 android:text="我听科技" />
 
@@ -31,7 +32,9 @@
                 android:layout_width="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/wt_img_feedback_child"
+                android:padding="15dp"
+                android:background="@drawable/bg_lin_orange"
+                android:textColor="@color/dinglan_orange"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center_vertical"

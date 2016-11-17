@@ -226,11 +226,6 @@ public class SequFragment extends Fragment {
                         }
                         newList.addAll(SubList);
                         adapter.notifyDataSetChanged();
-//                        if (adapter == null) {
-//                            mListView.setAdapter(adapter = new FavorListAdapter(context, newList));
-//                        } else {
-//                            adapter.notifyDataSetChanged();
-//                        }
                         setListener();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -277,6 +272,7 @@ public class SequFragment extends Fragment {
                 if (searchStr != null && !searchStr.equals("")) {
                     refreshType = 1;
                     page = 1;
+                    mListView.setPullLoadEnable(false);
                     newList.clear();
                     if (adapter == null) {
                         mListView.setAdapter(adapter = new FavorListAdapter(context, newList));

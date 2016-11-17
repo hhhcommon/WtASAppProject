@@ -63,7 +63,7 @@
     <string name="umeng_socialize_content_hint">说点啥&#8230;</string>
     <string name="umeng_socialize_cancel_btn_str">取消</string>
     <string name="umeng_socialize_send_btn_str">发送</string>
-    <string name="umeng_socialize_img_des"></string>
+    <string name="umeng_socialize_img_des"/>
     <string name="umeng_socialize_share">分享</string>
 
     <string name="umeng_socialize_mail">邮件</string>

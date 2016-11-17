@@ -3,7 +3,6 @@ package com.woting.ui.home.program.album.fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,6 +22,14 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
+import com.woting.common.application.BSApplication;
+import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.StringConstant;
+import com.woting.common.util.CommonUtils;
+import com.woting.common.util.DialogUtils;
+import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.model.FileInfo;
 import com.woting.ui.download.service.DownloadService;
@@ -35,13 +42,6 @@ import com.woting.ui.home.program.album.adapter.AlbumAdapter;
 import com.woting.ui.home.program.album.adapter.AlbumMainAdapter;
 import com.woting.ui.home.program.album.model.ContentInfo;
 import com.woting.ui.main.MainActivity;
-import com.woting.common.config.GlobalConfig;
-import com.woting.common.constant.StringConstant;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
-import com.woting.common.util.CommonUtils;
-import com.woting.common.util.DialogUtils;
-import com.woting.common.util.ToastUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,8 +53,8 @@ import java.util.List;
 
 /**
  * 专辑列表页
- *
- * @author woting11
+ * 作者：xinlong on 2016/11/16 17:40
+ * 邮箱：645700751@qq.com
  */
 public class ProgramFragment extends Fragment implements OnClickListener {
 	private View rootView;
@@ -97,12 +97,12 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 		if (rootView == null) {
 			rootView = inflater.inflate(R.layout.fragment_album_program, container, false);
 			findView(rootView);
-		}
-		if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-			dialog = DialogUtils.Dialogph(context, "正在获取数据");
-			send();
-		} else {
-			ToastUtils.show_short(context, "网络失败，请检查网络");
+			if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+				dialog = DialogUtils.Dialogph(context, "正在获取数据");
+				send();
+			} else {
+				ToastUtils.show_short(context, "网络失败，请检查网络");
+			}
 		}
 		return rootView;
 	}
@@ -182,8 +182,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 							HomeActivity.UpdateViewPager();
 							PlayerFragment.SendTextRequest(SubList.get(position).getContentName(), context);
 						}else{
-							SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
-							Editor et = sp.edit();
+							Editor et = BSApplication.SharedPreferences.edit();
 							et.putString(StringConstant.PLAYHISTORYENTER, "true");
 							et.putString(StringConstant.PLAYHISTORYENTERNEWS,SubList.get(position).getContentName());
 							et.commit();
@@ -193,7 +192,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 						getActivity().setResult(1);
 						getActivity().finish();
 					} else {
-						ToastUtils.show_short(context, "暂不支持的Type类型");
+						ToastUtils.show_allways(context, "暂不支持播放");
 					}
 				}
 			}
@@ -204,11 +203,16 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 	 * 向服务器发送请求
 	 */
 	public void send() {
-		VolleyRequest.RequestPost(GlobalConfig.getContentById, tag, setParam(), new VolleyCallback() {
-			private String ReturnType;
-			private String ResultList;
-			private String StringSubList;
-			private JSONObject arg1;
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+		try {
+			jsonObject.put("MediaType", "SEQU");
+			jsonObject.put("ContentId", AlbumActivity.id);
+			jsonObject.put("Page", "1");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		VolleyRequest.RequestPost(GlobalConfig.getContentById, tag, jsonObject, new VolleyCallback() {
 
 			@Override
 			protected void requestSuccess(JSONObject result) {
@@ -219,77 +223,78 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 					return ;
 				}
 				try {
-					ReturnType = result.getString("ReturnType");
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-
-				if (ReturnType != null) { // 根据返回值来对程序进行解析
-					if (ReturnType.equals("1001")) {
-						try {
-							ResultList = result.getString("ResultInfo"); // 获取列表
-							JSONTokener jsonParser = new JSONTokener(ResultList);
-							arg1 = (JSONObject) jsonParser.nextValue();
-
-							// 此处后期需要用typeToken将字符串StringSubList 转化成为一个list集合
-
+					String ReturnType = result.getString("ReturnType");
+					if (ReturnType != null) { // 根据返回值来对程序进行解析
+						if (ReturnType.equals("1001")) {
 							try {
-								StringSubList = arg1.getString("SubList");
-							}catch (Exception e){
+								String	ResultList = result.getString("ResultInfo"); // 获取列表
+								JSONTokener jsonParser = new JSONTokener(ResultList);
+								JSONObject arg1 = (JSONObject) jsonParser.nextValue();
+								// 此处后期需要用typeToken将字符串StringSubList 转化成为一个list集合
+								try {
+									String StringSubList = arg1.getString("SubList");
+									Gson gson = new Gson();
+									SubList = gson.fromJson(StringSubList, new TypeToken<List<ContentInfo>>() {}.getType());
+									if (SubList != null && SubList.size() > 0) {
+										SubListAll.clear();
+										SubListAll.addAll(SubList);
+										mainAdapter = new AlbumMainAdapter(context, SubList);
+										lv_album.setAdapter(mainAdapter);
+										setListener();
+										getData();
+										adapter = new AlbumAdapter(context, SubListAll);
+										lv_download.setAdapter(adapter);
+										setInterface();
+										textTotal.setText("共" + SubListAll.size() + "集");
+									}
+								}catch (Exception e){
 
+								}
+								try {
+									sequId=arg1.getString("ContentId");
+								}catch (Exception e){
+
+								}
+								try {
+									sequImg=arg1.getString("ContentImg");
+								}catch (Exception e){
+
+								}
+								try {
+									sequName=arg1.getString("ContentName");
+								}catch (Exception e){
+
+								}
+								try {
+									sequDesc=arg1.getString("ContentDescn");
+								}catch (Exception e){
+
+								}
+
+							} catch (Exception e) {
+								e.printStackTrace();
 							}
-							try {
-								sequId=arg1.getString("ContentId");
-							}catch (Exception e){
-
+						}else{
+							if (ReturnType.equals("0000")) {
+//							ToastUtils.show_allways(context, "无法获取相关的参数");
+								ToastUtils.show_allways(context, "数据出错了，请稍后再试！");
+							} else if (ReturnType.equals("1002")) {
+//							ToastUtils.show_allways(context, "无此分类信息");
+								ToastUtils.show_allways(context, "数据出错了，请稍后再试！");
+							} else if (ReturnType.equals("1003")) {
+//							ToastUtils.show_allways(context, "无法获得列表");
+								ToastUtils.show_allways(context, "数据出错了，请稍后再试！");
+							} else if (ReturnType.equals("1011")) {
+//							ToastUtils.show_allways(context, "列表为空（列表为空[size==0]");
+								ToastUtils.show_allways(context, "数据出错了，请稍后再试！");
+							} else if (ReturnType.equals("T")) {
+//							ToastUtils.show_allways(context, "获取列表异常");
+								ToastUtils.show_allways(context, "数据出错了，请稍后再试！");
 							}
-							try {
-								sequImg=arg1.getString("ContentImg");
-							}catch (Exception e){
-
-							}
-							try {
-								sequName=arg1.getString("ContentName");
-							}catch (Exception e){
-
-							}
-							try {
-								sequDesc=arg1.getString("ContentDescn");
-							}catch (Exception e){
-
-							}
-
-
-							Gson gson = new Gson();
-							SubList = gson.fromJson(StringSubList, new TypeToken<List<ContentInfo>>() {}.getType());
-							if (SubList != null && SubList.size() > 0) {
-								SubListAll.clear();
-								SubListAll.addAll(SubList);
-								mainAdapter = new AlbumMainAdapter(context, SubList);
-								lv_album.setAdapter(mainAdapter);
-								setListener();
-								getData();
-								adapter = new AlbumAdapter(context, SubListAll);
-								lv_download.setAdapter(adapter);
-								setInterface();
-								textTotal.setText("共" + SubListAll.size() + "集");
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
 						}
 					}
-				} else {
-					if (ReturnType.equals("0000")) {
-						ToastUtils.show_allways(context, "无法获取相关的参数");
-					} else if (ReturnType.equals("1002")) {
-						ToastUtils.show_allways(context, "无此分类信息");
-					} else if (ReturnType.equals("1003")) {
-						ToastUtils.show_allways(context, "无法获得列表");
-					} else if (ReturnType.equals("1011")) {
-						ToastUtils.show_allways(context, "列表为空（列表为空[size==0]");
-					} else if (ReturnType.equals("T")) {
-						ToastUtils.show_allways(context, "获取列表异常");
-					}
+				} catch (JSONException e) {
+					e.printStackTrace();
 				}
 			}
 
@@ -302,17 +307,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 		});
 	}
 
-	private JSONObject setParam(){
-		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-		try {
-			jsonObject.put("MediaType", "SEQU");
-			jsonObject.put("ContentId", AlbumActivity.id);
-			jsonObject.put("Page", "1");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return jsonObject;
-	}
+
 
 	/**
 	 * 实现接口的方法
@@ -347,10 +342,10 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 						//更新全选图标
 						if(sum == (SubListAll.size() - downLoadSum)){
 							flag = true;
-							img_quanxuan.setImageResource(R.mipmap.image_all_check);
+							img_quanxuan.setImageResource(R.mipmap.wt_group_checked);
 						}else{
 							flag = false;
-							img_quanxuan.setImageResource(R.mipmap.image_not_all_check);
+							img_quanxuan.setImageResource(R.mipmap.wt_group_nochecked);
 						}
 					}
 				}
@@ -435,7 +430,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 						}
 					}
 					flag = true;
-					img_quanxuan.setImageResource(R.mipmap.image_all_check);
+					img_quanxuan.setImageResource(R.mipmap.wt_group_checked);
 					setSum();
 				} else {
 					for (int i = 0; i < SubListAll.size(); i++) {
@@ -444,7 +439,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 						}
 					}
 					flag = false;
-					img_quanxuan.setImageResource(R.mipmap.image_not_all_check);
+					img_quanxuan.setImageResource(R.mipmap.wt_group_nochecked);
 					sum = 0;
 					setSum();
 				}

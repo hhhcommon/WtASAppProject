@@ -21,14 +21,14 @@ import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.download.fragment.DownLoadCompleted;
 import com.woting.ui.download.fragment.DownLoadUnCompleted;
 import com.woting.ui.home.search.activity.SearchLikeActivity;
+import com.woting.ui.interphone.notify.activity.NotifyNewsActivity;
 
 import java.util.ArrayList;
 
 /**
  * 下载主页
- *
  * @author 辛龙
- *         2016年4月1日
+ * 2016年4月1日
  */
 public class DownloadActivity extends FragmentActivity implements OnClickListener {
     private DownloadActivity context;
@@ -41,11 +41,10 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.lin_news:            // 跳转到新消息界面
-                // startActivity(new Intent(context, HandleMessageActivity.class));
+                startActivity(new Intent(context, NotifyNewsActivity.class));
                 break;
             case R.id.lin_find:            // 跳转到搜索界面
-                Intent intent = new Intent(context, SearchLikeActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(context, SearchLikeActivity.class));
                 break;
         }
     }

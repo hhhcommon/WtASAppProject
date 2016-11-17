@@ -68,9 +68,10 @@
                     android:id="@+id/tv_opinion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/wt_img_feedback_group"
+                    android:background="@drawable/bg_lin_normal"
                     android:clickable="true"
                     android:focusable="true"
+                    android:padding="15dp"
                     android:gravity="center_vertical"/>
             </LinearLayout>
         </LinearLayout>

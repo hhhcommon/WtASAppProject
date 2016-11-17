@@ -126,7 +126,6 @@ public class RecommendFragment extends Fragment{
 			@Override
 			protected void requestSuccess(JSONObject result) {
 				if (dialog != null) dialog.dismiss();
-				((RadioListActivity)getActivity()).closeDialog();
 				page++;
 				try {
 					ReturnType = result.getString("ReturnType");
