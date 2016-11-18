@@ -236,22 +236,20 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
                             ResultList = arg1.getString("children");
                             tempList = new Gson().fromJson(ResultList, new TypeToken<List<FenLei>>() {
                             }.getType());
-                            if ( tempList != null) {
-                                if ( tempList.size() == 0) {
-                                    ToastUtils.show_allways(context, "获取分类列表为空");
-                                } else {
-                                    //对每个返回的分类做设置 默认为全部未选中状态 此时获取的为是所有的列表内容
-                                    if (adapter == null) {
-                                        adapter = new PianHaoAdapter(context,tempList);
-                                        lv_prefer.setAdapter(adapter);
-                                    } else {
-                                        adapter.notifyDataSetChanged();
-                                    }
-                                    setInterface();
-                                    if(!TextUtils.isEmpty(CommonUtils.getUserId(context))){
+                            if ( tempList != null&&tempList.size()>0) {
+                                if(!TextUtils.isEmpty(CommonUtils.getUserId(context))){
                                         sendTwice();
-                                    }
-                                }
+                                    }else{
+                                        //对每个返回的分类做设置 默认为全部未选中状态 此时获取的为是所有的列表内容
+                                            if (adapter == null) {
+                                                adapter = new PianHaoAdapter(context,tempList);
+                                                lv_prefer.setAdapter(adapter);
+                                            } else {
+                                                adapter.notifyDataSetChanged();
+                                            }
+                                            setInterface();
+
+                                          }
                             } else {
                                 ToastUtils.show_allways(context, "获取分类列表为空");
                             }
@@ -340,7 +338,13 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
                                     }
                                 }
                             }
-                            adapter.notifyDataSetChanged();
+                            if (adapter == null) {
+                                adapter = new PianHaoAdapter(context,tempList);
+                                lv_prefer.setAdapter(adapter);
+                            } else {
+                                adapter.notifyDataSetChanged();
+                            }
+                            setInterface();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
