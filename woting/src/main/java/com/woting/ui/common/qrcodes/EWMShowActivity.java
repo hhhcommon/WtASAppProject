@@ -13,18 +13,16 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.helper.CreateQRImageHelper;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
-import com.woting.common.util.ToastUtils;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
 
 /**
  * 展示二维码
- *
- * @author 辛龙
- *         2016年4月28日
+ * 作者：xinlong on 2016/4/28 21:18
+ * 邮箱：645700751@qq.com
  */
-public class EWMShowActivity extends BaseActivity implements OnClickListener {
+public class EWMShowActivity extends AppBaseActivity implements OnClickListener {
     private ImageView imageEwm;
     private ImageView imageHead;
     private TextView textName;
@@ -36,9 +34,6 @@ public class EWMShowActivity extends BaseActivity implements OnClickListener {
         switch (v.getId()) {
             case R.id.head_left_btn:// 返回
                 finish();
-                break;
-            case R.id.tv_share:// 分享二维码名片
-                ToastUtils.show_allways(context, "分享二维码名片!");
                 break;
         }
     }
@@ -53,7 +48,6 @@ public class EWMShowActivity extends BaseActivity implements OnClickListener {
     // 初始化视图
     private void initView() {
         findViewById(R.id.head_left_btn).setOnClickListener(this);// 返回
-        findViewById(R.id.tv_share).setOnClickListener(this);// 分享二维码名片
 
         imageEwm = (ImageView) findViewById(R.id.imageView_ewm);
         imageHead = (ImageView) findViewById(R.id.image);
@@ -87,6 +81,8 @@ public class EWMShowActivity extends BaseActivity implements OnClickListener {
         if (imageUrl != null && !imageUrl.equals("null") && !imageUrl.trim().equals("")) {
             if (!imageUrl.startsWith("http:")) {
                 imageUrl = AssembleImageUrlUtils.assembleImageUrl150(GlobalConfig.imageurl + imageUrl);
+            }else{
+                imageUrl = AssembleImageUrlUtils.assembleImageUrl150(imageUrl);
             }
             Picasso.with(context).load(imageUrl.replace("\\/", "/")).resize(100, 100).centerCrop().into(imageHead);
         } else {

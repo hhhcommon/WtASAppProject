@@ -27,8 +27,8 @@ import java.util.ArrayList;
 
 /**
  * 下载主页
- * @author 辛龙
- * 2016年4月1日
+ * 作者：xinlong on 2016/11/6 21:18
+ * 邮箱：645700751@qq.com
  */
 public class DownloadActivity extends FragmentActivity implements OnClickListener {
     private DownloadActivity context;

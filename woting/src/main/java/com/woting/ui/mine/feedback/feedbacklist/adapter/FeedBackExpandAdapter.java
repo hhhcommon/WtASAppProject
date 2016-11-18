@@ -14,12 +14,17 @@ import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.ui.mine.feedback.feedbacklist.model.OpinionMessage;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
+/**
+ * 意见反馈列表适配器
+ * 作者：xinlong on 2016/8/1 21:18
+ * 邮箱：645700751@qq.com
+ */
 public class FeedBackExpandAdapter extends BaseExpandableListAdapter {
     private Context context;
     List<OpinionMessage> OM;
@@ -142,6 +147,7 @@ public class FeedBackExpandAdapter extends BaseExpandableListAdapter {
             } else {
                 url = GlobalConfig.imageurl + userImg;
             }
+            url= AssembleImageUrlUtils.assembleImageUrl150(url);
             Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.OpinionImage);
         } else {
 

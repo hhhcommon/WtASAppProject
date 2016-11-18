@@ -23,7 +23,7 @@ import com.woting.R;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ShareUtils;
 import com.woting.common.widgetui.HorizontalListView;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.player.main.adapter.ImageAdapter;
 import com.woting.ui.home.player.main.model.ShareModel;
 
@@ -31,8 +31,10 @@ import java.util.List;
 
 /**
  * 智能硬件
+ * 作者：xinlong on 2016/7/19 21:18
+ * 邮箱：645700751@qq.com
  */
-public class HardwareIntroduceActivity extends BaseActivity implements View.OnClickListener {
+public class HardwareIntroduceActivity extends AppBaseActivity implements View.OnClickListener {
     private WebView webView;
     private Dialog dialog;
     private Dialog shareDialog;

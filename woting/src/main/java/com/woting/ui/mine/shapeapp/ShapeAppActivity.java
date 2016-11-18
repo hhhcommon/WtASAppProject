@@ -23,7 +23,7 @@ import com.woting.R;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ShareUtils;
 import com.woting.common.widgetui.HorizontalListView;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.player.main.adapter.ImageAdapter;
 import com.woting.ui.home.player.main.model.ShareModel;
 
@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * 分享应用
  */
-public class ShapeAppActivity extends BaseActivity implements View.OnClickListener {
+public class ShapeAppActivity extends AppBaseActivity implements View.OnClickListener {
     private WebView webView;
     private Dialog dialog;
     private Dialog shareDialog;

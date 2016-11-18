@@ -44,7 +44,7 @@ import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.citylist.dao.CityInfoDao;
 import com.woting.ui.interphone.main.DuiJiangActivity;
 import com.woting.ui.mine.MineActivity;
-import com.woting.ui.mine.set.update.UpdateManager;
+import com.woting.common.manager.UpdateManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;

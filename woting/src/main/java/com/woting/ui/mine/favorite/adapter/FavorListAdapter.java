@@ -20,6 +20,11 @@ import com.woting.common.util.BitmapUtils;
 
 import java.util.List;
 
+/**
+ * 我喜欢的适配器
+ * 作者：xinlong on 2016/8/1 21:18
+ * 邮箱：645700751@qq.com
+ */
 public class FavorListAdapter extends BaseAdapter {
     private List<RankInfo> list;
     private Context context;
@@ -79,54 +84,55 @@ public class FavorListAdapter extends BaseAdapter {
             holder.imageLast.setVisibility(View.GONE);
             holder.tvLast.setVisibility(View.GONE);
             holder.imageNum.setVisibility(View.GONE);
-            if (lists.getContentName() == null|| lists.getContentName().equals("")) {
+            if (lists.getContentName() == null || lists.getContentName().equals("")) {
                 holder.textview_ranktitle.setText("未知");
             } else {
                 holder.textview_ranktitle.setText(lists.getContentName());
             }
-            if (lists.getCurrentContent() == null|| lists.getCurrentContent().equals("")) {
+            if (lists.getCurrentContent() == null || lists.getCurrentContent().equals("")) {
                 holder.textview_rankplaying.setText("测试-无节目单数据");
             } else {
                 holder.textview_rankplaying.setText(lists.getCurrentContent());
             }
-            if (lists.getContentImg() == null|| lists.getContentImg().equals("")|| lists.getContentImg().equals("null")
+            if (lists.getContentImg() == null || lists.getContentImg().equals("") || lists.getContentImg().equals("null")
                     || lists.getContentImg().trim().equals("")) {
                 Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
                 holder.imageview_rankimage.setImageBitmap(bmp);
             } else {
                 String url1;
-                if(lists.getContentImg().startsWith("http")){
-                    url1 =  lists.getContentImg();
-                }else{
+                if (lists.getContentImg().startsWith("http")) {
+                    url1 = lists.getContentImg();
+                } else {
                     url1 = GlobalConfig.imageurl + lists.getContentImg();
                 }
                 url1 = AssembleImageUrlUtils.assembleImageUrl150(url1);
                 Picasso.with(context).load(url1.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
             }
-        } else if(lists.getMediaType().equals("AUDIO")){
+        } else if (lists.getMediaType().equals("AUDIO")) {
             holder.textPlaying.setVisibility(View.GONE);
             holder.imageNum.setVisibility(View.GONE);
-            if (lists.getContentName() == null|| lists.getContentName().equals("")) {
+            if (lists.getContentName() == null || lists.getContentName().equals("")) {
                 holder.textview_ranktitle.setText("未知");
             } else {
                 holder.textview_ranktitle.setText(lists.getContentName());
             }
-            if (lists.getCurrentContent() == null|| lists.getCurrentContent().equals("")) {
+            if (lists.getCurrentContent() == null || lists.getCurrentContent().equals("")) {
                 holder.textview_rankplaying.setText("未知");
             } else {
                 holder.textview_rankplaying.setText(lists.getCurrentContent());
             }
-            if (lists.getContentImg() == null|| lists.getContentImg().equals("")|| lists.getContentImg().equals("null")
+            if (lists.getContentImg() == null || lists.getContentImg().equals("") || lists.getContentImg().equals("null")
                     || lists.getContentImg().trim().equals("")) {
                 Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
                 holder.imageview_rankimage.setImageBitmap(bmp);
             } else {
                 String url1;
-                if(lists.getContentImg().startsWith("http")){
-                    url1 =  lists.getContentImg();
-                }else{
+                if (lists.getContentImg().startsWith("http")) {
+                    url1 = lists.getContentImg();
+                } else {
                     url1 = GlobalConfig.imageurl + lists.getContentImg();
                 }
+                url1 = AssembleImageUrlUtils.assembleImageUrl150(url1);
                 Picasso.with(context).load(url1.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
             }
 
@@ -137,36 +143,37 @@ public class FavorListAdapter extends BaseAdapter {
             }
 
             // 节目时长
-            if (lists.getContentTimes() == null|| lists.getContentTimes().equals("") || lists.getContentTimes().equals("null")) {
+            if (lists.getContentTimes() == null || lists.getContentTimes().equals("") || lists.getContentTimes().equals("null")) {
                 holder.tvLast.setText(context.getString(R.string.play_time));
             } else {
                 int minute = Integer.valueOf(lists.getContentTimes()) / (1000 * 60);
                 int second = (Integer.valueOf(lists.getContentTimes()) / 1000) % 60;
-                if(second < 10){
+                if (second < 10) {
                     holder.tvLast.setText(minute + "\'" + " " + "0" + second + "\"");
-                }else{
+                } else {
                     holder.tvLast.setText(minute + "\'" + " " + second + "\"");
                 }
             }
-        }else if(lists.getMediaType().equals("SEQU")){// 判断mediatype==sequ的情况
+        } else if (lists.getMediaType().equals("SEQU")) {// 判断mediatype==sequ的情况
             holder.textPlaying.setVisibility(View.GONE);
             holder.imageLast.setVisibility(View.GONE);
-            if (lists.getContentName() == null|| lists.getContentName().equals("")) {
+            if (lists.getContentName() == null || lists.getContentName().equals("")) {
                 holder.textview_ranktitle.setText("未知");
             } else {
                 holder.textview_ranktitle.setText(lists.getContentName());
             }
-            if (lists.getContentImg() == null|| lists.getContentImg().equals("")|| lists.getContentImg().equals("null")
+            if (lists.getContentImg() == null || lists.getContentImg().equals("") || lists.getContentImg().equals("null")
                     || lists.getContentImg().trim().equals("")) {
                 Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
                 holder.imageview_rankimage.setImageBitmap(bmp);
             } else {
                 String url;
-                if(lists.getContentImg().startsWith("http")){
-                    url=  lists.getContentImg();
-                }else{
-                    url= GlobalConfig.imageurl + lists.getContentImg();
+                if (lists.getContentImg().startsWith("http")) {
+                    url = lists.getContentImg();
+                } else {
+                    url = GlobalConfig.imageurl + lists.getContentImg();
                 }
+                url = AssembleImageUrlUtils.assembleImageUrl150(url);
                 Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
             }
 
@@ -182,27 +189,28 @@ public class FavorListAdapter extends BaseAdapter {
             } else {
                 holder.tvLast.setText(lists.getContentSubCount() + "集");
             }
-        }else if(lists.getMediaType().equals("TTS")){
+        } else if (lists.getMediaType().equals("TTS")) {
             holder.imageNumber.setVisibility(View.GONE);
             holder.textPlaying.setVisibility(View.GONE);
             holder.imageNum.setVisibility(View.GONE);
             holder.mTv_number.setVisibility(View.GONE);
-            if (lists.getContentName() == null|| lists.getContentName().equals("")) {
+            if (lists.getContentName() == null || lists.getContentName().equals("")) {
                 holder.textview_ranktitle.setText("未知");
             } else {
                 holder.textview_ranktitle.setText(lists.getContentName());
             }
-            if (lists.getContentImg() == null|| lists.getContentImg().equals("")|| lists.getContentImg().equals("null")
+            if (lists.getContentImg() == null || lists.getContentImg().equals("") || lists.getContentImg().equals("null")
                     || lists.getContentImg().trim().equals("")) {
                 Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
                 holder.imageview_rankimage.setImageBitmap(bmp);
             } else {
                 String url;
-                if(lists.getContentImg().startsWith("http")){
-                    url=  lists.getContentImg();
-                }else{
-                    url= GlobalConfig.imageurl + lists.getContentImg();
+                if (lists.getContentImg().startsWith("http")) {
+                    url = lists.getContentImg();
+                } else {
+                    url = GlobalConfig.imageurl + lists.getContentImg();
                 }
+                url = AssembleImageUrlUtils.assembleImageUrl150(url);
                 Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
             }
 
@@ -213,19 +221,19 @@ public class FavorListAdapter extends BaseAdapter {
             }
 
             // 节目时长
-            if (lists.getContentTimes() == null|| lists.getContentTimes().equals("") || lists.getContentTimes().equals("null")) {
+            if (lists.getContentTimes() == null || lists.getContentTimes().equals("") || lists.getContentTimes().equals("null")) {
                 holder.tvLast.setText(context.getString(R.string.play_time));
             } else {
                 int minute = Integer.valueOf(lists.getContentTimes()) / (1000 * 60);
                 int second = (Integer.valueOf(lists.getContentTimes()) / 1000) % 60;
-                if(second < 10){
+                if (second < 10) {
                     holder.tvLast.setText(minute + "\'" + " " + "0" + second + "\"");
-                }else{
+                } else {
                     holder.tvLast.setText(minute + "\'" + " " + second + "\"");
                 }
             }
         }
-        if (lists.getWatchPlayerNum() == null|| lists.getWatchPlayerNum().equals("")|| lists.getWatchPlayerNum().equals("null")) {
+        if (lists.getWatchPlayerNum() == null || lists.getWatchPlayerNum().equals("") || lists.getWatchPlayerNum().equals("null")) {
             holder.mTv_number.setText("0");
         } else {
             holder.mTv_number.setText(lists.getWatchPlayerNum());
@@ -257,7 +265,6 @@ public class FavorListAdapter extends BaseAdapter {
     class ViewHolder {
         public ImageView img_check;
         public LinearLayout lin_check;
-
         public ImageView imageview_rankimage;
         public TextView textview_rankplaying;
         public TextView textview_ranktitle;

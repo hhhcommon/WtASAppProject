@@ -6,15 +6,15 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.download.service.DownloadService;
 
 /**
  * 下载位置
- * @author 辛龙
- * 2016年8月8日
+ * 作者：xinlong on 2016/8/1 21:18
+ * 邮箱：645700751@qq.com
  */
-public class DownloadPositionActivity extends BaseActivity {
+public class DownloadPositionActivity extends AppBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

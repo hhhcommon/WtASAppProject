@@ -42,6 +42,8 @@ import java.util.ArrayList;
 
 /**
  * 我喜欢的
+ * 作者：xinlong on 2016/8/1 21:18
+ * 邮箱：645700751@qq.com
  */
 public class FavoriteActivity extends AppBaseFragmentActivity implements OnClickListener {
     private static FavoriteActivity context;

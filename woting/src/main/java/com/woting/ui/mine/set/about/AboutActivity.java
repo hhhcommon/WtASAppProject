@@ -6,15 +6,15 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.common.util.PhoneMessage;
+import com.woting.ui.baseactivity.AppBaseActivity;
 
 /**
  * 关于
- * @author 辛龙
- * 2016年3月9日
+ * 作者：xinlong on 2016/8/1 21:18
+ * 邮箱：645700751@qq.com
  */
-public class AboutActivity extends BaseActivity implements OnClickListener {
+public class AboutActivity extends AppBaseActivity implements OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

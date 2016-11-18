@@ -1,6 +1,5 @@
-package com.woting.ui.mine.set.update;
+package com.woting.common.manager;
 
-import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Context;
@@ -28,15 +27,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * 软件更新下载安装
- * @author 辛龙
- * 2016年8月8日
+ *软件更新下载安装
+ * 作者：xinlong on 2016/8/1 21:18
+ * 邮箱：645700751@qq.com
  */
-public class UpdateManager extends Activity {
+public class UpdateManager  {
     private Context mContext;
     private String updateMsg = "我听FM有最新版本，亲快下载吧~"; // 提示语
     private String apkUrl = GlobalConfig.apkUrl;                // 返回的安装包url
-    // private String apkUrl = "http://www.ym18.cn/appupgrade/yangzhirili.apk";
     private Dialog noticeDialog;
     private Dialog downloadDialog;
     /* 下载包安装路径 */
@@ -120,7 +118,7 @@ public class UpdateManager extends Activity {
         mProgress = (ProgressBar) v.findViewById(R.id.progress);
         builder.setView(v);
         builder.setCancelable(false);
-//		builder.setNegativeButton("取消", new OnClickListener() {	
+//		builder.setNegativeButton("取消", new OnClickListener() {
 //			@Override
 //			public void onClick(DialogInterface dialog, int which) {
 //				dialog.dismiss();
@@ -145,11 +143,11 @@ public class UpdateManager extends Activity {
                 //////////////
                 String state = Environment.getExternalStorageState();
                 if (!state.equals(Environment.MEDIA_MOUNTED)) {
-                    Log.i("录音1", "SD Card is not mounted,It is  " + state + ".");
+                    Log.i("update1", "SD Card is not mounted,It is  " + state + ".");
                 }
                 File directory = new File(savePath).getParentFile();
                 if (!directory.exists() && !directory.mkdirs()) {
-                    Log.i("录音2", "Path to file could not be created");
+                    Log.i("update2", "Path to file could not be created");
                 }
                 ///////
                 File file = new File(savePath);

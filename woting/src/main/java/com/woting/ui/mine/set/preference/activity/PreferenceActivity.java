@@ -23,7 +23,7 @@ import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.program.fenlei.model.FenLei;
 import com.woting.ui.mine.set.preference.adapter.PianHaoAdapter;
 
@@ -39,7 +39,7 @@ import java.util.List;
  * 作者：xinlong on 2016/9/5 17:36
  * 邮箱：645700751@qq.com
  */
-public class PreferenceActivity extends BaseActivity implements View.OnClickListener {
+public class PreferenceActivity extends AppBaseActivity implements View.OnClickListener {
 
     private LinearLayout head_left_btn;
     private String tag = "PREFERENCE_SET_REQUEST_CANCEL_TAG"; // 取消网络请求标签
