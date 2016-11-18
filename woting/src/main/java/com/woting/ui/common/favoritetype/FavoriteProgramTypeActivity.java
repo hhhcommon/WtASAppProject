@@ -222,10 +222,10 @@ public class FavoriteProgramTypeActivity extends BaseActivity implements View.On
         }
         String prefStr = builder.toString();
         if(prefStr.length() != 0) {
-            ToastUtils.show_allways(context, prefStr.substring(0, prefStr.length() - 1));
+//            ToastUtils.show_allways(context, prefStr.substring(0, prefStr.length() - 1));
 
             dialog = DialogUtils.Dialogph(context, "Loading...");
-            sendPreferenceOkRequest(prefStr);
+            sendPreferenceOkRequest(prefStr.substring(0, prefStr.length() - 1));
         }
     }
 
@@ -253,7 +253,6 @@ public class FavoriteProgramTypeActivity extends BaseActivity implements View.On
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                ToastUtils.show_allways(context, "获取成功!");
             }
 
             @Override
@@ -266,12 +265,13 @@ public class FavoriteProgramTypeActivity extends BaseActivity implements View.On
     // 设置成功 发送数据给服务器
     private void sendPreferenceOkRequest(String preStr) {
         if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
+            if(dialog != null) dialog.dismiss();
             ToastUtils.show_allways(context, "网络连接失败，请检查网络设置!");
             return ;
         }
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            jsonObject.put("PrefStr0", preStr);
+            jsonObject.put("PrefStr", preStr);
         } catch (JSONException e) {
             e.printStackTrace();
         }

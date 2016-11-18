@@ -854,9 +854,13 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                         if(!starSign.equals(sharedPreferences.getString(StringConstant.STAR_SIGN, ""))) {
                             et.putString(StringConstant.STAR_SIGN, starSign);
                         }
-                        if(isEmail(email)) {
-                            if(!email.equals(sharedPreferences.getString(StringConstant.EMAIL, ""))) {
-                                et.putString(StringConstant.EMAIL, email);
+                        if(!email.equals(sharedPreferences.getString(StringConstant.EMAIL, ""))) {
+                            if(!email.equals("")) {
+                                if(isEmail(email)) {
+                                    et.putString(StringConstant.EMAIL, email);
+                                }
+                            } else {
+                                et.putString(StringConstant.EMAIL, "");
                             }
                         }
 

@@ -97,6 +97,7 @@
                 android:visibility="visible">
 
                 <ImageView
+                    android:id="@+id/image_num"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:layout_marginRight="6dp"
@@ -109,12 +110,13 @@
                     android:gravity="center"
                     android:text="0"
                     android:textColor="@color/beijing"
+                    android:layout_marginRight="14dp"
                     android:textSize="9sp"/>
 
                 <ImageView
+                    android:id="@+id/image_last"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
-                    android:layout_marginLeft="14dp"
                     android:layout_marginRight="6dp"
                     android:src="@mipmap/image_program_time"/>
 

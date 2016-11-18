@@ -24,6 +24,7 @@ import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.fragment.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
+import com.woting.ui.home.program.radiolist.activity.RadioListActivity;
 import com.woting.ui.home.program.radiolist.adapter.ListInfoAdapter;
 import com.woting.ui.home.program.radiolist.mode.ListInfo;
 import com.woting.ui.home.program.radiolist.rollviewpager.RollPagerView;
@@ -135,14 +136,13 @@ public class ClassifyFragment extends Fragment{
 	 * 请求网络获取分类信息
 	 */
 	private void sendRequest(){
-		VolleyRequest.RequestPost(GlobalConfig.getContentUrl, setParam(), new VolleyCallback() {
+		VolleyRequest.RequestPost(GlobalConfig.getContentUrl, RadioListActivity.tag, setParam(), new VolleyCallback() {
 			private String ReturnType;
 
 			@Override
 			protected void requestSuccess(JSONObject result) {
-				if (dialog != null) {
-					dialog.dismiss();
-				}
+				if (dialog != null) dialog.dismiss();
+                if(RadioListActivity.isCancelRequest) return ;
 				page++;
 				try {
 					ReturnType = result.getString("ReturnType");
@@ -192,9 +192,8 @@ public class ClassifyFragment extends Fragment{
 
 			@Override
 			protected void requestError(VolleyError error) {
-				if (dialog != null) {
-					dialog.dismiss();
-				}
+				if (dialog != null) dialog.dismiss();
+                ToastUtils.showVolleyError(context);
 			}
 		});
 	}
