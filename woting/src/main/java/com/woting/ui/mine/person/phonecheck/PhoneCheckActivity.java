@@ -26,11 +26,10 @@ import com.woting.ui.baseactivity.AppActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 /**
  * 变更手机号
- * @author 辛龙
- * 2016年7月19日
+ * 作者：xinlong on 2016/7/19 21:18
+ * 邮箱：645700751@qq.com
  */
 public class PhoneCheckActivity extends AppActivity implements OnClickListener {
     private CountDownTimer mCountDownTimer;         // 计时器

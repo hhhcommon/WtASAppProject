@@ -48,8 +48,8 @@ import java.util.List;
 
 /**
  * 播放历史
- *
- * @author woting11
+ * 作者：xinlong on 2016/8/1 21:18
+ * 邮箱：645700751@qq.com
  */
 public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnClickListener {
     private SearchPlayerHistoryDao dbDao;// 播放历史数据库

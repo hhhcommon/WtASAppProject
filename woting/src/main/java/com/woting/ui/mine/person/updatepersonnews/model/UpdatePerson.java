@@ -3,9 +3,11 @@ package com.woting.ui.mine.person.updatepersonnews.model;
 import java.io.Serializable;
 
 /**
- * Created by Administrator on 2016/11/9 0009.
+ * 修改个人信息的对象
+ * 作者：xinlong on 2016/7/19 21:18
+ * 邮箱：645700751@qq.com
  */
-public class personModel implements Serializable {
+public class UpdatePerson implements Serializable {
 
     private String nickName;
     private String birthday;
@@ -15,7 +17,7 @@ public class personModel implements Serializable {
     private String gender;
     private String Email;
 
-    public personModel(String nickName, String birthday, String starSign, String region, String userSign, String gender, String email) {
+    public UpdatePerson(String nickName, String birthday, String starSign, String region, String userSign, String gender, String email) {
         this.nickName = nickName;
         this.birthday = birthday;
         this.starSign = starSign;

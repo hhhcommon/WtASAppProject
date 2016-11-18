@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.player.main.fragment.PlayerFragment;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
 
@@ -22,7 +22,7 @@ import com.woting.ui.home.player.timeset.service.timeroffservice;
  * @author 辛龙
  * 2016年4月1日
  */
-public class TimerPowerOffActivity extends BaseActivity implements OnClickListener {
+public class TimerPowerOffActivity extends AppBaseActivity implements OnClickListener {
     private Intent intent;
 
     private View viewPlayEnd;

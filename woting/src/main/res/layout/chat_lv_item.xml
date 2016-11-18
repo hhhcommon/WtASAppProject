@@ -4,27 +4,29 @@
     android:layout_height="wrap_content"
     android:background="@color/transparent"
     android:orientation="horizontal"
+    android:paddingBottom="10dp"
     android:paddingRight="5dp"
     android:paddingTop="10dp">
 
     <RelativeLayout
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="5dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:paddingTop="2dp"
-        android:paddingBottom="5dp"
-        >
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
 
         <ImageView
             android:id="@+id/chatfrom_icon"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_centerInParent="true"
-            />
+            android:scaleType="centerCrop" />
 
+        <ImageView
+            android:id="@+id/img_zhezhao"
+            android:layout_width="48dp"
+            android:layout_height="48dp" />
     </RelativeLayout>
+
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
@@ -36,8 +38,9 @@
             android:id="@+id/chat_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
+            android:layout_marginLeft="25dp"
+            android:layout_toRightOf="@+id/chat_name"
             android:text="09-25 12:00"
             android:textColor="@color/gray"
             android:textSize="12sp" />
@@ -49,7 +52,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:text="姓名"
-            android:textColor="@color/gray"
+            android:textColor="@color/dinglan_orange"
             android:textSize="12sp" />
 
         <TextView

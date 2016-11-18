@@ -22,7 +22,6 @@
                 android:id="@+id/img_check"
                 android:layout_width="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="2dp"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/wt_group_nochecked" />
         </LinearLayout>
@@ -30,7 +29,7 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp">
+            android:layout_marginLeft="15dp">
 
             <ImageView
                 android:id="@+id/RankImageUrl"
@@ -73,8 +72,8 @@
                 android:gravity="left|center">
 
                 <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
                     android:layout_marginRight="6dp"
                     android:src="@mipmap/image_program_album" />
 

@@ -5,14 +5,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.woting.R;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.baseactivity.AppBaseActivity;
 
 /**
  * 联系我们界面
- * @author 辛龙
- * 2016年8月8日
+ * 作者：xinlong on 2016/8/1 21:18
+ * 邮箱：645700751@qq.com
  */
-public class ContactUsActivity extends BaseActivity implements OnClickListener {
+public class ContactUsActivity extends AppBaseActivity implements OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

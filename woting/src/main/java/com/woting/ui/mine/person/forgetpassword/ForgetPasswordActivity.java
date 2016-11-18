@@ -12,12 +12,12 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.woting.R;
-import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.common.config.GlobalConfig;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.ui.baseactivity.AppBaseActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,11 +26,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 修改密码
- * @author 辛龙
- * 2016年7月19日
+ * 忘记密码
+ * 作者：xinlong on 2016/7/19 21:18
+ * 邮箱：645700751@qq.com
  */
-public class ForgetPasswordActivity extends BaseActivity implements OnClickListener, TextWatcher {
+public class ForgetPasswordActivity extends AppBaseActivity implements OnClickListener, TextWatcher {
     private CountDownTimer mCountDownTimer;// 再次获取验证码时间
 
     private Dialog dialog;                 // 加载数据对话框

@@ -56,7 +56,7 @@ import com.woting.ui.mine.favorite.activity.FavoriteActivity;
 import com.woting.ui.mine.hardware.HardwareIntroduceActivity;
 import com.woting.ui.mine.model.UserPortaitInside;
 import com.woting.ui.mine.person.updatepersonnews.UpdatePersonActivity;
-import com.woting.ui.mine.person.updatepersonnews.model.personModel;
+import com.woting.ui.mine.person.updatepersonnews.model.UpdatePerson;
 import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
 import com.woting.ui.mine.set.SetActivity;
 import com.woting.ui.mine.shapeapp.ShapeAppActivity;
@@ -75,7 +75,7 @@ import java.util.regex.Pattern;
  */
 public class MineActivity extends BaseActivity implements OnClickListener {
     private SharedPreferences sharedPreferences = BSApplication.SharedPreferences;
-    private personModel pModel;
+    private UpdatePerson pModel;
 
     private final int TO_GALLERY = 1;           // 标识 打开系统图库
     private final int TO_CAMERA = 2;            // 标识 打开系统照相机
@@ -111,7 +111,6 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     private TextView textUserAutograph;
     private TextView textUserArea;
     private TextView textUserId;                // 显示用户 ID
-//    private TextView textTime;                  // 定时关闭的时间
     private TextView textUserName;              // 用户名
     private ImageView imageToggle;              // 流量提醒
     private ImageView imageHead;                // 用户头像
@@ -125,15 +124,6 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person);
-
-        // 注册广播
-//        IntentFilter filter = new IntentFilter();
-//        filter.addAction(BroadcastConstants.TIMER_UPDATE);
-//        filter.addAction(BroadcastConstants.TIMER_STOP);
-//        registerReceiver(timerBroadcast, filter);
-
-        // 获取数据存储对象
-        sharedPreferences = BSApplication.SharedPreferences;
         imageDialog();
         setView();
         setType();
@@ -169,14 +159,12 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     // 设置 view
     private void setView() {
         Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.img_person_background);
-//        textTime = (TextView) findViewById(R.id.text_time);                 // 定时关闭的时间显示
 
         findViewById(R.id.imageView_ewm).setOnClickListener(this);          // 二维码
         findViewById(R.id.lin_xiugai).setOnClickListener(this);             // 修改个人资料
         findViewById(R.id.text_denglu).setOnClickListener(this);            // 点击登录
         findViewById(R.id.image_nodenglu).setOnClickListener(this);         // 没有登录时的头像
         findViewById(R.id.lin_playhistory).setOnClickListener(this);        // 播放历史
-//        findViewById(R.id.lin_timer).setOnClickListener(this);              // 定时
         findViewById(R.id.lin_liuliang).setOnClickListener(this);           // 流量提醒
         findViewById(R.id.lin_hardware).setOnClickListener(this);           // 智能硬件
         findViewById(R.id.lin_app).setOnClickListener(this);                // 应用分享
@@ -225,9 +213,6 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             case R.id.lin_playhistory:      // 播放历史
                 startActivity(new Intent(context, PlayHistoryActivity.class));
                 break;
-//            case R.id.lin_timer:            // 定时
-//                startActivity(new Intent(context, TimerPowerOffActivity.class));
-//                break;
             case R.id.text_denglu:          // 登陆
                 startActivity(new Intent(context, LoginActivity.class));
                 break;
@@ -260,7 +245,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                 bundle.putInt("type", 1);
                 bundle.putString("id", userId);
                 bundle.putString("image", url);
-                bundle.putString("news", "");
+                bundle.putString("news", userSign);
                 bundle.putString("name", userName);
                 bundle.putSerializable("person", news);
                 intent.putExtras(bundle);
@@ -333,7 +318,6 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             userSign = sharedPreferences.getString(StringConstant.USER_SIGN, "");// 签名
             region = sharedPreferences.getString(StringConstant.REGION, "");// 区域
             textUserName.setText(userName);
-            textUserArea.setText(region);
             textUserAutograph.setText(userSign);
 
             if(region.equals("")) {
@@ -342,7 +326,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
 
                     region = GlobalConfig.CityName + GlobalConfig.District;
                 } else {
-                    region = "北京东城";
+                    region = "您还没有填写地址";
                 }
             }
             textUserArea.setText(region);
@@ -357,6 +341,8 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             if (!url.equals("")) {
                 if (!url.startsWith("http:")) {
                     url = AssembleImageUrlUtils.assembleImageUrl150(GlobalConfig.imageurl + url);
+                } else {
+                    url = AssembleImageUrlUtils.assembleImageUrl150(url);
                 }
                 Picasso.with(context).load(url.replace("\\/", "/")).into(imageHead);
             }
@@ -444,7 +430,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             case UPDATE_USER:// 修改个人资料界面返回
                 if(resultCode == 1){
                     Bundle bundle = data.getExtras();
-                    pModel = (personModel)bundle.getSerializable("data");
+                    pModel = (UpdatePerson) bundle.getSerializable("data");
                     regionId = bundle.getString("regionId");
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
                         ToastUtils.show_allways(context, "网络失败，请检查网络");
@@ -754,7 +740,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     String area;
 
     // 判断个人资料是否有修改过  有则将数据提交服务器
-    private void sendUpdate(personModel pM) {
+    private void sendUpdate(UpdatePerson pM) {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             nickName = pM.getNickName();
@@ -826,8 +812,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             return ;
         }
         isUpdate = false;
-        ToastUtils.show_allways(context, "数据有改动，将数据提交到服务器!");
-
+        Log.v("数据改动", "数据有改动，将数据提交到服务器!" );
         VolleyRequest.RequestPost(GlobalConfig.updateUserUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -891,7 +876,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                             textUserArea.setText(region);
                         }
                     } else {
-                        ToastUtils.show_allways(context, "信息修改失败!");
+//                        ToastUtils.show_allways(context, "信息修改失败!");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -916,7 +901,6 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        unregisterReceiver(timerBroadcast);
         isCancelRequest = VolleyRequest.cancelRequest(tag);
     }
 }
