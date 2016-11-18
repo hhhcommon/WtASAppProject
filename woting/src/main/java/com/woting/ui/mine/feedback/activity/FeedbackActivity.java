@@ -10,24 +10,23 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.woting.R;
-import com.woting.ui.baseactivity.BaseActivity;
-import com.woting.ui.mine.feedback.feedbacklist.activity.FeedbackListActivity;
 import com.woting.common.config.GlobalConfig;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.mine.feedback.feedbacklist.activity.FeedbackListActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  * 提交意见反馈
- *
- * @author 辛龙
- *         2016年8月1日
+ * 作者：xinlong on 2016/8/1 21:18
+ * 邮箱：645700751@qq.com
  */
-public class FeedbackActivity extends BaseActivity implements OnClickListener {
+public class FeedbackActivity extends AppBaseActivity implements OnClickListener {
     private Dialog dialog;
     private EditText mEditContent;// 输入 提交内容
 

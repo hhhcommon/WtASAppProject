@@ -30,10 +30,10 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.pickview.LoopView;
 import com.woting.common.widgetui.pickview.OnItemSelectedListener;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.common.model.Catalog;
 import com.woting.ui.home.common.model.CatalogName;
-import com.woting.ui.mine.person.updatepersonnews.model.personModel;
+import com.woting.ui.mine.person.updatepersonnews.model.UpdatePerson;
 import com.woting.ui.mine.person.updatepersonnews.util.DateUtil;
 
 import org.json.JSONException;
@@ -49,10 +49,10 @@ import java.util.Map;
 
 /**
  * 修改个人信息
- * @author 辛龙
- * 2016年7月19日
+ * 作者：xinlong on 2016/7/19 21:18
+ * 邮箱：645700751@qq.com
  */
-public class UpdatePersonActivity extends BaseActivity implements
+public class UpdatePersonActivity extends AppBaseActivity implements
         OnClickListener, DatePicker.OnDateChangedListener, DatePickerDialog.OnDateSetListener {
 
     private List<String> yearList;
@@ -270,7 +270,7 @@ public class UpdatePersonActivity extends BaseActivity implements
                     } else {
                         ToastUtils.show_allways(context, "数据获取异常，请稍候重试");
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -316,7 +316,7 @@ public class UpdatePersonActivity extends BaseActivity implements
         userSign = textSignature.getText().toString().trim();// 签名
 
         Intent intent = new Intent();
-        personModel pM = new personModel(nickName, birthday, starSign, region, userSign, gender, email);
+        UpdatePerson pM = new UpdatePerson(nickName, birthday, starSign, region, userSign, gender, email);
         Bundle bundle = new Bundle();
         bundle.putSerializable("data", pM);
         bundle.putString("regionId", regionId);

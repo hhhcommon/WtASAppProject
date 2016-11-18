@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.woting.R;
-import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.common.widgetui.photocut.ClipImageLayout;
+import com.woting.ui.baseactivity.AppBaseActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -18,11 +18,10 @@ import java.io.FileOutputStream;
 
 /**
  * 照片裁剪页
- *
- * @author 辛龙
- *         2016年7月19日
+ * 作者：xinlong on 2016/11/6 21:18
+ * 邮箱：645700751@qq.com
  */
-public class PhotoCutActivity extends BaseActivity implements OnClickListener {
+public class PhotoCutActivity extends AppBaseActivity implements OnClickListener {
     private Bitmap bitmap;
     private ClipImageLayout mClipImageLayout;
     private int type;

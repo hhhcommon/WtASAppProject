@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/WHITE"
         android:gravity="left|center"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -17,7 +17,7 @@
             android:layout_marginLeft="18dp"
             android:layout_weight="1"
             android:gravity="left|center"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_name"
@@ -25,47 +25,46 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="朋友"
-                android:textSize="@dimen/list_text_size"
-                android:textColor="@color/wt_login_third"/>
+                android:text="wtkj"
+                android:textColor="@color/wt_login_third"
+                android:textSize="@dimen/list_text_size" />
 
             <LinearLayout
-                android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/image_program_listener"
-                    android:layout_gravity="center"/>
-                
-                <TextView 
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@mipmap/image_program_listener" />
+
+                <TextView
                     android:id="@+id/tv_playnum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3755"
                     android:layout_marginLeft="6dp"
-                    android:textSize="12sp"
-                    android:textColor="@color/beijing"/>
-                
+                    android:text="0"
+                    android:textColor="@color/beijing"
+                    android:textSize="12sp" />
+
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/image_program_time"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="14dp"/>
-                
-                <TextView 
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_marginLeft="14dp"
+                    android:src="@mipmap/image_program_time" />
+
+                <TextView
                     android:id="@+id/text_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3755"
                     android:layout_marginLeft="6dp"
-                    android:textSize="12sp"
-                    android:textColor="@color/beijing"/>
-                
+                    android:text="0"
+                    android:textColor="@color/beijing"
+                    android:textSize="12sp" />
+
             </LinearLayout>
         </LinearLayout>
 
@@ -73,12 +72,12 @@
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="18dp"
             android:gravity="center"
-            android:text="2016-3-15"
+            android:text="0"
             android:textColor="@color/beijing"
-            android:textSize="12sp"
-            android:layout_marginLeft="10dp"/>
+            android:textSize="12sp" />
     </LinearLayout>
 
 </LinearLayout>

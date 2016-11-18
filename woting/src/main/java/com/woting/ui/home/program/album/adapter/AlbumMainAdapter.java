@@ -5,8 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.woting.R;
@@ -51,7 +49,7 @@ public class AlbumMainAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		ViewHolder holder;
+		ViewHolder holder ;
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_album_main, null);
@@ -70,7 +68,7 @@ public class AlbumMainAdapter extends BaseAdapter {
 			holder.tv_name.setText(lists.getContentName());
 		}
 		if (lists.getPlayCount() == null || lists.getPlayCount().equals("")) {
-			holder.tv_playnum.setText("000");
+			holder.tv_playnum.setText("0");
 		} else {
 			holder.tv_playnum.setText(lists.getPlayCount());
 		}
@@ -108,10 +106,7 @@ public class AlbumMainAdapter extends BaseAdapter {
 	class ViewHolder {
 		public TextView tv_time;
 		public TextView tv_playnum;
-		public ImageView imageView_touxiang;
 		public TextView tv_name;
-		public LinearLayout lin_onclick;
-		public ImageView imageView_check;
 		public TextView textTime;
 	}
 }

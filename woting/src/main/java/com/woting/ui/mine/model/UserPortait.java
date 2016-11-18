@@ -1,7 +1,11 @@
 package com.woting.ui.mine.model;
 
 import java.util.List;
-
+/**
+ * 个人信息公共对象
+ * 作者：xinlong on 2016/7/19 21:18
+ * 邮箱：645700751@qq.com
+ */
 public class UserPortait {
 	private String SessionId;
 	private String ReturnType;

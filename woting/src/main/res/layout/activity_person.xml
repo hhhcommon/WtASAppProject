@@ -66,7 +66,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="51dp"
             android:layout_centerHorizontal="true"
-            android:src="@mipmap/liubianxing_orange" />
+            android:src="@mipmap/wt_liubianxing_orange" />
 
         <LinearLayout
             android:id="@+id/linear_user"
@@ -113,7 +113,6 @@
             android:singleLine="true"
             android:maxWidth="240dp"
             android:ellipsize="end"
-            android:text="HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:textSize="12sp" />

@@ -22,14 +22,14 @@ import com.woting.ui.home.program.main.ProgramFragment;
 import com.woting.ui.home.search.activity.SearchLikeActivity;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.common.util.ToastUtils;
+import com.woting.ui.interphone.notify.activity.NotifyNewsActivity;
 
 import java.util.ArrayList;
 
 /**
  * 内容主页
- *
- * @author 辛龙
- *         2016年2月2日
+ * 作者：xinlong on 2016/11/6 21:18
+ * 邮箱：645700751@qq.com
  */
 public class HomeActivity extends FragmentActivity {
     private static TextView view1;
@@ -68,8 +68,14 @@ public class HomeActivity extends FragmentActivity {
     private void InitTextView() {
         view1 = (TextView) findViewById(R.id.tv_guid1);
         view2 = (TextView) findViewById(R.id.tv_guid2);
-        //		LinearLayout lin_news = (LinearLayout) findViewById(R.id.lin_news);
-
+        LinearLayout lin_news = (LinearLayout) findViewById(R.id.lin_news);
+        lin_news.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, NotifyNewsActivity.class);
+                startActivity(intent);
+            }
+        });
         LinearLayout lin_find = (LinearLayout) findViewById(R.id.lin_find);
         lin_find.setOnClickListener(new OnClickListener() {
             @Override

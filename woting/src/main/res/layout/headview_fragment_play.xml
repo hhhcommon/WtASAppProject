@@ -271,6 +271,7 @@
                         android:src="@mipmap/wt_play_xiazai" />
 
                     <TextView
+                        android:id="@+id/tv_download"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"

@@ -2,10 +2,10 @@ package com.woting.ui.mine.playhistory.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.woting.R;
+import com.woting.common.application.BSApplication;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.ui.home.main.HomeActivity;
@@ -35,24 +36,26 @@ import java.util.List;
  * @author woting11
  */
 public class TTSFragment extends Fragment{
-	private View rootView;
-	private SearchPlayerHistoryDao dbdao;
-	private Context context;
+    private Context context;
+	private SearchPlayerHistoryDao dbDao;
+    private PlayHistoryAdapter adapter;
+    private ArrayList<PlayerHistory> playList;	// 节目list
+    private List<PlayerHistory> subList;		// 播放历史数据
+    private List<PlayerHistory> deleteList;		// 删除数据列表
+    private List<PlayerHistory> checkList;		// 选中数据列表
+
+    private View rootView;
 	private ListView listView;
-	private ArrayList<PlayerHistory> playList;	// 节目list
-	private List<PlayerHistory> subList;		// 播放历史数据
-	private PlayHistoryAdapter adapter;
-	private List<PlayerHistory> deleteList;		// 删除数据列表
-	private List<PlayerHistory> checkList;		// 选中数据列表
+    private LinearLayout linearNull;			// linear_null
+	
 	public static boolean isData;				// 标记是否有数据
-	private LinearLayout linearNull;			// linear_null
 	public static boolean isLoad;				// 标记是否已经加载过
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		context = getActivity();
-		initDao();					// 初始化数据库
+		initDao();
 	}
 	
 	@Override
@@ -67,20 +70,16 @@ public class TTSFragment extends Fragment{
 		return rootView;
 	}
 	
-	/**
-	 * 初始化数据库命令执行对象
-	 */
+	// 初始化数据库命令执行对象
 	private void initDao() {
-		dbdao = new SearchPlayerHistoryDao(context);
+		dbDao = new SearchPlayerHistoryDao(context);
 	}
 	
-	/**
-	 * 获取数据
-	 */
+	// 获取数据
 	public void getData(){
 		listView.setVisibility(View.GONE);
 		isData = false;
-		subList = dbdao.queryHistory();
+		subList = dbDao.queryHistory();
 		playList = null;
 		if (subList != null && subList.size() > 0) {
 			for (int i = 0; i < subList.size(); i++) {
@@ -104,39 +103,26 @@ public class TTSFragment extends Fragment{
 		}
 	}
 	
-	/**
-	 * 没有历史播放记录时向用户友好提示
-	 * 全部界面中若单条删除数据 则重新加载刷新数据
-	 */
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
-//		if(isVisibleToUser && isLoad && !isData){
-//			ToastUtils.show_allways(context, "没有历史播放记录");
-//		}
 		if(isVisibleToUser && TotalFragment.isDeleteTTS){
 			getData();
 			TotalFragment.isDeleteTTS = false;
 		}
 	}
 	
-	/**
-	 * 设置 View 隐藏
-	 */
+	// 设置 View 隐藏
 	public void setLinearHint(){
 		linearNull.setVisibility(View.GONE);
 	}
 	
-	/**
-	 * 设置 View 可见  解决全选 Dialog 挡住 ListView 最底下一条 Item 问题
-	 */
+	// 设置 View 可见  解决全选 Dialog 挡住 ListView 最底下一条 Item 问题
 	public void setLinearVisibility(){
 		linearNull.setVisibility(View.VISIBLE);
 	}
 	
-	/**
-	 * 实现接口  设置点击事件
-	 */
+	// 实现接口  设置点击事件
 	private void setInterface() {
 		adapter.setonclick(new playhistorycheck() {
 			@Override
@@ -151,10 +137,7 @@ public class TTSFragment extends Fragment{
 			}
 		});
 		
-		/**
-		 * ListView Item 点击事件监听
-		 * 在编辑状态下点击为选中  不在编辑状态下点击则跳转到播放界面
-		 */
+		// 在编辑状态下点击为选中  不在编辑状态下点击则跳转到播放界面
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -198,8 +181,8 @@ public class TTSFragment extends Fragment{
 								plaplayeralltime, playerintime, playercontentdesc, playernum,
 								playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
 								ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
-						dbdao.deleteHistory(playerurl);
-						dbdao.addHistory(history);
+						dbDao.deleteHistory(playerurl);
+						dbDao.addHistory(history);
 						if(PlayerFragment.context!=null){
 							MainActivity.change();
 							HomeActivity.UpdateViewPager();
@@ -207,11 +190,12 @@ public class TTSFragment extends Fragment{
 							PlayerFragment.SendTextRequest(s, context);
 							getActivity().finish();
 						}else{
-							SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
-							Editor et = sp.edit();
+							Editor et = BSApplication.SharedPreferences.edit();
 							et.putString(StringConstant.PLAYHISTORYENTER, "true");
 							et.putString(StringConstant.PLAYHISTORYENTERNEWS, subList.get(position).getPlayerName());
-							et.commit();
+                            if(!et.commit()) {
+                                Log.w("commit", "数据 commit 失败!");
+                            }
 							MainActivity.change();
 							HomeActivity.UpdateViewPager();
 							getActivity().finish();
@@ -222,9 +206,7 @@ public class TTSFragment extends Fragment{
 		});
 	}
 	
-	/**
-	 * 更新是否全选状态
-	 */
+	// 更新是否全选状态
 	private void ifAll(){
 		if(checkList == null){
 			checkList = new ArrayList<>();
@@ -247,9 +229,7 @@ public class TTSFragment extends Fragment{
 		}
 	}
 	
-	/**
-	 * 设置可选状态
-	 */
+	// 设置可选状态
 	public void setCheck(boolean checkStatus){
 		if(playList!= null && playList.size() > 0){
 			for(int i=0; i<playList.size(); i++){
@@ -259,11 +239,9 @@ public class TTSFragment extends Fragment{
 		}
 	}
 	
-	/**
-	 * 设置是否选中
-	 */
+	// 设置是否选中
 	public void setCheckStatus(int status){
-		if(playList!= null && playList.size() > 0){
+		if(playList != null && playList.size() > 0){
 			for(int i=0; i<playList.size(); i++){
 				playList.get(i).setStatus(status);
 			}
@@ -271,14 +249,12 @@ public class TTSFragment extends Fragment{
 		}
 	}
 	
-	/**
-	 * 删除数据  返回删除数据的数目
-	 */
+	// 删除数据  返回删除数据的数目
 	public int deleteData(){
 		int number = 0;
 		for(int i=0; i<playList.size(); i++){
 			if(deleteList == null){
-				deleteList = new ArrayList<PlayerHistory>();
+				deleteList = new ArrayList<>();
 			}
 			if(playList.get(i).getStatus() == 1){
 				deleteList.add(playList.get(i));
@@ -288,7 +264,7 @@ public class TTSFragment extends Fragment{
 		if(deleteList.size() > 0){
 			for(int i=0; i<deleteList.size(); i++){
 				String id = deleteList.get(i).getContentID();
-				dbdao.deleteHistoryById(id);
+				dbDao.deleteHistoryById(id);
 			}
 			if(checkList != null && checkList.size() > 0){
 				checkList.clear();
@@ -320,9 +296,9 @@ public class TTSFragment extends Fragment{
 		deleteList = null;
 		checkList = null;
 		linearNull = null;
-		if(dbdao != null){
-			dbdao.closedb();
-			dbdao = null;
+		if(dbDao != null){
+			dbDao.closedb();
+			dbDao = null;
 		}
 	}
 }

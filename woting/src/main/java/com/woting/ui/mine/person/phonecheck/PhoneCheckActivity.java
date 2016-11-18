@@ -22,17 +22,16 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.baseactivity.AppActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 /**
  * 变更手机号
- * @author 辛龙
- * 2016年7月19日
+ * 作者：xinlong on 2016/7/19 21:18
+ * 邮箱：645700751@qq.com
  */
-public class PhoneCheckActivity extends AppBaseActivity implements OnClickListener {
+public class PhoneCheckActivity extends AppActivity implements OnClickListener {
     private CountDownTimer mCountDownTimer;         // 计时器
 
     private Dialog dialog;                          // 加载数据对话框

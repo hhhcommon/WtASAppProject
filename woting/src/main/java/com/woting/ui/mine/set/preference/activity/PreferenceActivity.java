@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -16,12 +17,13 @@ import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
+import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.program.fenlei.model.FenLei;
 import com.woting.ui.mine.set.preference.adapter.PianHaoAdapter;
 
@@ -37,7 +39,7 @@ import java.util.List;
  * 作者：xinlong on 2016/9/5 17:36
  * 邮箱：645700751@qq.com
  */
-public class PreferenceActivity extends BaseActivity implements View.OnClickListener {
+public class PreferenceActivity extends AppBaseActivity implements View.OnClickListener {
 
     private LinearLayout head_left_btn;
     private String tag = "PREFERENCE_SET_REQUEST_CANCEL_TAG"; // 取消网络请求标签
@@ -91,7 +93,7 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
                     for(int j=0;j<tempList.get(i).getChildren().size();j++){
                         if(tempList.get(i).getChildren().get(j).getchecked().equals("true")){
                             String s=tempList.get(i).getChildren().get(j).getAttributes().getmId()+"::"
-                                    +tempList.get(i).getChildren().get(j).getAttributes().getId()+"::"+tempList.get(i).getChildren().get(j).getName();
+                                    +tempList.get(i).getChildren().get(j).getAttributes().getId();
                             preferenceList.add(s);
                         }
                     }
@@ -102,8 +104,8 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
                 if(preferenceList.size()!=0){
                 //发送网络请求
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                    //dialog = DialogUtils.Dialogph(context, "通讯中...");
-                    //send(); 还没有接口
+                    dialog = DialogUtils.Dialogph(context, "通讯中...");
+                    sendRequest();
                     ToastUtils.show_allways(context,preferenceList.toString());
                 } else {
                     ToastUtils.show_allways(context, "网络失败，请检查网络");
@@ -113,6 +115,80 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
                 }
                 break;
         }
+    }
+
+    private void sendRequest() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if(!TextUtils.isEmpty(CommonUtils.getUserIdNoImei(context))){
+                jsonObject.put("UserId",CommonUtils.getUserId(context));
+            }
+            String s=preferenceList.toString();
+            jsonObject.put("PrefStr", s.substring(1,s.length()-1));
+            jsonObject.put("IsOnlyCata",2);
+            jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
+            jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
+            jsonObject.put("IMEI", PhoneMessage.imei);
+            PhoneMessage.getGps(context);
+            jsonObject.put("GPS-longitude", PhoneMessage.longitude);
+            jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
+            jsonObject.put("PCDType", GlobalConfig.PCDType);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        VolleyRequest.RequestPost(GlobalConfig.setPreferenceUrl, tag, jsonObject, new VolleyCallback() {
+
+            private String ReturnType;
+            private String ResultList;
+
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+                if (isCancelRequest) {
+                    return;
+                }
+                try {
+                    ReturnType = result.getString("ReturnType");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                // 根据返回值来对程序进行解析
+                if (ReturnType != null) {
+                    if (ReturnType.equals("1001")) {
+                        try {
+                         ToastUtils.show_allways(context,"偏好已经设置成功");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else if (ReturnType.equals("1002")) {
+                        ToastUtils.show_allways(context, "无此分类信息");
+                    } else if (ReturnType.equals("1003")) {
+                        ToastUtils.show_allways(context, "分类不存在");
+                    } else if (ReturnType.equals("1011")) {
+                        ToastUtils.show_allways(context, "当前暂无分类");
+                    } else if (ReturnType.equals("T")) {
+                        ToastUtils.show_allways(context, "获取列表异常");
+                    } else {
+                        ToastUtils.show_allways(context, "获取列表异常");
+                    }
+
+                } else {
+                    ToastUtils.show_allways(context, "数据获取异常，请稍候重试");
+                }
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
     }
 
     /**
@@ -160,19 +236,20 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
                             ResultList = arg1.getString("children");
                             tempList = new Gson().fromJson(ResultList, new TypeToken<List<FenLei>>() {
                             }.getType());
-                            if ( tempList != null) {
-                                if ( tempList.size() == 0) {
-                                    ToastUtils.show_allways(context, "获取分类列表为空");
-                                } else {
-                                    //对每个返回的分类做设置 默认为全部未选中状态 此时获取的为是所有的列表内容
-                                    if (adapter == null) {
-                                        adapter = new PianHaoAdapter(context,tempList);
-                                        lv_prefer.setAdapter(adapter);
-                                    } else {
-                                        adapter.notifyDataSetChanged();
-                                    }
-                                    setInterface();
-                                }
+                            if ( tempList != null&&tempList.size()>0) {
+                                if(!TextUtils.isEmpty(CommonUtils.getUserId(context))){
+                                        sendTwice();
+                                    }else{
+                                        //对每个返回的分类做设置 默认为全部未选中状态 此时获取的为是所有的列表内容
+                                            if (adapter == null) {
+                                                adapter = new PianHaoAdapter(context,tempList);
+                                                lv_prefer.setAdapter(adapter);
+                                            } else {
+                                                adapter.notifyDataSetChanged();
+                                            }
+                                            setInterface();
+
+                                          }
                             } else {
                                 ToastUtils.show_allways(context, "获取分类列表为空");
                             }
@@ -185,6 +262,105 @@ public class PreferenceActivity extends BaseActivity implements View.OnClickList
                         ToastUtils.show_allways(context, "分类不存在");
                     } else if (ReturnType.equals("1011")) {
                         ToastUtils.show_allways(context, "当前暂无分类");
+                    } else if (ReturnType.equals("T")) {
+                        ToastUtils.show_allways(context, "获取列表异常");
+                    } else {
+                        ToastUtils.show_allways(context, "获取列表异常");
+                    }
+
+                } else {
+                    ToastUtils.show_allways(context, "数据获取异常，请稍候重试");
+                }
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+    }
+
+
+    private void sendTwice() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("UserId",CommonUtils.getUserIdNoImei(context));
+            jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
+            jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
+            jsonObject.put("IMEI", PhoneMessage.imei);
+            PhoneMessage.getGps(context);
+            jsonObject.put("GPS-longitude", PhoneMessage.longitude);
+            jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
+            jsonObject.put("PCDType", GlobalConfig.PCDType);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        VolleyRequest.RequestPost(GlobalConfig.getPreferenceUrl, tag, jsonObject, new VolleyCallback() {
+
+            private String ReturnType;
+            private String ResultList;
+
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+                if (isCancelRequest) {
+                    return;
+                }
+                try {
+                    ReturnType = result.getString("ReturnType");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                // 根据返回值来对程序进行解析
+                if (ReturnType != null) {
+                    if (ReturnType.equals("1001")) {
+                        try {
+                            JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("PrefTree")).nextValue();
+                            ResultList = arg1.getString("children");
+                            List<FenLei> mList = new Gson().fromJson(ResultList, new TypeToken<List<FenLei>>() {}.getType());
+                 /*           String s=mList.get(0).getName();
+                            String s1=mList.get(1).getName();*/
+                            for(int i=0;i<mList.size();i++){
+                                for(int j=0;j<tempList.size();j++){
+                                    for(int k=0;k<tempList.get(j).getChildren().size();k++){
+                                   /*     String s1=tempList.get(j).getChildren().get(k).getId();
+                                        String s=mList.get(i).getChildren().get(i).getId();*/
+                                        if(mList.get(i).getId().equals(tempList.get(j).getChildren().get(k).getId())){
+                                            tempList.get(j).getChildren().get(k).setchecked("true");
+                                        }
+                                    }
+                                }
+                            }
+                            if (adapter == null) {
+                                adapter = new PianHaoAdapter(context,tempList);
+                                lv_prefer.setAdapter(adapter);
+                            } else {
+                                adapter.notifyDataSetChanged();
+                            }
+                            setInterface();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else if (ReturnType.equals("1002")) {
+                        ToastUtils.show_allways(context, "无此分类信息");
+                    } else if (ReturnType.equals("1003")) {
+                        ToastUtils.show_allways(context, "分类不存在");
+                    } else if (ReturnType.equals("1011")) {
+                        ToastUtils.show_allways(context, "当前暂无分类");
+                        if (adapter == null) {
+                            adapter = new PianHaoAdapter(context,tempList);
+                            lv_prefer.setAdapter(adapter);
+                        } else {
+                            adapter.notifyDataSetChanged();
+                        }
+                        setInterface();
                     } else if (ReturnType.equals("T")) {
                         ToastUtils.show_allways(context, "获取列表异常");
                     } else {

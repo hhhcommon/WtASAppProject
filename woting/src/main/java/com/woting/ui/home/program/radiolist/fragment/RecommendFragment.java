@@ -120,13 +120,14 @@ public class RecommendFragment extends Fragment{
 	 * 请求网络数据
 	 */
 	public void sendRequest(){
-		VolleyRequest.RequestPost(GlobalConfig.getContentUrl, setParam(), new VolleyCallback() {
+		VolleyRequest.RequestPost(GlobalConfig.getContentUrl, RadioListActivity.tag, setParam(), new VolleyCallback() {
 			private String ReturnType;
 
 			@Override
 			protected void requestSuccess(JSONObject result) {
+                ((RadioListActivity)getActivity()).closeDialog();
 				if (dialog != null) dialog.dismiss();
-				((RadioListActivity)getActivity()).closeDialog();
+                if(RadioListActivity.isCancelRequest) return ;
 				page++;
 				try {
 					ReturnType = result.getString("ReturnType");
@@ -174,6 +175,7 @@ public class RecommendFragment extends Fragment{
 			protected void requestError(VolleyError error) {
 				if (dialog != null) dialog.dismiss();
 				((RadioListActivity)getActivity()).closeDialog();
+                ToastUtils.showVolleyError(context);
 			}
 		});
 	}

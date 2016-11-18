@@ -33,6 +33,7 @@ import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.fragment.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
+import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.home.search.activity.SearchLikeActivity;
 import com.woting.ui.main.MainActivity;
@@ -161,7 +162,12 @@ public class SequFragment extends Fragment {
                         PlayerFragment.SendTextRequest(newList.get(position - 1).getContentName(), context);
                         context.finish();
                     } else if(MediaType.equals("SEQU")) {
-                        ToastUtils.show_allways(context, "跳转到专辑界面!");
+                        Intent intent = new Intent(context, AlbumActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("type", "search");
+                        bundle.putSerializable("list", newList.get(position - 1));
+                        intent.putExtras(bundle);
+                        startActivity(intent);
                     } else {
                         ToastUtils.show_allways(context, "暂不支持的Type类型");
                     }
@@ -224,7 +230,12 @@ public class SequFragment extends Fragment {
                         if (refreshType == 1) {
                             newList.clear();
                         }
-                        newList.addAll(SubList);
+                        for(int i=0; i<SubList.size(); i++) {
+                            if(SubList.get(i).getMediaType().equals("SEQU")) {
+                                newList.add(SubList.get(i));
+                            }
+                        }
+//                        newList.addAll(SubList);
                         adapter.notifyDataSetChanged();
                         setListener();
                     } catch (JSONException e) {

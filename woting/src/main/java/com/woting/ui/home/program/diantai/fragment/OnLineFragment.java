@@ -20,7 +20,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
-import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -28,6 +27,16 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.StringConstant;
+import com.woting.common.util.CommonUtils;
+import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.MyGridView;
+import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout;
+import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout.OnRefreshListener;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.fragment.PlayerFragment;
@@ -39,15 +48,6 @@ import com.woting.ui.home.program.diantai.adapter.OnLinesAdapter;
 import com.woting.ui.home.program.diantai.model.RadioPlay;
 import com.woting.ui.home.program.fmlist.activity.FMListActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
-import com.woting.common.config.GlobalConfig;
-import com.woting.common.constant.BroadcastConstants;
-import com.woting.common.constant.StringConstant;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
-import com.woting.common.util.CommonUtils;
-import com.woting.common.util.ToastUtils;
-import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout;
-import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout.OnRefreshListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -77,7 +77,7 @@ public class OnLineFragment extends Fragment {
 	private LinearLayout lin_address;
 	private TextView tv_Name;
 	private LinearLayout lin_head_more;
-	private GridView gridView;
+	private MyGridView gridView;
 	private List<RankInfo> mainLists;
 	private SharedPreferences shared;
 	private SearchPlayerHistoryDao dbDao;
@@ -106,7 +106,7 @@ public class OnLineFragment extends Fragment {
 			lin_address = (LinearLayout) headView.findViewById(R.id.lin_address);
 			tv_Name = (TextView) headView.findViewById(R.id.tv_name);
 			lin_head_more = (LinearLayout) headView.findViewById(R.id.lin_head_more);
-			gridView = (GridView) headView.findViewById(R.id.gridView);
+			gridView = (MyGridView) headView.findViewById(R.id.gridView);
 			// 取消默认selector
 			gridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 			mPullToRefreshLayout=(PullToRefreshLayout)rootView.findViewById(R.id.refresh_view);

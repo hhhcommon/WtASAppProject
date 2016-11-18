@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.ui.home.program.diantai.model.RadioPlay;
 import com.woting.ui.home.program.fmlist.activity.FMListActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
@@ -122,8 +123,10 @@ public class OnLinesAdapter extends BaseExpandableListAdapter  {
 			holder.textview_rankplaying = (TextView) convertView.findViewById(R.id.RankPlaying);// 正在播放的节目
 			holder.imageview_rankimage = (ImageView) convertView.findViewById(R.id.RankImageUrl);// 电台图标
 			holder.mTv_number = (TextView) convertView.findViewById(R.id.tv_num);
-			//			holder.mImg_play = (ImageView) convertView.findViewById(R.id.img_play);
 			holder.lin_CurrentPlay = (LinearLayout) convertView.findViewById(R.id.lin_currentplay);
+			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
+			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
+			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -137,11 +140,12 @@ public class OnLinesAdapter extends BaseExpandableListAdapter  {
 					} else {
 						holder.textview_ranktitle.setText(lists.getContentName());
 					}
-					if (lists.getContentPub() == null|| lists.getContentPub().equals("")) {
-						holder.textview_rankplaying.setText("未知");
-					} else {
-						holder.textview_rankplaying.setText(lists.getContentPub());
-					}
+//					if (lists.getContentPub() == null|| lists.getContentPub().equals("")) {
+//						holder.textview_rankplaying.setText("未知");
+//					} else {
+//						holder.textview_rankplaying.setText(lists.getContentPub());
+//					}
+					holder.textview_rankplaying.setText("测试-无节目单数据");
 					if (lists.getContentImg() == null
 							|| lists.getContentImg().equals("")
 							|| lists.getContentImg().equals("null")
@@ -155,9 +159,11 @@ public class OnLinesAdapter extends BaseExpandableListAdapter  {
 						}else{
 							url = GlobalConfig.imageurl + lists.getContentImg();
 						}
+						url=AssembleImageUrlUtils.assembleImageUrl150(url);
 						Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 					}
-				} else {// 判断mediatype==AUDIO的情况
+				} else {
+					// 判断mediatype==AUDIO的情况
 					if (lists.getContentName() == null|| lists.getContentName().equals("")) {
 						holder.textview_ranktitle.setText("未知");
 					} else {
@@ -176,49 +182,36 @@ public class OnLinesAdapter extends BaseExpandableListAdapter  {
 						}else{
 							url = GlobalConfig.imageurl + lists.getContentImg();
 						}
+						url= AssembleImageUrlUtils.assembleImageUrl150(url);
 						Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 					}
 					holder.lin_CurrentPlay.setVisibility(View.INVISIBLE);
 				}
 			}else{
-				ToastUtils.show_allways(context, "服务器返回数据MediaType为空");
+				ToastUtils.show_short(context, "服务器返回数据MediaType为空");
 			}
 			if (lists.getPlayCount() == null
 					|| lists.getPlayCount().equals("")
 					|| lists.getPlayCount().equals("null")) {
-				holder.mTv_number.setText("8000");
+				holder.mTv_number.setText("0");
 			} else {
 				holder.mTv_number.setText(lists.getPlayCount());
 			}
 		}
-		//		if (lists.getType() == 1) {
-		//			holder.mImg_play.setImageResource(R.drawable.album_play);
-		//		} else {
-		//			holder.mImg_play.setImageResource(R.drawable.album_pause);
-		//		}
-		//		holder.mImg_play.setOnClickListener(this);
-		//		holder.mImg_play.setTag(R.id.tag_groupname, groupPosition);
-		//		holder.mImg_play.setTag(R.id.tag_childname, childPosition);
+
 		return convertView;
 
 	}
 
-	// 定义的接口
-	public interface CallBackOnline {
-		public void click(View v);
-	}
-
-
 	class ViewHolder {
 		public ImageView imageview_rankimage;
-		//		public ImageView mImg_play;
-		public TextView textview_rankplayingnumber;
 		public TextView textview_rankplaying;
 		public TextView textview_ranktitle;
 		public TextView tv_name;
 		public LinearLayout lin_more;
 		public TextView mTv_number;
 		public LinearLayout lin_CurrentPlay;
+		public ImageView img_zhezhao;
 	}
 
 	@Override

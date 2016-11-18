@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.ui.download.model.FileInfo;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.widgetui.CircleProgress;
@@ -55,19 +56,21 @@ public class DownloadAdapter extends BaseAdapter {
 			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_uncompelete, null);
 			holder.textview_ranktitle = (TextView)convertView.findViewById(R.id.RankTitle);		// 台名
 			holder.imageview_rankimage = (ImageView)convertView.findViewById(R.id.img_touxiang);// 电台图标
-//			holder.pro_bar = (ProgressBar) convertView.findViewById(R.id.pb_progress);
 			holder.ncb=(CircleProgress)convertView.findViewById(R.id.roundBar2);
-//			holder.ncb=(NumberCircleProgressBar)convertView.findViewById(R.id.numbercircleprogress_bar);
 			holder.tv_start = (TextView)convertView.findViewById(R.id.download_start);
 			holder.tv_end = (TextView)convertView.findViewById(R.id.download_end);
 			holder.img_download_delete = (ImageView)convertView.findViewById(R.id.img_play);
 			holder.tv_author = (TextView)convertView.findViewById(R.id.tv_author);
 			holder.lin_board=(LinearLayout)convertView.findViewById(R.id.lin_downloadboard);
 			holder.rv_download=(RelativeLayout)convertView.findViewById(R.id.rv_download);
+			holder.img_liu = (ImageView)convertView.findViewById(R.id.img_liu);
+			Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
+			holder.img_liu.setImageBitmap(bmp);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
+
 		FileInfo lists = list.get(position);
 		if (lists.getFileName() == null || lists.getFileName().equals("")) {
 			holder.textview_ranktitle.setText("未知");
@@ -76,10 +79,10 @@ public class DownloadAdapter extends BaseAdapter {
 		}
 		if (lists.getImageurl() == null || lists.getImageurl().equals("")
 				|| lists.getImageurl().equals("null") || lists.getImageurl().trim().equals("")) {
-			Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_bg_noimage);
+			Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
 			holder.imageview_rankimage.setImageBitmap(bmp);
 		} else {
-			String url = lists.getImageurl();
+			String url = AssembleImageUrlUtils.assembleImageUrl150(lists.getImageurl());
 			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 		}
 
@@ -155,15 +158,14 @@ public class DownloadAdapter extends BaseAdapter {
 
 	private class ViewHolder {
 		public CircleProgress ncb;
-//		public ProgressBar pro_bar;
 		private ImageView imageview_rankimage;
 		private TextView tv_author;
 		private TextView textview_ranktitle;
 		private TextView tv_start;
 		private TextView tv_end;
-//		private NumberCircleProgressBar ncb;
 		private ImageView img_download_delete;
 		private LinearLayout lin_board;
 		private RelativeLayout rv_download;
+		public ImageView img_liu;
 	}
 }

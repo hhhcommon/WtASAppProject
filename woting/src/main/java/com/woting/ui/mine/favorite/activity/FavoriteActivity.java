@@ -1,6 +1,5 @@
 package com.woting.ui.mine.favorite.activity;
 
-import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -29,21 +27,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.woting.R;
+import com.woting.common.manager.MyActivityManager;
+import com.woting.common.util.PhoneMessage;
+import com.woting.common.util.ToastUtils;
 import com.woting.ui.baseactivity.AppBaseFragmentActivity;
+import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.mine.favorite.fragment.RadioFragment;
 import com.woting.ui.mine.favorite.fragment.SequFragment;
 import com.woting.ui.mine.favorite.fragment.SoundFragment;
 import com.woting.ui.mine.favorite.fragment.TTSFragment;
 import com.woting.ui.mine.favorite.fragment.TotalFragment;
-import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
-import com.woting.common.manager.MyActivityManager;
-import com.woting.common.util.PhoneMessage;
-import com.woting.common.util.ToastUtils;
 
 import java.util.ArrayList;
 
 /**
  * 我喜欢的
+ * 作者：xinlong on 2016/8/1 21:18
+ * 邮箱：645700751@qq.com
  */
 public class FavoriteActivity extends AppBaseFragmentActivity implements OnClickListener {
     private static FavoriteActivity context;
@@ -61,7 +61,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
     private static TextView tv_tts;
     private static ViewPager mPager;
     private static TextView tv_qingkong;
-    private static TextView tv_bianji;    // 加一个bol值，如果key值为0是为编辑状态，为1时显示完成
+    private static TextView tv_bianji;    // 加一个 bol 值，如果 key 值为 0 是为编辑状态，为 1 时显示完成
     private Dialog confirmDialog;
     private Dialog DelDialog;
     private ImageView image;
@@ -81,7 +81,6 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
     private int textFlag = 0;// 标记右上角text的状态0为编辑，1为取消
     public static boolean isEdit = false;// 是否为编辑状态
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,11 +93,11 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
         intentFilter.addAction(FavoriteActivity.SET_NOT_ALL_IMAGE);
         registerReceiver(mBroadcast, intentFilter);
 
-        setView();
         initImage();
         InitViewPager();
         delDialog();
         confirmDialog();
+        setView();
     }
 
     // 初始化 ViewPager
@@ -159,15 +158,10 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
                 index = 3;
             } else if (mediaType.equals("TTS")) {
                 index = 4;
-            } else {
-                ToastUtils.show_allways(context, "mediatype不属于已经分类的四种类型");
             }
             mPager.setCurrentItem(index);
             currentIndex = index;
             viewChange(index);
-        } else {
-            ToastUtils.show_allways(context, "传进来的mediatype值为空");
-
         }
     }
 
@@ -217,7 +211,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
     // 四种参数 1为打开该界面的隐藏栏，0为收起隐藏栏，2为全选，3为取消全选
     private void handleData(int type) {
         if (currentIndex == 0) {
-            // 全部 //1：先调total的查询全部方法 返回是否有值的弹窗
+            // 全部 先调total的查询全部方法 返回是否有值的弹窗
             int sum = totalFragment.getdelitemsum();
             if (type == 0) {
                 if (sum != 0) {
@@ -435,7 +429,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
         }
     }
 
-    // DelDialog 初始化
+    // delDialog 初始化
     private void delDialog() {
         final View dialog = LayoutInflater.from(context).inflate(R.layout.dialog_fravorite, null);
         LinearLayout lin_favorite_quanxuan = (LinearLayout) dialog.findViewById(R.id.lin_favorite_quanxuan);

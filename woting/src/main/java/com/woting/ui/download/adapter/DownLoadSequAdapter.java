@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.ui.download.model.FileInfo;
 import com.woting.common.util.BitmapUtils;
 
@@ -62,6 +63,9 @@ public class DownLoadSequAdapter extends BaseAdapter {
 			holder.lin_check=(LinearLayout)convertView.findViewById(R.id.lin_check);
 			holder.tv_count=(TextView)convertView.findViewById(R.id.tv_count);
 			holder.tv_sum=(TextView)convertView.findViewById(R.id.tv_sum);
+			holder.img_liu = (ImageView)convertView.findViewById(R.id.img_liu);
+			Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
+			holder.img_liu.setImageBitmap(bmp);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -75,10 +79,10 @@ public class DownLoadSequAdapter extends BaseAdapter {
 		if (lists.getSequimgurl() == null || lists.getSequimgurl().equals("")
 				|| lists.getSequimgurl().equals("null")
 				|| lists.getSequimgurl().trim().equals("")) {
-			Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_bg_noimage);
+			Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
 			holder.imageview_rankimage.setImageBitmap(bmp);
 		} else {
-			String url = /*GlobalConfig.imageurl +*/ lists.getSequimgurl();
+			String url = AssembleImageUrlUtils.assembleImageUrl150(lists.getSequimgurl());
 			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 		}
 		if (lists.getAuthor() == null || lists.getAuthor().equals("")) {
@@ -90,7 +94,7 @@ public class DownLoadSequAdapter extends BaseAdapter {
 			/*0状态时 为点选框隐藏状态
 			 *设置当前的选择状态为0 
 			 */
-			holder.lin_check.setVisibility(View.INVISIBLE);
+			holder.lin_check.setVisibility(View.GONE);
 	       
 		}else{
 			//1状态 此时设置choicetype生效
@@ -132,5 +136,6 @@ public class DownLoadSequAdapter extends BaseAdapter {
 		public LinearLayout lin_check;
 		public TextView tv_count;
 		public TextView tv_sum;
+		public ImageView img_liu;
 	}
 }

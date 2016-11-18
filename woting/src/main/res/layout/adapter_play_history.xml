@@ -31,21 +31,20 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="18dp">
+            android:layout_marginLeft="13dp">
 
             <ImageView
                 android:id="@+id/RankImageUrl"
                 android:layout_width="65dp"
                 android:layout_height="65dp"
                 android:layout_centerInParent="true"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/wt_image_playertx"/>
+                android:scaleType="centerCrop"/>
 
             <ImageView
+                android:id="@+id/img_zhezhao"
                 android:layout_width="65dp"
                 android:layout_height="65dp"
-                android:layout_centerInParent="true"
-                android:src="@mipmap/wt_6_b_y_b"/>
+                android:layout_centerInParent="true"/>
 
         </RelativeLayout>
 
@@ -62,7 +61,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="11dp"
                 android:singleLine="true"
-                android:text="我听之声"
+                android:text="我听之声我听之声我听之声我听之声我听之声我听之声"
+                android:layout_marginRight="10dp"
                 android:textColor="@color/dinglan_orange"
                 android:textSize="15sp"/>
 
@@ -73,8 +73,8 @@
                 android:gravity="left|center">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
                     android:layout_marginRight="6dp"
                     android:src="@mipmap/image_program_album"/>
 
@@ -98,8 +98,9 @@
                 android:visibility="visible">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/image_num"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
                     android:layout_marginRight="6dp"
                     android:src="@mipmap/image_program_listener"/>
 
@@ -108,14 +109,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="8888"
+                    android:text="0"
                     android:textColor="@color/beijing"
+                    android:layout_marginRight="14dp"
                     android:textSize="9sp"/>
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
+                    android:id="@+id/image_last"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
                     android:layout_marginRight="6dp"
                     android:src="@mipmap/image_program_time"/>
 

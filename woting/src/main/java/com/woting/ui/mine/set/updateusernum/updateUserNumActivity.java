@@ -20,7 +20,7 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.baseactivity.AppActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +29,7 @@ import org.json.JSONObject;
  * 设置用户号  只能设置一次
  * Created by Administrator on 2016/11/9 0009.
  */
-public class updateUserNumActivity extends AppBaseActivity implements View.OnClickListener {
+public class updateUserNumActivity extends AppActivity implements View.OnClickListener {
     private EditText et_UsrNum;
     private Button btn_Confirm;
     private TextView tv_desc;

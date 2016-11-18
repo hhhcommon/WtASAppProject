@@ -1,6 +1,7 @@
 package com.woting.ui.home.program.comment.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -12,8 +13,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.AssembleImageUrlUtils;
+import com.woting.common.util.BitmapUtils;
 import com.woting.ui.home.program.comment.model.opinion;
 
 import java.io.IOException;
@@ -31,6 +35,7 @@ public class ChatLVAdapter extends BaseAdapter {
         this.mContext = mContext;
         this.list = list;
     }
+
     public void updateList(List<opinion> list) {
         this.list = list;
         super.notifyDataSetChanged();
@@ -63,47 +68,53 @@ public class ChatLVAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.chat_lv_item, null);
             holder.fromContent = (TextView) convertView.findViewById(R.id.chatfrom_content);// 提交内容
             holder.time = (TextView) convertView.findViewById(R.id.chat_time);// 提交时间
-            holder.name=(TextView)convertView.findViewById(R.id.chat_name);// 提交人的名字
-            holder.img=(ImageView)convertView.findViewById(R.id.chatfrom_icon);
+            holder.name = (TextView) convertView.findViewById(R.id.chat_name);// 提交人的名字
+            holder.img = (ImageView) convertView.findViewById(R.id.chatfrom_icon);
+
+            holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
+            Bitmap bmp_zhezhao = BitmapUtils.readBitMap(mContext, R.mipmap.wt_6_b_y_b);
+            holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-            // 对内容做处理
-        opinion opinion=list.get(position);
-        if(opinion!=null&&!opinion.equals("")){
-            if(opinion.getDiscuss()!=null){
-                SpannableStringBuilder sb = handler(holder.fromContent,list.get(position).getDiscuss());
-                holder.fromContent.setText(sb);
-            }
-            if(opinion.getTime()!=null&&!opinion.equals("")){
-                holder.time.setText(list.get(position).getTime());
-            }
-            if(opinion.getUserInfo()!=null){
-            if(opinion.getUserInfo().getUserName()!=null){
+        // 对内容做处理
+        opinion opinion = list.get(position);
+        if (opinion.getDiscuss() != null) {
+            SpannableStringBuilder sb = handler(holder.fromContent, list.get(position).getDiscuss());
+            holder.fromContent.setText(sb);
+        }
+        if (opinion.getTime() != null && !opinion.equals("")) {
+            holder.time.setText(list.get(position).getTime());
+        } else {
+            holder.time.setText("0000-00-00");
+        }
+        if (opinion.getUserInfo() != null) {
+            if (opinion.getUserInfo().getUserName() != null) {
                 holder.name.setText(opinion.getUserInfo().getUserName());
-            }else{
+            } else {
                 holder.name.setText("游客");
             }
-            if(opinion.getUserInfo().getPortraitMini()!=null&&!opinion.getUserInfo().getPortraitMini().equals("")){
-              if(opinion.getUserInfo().getPortraitMini().startsWith("http:")){
-                 // BSApplication.imageLoader.get(opinion.getUserInfo().getPortraitMini(),BSApplication.imageLoader.getImageListener( holder.img, R.mipmap.home_image_bg, 0));
-                }else{
-                  String url= GlobalConfig.baseUrl+"Chopin/"+opinion.getUserInfo().getPortraitMini();
-                  //BSApplication.imageLoader.get(url,BSApplication.imageLoader.getImageListener( holder.img, R.mipmap.comment_default, 0));
-              }
-            }else{
-                //Bitmap bmp = BitmapUtils.readBitMap(mContext, R.mipmap.comment_default);
-                //holder.img.setImageBitmap(bmp);
-            }
-            }else{
-            /*    Bitmap bmp = BitmapUtils.readBitMap(mContext, R.mipmap.comment_default);
+            if (opinion.getUserInfo().getPortraitMini() != null && !opinion.getUserInfo().getPortraitMini().equals("")) {
+                String url;
+                if (opinion.getUserInfo().getPortraitMini().startsWith("http")) {
+                    url = opinion.getUserInfo().getPortraitMini();
+                } else {
+                    url = GlobalConfig.imageurl + opinion.getUserInfo().getPortraitMini();
+                }
+                url = AssembleImageUrlUtils.assembleImageUrl150(url);
+                Picasso.with(mContext).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.img);
+            } else {
+                Bitmap bmp = BitmapUtils.readBitMap(mContext, R.mipmap.person_nologinimage);
                 holder.img.setImageBitmap(bmp);
-                holder.name.setText("游客");*/
             }
-        }else{
-            //异常
+        } else {
+            Bitmap bmp = BitmapUtils.readBitMap(mContext, R.mipmap.person_nologinimage);
+            holder.img.setImageBitmap(bmp);
+            holder.name.setText("游客");
         }
+
         return convertView;
     }
 
@@ -115,19 +126,20 @@ public class ChatLVAdapter extends BaseAdapter {
         while (m.find()) {
             String tempText = m.group();
 
-                String png = tempText.substring("#[".length(), tempText.length() - "]#".length());
-                try {
-                    sb.setSpan(new ImageSpan(mContext, BitmapFactory.decodeStream(mContext.getAssets().open(png))), m.start(), m.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+            String png = tempText.substring("#[".length(), tempText.length() - "]#".length());
+            try {
+                sb.setSpan(new ImageSpan(mContext, BitmapFactory.decodeStream(mContext.getAssets().open(png))), m.start(), m.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
         return sb;
     }
 
     class ViewHolder {
         ImageView img;
-        TextView fromContent, time,name;
+        TextView fromContent, time, name;
+        public ImageView img_zhezhao;
     }
 
 }

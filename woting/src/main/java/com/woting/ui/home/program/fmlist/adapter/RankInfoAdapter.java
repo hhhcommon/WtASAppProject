@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.BitmapUtils;
@@ -47,7 +48,7 @@ public class RankInfoAdapter extends BaseAdapter   {
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		ViewHolder holder = null;
+		ViewHolder holder ;
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_rankinfo, null);
@@ -55,6 +56,9 @@ public class RankInfoAdapter extends BaseAdapter   {
 			holder.imageview_rankimage = (ImageView) convertView.findViewById(R.id.RankImageUrl);// 电台图标
 			holder.mTv_number = (TextView) convertView.findViewById(R.id.tv_num);
 			holder.textview_rankplaying=(TextView)convertView.findViewById(R.id.RankPlaying);
+			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
+			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
+			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -66,11 +70,15 @@ public class RankInfoAdapter extends BaseAdapter   {
 		} else {
 			holder.textview_ranktitle.setText(lists.getContentName());
 		}
-		if(lists.getContentPub()== null|| lists.getContentPub().equals("")){
-			holder.textview_rankplaying.setText("未知");
-		}else{
-			holder.textview_rankplaying.setText(lists.getContentPub());
-		}
+
+//		if(lists.getContentPub()== null|| lists.getContentPub().equals("")){
+//			holder.textview_rankplaying.setText("未知");
+//		}else{
+//			holder.textview_rankplaying.setText(lists.getContentPub());
+//		}
+
+		holder.textview_rankplaying.setText("测试-暂无节目单");
+
 		if (lists.getContentImg() == null || lists.getContentImg().equals("")
 				|| lists.getContentImg().equals("null") || lists.getContentImg().trim().equals("")) {
 			Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
@@ -82,11 +90,12 @@ public class RankInfoAdapter extends BaseAdapter   {
 			}else{
 				 url = GlobalConfig.imageurl + lists.getContentImg();
 			}
+			url= AssembleImageUrlUtils.assembleImageUrl150(url);
 			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 		}
 		if (lists.getPlayCount() == null
 				|| lists.getPlayCount().equals("") || lists.getPlayCount().equals("null")) {
-			holder.mTv_number.setText("8000");
+			holder.mTv_number.setText("0");
 		} else {
 			holder.mTv_number.setText(lists.getPlayCount());
 		}
@@ -98,5 +107,6 @@ public class RankInfoAdapter extends BaseAdapter   {
 		public TextView textview_ranktitle;
 		public TextView mTv_number;
 		public TextView textview_rankplaying;
+		public ImageView img_zhezhao;
 	}
 }

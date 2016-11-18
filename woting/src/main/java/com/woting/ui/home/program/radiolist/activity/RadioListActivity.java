@@ -4,16 +4,12 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,18 +17,19 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.DialogUtils;
+import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.PagerSlidingTabStrip;
+import com.woting.ui.baseactivity.AppBaseFragmentActivity;
 import com.woting.ui.home.program.fenlei.model.FenLeiName;
 import com.woting.ui.home.program.radiolist.adapter.MyPagerAdaper;
 import com.woting.ui.home.program.radiolist.fragment.ClassifyFragment;
 import com.woting.ui.home.program.radiolist.fragment.RecommendFragment;
 import com.woting.ui.home.program.radiolist.mode.CatalogData;
 import com.woting.ui.home.program.radiolist.mode.SubCata;
-import com.woting.common.config.GlobalConfig;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
-import com.woting.common.util.DialogUtils;
-import com.woting.common.util.ToastUtils;
-import com.woting.common.widgetui.PagerSlidingTabStrip;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,7 +42,7 @@ import java.util.List;
  * @author 辛龙
  * 2016年4月5日
  */
-public class RadioListActivity extends FragmentActivity implements OnClickListener {
+public class RadioListActivity extends AppBaseFragmentActivity implements OnClickListener {
 	private LinearLayout head_left_btn;		// 返回
 	private TextView mTextView_Head;
 	public static String catalogName;
@@ -67,8 +64,6 @@ public class RadioListActivity extends FragmentActivity implements OnClickListen
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_radiolist);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);		// 透明状态栏
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);	// 透明导航栏
 		fragments = new ArrayList<>();
 		setView();
 		handleRequestType();
@@ -207,16 +202,6 @@ public class RadioListActivity extends FragmentActivity implements OnClickListen
 			finish();
 			break;
 		}
-	}
-
-	// 设置android app 的字体大小不受系统字体大小改变的影响
-	@Override
-	public Resources getResources() {
-		Resources res = super.getResources();
-		Configuration config = new Configuration();
-		config.setToDefaults();
-		res.updateConfiguration(config, res.getDisplayMetrics());
-		return res;
 	}
 
 	@Override

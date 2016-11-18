@@ -3,25 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_bg"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-            android:background="@color/WHITE"
-        android:orientation="vertical" >
+        android:background="@color/WHITE"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@color/WHITE"
-            android:gravity="center_vertical" >
+            android:gravity="center_vertical">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center" >
+                android:gravity="center">
 
                 <TextView
                     android:id="@+id/tv_guid1"
@@ -36,7 +36,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center" >
+                android:gravity="center">
 
                 <TextView
                     android:id="@+id/tv_guid2"
@@ -51,7 +51,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center" >
+                android:gravity="center">
 
                 <TextView
                     android:id="@+id/tv_guid3"
@@ -62,35 +62,35 @@
                     android:textColor="@color/group_item_text2" />
             </LinearLayout>
         </LinearLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="2dp">
+
             <TextView
                 android:layout_width="match_parent"
-                android:layout_centerInParent="true"
                 android:layout_height="0.5dip"
+                android:layout_centerInParent="true"
                 android:background="@color/gray" />
+
             <ImageView
                 android:id="@+id/cursor"
                 android:layout_width="38dp"
                 android:layout_height="2dp"
-                android:scaleType="matrix"
-                android:background="@mipmap/left_personal_bg" />
+                android:background="@mipmap/left_personal_bg"
+                android:scaleType="matrix" />
         </RelativeLayout>
-
-
 
 
     </LinearLayout>
 
 
-
     <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"  
-          android:layout_width="fill_parent"
+        android:id="@+id/viewpager"
+        android:layout_width="fill_parent"
         android:layout_height="0dip"
         android:layout_weight="1"
         android:background="@color/WHITE"
-        android:persistentDrawingCache="animation"/>
+        android:persistentDrawingCache="animation" />
 
 </LinearLayout>

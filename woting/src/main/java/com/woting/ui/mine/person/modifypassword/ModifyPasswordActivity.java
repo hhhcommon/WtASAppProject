@@ -11,23 +11,23 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.woting.R;
-import com.woting.ui.baseactivity.BaseActivity;
-import com.woting.ui.common.login.LoginActivity;
 import com.woting.common.config.GlobalConfig;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.common.login.LoginActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  * 修改密码
- * @author 辛龙
- *         2016年7月19日
+ * 作者：xinlong on 2016/7/19 21:18
+ * 邮箱：645700751@qq.com
  */
-public class ModifyPasswordActivity extends BaseActivity implements OnClickListener {
+public class ModifyPasswordActivity extends AppBaseActivity implements OnClickListener {
     private Dialog dialog;
     private EditText editOldPassword;// 输入 旧密码
     private EditText editNewPassword;// 输入新密码
