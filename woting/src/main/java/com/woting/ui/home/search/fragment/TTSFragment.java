@@ -236,7 +236,13 @@ public class TTSFragment extends Fragment {
                         if (refreshType == 1) {
                             newList.clear();
                         }
-                        newList.addAll(SubList);
+
+                        for(int i=0; i<SubList.size(); i++) {
+                            if(SubList.get(i).getMediaType().equals("TTS")) {
+                                newList.add(SubList.get(i));
+                            }
+                        }
+//                        newList.addAll(SubList);
                         adapter.notifyDataSetChanged();
                         setListener();
                     } catch (JSONException e) {

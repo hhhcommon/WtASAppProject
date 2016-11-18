@@ -209,8 +209,6 @@ public class SoundFragment extends Fragment {
                     try {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         SubList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
-                        newList.clear();
-                        newList.addAll(SubList);
 
                         try {
                             String allCountString = arg1.getString("AllCount");
@@ -237,7 +235,13 @@ public class SoundFragment extends Fragment {
                         if (refreshType == 1) {
                             newList.clear();
                         }
-                        newList.addAll(SubList);
+
+                        for(int i=0; i<SubList.size(); i++) {
+                            if(SubList.get(i).getMediaType().equals("AUDIO")) {
+                                newList.add(SubList.get(i));
+                            }
+                        }
+//                        newList.addAll(SubList);
                         adapter.notifyDataSetChanged();
                         setListener();
                     } catch (JSONException e) {

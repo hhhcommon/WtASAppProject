@@ -5,13 +5,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +22,16 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
+import com.woting.common.application.BSApplication;
+import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.StringConstant;
+import com.woting.common.util.CommonUtils;
+import com.woting.common.util.DialogUtils;
+import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.xlistview.XListView;
+import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.fragment.PlayerFragment;
@@ -31,15 +41,6 @@ import com.woting.ui.main.MainActivity;
 import com.woting.ui.mine.favorite.activity.FavoriteActivity;
 import com.woting.ui.mine.favorite.adapter.FavorListAdapter;
 import com.woting.ui.mine.favorite.adapter.FavorListAdapter.favorCheck;
-import com.woting.common.config.GlobalConfig;
-import com.woting.common.constant.StringConstant;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
-import com.woting.common.util.CommonUtils;
-import com.woting.common.util.DialogUtils;
-import com.woting.common.util.ToastUtils;
-import com.woting.common.widgetui.xlistview.XListView;
-import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,22 +56,18 @@ import java.util.List;
  */
 public class SoundFragment extends Fragment {
 	private FragmentActivity context;
-//	private View headview;
 	private Dialog dialog;
 	private List<RankInfo> SubList;
 	private XListView mlistView;
 	private int page = 1;
-	private int RefreshType;		// refreshtype 1为下拉加载 2为上拉加载更多
-	private ArrayList<RankInfo> newlist = new ArrayList<RankInfo>();
-	private boolean flag;
-	private int pagesizenum = -1;	// 前端自己算 //先求余 如果等于0 最后结果不加1 如果不等于0 结果加一
+	private int RefreshType = 1;    // refreshType == 1 为下拉加载  == 2 为上拉加载更多
+	private ArrayList<RankInfo> newlist = new ArrayList<>();
+	private int pagesizenum = -1;	// 先求余 如果等于 0 最后结果不加 1  如果不等于 0 结果加 1
 	private View rootView;
 	protected FavorListAdapter adapter;
 	private List<String> dellist;
 	private String ReturnType;
-	private Intent mintent;
 	private SearchPlayerHistoryDao dbdao;
-//	private Integer pagesize;
 	private View linearNull;
 	private String tag = "SOUND_VOLLEY_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
@@ -79,11 +76,14 @@ public class SoundFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		context = this.getActivity();
-		flag = true;		// 设置等待提示是否展示
-		mintent = new Intent();
-		mintent.setAction(FavoriteActivity.VIEW_UPDATE);
-		initDao();
+		context = getActivity();
+        initDao();
+
+        IntentFilter mFilter = new IntentFilter();
+        mFilter.addAction(FavoriteActivity.VIEW_UPDATE);
+        mFilter.addAction(FavoriteActivity.SET_NOT_LOAD_REFRESH);
+        mFilter.addAction(FavoriteActivity.SET_LOAD_REFRESH);
+        context.registerReceiver(mBroadcastReceiver, mFilter);
 	}
 
 	@Override
@@ -93,50 +93,29 @@ public class SoundFragment extends Fragment {
 			linearNull = rootView.findViewById(R.id.linear_null);
 			mlistView = (XListView) rootView.findViewById(R.id.listView);
 			mlistView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-			IntentFilter myfileter = new IntentFilter();
-			myfileter.addAction(FavoriteActivity.VIEW_UPDATE);
-			myfileter.addAction(FavoriteActivity.SET_NOT_LOAD_REFRESH);
-			myfileter.addAction(FavoriteActivity.SET_LOAD_REFRESH);
-			context.registerReceiver(mBroadcastReceiver, myfileter);
+            setView();
 			if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-				if (flag) {
-					flag = false;
-				}
-				RefreshType = 1;
-				page = 1;
 				send();		// 发送网络请求
 			} else {
-				ToastUtils.show_short(context, "网络失败，请检查网络");
+				ToastUtils.show_allways(context, "网络失败，请检查网络");
 			}
 		}
 		return rootView;
 	}
 	
-	/*
-	 * 设置 View 隐藏
-	 */
+	// 设置 View 隐藏
 	public void setViewHint(){
 		linearNull.setVisibility(View.GONE);
 	}
 	
-	/*
-	 * 设置 View 可见  解决全选 Dialog 挡住 ListView 最底下一条 Item 问题
-	 */
+	// 设置 View 可见  解决全选 Dialog 挡住 ListView 最底下一条 Item 问题
 	public void setViewVisibility(){
 		linearNull.setVisibility(View.VISIBLE);
 	}
 
-	/*
-	 * 初始化数据库
-	 */
+	// 初始化数据库
 	private void initDao() {
 		dbdao = new SearchPlayerHistoryDao(context);
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		setView();
 	}
 
 	private void setListener() {
@@ -208,17 +187,18 @@ public class SoundFragment extends Fragment {
 								PlayerFragment.SendTextRequest(newlist.get(position - 1).getContentName(), context);
 								getActivity().finish();
 							} else {
-								SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
-								Editor et = sp.edit();
+								Editor et = BSApplication.SharedPreferences.edit();
 								et.putString(StringConstant.PLAYHISTORYENTER, "true");
 								et.putString(StringConstant.PLAYHISTORYENTERNEWS, newlist.get(position - 1).getContentName());
-								et.commit();
+                                if(!et.commit()) {
+                                    Log.w("commit", "数据 commit 失败!");
+                                }
 								MainActivity.change();
 								HomeActivity.UpdateViewPager();
 								getActivity().finish();
 							}
 						} else {
-							ToastUtils.show_short(context, "暂不支持的Type类型");
+							ToastUtils.show_allways(context, "暂不支持的Type类型");
 						}
 					}
 				}
@@ -242,6 +222,7 @@ public class SoundFragment extends Fragment {
 				}
 			}
 
+            @Override
 			public void onLoadMore() {
 				if (page <= pagesizenum) {
 					if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
@@ -260,13 +241,10 @@ public class SoundFragment extends Fragment {
 		});
 	}
 
-	/*
-	 * 发送网络请求
-	 */
+	// 发送网络请求
 	private void send() {
 		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			// 模块属性
 			jsonObject.put("MediaType", "AUDIO");
 			jsonObject.put("Page", String.valueOf(page));
 		} catch (JSONException e) {
@@ -290,27 +268,26 @@ public class SoundFragment extends Fragment {
                         }
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         SubList = new Gson().fromJson(arg1.getString("FavoriteList"), new TypeToken<List<RankInfo>>() {}.getType());
-                        String allCountString = arg1.getString("AllCount");
-                        String pageSizeString = arg1.getString("PageSize");
-                        if (allCountString != null && !allCountString.equals("") && pageSizeString != null && !pageSizeString.equals("")) {
-                            int allCountInt = Integer.valueOf(allCountString);
-                            int pageSizeInt = Integer.valueOf(pageSizeString);
-                            if(allCountInt < 10 || pageSizeInt < 10){
-                                mlistView.stopLoadMore();
-                                mlistView.setPullLoadEnable(false);
-                            }else{
-                                mlistView.setPullLoadEnable(true);
-                                if (allCountInt % pageSizeInt == 0) {
-                                    pagesizenum = allCountInt / pageSizeInt;
-                                } else {
-                                    pagesizenum = allCountInt / pageSizeInt + 1;
+                        try {
+                            String allCountString = arg1.getString("AllCount");
+                            String pageSizeString = arg1.getString("PageSize");
+                            if (allCountString != null && !allCountString.equals("") && pageSizeString != null && !pageSizeString.equals("")) {
+                                int allCountInt = Integer.valueOf(allCountString);
+                                int pageSizeInt = Integer.valueOf(pageSizeString);
+                                if(allCountInt < 10 || pageSizeInt < 10){
+                                    mlistView.stopLoadMore();
+                                    mlistView.setPullLoadEnable(false);
+                                }else{
+                                    mlistView.setPullLoadEnable(true);
+                                    if (allCountInt % pageSizeInt == 0) {
+                                        pagesizenum = allCountInt / pageSizeInt;
+                                    } else {
+                                        pagesizenum = allCountInt / pageSizeInt + 1;
+                                    }
                                 }
                             }
-                        } else {
-                            ToastUtils.show_allways(context, "页码获取异常");
-                        }
-                        if(SubList != null){
-                            SubList.clear();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                         if (RefreshType == 1) {
                             newlist.clear();
@@ -329,8 +306,7 @@ public class SoundFragment extends Fragment {
                     } else if (ReturnType != null && ReturnType.equals("1003")) {
                         ToastUtils.show_short(context, "无法获得列表");
                     } else if (ReturnType != null && ReturnType.equals("1011")) {
-                        ToastUtils.show_short(context, "无数据");
-                        mlistView.setVisibility(View.GONE);
+                        ToastUtils.show_allways(context, "无数据");
                     } else {
                         ToastUtils.show_short(context, "ReturnType不能为空");
                     }
@@ -349,13 +325,12 @@ public class SoundFragment extends Fragment {
 			@Override
 			protected void requestError(VolleyError error) {
 				if (dialog != null) dialog.dismiss();
+                ToastUtils.showVolleyError(context);
 			}
 		});
 	}
 
-	/*
-	 * 广播接收器
-	 */
+	// 广播接收器
 	private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 
 		@Override
@@ -388,7 +363,7 @@ public class SoundFragment extends Fragment {
 	 * 更改界面的view布局 让每个item都可以显示点选框
 	 */
 	public boolean changeviewtype(int type) {
-		if (newlist != null & newlist.size() != 0) {
+		if (newlist != null && newlist.size() != 0) {
 			for (int i = 0; i < newlist.size(); i++) {
 				newlist.get(i).setViewtype(type);
 			}
@@ -471,14 +446,10 @@ public class SoundFragment extends Fragment {
 		}
 	}
 
-	/*
-	 * 执行删除单条喜欢的方法
-	 */
+	// 执行删除单条喜欢的方法
 	protected void sendrequest() {
 		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			// 模块属性
-			// 对s进行处理 去掉"[]"符号
 			String s = dellist.toString();
 			jsonObject.put("DelInfos", s.substring(1, s.length() - 1).replaceAll(" ", ""));
 		} catch (JSONException e) {
@@ -487,32 +458,20 @@ public class SoundFragment extends Fragment {
 		
 		VolleyRequest.RequestPost(GlobalConfig.delFavoriteListUrl, tag, jsonObject, new VolleyCallback() {
 			private String Message;
-//			private String SessionId;
 
 			@Override
 			protected void requestSuccess(JSONObject result) {
 				isDel = true;
 				dellist.clear();
-				if(isCancelRequest){
-					return ;
-				}
+				if(isCancelRequest) return ;
 				try {
 					ReturnType = result.getString("ReturnType");
-//					SessionId = result.getString("SessionId");
 					Message = result.getString("Message");
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 				if (ReturnType != null && ReturnType.equals("1001")) {
-					context.sendBroadcast(mintent);
-//					if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-//						page = 1;
-//						send();
-//						context.sendBroadcast(mintent);
-//					} else {
-//						ToastUtils.show_allways(context, "网络失败，请检查网络");
-//					}
-					// 将页面改动的消息发送出去	如果删除成功默认去获取第一页数据
+					context.sendBroadcast(new Intent(FavoriteActivity.VIEW_UPDATE));
 				} else if (ReturnType != null && ReturnType.equals("1002")) {
 					ToastUtils.show_allways(context, "无法获取用户Id");
 				} else if (ReturnType != null && ReturnType.equals("T")) {
@@ -530,9 +489,8 @@ public class SoundFragment extends Fragment {
 			
 			@Override
 			protected void requestError(VolleyError error) {
-				if (dialog != null) {
-					dialog.dismiss();
-				}
+				if (dialog != null) dialog.dismiss();
+                ToastUtils.showVolleyError(context);
 				dellist.clear();
 			}
 		});
@@ -560,7 +518,6 @@ public class SoundFragment extends Fragment {
 		adapter = null;
 		dellist = null;
 		ReturnType = null;
-		mintent = null;
 		linearNull = null;
 		tag = null;
 		if(dbdao != null){

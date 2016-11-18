@@ -1,6 +1,5 @@
 package com.woting.ui.mine.favorite.activity;
 
-import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -29,16 +27,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.woting.R;
+import com.woting.common.manager.MyActivityManager;
+import com.woting.common.util.PhoneMessage;
+import com.woting.common.util.ToastUtils;
 import com.woting.ui.baseactivity.AppBaseFragmentActivity;
+import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.mine.favorite.fragment.RadioFragment;
 import com.woting.ui.mine.favorite.fragment.SequFragment;
 import com.woting.ui.mine.favorite.fragment.SoundFragment;
 import com.woting.ui.mine.favorite.fragment.TTSFragment;
 import com.woting.ui.mine.favorite.fragment.TotalFragment;
-import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
-import com.woting.common.manager.MyActivityManager;
-import com.woting.common.util.PhoneMessage;
-import com.woting.common.util.ToastUtils;
 
 import java.util.ArrayList;
 
@@ -81,7 +79,6 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
     private int textFlag = 0;// 标记右上角text的状态0为编辑，1为取消
     public static boolean isEdit = false;// 是否为编辑状态
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
