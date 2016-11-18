@@ -197,9 +197,6 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
     private void send() {
         JSONObject jsonObject = new JSONObject();
         try {
-            if(!TextUtils.isEmpty(CommonUtils.getUserIdNoImei(context))){
-                jsonObject.put("UserId",CommonUtils.getUserIdNoImei(context));
-            }
             jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
             jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
             jsonObject.put("IMEI", PhoneMessage.imei);
@@ -239,23 +236,116 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
                             ResultList = arg1.getString("children");
                             tempList = new Gson().fromJson(ResultList, new TypeToken<List<FenLei>>() {
                             }.getType());
-                            if ( tempList != null) {
-                                if ( tempList.size() == 0) {
-                                    ToastUtils.show_allways(context, "获取分类列表为空");
-                                } else {
-                                    //对每个返回的分类做设置 默认为全部未选中状态 此时获取的为是所有的列表内容
-                                    if (adapter == null) {
-                                        adapter = new PianHaoAdapter(context,tempList);
-                                        lv_prefer.setAdapter(adapter);
-                                    } else {
-                                        adapter.notifyDataSetChanged();
-                                    }
-                                    setInterface();
-                                }
+                            if ( tempList != null&&tempList.size()>0) {
+                                if(!TextUtils.isEmpty(CommonUtils.getUserId(context))){
+                                        sendTwice();
+                                    }else{
+                                        //对每个返回的分类做设置 默认为全部未选中状态 此时获取的为是所有的列表内容
+                                            if (adapter == null) {
+                                                adapter = new PianHaoAdapter(context,tempList);
+                                                lv_prefer.setAdapter(adapter);
+                                            } else {
+                                                adapter.notifyDataSetChanged();
+                                            }
+                                            setInterface();
+
+                                          }
                             } else {
                                 ToastUtils.show_allways(context, "获取分类列表为空");
                             }
                         } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (ReturnType.equals("1002")) {
+                        ToastUtils.show_allways(context, "无此分类信息");
+                    } else if (ReturnType.equals("1003")) {
+                        ToastUtils.show_allways(context, "分类不存在");
+                    } else if (ReturnType.equals("1011")) {
+                        ToastUtils.show_allways(context, "当前暂无分类");
+                    } else if (ReturnType.equals("T")) {
+                        ToastUtils.show_allways(context, "获取列表异常");
+                    } else {
+                        ToastUtils.show_allways(context, "获取列表异常");
+                    }
+
+                } else {
+                    ToastUtils.show_allways(context, "数据获取异常，请稍候重试");
+                }
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+    }
+
+
+    private void sendTwice() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("UserId",CommonUtils.getUserIdNoImei(context));
+            jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
+            jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
+            jsonObject.put("IMEI", PhoneMessage.imei);
+            PhoneMessage.getGps(context);
+            jsonObject.put("GPS-longitude", PhoneMessage.longitude);
+            jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
+            jsonObject.put("PCDType", GlobalConfig.PCDType);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        VolleyRequest.RequestPost(GlobalConfig.getPreferenceUrl, tag, jsonObject, new VolleyCallback() {
+
+            private String ReturnType;
+            private String ResultList;
+
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+                if (isCancelRequest) {
+                    return;
+                }
+                try {
+                    ReturnType = result.getString("ReturnType");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                // 根据返回值来对程序进行解析
+                if (ReturnType != null) {
+                    if (ReturnType.equals("1001")) {
+                        try {
+                            JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("PrefTree")).nextValue();
+                            ResultList = arg1.getString("children");
+                            List<FenLei> mList = new Gson().fromJson(ResultList, new TypeToken<List<FenLei>>() {}.getType());
+                 /*           String s=mList.get(0).getName();
+                            String s1=mList.get(1).getName();*/
+                            for(int i=0;i<mList.size();i++){
+                                for(int j=0;j<tempList.size();j++){
+                                    for(int k=0;k<tempList.get(j).getChildren().size();k++){
+                                   /*     String s1=tempList.get(j).getChildren().get(k).getId();
+                                        String s=mList.get(i).getChildren().get(i).getId();*/
+                                        if(mList.get(i).getId().equals(tempList.get(j).getChildren().get(k).getId())){
+                                            tempList.get(j).getChildren().get(k).setchecked("true");
+                                        }
+                                    }
+                                }
+                            }
+                            if (adapter == null) {
+                                adapter = new PianHaoAdapter(context,tempList);
+                                lv_prefer.setAdapter(adapter);
+                            } else {
+                                adapter.notifyDataSetChanged();
+                            }
+                            setInterface();
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     } else if (ReturnType.equals("1002")) {

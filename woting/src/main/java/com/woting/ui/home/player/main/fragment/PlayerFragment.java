@@ -186,6 +186,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 	private static TextView tv_sequ;
 	private static TextView tv_desc;
 	private static ImageView img_download;
+	private static TextView tv_download;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -288,6 +289,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		seekBar = (SeekBar) headView.findViewById(R.id.seekBar);
 		lin_share = (LinearLayout) headView.findViewById(R.id.lin_share);
 		textTime = (TextView) headView.findViewById(R.id.text_time);
+		tv_download=(TextView)headView.findViewById(R.id.tv_download);
 		seekBar.setEnabled(false);
 		// 配合seekBar使用的标签
 		time_start = (TextView) headView.findViewById(R.id.time_start);
@@ -1752,14 +1754,14 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 	protected static void resetHeadView() {
 		if (GlobalConfig.playerobject != null) {
 			//判断下载类型的方法
-			if (GlobalConfig.playerobject.getMediaType().equals("RADIO")||
-					GlobalConfig.playerobject.getMediaType().equals("TTS")) {
+			if (GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
 
-				img_download.setImageResource(R.mipmap.wt_play_xiazai_no);
-			}else{
 				img_download.setImageResource(R.mipmap.wt_play_xiazai);
+				tv_download.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
+			}else{
+				img_download.setImageResource(R.mipmap.wt_play_xiazai_no);
+				tv_download.setTextColor(context.getResources().getColor(R.color.gray));
 			}
-
 
 			if(GlobalConfig.playerobject.getSequName()!=null){
 				tv_sequ.setText(GlobalConfig.playerobject.getSequName());
