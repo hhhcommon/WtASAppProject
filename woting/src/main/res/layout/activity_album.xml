@@ -111,25 +111,33 @@
 
                     <LinearLayout
                         android:id="@+id/lin_favorite"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="right|center"
                         android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/tv_favorite"
+                        <LinearLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="喜欢"
-                            android:textColor="@color/WHITE"
-                            android:textSize="@dimen/activity_normal_textone" />
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
 
-                        <ImageView
-                            android:id="@+id/img_favorite"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginTop="3dp"
-                            android:src="@mipmap/wt_img_like" />
+                            <TextView
+                                android:id="@+id/tv_favorite"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="喜欢"
+                                android:textColor="@color/WHITE"
+                                android:textSize="@dimen/activity_normal_textone" />
+
+                            <ImageView
+                                android:id="@+id/img_favorite"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_marginTop="3dp"
+                                android:src="@mipmap/wt_img_like" />
+                        </LinearLayout>
                     </LinearLayout>
 
                     <TextView
@@ -174,9 +182,10 @@
 
                     <LinearLayout
                         android:id="@+id/lin_pinglun"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="left|center"
                         android:orientation="vertical">
 
                         <TextView
@@ -225,8 +234,8 @@
                 android:id="@+id/cursor"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:scaleType="matrix"
-                android:background="@mipmap/left_personal_bg"  />
+                android:background="@mipmap/left_personal_bg"
+                android:scaleType="matrix" />
 
             <View
                 android:layout_width="match_parent"

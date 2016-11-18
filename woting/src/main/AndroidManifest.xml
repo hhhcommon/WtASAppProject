@@ -212,9 +212,10 @@
         <!--  -->
         <activity
             android:name=".ui.home.program.comment.CommentActivity"
+            android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
 
         <!--  -->
         <activity

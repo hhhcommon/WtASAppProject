@@ -6,17 +6,15 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="81dp"
         android:background="@color/WHITE"
         android:gravity="left|center"
-        android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp">
+        android:orientation="horizontal">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp">
+            android:layout_marginLeft="15dp">
 
             <ImageView
                 android:id="@+id/RankImageUrl"
@@ -33,10 +31,11 @@
         </RelativeLayout>
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="0dip"
             android:layout_height="match_parent"
-            android:layout_marginLeft="13dp"
             android:layout_weight="2"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="13dp"
             android:gravity="left|center"
             android:orientation="vertical">
 
@@ -44,12 +43,12 @@
                 android:id="@+id/RankTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="我听之声"
+                android:layout_marginTop="11dp"
                 android:textColor="@color/dinglan_orange"
-                android:textSize="15sp" />
+                android:textSize="@dimen/wt_group_detail_16" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -58,8 +57,8 @@
                 android:gravity="left|center">
 
                 <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
                     android:layout_marginRight="6dp"
                     android:src="@mipmap/image_program_album" />
 
@@ -72,23 +71,22 @@
                     android:text="我听科技"
                     android:textColor="@color/beijing"
                     android:textSize="13sp" />
-
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginBottom="8dp"
                 android:gravity="left|center">
 
                 <ImageView
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:layout_marginRight="6dp"
-                    android:src="@mipmap/image_program_listener" />
+                    android:src="@mipmap/image_program_number" />
 
                 <TextView
-                    android:id="@+id/tv_num"
+                    android:id="@+id/tv_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
@@ -100,17 +98,16 @@
                     android:layout_height="12dp"
                     android:layout_marginLeft="14dp"
                     android:layout_marginRight="6dp"
-                    android:src="@mipmap/image_program_time" />
+                    android:src="@mipmap/image_program_size" />
 
                 <TextView
-                    android:id="@+id/tv_last"
+                    android:id="@+id/tv_sum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="播放时长"
+                    android:text="MB"
                     android:textColor="@color/beijing"
                     android:textSize="9sp" />
             </LinearLayout>
-
         </LinearLayout>
 
         <LinearLayout

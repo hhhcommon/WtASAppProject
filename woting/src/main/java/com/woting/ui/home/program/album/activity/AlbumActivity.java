@@ -360,10 +360,10 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
                 textDetails.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 break;
             case R.id.lin_pinglun: // 评论
-                if(!TextUtils.isEmpty(GlobalConfig.playerobject.getContentId())&&!TextUtils.isEmpty(GlobalConfig.playerobject.getMediaType())){
+                if(!TextUtils.isEmpty(id)){
                     Intent intent=new Intent(context, CommentActivity.class);
-                    intent.putExtra("contentId",GlobalConfig.playerobject.getContentId());
-                    intent.putExtra("MediaType",GlobalConfig.playerobject.getMediaType());
+                    intent.putExtra("contentId",id);
+                    intent.putExtra("MediaType","SEQU");
                     startActivity(intent);
                 }else{
                     ToastUtils.show_allways(context,"当前播放的节目的信息有误，无法获取评论列表");
