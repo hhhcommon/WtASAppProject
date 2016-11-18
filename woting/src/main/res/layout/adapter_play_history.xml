@@ -61,7 +61,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="11dp"
                 android:singleLine="true"
-                android:text="我听之声"
+                android:text="我听之声我听之声我听之声我听之声我听之声我听之声"
+                android:layout_marginRight="10dp"
                 android:textColor="@color/dinglan_orange"
                 android:textSize="15sp"/>
 

@@ -837,7 +837,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                     String returnType = result.getString("ReturnType");
                     Log.v("returnType", "returnType -- > > " + returnType);
 
-                    if (returnType != null && returnType.equals("1001") || returnType != null && returnType.equals("T")) {
+                    if (returnType != null && returnType.equals("1001")) {
                         SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
                         if(!nickName.equals(sharedPreferences.getString(StringConstant.NICK_NAME, ""))) {
                             et.putString(StringConstant.NICK_NAME, nickName);
