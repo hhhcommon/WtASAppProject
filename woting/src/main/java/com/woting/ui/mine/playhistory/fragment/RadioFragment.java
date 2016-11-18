@@ -2,10 +2,10 @@ package com.woting.ui.mine.playhistory.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.woting.R;
+import com.woting.common.application.BSApplication;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.ui.home.main.HomeActivity;
@@ -35,19 +36,21 @@ import java.util.List;
  * @author woting11
  */
 public class RadioFragment extends Fragment{
-	private View rootView;
-	private SearchPlayerHistoryDao dbdao;
-	private Context context;
+    private Context context;
+	private SearchPlayerHistoryDao dbdDao;
+    private PlayHistoryAdapter adapter;
+    private ArrayList<PlayerHistory> playList;	// 节目list
+    private List<PlayerHistory> subList;		// 播放历史数据
+    private List<PlayerHistory> deleteList;		// 删除数据列表
+    private List<PlayerHistory> checkList;		// 选中数据列表
+
+    private View rootView;
 	private ListView listView;
-	private ArrayList<PlayerHistory> playList;	// 节目list
-	private List<PlayerHistory> subList;		// 播放历史数据
-	private PlayHistoryAdapter adapter;
-	private List<PlayerHistory> deleteList;		// 删除数据列表
-	private List<PlayerHistory> checkList;		// 选中数据列表
+    private LinearLayout linearNull;			// linear_null
+
 	public static boolean isData;				// 是否有数据
 	public static boolean isLoad;				// 是否加载过
-	private LinearLayout linearNull;			// linear_null
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,20 +70,16 @@ public class RadioFragment extends Fragment{
 		return rootView;
 	}
 	
-	/**
-	 * 初始化数据库命令执行对象
-	 */
+	// 初始化数据库命令执行对象
 	private void initDao() {
-		dbdao = new SearchPlayerHistoryDao(context);
+        dbdDao = new SearchPlayerHistoryDao(context);
 	}
 	
-	/**
-	 * 获取数据
-	 */
+	// 获取数据
 	public void getData(){
 		listView.setVisibility(View.GONE);
 		isData = false;
-		subList = dbdao.queryHistory();
+		subList = dbdDao.queryHistory();
 		playList = null;
 		if (subList != null && subList.size() > 0) {
 			for (int i = 0; i < subList.size(); i++) {
@@ -104,38 +103,27 @@ public class RadioFragment extends Fragment{
 		}
 	}
 	
-	/**
-	 * 解决重复加载问题以及没有历史播放记录时向用户进行友好提示
-	 */
+	// 解决重复加载问题以及没有历史播放记录时向用户进行友好提示
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
-//		if(isVisibleToUser && isLoad && !isData){
-//			ToastUtils.show_allways(context, "没有历史播放记录");
-//		}
 		if(isVisibleToUser && TotalFragment.isDeleteRadio){
 			getData();
 			TotalFragment.isDeleteRadio = false;
 		}
 	}
 	
-	/**
-	 * 设置 View 隐藏
-	 */
+	// 设置 View 隐藏
 	public void setLinearHint(){
 		linearNull.setVisibility(View.GONE);
 	}
 	
-	/**
-	 * 设置 View 可见  解决全选 Dialog 挡住 ListView 最底下一条 Item 问题
-	 */
+	// 设置 View 可见  解决全选 Dialog 挡住 ListView 最底下一条 Item 问题
 	public void setLinearVisibility(){
 		linearNull.setVisibility(View.VISIBLE);
 	}
 	
-	/**
-	 * 实现接口  设置点击事件
-	 */
+	// 实现接口  设置点击事件
 	private void setInterface() {
 		adapter.setonclick(new playhistorycheck() {
 			
@@ -151,11 +139,7 @@ public class RadioFragment extends Fragment{
 			}
 		});
 		
-		/**
-		 * ListView Item 点击监听
-		 * 
-		 * 编辑状态下时点击为选中  不是编辑状态下时点击则跳转到播放界面
-		 */
+		//  编辑状态下时点击为选中  不是编辑状态下时点击则跳转到播放界面
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -199,8 +183,8 @@ public class RadioFragment extends Fragment{
 								plaplayeralltime, playerintime, playercontentdesc, playernum,
 								playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
 								ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
-						dbdao.deleteHistory(playerurl);
-						dbdao.addHistory(history);
+                        dbdDao.deleteHistory(playerurl);
+                        dbdDao.addHistory(history);
 						
 						if(PlayerFragment.context != null){
 							MainActivity.change();
@@ -209,11 +193,12 @@ public class RadioFragment extends Fragment{
 							PlayerFragment.SendTextRequest(s, context);
 							getActivity().finish();
 						}else{
-							SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
-							Editor et = sp.edit();
+							Editor et = BSApplication.SharedPreferences.edit();
 							et.putString(StringConstant.PLAYHISTORYENTER, "true");
 							et.putString(StringConstant.PLAYHISTORYENTERNEWS, subList.get(position).getPlayerName());
-							et.commit();
+                            if(!et.commit()) {
+                                Log.w("commit", "数据 commit 失败!");
+                            }
 							MainActivity.change();
 							HomeActivity.UpdateViewPager();
 							getActivity().finish();
@@ -224,9 +209,7 @@ public class RadioFragment extends Fragment{
 		});
 	}
 	
-	/**
-	 * 更新是否全选状态
-	 */
+	// 更新是否全选状态
 	private void ifAll(){
 		if(checkList == null){
 			checkList = new ArrayList<>();
@@ -249,9 +232,7 @@ public class RadioFragment extends Fragment{
 		}
 	}
 	
-	/**
-	 * 设置可选状态
-	 */
+	// 设置可选状态
 	public void setCheck(boolean checkStatus){
 		if(playList!= null && playList.size() > 0){
 			for(int i=0; i<playList.size(); i++){
@@ -261,9 +242,7 @@ public class RadioFragment extends Fragment{
 		}
 	}
 	
-	/**
-	 * 设置是否选中
-	 */
+	// 设置是否选中
 	public void setCheckStatus(int status){
 		if(playList!= null && playList.size() > 0){
 			for(int i=0; i<playList.size(); i++){
@@ -273,14 +252,12 @@ public class RadioFragment extends Fragment{
 		}
 	}
 	
-	/**
-	 * 删除数据
-	 */
+	// 删除数据
 	public int deleteData(){
 		int number = 0;
 		for(int i=0; i<playList.size(); i++){
 			if(deleteList == null){
-				deleteList = new ArrayList<PlayerHistory>();
+				deleteList = new ArrayList<>();
 			}
 			if(playList.get(i).getStatus() == 1){
 				deleteList.add(playList.get(i));
@@ -290,7 +267,7 @@ public class RadioFragment extends Fragment{
 		if(deleteList.size() > 0){
 			for(int i=0; i<deleteList.size(); i++){
 				String url = deleteList.get(i).getPlayerUrl();
-				dbdao.deleteHistory(url);
+                dbdDao.deleteHistory(url);
 			}
 			if(checkList != null && checkList.size() > 0){
 				checkList.clear();
@@ -322,9 +299,9 @@ public class RadioFragment extends Fragment{
 		deleteList = null;
 		checkList = null;
 		linearNull = null;
-		if(dbdao != null){
-			dbdao.closedb();
-			dbdao = null;
+		if(dbdDao != null){
+            dbdDao.closedb();
+            dbdDao = null;
 		}
 	}
 }

@@ -60,6 +60,7 @@ import com.woting.ui.mine.person.updatepersonnews.model.UpdatePerson;
 import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
 import com.woting.ui.mine.set.SetActivity;
 import com.woting.ui.mine.shapeapp.ShapeAppActivity;
+import com.woting.ui.mine.upload.UploadActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -139,8 +140,8 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             v = true;
         }
         if (v) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        //透明状态栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    //透明导航栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        // 透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    // 透明导航栏
         }
     }
 
@@ -254,14 +255,14 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             case R.id.lin_like:             // 我喜欢的
                 startActivity(new Intent(context, FavoriteActivity.class));
                 break;
-            case R.id.lin_anchor:           // 我的主播
+            case R.id.lin_anchor:           // 我的主播  我关注的主播
                 ToastUtils.show_allways(context, "我的主播!");
                 break;
             case R.id.lin_subscribe:        // 我的订阅
                 ToastUtils.show_allways(context, "我的订阅!");
                 break;
-            case R.id.lin_album:            // 我的专辑
-                ToastUtils.show_allways(context, "我的专辑!");
+            case R.id.lin_album:            // 我的专辑  我上传的专辑
+                startActivity(new Intent(context, UploadActivity.class));
                 break;
             case R.id.lin_hardware:         // 智能硬件
                 startActivity(new Intent(context, HardwareIntroduceActivity.class));
@@ -711,25 +712,6 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         }
         return super.onKeyDown(keyCode, event);
     }
-
-    // 广播接收  接收来自定时服务的时间更新广播
-//    private BroadcastReceiver timerBroadcast = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            String action = intent.getAction();
-//            if (action.equals(BroadcastConstants.TIMER_UPDATE)) {
-//                String s = intent.getStringExtra("update");
-//                if (textTime != null) {
-//                    textTime.setVisibility(View.VISIBLE);
-//                    textTime.setText(s);
-//                }
-//            } else if (action.equals(BroadcastConstants.TIMER_STOP)) {
-//                if (textTime != null) {
-//                    textTime.setVisibility(View.GONE);
-//                }
-//            }
-//        }
-//    };
 
     String nickName;
     String sign;

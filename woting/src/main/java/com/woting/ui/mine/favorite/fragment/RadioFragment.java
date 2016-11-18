@@ -92,6 +92,7 @@ public class RadioFragment extends Fragment {
             mListView = (XListView) rootView.findViewById(R.id.listView);
             mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
             setView();
+
             send();
 		}
 		return rootView;
@@ -217,7 +218,6 @@ public class RadioFragment extends Fragment {
 				} else {
 					mListView.stopLoadMore();
 					mListView.setPullLoadEnable(false);
-					ToastUtils.show_allways(context, "已经是最后一页了");
 				}
 			}
 		});
@@ -226,6 +226,7 @@ public class RadioFragment extends Fragment {
 	// 发送网络请求
 	private void send() {
         if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
+            if(dialog != null) dialog.dismiss();
             ToastUtils.show_allways(context, "网络连接失败，请检查网络连接!");
             if(refreshType == 1) {
                 mListView.stopRefresh();
@@ -252,15 +253,13 @@ public class RadioFragment extends Fragment {
 				page++;
 				try {
 					ReturnType = result.getString("ReturnType");
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				if (ReturnType != null && ReturnType.equals("1001")) {
-                    if(isDel){
-                        ToastUtils.show_allways(context, "已删除");
-                        isDel = false;
-                    }
-                    try {
+                    Log.w("ReturnType", "ReturnType -- > > " + ReturnType);
+
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        if(isDel){
+                            ToastUtils.show_allways(context, "已删除");
+                            isDel = false;
+                        }
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         subList = new Gson().fromJson(arg1.getString("FavoriteList"), new TypeToken<List<RankInfo>>() {}.getType());
                         try {
@@ -281,10 +280,10 @@ public class RadioFragment extends Fragment {
                                     }
                                 }
                             }
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        
+
                         if (refreshType == 1) {
                             newList.clear();
                         }
@@ -295,12 +294,10 @@ public class RadioFragment extends Fragment {
                             adapter.notifyDataSetChanged();
                         }
                         setListener();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
-				} else {
-                    ToastUtils.show_allways(context, "获取列表失败，请检查网络或稍后重试!");
-                }
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 
                 // 无论何种返回值，都需要终止掉上拉刷新及下拉加载的滚动状态
                 if (refreshType == 1) {
@@ -406,14 +403,10 @@ public class RadioFragment extends Fragment {
 				if (newList.get(i).getChecktype() == 1) {
 					if (delList == null) {
                         delList = new ArrayList<>();
-						String type = newList.get(i).getMediaType();
-						String contentid = newList.get(i).getContentId();
-                        delList.add(type + "::" + contentid);
-					} else {
-						String type = newList.get(i).getMediaType();
-						String contentid = newList.get(i).getContentId();
-                        delList.add(type + "::" + contentid);
 					}
+                    String type = newList.get(i).getMediaType();
+                    String contentId = newList.get(i).getContentId();
+                    delList.add(type + "::" + contentId);
 				}
 			}
             refreshType = 1;

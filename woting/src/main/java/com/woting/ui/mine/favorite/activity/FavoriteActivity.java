@@ -61,7 +61,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
     private static TextView tv_tts;
     private static ViewPager mPager;
     private static TextView tv_qingkong;
-    private static TextView tv_bianji;    // 加一个bol值，如果key值为0是为编辑状态，为1时显示完成
+    private static TextView tv_bianji;    // 加一个 bol 值，如果 key 值为 0 是为编辑状态，为 1 时显示完成
     private Dialog confirmDialog;
     private Dialog DelDialog;
     private ImageView image;
@@ -93,11 +93,11 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
         intentFilter.addAction(FavoriteActivity.SET_NOT_ALL_IMAGE);
         registerReceiver(mBroadcast, intentFilter);
 
-        setView();
         initImage();
         InitViewPager();
         delDialog();
         confirmDialog();
+        setView();
     }
 
     // 初始化 ViewPager
@@ -158,15 +158,10 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
                 index = 3;
             } else if (mediaType.equals("TTS")) {
                 index = 4;
-            } else {
-                ToastUtils.show_allways(context, "mediatype不属于已经分类的四种类型");
             }
             mPager.setCurrentItem(index);
             currentIndex = index;
             viewChange(index);
-        } else {
-            ToastUtils.show_allways(context, "传进来的mediatype值为空");
-
         }
     }
 
@@ -216,7 +211,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
     // 四种参数 1为打开该界面的隐藏栏，0为收起隐藏栏，2为全选，3为取消全选
     private void handleData(int type) {
         if (currentIndex == 0) {
-            // 全部 //1：先调total的查询全部方法 返回是否有值的弹窗
+            // 全部 先调total的查询全部方法 返回是否有值的弹窗
             int sum = totalFragment.getdelitemsum();
             if (type == 0) {
                 if (sum != 0) {
@@ -434,7 +429,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
         }
     }
 
-    // DelDialog 初始化
+    // delDialog 初始化
     private void delDialog() {
         final View dialog = LayoutInflater.from(context).inflate(R.layout.dialog_fravorite, null);
         LinearLayout lin_favorite_quanxuan = (LinearLayout) dialog.findViewById(R.id.lin_favorite_quanxuan);
