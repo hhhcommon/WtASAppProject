@@ -579,8 +579,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 					ToastUtils.show_short(context, "暂不支持播放");
 				}
 			   } else if (playType.equals("TTS")) {
-				if (allList.get(number).getContentURI() != null
-						&& allList.get(number).getContentURI().trim().length() > 0) {
+				if (allList.get(number).getContentURI() != null&& allList.get(number).getContentURI().trim().length() > 0) {
 					if (audioPlay == null) {
 						audioPlay = TtsPlayer.getInstance(context);
 					} else {
@@ -1030,8 +1029,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 					ToastUtils.show_short(context, "暂不支持播放");
 				}
 			} else if (playType.equals("TTS")) {
-				if (GlobalConfig.playerobject.getContentURI() != null
-						&& GlobalConfig.playerobject.getContentURI().trim().length() > 0) {
+				if (GlobalConfig.playerobject.getContentURI() != null && GlobalConfig.playerobject.getContentURI().trim().length() > 0) {
 					if (audioPlay == null) {
 						audioPlay = TtsPlayer.getInstance(context);
 					} else {
@@ -1294,13 +1292,25 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			local = s;
 			mUIHandler.sendEmptyMessage(PLAY);
 			img_play.setImageResource(R.mipmap.wt_play_play);
-			img_play.setImageResource(R.mipmap.wt_play_play);
 			setPlayingType();
 			PlayFlag=true;
 		} else {
 			// 不等于空
 			if (local.equals(s)) {
 				// 里面可以根据播放类型判断继续播放或者停止
+				if(playType.equals("TTS")){
+					if (audioPlay.isPlaying()) {
+						// 播放状态，对应暂停方法，播放图
+						audioPlay.stop();
+						img_play.setImageResource(R.mipmap.wt_play_stop);
+						setPauseType();
+					} else {
+						local = s;
+						mUIHandler.sendEmptyMessage(PLAY);
+						img_play.setImageResource(R.mipmap.wt_play_play);
+						setPlayingType();
+					}
+				}else{
 				if (audioPlay.isPlaying()) {
 					// 播放状态，对应暂停方法，播放图
 					audioPlay.pause();
@@ -1314,6 +1324,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 					audioPlay.continuePlay();
 					img_play.setImageResource(R.mipmap.wt_play_play);
 					setPlayingType();
+				}
 				}
 			} else {
 				local = s;
