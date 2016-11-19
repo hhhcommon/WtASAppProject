@@ -23,7 +23,6 @@
                 android:id="@+id/head_left_btn"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
-                android:background="@drawable/head_press"
                 android:gravity="left|center" >
 
                 <ImageView
@@ -193,7 +192,7 @@
                         android:layout_marginLeft="12dp"
                         android:layout_marginRight="12dp"
                         android:layout_marginTop="15dp"
-                        android:background="@drawable/bg_edittext_normal"
+                        android:background="@drawable/bg_edittext_gray"
                         android:gravity="left|center"
                         android:orientation="horizontal"
                         android:padding="5dip" >
@@ -206,9 +205,10 @@
                             android:background="@color/WHITE"
                             android:ellipsize="end"
                             android:ems="10"
-                            android:hint="请输入验证信息"
+                            android:hint="   请输入验证信息"
                             android:maxLines="1"
-                            android:padding="1dp"
+                            android:paddingLeft="10dp"
+                            android:layout_marginLeft="5dp"
                             android:singleLine="true"
                             android:textColor="@color/beijing"
                             android:textColorHint="@color/gray"
@@ -225,8 +225,9 @@
                             android:orientation="vertical" >
 
                             <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:padding="8dp"
                                 android:src="@mipmap/wt_img_clearnew" />
                         </LinearLayout>
                     </LinearLayout>

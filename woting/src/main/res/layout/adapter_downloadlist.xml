@@ -35,7 +35,7 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:layout_marginLeft="13dp"
-            android:layout_marginRight="13dp"
+            android:layout_marginRight="5dp"
             android:gravity="left|center"
             android:orientation="vertical">
 
@@ -46,14 +46,14 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="我听之声"
-                android:layout_marginTop="11dp"
                 android:textColor="@color/dinglan_orange"
                 android:textSize="@dimen/wt_group_detail_16" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="7dp"
                 android:gravity="left|center">
 
                 <ImageView
@@ -76,7 +76,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
                 android:gravity="left|center">
 
                 <ImageView

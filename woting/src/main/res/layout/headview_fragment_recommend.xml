@@ -14,7 +14,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="32dp"
+        android:layout_height="34dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -27,10 +27,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="27dp"
+                android:layout_marginLeft="15dp"
                 android:text="猜你喜欢"
                 android:textColor="@color/wt_login_third"
-                android:textSize="13sp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
     </LinearLayout>

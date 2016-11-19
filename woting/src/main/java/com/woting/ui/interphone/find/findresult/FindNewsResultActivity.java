@@ -1,12 +1,10 @@
 package com.woting.ui.interphone.find.findresult;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
@@ -16,7 +14,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
-import com.woting.common.manager.MyActivityManager;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
@@ -24,13 +21,14 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
+import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.interphone.find.findresult.adapter.FindFriendResultAdapter;
 import com.woting.ui.interphone.find.findresult.adapter.FindGroupResultAdapter;
 import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
 import com.woting.ui.interphone.find.friendadd.FriendAddActivity;
 import com.woting.ui.interphone.find.groupadd.GroupAddActivity;
 import com.woting.ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivity;
-import com.woting.ui.common.model.GroupInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,7 +41,7 @@ import java.util.List;
  * @author 辛龙
  *  2016年1月20日
  */
-public class FindNewsResultActivity extends Activity implements OnClickListener {
+public class FindNewsResultActivity extends AppBaseActivity implements OnClickListener {
 	private LinearLayout lin_left;
 	private XListView mxlistview;
 	private int RefreshType;		// 1，下拉刷新 2，加载更多
@@ -55,7 +53,6 @@ public class FindNewsResultActivity extends Activity implements OnClickListener 
 	private int PageNum;
 	private FindFriendResultAdapter adapter;
 	private FindGroupResultAdapter adapters;
-	private FindNewsResultActivity context;
 	private String tag = "FINDNEWS_RESULT_VOLLEY_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
 	
@@ -63,11 +60,6 @@ public class FindNewsResultActivity extends Activity implements OnClickListener 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_findnews_result);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);		// 透明状态栏
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);	// 透明导航栏
-		context = this;
-		MyActivityManager mam = MyActivityManager.getInstance();
-		mam.pushOneActivity(context);
 		setview();
 		setlistener();
 		searchstr = this.getIntent().getStringExtra("searchstr");
@@ -407,8 +399,6 @@ public class FindNewsResultActivity extends Activity implements OnClickListener 
 	protected void onDestroy() {
 		super.onDestroy();
 		isCancelRequest = VolleyRequest.cancelRequest(tag);
-		MyActivityManager mam = MyActivityManager.getInstance();
-		mam.popOneActivity(context);
 		UserList = null;
 		GroupList = null;
 		lin_left =  null;

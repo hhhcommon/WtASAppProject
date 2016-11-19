@@ -57,6 +57,9 @@ public class PlayerListAdapter extends BaseAdapter {
 			holder.imageView_playering = (ImageView) convertView.findViewById(R.id.imageView_playering); 
 			holder.textPlayTime = (TextView) convertView.findViewById(R.id.tv_last);
 			holder.imageView_playering.setBackgroundResource(R.drawable.playering_show);
+			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
+			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
+			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
 			holder.draw = (AnimationDrawable) holder.imageView_playering.getBackground(); 
 			convertView.setTag(holder);
 		} else {
@@ -88,7 +91,7 @@ public class PlayerListAdapter extends BaseAdapter {
 			}
 
 			if (searchlist.getPlayCount() == null || searchlist.getPlayCount().equals("")) {
-				holder.mTv_number.setText("未知");
+				holder.mTv_number.setText("0");
 			} else {
 				holder.mTv_number.setText(searchlist.getPlayCount());
 			}
@@ -104,8 +107,8 @@ public class PlayerListAdapter extends BaseAdapter {
 			}else{
 				holder.imageview_rankimage.setImageBitmap(bmp);
 			}
-			if(searchlist.getContentPub()!=null&&!searchlist.getContentPub().equals("")){
-				holder.RankContent.setText(searchlist.getContentPub());
+			if(searchlist.getSeqInfo()!=null&&searchlist.getSeqInfo().getContentName()!=null&&!searchlist.getSeqInfo().getContentName().equals("")){
+				holder.RankContent.setText(searchlist.getSeqInfo().getContentName());
 			}else{
 				holder.RankContent.setText("我听科技");
 			}	
@@ -161,9 +164,9 @@ public class PlayerListAdapter extends BaseAdapter {
 		public ImageView imageView_playering;
 		public TextView RankContent;
 		public ImageView imageview_rankimage;
-		// public ImageView mImg_play;
 		public TextView textview_ranktitle;
 		public TextView mTv_number;
 		public TextView textPlayTime;
+		public ImageView img_zhezhao;
 	}
 }

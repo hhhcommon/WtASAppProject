@@ -16,7 +16,7 @@ public class LanguageSearchInside implements Serializable{
 	private String ContentPlay;
 	private String MediaType;
 	private String ContentId;
-	private String ContentDesc;
+	private String ContentDescn;
 	private String ContentImg;
 	private String PlayerAllTime;
 	private String PlayerInTime;
@@ -182,11 +182,11 @@ public class LanguageSearchInside implements Serializable{
 	public void setContentId(String contentId) {
 		ContentId = contentId;
 	}
-	public String getContentDesc() {
-		return ContentDesc;
+	public String getContentDescn() {
+		return ContentDescn;
 	}
-	public void setContentDesc(String contentDesc) {
-		ContentDesc = contentDesc;
+	public void setContentDescn(String contentDesc) {
+		ContentDescn = contentDesc;
 	}
 	public String getContentImg() {
 		return ContentImg;

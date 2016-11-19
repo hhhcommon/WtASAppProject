@@ -24,6 +24,8 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechUtility;
 import com.umeng.analytics.MobclickAgent;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
@@ -87,6 +89,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         tabHost = extracted();
         context = this;
         MobclickAgent.openActivityDurationTrack(false);
+        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=56275014");			// 初始化语音配置对象
         upDataType = 1;    //不需要强制升级
         update();          //获取版本数据
         InitTextView();    //设置界面

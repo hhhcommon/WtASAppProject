@@ -1,6 +1,5 @@
 package com.woting.ui.interphone.find.main;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -21,31 +20,29 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.iflytek.cloud.SpeechConstant;
-import com.iflytek.cloud.SpeechUtility;
+
 import com.woting.R;
-import com.woting.video.VoiceRecognizer;
-import com.woting.ui.interphone.find.findresult.FindNewsResultActivity;
-import com.woting.ui.common.scanning.activity.CaptureActivity;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
-import com.woting.common.manager.MyActivityManager;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.widgetui.MyLinearLayout;
+import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.common.scanning.activity.CaptureActivity;
+import com.woting.ui.interphone.find.findresult.FindNewsResultActivity;
+import com.woting.video.VoiceRecognizer;
 
 /**
  * 搜索方法类型页
  * @author 辛龙
  *  2016年1月20日
  */
-public class FindActivity extends Activity implements OnClickListener {
+public class FindActivity extends AppBaseActivity implements OnClickListener {
 	private LinearLayout lin_left;
 	private EditText et_news;
 	private LinearLayout lin_search;
@@ -76,15 +73,10 @@ public class FindActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_find);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);		// 透明状态栏
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);	// 透明导航栏
 		context = this;
-		SpeechUtility.createUtility(this, SpeechConstant.APPID + "=56275014");			// 初始化语音配置对象
 		// 创建SpeechRecognizer对象，第二个参数：本地听写时传InitListener
 		 // 初始化语音搜索
 		mVoiceRecognizer=VoiceRecognizer.getInstance(context,BroadcastConstants.FINDVOICE);
-		MyActivityManager mam = MyActivityManager.getInstance();
-		mam.pushOneActivity(context);
 		// 先要看到type
 		type = this.getIntent().getStringExtra("type");
 		setView();
@@ -109,7 +101,7 @@ public class FindActivity extends Activity implements OnClickListener {
 		registerReceiver(mBroadcastReceiver, myfileter);
 	}
 	
-	// 更新弹出框
+	// 弹出框
 	private void Dialog() {
 		View dialog = LayoutInflater.from(this).inflate(R.layout.dialog_yuyin_search,null);
 		//定义dialog view
@@ -296,8 +288,6 @@ public class FindActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		MyActivityManager mam = MyActivityManager.getInstance();
-		mam.popOneActivity(context);
 		// 退出时释放连接
 		et_news = null;
 		lin_left = null;

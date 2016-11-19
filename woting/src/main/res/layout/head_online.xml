@@ -3,14 +3,85 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/WHITE"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp">
+
+        <LinearLayout
+            android:id="@+id/lin_country"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@mipmap/national_fm_normal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="国家台" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lin_local"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@mipmap/local_fm_normal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="地方台" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lin_net"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@mipmap/net_fm_normal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="网络台" />
+        </LinearLayout>
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:background="@color/text_line_1"
+        android:layout_height="0.5dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
         android:background="@color/setting_bg_color"
-        android:orientation="horizontal" >
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/lin_address"
@@ -23,17 +94,17 @@
                 android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
                 android:text="北京"
-                android:layout_marginLeft="18dp"
                 android:textColor="@color/wt_login_third"
-                android:textSize="@dimen/text_size_13" />
+                android:textSize="14sp" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="10dp"
+                android:layout_height="14dp"
                 android:layout_marginLeft="7dp"
                 android:src="@mipmap/image_fixed_position" />
-            
+
         </LinearLayout>
 
         <LinearLayout
@@ -41,30 +112,43 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="right|center" >
+            android:gravity="right|center">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="更多"
                 android:textColor="@color/wt_login_third"
-                android:textSize="@dimen/text_size_13" />
+                android:textSize="12sp" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="18dp"
-                android:src="@mipmap/live_more"/>
+                android:layout_width="22dp"
+                android:layout_height="16dp"
+                android:layout_marginRight="13dp"
+                android:src="@mipmap/live_more" />
         </LinearLayout>
-        
+
     </LinearLayout>
 
-    <com.woting.common.widgetui.MyGridView
+    <TextView
+        android:layout_width="match_parent"
+        android:background="@color/text_line_1"
+        android:layout_height="0.5dp" />
+
+   <!-- <com.woting.common.widgetui.MyGridView
         android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/WHITE"
         android:numColumns="1"
-        android:scrollbars="none"/>
+        android:scrollbars="none" />-->
 
+    <ListView
+        android:id="@+id/gridView"
+        android:layout_width="match_parent"
+        android:layout_height="244dp"
+        android:divider="@color/text_line_1"
+        android:dividerHeight="0.5dp"
+        android:background="@color/WHITE"
+        android:scrollbars="none"/>
 </LinearLayout>

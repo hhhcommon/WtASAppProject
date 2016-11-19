@@ -11,10 +11,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
-import com.woting.common.util.AssembleImageUrlUtils;
-import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
+import com.woting.ui.home.program.fmlist.model.RankInfo;
 
 import java.util.List;
 
@@ -56,6 +56,14 @@ public class RankInfoAdapter extends BaseAdapter   {
 			holder.imageview_rankimage = (ImageView) convertView.findViewById(R.id.RankImageUrl);// 电台图标
 			holder.mTv_number = (TextView) convertView.findViewById(R.id.tv_num);
 			holder.textview_rankplaying=(TextView)convertView.findViewById(R.id.RankPlaying);
+
+			holder.image_last = (ImageView) convertView.findViewById(R.id.image_last);//
+			holder.image_num = (ImageView) convertView.findViewById(R.id.image_num);//
+			holder.tv_last = (TextView) convertView.findViewById(R.id.tv_last);
+			holder.image_last.setVisibility(View.GONE);
+			holder.image_num.setVisibility(View.GONE);
+			holder.tv_last.setVisibility(View.GONE);
+
 			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
 			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
 			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
@@ -105,8 +113,10 @@ public class RankInfoAdapter extends BaseAdapter   {
 	class ViewHolder {
 		public ImageView imageview_rankimage;
 		public TextView textview_ranktitle;
-		public TextView mTv_number;
+		public TextView mTv_number,tv_last;
 		public TextView textview_rankplaying;
 		public ImageView img_zhezhao;
+		public ImageView image_last;
+		public ImageView image_num;
 	}
 }

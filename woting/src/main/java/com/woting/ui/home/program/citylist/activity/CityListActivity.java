@@ -2,6 +2,7 @@ package com.woting.ui.home.program.citylist.activity;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.common.model.Catalog;
 import com.woting.ui.home.common.model.CatalogName;
 import com.woting.ui.home.program.citylist.adapter.CityListAdapter;
+import com.woting.ui.home.program.fmlist.activity.FMListActivity;
 import com.woting.ui.interphone.linkman.view.CharacterParser;
 import com.woting.ui.interphone.linkman.view.PinyinComparator_d;
 import com.woting.ui.interphone.linkman.view.SideBar;
@@ -67,12 +69,15 @@ public class CityListActivity extends AppBaseActivity implements OnClickListener
 	private List<CatalogName> srcList;
 	private String tag = "CITY_LIST_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
+	private String type;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_citylists);
 		context = this;
+		type=this.getIntent().getStringExtra("type");
+
 		characterParser = CharacterParser.getInstance();								// 实例化汉字转拼音类
 		pinyinComparator = new PinyinComparator_d();
 		setView();
@@ -209,19 +214,30 @@ public class CityListActivity extends AppBaseActivity implements OnClickListener
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				SharedPreferences sp = getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
-				Editor et = sp.edit();
-				et.putString(StringConstant.CITYTYPE, "true");
-				if(userList.get(position).getCatalogId()!=null&&!userList.get(position).getCatalogId().equals("")){
-					et.putString(StringConstant.CITYID, userList.get(position).getCatalogId());
-					GlobalConfig.AdCode= userList.get(position).getCatalogId();
+				if(type!=null&&!type.trim().equals("")&&type.equals("address")){
+					SharedPreferences sp = getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
+					Editor et = sp.edit();
+					et.putString(StringConstant.CITYTYPE, "true");
+					if(userList.get(position).getCatalogId()!=null&&!userList.get(position).getCatalogId().equals("")){
+						et.putString(StringConstant.CITYID, userList.get(position).getCatalogId());
+						GlobalConfig.AdCode= userList.get(position).getCatalogId();
+					}
+					if(userList.get(position).getCatalogName()!=null&&!userList.get(position).getCatalogName().equals("")){
+						et.putString(StringConstant.CITYNAME, userList.get(position).getCatalogName());
+						GlobalConfig.CityName=userList.get(position).getCatalogName();
+					}
+					et.commit();
+					finish();
+				}else{
+					Intent intent = new Intent(context, FMListActivity.class);
+					Bundle bundle = new Bundle();
+					bundle.putString("fromtype", "online");
+					bundle.putString("name", userList.get(position).getCatalogName());
+					bundle.putString("type", "2");
+					bundle.putString("id", userList.get(position).getCatalogId());
+					intent.putExtras(bundle);
+					startActivity(intent);
 				}
-				if(userList.get(position).getCatalogName()!=null&&!userList.get(position).getCatalogName().equals("")){
-					et.putString(StringConstant.CITYNAME, userList.get(position).getCatalogName());
-					GlobalConfig.CityName=userList.get(position).getCatalogName();
-				}
-				et.commit();
-				finish();
 			}
 		});
 

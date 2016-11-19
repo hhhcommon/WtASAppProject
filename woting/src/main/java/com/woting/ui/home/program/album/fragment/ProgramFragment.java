@@ -180,6 +180,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 						if(PlayerFragment.context!=null){
 							MainActivity.change();
 							HomeActivity.UpdateViewPager();
+							PlayerFragment.TextPage=1;
 							PlayerFragment.SendTextRequest(SubList.get(position).getContentName(), context);
 						}else{
 							Editor et = BSApplication.SharedPreferences.edit();

@@ -237,7 +237,7 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
                             tempList = new Gson().fromJson(ResultList, new TypeToken<List<FenLei>>() {
                             }.getType());
                             if ( tempList != null&&tempList.size()>0) {
-                                if(!TextUtils.isEmpty(CommonUtils.getUserId(context))){
+                                if(!TextUtils.isEmpty(CommonUtils.getUserIdNoImei(context))){
                                         sendTwice();
                                     }else{
                                         //对每个返回的分类做设置 默认为全部未选中状态 此时获取的为是所有的列表内容
@@ -353,6 +353,13 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
                     } else if (ReturnType.equals("1003")) {
                         ToastUtils.show_allways(context, "分类不存在");
                     } else if (ReturnType.equals("1011")) {
+                        if (adapter == null) {
+                            adapter = new PianHaoAdapter(context,tempList);
+                            lv_prefer.setAdapter(adapter);
+                        } else {
+                            adapter.notifyDataSetChanged();
+                        }
+                        setInterface();
                         ToastUtils.show_allways(context, "当前暂无分类");
                         if (adapter == null) {
                             adapter = new PianHaoAdapter(context,tempList);

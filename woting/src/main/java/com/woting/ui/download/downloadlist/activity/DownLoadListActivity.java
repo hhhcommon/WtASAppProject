@@ -244,6 +244,7 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
                             if (PlayerFragment.context != null) {
                                 MainActivity.change();
                                 HomeActivity.UpdateViewPager();
+                                PlayerFragment.TextPage=1;
                                 PlayerFragment.SendTextRequest(mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4), context);
                             } else {
                                 SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
