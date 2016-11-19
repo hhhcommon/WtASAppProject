@@ -15,15 +15,14 @@
 
         <LinearLayout
             android:id="@+id/lin_news"
-            android:layout_width="wrap_content"
+			android:layout_marginLeft="5dp"
+            android:layout_width="45dp"
             android:layout_height="match_parent"
-            android:background="@drawable/head_press"
-            android:layout_marginLeft="18dp"
             android:gravity="center">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="21dp"
+                android:layout_height="21dp"
                 android:src="@mipmap/news"/>
 
         </LinearLayout>
@@ -71,16 +70,15 @@
 
         <LinearLayout
             android:id="@+id/lin_find"
-            android:layout_width="wrap_content"
+            android:layout_width="45dp"
             android:layout_height="match_parent"
-            android:background="@drawable/head_press"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="6dp"
+			android:layout_alignParentRight="true"
+			android:layout_marginRight="5dp"
             android:gravity="center">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="19dp"
+                android:layout_height="19dp"
                 android:src="@mipmap/wt_find"/>
         </LinearLayout>
         

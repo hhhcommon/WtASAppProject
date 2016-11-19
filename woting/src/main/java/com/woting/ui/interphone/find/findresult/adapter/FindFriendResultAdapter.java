@@ -1,6 +1,7 @@
 package com.woting.ui.interphone.find.findresult.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.util.AssembleImageUrlUtils;
+import com.woting.common.util.BitmapUtils;
 import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
 import com.woting.common.config.GlobalConfig;
 
@@ -47,7 +50,7 @@ public class FindFriendResultAdapter extends BaseAdapter{
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		ViewHolder holder = null;
+		ViewHolder holder ;
 		if(convertView == null){
 			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_contactquery,null);
 			holder = new ViewHolder();
@@ -73,13 +76,15 @@ public class FindFriendResultAdapter extends BaseAdapter{
 		}
 		if(Inviter.getPortraitMini() == null || Inviter.getPortraitMini().equals("")
 				|| Inviter.getPortraitMini().equals("null") || Inviter.getPortraitMini().trim().equals("")){
-			holder.imageview_inviteimage.setImageResource(R.mipmap.wt_image_tx_hy);
+			Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_hy);
+			holder.imageview_inviteimage.setImageBitmap(bmp);
 		}else{
 			if(Inviter.getPortraitMini().startsWith("http:")){
 				url = Inviter.getPortraitMini();
 			}else{
 				url = GlobalConfig.imageurl+Inviter.getPortraitMini();
 			}
+			url= AssembleImageUrlUtils.assembleImageUrl150(url);
 			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_inviteimage);
 		}
 		return convertView;

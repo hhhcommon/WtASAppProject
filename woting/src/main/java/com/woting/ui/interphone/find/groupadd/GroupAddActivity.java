@@ -35,7 +35,7 @@ import org.json.JSONObject;
  * @author 辛龙
  *  2016年1月20日
  */
-public class GroupAddActivity extends Activity implements OnClickListener {
+public class  GroupAddActivity extends Activity implements OnClickListener {
 	private TextView tv_add;
 	private Dialog dialog;
 	private SharedPreferences sharedPreferences;

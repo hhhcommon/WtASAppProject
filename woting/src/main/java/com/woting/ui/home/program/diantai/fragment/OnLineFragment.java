@@ -74,7 +74,7 @@ public class OnLineFragment extends Fragment {
 	private ArrayList<RadioPlay> newList = new ArrayList<>();
 	private String BeginCatalogId;
 	private View headView;
-	private LinearLayout lin_address;
+	private LinearLayout lin_address,lin_local,lin_country,lin_net;
 	private TextView tv_Name;
 	private LinearLayout lin_head_more;
 	private MyGridView gridView;
@@ -103,6 +103,11 @@ public class OnLineFragment extends Fragment {
 			rootView = inflater.inflate(R.layout.fragment_radio, container, false);
 			listView_Main = (ExpandableListView) rootView.findViewById(R.id.listView_main);
 			headView = LayoutInflater.from(context).inflate(R.layout.head_online, null);
+
+			lin_country = (LinearLayout) headView.findViewById(R.id.lin_country);
+			lin_local = (LinearLayout) headView.findViewById(R.id.lin_local);
+			lin_net = (LinearLayout) headView.findViewById(R.id.lin_net);
+
 			lin_address = (LinearLayout) headView.findViewById(R.id.lin_address);
 			tv_Name = (TextView) headView.findViewById(R.id.tv_name);
 			lin_head_more = (LinearLayout) headView.findViewById(R.id.lin_head_more);
@@ -186,10 +191,39 @@ public class OnLineFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(context, CityListActivity.class);
-				startActivityForResult(intent, 0);
+				Bundle bundle = new Bundle();
+				bundle.putString("type","address");
+				intent.putExtras(bundle);
+				startActivity(intent);
 			}
 		});
+		lin_local.setOnClickListener(new OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(context, CityListActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putString("type","local");
+				intent.putExtras(bundle);
+				startActivity(intent);
+			}
+		});
+		lin_country.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(context, CityListActivity.class);
+				startActivity(intent);
+			}
+		});
+		lin_net.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(context, CityListActivity.class);
+				startActivity(intent);
+			}
+		});
 		lin_head_more.setOnClickListener(new OnClickListener() {
 
 			@Override

@@ -33,6 +33,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:layout_marginLeft="13dp"
             android:orientation="vertical">
 
@@ -40,17 +41,19 @@
                 android:id="@+id/RankTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="CNR中国之声"
+                android:text="woting"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:textColor="@color/dinglan_orange"
-                android:layout_marginTop="11dp"
                 android:textSize="15sp"
                 android:singleLine="true"/>
             
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="left|center"
-                android:layout_weight="1">
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="7dp"
+                android:gravity="left|center">
             
 	            <ImageView
 	                android:id="@+id/image_hint_visibility"
@@ -75,8 +78,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="11dp">
+                android:gravity="center_vertical">
 
                 <ImageView
                     android:layout_width="12dp"
