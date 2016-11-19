@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
 import com.woting.ui.interphone.chat.fragment.ChatFragment;
 import com.woting.ui.interphone.chat.model.DBTalkHistorary;
@@ -73,7 +74,7 @@ public class CallAlertActivity extends Activity implements OnClickListener{
 		if(Receiver == null) {
 			Receiver = new MessageReceiver();
 			IntentFilter filter = new IntentFilter();
-			filter.addAction("push_call");
+			filter.addAction(BroadcastConstants.PUSH_CALL);
 			instance.registerReceiver(Receiver, filter);
 		}
 		tv_news = (TextView) findViewById(R.id.tv_news);	

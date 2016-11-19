@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:layout_marginLeft="30dp"
+                android:layout_marginLeft="20dp"
                 android:text="我听之声"
                 android:textColor="@color/wt_login_third"
                 android:textSize="@dimen/wt_dinglan_text_right" />

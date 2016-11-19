@@ -1,24 +1,21 @@
 package com.woting.ui.interphone.group.creatgroup;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 
 import com.woting.R;
+import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.interphone.group.creatgroup.creat.CreateGroupContentActivity;
-import com.woting.common.manager.MyActivityManager;
 
 /**
  * 创建群主页
  * @author 辛龙
  * 2016年5月16日
  */
-public class CreateGroupActivity extends Activity implements OnClickListener {
-	private CreateGroupActivity context;
+public class CreateGroupActivity extends AppBaseActivity implements OnClickListener {
 	private LinearLayout head_left_btn;
 	private LinearLayout lin_groupmain_first;
 	private LinearLayout lin_groupmain_second;
@@ -28,23 +25,18 @@ public class CreateGroupActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_creategroupmain);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);		//透明状态栏
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);	//透明导航栏
-		context = this;
-		MyActivityManager mam = MyActivityManager.getInstance();
-		mam.pushOneActivity(context);
-		setview();
-		setlistener();
+		setView();
+		setListener();
 	}
 
-	private void setlistener() {
+	private void setListener() {
 		lin_groupmain_first.setOnClickListener(this);
 		lin_groupmain_second.setOnClickListener(this);
 		lin_groupmain_third.setOnClickListener(this);
 		head_left_btn.setOnClickListener(this);
 	}
 
-	private void setview() {
+	private void setView() {
 		head_left_btn = (LinearLayout) findViewById(R.id.head_left_btn);
 		lin_groupmain_first = (LinearLayout) findViewById(R.id.lin_groupmain_first);
 		lin_groupmain_second = (LinearLayout) findViewById(R.id.lin_groupmain_second);
@@ -98,8 +90,6 @@ public class CreateGroupActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		MyActivityManager mam = MyActivityManager.getInstance();
-		mam.popOneActivity(context);
 		context = null;
 		head_left_btn = null;
 		lin_groupmain_first = null;

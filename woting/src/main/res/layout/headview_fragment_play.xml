@@ -525,7 +525,7 @@
         <LinearLayout
             android:id="@+id/lin_tuijian"
             android:layout_width="match_parent"
-            android:layout_height="32dp"
+            android:layout_height="34dp"
             android:background="@color/setting_bg_color"
             android:gravity="left|center"
             android:visibility="gone">
@@ -533,10 +533,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="27dp"
+                android:layout_marginLeft="15dp"
                 android:text="相关推荐"
                 android:textColor="@color/s_green"
-                android:textSize="13sp" />
+                android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
