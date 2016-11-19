@@ -255,4 +255,9 @@ public class GlobalConfig {
     // 设置偏好列表
     public static final String setPreferenceUrl=baseUrl+"wt/setPreference.do";
 
+    // 上传文件(音频)文件
+    public static final String uploadWorksFileUrl = baseUrl + "Chopin/common/uploadCM.do";
+    // 上传文件内容
+    public static final String uploadWorksFileContentUrl = baseUrl + "Chopin/content/addByApp.do";
+
 }

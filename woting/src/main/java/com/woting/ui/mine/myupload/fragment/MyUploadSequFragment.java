@@ -1,4 +1,4 @@
-package com.woting.ui.mine.upload.fragment;
+package com.woting.ui.mine.myupload.fragment;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -21,7 +21,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
-import com.woting.ui.mine.upload.adapter.UploadListAdapter;
+import com.woting.ui.mine.myupload.adapter.MyUploadListAdapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,11 +34,11 @@ import java.util.List;
  * 上传的专辑列表
  * Created by Administrator on 2016/11/19.
  */
-public class UploadSequFragment extends Fragment {
+public class MyUploadSequFragment extends Fragment implements XListView.IXListViewListener {
     private Context context;
-    private UploadListAdapter adapter;
+    private MyUploadListAdapter adapter;
     private List<RankInfo> subList;
-    private List<String> delList;
+//    private List<String> delList;
     private List<RankInfo> newList = new ArrayList<>();
 
     private View rootView;
@@ -63,12 +63,20 @@ public class UploadSequFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if(rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_upload, container, false);
-            mListView = (XListView) rootView.findViewById(R.id.list_view);
-
-            dialog = DialogUtils.Dialogph(context, "loading....");
-            sendRequest();
+            initListView();
         }
         return rootView;
+    }
+
+    // 初始化控件
+    private void initListView() {
+        mListView = (XListView) rootView.findViewById(R.id.list_view);
+        mListView.setPullRefreshEnable(true);
+        mListView.setPullLoadEnable(true);
+        mListView.setXListViewListener(this);
+
+        dialog = DialogUtils.Dialogph(context, "loading....");
+        sendRequest();
     }
 
     // 发送网络请求
@@ -117,7 +125,6 @@ public class UploadSequFragment extends Fragment {
                                 int allCountInt = Integer.valueOf(allCountString);
                                 int pageSizeInt = Integer.valueOf(pageSizeString);
                                 if(pageSizeInt < 10 || allCountInt < 10){
-                                    mListView.stopLoadMore();
                                     mListView.setPullLoadEnable(false);
                                 }else{
                                     mListView.setPullLoadEnable(true);
@@ -137,7 +144,7 @@ public class UploadSequFragment extends Fragment {
                         }
                         newList.addAll(subList);
                         if (adapter == null) {
-                            mListView.setAdapter(adapter = new UploadListAdapter(context, newList));
+                            mListView.setAdapter(adapter = new MyUploadListAdapter(context, newList));
                         } else {
                             adapter.notifyDataSetChanged();
                         }
@@ -160,6 +167,24 @@ public class UploadSequFragment extends Fragment {
                 ToastUtils.showVolleyError(context);
             }
         });
+    }
+
+    @Override
+    public void onRefresh() {
+        refreshType = 1;
+        page = 1;
+        sendRequest();
+    }
+
+    @Override
+    public void onLoadMore() {
+        if (page <= pageSizeNum) {
+            refreshType = 2;
+            sendRequest();
+        } else {
+            mListView.stopLoadMore();
+            mListView.setPullLoadEnable(false);
+        }
     }
 
     @Override

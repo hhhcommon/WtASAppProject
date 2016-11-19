@@ -509,6 +509,10 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(myBroadcast);
+        if(delDialog != null) {
+            delDialog.dismiss();
+            delDialog = null;
+        }
         SoundFragment.isLoad = false;
         RadioFragment.isData = false;
         TTSFragment.isLoad = false;

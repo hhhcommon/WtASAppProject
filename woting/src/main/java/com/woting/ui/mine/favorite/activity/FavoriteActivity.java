@@ -616,6 +616,10 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
         MyActivityManager mam = MyActivityManager.getInstance();
         mam.popOneActivity(context);
         unregisterReceiver(mBroadcast);
+        if(DelDialog != null) {
+            DelDialog.dismiss();
+            DelDialog = null;
+        }
         image = null;
         tv_total = null;
         tv_sequ = null;
@@ -626,7 +630,6 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
         tv_bianji = null;
         imageAllCheck = null;
         mPager = null;
-        DelDialog = null;
         confirmDialog = null;
         totalFragment = null;
         sequfragment = null;

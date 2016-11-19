@@ -1,4 +1,4 @@
-package com.woting.ui.mine.upload.adapter;
+package com.woting.ui.mine.myupload.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -22,11 +22,11 @@ import java.util.List;
  * 展示上传文件的列表
  * Created by Administrator on 2016/11/19.
  */
-public class UploadListAdapter extends BaseAdapter {
+public class MyUploadListAdapter extends BaseAdapter {
     private Context context;
     private List<RankInfo> list;
 
-    public UploadListAdapter(Context context, List<RankInfo> list) {
+    public MyUploadListAdapter(Context context, List<RankInfo> list) {
         this.context = context;
         this.list = list;
     }
@@ -53,18 +53,18 @@ public class UploadListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.adapter_upload_list_item, parent, false);
 
-            holder.imageMask = (ImageView) convertView.findViewById(R.id.image_mask);// 封面的六边形遮罩
+            holder.imageMask = (ImageView) convertView.findViewById(R.id.image_mask);               // 封面的六边形遮罩
             Bitmap bitmapMask = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
             holder.imageMask.setImageBitmap(bitmapMask);
 
-            holder.rankImageCover = (ImageView) convertView.findViewById(R.id.rank_image_cover);// 封面图片
-            holder.layoutCheck = convertView.findViewById(R.id.layout_check);// item
-            holder.imageCheck = (ImageView) convertView.findViewById(R.id.image_check);// 可选状态
-            holder.rankTitle = (TextView) convertView.findViewById(R.id.rank_title);// 标题
-            holder.rankFrom = (TextView) convertView.findViewById(R.id.rank_from);// 来源
-            holder.textWatchNumber = (TextView) convertView.findViewById(R.id.text_watch_number);// 收听次数
-            holder.imageLast = (ImageView) convertView.findViewById(R.id.image_last);// 图标 集数 OR 时长
-            holder.textLast = (TextView) convertView.findViewById(R.id.text_last);// 文字 集数 OR 时长
+            holder.rankImageCover = (ImageView) convertView.findViewById(R.id.rank_image_cover);    // 封面图片
+            holder.layoutCheck = convertView.findViewById(R.id.layout_check);                       // item
+            holder.imageCheck = (ImageView) convertView.findViewById(R.id.image_check);             // 可选状态
+            holder.rankTitle = (TextView) convertView.findViewById(R.id.rank_title);                // 标题
+            holder.rankFrom = (TextView) convertView.findViewById(R.id.rank_from);                  // 来源
+            holder.textWatchNumber = (TextView) convertView.findViewById(R.id.text_watch_number);   // 收听次数
+            holder.imageLast = (ImageView) convertView.findViewById(R.id.image_last);               // 图标 集数 OR 时长
+            holder.textLast = (TextView) convertView.findViewById(R.id.text_last);                  // 文字 集数 OR 时长
 
             convertView.setTag(holder);
         } else {
