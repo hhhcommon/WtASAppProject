@@ -406,6 +406,7 @@ public class TotalFragment extends Fragment {
 					if (PlayerFragment.context != null) {
 						MainActivity.change();
 						HomeActivity.UpdateViewPager();
+						PlayerFragment.TextPage=1;
 						PlayerFragment.SendTextRequest(list.get(groupPosition).getList().get(childPosition).getContentName(), context);
 						getActivity().finish();
 					} else {

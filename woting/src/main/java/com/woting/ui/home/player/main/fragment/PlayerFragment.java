@@ -191,6 +191,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 	private static TextView tv_desc;
 	private static ImageView img_download;
 	private static TextView tv_download;
+	private String voiceStr;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -415,7 +416,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			historyNews.setContentPlay(historyNew.getPlayerUrl());
 			historyNews.setMediaType(historyNew.getPlayerMediaType());
 			historyNews.setContentId(historyNew.getContentID());
-			historyNews.setContentDesc(historyNew.getPlayerContentDesc());
+			historyNews.setContentDescn(historyNew.getPlayerContentDescn());
 			historyNews.setContentImg(historyNew.getPlayerImage());
 			try{
 				if(historyNew.getPlayerAllTime().equals("")){
@@ -467,7 +468,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		String playContentShareUrl = languageSearchInside.getContentShareURL();
 		String playerAllTime = languageSearchInside.getPlayerAllTime();
 		String playerInTime =languageSearchInside.getPlayerInTime();
-		String playerContentDesc = languageSearchInside.getContentDesc();
+		String playerContentDesc = languageSearchInside.getContentDescn();
 		String playerNum = languageSearchInside.getPlayCount();
 		String playerZanType = "false";
 		String playerFrom = languageSearchInside.getContentPub();
@@ -838,7 +839,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 						if (data.getSeqInfo() == null
 								|| data.getSeqInfo().getContentDesc() == null
 								|| data.getSeqInfo().getContentDesc().equals("")) {
-							mcontent.setSequdesc(data.getContentDesc());
+							mcontent.setSequdesc(data.getContentDescn());
 						} else {
 							mcontent.setSequdesc(data.getSeqInfo().getContentDesc());
 						}
@@ -1098,6 +1099,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 					SendTextRequest(searchName,context);
 				}else if(sendType==3){
 					RefreshType =3;
+					searchByVoice(voiceStr);
 				}
 			}
 		}, 1000);
@@ -1112,6 +1114,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			String enter = sp.getString(StringConstant.PLAYHISTORYENTER, "false");
 			String news = sp.getString(StringConstant.PLAYHISTORYENTERNEWS, "");
 			if (enter.equals("true")) {
+			    TextPage=1;
 				SendTextRequest(news, context);
 				Editor et = sp.edit();
 				et.putString(StringConstant.PLAYHISTORYENTER, "false");
@@ -1160,12 +1163,14 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 					textTime.setText("定时");
 				}
 			} else if (action.equals(BroadcastConstants.PLAYERVOICE)) {
-				String str = intent.getStringExtra("VoiceContent");
-				tv_speak_status.setText("正在为您查找: "+str);
+				voiceStr = intent.getStringExtra("VoiceContent");
+
+				tv_speak_status.setText("正在为您查找: "+voiceStr);
 				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-					if(!str.trim().equals("")){
-						tv_speak_status.setText("正在搜索: "+str);
-						searchByVoice(str);
+					if(!voiceStr.trim().equals("")){
+						tv_speak_status.setText("正在搜索: "+voiceStr);
+						VoicePage=1;
+						searchByVoice(voiceStr);
 						Handler handler =new Handler();
 						handler.postDelayed(new Runnable() {
 
@@ -1382,9 +1387,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			} else {
 				shareName = "我听我享听";
 			}
-			if (GlobalConfig.playerobject.getContentDesc() != null
-					&& !GlobalConfig.playerobject.getContentDesc().equals("")) {
-				shareDesc = GlobalConfig.playerobject.getContentDesc();
+			if (GlobalConfig.playerobject.getContentDescn() != null
+					&& !GlobalConfig.playerobject.getContentDescn().equals("")) {
+				shareDesc = GlobalConfig.playerobject.getContentDescn();
 			} else {
 				shareDesc = "暂无本节目介绍";
 			}
@@ -1423,6 +1428,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		try {
 			jsonObject.put("SearchStr", str);
 			jsonObject.put("PageType", "0");
+			jsonObject.put("Page",VoicePage);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -1430,6 +1436,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		VolleyRequest.RequestTextVoicePost(GlobalConfig.searchvoiceUrl, jsonObject, new VolleyCallback() {
 			private String ReturnType;
 			private String MainList;
+
 
 			@Override
 			protected void requestSuccess(JSONObject result) {
@@ -1447,20 +1454,30 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 					try {
 						LanguageSearch lists = new Gson().fromJson(MainList, new TypeToken<LanguageSearch>() {}.getType());
 						List<LanguageSearchInside> list = lists.getList();
-						list.get(0).getContentDesc();
+						list.get(0).getContentDescn();
 						if (list != null && list.size() != 0) {
-							num = 0;
-							allList.clear();
-							allList.addAll(list);
-							GlobalConfig.playerobject=allList.get(num);
-							//decideUpdatePlayHistory();
-							lin_tuijian.setVisibility(View.VISIBLE);
-							adapter = new PlayerListAdapter(context, allList);
-							mListView.setAdapter(adapter);
-							setItemListener();
+							if(VoicePage==1){
+								num = 0;
+								allList.clear();
+								allList.addAll(list);
+								//decideUpdatePlayHistory();
+								lin_tuijian.setVisibility(View.VISIBLE);
+							}else{
+								allList.addAll(list);
+							}
+							if(adapter==null){
+								adapter = new PlayerListAdapter(context, allList);
+								mListView.setAdapter(adapter);
+							}else{
+								adapter.notifyDataSetChanged();
+							}
+							GlobalConfig.playerobject=allList.get(0);
+							stopCurrentTimer();
 							getNetWork(0, context);
+							VoicePage++;
+							setItemListener();
 							mListView.setPullRefreshEnable(false);
-							mListView.setPullLoadEnable(false);
+							mListView.setPullLoadEnable(true);
 							mListView.stopRefresh();
 							mListView.stopLoadMore();
 							mListView.setRefreshTime(new Date().toLocaleString());
@@ -1470,9 +1487,13 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 					}
 
 				} else if (ReturnType.equals("1011")) {
-					ToastUtils.show_short(context, "没有查询内容");
+					mListView.stopLoadMore();
+					mListView.setPullLoadEnable(false);
+					ToastUtils.show_allways(context,"已经没有相关数据啦");
 				} else {
-					ToastUtils.show_short(context, "没有新的数据");
+					ToastUtils.show_allways(context,"已经没有相关数据啦");
+					mListView.stopLoadMore();
+					mListView.setPullLoadEnable(false);
 				}
 				new Handler().postDelayed(new Runnable() {
 					@Override
@@ -1786,8 +1807,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			}else{
 				tv_sequ.setText("暂无专辑");
 			}
-			if(GlobalConfig.playerobject.getContentDesc()!=null){
-				tv_desc.setText(GlobalConfig.playerobject.getContentDesc());
+			if(GlobalConfig.playerobject.getContentDescn()!=null){
+				tv_desc.setText(GlobalConfig.playerobject.getContentDescn());
 			}else{
 				tv_desc.setText("暂无介绍");
 			}
@@ -1814,29 +1835,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 	public static void SendTextRequest(String contentName, final Context mContext) {
 
 		final LanguageSearchInside fList =getDaoList(mContext);// 得到数据库里边的第一条数据
-		if (fList != null) {
-			// 如果数据库里边的数据不是空的，设置该数据
-			if (allList != null && allList.size() > 0) {
-				allList.clear();
-				allList.add(fList);
-			} else {
-				allList = new ArrayList<>();
-				allList.add(fList);
-			}
-			num = 0;
-			if (fList.getContentName() != null) {
-				tv_name.setText(fList.getContentName());
-				searchName=contentName;
-			} else {
-				tv_name.setText("我听科技");
-				searchName="我听科技";
-			}
-			adapter = new PlayerListAdapter(context, allList);
-			mListView.setAdapter(adapter);
-			setItemListener();
-			stopCurrentTimer();
-			getNetWork(0, context);
-		}
 		// 发送数据
 		sendType = 2;
 		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
@@ -1884,7 +1882,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 					       if(TextPage==1){
 							num = 0;
 							allList.clear();
-							allList.add(fList);
+							   if(fList!=null&&!fList.equals("")) {
+								   allList.add(fList);
+							   }
 							allList.addAll(list);
 							GlobalConfig.playerobject=allList.get(num);
 							//decideUpdatePlayHistory();
@@ -1898,6 +1898,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 							}else{
 								adapter.notifyDataSetChanged();
 							}
+							stopCurrentTimer();
+							getNetWork(0, context);
 							TextPage++;
 							setItemListener();
 							mListView.setPullRefreshEnable(false);
@@ -1910,11 +1912,13 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 						e.printStackTrace();
 					}
 				} else if (ReturnType.equals("1011")) {
-					ToastUtils.show_short(context, "没有查询内容");
+					ToastUtils.show_allways(context, "已经没有相关数据啦");
 					mListView.stopLoadMore();
+					mListView.setPullLoadEnable(false);
 				} else {
-					ToastUtils.show_short(context, "没有新的数据");
+					ToastUtils.show_allways(context, "已经没有相关数据啦");
 					mListView.stopLoadMore();
+					mListView.setPullLoadEnable(false);
 				}
 			}
 
@@ -1923,6 +1927,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				if (dialogs != null) {
 					dialogs.dismiss();
 					mListView.stopLoadMore();
+					mListView.setPullLoadEnable(false);
 				}
 			}
 		});

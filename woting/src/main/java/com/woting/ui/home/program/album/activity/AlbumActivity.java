@@ -317,7 +317,7 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
         } else {
             LanguageSearchInside list = (LanguageSearchInside) getIntent().getSerializableExtra("list");
             RadioName = list.getContentName();
-            ContentDesc = list.getContentDesc();
+            ContentDesc = list.getContentDescn();
             id = list.getContentId();
         }
         if (RadioName != null && !RadioName.equals("")) {

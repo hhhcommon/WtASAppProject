@@ -344,6 +344,7 @@ public class OnLineFragment extends Fragment {
 								ContentFavorite,ContentId,localUrl,sequName,sequId,sequDesc,sequImg);
 						dbDao.deleteHistory(playUrl);
 						dbDao.addHistory(history);
+						PlayerFragment.TextPage=1;
 						PlayerFragment.SendTextRequest(mainLists.get(position).getContentName(), context);
 						HomeActivity.UpdateViewPager();
 					}
@@ -473,6 +474,7 @@ public class OnLineFragment extends Fragment {
 						dbDao.deleteHistory(playUrl);
 						dbDao.addHistory(history);
 						HomeActivity.UpdateViewPager();
+						PlayerFragment.TextPage=1;
 						PlayerFragment.SendTextRequest(newList.get(groupPosition).getList().get(childPosition).getContentName(), context);
 
 					} else if (MediaType.equals("SEQU")) {

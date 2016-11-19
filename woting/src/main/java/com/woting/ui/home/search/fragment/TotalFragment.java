@@ -288,6 +288,7 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                     dbDao.addHistory(history);
                     MainActivity.change();
                     HomeActivity.UpdateViewPager();
+                    PlayerFragment.TextPage=1;
                     PlayerFragment.SendTextRequest(list.get(groupPosition).getList().get(childPosition).getContentName(), context.getApplicationContext());
                     context.finish();
                 } else if (MediaType != null && MediaType.equals("SEQU")) {

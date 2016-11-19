@@ -159,6 +159,7 @@ public class SequFragment extends Fragment {
                         dbDao.addHistory(history);
                         MainActivity.change();
                         HomeActivity.UpdateViewPager();
+                        PlayerFragment.TextPage=1;
                         PlayerFragment.SendTextRequest(newList.get(position - 1).getContentName(), context);
                         context.finish();
                     } else if(MediaType.equals("SEQU")) {

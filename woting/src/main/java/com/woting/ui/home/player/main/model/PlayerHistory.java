@@ -14,7 +14,7 @@ public class PlayerHistory implements Serializable{
 	private String PlayerMediaType;		//播放类型，radio，audio，sequ
 	private String PlayerAllTime;		//播放文件总时长
 	private String PlayerInTime;		//此时播放时长
-	private String PlayerContentDesc;	//播放文件介绍
+	private String PlayerContentDescn;	//播放文件介绍
 	private String PlayerNum;			//播放次数
 	private String PlayerZanType;		//String类型的true,false
 	private String PlayerFrom;			//预留字段
@@ -169,7 +169,7 @@ public class PlayerHistory implements Serializable{
 		PlayerMediaType = playermediatype;
 		PlayerAllTime = playeralltime;
 		PlayerInTime = playerintime;
-		PlayerContentDesc = playercontentdesc;
+		PlayerContentDescn = playercontentdesc;
 		PlayerNum = playernum;
 		PlayerZanType = playerzantype;
 		PlayerFrom = playerfrom;
@@ -231,11 +231,12 @@ public class PlayerHistory implements Serializable{
 	public void setPlayerInTime(String playerInTime) {
 		PlayerInTime = playerInTime;
 	}
-	public String getPlayerContentDesc() {
-		return PlayerContentDesc;
+
+	public String getPlayerContentDescn() {
+		return PlayerContentDescn;
 	}
-	public void setPlayerContentDesc(String playerContentDesc) {
-		PlayerContentDesc = playerContentDesc;
+	public void setPlayerContentDescn(String playerContentDesc) {
+		PlayerContentDescn = playerContentDesc;
 	}
 	public String getPlayerNum() {
 		return PlayerNum;

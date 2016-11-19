@@ -232,6 +232,7 @@ public class FMListActivity extends AppBaseActivity implements OnClickListener {
                         dbDao.deleteHistory(playerurl);
                         dbDao.addHistory(history);
                         HomeActivity.UpdateViewPager();
+                        PlayerFragment.TextPage=1;
                         PlayerFragment.SendTextRequest(newList.get(position - 1).getContentName(), context);
                         finish();
                     }

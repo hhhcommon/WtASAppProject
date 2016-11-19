@@ -178,6 +178,7 @@ public class TTSFragment extends Fragment {
                             if (PlayerFragment.context != null) {
                                 MainActivity.change();
                                 HomeActivity.UpdateViewPager();
+                                PlayerFragment.TextPage=1;
                                 PlayerFragment.SendTextRequest(newList.get(position - 1).getContentName(), context);
                                 getActivity().finish();
                             } else {

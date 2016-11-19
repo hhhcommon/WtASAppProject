@@ -237,8 +237,8 @@ public class RecommendFragment extends Fragment{
 									ContentFavorite,ContentId,localUrl,sequName,sequId,sequDesc,sequImg);
 							dbDao.deleteHistory(playUrl);
 							dbDao.addHistory(history);
-
 							HomeActivity.UpdateViewPager();
+							PlayerFragment.TextPage=1;
 							PlayerFragment.SendTextRequest(newList.get(position - 2).getContentName(),context);
 							getActivity().finish();
 						} else if (MediaType.equals("SEQU")) {

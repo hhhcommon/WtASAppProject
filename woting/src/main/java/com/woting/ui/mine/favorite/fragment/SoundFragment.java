@@ -184,6 +184,7 @@ public class SoundFragment extends Fragment {
 							if (PlayerFragment.context != null) {
 								MainActivity.change();
 								HomeActivity.UpdateViewPager();
+								PlayerFragment.TextPage=1;
 								PlayerFragment.SendTextRequest(newlist.get(position - 1).getContentName(), context);
 								getActivity().finish();
 							} else {

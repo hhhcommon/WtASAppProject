@@ -175,7 +175,7 @@ public class TTSFragment extends Fragment{
 						String playermediatype = playList.get(position).getPlayerMediaType();
 						String plaplayeralltime = "0";
 						String playerintime = "0";
-						String playercontentdesc = playList.get(position).getPlayerContentDesc();
+						String playercontentdesc = playList.get(position).getPlayerContentDescn();
 						String playernum = playList.get(position).getPlayerNum();
 						String playerzantype = "0";
 						String playerfrom = playList.get(position).getPlayerFrom();
@@ -204,6 +204,7 @@ public class TTSFragment extends Fragment{
 							MainActivity.change();
 							HomeActivity.UpdateViewPager();
 							String s = playList.get(position).getPlayerName();
+							PlayerFragment.TextPage=1;
 							PlayerFragment.SendTextRequest(s, context);
 							getActivity().finish();
 						}else{
