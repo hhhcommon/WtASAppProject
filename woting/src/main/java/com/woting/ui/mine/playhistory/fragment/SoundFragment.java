@@ -181,7 +181,7 @@ public class SoundFragment extends Fragment{
 						String playermediatype = playList.get(position).getPlayerMediaType();
 						String plaplayeralltime = playList.get(position).getPlayerAllTime();
 						String playerintime =  playList.get(position).getPlayerInTime();
-						String playercontentdesc = playList.get(position).getPlayerContentDesc();
+						String playercontentdesc = playList.get(position).getPlayerContentDescn();
 						String playernum = playList.get(position).getPlayerNum();
 						String playerzantype = "0";
 						String playerfrom = playList.get(position).getPlayerFrom();
@@ -210,6 +210,7 @@ public class SoundFragment extends Fragment{
 							MainActivity.change();
 							HomeActivity.UpdateViewPager();
 							String s = playList.get(position).getPlayerName();
+							PlayerFragment.TextPage=1;
 							PlayerFragment.SendTextRequest(s, context);
 							getActivity().finish();
 						}else{

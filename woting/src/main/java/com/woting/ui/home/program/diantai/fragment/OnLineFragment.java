@@ -21,7 +21,6 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -35,6 +34,7 @@ import com.woting.common.util.CommonUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.MyGridView;
 import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout;
 import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout.OnRefreshListener;
 import com.woting.ui.home.main.HomeActivity;
@@ -374,21 +374,22 @@ public class OnLineFragment extends Fragment {
                         String sequDesc = mainLists.get(position).getSequDesc();
                         String sequImg = mainLists.get(position).getSequImg();
 
-                        //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-                        PlayerHistory history = new PlayerHistory(
-                                playName, playImage, playUrl, playUri, playMediaType,
-                                playAllTime, playInTime, playContentDesc, playerNum,
-                                playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg);
-                        dbDao.deleteHistory(playUrl);
-                        dbDao.addHistory(history);
-                        PlayerFragment.SendTextRequest(mainLists.get(position).getContentName(), context);
-                        HomeActivity.UpdateViewPager();
-                    }
-                }
-            }
-        });
-    }
+						//如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+						PlayerHistory history = new PlayerHistory(
+								playName, playImage,playUrl,playUri,playMediaType,
+								playAllTime, playInTime, playContentDesc,playerNum,
+								playZanType,playFrom,playFromId,playFromUrl,playAddTime,bjUserId,playContentShareUrl,
+								ContentFavorite,ContentId,localUrl,sequName,sequId,sequDesc,sequImg);
+						dbDao.deleteHistory(playUrl);
+						dbDao.addHistory(history);
+						PlayerFragment.TextPage=1;
+						PlayerFragment.SendTextRequest(mainLists.get(position).getContentName(), context);
+						HomeActivity.UpdateViewPager();
+					}
+				}
+			}
+		});
+	}
 
     private void send() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
@@ -509,10 +510,11 @@ public class OnLineFragment extends Fragment {
                                 playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
                                 ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg);
 
-                        dbDao.deleteHistory(playUrl);
-                        dbDao.addHistory(history);
-                        HomeActivity.UpdateViewPager();
-                        PlayerFragment.SendTextRequest(newList.get(groupPosition).getList().get(childPosition).getContentName(), context);
+						dbDao.deleteHistory(playUrl);
+						dbDao.addHistory(history);
+						HomeActivity.UpdateViewPager();
+						PlayerFragment.TextPage=1;
+						PlayerFragment.SendTextRequest(newList.get(groupPosition).getList().get(childPosition).getContentName(), context);
 
                     } else if (MediaType.equals("SEQU")) {
                         Intent intent = new Intent(context, AlbumActivity.class);
