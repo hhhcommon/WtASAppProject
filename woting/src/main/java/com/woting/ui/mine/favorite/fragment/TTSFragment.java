@@ -192,8 +192,6 @@ public class TTSFragment extends Fragment {
                                 HomeActivity.UpdateViewPager();
                                 getActivity().finish();
                             }
-                        } else {
-                            ToastUtils.show_short(context, "暂不支持的Type类型");
                         }
                     }
                 }
@@ -220,7 +218,6 @@ public class TTSFragment extends Fragment {
                 } else {
                     mListView.stopLoadMore();
                     mListView.setPullLoadEnable(false);
-                    ToastUtils.show_allways(context, "已经是最后一页了");
                 }
             }
         });
@@ -229,6 +226,7 @@ public class TTSFragment extends Fragment {
     // 发送网络请求
     private void send() {
         if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
+            if(dialog != null) dialog.dismiss();
             ToastUtils.show_allways(context, "网络连接失败，请检查网络连接!");
             if(refreshType == 1) {
                 mListView.stopRefresh();
@@ -253,6 +251,8 @@ public class TTSFragment extends Fragment {
                 page++;
                 try {
                     String ReturnType = result.getString("ReturnType");
+                    Log.w("ReturnType", "ReturnType -- > > " + ReturnType);
+
                     if (ReturnType != null && ReturnType.equals("1001")) {
                         if (isDel) {
                             ToastUtils.show_allways(context, "已删除");
@@ -293,16 +293,6 @@ public class TTSFragment extends Fragment {
                             adapter.notifyDataSetChanged();
                         }
                         setListener();
-                    } else if (ReturnType != null && ReturnType.equals("0000")) {
-                        ToastUtils.show_short(context, "无法获取相关的参数");
-                    } else if (ReturnType != null && ReturnType.equals("1002")) {
-                        ToastUtils.show_short(context, "无此分类信息");
-                    } else if (ReturnType != null && ReturnType.equals("1003")) {
-                        ToastUtils.show_short(context, "无法获得列表");
-                    } else if (ReturnType != null && ReturnType.equals("1011")) {
-                        ToastUtils.show_short(context, "无数据");
-                    } else {
-                        ToastUtils.show_short(context, "ReturnType不能为空");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -319,6 +309,7 @@ public class TTSFragment extends Fragment {
             @Override
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
+                ToastUtils.showVolleyError(context);
             }
         });
     }
@@ -329,21 +320,25 @@ public class TTSFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(FavoriteActivity.VIEW_UPDATE)) {
-                page = 1;
-                send();
-            } else if (action.equals(FavoriteActivity.SET_NOT_LOAD_REFRESH)) {
-                if (isVisible()) {
-                    mListView.setPullRefreshEnable(false);
-                    mListView.setPullLoadEnable(false);
-                }
-            } else if (action.equals(FavoriteActivity.SET_LOAD_REFRESH)) {
-                if (isVisible()) {
-                    mListView.setPullRefreshEnable(true);
-                    if (newList.size() >= 10) {
-                        mListView.setPullLoadEnable(true);
+            switch (action) {
+                case FavoriteActivity.VIEW_UPDATE:
+                    page = 1;
+                    send();
+                    break;
+                case FavoriteActivity.SET_NOT_LOAD_REFRESH:
+                    if (isVisible()) {
+                        mListView.setPullRefreshEnable(false);
+                        mListView.setPullLoadEnable(false);
                     }
-                }
+                    break;
+                case FavoriteActivity.SET_LOAD_REFRESH:
+                    if (isVisible()) {
+                        mListView.setPullRefreshEnable(true);
+                        if (newList.size() >= 10) {
+                            mListView.setPullLoadEnable(true);
+                        }
+                    }
+                    break;
             }
         }
     };
@@ -438,7 +433,6 @@ public class TTSFragment extends Fragment {
 
         VolleyRequest.RequestPost(GlobalConfig.delFavoriteListUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
-            private String Message;
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -447,22 +441,20 @@ public class TTSFragment extends Fragment {
                 if (isCancelRequest) return;
                 try {
                     ReturnType = result.getString("ReturnType");
-                    Message = result.getString("Message");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     context.sendBroadcast(new Intent(FavoriteActivity.VIEW_UPDATE));
                 } else {
-                    if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_allways(context, Message + "");
-                    }
+                    ToastUtils.show_allways(context, "删除失败，请检查网络或稍后重试!");
                 }
             }
 
             @Override
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
+                ToastUtils.showVolleyError(context);
                 delList.clear();
             }
         });

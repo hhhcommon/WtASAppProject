@@ -142,7 +142,7 @@ public class ClassifyFragment extends Fragment{
 			@Override
 			protected void requestSuccess(JSONObject result) {
 				if (dialog != null) dialog.dismiss();
-                if(RadioListActivity.isCancelRequest) return ;
+                if(((RadioListActivity)getActivity()).isCancel()) return ;
 				page++;
 				try {
 					ReturnType = result.getString("ReturnType");

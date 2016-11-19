@@ -2,10 +2,10 @@ package com.woting.ui.mine.playhistory.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.woting.R;
+import com.woting.common.application.BSApplication;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.ui.home.main.HomeActivity;
@@ -35,19 +36,21 @@ import java.util.List;
  * @author woting11
  */
 public class SoundFragment extends Fragment{
-	private View rootView;
-	private SearchPlayerHistoryDao dbdao;
-	private Context context;
+    private Context context;
+	private SearchPlayerHistoryDao dbDao;
+    private PlayHistoryAdapter adapter;
+    private ArrayList<PlayerHistory> playList;	// 播放历史声音列表
+    private List<PlayerHistory> subList;		// 播放历史全部数据
+    private List<PlayerHistory> deleteList;		// 删除数据列表
+    private List<PlayerHistory> checkList;		// 选中数据列表
+
+    private View rootView;
 	private ListView listView;
-	private List<PlayerHistory> subList;		// 播放历史全部数据
-	private PlayHistoryAdapter adapter;
-	private List<PlayerHistory> deleteList;		// 删除数据列表
-	private ArrayList<PlayerHistory> playList;	// 播放历史声音列表
-	private List<PlayerHistory> checkList;		// 选中数据列表
+    private LinearLayout linearNull;			// linear_null
+
 	public static boolean isData = false;		// 是否有数据 
 	public static boolean isLoad;
-	private LinearLayout linearNull;			// linear_null
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -64,24 +67,19 @@ public class SoundFragment extends Fragment{
 			getData();
 			isLoad = true;
 		}
-		
 		return rootView;
 	}
 	
-	/**
-	 * 初始化数据库命令执行对象
-	 */
+	// 初始化数据库命令执行对象
 	private void initDao() {
-		dbdao = new SearchPlayerHistoryDao(context);
+        dbDao = new SearchPlayerHistoryDao(context);
 	}
 	
-	/**
-	 * 查询数据库  获取历史播放数据
-	 */
+	// 查询数据库  获取历史播放数据
 	public void getData(){
 		listView.setVisibility(View.GONE);
 		isData = false;
-		subList = dbdao.queryHistory();
+		subList = dbDao.queryHistory();
 		playList = null;
 		if (subList != null && subList.size() > 0) {
 			for (int i = 0; i < subList.size(); i++) {
@@ -108,18 +106,13 @@ public class SoundFragment extends Fragment{
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
-//		if(isVisibleToUser && isLoad && !isData){
-//			ToastUtils.show_allways(context, "没有历史播放记录");
-//		}
 		if(isVisibleToUser && TotalFragment.isDeleteSound){
 			getData();
 			TotalFragment.isDeleteSound = false;
 		}
 	}
 	
-	/**
-	 * 更新是否全选状态
-	 */
+	// 更新是否全选状态
 	private void ifAll(){
 		if(checkList == null){
 			checkList = new ArrayList<>();
@@ -142,23 +135,17 @@ public class SoundFragment extends Fragment{
 		}
 	}
 	
-	/**
-	 * 设置 View 隐藏
-	 */
+	// 设置 View 隐藏
 	public void setLinearHint(){
 		linearNull.setVisibility(View.GONE);
 	}
 	
-	/**
-	 * 设置 View 可见  解决全选 Dialog 挡住 ListView 最底下一条 Item 问题
-	 */
+	// 设置 View 可见  解决全选 Dialog 挡住 ListView 最底下一条 Item 问题
 	public void setLinearVisibility(){
 		linearNull.setVisibility(View.VISIBLE);
 	}
 	
-	/**
-	 * 实现接口  设置点击事件
-	 */
+	// 实现接口  设置点击事件
 	private void setInterface() {
 		adapter.setonclick(new playhistorycheck() {
 			@Override
@@ -173,10 +160,7 @@ public class SoundFragment extends Fragment{
 			}
 		});
 		
-		/**
-		 * ListView Item 点击事件监听 
-		 * 在编辑状态下点击为选中  不在编辑状态下则跳转到播放界面
-		 */
+		// 在编辑状态下点击为选中  不在编辑状态下则跳转到播放界面
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -220,8 +204,8 @@ public class SoundFragment extends Fragment{
 								plaplayeralltime, playerintime, playercontentdesc, playernum,
 								playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
 								ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
-						dbdao.deleteHistory(playerurl);
-						dbdao.addHistory(history);
+                        dbDao.deleteHistory(playerurl);
+                        dbDao.addHistory(history);
 						if(PlayerFragment.context!=null){
 							MainActivity.change();
 							HomeActivity.UpdateViewPager();
@@ -230,11 +214,12 @@ public class SoundFragment extends Fragment{
 							PlayerFragment.SendTextRequest(s, context);
 							getActivity().finish();
 						}else{
-							SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
-							Editor et = sp.edit();
+							Editor et = BSApplication.SharedPreferences.edit();
 							et.putString(StringConstant.PLAYHISTORYENTER, "true");
 							et.putString(StringConstant.PLAYHISTORYENTERNEWS, subList.get(position).getPlayerName());
-							et.commit();
+                            if(!et.commit()) {
+                                Log.w("commit", "数据 commit 失败!");
+                            }
 							MainActivity.change();
 							HomeActivity.UpdateViewPager();
 							getActivity().finish();
@@ -245,9 +230,7 @@ public class SoundFragment extends Fragment{
 		});
 	}
 	
-	/**
-	 * 设置可选状态
-	 */
+	// 设置可选状态
 	public void setCheck(boolean checkStatus){
 		if(playList != null && playList.size() > 0){
 			for(int i=0; i<playList.size(); i++){
@@ -257,9 +240,7 @@ public class SoundFragment extends Fragment{
 		}
 	}
 	
-	/**
-	 * 设置是否选中
-	 */
+	// 设置是否选中
 	public void setCheckStatus(int status){
 		if(playList!= null && playList.size() > 0){
 			for(int i=0; i<playList.size(); i++){
@@ -269,14 +250,12 @@ public class SoundFragment extends Fragment{
 		}
 	}
 	
-	/**
-	 * 删除数据
-	 */
+	// 删除数据
 	public int deleteData(){
 		int number = 0;
 		for(int i=0; i<playList.size(); i++){
 			if(deleteList == null){
-				deleteList = new ArrayList<PlayerHistory>();
+				deleteList = new ArrayList<>();
 			}
 			if(playList.get(i).getStatus() == 1){
 				deleteList.add(playList.get(i));
@@ -286,7 +265,7 @@ public class SoundFragment extends Fragment{
 		if(deleteList.size() > 0){
 			for(int i=0; i<deleteList.size(); i++){
 				String url = deleteList.get(i).getPlayerUrl();
-				dbdao.deleteHistory(url);
+                dbDao.deleteHistory(url);
 			}
 			if(checkList != null && checkList.size() > 0){
 				checkList.clear();
@@ -318,9 +297,9 @@ public class SoundFragment extends Fragment{
 		playList = null;
 		checkList = null;
 		linearNull = null;
-		if(dbdao != null){
-			dbdao.closedb();
-			dbdao = null;
+		if(dbDao != null){
+            dbDao.closedb();
+            dbDao = null;
 		}
 	}
 }

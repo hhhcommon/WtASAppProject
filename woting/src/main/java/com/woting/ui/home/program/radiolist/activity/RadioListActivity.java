@@ -25,7 +25,7 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.PagerSlidingTabStrip;
 import com.woting.ui.baseactivity.AppBaseFragmentActivity;
 import com.woting.ui.home.program.fenlei.model.FenLeiName;
-import com.woting.ui.home.program.radiolist.adapter.MyPagerAdaper;
+import com.woting.ui.home.program.radiolist.adapter.MyPagerAdapter;
 import com.woting.ui.home.program.radiolist.fragment.ClassifyFragment;
 import com.woting.ui.home.program.radiolist.fragment.RecommendFragment;
 import com.woting.ui.home.program.radiolist.mode.CatalogData;
@@ -55,8 +55,12 @@ public class RadioListActivity extends AppBaseFragmentActivity implements OnClic
 	private ViewPager viewPager;
 	private int count = 1;
 	public static final String tag = "RADIO_LIST_VOLLEY_REQUEST_CANCEL_TAG";
-	public static boolean isCancelRequest;
+    private boolean isCancelRequest;
 	private RecommendFragment recommend;
+
+    public boolean isCancel() {
+        return isCancelRequest;
+    }
 
 	@TargetApi(Build.VERSION_CODES.KITKAT)
 	@SuppressLint("InlinedApi")
@@ -127,7 +131,7 @@ public class RadioListActivity extends AppBaseFragmentActivity implements OnClic
 							count++;
 						}
 					}
-					viewPager.setAdapter(new MyPagerAdaper(getSupportFragmentManager(), list, fragments));
+					viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), list, fragments));
 					pageSlidingTab.setViewPager(viewPager);
 					if(count == 1){
 						pageSlidingTab.setVisibility(View.GONE);
