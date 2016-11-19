@@ -269,6 +269,7 @@ public class RecommendFragment extends Fragment {
                         dbDao.deleteHistory(playerurl);
                         dbDao.addHistory(history);
                         HomeActivity.UpdateViewPager();
+                        PlayerFragment.TextPage=1;
                         PlayerFragment.SendTextRequest(newList.get(position - 2).getContentName(), context);
                     } else if (MediaType.equals("SEQU")) {
                         Intent intent = new Intent(context, AlbumActivity.class);
