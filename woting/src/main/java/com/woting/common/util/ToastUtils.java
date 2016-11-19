@@ -27,8 +27,9 @@ public class ToastUtils {
 
     /**Volley 请求发生错误或连接服务器失败*/
     public static void showVolleyError(Context context){
-        if(GlobalConfig.istusi) {
-            Toast.makeText(context, "连接服务器失败!", Toast.LENGTH_SHORT).show();
-        }
+//        if(GlobalConfig.istusi) {
+//            Toast.makeText(context, "连接服务器失败!", Toast.LENGTH_SHORT).show();
+//        }
+        Toast.makeText(context, "连接服务器失败!", Toast.LENGTH_SHORT).show();
     }
 }

@@ -54,25 +54,25 @@ import java.util.List;
 /**
  * 我喜欢的 全部界面
  */
-public class TotalFragment extends Fragment {
+public class TotalFragment extends Fragment implements OnClickListener {
 	private FragmentActivity context;
-    private SearchContentAdapter searchadapter;
-    private SearchPlayerHistoryDao dbdao;
+    private SearchContentAdapter searchAdapter;
+    private SearchPlayerHistoryDao dbDao;
 
-	private ArrayList<RankInfo> playlist; 	// 节目list
-	private ArrayList<RankInfo> sequlist; 	// 专辑list
-	private ArrayList<RankInfo> ttslist; 	// tts
-	private ArrayList<RankInfo> radiolist; 	// radio
+	private ArrayList<RankInfo> playList; 	// 节目list
+	private ArrayList<RankInfo> sequList; 	// 专辑list
+	private ArrayList<RankInfo> ttsList; 	// tts
+	private ArrayList<RankInfo> radioList; 	// radio
 	private ArrayList<SuperRankInfo> list = new ArrayList<>();// 返回的节目list，拆分之前的list
-	private List<RankInfo> SubList;
-	private List<String> dellist;
+	private List<RankInfo> subList;
+	private List<String> delList;
 
-    private Dialog DelDialog;
-    private Dialog dialog;
     private View rootView;
-    private ExpandableListView ex_listview;
-	private int delchildposition = -1;
-	private int delgroupposition = -1;
+    private Dialog delDialog;
+    private Dialog dialog;
+    private ExpandableListView expandListView;
+	private int delChildPosition = -1;
+	private int delGroupPosition = -1;
 	private String tag = "TOTAL_VOLLEY_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
 
@@ -81,7 +81,7 @@ public class TotalFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		context = getActivity();
 		initDao();
-        DelDialog();
+        delDialog();
 
         IntentFilter mFilter = new IntentFilter();
         mFilter.addAction(FavoriteActivity.VIEW_UPDATE);
@@ -92,8 +92,8 @@ public class TotalFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (rootView == null) {
 			rootView = inflater.inflate(R.layout.fragment_favorite_total, container, false);
-			ex_listview = (ExpandableListView) rootView.findViewById(R.id.ex_listview);
-			ex_listview.setGroupIndicator(null);
+            expandListView = (ExpandableListView) rootView.findViewById(R.id.ex_listview);
+            expandListView.setGroupIndicator(null);
 			setListener();
 
 			if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
@@ -108,13 +108,12 @@ public class TotalFragment extends Fragment {
 
 	// 初始化数据库
 	private void initDao() {
-		dbdao = new SearchPlayerHistoryDao(context);
+        dbDao = new SearchPlayerHistoryDao(context);
 	}
 
 	// 控件点击事件监听
 	private void setListener() {
-		// 屏蔽 group 点击事件
-		ex_listview.setOnGroupClickListener(new OnGroupClickListener() {
+        expandListView.setOnGroupClickListener(new OnGroupClickListener() {
 			@Override
 			public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
 				FavoriteActivity.updateViewPager(list.get(groupPosition).getKey());
@@ -123,15 +122,15 @@ public class TotalFragment extends Fragment {
 		});
 
 		// 长按删除喜欢
-		ex_listview.setOnItemLongClickListener(new OnItemLongClickListener() {
+        expandListView.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View childView, int flatPos, long id) {
 				if (ExpandableListView.getPackedPositionType(id) == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
 					long packedPos = ((ExpandableListView) parent).getExpandableListPosition(flatPos);
-					delgroupposition = ExpandableListView.getPackedPositionGroup(packedPos);
-					delchildposition = ExpandableListView.getPackedPositionChild(packedPos);
-					if (delgroupposition != -1 && delchildposition != -1) {
-						DelDialog.show();
+                    delGroupPosition = ExpandableListView.getPackedPositionGroup(packedPos);
+                    delChildPosition = ExpandableListView.getPackedPositionChild(packedPos);
+					if (delGroupPosition != -1 && delChildPosition != -1) {
+                        delDialog.show();
 					}
 					return true;
 				}
@@ -141,55 +140,48 @@ public class TotalFragment extends Fragment {
 	}
 
 	// 长按单条删除数据对话框
-	private void DelDialog() {
+	private void delDialog() {
 		final View dialog1 = LayoutInflater.from(context).inflate(R.layout.dialog_exit_confirm, null);
-		TextView tv_cancle = (TextView) dialog1.findViewById(R.id.tv_cancle);
-		TextView tv_title = (TextView) dialog1.findViewById(R.id.tv_title);
-		TextView tv_confirm = (TextView) dialog1.findViewById(R.id.tv_confirm);
-		tv_title.setText("确定?");
-		DelDialog = new Dialog(context, R.style.MyDialog);
-		DelDialog.setContentView(dialog1);
-		DelDialog.setCanceledOnTouchOutside(false);
-		DelDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
+        dialog1.findViewById(R.id.tv_cancle).setOnClickListener(this);// 取消
+        dialog1.findViewById(R.id.tv_confirm).setOnClickListener(this);// 删除
+		TextView textTitle = (TextView) dialog1.findViewById(R.id.tv_title);
+        textTitle.setText("确定?");
 
-		// 取消
-		tv_cancle.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				DelDialog.dismiss();
-			}
-		});
-
-		// 删除
-		tv_confirm.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-					dialog = DialogUtils.Dialogph(context, "正在删除");
-					if (dellist == null) {
-						dellist = new ArrayList<>();
-						String type = list.get(delgroupposition).getList().get(delchildposition).getMediaType();
-						String contentid = list.get(delgroupposition).getList().get(delchildposition).getContentId();
-						dellist.add(type + "::" + contentid);
-					} else {
-						String type = list.get(delgroupposition).getList().get(delchildposition).getMediaType();
-						String contentid = list.get(delgroupposition).getList().get(delchildposition).getContentId();
-						dellist.add(type + "::" + contentid);
-					}
-					sendrequest();
-				} else {
-					ToastUtils.show_allways(context, "网络失败，请检查网络");
-				}
-				DelDialog.dismiss();
-			}
-		});
+        delDialog = new Dialog(context, R.style.MyDialog);
+        delDialog.setContentView(dialog1);
+        delDialog.setCanceledOnTouchOutside(false);
+        delDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
 	}
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_cancle:
+                delDialog.dismiss();
+                break;
+            case R.id.tv_confirm:
+                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                    dialog = DialogUtils.Dialogph(context, "正在删除");
+                    if (delList == null) {
+                        delList = new ArrayList<>();
+                    }
+                    String type = list.get(delGroupPosition).getList().get(delChildPosition).getMediaType();
+                    String contentId = list.get(delGroupPosition).getList().get(delChildPosition).getContentId();
+                    delList.add(type + "::" + contentId);
+                    sendRequest();
+                } else {
+                    ToastUtils.show_allways(context, "网络失败，请检查网络");
+                }
+                delDialog.dismiss();
+                break;
+        }
+    }
+
 	// 执行删除单条喜欢的方法
-	protected void sendrequest() {
+	protected void sendRequest() {
 		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			String s = dellist.toString();
+			String s = delList.toString();
 			jsonObject.put("DelInfos", s.substring(1, s.length() - 1).replaceAll(" ", ""));
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -197,31 +189,29 @@ public class TotalFragment extends Fragment {
 		
 		VolleyRequest.RequestPost(GlobalConfig.delFavoriteListUrl, tag, jsonObject, new VolleyCallback() {
 			private String ReturnType;
-			private String Message;
 
 			@Override
 			protected void requestSuccess(JSONObject result) {
-				dellist.clear();
+				delList.clear();
 				if(isCancelRequest) return ;
 				try {
 					ReturnType = result.getString("ReturnType");
-					Message = result.getString("Message");
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 				if (ReturnType != null && ReturnType.equals("1001")) {
                     context.sendBroadcast(new Intent(FavoriteActivity.VIEW_UPDATE));
+                    send();
 				} else {
-					if (Message != null && !Message.trim().equals("")) {
-						ToastUtils.show_allways(context, Message + "");
-					}
+					ToastUtils.show_allways(context, "删除失败，请检查网络或稍后重试!");
 				}
 			}
 			
 			@Override
 			protected void requestError(VolleyError error) {
 				if (dialog != null) dialog.dismiss();
-				dellist.clear();
+                ToastUtils.showVolleyError(context);
+				delList.clear();
 			}
 		});
 	}
@@ -237,7 +227,6 @@ public class TotalFragment extends Fragment {
 
 		VolleyRequest.RequestPost(GlobalConfig.getFavoriteListUrl, tag, jsonObject, new VolleyCallback() {
 			private String ReturnType;
-			private String Message;
 
 			@Override
 			protected void requestSuccess(JSONObject result) {
@@ -245,107 +234,101 @@ public class TotalFragment extends Fragment {
 				if(isCancelRequest) return ;
 				try {
 					ReturnType = result.getString("ReturnType");
-					Message = result.getString("Message");
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 				if (ReturnType != null && ReturnType.equals("1001")) {
 					try {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-						SubList = new Gson().fromJson(arg1.getString("FavoriteList"), new TypeToken<List<RankInfo>>() {}.getType());
+						subList = new Gson().fromJson(arg1.getString("FavoriteList"), new TypeToken<List<RankInfo>>() {}.getType());
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 					list.clear();
-					if (playlist != null) {
-						playlist.clear();
-					}
-					if (sequlist != null) {
-						sequlist.clear();
-					}
-					if (SubList != null && SubList.size() > 0) {
-						for (int i = 0; i < SubList.size(); i++) {
-							if (SubList.get(i).getMediaType() != null && !SubList.get(i).getMediaType().equals("")) {
-								if (SubList.get(i).getMediaType().equals("AUDIO")) {
-									if (playlist == null) {
-										playlist = new ArrayList<>();
-										playlist.add(SubList.get(i));
+					if(playList != null) playList.clear();
+					if(sequList != null) sequList.clear();
+                    if(ttsList != null) ttsList.clear();
+                    if(radioList != null) radioList.clear();
+
+					if (subList != null && subList.size() > 0) {
+						for (int i = 0; i < subList.size(); i++) {
+							if (subList.get(i).getMediaType() != null && !subList.get(i).getMediaType().equals("")) {
+								if (subList.get(i).getMediaType().equals("AUDIO")) {
+									if (playList == null) {
+										playList = new ArrayList<>();
+										playList.add(subList.get(i));
 									} else {
-										if (playlist.size() < 3) {
-											playlist.add(SubList.get(i));
+										if (playList.size() < 3) {
+											playList.add(subList.get(i));
 										}
 									}
-								} else if (SubList.get(i).getMediaType().equals("SEQU")) {
-									if (sequlist == null) {
-										sequlist = new ArrayList<>();
-										sequlist.add(SubList.get(i));
+								} else if (subList.get(i).getMediaType().equals("SEQU")) {
+									if (sequList == null) {
+										sequList = new ArrayList<>();
+										sequList.add(subList.get(i));
 									} else {
-										if (sequlist.size() < 3) {
-											sequlist.add(SubList.get(i));
+										if (sequList.size() < 3) {
+											sequList.add(subList.get(i));
 										}
 									}
-								} else if (SubList.get(i).getMediaType().equals("TTS")) {
-									if (ttslist == null) {
-										ttslist = new ArrayList<>();
-										ttslist.add(SubList.get(i));
+								} else if (subList.get(i).getMediaType().equals("TTS")) {
+									if (ttsList == null) {
+										ttsList = new ArrayList<>();
+										ttsList.add(subList.get(i));
 									} else {
-										if (ttslist.size() < 3) {
-											ttslist.add(SubList.get(i));
+										if (ttsList.size() < 3) {
+											ttsList.add(subList.get(i));
 										}
 									}
-								} else if (SubList.get(i).getMediaType().equals("RADIO")) {
-									if (radiolist == null) {
-										radiolist = new ArrayList<>();
-										radiolist.add(SubList.get(i));
+								} else if (subList.get(i).getMediaType().equals("RADIO")) {
+									if (radioList == null) {
+										radioList = new ArrayList<>();
+										radioList.add(subList.get(i));
 									} else {
-										if (radiolist.size() < 3) {
-											radiolist.add(SubList.get(i));
+										if (radioList.size() < 3) {
+											radioList.add(subList.get(i));
 										}
 									}
 								}
 							}
 						}
-						if (sequlist != null && sequlist.size() != 0) {
+						if (sequList != null && sequList.size() != 0) {
 							SuperRankInfo mSuperRankInfo1 = new SuperRankInfo();
-							mSuperRankInfo1.setKey(sequlist.get(0).getMediaType());
-							mSuperRankInfo1.setList(sequlist);
+							mSuperRankInfo1.setKey(sequList.get(0).getMediaType());
+							mSuperRankInfo1.setList(sequList);
 							list.add(mSuperRankInfo1);
 						}
-						if (playlist != null && playlist.size() != 0) {
+						if (playList != null && playList.size() != 0) {
 							SuperRankInfo mSuperRankInfo = new SuperRankInfo();
-							mSuperRankInfo.setKey(playlist.get(0).getMediaType());
-							mSuperRankInfo.setList(playlist);
+							mSuperRankInfo.setKey(playList.get(0).getMediaType());
+							mSuperRankInfo.setList(playList);
 							list.add(mSuperRankInfo);
 						}
-						if (ttslist != null && ttslist.size() != 0) {
+						if (ttsList != null && ttsList.size() != 0) {
 							SuperRankInfo mSuperRankInfo1 = new SuperRankInfo();
-							mSuperRankInfo1.setKey(ttslist.get(0).getMediaType());
-							mSuperRankInfo1.setList(ttslist);
+							mSuperRankInfo1.setKey(ttsList.get(0).getMediaType());
+							mSuperRankInfo1.setList(ttsList);
 							list.add(mSuperRankInfo1);
 						}
-						if (radiolist != null && radiolist.size() != 0) {
+						if (radioList != null && radioList.size() != 0) {
 							SuperRankInfo mSuperRankInfo1 = new SuperRankInfo();
-							mSuperRankInfo1.setKey(radiolist.get(0).getMediaType());
-							mSuperRankInfo1.setList(radiolist);
+							mSuperRankInfo1.setKey(radioList.get(0).getMediaType());
+							mSuperRankInfo1.setList(radioList);
 							list.add(mSuperRankInfo1);
 						}
 						if (list.size() != 0) {
-							searchadapter = new SearchContentAdapter(context, list);
-							ex_listview.setAdapter(searchadapter);
+                            searchAdapter = new SearchContentAdapter(context, list);
+                            expandListView.setAdapter(searchAdapter);
 							for (int i = 0; i < list.size(); i++) {
-								ex_listview.expandGroup(i);
+                                expandListView.expandGroup(i);
 							}
                             setItemListener();
 						} else {
-							ToastUtils.show_short(context, "没有数据");
+							ToastUtils.show_allways(context, "还没有喜欢的内容!");
 						}
-					} else {
-						ToastUtils.show_short(context, "数据获取异常");
 					}
 				} else {
-					if (Message != null && !Message.trim().equals("")) {
-						ToastUtils.show_allways(context, "加载失败" + Message);
-					}
+					ToastUtils.show_allways(context, "还没有喜欢的内容!");
 				}
 			}
 			
@@ -359,17 +342,20 @@ public class TotalFragment extends Fragment {
 
 	// ExpandableListView Item 点击事件监听
 	protected void setItemListener() {
-		ex_listview.setOnChildClickListener(new OnChildClickListener() {
+        expandListView.setOnChildClickListener(new OnChildClickListener() {
 
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-				String MediaType = null;
+				String mediaType = null;
 				try {
-					MediaType = list.get(groupPosition).getList().get(childPosition).getMediaType();
+                    mediaType = list.get(groupPosition).getList().get(childPosition).getMediaType();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				if (MediaType != null && MediaType.equals("RADIO") || MediaType != null && MediaType.equals("AUDIO")) {
+                if(mediaType == null) {
+                    return true;
+                }
+				if (mediaType.equals("RADIO") || mediaType.equals("AUDIO") || mediaType.equals("TTS")) {
 					String playername = list.get(groupPosition).getList().get(childPosition).getContentName();
 					String playerimage = list.get(groupPosition).getList().get(childPosition).getContentImg();
 					String playerurl = list.get(groupPosition).getList().get(childPosition).getContentPlay();
@@ -401,8 +387,12 @@ public class TotalFragment extends Fragment {
 							plaplayeralltime, playerintime, playercontentdesc, playernum,
 							playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
 							ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
-					dbdao.deleteHistory(playerurl);
-					dbdao.addHistory(history);
+                    if(mediaType.equals("TTS")){
+                        dbDao.deleteHistoryById(ContentId);
+                    }else {
+                        dbDao.deleteHistory(playerurl);
+                    }
+                    dbDao.addHistory(history);
 					if (PlayerFragment.context != null) {
 						MainActivity.change();
 						HomeActivity.UpdateViewPager();
@@ -419,15 +409,13 @@ public class TotalFragment extends Fragment {
 						HomeActivity.UpdateViewPager();
 						getActivity().finish();
 					}
-				} else if (MediaType != null && MediaType.equals("SEQU")) {
+				} else if (mediaType.equals("SEQU")) {
 					Intent intent = new Intent(context, AlbumActivity.class);
 					Bundle bundle = new Bundle();
 					bundle.putString("type", "search");
 					bundle.putSerializable("list", list.get(groupPosition).getList().get(childPosition));
 					intent.putExtras(bundle);
 					startActivityForResult(intent, 1);
-				} else {
-					ToastUtils.show_short(context, "暂不支持的Type类型");
 				}
 				return true;
 			}
@@ -465,10 +453,10 @@ public class TotalFragment extends Fragment {
 	// 获取当前页面选中的为选中的数目
 	public int getdelitemsum() {
 		int sum = 0;
-		if (SubList == null) {
+		if (subList == null) {
 			return sum;
 		} else {
-			sum = SubList.size();
+			sum = subList.size();
 		}
 		return sum;
 	}
@@ -477,21 +465,17 @@ public class TotalFragment extends Fragment {
 	public void delitem() {
 		if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 			dialog = DialogUtils.Dialogph(context, "正在删除");
-			for (int i = 0; i < SubList.size(); i++) {
-				if (dellist == null) {
-					dellist = new ArrayList<>();
-					String type = SubList.get(i).getMediaType();
-					String contentid = SubList.get(i).getContentId();
-					dellist.add(type + "::" + contentid);
-				} else {
-					String type = SubList.get(i).getMediaType();
-					String contentid = SubList.get(i).getContentId();
-					dellist.add(type + "::" + contentid);
+			for (int i = 0; i < subList.size(); i++) {
+				if (delList == null) {
+					delList = new ArrayList<>();
 				}
+                String type = subList.get(i).getMediaType();
+                String contentId = subList.get(i).getContentId();
+                delList.add(type + "::" + contentId);
 			}
-			sendrequest();
+			sendRequest();
 		} else {
-			ToastUtils.show_allways(context, "网络失败，请检查网络");
+			ToastUtils.show_allways(context, "网络连接失败，请检查网络!");
 		}
 	}
 
@@ -508,23 +492,23 @@ public class TotalFragment extends Fragment {
 		super.onDestroy();
 		isCancelRequest = VolleyRequest.cancelRequest(tag);
 		context.unregisterReceiver(mBroadcastReceiver);
-		ex_listview = null;
-		DelDialog = null;
+        expandListView = null;
+		delDialog = null;
 		rootView = null;
 		context = null;
-		playlist = null;
-		sequlist = null;
-		ttslist = null;
-		radiolist = null;
+		playList = null;
+		sequList = null;
+		ttsList = null;
+		radioList = null;
 		list = null;
-		SubList = null;
-		dellist = null;
-		searchadapter = null;
+		subList = null;
+		delList = null;
+        searchAdapter = null;
 		dialog = null;
 		tag = null;
-		if(dbdao != null){
-			dbdao.closedb();
-			dbdao = null;
+		if(dbDao != null){
+            dbDao.closedb();
+            dbDao = null;
 		}
 	}
 }

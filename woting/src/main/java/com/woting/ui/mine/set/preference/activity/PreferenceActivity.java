@@ -361,6 +361,13 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
                         }
                         setInterface();
                         ToastUtils.show_allways(context, "当前暂无分类");
+                        if (adapter == null) {
+                            adapter = new PianHaoAdapter(context,tempList);
+                            lv_prefer.setAdapter(adapter);
+                        } else {
+                            adapter.notifyDataSetChanged();
+                        }
+                        setInterface();
                     } else if (ReturnType.equals("T")) {
                         ToastUtils.show_allways(context, "获取列表异常");
                     } else {

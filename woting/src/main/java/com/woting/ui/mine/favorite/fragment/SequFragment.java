@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +82,6 @@ public class SequFragment extends Fragment {
 			linearNull = rootView.findViewById(R.id.linear_null);
 			mListView = (XListView) rootView.findViewById(R.id.listView);
 			mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-
             setView();
             send();
 		}
@@ -98,7 +98,7 @@ public class SequFragment extends Fragment {
 		linearNull.setVisibility(View.VISIBLE);
 	}
 
-	private void setListener() {
+    private void setListener() {
 		adapter.setOnListener(new favorCheck() {
 			@Override
 			public void checkPosition(int position) {
@@ -130,13 +130,24 @@ public class SequFragment extends Fragment {
 						bundle.putString("type", "recommend");
 						bundle.putSerializable("list", newList.get(position - 1));
 						intent.putExtras(bundle);
-						startActivity(intent);
-						context.finish();
+                        startActivityForResult(intent, 1);
 					}
 				}
 			}
 		});
 	}
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 1:
+                if(resultCode==1){
+                    getActivity().finish();
+                }
+                break;
+        }
+    }
 
 	// 初始化视图
 	private void setView() {
@@ -159,7 +170,6 @@ public class SequFragment extends Fragment {
 				} else {
 					mListView.stopLoadMore();
 					mListView.setPullLoadEnable(false);
-					ToastUtils.show_allways(context, "已经是最后一页了");
 				}
 			}
 		});
@@ -168,6 +178,7 @@ public class SequFragment extends Fragment {
 	// 发送网络请求
 	private void send() {
         if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
+            if(dialog != null) dialog.dismiss();
             ToastUtils.show_allways(context, "网络连接失败，请检查网络连接!");
             if(refreshType == 1) {
                 mListView.stopRefresh();
@@ -192,6 +203,8 @@ public class SequFragment extends Fragment {
 				page++;
 				try {
                     String ReturnType = result.getString("ReturnType");
+                    Log.w("ReturnType", "ReturnType -- > > " + ReturnType);
+
                     if (ReturnType != null && ReturnType.equals("1001")) {
                         if(isDel){
                             ToastUtils.show_allways(context, "已删除");
@@ -218,7 +231,7 @@ public class SequFragment extends Fragment {
                                     }
                                 }
                             }
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -232,16 +245,6 @@ public class SequFragment extends Fragment {
                             adapter.notifyDataSetChanged();
                         }
                         setListener();
-                    } else if (ReturnType != null && ReturnType.equals("0000")) {
-                        ToastUtils.show_short(context, "无法获取相关的参数");
-                    } else if (ReturnType != null && ReturnType.equals("1002")) {
-                        ToastUtils.show_short(context, "无此分类信息");
-                    } else if (ReturnType != null && ReturnType.equals("1003")) {
-                        ToastUtils.show_short(context, "无法获得列表");
-                    } else if (ReturnType != null && ReturnType.equals("1011")) {
-                        ToastUtils.show_short(context, "无数据");
-                    } else {
-                        ToastUtils.show_short(context, "ReturnType不能为空");
                     }
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -258,6 +261,7 @@ public class SequFragment extends Fragment {
 			@Override
 			protected void requestError(VolleyError error) {
 				if (dialog != null) dialog.dismiss();
+                ToastUtils.showVolleyError(context);
 			}
 		});
 	}
@@ -323,14 +327,10 @@ public class SequFragment extends Fragment {
 				if (newList.get(i).getChecktype() == 1) {
 					if (delList == null) {
                         delList = new ArrayList<>();
-						String type = newList.get(i).getMediaType();
-						String contentid = newList.get(i).getContentId();
-                        delList.add(type + "::" + contentid);
-					} else {
-						String type = newList.get(i).getMediaType();
-						String contentid = newList.get(i).getContentId();
-                        delList.add(type + "::" + contentid);
 					}
+                    String type = newList.get(i).getMediaType();
+                    String contentId = newList.get(i).getContentId();
+                    delList.add(type + "::" + contentId);
 				}
 			}
             refreshType = 1;
@@ -351,7 +351,6 @@ public class SequFragment extends Fragment {
 		}
 		
 		VolleyRequest.RequestPost(GlobalConfig.delFavoriteListUrl, tag, jsonObject, new VolleyCallback() {
-			private String Message;
             private String returnType;
 
 			@Override
@@ -361,22 +360,20 @@ public class SequFragment extends Fragment {
 				if(isCancelRequest) return ;
 				try {
                     returnType = result.getString("ReturnType");
-					Message = result.getString("Message");
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 				if (returnType != null && returnType.equals("1001")) {
 					context.sendBroadcast(new Intent(FavoriteActivity.VIEW_UPDATE));
 				} else {
-					if (Message != null && !Message.trim().equals("")) {
-						ToastUtils.show_allways(context, Message + "");
-					}
+					ToastUtils.show_allways(context, "删除失败，请检查网络或稍后重试!");
 				}
 			}
 			
 			@Override
 			protected void requestError(VolleyError error) {
 				if (dialog != null) dialog.dismiss();
+                ToastUtils.showVolleyError(context);
                 delList.clear();
 			}
 		});
@@ -388,26 +385,26 @@ public class SequFragment extends Fragment {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			if (action.equals(FavoriteActivity.VIEW_UPDATE)) {
-				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-					page = 1;
-					send();
-				} else {
-					ToastUtils.show_allways(context, "网络失败，请检查网络");
-				}
-			}else if(action.equals(FavoriteActivity.SET_NOT_LOAD_REFRESH)){
-				if(isVisible()){
-					mListView.setPullRefreshEnable(false);
-					mListView.setPullLoadEnable(false);
-				}
-			}else if(action.equals(FavoriteActivity.SET_LOAD_REFRESH)){
-				if(isVisible()){
-					mListView.setPullRefreshEnable(true);
-					if(newList.size() >= 10){
-						mListView.setPullLoadEnable(true);
-					}
-				}
-			}
+            switch (action) {
+                case FavoriteActivity.VIEW_UPDATE:
+                    page = 1;
+                    send();
+                    break;
+                case FavoriteActivity.SET_NOT_LOAD_REFRESH:
+                    if (isVisible()) {
+                        mListView.setPullRefreshEnable(false);
+                        mListView.setPullLoadEnable(false);
+                    }
+                    break;
+                case FavoriteActivity.SET_LOAD_REFRESH:
+                    if (isVisible()) {
+                        mListView.setPullRefreshEnable(true);
+                        if (newList.size() >= 10) {
+                            mListView.setPullLoadEnable(true);
+                        }
+                    }
+                    break;
+            }
 		}
 	};
 

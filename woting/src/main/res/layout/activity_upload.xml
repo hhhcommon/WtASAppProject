@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dinglan_orange"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:id="@+id/relative_title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <ImageView
+            android:id="@+id/image_left_back"
+            style="@style/LeftImageStyle"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我的上传"
+            android:layout_centerInParent="true"
+            android:textSize="17sp"
+            android:textColor="@color/WHITE"/>
+
+        <TextView
+            android:id="@+id/text_edit"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="编辑"
+            android:layout_alignParentRight="true"
+            android:textSize="15sp"
+            android:textColor="@color/WHITE"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/lin_all"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/WHITE"
+        android:layout_below="@id/relative_title"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                android:id="@+id/text_sequ"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="专辑"
+                android:textColor="@color/dinglan_orange"
+                android:textSize="@dimen/wt_edittext_default_text"/>
+
+            <TextView
+                android:id="@+id/text_sound"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="声音"
+                android:textColor="@color/group_item_text2"
+                android:textSize="@dimen/wt_edittext_default_text"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/cursor"
+            android:layout_width="wrap_content"
+            android:layout_height="3dp"
+            android:scaleType="matrix"
+            android:src="@mipmap/left_personal_bg"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/view_color"/>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view_back"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/app_bg"/>
+
+    <Button
+        android:id="@+id/btn_upload"
+        style="@style/ButtonStyle"
+        android:layout_alignParentBottom="true"
+        android:text="上传声音"
+        android:layout_marginBottom="15dp"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/lin_all"
+        android:layout_above="@id/view_back"
+        android:background="@color/app_bg"
+        android:persistentDrawingCache="animation"/>
+
+</RelativeLayout>

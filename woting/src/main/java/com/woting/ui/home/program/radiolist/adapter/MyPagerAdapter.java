@@ -1,17 +1,17 @@
 package com.woting.ui.home.program.radiolist.adapter;
 
-import java.util.List;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 
-public class MyPagerAdaper extends FragmentStatePagerAdapter{
+import java.util.List;
+
+public class MyPagerAdapter extends FragmentStatePagerAdapter{
 	private List<String> title;
 	private List<Fragment> fragments;
 
-	public MyPagerAdaper(FragmentManager fm, List<String> title, List<Fragment> fragments) {
+	public MyPagerAdapter(FragmentManager fm, List<String> title, List<Fragment> fragments) {
 		super(fm);
 		this.title = title;
 		this.fragments = fragments;
