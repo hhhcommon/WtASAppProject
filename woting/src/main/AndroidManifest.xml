@@ -545,11 +545,12 @@
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
         <!--  -->
-        <!--<activity-->
-            <!--android:name=".ui.home.program.tuijian.activity.RecommendLikeListActivity"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:theme="@android:style/Theme.Light.NoTitleBar"-->
-            <!--android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>-->
+        <!-- <activity -->
+        <!-- android:name=".ui.home.program.tuijian.activity.RecommendLikeListActivity" -->
+        <!-- android:screenOrientation="portrait" -->
+        <!-- android:theme="@android:style/Theme.Light.NoTitleBar" -->
+        <!-- android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/> -->
+
 
         <!-- 智能硬件 -->
         <activity
@@ -565,16 +566,30 @@
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
-        <!--第一次进入应用时的偏好设置-->
+        <!-- 第一次进入应用时的偏好设置 -->
         <activity
             android:name=".ui.common.favoritetype.FavoriteProgramTypeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
-        <!--我的上传-->
+        <!-- 我的上传 -->
         <activity
-            android:name=".ui.mine.upload.UploadActivity"
+            android:name=".ui.mine.myupload.MyUploadActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+
+        <!-- 选择要上传的音频文件 -->
+        <activity
+            android:name=".ui.mine.myupload.upload.SelectAudioActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+
+        <!--发布作品-->
+        <activity
+            android:name=".ui.mine.myupload.upload.UploadActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>

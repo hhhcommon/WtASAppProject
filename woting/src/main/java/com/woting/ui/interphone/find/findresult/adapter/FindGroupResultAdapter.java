@@ -1,6 +1,7 @@
 package com.woting.ui.interphone.find.findresult.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.AssembleImageUrlUtils;
+import com.woting.common.util.BitmapUtils;
 import com.woting.ui.common.model.GroupInfo;
 
 import java.util.List;
@@ -55,6 +58,9 @@ public class FindGroupResultAdapter extends BaseAdapter {
 			holder.textview_invitename = (TextView) convertView.findViewById(R.id.RankTitle);		// 人名
 			holder.textview_invitemessage = (TextView) convertView.findViewById(R.id.RankContent);	// 介绍
 			holder.imageview_inviteimage = (ImageView) convertView.findViewById(R.id.RankImageUrl);	// 该人头像
+			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
+			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
+			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -73,13 +79,15 @@ public class FindGroupResultAdapter extends BaseAdapter {
 		}
 		if (Inviter.getGroupImg() == null || Inviter.getGroupImg().equals("")
 				|| Inviter.getGroupImg().equals("null") || Inviter.getGroupImg().trim().equals("")) {
-			holder.imageview_inviteimage.setImageResource(R.mipmap.wt_image_tx_qz);
+			Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_qz);
+			holder.imageview_inviteimage.setImageBitmap(bmp);
 		} else {
 			if(Inviter.getGroupImg().startsWith("http:")){
 				url = Inviter.getGroupImg();
 			}else{
 				url = GlobalConfig.imageurl+Inviter.getGroupImg();
 			}
+			url= AssembleImageUrlUtils.assembleImageUrl150(url);
 			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_inviteimage);
 		}
 		return convertView;
@@ -89,5 +97,6 @@ public class FindGroupResultAdapter extends BaseAdapter {
 		public TextView textview_invitename;
 		public TextView textview_invitemessage;
 		public ImageView imageview_inviteimage;
+		public ImageView img_zhezhao;
 	}
 }

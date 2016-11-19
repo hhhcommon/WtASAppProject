@@ -15,7 +15,6 @@ import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
-import com.woting.common.util.ToastUtils;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 
 import java.util.List;
@@ -55,6 +54,13 @@ public class CityNewAdapter extends BaseAdapter {
 			holder.imageview_rankimage = (ImageView) convertView.findViewById(R.id.RankImageUrl);// 电台图标
 			holder.mTv_number = (TextView) convertView.findViewById(R.id.tv_num);
 			holder.lin_CurrentPlay = (LinearLayout) convertView.findViewById(R.id.lin_currentplay);
+			holder.image_last = (ImageView) convertView.findViewById(R.id.image_last);//
+			holder.image_num = (ImageView) convertView.findViewById(R.id.image_num);//
+			holder.tv_last = (TextView) convertView.findViewById(R.id.tv_last);
+			holder.image_last.setVisibility(View.GONE);
+			holder.image_num.setVisibility(View.GONE);
+			holder.tv_last.setVisibility(View.GONE);
+
 			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
 			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
 			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
@@ -120,13 +126,11 @@ public class CityNewAdapter extends BaseAdapter {
 				}
 				holder.lin_CurrentPlay.setVisibility(View.INVISIBLE);
 			}
-		}else{
-			ToastUtils.show_allways(context, "服务器返回数据MediaType为空");
 		}
 		if (lists.getPlayCount() == null
 				|| lists.getPlayCount().equals("")
 				|| lists.getPlayCount().equals("null")) {
-			holder.mTv_number.setText("8000");
+			holder.mTv_number.setText("0");
 		} else {
 			holder.mTv_number.setText(lists.getPlayCount());
 		}
@@ -138,5 +142,8 @@ public class CityNewAdapter extends BaseAdapter {
 		public ImageView imageview_rankimage;
 		public LinearLayout lin_CurrentPlay;
 		public ImageView img_zhezhao;
+		public ImageView image_num;
+		public TextView tv_last;
+		public ImageView image_last;
 	}
 }

@@ -19,7 +19,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,20 +30,21 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.http.MyHttp;
 import com.woting.common.manager.FileManager;
-import com.woting.common.manager.MyActivityManager;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
+import com.woting.common.util.ImageUploadReturnUtil;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.common.util.ImageUploadReturnUtil;
-import com.woting.ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivity;
+import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.GroupInfo;
-import com.woting.ui.mine.model.UserPortaitInside;
 import com.woting.ui.common.photocut.PhotoCutActivity;
+import com.woting.ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivity;
+import com.woting.ui.mine.model.UserPortaitInside;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,53 +55,53 @@ import java.io.File;
  * 创建组的实现界面 1：edittext已经做出限制，只可以设置英文和数字输入
  * 2：创建组接口对接完成，对返回失败的值做出了处理
  * */
-public class CreateGroupContentActivity extends Activity implements OnClickListener {
+public class CreateGroupContentActivity extends AppBaseActivity implements OnClickListener {
 	private CreateGroupContentActivity context;
-	private String GroupType;
+	private Dialog dialog;
+	private Dialog imageDialog;
+
 	private LinearLayout lin_status_first;
 	private LinearLayout lin_status_second;
 	private LinearLayout lin_head_left;
-	private Dialog dialog;
+
 	private TextView head_name_tv;
 	private TextView tv_group_entry;
 	private EditText et_group_nick;
-	private int RequestStatus = -1;// 标志当前页面的处理状态根据HandleIntent设定对应值 =1公开群 =2密码群
-	// =3验证群
-	private EditText et_group_password;
-	private String password;
-	private int grouptype = -1;// 服务器端需求的grouptype参数 验证群为0 公开群为1 密码群为2
 	private EditText et_group_sign;
-	private String NICK;
-	private String SIGN;
-	private Dialog Imagedialog;
+	private EditText et_group_password;
 	private ImageView ImageUrl;
-	private Uri outputFileUri;
-	private String outputFilePath;
-	private final int TO_GALLERY = 5;
-	private final int TO_CAMARA = 6;
-	private final int PHOTO_REQUEST_CUT = 7;
+
+	private String password;
+	private String GroupType;
 	private String filePath;
 	private String imagePath;
 	private String MiniUri;
-	private int imagenum;
-	private int ViewSuccess=-1;//判断图片是否保存完成
+	private String NICK;
+	private String SIGN;
+	private String outputFilePath;
 	private String PhotoCutAfterImagePath;
 	private String tag = "CREATE_GROUP_CONTENT_VOLLEY_REQUEST_CANCEL_TAG";
+
+	private final int TO_GALLERY = 5;
+	private final int TO_CAMERA = 6;
+	private final int PHOTO_REQUEST_CUT = 7;
+	private int ViewSuccess=-1;//判断图片是否保存完成
+	private int RequestStatus = -1;// 标志当前页面的处理状态根据HandleIntent设定对应值 =1公开群 =2密码群 =3验证群
+	private int groupType = -1;// 服务器端需求的grouptype参数 验证群为0 公开群为1 密码群为2
+	private int imageNum;
 	private boolean isCancelRequest;
+	private Uri outputFileUri;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_creategroupcontent);
 		context = this;
-		imagenum=0;
-		MyActivityManager mam = MyActivityManager.getInstance();
-		mam.pushOneActivity(context);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);		// 透明状态栏
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);	// 透明导航栏
-		setview();
+		imageNum=0;
+		setView();
 		handleIntent();
-		setlistener();
+		setListener();
 		Dialog();
 	}
 
@@ -116,28 +116,28 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 				intent.setAction(Intent.ACTION_GET_CONTENT);
 				intent.setType("image/*");
 				startActivityForResult(intent, TO_GALLERY);
-				Imagedialog.dismiss();
+				imageDialog.dismiss();
 			}
 		});
 		tv_camera.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				String savepath = FileManager.getImageSaveFilePath(context);
-				FileManager.createDirectory(savepath);
+				String savePath = FileManager.getImageSaveFilePath(context);
+				FileManager.createDirectory(savePath);
 				String fileName=System.currentTimeMillis()+".jpg";
-				File file = new File(savepath, fileName);
+				File file = new File(savePath, fileName);
 				outputFileUri = Uri.fromFile(file);
 				outputFilePath=file.getAbsolutePath();
-				Intent intentss = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-				intentss.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-				startActivityForResult(intentss, TO_CAMARA);
-				Imagedialog.dismiss();
+				Intent s = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+				s.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+				startActivityForResult(s, TO_CAMERA);
+				imageDialog.dismiss();
 			}
 		});
-		Imagedialog = new Dialog(this, R.style.MyDialog);
-		Imagedialog.setContentView(dialog);
-		Imagedialog.setCanceledOnTouchOutside(true);
-		Imagedialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
+		imageDialog = new Dialog(this, R.style.MyDialog);
+		imageDialog.setContentView(dialog);
+		imageDialog.setCanceledOnTouchOutside(true);
+		imageDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
 	}
 
 	// 判断网络类型 主网络请求模块
@@ -145,7 +145,7 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 		JSONObject jsonObject =VolleyRequest.getJsonObject(context);
 		try {
 			// 模块属性
-			jsonObject.put("GroupType", grouptype);
+			jsonObject.put("GroupType", groupType);
 			jsonObject.put("GroupSignature", SIGN);
 			jsonObject.put("GroupName", NICK);
 			/*
@@ -155,7 +155,7 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 			/* jsonObject.put("NeedMember", 1); */
 			// 当NeedMember=1时 也就是需要传送一个members的list时需处理
 			/* jsonObject.put("Members", "a5d27255a5dd,956439fe9cbc"); */
-			if (grouptype == 2) {
+			if (groupType == 2) {
 				jsonObject.put("GroupPwd", password);
 			}
 		} catch (JSONException e) {
@@ -163,7 +163,6 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 		}
 
 		VolleyRequest.RequestPost(GlobalConfig.talkgroupcreatUrl, tag, jsonObject, new VolleyCallback() {
-//			private String SessionId;
 			private String ReturnType;
 			private String Message;
 			private GroupInfo groupinfo;
@@ -177,7 +176,6 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 					return ;
 				}
 				try {
-//					SessionId = result.getString("SessionId");
 					ReturnType = result.getString("ReturnType");
 					Message = result.getString("Message");
 				} catch (JSONException e) {
@@ -191,10 +189,10 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 						e.printStackTrace();
 					}
 					if(ViewSuccess == 1){
-						chuli(groupinfo);
+						chuLi(groupinfo);
 					}else{
-						Intent pushintent=new Intent("push_refreshlinkman");
-						context. sendBroadcast(pushintent);
+						Intent p=new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN);
+						context. sendBroadcast(p);
 						Intent intent = new Intent(CreateGroupContentActivity.this, TalkGroupNewsActivity.class);
 						Bundle bundle = new Bundle();
 						bundle.putString("type", "CreateGroupContentActivity");
@@ -262,27 +260,27 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 			ToastUtils.show_allways(context, "获取组类型异常，请返回上一界面重新选择");
 		} else if (GroupType.equals("Open")) {
 			RequestStatus = 1;
-			grouptype = 1;
+			groupType = 1;
 		} else if (GroupType.equals("PassWord")) {
 			lin_status_first.setVisibility(View.VISIBLE);
 			lin_status_second.setVisibility(View.GONE);
 			RequestStatus = 2;
-			grouptype = 2;
+			groupType = 2;
 		} else if (GroupType.equals("Validate")) {
 			lin_status_first.setVisibility(View.GONE);
 			lin_status_second.setVisibility(View.VISIBLE);
 			RequestStatus = 3;
-			grouptype = 0;
+			groupType = 0;
 		}
 	}
 
-	private void setlistener() {
+	private void setListener() {
 		ImageUrl.setOnClickListener(this);
 		lin_head_left.setOnClickListener(this);
 		tv_group_entry.setOnClickListener(this);
 	}
 
-	private void setview() {
+	private void setView() {
 		lin_status_first = (LinearLayout) findViewById(R.id.lin_groupcreate_status_first);
 		lin_status_second = (LinearLayout) findViewById(R.id.lin_groupcreate_status_second);
 		lin_head_left = (LinearLayout) findViewById(R.id.head_left_btn);
@@ -299,7 +297,7 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.ImageUrl:
-			Imagedialog.show();
+			imageDialog.show();
 			break;
 		case R.id.head_left_btn:
 			finish();
@@ -380,27 +378,27 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 					path = getPath_above19(context, uri);
 					Log.e("path_above19:" , path);
 					imagePath = path;
-					imagenum=1;
+					imageNum=1;
 					startPhotoZoom(Uri.parse(imagePath));
 				} else {
 					path = getFilePath_below19(uri);
 					Log.e("path_below19:" , path);
 					imagePath = path;
-					imagenum=1;
+					imageNum=1;
 					startPhotoZoom(Uri.parse(imagePath));
 				}
 			}
 			break;
-		case TO_CAMARA:
+		case TO_CAMERA:
 			if (resultCode == Activity.RESULT_OK) {
 				imagePath = outputFilePath;
-				imagenum=1;
+				imageNum=1;
 				startPhotoZoom(Uri.parse(imagePath));
 			}
 			break;
 		case PHOTO_REQUEST_CUT:
 			if (resultCode == 1) {
-				 imagenum=1;
+				imageNum=1;
 				 PhotoCutAfterImagePath= data.getStringExtra("return");
                  ImageUrl.setImageURI(Uri.parse(PhotoCutAfterImagePath));
 				 ViewSuccess=1;
@@ -420,7 +418,7 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 	}
 
 	/* * 图片处理 */
-	private void chuli(final GroupInfo groupinfo) {
+	private void chuLi(final GroupInfo groupinfo) {
 		final Handler handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -429,8 +427,8 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 					if (dialog != null) {
 						dialog.dismiss();
 					}
-					Intent pushintent=new Intent("push_refreshlinkman");
-					context. sendBroadcast(pushintent);
+					Intent p=new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN);
+					context. sendBroadcast(p);
 					setResult(1);
 					if(groupinfo==null||groupinfo.equals("")){
 						ToastUtils.show_allways(context, "创建成功");
@@ -460,7 +458,6 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 		};
 
 		new Thread() {
-			private String SessionId;
 			private UserPortaitInside UserPortait;
 			private String ReturnType;
 
@@ -470,11 +467,10 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 				int m=0;
 				Message msg = new Message();
 				try {
-					for(int i=0;i<imagenum;i++){
+					for(int i=0;i<imageNum;i++){
 						filePath= PhotoCutAfterImagePath;
 						String ExtName = filePath.substring(filePath.lastIndexOf("."));
-						//String TestURI = "http://192.168.1.3:808/wt/common/upload4App.do?FType=GroupP&ExtName=";
-						String TestURI = "http://182.92.175.134:808/wt/common/upload4App.do?FType=GroupP&ExtName=";
+						String TestURI = GlobalConfig.baseUrl + "wt/common/upload4App.do?FType=UserP&ExtName=";
 						String Response = MyHttp.postFile(new File(filePath),TestURI+ ExtName+ "&PCDType=" + GlobalConfig.PCDType + "&GroupId="+ groupinfo.GroupId
 								+ "&IMEI="+ PhoneMessage.imei);
 						Log.e("图片上传数据",	TestURI+ ExtName
@@ -484,11 +480,6 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 						UserPortait = gson.fromJson(Response,new TypeToken<UserPortaitInside>() {}.getType());
 						try {
 							ReturnType = UserPortait.getReturnType();
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
-						try {
-							SessionId = UserPortait.getSessionId();
 						} catch (Exception e1) {
 							e1.printStackTrace();
 						}
@@ -507,7 +498,7 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 							}
 						}
 					}
-					if(m==imagenum){
+					if(m==imageNum){
 						msg.what=1;
 					}
 				} catch (Exception e) {
@@ -678,9 +669,6 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 	protected void onDestroy() {
 		super.onDestroy();
 		isCancelRequest = VolleyRequest.cancelRequest(tag);
-		MyActivityManager mam = MyActivityManager.getInstance();
-		mam.popOneActivity(context);
-
 		context = null;
 		GroupType = null;
 		lin_status_first = null;
@@ -695,7 +683,7 @@ public class CreateGroupContentActivity extends Activity implements OnClickListe
 		et_group_sign = null;
 		NICK = null;
 		SIGN = null;
-		Imagedialog = null;
+		imageDialog = null;
 		ImageUrl = null;
 		outputFileUri = null;
 		outputFilePath = null;

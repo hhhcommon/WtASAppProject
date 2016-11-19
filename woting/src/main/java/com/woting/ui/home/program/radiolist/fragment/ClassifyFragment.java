@@ -142,7 +142,7 @@ public class ClassifyFragment extends Fragment{
 			@Override
 			protected void requestSuccess(JSONObject result) {
 				if (dialog != null) dialog.dismiss();
-                if(RadioListActivity.isCancelRequest) return ;
+                if(((RadioListActivity)getActivity()).isCancel()) return ;
 				page++;
 				try {
 					ReturnType = result.getString("ReturnType");
@@ -253,8 +253,8 @@ public class ClassifyFragment extends Fragment{
 								ContentFavorite,ContentId,localUrl,sequName,sequId,sequDesc,sequImg);
 						dbDao.deleteHistory(playUrl);
 						dbDao.addHistory(history);
-
 						HomeActivity.UpdateViewPager();
+						PlayerFragment.TextPage=1;
 						PlayerFragment.SendTextRequest(newList.get(position - 2).getContentName(),context);
 						getActivity().finish();
 					} else if (MediaType.equals("SEQU")) {

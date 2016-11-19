@@ -19,16 +19,15 @@
 
         <LinearLayout
             android:id="@+id/lin_news"
-            android:layout_width="wrap_content"
+            android:layout_width="45dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="18dp"
-            android:background="@drawable/head_press"
             android:gravity="center"
+            android:layout_marginLeft="5dp"
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="21dp"
+                android:layout_height="21dp"
                 android:src="@mipmap/news" />
 
         </LinearLayout>
@@ -76,16 +75,15 @@
 
         <LinearLayout
             android:id="@+id/lin_more"
-            android:layout_width="wrap_content"
+            android:layout_width="45dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:background="@drawable/head_press"
+            android:layout_marginRight="5dp"
             android:gravity="center">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="18dp"
+                android:layout_width="21dp"
+                android:layout_height="21dp"
                 android:src="@mipmap/wt_more_white" />
         </LinearLayout>
     </RelativeLayout>

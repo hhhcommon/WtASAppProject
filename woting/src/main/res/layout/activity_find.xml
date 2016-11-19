@@ -22,7 +22,6 @@
                 android:id="@+id/head_left_btn"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
-                android:background="@drawable/head_press"
                 android:gravity="left|center">
 
                 <ImageView
@@ -54,11 +53,6 @@
                     android:background="@drawable/bg_dinglan_edittext"
                     android:gravity="left|center" >
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="3dp"
-                        android:src="@mipmap/wt_img_search_gray" />
 
                     <EditText
                         android:id="@+id/et_news"
@@ -68,26 +62,27 @@
                         android:background="@android:color/transparent"
                         android:ellipsize="end"
                         android:gravity="left|center"
-                        android:hint="昵称/手机号"
+                        android:hint="   昵称/手机号"
                         android:singleLine="true"
-                        android:layout_marginLeft="14dp"
+                        android:paddingLeft="10dp"
+                        android:layout_marginLeft="5dp"
                         android:textColorHint="@color/beijing"
                         android:textColor="@color/wt_login_third"
                         android:textSize="@dimen/wt_button_default_text" />
 
                     <ImageView
                         android:id="@+id/img_voicesearch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="11dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
                         android:src="@mipmap/wt_img_voicenew"
                         android:visibility="visible" />
 
                     <ImageView
                         android:id="@+id/img_delete"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="8dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
                         android:src="@mipmap/wt_img_clearnew"
                         android:visibility="gone" />
                 </LinearLayout>

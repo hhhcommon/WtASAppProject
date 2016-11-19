@@ -132,6 +132,7 @@ public class RecommendListAdapter extends BaseAdapter {
 		} else {
 			holder.textRankContent.setText(lists.getContentPub());
 		}
+
 		return convertView;
 	}
 	

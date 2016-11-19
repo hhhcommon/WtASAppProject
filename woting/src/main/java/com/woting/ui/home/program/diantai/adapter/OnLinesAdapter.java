@@ -124,6 +124,14 @@ public class OnLinesAdapter extends BaseExpandableListAdapter  {
 			holder.imageview_rankimage = (ImageView) convertView.findViewById(R.id.RankImageUrl);// 电台图标
 			holder.mTv_number = (TextView) convertView.findViewById(R.id.tv_num);
 			holder.lin_CurrentPlay = (LinearLayout) convertView.findViewById(R.id.lin_currentplay);
+
+			holder.image_last = (ImageView) convertView.findViewById(R.id.image_last);//
+			holder.image_num = (ImageView) convertView.findViewById(R.id.image_num);//
+			holder.tv_last = (TextView) convertView.findViewById(R.id.tv_last);
+			holder.image_last.setVisibility(View.GONE);
+			holder.image_num.setVisibility(View.GONE);
+			holder.tv_last.setVisibility(View.GONE);
+
 			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
 			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
 			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
@@ -212,6 +220,9 @@ public class OnLinesAdapter extends BaseExpandableListAdapter  {
 		public TextView mTv_number;
 		public LinearLayout lin_CurrentPlay;
 		public ImageView img_zhezhao;
+		public ImageView image_num;
+		public ImageView image_last;
+		public TextView tv_last;
 	}
 
 	@Override

@@ -1,13 +1,11 @@
 package com.woting.ui.interphone.find.friendadd;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,14 +14,15 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
-import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
 import com.woting.common.manager.MyActivityManager;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,7 +32,7 @@ import org.json.JSONObject;
  * @author 辛龙
  * 2016年1月20日
  */
-public class FriendAddActivity extends Activity implements OnClickListener {
+public class FriendAddActivity extends AppBaseActivity implements OnClickListener {
 	private TextView tv_add;
 	private Dialog dialog;
 	private SharedPreferences sharedPreferences;
@@ -46,7 +45,6 @@ public class FriendAddActivity extends Activity implements OnClickListener {
 	private EditText et_news;
 	private LinearLayout lin_delete;
 	private UserInviteMeInside contact;
-	private FriendAddActivity context;
 	private TextView tv_sign;
 	private String tag = "FRIEND_ADD_VOLLEY_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
@@ -55,11 +53,6 @@ public class FriendAddActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friendadds);
-		context=this;
-		MyActivityManager mam = MyActivityManager.getInstance();
-		mam.pushOneActivity(context);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);		//透明状态栏
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);	//透明导航栏
 		sharedPreferences = this.getSharedPreferences("wotingfm",Context.MODE_PRIVATE);
 		username = sharedPreferences.getString(StringConstant.USERNAME, "");			//当前登录账号的姓名
 		contact = (UserInviteMeInside) this.getIntent().getSerializableExtra("contact");
@@ -224,8 +217,6 @@ public class FriendAddActivity extends Activity implements OnClickListener {
 	protected void onDestroy() {
 		super.onDestroy();
 		isCancelRequest = VolleyRequest.cancelRequest(tag);
-		MyActivityManager mam = MyActivityManager.getInstance();
-		mam.popOneActivity(context);
 		lin_delete = null;
 		et_news = null;
 		image_touxiang = null;

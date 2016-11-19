@@ -180,7 +180,7 @@ public class TotalFragment extends Fragment {
 					String playermediatype = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerMediaType();
 					String plaplayeralltime = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerAllTime();
 					String playerintime = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerInTime();
-					String playercontentdesc = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerContentDesc();
+					String playercontentdesc = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerContentDescn();
 					String playernum = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerNum();
 					String playerzantype = "0";
 					String playerfrom =list.get(groupPosition).getHistoryList().get(childPosition).getPlayerFrom();
@@ -215,6 +215,7 @@ public class TotalFragment extends Fragment {
 						MainActivity.change();
 						HomeActivity.UpdateViewPager();
 						String s = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerName();
+						PlayerFragment.TextPage=1;
 						PlayerFragment.SendTextRequest(s, context);
 						getActivity().finish();
 					}else{

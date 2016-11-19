@@ -63,7 +63,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/province_fm_normal" />
+                android:src="@mipmap/national_fm_normal" />
 
             <TextView
                 android:layout_width="wrap_content"

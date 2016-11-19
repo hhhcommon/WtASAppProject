@@ -94,28 +94,9 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
         registerReceiver(mBroadcast, intentFilter);
 
         initImage();
-        InitViewPager();
         delDialog();
         confirmDialog();
         setView();
-    }
-
-    // 初始化 ViewPager
-    private void InitViewPager() {
-        ArrayList<Fragment> fragmentList = new ArrayList<>();
-        totalFragment = new TotalFragment();
-        sequfragment = new SequFragment();
-        soundfragment = new SoundFragment();
-        radiofragment = new RadioFragment();
-        ttsfragment = new TTSFragment();
-        fragmentList.add(totalFragment);
-        fragmentList.add(sequfragment);
-        fragmentList.add(soundfragment);
-        fragmentList.add(radiofragment);
-        fragmentList.add(ttsfragment);
-        mPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager(), fragmentList));
-        mPager.setOnPageChangeListener(new MyOnPageChangeListener());    // 页面变化时的监听器
-        mPager.setCurrentItem(0);                                        // 设置当前显示标签页为第
     }
 
     // 初始化视图
@@ -145,6 +126,26 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
         
         tv_bianji = (TextView) findViewById(R.id.tv_bianji);
         tv_bianji.setOnClickListener(this);
+
+        initViewPager();
+    }
+
+    // 初始化 ViewPager
+    private void initViewPager() {
+        ArrayList<Fragment> fragmentList = new ArrayList<>();
+        totalFragment = new TotalFragment();
+        sequfragment = new SequFragment();
+        soundfragment = new SoundFragment();
+        radiofragment = new RadioFragment();
+        ttsfragment = new TTSFragment();
+        fragmentList.add(totalFragment);
+        fragmentList.add(sequfragment);
+        fragmentList.add(soundfragment);
+        fragmentList.add(radiofragment);
+        fragmentList.add(ttsfragment);
+        mPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager(), fragmentList));
+        mPager.setOnPageChangeListener(new MyOnPageChangeListener());    // 页面变化时的监听器
+        mPager.setCurrentItem(0);                                        // 设置当前显示标签页为第
     }
 
     public static void updateViewPager(String mediaType) {
@@ -615,6 +616,10 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
         MyActivityManager mam = MyActivityManager.getInstance();
         mam.popOneActivity(context);
         unregisterReceiver(mBroadcast);
+        if(DelDialog != null) {
+            DelDialog.dismiss();
+            DelDialog = null;
+        }
         image = null;
         tv_total = null;
         tv_sequ = null;
@@ -625,7 +630,6 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
         tv_bianji = null;
         imageAllCheck = null;
         mPager = null;
-        DelDialog = null;
         confirmDialog = null;
         totalFragment = null;
         sequfragment = null;

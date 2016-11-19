@@ -39,7 +39,7 @@ public class SearchPlayerHistoryDao {
 						, playerhistory.getPlayerUrl(),playerhistory.getPlayerUrI()
 						,playerhistory.getPlayerMediaType()
 						, playerhistory.getPlayerAllTime(), playerhistory.getPlayerInTime()//这里
-						, playerhistory.getPlayerContentDesc(), playerhistory.getPlayerNum()
+						, playerhistory.getPlayerContentDescn(), playerhistory.getPlayerNum()
 						, playerhistory.getPlayerZanType(), playerhistory.getPlayerFrom(), playerhistory.getPlayerFromId(), playerhistory.getPlayerAddTime()
 						, playerhistory.getBJUserid(),playerhistory.getPlayContentShareUrl()
 						,playerhistory.getContentFavorite(),playerhistory.getContentID(),playerhistory.getLocalurl()
