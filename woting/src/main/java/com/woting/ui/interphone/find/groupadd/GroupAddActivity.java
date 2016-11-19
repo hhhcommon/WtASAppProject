@@ -1,6 +1,5 @@
 package com.woting.ui.interphone.find.groupadd;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,13 +17,13 @@ import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.manager.MyActivityManager;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivity;
+import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.GroupInfo;
+import com.woting.ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +33,7 @@ import org.json.JSONObject;
  * @author 辛龙
  *  2016年1月20日
  */
-public class  GroupAddActivity extends Activity implements OnClickListener {
+public class  GroupAddActivity extends AppBaseActivity implements OnClickListener {
 	private TextView tv_add;
 	private Dialog dialog;
 	private SharedPreferences sharedPreferences;
@@ -63,11 +61,7 @@ public class  GroupAddActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_groupadds);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);		//透明状态栏
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);	//透明导航栏
 		context = this;
-		MyActivityManager mam = MyActivityManager.getInstance();
-		mam.pushOneActivity(context);
 		sharedPreferences = this.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
 		username = sharedPreferences.getString(StringConstant.USERNAME, "");			// 当前登录账号的姓名
 		contact = (GroupInfo) this.getIntent().getSerializableExtra("contact");
@@ -361,8 +355,6 @@ public class  GroupAddActivity extends Activity implements OnClickListener {
 	protected void onDestroy() {
 		super.onDestroy();
 		isCancelRequest = VolleyRequest.cancelRequest(tag);
-		MyActivityManager mam = MyActivityManager.getInstance();
-		mam.popOneActivity(context);
 		image_touxiang = null;
 		et_password = null;
 		et_news = null;

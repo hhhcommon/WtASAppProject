@@ -21,6 +21,7 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -34,7 +35,6 @@ import com.woting.common.util.CommonUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.common.widgetui.MyGridView;
 import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout;
 import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout.OnRefreshListener;
 import com.woting.ui.home.main.HomeActivity;

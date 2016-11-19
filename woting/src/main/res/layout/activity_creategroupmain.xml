@@ -23,7 +23,6 @@
                 android:id="@+id/head_left_btn"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
-                android:background="@drawable/head_press"
                 android:gravity="left|center" >
 
                 <ImageView

@@ -58,6 +58,9 @@ public class FindGroupResultAdapter extends BaseAdapter {
 			holder.textview_invitename = (TextView) convertView.findViewById(R.id.RankTitle);		// 人名
 			holder.textview_invitemessage = (TextView) convertView.findViewById(R.id.RankContent);	// 介绍
 			holder.imageview_inviteimage = (ImageView) convertView.findViewById(R.id.RankImageUrl);	// 该人头像
+			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
+			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
+			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -94,5 +97,6 @@ public class FindGroupResultAdapter extends BaseAdapter {
 		public TextView textview_invitename;
 		public TextView textview_invitemessage;
 		public ImageView imageview_inviteimage;
+		public ImageView img_zhezhao;
 	}
 }
