@@ -617,7 +617,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 					resetHeadView();
 					num = number;
 				} else {
-					getContentNews(allList.get(number).getContentId(), number);
+					getContentNews(allList.get(number).getContentId(), number);// 当contenturi为空时 获取内容
 				}
 			}
 		}
@@ -1064,6 +1064,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 					adapter.notifyDataSetChanged();
 					musicPlay(GlobalConfig.playerobject.getContentURI());
 					resetHeadView();
+				}else{
+					getContentNews(GlobalConfig.playerobject.getContentId(), 0);// 当contenturi为空时 获取内容
 				}
 			}
 		} else {
@@ -1309,6 +1311,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 						mUIHandler.sendEmptyMessage(PLAY);
 						img_play.setImageResource(R.mipmap.wt_play_play);
 						setPlayingType();
+						PlayFlag=true;
 					}
 				}else{
 				if (audioPlay.isPlaying()) {
@@ -1976,6 +1979,15 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 						String ContentURI = lists.getContentURI();
 						Log.e("ContentURI", ContentURI + "");
 						if (ContentURI != null && ContentURI.trim().length() > 0) {
+							if (audioPlay == null) {
+								audioPlay = TtsPlayer.getInstance(context);
+							} else {
+								// 不为空
+								if (audioPlay.mark().equals("VLC")) {
+									audioPlay.stop();
+								}
+								audioPlay = TtsPlayer.getInstance(context);
+							}
 							img_play.setImageResource(R.mipmap.wt_play_play);
 							if (allList.get(number).getContentName() != null) {
 								tv_name.setText(allList.get(number).getContentName());
@@ -1999,8 +2011,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 							}
 							allList.get(number).setType("2");
 							adapter.notifyDataSetChanged();
-							musicPlay(ContentURI);
 							GlobalConfig.playerobject = allList.get(number);
+							musicPlay(ContentURI);
 							resetHeadView();// 页面的对象改变，根据对象重新设置属性
 							num = number;
 						}
