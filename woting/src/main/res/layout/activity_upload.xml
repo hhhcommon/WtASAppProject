@@ -37,13 +37,191 @@
 
     </RelativeLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/app_bg">
+        android:scrollbars="none"
+        android:background="@color/WHITE">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="43dp"
+                android:background="@color/WHITE"
+                android:gravity="center_vertical">
 
-    </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="标题"
+                    android:textColor="@color/wt_login_third"
+                    android:textSize="14sp"
+                    android:layout_marginLeft="19dp"/>
+
+                <EditText
+                    android:id="@+id/edit_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="建议使用简洁明了的标题，不超过40个字哦~"
+                    android:textColor="@color/wt_login_third"
+                    android:textSize="14sp"
+                    android:background="@color/WHITE"
+                    android:maxLength="40"
+                    android:layout_marginLeft="19dp"/>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/view_cover"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="95dp"
+                android:background="@drawable/person_color">
+
+                <View style="@style/LineStyle"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="封面"
+                    android:textColor="@color/wt_login_third"
+                    android:textSize="14sp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="19dp"/>
+
+                <ImageView
+                    android:id="@+id/image_right_1"
+                    style="@style/PersonAndSetRightStyle"/>
+
+                <ImageView
+                    android:id="@+id/image_cover"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_toLeftOf="@id/image_right_1"
+                    android:layout_marginRight="9dp"
+                    android:layout_centerVertical="true"/>
+
+                <ImageView
+                    android:id="@+id/image_mask"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_toLeftOf="@id/image_right_1"
+                    android:layout_marginRight="9dp"
+                    android:layout_centerVertical="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/view_sequ"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="43dp"
+                android:background="@drawable/person_color">
+
+                <View style="@style/LineStyle"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="专辑"
+                    android:textColor="@color/wt_login_third"
+                    android:textSize="14sp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="19dp"/>
+
+                <ImageView
+                    android:id="@+id/image_right_2"
+                    style="@style/PersonAndSetRightStyle"/>
+
+                <TextView
+                    android:id="@+id/text_sequ"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="选择专辑"
+                    android:layout_toLeftOf="@id/image_right_2"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="9dp"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/view_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="43dp"
+                android:background="@drawable/person_color">
+
+                <View style="@style/LineStyle"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="标签"
+                    android:textColor="@color/wt_login_third"
+                    android:textSize="14sp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="19dp"/>
+
+                <ImageView
+                    android:id="@+id/image_right_3"
+                    style="@style/PersonAndSetRightStyle"/>
+
+                <TextView
+                    android:id="@+id/text_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="添加标签"
+                    android:layout_toLeftOf="@id/image_right_3"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="9dp"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="170dp"
+                android:minHeight="43dp"
+                android:background="@color/WHITE">
+
+                <View style="@style/LineStyle"/>
+
+                <TextView
+                    android:id="@+id/text_describe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:text="描述"
+                    android:textColor="@color/wt_login_third"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    android:layout_marginLeft="19dp"/>
+
+                <EditText
+                    android:id="@+id/edit_describe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="这个节目讲了什么?简单介绍一下吧~"
+                    android:textColor="@color/wt_login_third"
+                    android:layout_toRightOf="@id/text_describe"
+                    android:textSize="14sp"
+                    android:background="@color/WHITE"
+                    android:maxLength="150"
+                    android:layout_marginTop="15dp"
+                    android:paddingRight="10dp"
+                    android:layout_marginLeft="19dp"/>
+
+                <View
+                    style="@style/LineStyle"
+                    android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

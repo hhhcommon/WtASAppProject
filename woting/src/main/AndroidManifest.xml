@@ -582,7 +582,7 @@
 
         <!-- 选择要上传的音频文件 -->
         <activity
-            android:name=".ui.mine.myupload.upload.SelectAudioActivity"
+            android:name=".ui.mine.myupload.upload.SelectLocalFileActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
@@ -590,6 +590,21 @@
         <!--发布作品-->
         <activity
             android:name=".ui.mine.myupload.upload.UploadActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+
+        <!--选择专辑-->
+        <activity
+            android:name=".ui.mine.myupload.upload.SelectSequActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+
+        <!--添加标签-->
+        <activity
+            android:name=".ui.mine.myupload.upload.AddLabelActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>

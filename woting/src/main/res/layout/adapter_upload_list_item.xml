@@ -9,11 +9,10 @@
 
     <ImageView
         android:id="@+id/image_check"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:layout_marginLeft="12dp"
-        android:visibility="gone"
-        android:src="@mipmap/wt_group_nochecked"/>
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
