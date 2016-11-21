@@ -15,7 +15,7 @@ import com.woting.R;
 import com.woting.common.util.PhoneMessage;
 import com.woting.ui.baseactivity.AppBaseFragmentActivity;
 import com.woting.ui.baseadapter.MyFragmentChildPagerAdapter;
-import com.woting.ui.home.program.diantai.activity.fragment.CenterFragment;
+import com.woting.ui.home.program.diantai.activity.fragment.CenteFragment;
 import com.woting.ui.home.program.diantai.activity.fragment.InternationalFragment;
 
 import java.util.ArrayList;
@@ -83,7 +83,7 @@ public class RadioNationalActivity extends AppBaseFragmentActivity implements Vi
         mPager = (ViewPager) findViewById(R.id.viewpager);
         mPager.setOffscreenPageLimit(1);
         ArrayList<Fragment> fragmentList = new ArrayList<>();
-        CenterFragment centerFragment = new CenterFragment();//专辑详情页
+        CenteFragment centerFragment = new CenteFragment();//专辑详情页
         InternationalFragment internationalFragment = new InternationalFragment();//专辑列表页
         fragmentList.add(centerFragment);
         fragmentList.add(internationalFragment);
