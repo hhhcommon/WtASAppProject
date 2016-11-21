@@ -41,7 +41,7 @@ import java.util.List;
  *
  * @author 辛龙 2016年2月26日
  */
-public class CenteFragment extends Fragment {
+public class CenterFragment extends Fragment {
     private FragmentActivity context;
     private View rootView;
 
