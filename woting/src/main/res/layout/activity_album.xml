@@ -237,10 +237,7 @@
                 android:background="@mipmap/left_personal_bg"
                 android:scaleType="matrix" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/view_color" />
+
         </LinearLayout>
 
         <android.support.v4.view.ViewPager
