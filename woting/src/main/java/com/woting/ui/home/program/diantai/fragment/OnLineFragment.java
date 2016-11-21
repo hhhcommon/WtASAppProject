@@ -43,6 +43,7 @@ import com.woting.ui.home.player.main.fragment.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.citylist.activity.CityListActivity;
+import com.woting.ui.home.program.diantai.activity.RadioNationalActivity;
 import com.woting.ui.home.program.diantai.adapter.CityNewAdapter;
 import com.woting.ui.home.program.diantai.adapter.OnLinesAdapter;
 import com.woting.ui.home.program.diantai.model.RadioPlay;
@@ -215,7 +216,7 @@ public class OnLineFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, CityListActivity.class);
+                Intent intent = new Intent(context, RadioNationalActivity.class);
                 startActivity(intent);
             }
         });
@@ -223,7 +224,13 @@ public class OnLineFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, CityListActivity.class);
+                Intent intent = new Intent(context, FMListActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("fromtype", "online");
+                bundle.putString("name", "网络台");
+                bundle.putString("type", "2");
+                bundle.putString("id", cityId);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });

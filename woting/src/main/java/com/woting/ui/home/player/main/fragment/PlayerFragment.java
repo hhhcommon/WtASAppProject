@@ -192,6 +192,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 	private static ImageView img_download;
 	private static TextView tv_download;
 	private String voiceStr;
+	private static TextView tv_origin;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -274,10 +275,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		img_download= (ImageView) headView.findViewById(R.id.img_download);
 
 		tv_details_flag=(TextView)headView.findViewById(R.id.tv_details_flag); // 展开或者隐藏按钮
-        rv_details=(RelativeLayout)headView.findViewById(R.id.rv_details);    // 节目详情布局
+        rv_details=(RelativeLayout)headView.findViewById(R.id.rv_details);     // 节目详情布局
 		tv_like = (TextView) headView.findViewById(R.id.tv_like);
 		tv_sequ=(TextView)headView.findViewById(R.id.tv_sequ);
 		tv_desc=(TextView)headView.findViewById(R.id.tv_desc);
+		tv_origin=(TextView)headView.findViewById(R.id.tv_origin);               // 来源
 
 		tv_details_flag.setText("  显示  ");
 		flowTag = (GridView)headView.findViewById(R.id.gv_tag);                    // 展示热门搜索词
@@ -1821,6 +1823,13 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			}else{
 				tv_sequ.setText("暂无专辑");
 			}
+
+			if(GlobalConfig.playerobject.getContentPub()!=null){
+				tv_origin.setText(GlobalConfig.playerobject.getContentPub());
+			}else{
+				tv_origin.setText("暂无来源");
+			}
+
 			if(GlobalConfig.playerobject.getContentDescn()!=null){
 				tv_desc.setText(GlobalConfig.playerobject.getContentDescn());
 			}else{
