@@ -109,13 +109,12 @@ public class VLCInstance {
         instance.setAout(aout);
         instance.setVout(vout);
         instance.setDeblocking(deblocking);
+
         instance.setNetworkCaching(networkCaching);
         instance.setHardwareAcceleration(hardwareAcceleration);
         instance.detachSurface();
         //instance.getBufferContent();
         instance.stopDebugBuffer();
-        
-
     }
 
 

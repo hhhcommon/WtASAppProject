@@ -337,7 +337,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             } else {
                 circleView.setVisibility(View.VISIBLE);
                 textUserId.setVisibility(View.VISIBLE);
-                textUserId.setText("ID：(" + userNum + ")");
+                textUserId.setText(userNum);
             }
             if (!url.equals("")) {
                 if (!url.startsWith("http:")) {
@@ -445,7 +445,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                     if(!userNum.equals("")) {
                         circleView.setVisibility(View.VISIBLE);
                         textUserId.setVisibility(View.VISIBLE);
-                        textUserId.setText("ID：(" + userNum + ")");
+                        textUserId.setText( userNum);
                     }
                 }
                 break;

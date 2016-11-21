@@ -79,4 +79,10 @@ public class BroadcastConstants {
 
     // 刷新下载完成界面
     public static final String PUSH_DOWN_COMPLETED= "push_down_completed";
+
+    // 我的上传界面非全选
+    public static final String UPDATE_MY_UPLOAD_CHECK_NO = "UPDATE_MY_UPLOAD_CHECK_NO";
+
+    // 我的上传界面全选
+    public static final String UPDATE_MY_UPLOAD_CHECK_ALL = "UPDATE_MY_UPLOAD_CHECK_ALL";
 }
