@@ -13,6 +13,7 @@ import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.ui.mine.myupload.model.FileContentInfo;
+import com.woting.ui.mine.myupload.upload.UploadActivity;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -116,7 +117,7 @@ public class HttpMultipartPost extends AsyncTask<String, Integer, String> {
             List<FileContentInfo> fileContentInfo = new Gson().fromJson(ful, new TypeToken<List<FileContentInfo>>() {}.getType());
             if(fileContentInfo.get(0).getSuccess().equals("TRUE")) {
                 String filePath = fileContentInfo.get(0).getStoreFilepath();
-//                ((UploadWorksMainActivity)context).finishUpload(filePath);// 上传完成回到原界面
+                ((UploadActivity)context).addFileContent(filePath);// 上传完成回到原界面
             } else {
                 uploadFail();
             }

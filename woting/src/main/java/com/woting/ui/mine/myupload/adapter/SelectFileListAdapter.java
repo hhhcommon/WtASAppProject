@@ -25,10 +25,22 @@ import java.util.Locale;
 public class SelectFileListAdapter extends BaseAdapter {
     private Context context;
     private List<MediaStoreInfo> list;
+    private ImagePlayListener imagePlayListener;
+    private int index;
 
     public SelectFileListAdapter(Context context, List<MediaStoreInfo> list) {
         this.context = context;
         this.list = list;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+        notifyDataSetChanged();
+    }
+
+    // 点击播放音频文件监听事件
+    public void setImagePlayListener(ImagePlayListener imagePlayListener) {
+        this.imagePlayListener = imagePlayListener;
     }
 
     @Override
@@ -77,6 +89,14 @@ public class SelectFileListAdapter extends BaseAdapter {
 
         MediaStoreInfo mediaStoreInfo = list.get(position);
 
+        if(index == position) {
+            Bitmap bitmapNoCheck = BitmapUtils.readBitMap(context, R.mipmap.wt_group_checked);
+            holder.imageCheck.setImageBitmap(bitmapNoCheck);
+        } else {
+            Bitmap bitmapNoCheck = BitmapUtils.readBitMap(context, R.mipmap.wt_group_nochecked);
+            holder.imageCheck.setImageBitmap(bitmapNoCheck);
+        }
+
         // 标题
         String title = mediaStoreInfo.getTitle();
         holder.rankTitle.setText(title);
@@ -104,6 +124,15 @@ public class SelectFileListAdapter extends BaseAdapter {
         // 文件大小
         long size = mediaStoreInfo.getSize();
         holder.textSize.setText(Formatter.formatFileSize(context, size));
+
+        // 点击播放音频文件
+        holder.imagePlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imagePlayListener.playClick();
+            }
+        });
+
         return convertView;
     }
 
@@ -117,5 +146,9 @@ public class SelectFileListAdapter extends BaseAdapter {
         TextView textTime;// text_time
         TextView textSize;// text_size
         ImageView imagePlay;// image_play
+    }
+
+    public interface ImagePlayListener {
+        void playClick();
     }
 }
