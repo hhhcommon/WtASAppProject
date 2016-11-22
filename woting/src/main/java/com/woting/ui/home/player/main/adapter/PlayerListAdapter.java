@@ -66,6 +66,7 @@ public class PlayerListAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		LanguageSearchInside searchlist = list.get(position);
+
 		if(searchlist != null){
 			if(searchlist.getType().equals("2")){
 				//播放状态，按钮显示
