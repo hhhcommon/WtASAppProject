@@ -616,6 +616,13 @@
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
+        <!--音频录制-->
+        <activity
+            android:name=".ui.mine.myupload.upload.recording.MediaRecorderActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+
         <!-- 友盟activity -->
         <activity
             android:name="com.umeng.socialize.editorpage.ShareActivity"

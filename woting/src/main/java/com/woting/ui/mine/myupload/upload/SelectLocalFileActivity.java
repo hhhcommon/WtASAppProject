@@ -16,10 +16,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.common.util.ToastUtils;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.mine.myupload.adapter.SelectFileListAdapter;
 import com.woting.ui.mine.myupload.model.MediaStoreInfo;
+import com.woting.ui.mine.myupload.upload.recording.MediaRecorderActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -60,8 +60,6 @@ public class SelectLocalFileActivity extends AppBaseActivity implements
             textTip.setVisibility(View.VISIBLE);
             btnNext.setVisibility(View.GONE);
         } else {
-//            textTip.setVisibility(View.GONE);
-//            btnNext.setVisibility(View.VISIBLE);
             listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
             listView.setAdapter(adapter = new SelectFileListAdapter(context, list));
             listView.setOnItemClickListener(this);
@@ -76,10 +74,11 @@ public class SelectLocalFileActivity extends AppBaseActivity implements
                 finish();
                 break;
             case R.id.text_recording:// 录音
-                ToastUtils.show_allways(context, "录音");
+                startActivityForResult(new Intent(context, MediaRecorderActivity.class), 0xeee);
                 break;
             case R.id.btn_next:// 下一步
                 Intent intent = new Intent(context, UploadActivity.class);
+                intent.putExtra("GOTO_TYPE", "LOCAL_FILE");// 选择本地文件跳转
                 intent.putExtra("MEDIA__FILE_PATH", list.get(index).getData());
                 startActivityForResult(intent, 0xeee);
                 break;
@@ -127,8 +126,7 @@ public class SelectLocalFileActivity extends AppBaseActivity implements
             String type = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE));
             int id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
             long size = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
-//            long addTime = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));
-            long addTime = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_MODIFIED));
+            long addTime = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));// 修改时间
             long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
             mediaStoreInfo.setData(data1);
             mediaStoreInfo.setTitle(title);

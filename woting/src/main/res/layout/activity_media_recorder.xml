@@ -28,72 +28,107 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/app_bg"
-        android:orientation="vertical">
+        android:background="@color/WHITE">
 
-        <ProgressBar
-            android:id="@+id/view_quan"
-            android:layout_width="240dp"
-            android:layout_height="240dp"
-            android:indeterminate="false"
-            android:layout_marginTop="50dp"
+        <ImageView
+            android:id="@+id/image_background"
+            android:layout_width="168dp"
+            android:layout_height="168dp"
             android:layout_centerHorizontal="true"
-            android:visibility="gone"/>
+            android:layout_marginTop="90dp"/>
+
+        <ImageView
+            android:id="@+id/image_recording"
+            android:layout_width="168dp"
+            android:layout_height="168dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="90dp"
+            android:visibility="gone"
+            android:background="@mipmap/wt_image_audio_recording"/>
+
+        <TextView
+            android:id="@+id/text_record_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="开始录音"
+            android:textSize="18sp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="150dp"
+            android:textColor="@color/dinglan_orange"/>
 
         <LinearLayout
             android:id="@+id/linear_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_marginTop="140dp"
+            android:layout_below="@id/text_record_state"
             android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/timestamp_hour_prefix"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dinglan_orange"
+                android:textSize="25sp"
+                android:text="0"/>
+
+            <TextView
+                android:id="@+id/timestamp_hour_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dinglan_orange"
+                android:textSize="25sp"
+                android:text="0"/>
+
+            <TextView
+                android:id="@+id/text_hour_dian"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dinglan_orange"
+                android:textSize="25sp"
+                android:text=":"/>
 
             <TextView
                 android:id="@+id/timestamp_minute_prefix"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#FFAA00"
-                android:textSize="50sp"
+                android:textColor="@color/dinglan_orange"
+                android:textSize="25sp"
                 android:text="0"/>
 
             <TextView
                 android:id="@+id/timestamp_minute_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#FFAA00"
-                android:textSize="50sp"
+                android:textColor="@color/dinglan_orange"
+                android:textSize="25sp"
                 android:text="0"/>
 
             <TextView
                 android:id="@+id/text_dian"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#FFAA00"
-                android:textSize="50sp"
+                android:textColor="@color/dinglan_orange"
+                android:textSize="25sp"
                 android:text=":"/>
 
             <TextView
                 android:id="@+id/timestamp_second_prefix"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#FFAA00"
-                android:textSize="50sp"
+                android:textColor="@color/dinglan_orange"
+                android:textSize="25sp"
                 android:text="0"/>
 
             <TextView
                 android:id="@+id/timestamp_second_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#FFAA00"
-                android:textSize="50sp"
+                android:textColor="@color/dinglan_orange"
+                android:textSize="25sp"
                 android:text="0"/>
-        </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1.5dp"
-            android:background="@color/heihui"
-            android:layout_above="@+id/linear_btn"/>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linear_btn"
@@ -105,42 +140,37 @@
 
             <Button
                 android:id="@+id/btn_play"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:drawableTop="@mipmap/ic_launcher"
-                android:background="@color/app_bg"
-                android:textColor="@color/WHITE"
-                android:textStyle="bold"
-                android:drawablePadding="20dp"
+                android:layout_marginRight="40dp"
+                android:drawableTop="@mipmap/wt_image_recorder_play_unavailable"
+                android:background="@color/WHITE"
+                android:enabled="false"
+                android:textColor="@color/gray"
+                android:drawablePadding="7dp"
                 android:text="播放"/>
 
             <Button
                 android:id="@+id/btn_start"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/app_bg"
-                android:drawableTop="@mipmap/ic_launcher"
-                android:drawablePadding="5dp"
-                android:textStyle="bold"
-                android:textColor="@color/WHITE"
-                android:layout_margin="5dp"
-                android:text="录音"/>
+                android:background="@color/WHITE"
+                android:drawableTop="@mipmap/wt_image_recording"
+                android:drawablePadding="7dp"
+                android:textColor="@color/dinglan_orange"
+                android:text="开始"/>
 
             <Button
-                android:id="@+id/btn_finish"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:id="@+id/btn_save"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:drawableTop="@mipmap/ic_launcher"
-                android:background="@color/app_bg"
-                android:textColor="@color/WHITE"
-                android:textStyle="bold"
-                android:drawablePadding="20dp"
-                android:text="完成"/>
+                android:layout_marginLeft="40dp"
+                android:drawableTop="@mipmap/wt_image_recorder_save_unavailable"
+                android:background="@color/WHITE"
+                android:enabled="false"
+                android:textColor="@color/gray"
+                android:drawablePadding="7dp"
+                android:text="保存"/>
 
         </LinearLayout>
 
