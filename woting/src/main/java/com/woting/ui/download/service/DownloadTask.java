@@ -4,11 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.woting.common.constant.BroadcastConstants;
+import com.woting.ui.download.activity.DownloadActivity;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.dao.ThreadDao;
 import com.woting.ui.download.model.FileInfo;
 import com.woting.ui.download.model.ThreadInfo;
-import com.woting.common.constant.BroadcastConstants;
 
 import org.apache.http.HttpStatus;
 
@@ -132,8 +133,13 @@ public class DownloadTask{
 					Log.i("DownloadTask", "下载完毕");
 	                //向fragment发送完成消息
 					intent.putExtra("fileInfo",mFileInfo);
-					intent.setAction(BroadcastConstants.ACTION_FINISHED);
-					mContext.sendBroadcast(intent);
+					if (DownloadActivity.isVisible==true){
+						intent.setAction(BroadcastConstants.ACTION_FINISHED);
+						mContext.sendBroadcast(intent);
+					}else{
+						intent.setAction(BroadcastConstants.ACTION_FINISHED_NO_DOWNLOADVIEW);
+						mContext.sendBroadcast(intent);
+					}
 					}
 			}catch (Exception e){
 				e.printStackTrace();

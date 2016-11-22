@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
 import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.downloadlist.adapter.DownLoadListAdapter;
@@ -241,6 +242,7 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
                                     ContentId, playlocalrurl, sequName, sequId, sequDesc, sequImg);
                             dbDao.deleteHistory(playerurl);
                             dbDao.addHistory(history);
+                            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                             if (PlayerFragment.context != null) {
                                 MainActivity.change();
                                 HomeActivity.UpdateViewPager();
@@ -255,6 +257,13 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
                                 }
                                 MainActivity.change();
                                 HomeActivity.UpdateViewPager();
+                            }
+                            }else{
+                                //没网的状态下
+                                MainActivity.change();
+                                HomeActivity.UpdateViewPager();
+                                PlayerFragment.TextPage=1;
+                                PlayerFragment.playNoNet();
                             }
                             setResult(1);
                             finish();

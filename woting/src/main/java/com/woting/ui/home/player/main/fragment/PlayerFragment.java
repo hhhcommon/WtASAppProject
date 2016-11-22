@@ -1810,12 +1810,17 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		if (GlobalConfig.playerobject != null) {
 			//判断下载类型的方法
 			if (GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
-
 				img_download.setImageResource(R.mipmap.wt_play_xiazai);
 				tv_download.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
 			}else{
 				img_download.setImageResource(R.mipmap.wt_play_xiazai_no);
 				tv_download.setTextColor(context.getResources().getColor(R.color.gray));
+			}
+
+			if (!TextUtils.isEmpty(GlobalConfig.playerobject.getLocalurl())){
+				img_download.setImageResource(R.mipmap.wt_play_xiazai_no);
+				tv_download.setTextColor(context.getResources().getColor(R.color.gray));
+				tv_download.setText("已下载");
 			}
 
 			if(GlobalConfig.playerobject.getSequName()!=null){
@@ -2038,6 +2043,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 		});
 	}
 
+
+
 	private static void sendFavorite() {
 		dialogs = DialogUtils.Dialogph(context, "通讯中");
 		JSONObject jsonObject =VolleyRequest.getJsonObject(context);
@@ -2127,6 +2134,66 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				}
 			}
 		});
+	}
+
+	public static void playNoNet(){
+		LanguageSearchInside mContent = getDaoList(context);
+		GlobalConfig.playerobject =mContent;
+/*		String s=mContent.getContentName();
+		String s1=mContent.getLocalurl();*/
+		if(allList.size()>0){
+			allList.clear();
+			allList.add(mContent);
+		}else{
+			allList.add(mContent);
+		}
+		allList.get(0).setType("2");
+		if(adapter==null){
+		adapter=new PlayerListAdapter(context,allList);
+			mListView.setAdapter(adapter);
+		}else {
+			adapter.notifyDataSetChanged();
+		}
+		img_play.setImageResource(R.mipmap.wt_play_play);
+		if (GlobalConfig.playerobject.getContentName() != null) {
+			tv_name.setText(GlobalConfig.playerobject.getContentName());
+		} else {
+			tv_name.setText("我听科技");
+		}
+		if (GlobalConfig.playerobject.getContentImg() != null) {
+			String url;
+			if (GlobalConfig.playerobject.getContentImg().startsWith("http")) {
+				url = GlobalConfig.playerobject.getContentImg();
+			} else {
+				url = GlobalConfig.imageurl+ GlobalConfig.playerobject.getContentImg();
+			}
+			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(img_news);
+		} else {
+			Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
+			img_news.setImageBitmap(bmp);
+		}
+		if (!TextUtils.isEmpty(GlobalConfig.playerobject.getLocalurl())) {
+			mListView.setVisibility(View.VISIBLE);
+			mListView.setPullRefreshEnable(false);
+			mListView.setPullLoadEnable(false);
+			mListView.stopLoadMore();
+			mListView.stopRefresh();
+			if (audioPlay == null) {
+				audioPlay = VlcPlayer.getInstance(context);
+			} else {
+				// 不为空
+				if (audioPlay.mark().equals("TTS")) {
+					audioPlay.stop();
+				}
+				audioPlay = VlcPlayer.getInstance(context);
+			}
+			resetHeadView();
+			musicPlay("file:///"+GlobalConfig.playerobject.getLocalurl());
+			ToastUtils.show_allways(context, "正在播放本地内容");
+		} else {
+			ToastUtils.show_allways(context,"数据异常");
+		}
+
 	}
 
 	/**
