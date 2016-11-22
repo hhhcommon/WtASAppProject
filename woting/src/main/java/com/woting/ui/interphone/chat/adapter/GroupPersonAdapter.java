@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.common.model.UserInfo;
 
@@ -85,7 +86,13 @@ public class GroupPersonAdapter extends BaseAdapter{
 				holder.imageView_touxiang.setImageBitmap(bmpb);
 			}
 		}else{
-			String url = GlobalConfig.imageurl+lists.getPortraitBig();
+			String url;
+			if(lists.getPortrait().startsWith("http")){
+				url =  lists.getPortrait();
+			}else{
+				url = GlobalConfig.imageurl + lists.getPortrait();
+			}
+			url= AssembleImageUrlUtils.assembleImageUrl150(url);
 			Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageView_touxiang);
 		}
 		if(lists.getOnLine()==2){

@@ -29,7 +29,6 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -46,6 +45,7 @@ import com.woting.common.helper.CreateQRImageHelper;
 import com.woting.common.http.MyHttp;
 import com.woting.common.manager.FileManager;
 import com.woting.common.manager.MyActivityManager;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -54,7 +54,11 @@ import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.common.widgetui.MyGridView;
+import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.common.model.GroupInfo;
+import com.woting.ui.common.photocut.PhotoCutActivity;
+import com.woting.ui.common.qrcodes.EWMShowActivity;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
 import com.woting.ui.interphone.chat.fragment.ChatFragment;
 import com.woting.ui.interphone.commom.service.InterPhoneControl;
@@ -70,10 +74,7 @@ import com.woting.ui.interphone.group.groupcontrol.modifygrouppassword.ModifyGro
 import com.woting.ui.interphone.group.groupcontrol.personnews.TalkPersonNewsActivity;
 import com.woting.ui.interphone.group.groupcontrol.transferauthority.TransferAuthorityActivity;
 import com.woting.ui.interphone.main.DuiJiangActivity;
-import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.mine.model.UserPortaitInside;
-import com.woting.ui.common.photocut.PhotoCutActivity;
-import com.woting.ui.common.qrcodes.EWMShowActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -86,7 +87,7 @@ import java.util.List;
  * 群组详情页面
  * 辛龙 2016年1月21日
  */
-public class TalkGroupNewsActivity extends BaseActivity implements OnClickListener, OnItemClickListener {
+public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickListener, OnItemClickListener {
     private Bitmap bmp;
     private GroupInfo news;
     private GroupTalkAdapter adapter;
@@ -104,7 +105,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
     private Dialog confirmDialog;// 退出群组确认对话框
     private Dialog imageDialog;// 修改群组头像对话框
     private Dialog dialog;// 加载数据对话框
-    private GridView gridView;// 展示群组成员
+    private MyGridView gridView;// 展示群组成员
     private EditText editAliasName;// 群别名
     private EditText editSignature;// 群描述
     private TextView textIntroduce;// 群介绍
@@ -180,12 +181,12 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
 
     // 获取上一个界面传递过来的数据
     private void getData() {
-        if(getIntent() == null) {
-            return ;
+        if (getIntent() == null) {
+            return;
         }
         String type = getIntent().getStringExtra("type");
-        if(type == null || type.equals("")) {
-            return ;
+        if (type == null || type.equals("")) {
+            return;
         }
         switch (type) {
             case "talkoldlistfragment":// 聊天界面传过来
@@ -299,7 +300,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
         editSignature = (EditText) findViewById(R.id.et_groupSignature);// 描述
         textGroupId = (TextView) findViewById(R.id.tv_id);// 群号
 
-        gridView = (GridView) findViewById(R.id.gridView);// 展示群成员
+        gridView = (MyGridView) findViewById(R.id.gridView);// 展示群成员
         gridView.setOnItemClickListener(this);
         gridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 
@@ -336,6 +337,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
             if (!headUrl.startsWith("http:")) {
                 headUrl = GlobalConfig.imageurl + headUrl;
             }
+            headUrl = AssembleImageUrlUtils.assembleImageUrl150(headUrl);
             Picasso.with(context).load(headUrl.replace("\\/", "/")).into(imageHead);
         }
 
@@ -408,7 +410,8 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
                     ToastUtils.show_allways(context, "对讲组内没有成员自动解散!");
                 } else {
                     try {
-                        list = new Gson().fromJson(result.getString("UserList"), new TypeToken<List<GroupInfo>>() {}.getType());
+                        list = new Gson().fromJson(result.getString("UserList"), new TypeToken<List<GroupInfo>>() {
+                        }.getType());
                         lists.clear();
                         String numString = "(" + list.size() + ")";
                         textGroupNumber.setText(numString);
@@ -416,7 +419,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
                             for (int i = 0; i < 6; i++) {
                                 lists.add(list.get(i));
                             }
-                        } else if(!groupCreator.equals(CommonUtils.getUserId(context)) && list.size() > 7) {// 非群主
+                        } else if (!groupCreator.equals(CommonUtils.getUserId(context)) && list.size() > 7) {// 非群主
                             for (int i = 0; i < 7; i++) {
                                 lists.add(list.get(i));
                             }
@@ -490,8 +493,8 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
 
                     String name = editAliasName.getText().toString().trim();
                     String signature = editSignature.getText().toString().trim();
-                    if(name.equals(groupName) && signature.equals(groupSignature)) {
-                        return ;
+                    if (name.equals(groupName) && signature.equals(groupSignature)) {
+                        return;
                     }
                     groupName = name;
                     groupSignature = signature;
@@ -602,7 +605,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
     }
 
     public void addGroup() {
-        if (ChatFragment.iscalling && ChatFragment.interphonetype.equals("user")) {// 此时有对讲状态 对讲状态为个人时弹出框展示
+        if (ChatFragment.isCalling && ChatFragment.interPhoneType.equals("user")) {// 此时有对讲状态 对讲状态为个人时弹出框展示
             InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
         }
         ChatFragment.zhidinggroupss(groupId);
@@ -632,12 +635,12 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
                     if (ReturnType.equals("1001") || ReturnType.equals("10011")) {
                         ToastUtils.show_allways(context, "已经成功退出该组");
                         sendBroadcast(pushIntent);
-                        if (ChatFragment.context != null && ChatFragment.interphoneid != null &&
-                                ChatFragment.interphoneid.equals(groupId)) {
+                        if (ChatFragment.context != null && ChatFragment.interPhoneId != null &&
+                                ChatFragment.interPhoneId.equals(groupId)) {
                             // 保存通讯录是否刷新的属性
                             SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
                             et.putString(StringConstant.PERSONREFRESHB, "true");
-                            if(!et.commit()) {
+                            if (!et.commit()) {
                                 Log.w("commit", "数据 commit 失败!");
                             }
                         }
@@ -667,7 +670,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (lists.get(position).getType() == 1) {
             if (lists.get(position).getUserId().equals(CommonUtils.getUserId(context))) {
-                return ;
+                return;
             }
             boolean isFriend = false;
             if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() != 0) {
@@ -698,9 +701,9 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
                 startActivityForResult(intent, 2);
             }
         } else {
-            if(lists.get(position).getType() == 2) {
+            if (lists.get(position).getType() == 2) {
                 startToActivity(GroupMemberAddActivity.class);
-            } else if(lists.get(position).getType() == 3) {
+            } else if (lists.get(position).getType() == 3) {
                 startToActivity(GroupMemberDelActivity.class, 2);
             }
         }
@@ -816,6 +819,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
                     if (!miniUri.startsWith("http:")) {
                         miniUri = GlobalConfig.imageurl + miniUri;
                     }
+                    miniUri = AssembleImageUrlUtils.assembleImageUrl150(miniUri);
                     // 正常切可用代码 已从服务器获得返回值，但是无法正常显示
                     Picasso.with(context).load(miniUri.replace("\\/", "/")).into(imageHead);
                     sendBroadcast(pushIntent);
@@ -857,7 +861,8 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
                     Log.e("图片上传结果", Response);
                     Gson gson = new Gson();
                     Response = ImageUploadReturnUtil.getResPonse(Response);
-                    UserPortait = gson.fromJson(Response, new TypeToken<UserPortaitInside>() {}.getType());
+                    UserPortait = gson.fromJson(Response, new TypeToken<UserPortaitInside>() {
+                    }.getType());
                     try {
                         ReturnType = UserPortait.getReturnType();
                     } catch (Exception e1) {
@@ -1050,7 +1055,7 @@ public class TalkGroupNewsActivity extends BaseActivity implements OnClickListen
             bmp.recycle();
             bmp = null;
         }
-        if(list != null) {
+        if (list != null) {
             list.clear();
             list = null;
         }

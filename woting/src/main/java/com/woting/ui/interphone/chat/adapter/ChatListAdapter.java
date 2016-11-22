@@ -1,6 +1,7 @@
 package com.woting.ui.interphone.chat.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.AssembleImageUrlUtils;
+import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.TimeUtils;
 import com.woting.ui.common.model.GroupInfo;
 
@@ -20,7 +23,6 @@ import java.util.List;
 public class ChatListAdapter extends BaseAdapter {
 	private Context context;
 	private OnListener onListener;
-	private String url;
 	private String id;
 	private List<GroupInfo> list;
 	private GroupInfo lists;
@@ -70,6 +72,9 @@ public class ChatListAdapter extends BaseAdapter {
 			holder.lin_zhiding = (LinearLayout) convertView.findViewById(R.id.lin_zhiding);
 			holder.imageView_touxiang = (ImageView) convertView.findViewById(R.id.image);
 			holder.textGroupNumber = (TextView) convertView.findViewById(R.id.tv_group_number);
+			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
+			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
+			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -111,7 +116,13 @@ public class ChatListAdapter extends BaseAdapter {
 				holder.imageView_touxiang.setImageResource(R.mipmap.wt_image_tx_qz);
 			}
 		} else {
-			url = GlobalConfig.imageurl + lists.getPortrait();
+			String url;
+			if(lists.getPortrait().startsWith("http")){
+				url =  lists.getPortrait();
+			}else{
+				url = GlobalConfig.imageurl + lists.getPortrait();
+			}
+			url= AssembleImageUrlUtils.assembleImageUrl150(url);
 			Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageView_touxiang);
 		}
 		holder.lin_zhiding.setOnClickListener(new View.OnClickListener() {
@@ -137,5 +148,6 @@ public class ChatListAdapter extends BaseAdapter {
 		public ImageView imageView_touxiang;
 		public TextView tv_name;
 		public TextView textGroupNumber;
+		public ImageView img_zhezhao;
 	}
 }

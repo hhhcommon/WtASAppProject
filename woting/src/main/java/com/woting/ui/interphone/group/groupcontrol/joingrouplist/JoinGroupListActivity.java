@@ -1,32 +1,31 @@
 package com.woting.ui.interphone.group.groupcontrol.joingrouplist;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.DialogUtils;
+import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.interphone.group.groupcontrol.joingrouplist.adapter.JoinGroupAdapter;
 import com.woting.ui.interphone.group.groupcontrol.joingrouplist.adapter.JoinGroupAdapter.Callback;
 import com.woting.ui.interphone.group.groupcontrol.joingrouplist.model.CheckInfo;
-import com.woting.common.config.GlobalConfig;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
-import com.woting.common.manager.MyActivityManager;
-import com.woting.common.util.DialogUtils;
-import com.woting.common.util.ToastUtils;
-import com.woting.ui.common.model.GroupInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,20 +38,20 @@ import java.util.List;
  * @author 辛龙
  * 2016年4月13日
  */
-public class JoinGroupListActivity extends Activity implements OnClickListener,	Callback {
+public class JoinGroupListActivity extends AppBaseActivity implements OnClickListener,	Callback {
 	private JoinGroupListActivity context;
+	private Dialog DelDialog;
 	private Dialog dialog;
-	private String groupid;
+	private String tag = "JOIN_GROUP_LIST_VOLLEY_REQUEST_CANCEL_TAG";
+	private String groupId;
 	private ListView lv_jiaqun;
 	private LinearLayout lin_left;
 	protected JoinGroupAdapter adapter;
 	private List<CheckInfo> userlist ;
-	private Integer onclicktv;
+	private Integer onClickTv;
 	private ArrayList<GroupInfo> list;
-	private int dealtype=1;//1接受2拒绝
-	private Dialog DelDialog;
-	private int delposition;
-	private String tag = "JOIN_GROUP_LIST_VOLLEY_REQUEST_CANCEL_TAG";
+	private int dealType=1;//1接受2拒绝
+	private int delPosition;
 	private boolean isCancelRequest;
 
 	@Override
@@ -60,14 +59,10 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_joingrouplist);
 		context = this;
-		MyActivityManager mam = MyActivityManager.getInstance();
-		mam.pushOneActivity(context);
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);		// 透明状态栏
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);	// 透明导航栏
 		handleIntent();
-		setview();
-		setlistener();
-		if (groupid != null && !groupid.equals("")) {
+		setView();
+		setListener();
+		if (groupId != null && !groupId.equals("")) {
 			if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 				dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
 				send();
@@ -82,7 +77,7 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 
 	private void DelDialog() {
 		final View dialog1 = LayoutInflater.from(this).inflate(R.layout.dialog_exit_confirm, null);
-		TextView tv_cancle = (TextView) dialog1.findViewById(R.id.tv_cancle);
+		TextView tv_cancel = (TextView) dialog1.findViewById(R.id.tv_cancle);
 		TextView tv_title = (TextView) dialog1.findViewById(R.id.tv_title);
 		TextView tv_confirm = (TextView) dialog1.findViewById(R.id.tv_confirm);
 		tv_title.setText("确定拒绝?");
@@ -90,7 +85,7 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 		DelDialog.setContentView(dialog1);
 		DelDialog.setCanceledOnTouchOutside(false);
 		DelDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
-		tv_cancle.setOnClickListener(new OnClickListener() {
+		tv_cancel.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				DelDialog.dismiss();
@@ -102,8 +97,8 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 			public void onClick(View v) {
 				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 					DelDialog.dismiss();
-					dealtype=2;
-					sendrequest();
+					dealType=2;
+					sendRequest();
 				} else {
 					ToastUtils.show_allways(context, "网络失败，请检查网络");
 				}
@@ -114,20 +109,19 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 	private void handleIntent() {
 		Intent intent = context.getIntent();
 		Bundle bundle = intent.getExtras();
-		groupid = bundle.getString("GroupId");
+		groupId = bundle.getString("GroupId");
 		list = (ArrayList<GroupInfo>) bundle.getSerializable("userlist");
 	}
 
 	private void send() {
 		JSONObject jsonObject =VolleyRequest.getJsonObject(context);
 		try {
-			jsonObject.put("GroupId", groupid);
+			jsonObject.put("GroupId", groupId);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 
 		VolleyRequest.RequestPost(GlobalConfig.checkVertifyUrl, tag, jsonObject, new VolleyCallback() {
-//			private String SessionId;
 			private String ReturnType;
 			private String Message;
 
@@ -139,11 +133,10 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 				if(isCancelRequest){
 					return ;
 				}
-				String userlist1 = null;
+				String U = null;
 				try {
 					ReturnType = result.getString("ReturnType");
-//					SessionId = result.getString("SessionId");
-					userlist1 = result.getString("InviteUserList");
+					U = result.getString("InviteUserList");
 					Message = result.getString("Message");
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -151,7 +144,7 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 
 				if (ReturnType != null && ReturnType.equals("1001")) {
 					try {
-						userlist = new Gson().fromJson(userlist1,new TypeToken<List<CheckInfo>>() {}.getType());
+						userlist = new Gson().fromJson(U,new TypeToken<List<CheckInfo>>() {}.getType());
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
@@ -170,7 +163,7 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 						@Override
 						public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 							DelDialog.show();
-							delposition=position;
+							delPosition=position;
 							return false;
 						}
 					});
@@ -196,11 +189,11 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 		});
 	}
 
-	private void setlistener() {
+	private void setListener() {
 		lin_left.setOnClickListener(this);
 	}
 
-	private void setview() {
+	private void setView() {
 		lv_jiaqun = (ListView) findViewById(R.id.lv_jiaqun);
 		lin_left = (LinearLayout) findViewById(R.id.head_left_btn);
 	}
@@ -214,18 +207,18 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 		}
 	}
 
-	private void sendrequest() {
+	private void sendRequest() {
 		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			jsonObject.put("DealType", dealtype);
-			if(dealtype==1){
-				jsonObject.put("InviteUserId", userlist.get(onclicktv).getInviteUserId());
-				jsonObject.put("BeInvitedUserId", userlist.get(onclicktv).getBeInviteUserId());
+			jsonObject.put("DealType", dealType);
+			if(dealType==1){
+				jsonObject.put("InviteUserId", userlist.get(onClickTv).getInviteUserId());
+				jsonObject.put("BeInvitedUserId", userlist.get(onClickTv).getBeInviteUserId());
 			}else{
-				jsonObject.put("InviteUserId", userlist.get(delposition).getInviteUserId());
-				jsonObject.put("BeInvitedUserId", userlist.get(delposition).getBeInviteUserId());
+				jsonObject.put("InviteUserId", userlist.get(delPosition).getInviteUserId());
+				jsonObject.put("BeInvitedUserId", userlist.get(delPosition).getBeInviteUserId());
 			}
-			jsonObject.put("GroupId", groupid);			// groupid由上一个界面传递而来
+			jsonObject.put("GroupId", groupId);			// groupid由上一个界面传递而来
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -233,8 +226,6 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 		VolleyRequest.RequestPost(GlobalConfig.checkDealUrl, tag, jsonObject, new VolleyCallback() {
 			private String ReturnType;
 			private String Message;
-//			private String SessionId;
-
 			@Override
 			protected void requestSuccess(JSONObject result) {
 				if (dialog != null) {
@@ -245,19 +236,18 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 				}
 				try {
 					ReturnType = result.getString("ReturnType");
-//					SessionId = result.getString("SessionId");
 					Message = result.getString("Message");
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 				if (ReturnType != null && ReturnType.equals("1001")) {
-					if(dealtype == 1){
-						userlist.get(onclicktv).setCheckType(2);
+					if(dealType == 1){
+						userlist.get(onClickTv).setCheckType(2);
 					}else{
-						userlist.remove(delposition);
+						userlist.remove(delPosition);
 					}
 					adapter.notifyDataSetChanged();
-					dealtype = 1;
+					dealType = 1;
 				} else if (ReturnType != null && ReturnType.equals("1002")) {
 					ToastUtils.show_allways(context, "无法获取用户Id");
 				} else if (ReturnType != null && ReturnType.equals("T")) {
@@ -285,7 +275,7 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 			protected void requestError(VolleyError error) {
 				if (dialog != null) {
 					dialog.dismiss();
-					dealtype = 1;
+					dealType = 1;
 				}
 			}
 		});
@@ -293,10 +283,10 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 
 	@Override
 	public void click(View v) {
-		onclicktv = (Integer) v.getTag();
+		onClickTv = (Integer) v.getTag();
 		if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 			dialog = DialogUtils.Dialogph(context, "正在获取数据");
-			sendrequest();
+			sendRequest();
 		} else {
 			ToastUtils.show_allways(this, "网络连接失败，请稍后重试");
 		}
@@ -306,8 +296,6 @@ public class JoinGroupListActivity extends Activity implements OnClickListener,	
 	protected void onDestroy() {
 		super.onDestroy();
 		isCancelRequest = VolleyRequest.cancelRequest(tag);
-		MyActivityManager mam = MyActivityManager.getInstance();
-		mam.popOneActivity(context);
 		userlist = null;
 		list = null;
 		adapter = null;

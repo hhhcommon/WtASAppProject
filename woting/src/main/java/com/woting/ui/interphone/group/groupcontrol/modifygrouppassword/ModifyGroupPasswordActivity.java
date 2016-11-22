@@ -1,13 +1,11 @@
 package com.woting.ui.interphone.group.groupcontrol.modifygrouppassword;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,10 +14,11 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.ui.baseactivity.AppBaseActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +28,7 @@ import org.json.JSONObject;
  * @author 辛龙
  * 2016年7月19日
  */
-public class ModifyGroupPasswordActivity extends Activity {
+public class ModifyGroupPasswordActivity extends AppBaseActivity {
 	private EditText et_oldpassword;
 	private EditText et_newpassword;
 	private EditText et_newpassword_confirm;
@@ -50,8 +49,6 @@ public class ModifyGroupPasswordActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_modify_grouppassword);
 		context = this;
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);		// 透明状态栏
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);	// 透明导航栏
 		handleIntent();
 		setView();
 		setListener();

@@ -73,48 +73,40 @@ import java.util.List;
  * 2016年5月12日
  */
 public class LinkManFragment extends Fragment implements SectionIndexer,OnClickListener {
-	private ListView sortListView;
-	private SideBar sideBar;
 	private SortGroupMemberAdapter adapter;
-	private TextView tvNofriends;
-
-	/**
-	 * 汉字转换成拼音的类
-	 */
-	private CharacterParser characterParser;
-
-	/**
-	 * 根据拼音来排列ListView里面的数据类
-	 */
+	private TalkGroupAdapter adapter_group;
+	private CharacterParser characterParser;//汉字转换成拼音的类
 	private PinyinComparator pinyinComparator;
 	private FragmentActivity context;
 	private MessageReceiver Receiver;
 	private SharedPreferences sharedPreferences;
-	private String islogin;
-	private boolean firstentry = true;
-	private Dialog confirmdialog;
+	private boolean isCancelRequest;
+	private boolean firstEntry = true;
+	private Dialog confirmDialog;
 	private Dialog dialogs;
 	private int type = 1;			//1.个人2.组
 	private GroupInfo group;
-	private TalkGroupAdapter adapter_group;
-	private List<GroupInfo> grouplist = new ArrayList<>();
+	private List<GroupInfo> groupList = new ArrayList<>();
 	private List<GroupInfo> srclist_g;
 	private List<UserInfo> srclist_p;
+	private List<UserInfo> list;
+	private String isLogin;
 	private String id;
+	private String tag = "FRIENDS_VOLLEY_REQUEST_CANCEL_TAG";
+	private View rootView;
+	private View headView;
+	private SideBar sideBar;
 	private EditText et_search;
 	private ImageView image_clear;
-	private View rootView;
-	private View headview;
 	private ListView listView_group;
-	private LinearLayout relative;
-	private LinearLayout lin_second;
-	private List<UserInfo> list;
-	private TextView tvdialog;
-	private String tag = "FRIENDS_VOLLEY_REQUEST_CANCEL_TAG";
-	private boolean isCancelRequest;
-	private LinearLayout lin_news_message;
+	private ListView sortListView;
+	private TextView tvDialog;
+	private TextView tvNofriends;
 	private TextView tv_newpersons;
 	private LinearLayout lin_grouplist;
+	private LinearLayout lin_news_message;
+	private LinearLayout relative;
+	private LinearLayout lin_second;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -137,7 +129,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 		if(rootView == null){
 			rootView = inflater.inflate(R.layout.activity_add_friends, container, false);
 			initViews();		// 设置界面
-			setEditLiestner();
+			setEditListener();
 		}
 		return rootView;
 	}
@@ -151,16 +143,16 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 	public void onResume() {
 		super.onResume();
 		sharedPreferences = BSApplication.SharedPreferences;
-		islogin = sharedPreferences.getString(StringConstant.ISLOGIN, "false");
-		if (islogin.equals("true")) {
+		isLogin = sharedPreferences.getString(StringConstant.ISLOGIN, "false");
+		if (isLogin.equals("true")) {
 			lin_second.setVisibility(View.GONE);
 			relative.setVisibility(View.VISIBLE);
-			if (firstentry) {
+			if (firstEntry) {
 				send();
-				firstentry = false;
+				firstEntry = false;
 			} 
 		} else {
-			firstentry = false;
+			firstEntry = false;
 			lin_second.setVisibility(View.VISIBLE);
 			relative.setVisibility(View.GONE);
 		}
@@ -174,17 +166,17 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 		lin_second = (LinearLayout) rootView.findViewById(R.id.lin_second);
 		tvNofriends = (TextView) rootView.findViewById(R.id.title_layout_no_friends);
 		sideBar = (SideBar) rootView.findViewById(R.id.sidrbar);
-		tvdialog = (TextView) rootView.findViewById(R.id.dialog);
-		sideBar.setTextView(tvdialog);
-		headview = LayoutInflater.from(context).inflate(R.layout.head_talk_person, null);// 头部view
-		lin_news_message = (LinearLayout) headview.findViewById(R.id.news_message);
-		lin_grouplist = (LinearLayout) headview.findViewById(R.id.lin_grouplist);
-		tv_newpersons = (TextView) headview.findViewById(R.id.tv_newpersons);
-		listView_group = (ListView) headview.findViewById(R.id.listView_group);
+		tvDialog = (TextView) rootView.findViewById(R.id.dialog);
+		sideBar.setTextView(tvDialog);
+		headView = LayoutInflater.from(context).inflate(R.layout.head_talk_person, null);// 头部view
+		lin_news_message = (LinearLayout) headView.findViewById(R.id.news_message);
+		lin_grouplist = (LinearLayout) headView.findViewById(R.id.lin_grouplist);
+		tv_newpersons = (TextView) headView.findViewById(R.id.tv_newpersons);
+		listView_group = (ListView) headView.findViewById(R.id.listView_group);
 		sortListView = (ListView)rootView.findViewById(R.id.country_lvcountry);
 		et_search = (EditText) rootView.findViewById(R.id.et_search);
 		image_clear = (ImageView) rootView.findViewById(R.id.image_clear);
-		sortListView.addHeaderView(headview);// 添加头部view
+		sortListView.addHeaderView(headView);// 添加头部view
 		lin_news_message.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -300,16 +292,16 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 
 	private void Dialog() {
 		final View dialog1 = LayoutInflater.from(context).inflate(R.layout.dialog_talk_person_del, null);
-		TextView tv_cancle = (TextView) dialog1.findViewById(R.id.tv_cancle);
+		TextView tv_cancel = (TextView) dialog1.findViewById(R.id.tv_cancle);
 		TextView tv_confirm = (TextView) dialog1.findViewById(R.id.tv_confirm);
-		confirmdialog = new Dialog(context, R.style.MyDialog);
-		confirmdialog.setContentView(dialog1);
-		confirmdialog.setCanceledOnTouchOutside(true);
-		confirmdialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
-		tv_cancle.setOnClickListener(new OnClickListener() {
+		confirmDialog = new Dialog(context, R.style.MyDialog);
+		confirmDialog.setContentView(dialog1);
+		confirmDialog.setCanceledOnTouchOutside(true);
+		confirmDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
+		tv_cancel.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				confirmdialog.dismiss();
+				confirmDialog.dismiss();
 			}
 		});
 
@@ -318,16 +310,16 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 			public void onClick(View v) {
 				if(type == 1){
 					InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
-					ChatFragment.iscalling = false;
+					ChatFragment.isCalling = false;
 					ChatFragment.lin_notalk.setVisibility(View.VISIBLE);
 					ChatFragment.lin_personhead.setVisibility(View.GONE);
 					ChatFragment.lin_head.setVisibility(View.GONE);
 					ChatFragment.lin_foot.setVisibility(View.GONE);
 					call(id);
-					confirmdialog.dismiss();
+					confirmDialog.dismiss();
 				}else{
 					InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
-					ChatFragment.iscalling = false;
+					ChatFragment.isCalling = false;
 					ChatFragment.lin_notalk.setVisibility(View.VISIBLE);
 					ChatFragment.lin_personhead.setVisibility(View.GONE);
 					ChatFragment.lin_head.setVisibility(View.GONE);
@@ -335,7 +327,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 					ChatFragment.zhidinggroup(group);
 					//对讲主页界面更新
 					DuiJiangActivity.update();
-					confirmdialog.dismiss();
+					confirmDialog.dismiss();
 				}
 			}
 		});
@@ -371,8 +363,8 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 					if(isCancelRequest){
 						return ;
 					}
-					LinkMan list = new Gson().fromJson(result.toString(), new TypeToken<LinkMan>(){}.getType());
 					try {
+						LinkMan list = new Gson().fromJson(result.toString(), new TypeToken<LinkMan>(){}.getType());
 						try {
 							GlobalConfig.list_group = srclist_g = list.getGroupList().getGroups();
 						} catch (Exception e1) {
@@ -388,10 +380,10 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 						} else {
 							relative.setVisibility(View.VISIBLE);
 							if (srclist_g != null && srclist_g.size() != 0) {
-								grouplist.clear();
-								grouplist.addAll(srclist_g);
+								groupList.clear();
+								groupList.addAll(srclist_g);
 								if(adapter_group==null){
-									adapter_group = new TalkGroupAdapter(context,grouplist);
+									adapter_group = new TalkGroupAdapter(context,groupList);
 									listView_group.setAdapter(adapter_group);
 									new HeightListView(context).setListViewHeightBasedOnChildren(listView_group);
 								}else{
@@ -445,7 +437,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.lin_second:
-			if (islogin.equals("true")) {
+			if (isLogin.equals("true")) {
 				send();
 			} else {
 				// 可以直接用startActivity方法，不需要返回处理，因为已经存在onresume
@@ -463,7 +455,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 	/**
 	 * 根据输入框输入值的改变来过滤搜索
 	 */
-	private void setEditLiestner() {
+	private void setEditListener() {
 		lin_second.setOnClickListener(this);
 		image_clear.setOnClickListener(this);
 		et_search.addTextChangedListener(new TextWatcher() {
@@ -475,14 +467,14 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 					tvNofriends.setVisibility(View.GONE);		// 关键词为空
 					sortListView.setVisibility(View.VISIBLE);
 					if (srclist_g != null && srclist_g.size() != 0) {
-						grouplist.clear();
-						grouplist.addAll(srclist_g);
+						groupList.clear();
+						groupList.addAll(srclist_g);
 						//						List<TalkGroupInside> grouplists = grouplist;
 						if(adapter_group == null){
-							adapter_group = new TalkGroupAdapter(context,grouplist);
+							adapter_group = new TalkGroupAdapter(context,groupList);
 							listView_group.setAdapter(adapter_group);
 						}else{
-							adapter_group.ChangeDate(grouplist);
+							adapter_group.ChangeDate(groupList);
 						}
 						new HeightListView(context).setListViewHeightBasedOnChildren(listView_group);
 						setGroupListViewListener();
@@ -514,7 +506,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 					}
 				} else {		// 关键词不为空
 					image_clear.setVisibility(View.VISIBLE);
-					grouplist.clear();
+					groupList.clear();
 					search(search_name);
 				}
 				//				// 当输入框里面的值为空，更新为原来的列表，否则为过滤数据列表
@@ -559,7 +551,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 					tvNofriends.setVisibility(View.GONE);
 					sortListView.setVisibility(View.VISIBLE);
 					if(adapter_group==null){
-						adapter_group = new TalkGroupAdapter(context,grouplist);
+						adapter_group = new TalkGroupAdapter(context,groupList);
 						listView_group.setAdapter(adapter_group);
 					}else{
 						adapter_group.notifyDataSetChanged();
@@ -572,7 +564,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 					tvNofriends.setVisibility(View.GONE);
 					sortListView.setVisibility(View.VISIBLE);
 					if(adapter_group==null){
-						adapter_group = new TalkGroupAdapter(context,grouplist);
+						adapter_group = new TalkGroupAdapter(context,groupList);
 						listView_group.setAdapter(adapter_group);
 					}else{
 						adapter_group.notifyDataSetChanged();
@@ -615,10 +607,10 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 					//此时有群组数据
 					for (int i = 0; i < srclist_g.size(); i++) {
 						if (srclist_g.get(i).getGroupName().contains(search_name)) {
-							grouplist.add(srclist_g.get(i));
+							groupList.add(srclist_g.get(i));
 						}
 					}
-					if (grouplist.size() == 0) {
+					if (groupList.size() == 0) {
 						//群组没有匹配数据
 						if (srclist_p == null || srclist_p.size() == 0) {
 							// 此时没有好友数据
@@ -676,10 +668,10 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 			public void add(int position) {
 				id = ((UserInfo) adapter.getItem(position)).getUserId();
 				//此时的对讲状态
-				if(ChatFragment.iscalling){
-					if(ChatFragment.interphonetype.equals("user")){
+				if(ChatFragment.isCalling){
+					if(ChatFragment.interPhoneType.equals("user")){
 						type = 1;
-						confirmdialog.show();
+						confirmDialog.show();
 					}else{
 						call(id);
 					}
@@ -728,12 +720,12 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 		adapter_group.setOnListener(new OnListener() {
 			@Override
 			public void add(int position) {
-				group=grouplist.get(position);
+				group=groupList.get(position);
 				Log.e("组名称", group.getGroupName());
-				if(ChatFragment.iscalling){
-					if(ChatFragment.interphonetype.equals("user")){
+				if(ChatFragment.isCalling){
+					if(ChatFragment.interPhoneType.equals("user")){
 						type=2;
-						confirmdialog.show();
+						confirmDialog.show();
 					}else{
 						//这是zhidinggroups，不是zhidinggroup；
 						ChatFragment.zhidinggroups(group);
@@ -755,7 +747,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 				Intent intent = new Intent(context, TalkGroupNewsActivity.class);
 				Bundle bundle = new Bundle();
 				bundle.putString("type", "talkpersonfragment");
-				bundle.putSerializable("data", grouplist.get(position));
+				bundle.putSerializable("data", groupList.get(position));
 				intent.putExtras(bundle);
 				startActivity(intent);
 			}
@@ -786,24 +778,24 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 		pinyinComparator = null;
 		context = null;
 		sharedPreferences = null;
-		islogin = null;
-		confirmdialog = null;
+		isLogin = null;
+		confirmDialog = null;
 		dialogs = null;
 		group = null;
 		adapter_group = null;
-		grouplist = null;
+		groupList = null;
 		srclist_g = null;
 		srclist_p = null;
 		id = null;
 		et_search = null;
 		image_clear = null;
 		rootView = null;
-		headview = null;
+		headView = null;
 		listView_group = null;
 		relative = null;
 		lin_second = null;
 		list = null;
-		tvdialog = null;
+		isLogin = null;
 		tag = null;
 	}
 }

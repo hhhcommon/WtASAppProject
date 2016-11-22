@@ -1,12 +1,18 @@
 package com.woting.ui.download.service;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.util.CommonUtils;
+import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.model.FileInfo;
 
 import org.apache.http.HttpStatus;
@@ -16,6 +22,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 /**
  * 类注释
@@ -28,6 +35,8 @@ public class DownloadService extends Service {
 	private static DownloadService context;
 	private static DownloadTask mTask;
 	private static FileInfo fileTemp = null;
+	private static FileInfoDao FID;
+	private static int downloadStatus=-1;  //
 
 	@Override
 	public void onCreate() {
@@ -40,6 +49,14 @@ public class DownloadService extends Service {
         // String s=fileInfo.getFileName();
         // String s1=fileInfo.getUrl();
 		new InitThread(fileInfo).start();//http://audio.xmcdn.com/group13/M05/02/9E/wKgDXVbBJY3QZQkmABblyjUSkbI912.m4a
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(BroadcastConstants.ACTION_FINISHED_NO_DOWNLOADVIEW);
+		context.registerReceiver(mReceiver, filter);
+		downloadStatus=1;
+		if(FID==null){
+			FID=new FileInfoDao(context);
+		}
+
 	}
 
 	public static void workStop(FileInfo fileInfo) {
@@ -138,6 +155,32 @@ public class DownloadService extends Service {
 					}
 				}
 			}
+		}
+	}
+
+	private static List<FileInfo> fileInfoList;
+	private static BroadcastReceiver mReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context contexts, Intent intent) {
+
+			if (BroadcastConstants.ACTION_FINISHED_NO_DOWNLOADVIEW.equals(intent.getAction())) {
+				FileInfo fileInfo = (FileInfo) intent.getSerializableExtra("fileInfo");
+				FID.updataFileInfo(fileInfo.getFileName());
+				fileInfoList=FID.queryFileInfo("false", CommonUtils.getUserId(context));
+				if (fileInfoList != null && fileInfoList.size() > 0) {
+					fileInfoList.get(0).setDownloadtype(1);
+					FID.updataDownloadStatus(fileInfoList.get(0).getUrl(), "1");
+					workStart(fileInfoList.get(0));
+				}
+			}
+		}
+	};
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if(downloadStatus==1) {
+			context.unregisterReceiver(mReceiver);
 		}
 	}
 

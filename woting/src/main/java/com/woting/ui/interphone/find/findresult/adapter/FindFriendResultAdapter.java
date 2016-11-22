@@ -11,11 +11,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
-import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
-import com.woting.common.config.GlobalConfig;
-
+import com.woting.ui.interphone.model.UserInviteMeInside;
 import java.util.List;
 
 public class FindFriendResultAdapter extends BaseAdapter{

@@ -36,6 +36,7 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
     private TextView textCompleted;
     private TextView textUncompleted;
     private ViewPager viewDownload;
+    public static Boolean isVisible=false;
 
     @Override
     public void onClick(View v) {
@@ -57,6 +58,13 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
         setView();
         initViewPager();
         setType();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isVisible=true;
     }
 
     // 适配顶栏样式
@@ -177,6 +185,7 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        isVisible=false;
         textCompleted = null;
         textUncompleted = null;
         viewDownload = null;

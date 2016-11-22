@@ -58,12 +58,14 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
     private String sequ;// 专辑
     private String describe;// 描述
     private String tag = "UPLOAD_ADD_CONTENT_VOLLEY_REQUEST_CANCEL_TAG";
+    private String gotoType;// 跳转类型  本地 OR 录制
 
 //    private int imageNum;
     private final int TO_GALLERY = 1;           // 标识 打开系统图库
     private final int TO_CAMERA = 2;            // 标识 打开系统照相机
     private final int PHOTO_REQUEST_CUT = 7;    // 标识 跳转到图片裁剪界面
     private boolean isCancelRequest;
+    private boolean isUpload;// 判断是否上传成功
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +102,7 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
     private void handleIntent() {
         Intent intent = getIntent();
         if(intent != null) {
+            gotoType = intent.getStringExtra("GOTO_TYPE");
             String path = intent.getStringExtra("MEDIA__FILE_PATH");
             ToastUtils.show_allways(context, path);
             list.add(path);
@@ -122,6 +125,11 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.image_left_back:// 返回
+                if(gotoType.equals("MEDIA_RECORDER") && !isUpload) {
+                    Intent intent = new Intent();
+                    intent.putExtra("MEDIA_RECORDER", 0);
+                    setResult(RESULT_OK, intent);
+                }
                 finish();
                 break;
             case R.id.text_release:// 发布
@@ -131,7 +139,7 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
                 imageDialog.show();
                 break;
             case R.id.view_sequ:// 选择专辑
-                startActivity(new Intent(context, SelectSequActivity.class));
+                startActivityForResult(new Intent(context, SelectSequActivity.class), 0xeee);
                 break;
             case R.id.view_label:// 设置标签
                 startActivity(new Intent(context, AddLabelActivity.class));
@@ -197,7 +205,14 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
                     String returnType = result.getString("ReturnType");
                     String message = result.getString("Message");
                     if (returnType.equals("1001")) {
-                        setResult(RESULT_OK);
+                        isUpload = true;
+                        if(gotoType.equals("MEDIA_RECORDER")) {
+                            Intent intent = new Intent();
+                            intent.putExtra("MEDIA_RECORDER", 1);
+                            setResult(RESULT_OK, intent);
+                        } else {
+                            setResult(RESULT_OK);
+                        }
                         ToastUtils.show_allways(context, message);
                         finish();
                     } else {
@@ -269,6 +284,12 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
                     String photoCutAfterImagePath = data.getStringExtra("return");
                     Log.v("photoCutAfterImagePath", "photoCutAfterImagePath -- > > " + photoCutAfterImagePath);
                     imageCover.setImageBitmap(BitmapUtils.decodeFile(new File(photoCutAfterImagePath)));
+                }
+                break;
+            case 0xeee:
+                if(resultCode == RESULT_OK) {
+                    String sequName = data.getStringExtra("SEQU_NAME");
+                    textSequ.setText(sequName);
                 }
                 break;
         }
@@ -366,6 +387,16 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
 
     private boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(gotoType.equals("MEDIA_RECORDER") && !isUpload) {
+            Intent intent = new Intent();
+            intent.putExtra("MEDIA_RECORDER", 0);
+            setResult(RESULT_OK, intent);
+        }
+        super.onBackPressed();
     }
 
     @Override

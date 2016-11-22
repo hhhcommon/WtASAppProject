@@ -73,14 +73,17 @@ public class SelectFileListAdapter extends BaseAdapter {
             Bitmap bitmapCover = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
             holder.rankImageCover.setImageBitmap(bitmapCover);
 
-            holder.layoutCheck = convertView.findViewById(R.id.layout_check);// item
+            holder.layoutCheck = convertView.findViewById(R.id.layout_check);// item  wt_image_play_local_audio
             holder.imageCheck = (ImageView) convertView.findViewById(R.id.image_check);// 可选择状态
 
             holder.rankTitle = (TextView) convertView.findViewById(R.id.rank_title);// 文件名
             holder.rankAddTime = (TextView) convertView.findViewById(R.id.rank_add_time);// 文件添加时间
             holder.textTime = (TextView) convertView.findViewById(R.id.text_time);// 时间长度
             holder.textSize = (TextView) convertView.findViewById(R.id.text_size);// 文件大小
+
             holder.imagePlay = (ImageView) convertView.findViewById(R.id.image_play);// 播放
+            Bitmap bitmapPlay = BitmapUtils.readBitMap(context, R.mipmap.wt_image_play_local_audio);
+            holder.imagePlay.setImageBitmap(bitmapPlay);
 
             convertView.setTag(holder);
         } else {

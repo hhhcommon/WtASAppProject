@@ -22,7 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * 更改群类型
+ * 更改群类型,暂不做
  * @author 辛龙
  * 2016年7月19日
  */

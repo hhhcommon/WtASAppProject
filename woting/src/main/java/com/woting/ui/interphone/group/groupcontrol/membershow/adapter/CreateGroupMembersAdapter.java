@@ -1,6 +1,7 @@
 package com.woting.ui.interphone.group.groupcontrol.membershow.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.AssembleImageUrlUtils;
+import com.woting.common.util.BitmapUtils;
 import com.woting.ui.common.model.UserInfo;
 
 import java.util.List;
@@ -26,7 +29,7 @@ public class CreateGroupMembersAdapter extends BaseAdapter  implements SectionIn
 	private List<UserInfo> list;
 	private Context context;
 	private UserInfo lists;
-	private String url;
+
 	public CreateGroupMembersAdapter(Context context,List<UserInfo> list) {
 		super();
 		this.list = list;
@@ -60,7 +63,10 @@ public class CreateGroupMembersAdapter extends BaseAdapter  implements SectionIn
 			holder.image=(ImageView)convertView.findViewById(R.id.image);
 			holder.indexLayut=(LinearLayout)convertView.findViewById(R.id.index);
 			holder.contactLayut=(LinearLayout)convertView.findViewById(R.id.contactLayut);
-			holder.indexTv = (TextView) convertView.findViewById(R.id.indexTv); 
+			holder.indexTv = (TextView) convertView.findViewById(R.id.indexTv);
+			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
+			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
+			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
 			convertView.setTag(holder);
 		}else{
 			holder=(ViewHolder) convertView.getTag();
@@ -97,11 +103,13 @@ public class CreateGroupMembersAdapter extends BaseAdapter  implements SectionIn
 		if(lists.getPortraitMini()==null||lists.getPortraitMini().equals("")||lists.getPortraitMini().equals("null")||lists.getPortraitMini().trim().equals("")){
 			holder.image.setImageResource(R.mipmap.wt_image_tx_hy);
 		}else{
+			String url;
 			if(lists.getPortraitMini().startsWith("http:")){
 				url=lists.getPortraitMini();
 			}else{
 				url = GlobalConfig.imageurl+lists.getPortraitMini();
 			}
+			url=AssembleImageUrlUtils.assembleImageUrl150(url);
 			Log.e("url==================", url);
 			Picasso.with(context).load(url.replace("\\/", "/")).into(holder.image);
 		}
@@ -111,11 +119,11 @@ public class CreateGroupMembersAdapter extends BaseAdapter  implements SectionIn
 	class ViewHolder{
 		public ImageView image;
 		public TextView tv_b_name;
-		public LinearLayout lin_add;
 		public LinearLayout contactLayut;
 		public TextView indexTv;
 		public LinearLayout indexLayut;
 		public TextView tv_name;
+		public ImageView img_zhezhao;
 	}
 
 	/**
