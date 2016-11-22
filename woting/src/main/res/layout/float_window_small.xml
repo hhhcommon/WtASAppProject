@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/small_window_layout"
     android:layout_width="60dip"
-    android:layout_height="25dip"
-    android:background="@mipmap/bg_setting_on" >
+    android:layout_height="25dip">
 
     <TextView
         android:id="@+id/percent"

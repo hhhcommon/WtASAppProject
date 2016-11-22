@@ -55,8 +55,8 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="12dp"
                     android:src="@mipmap/img_telephone" />
@@ -93,8 +93,8 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="12dp"
                     android:src="@mipmap/img_username" />
@@ -131,8 +131,8 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="12dp"
                     android:src="@mipmap/img_password" />
@@ -168,10 +168,10 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="15dp"
                 android:layout_marginRight="12dp"
                 android:src="@mipmap/wt_group_vertify" />
 

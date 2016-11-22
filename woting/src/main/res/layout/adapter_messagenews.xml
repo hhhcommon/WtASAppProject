@@ -25,10 +25,10 @@
                 android:scaleType="centerCrop" />
 
             <ImageView
+                android:id="@+id/img_zhezhao"
                 android:layout_width="55dip"
                 android:layout_height="55dip"
-                android:layout_centerInParent="true"
-                android:src="@mipmap/wt_6_b_y_b" />
+                android:layout_centerInParent="true"/>
         </RelativeLayout>
 
         <LinearLayout

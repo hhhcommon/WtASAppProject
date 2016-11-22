@@ -15,8 +15,8 @@
         android:visibility="gone" >
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@mipmap/no_message_picture" />
 
         <LinearLayout
@@ -69,8 +69,8 @@
                     android:orientation="vertical" >
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
                         android:src="@mipmap/wt_image_notalk" />
 
                     <LinearLayout

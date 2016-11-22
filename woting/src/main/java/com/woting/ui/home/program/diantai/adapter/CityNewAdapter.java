@@ -89,7 +89,7 @@ public class CityNewAdapter extends BaseAdapter {
 						|| lists.getContentImg().equals("")
 						|| lists.getContentImg().equals("null")
 						|| lists.getContentImg().trim().equals("")) {
-					Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
+					Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx_d);
 					holder.imageview_rankimage.setImageBitmap(bmp);
 				} else {
 					String url;

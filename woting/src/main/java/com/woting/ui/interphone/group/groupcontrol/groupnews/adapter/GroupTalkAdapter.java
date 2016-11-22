@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.common.model.GroupInfo;
 
@@ -50,7 +51,7 @@ public class GroupTalkAdapter extends BaseAdapter{
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		ViewHolder holder=null;
+		ViewHolder holder;
 		if(convertView==null){
 			holder=new ViewHolder();
 			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_grouptalk, null);
@@ -80,12 +81,13 @@ public class GroupTalkAdapter extends BaseAdapter{
 				}else{
 					url = GlobalConfig.imageurl+lists.getPortraitMini();
 				}
+				url=AssembleImageUrlUtils.assembleImageUrl150(url);
 				Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageView_touxiang);
 			}
 		}else if(lists.getType() == 2){
 			holder.tv_name.setText("添加");
 			holder.headFrame.setVisibility(View.GONE);		// 08/04  头像的六边形边框  添加和剔除图标本身是六边形图标  所以隐藏其六边形边框
-			Bitmap bp=BitmapUtils.readBitMap(context, R.mipmap.image_add);
+			Bitmap bp=BitmapUtils.readBitMap(context, R.mipmap.wt_img_groupdetail_gridview_itemnull);
 	/*		holder.imageView_touxiang.setImageResource(R.drawable.image_add);*/
 			holder.imageView_touxiang.setImageBitmap(bp);
 		}else{

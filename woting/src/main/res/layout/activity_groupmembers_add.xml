@@ -13,11 +13,7 @@
 
         <ImageView
             android:id="@+id/head_left_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="6dp"
-            android:background="@mipmap/back_images"/>
+            style="@style/LeftImageStyle" />
 
         <TextView
             android:id="@+id/head_name_tv"
@@ -26,7 +22,7 @@
             android:layout_centerInParent="true"
             android:text="选择联系人"
             android:textColor="@color/WHITE_1"
-            android:textSize="@dimen/activity_head_center_s"/>
+            android:textSize="@dimen/activity_head_center_s" />
 
         <LinearLayout
             android:id="@+id/head_right_btn"
@@ -43,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:text="确定"
                 android:textColor="@color/dinglan_orange"
-                android:textSize="@dimen/activity_head_right"/>
+                android:textSize="@dimen/activity_head_right" />
 
         </LinearLayout>
 
@@ -70,7 +66,7 @@
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_marginLeft="10dp"
-                android:src="@mipmap/abc_ic_search_api_holo_light"/>
+                android:src="@mipmap/abc_ic_search_api_holo_light" />
 
             <EditText
                 android:id="@+id/et_search"
@@ -86,7 +82,7 @@
                 android:textColor="@color/gray"
                 android:textColorHint="@color/gray"
                 android:textCursorDrawable="@drawable/wt_edittext_cursor"
-                android:textSize="@dimen/wt_edittext_default_text"/>
+                android:textSize="@dimen/wt_edittext_default_text" />
 
             <ImageView
                 android:id="@+id/image_clear"
@@ -94,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:src="@mipmap/wt_img_clearnew"
-                android:visibility="invisible"/>
+                android:visibility="invisible" />
 
         </LinearLayout>
 
@@ -108,7 +104,7 @@
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
                 android:divider="@null"
-                android:scrollbars="none"/>
+                android:scrollbars="none" />
 
             <TextView
                 android:id="@+id/title_layout_no_friends"
@@ -119,7 +115,7 @@
                 android:text="没有找到联系人"
                 android:textColor="@color/gray"
                 android:textSize="12sp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/dialog"
@@ -131,7 +127,7 @@
                 android:text="A"
                 android:textColor="@color/WHITE"
                 android:textSize="30sp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <com.woting.ui.interphone.linkman.view.SideBar
                 android:id="@+id/sidrbar"
@@ -139,7 +135,7 @@
                 android:layout_height="fill_parent"
                 android:layout_gravity="right|center"
                 android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp" />
 
         </FrameLayout>
 

@@ -104,7 +104,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="13dp"
         android:padding="10dp"
-        android:layout_centerVertical="true"
-        android:src="@mipmap/play_icon_new"/>
+        android:layout_centerVertical="true"/>
 
 </RelativeLayout>

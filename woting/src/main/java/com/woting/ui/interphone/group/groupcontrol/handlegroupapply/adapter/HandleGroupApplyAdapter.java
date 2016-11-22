@@ -1,6 +1,7 @@
 package com.woting.ui.interphone.group.groupcontrol.handlegroupapply.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.AssembleImageUrlUtils;
+import com.woting.common.util.BitmapUtils;
 import com.woting.ui.common.model.UserInfo;
 
 import java.sql.Date;
@@ -21,9 +24,7 @@ import java.util.List;
 public class HandleGroupApplyAdapter extends BaseAdapter implements OnClickListener{
 	private List<UserInfo> list;
 	private Context context;
-	// private OnListener onListener;
 	private UserInfo Inviter;
-	private String url;
 	private Callback mCallback;
 	private SimpleDateFormat format;
 	public interface Callback {
@@ -60,7 +61,7 @@ public class HandleGroupApplyAdapter extends BaseAdapter implements OnClickListe
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		ViewHolder holder = null;
+		ViewHolder holder ;
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_userinviteme, null);
@@ -69,6 +70,9 @@ public class HandleGroupApplyAdapter extends BaseAdapter implements OnClickListe
 			holder.imageview_inviteimage = (ImageView) convertView.findViewById(R.id.imageView_inviter);// 该人头像
 			holder.textview_invitestauswait = (TextView) convertView.findViewById(R.id.textView_repeatstatus2);
 			holder.textview_invitestausyes = (TextView) convertView.findViewById(R.id.textView_repeatstatus);
+			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
+			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
+			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -89,14 +93,15 @@ public class HandleGroupApplyAdapter extends BaseAdapter implements OnClickListe
 		}
 		if (Inviter.getPortraitMini() == null || Inviter.getPortraitMini().equals("")
 				|| Inviter.getPortraitMini().equals("null") || Inviter.getPortraitMini().trim().equals("")) {
-			holder.imageview_inviteimage
-			.setImageResource(R.mipmap.wt_image_tx_hy);
-		} else {	
+			holder.imageview_inviteimage.setImageResource(R.mipmap.wt_image_tx_hy);
+		} else {
+			String url;
 			if(Inviter.getPortraitMini().startsWith("http:")){
 				url=Inviter.getPortraitMini();
 			}else{
 				url = GlobalConfig.imageurl+Inviter.getPortraitMini();
 			}
+			url=AssembleImageUrlUtils.assembleImageUrl150(url);
 			Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageview_inviteimage);
 		}
 		if (Inviter.getType() == 1) {
@@ -117,6 +122,7 @@ public class HandleGroupApplyAdapter extends BaseAdapter implements OnClickListe
 		public ImageView imageview_inviteimage;
 		public TextView textview_invitestauswait;
 		public TextView textview_invitestausyes;
+		public ImageView img_zhezhao;
 	}
 
 	@Override

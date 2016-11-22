@@ -59,8 +59,8 @@
                     android:orientation="horizontal" >
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="13dp"
                         android:src="@mipmap/icon4" />
@@ -88,8 +88,8 @@
                     android:orientation="horizontal" >
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="13dp"
                         android:src="@mipmap/icon2" />
@@ -116,8 +116,8 @@
                     android:orientation="horizontal" >
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="13dp"
                         android:src="@mipmap/icon1" />
@@ -144,8 +144,8 @@
                     android:orientation="horizontal" >
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="13dp"
                         android:src="@mipmap/icon3" />
