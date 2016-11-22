@@ -106,7 +106,7 @@ public class FloatingWindowService extends Service {
 		btn_floatView = new TextView(getApplicationContext());
 		btn_floatView.setGravity(Gravity.CENTER);
 		btn_floatView.setTextColor(getResources().getColor(R.color.WHITE));
-		btn_floatView.setBackgroundDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.btn_record_start));
+		btn_floatView.setBackgroundDrawable(getApplicationContext().getResources().getDrawable(R.mipmap.addgroup_talk));
 //        btn_floatView.setText("我听科技");
         
         wm = (WindowManager) getApplicationContext()

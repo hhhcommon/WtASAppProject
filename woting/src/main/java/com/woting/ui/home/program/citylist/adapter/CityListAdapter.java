@@ -10,7 +10,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.ui.home.common.model.CatalogName;
+import com.woting.ui.home.model.CatalogName;
 
 import java.util.List;
 

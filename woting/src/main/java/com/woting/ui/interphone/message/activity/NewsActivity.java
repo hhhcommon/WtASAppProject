@@ -16,18 +16,18 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
-import com.woting.ui.baseactivity.BaseActivity;
-import com.woting.ui.interphone.message.adapter.NewsAdapter;
-import com.woting.ui.interphone.message.adapter.NewsAdapter.OnListener;
-import com.woting.ui.common.model.GroupInfo;
-import com.woting.ui.interphone.message.model.MessageInFo;
-import com.woting.ui.interphone.message.model.UserInviteMeInside;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.common.model.GroupInfo;
+import com.woting.ui.interphone.message.adapter.NewsAdapter;
+import com.woting.ui.interphone.message.adapter.NewsAdapter.OnListener;
+import com.woting.ui.interphone.message.model.MessageInFo;
+import com.woting.ui.interphone.model.UserInviteMeInside;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +41,7 @@ import java.util.List;
  * 邮箱：645700751@qq.com
  */
 
-public class NewsActivity extends BaseActivity implements OnClickListener {
+public class NewsActivity extends AppBaseActivity implements OnClickListener {
     private NewsActivity context;
 
     private NewsAdapter adapter;

@@ -1,6 +1,7 @@
 package com.woting.ui.interphone.group.groupcontrol.groupnumdel.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.util.AssembleImageUrlUtils;
+import com.woting.common.util.BitmapUtils;
 import com.woting.ui.common.model.UserInfo;
 import com.woting.common.config.GlobalConfig;
 
@@ -22,7 +25,7 @@ public class CreateGroupMembersDelAdapter extends BaseAdapter implements Section
 	private List<UserInfo> list;
 	private Context context;
 	private UserInfo lists;
-	private String url;
+	
 	private friendCheck friendcheck;
 
 	public CreateGroupMembersDelAdapter(Context context, List<UserInfo> list) {
@@ -57,7 +60,7 @@ public class CreateGroupMembersDelAdapter extends BaseAdapter implements Section
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		ViewHolder holder = null;
+		ViewHolder holder ;
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_group_membersadd, null);
@@ -67,7 +70,10 @@ public class CreateGroupMembersDelAdapter extends BaseAdapter implements Section
 			/*holder.lin_onclick = (LinearLayout) convertView.findViewById(R.id.lin_check);*/
 			holder.indexLayut=(LinearLayout)convertView.findViewById(R.id.index);
 			holder.contactLayut=(LinearLayout)convertView.findViewById(R.id.contactLayut);
-			holder.indexTv = (TextView) convertView.findViewById(R.id.indexTv); 
+			holder.indexTv = (TextView) convertView.findViewById(R.id.indexTv);
+			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
+			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
+			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -95,11 +101,13 @@ public class CreateGroupMembersDelAdapter extends BaseAdapter implements Section
 				|| lists.getPortraitMini().trim().equals("")) {
 			holder.imageView_touxiang.setImageResource(R.mipmap.wt_image_tx_hy);
 		} else {
+			String url;
 			if(lists.getPortraitMini().startsWith("http:")){
 				url=lists.getPortraitMini();
 			}else{
 				url = GlobalConfig.imageurl+lists.getPortraitMini();
 			}
+			url=AssembleImageUrlUtils.assembleImageUrl150(url);
 			Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageView_touxiang);
 		}
 		if (lists.getCheckType() == 2) {
@@ -130,6 +138,7 @@ public class CreateGroupMembersDelAdapter extends BaseAdapter implements Section
 		public TextView tv_name;
 /*		public LinearLayout lin_onclick;*/
 		public ImageView imageView_check;
+		public ImageView img_zhezhao;
 	}
 
 

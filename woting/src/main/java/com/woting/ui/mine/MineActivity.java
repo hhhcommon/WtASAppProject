@@ -51,16 +51,16 @@ import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.photocut.PhotoCutActivity;
 import com.woting.ui.common.qrcodes.EWMShowActivity;
-import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
+import com.woting.ui.interphone.model.UserInviteMeInside;
 import com.woting.ui.mine.favorite.activity.FavoriteActivity;
 import com.woting.ui.mine.hardware.HardwareIntroduceActivity;
 import com.woting.ui.mine.model.UserPortaitInside;
+import com.woting.ui.mine.myupload.MyUploadActivity;
 import com.woting.ui.mine.person.updatepersonnews.UpdatePersonActivity;
 import com.woting.ui.mine.person.updatepersonnews.model.UpdatePerson;
 import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
 import com.woting.ui.mine.set.SetActivity;
 import com.woting.ui.mine.shapeapp.ShapeAppActivity;
-import com.woting.ui.mine.myupload.MyUploadActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
