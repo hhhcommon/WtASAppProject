@@ -25,6 +25,24 @@ import java.util.List;
 public class MyUploadListAdapter extends BaseAdapter {
     private Context context;
     private List<RankInfo> list;
+    private boolean isVisible;// 选择
+
+    // 设置状态
+    public void setVisible(boolean visible) {
+        isVisible = visible;
+        if(!isVisible) {
+            for(int i=0; i<list.size(); i++) {
+                list.get(i).setChecktype(0);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    // 刷新界面
+    public void setList(List<RankInfo> list) {
+        this.list = list;
+        notifyDataSetChanged();
+    }
 
     public MyUploadListAdapter(Context context, List<RankInfo> list) {
         this.context = context;
@@ -132,6 +150,23 @@ public class MyUploadListAdapter extends BaseAdapter {
                 }
             }
             holder.textLast.setText(time);
+        }
+
+        // 设置是否可以选择
+        if(isVisible) {
+            holder.imageCheck.setVisibility(View.VISIBLE);
+        } else {
+            holder.imageCheck.setVisibility(View.GONE);
+        }
+
+        // 点选框被选中为 1  未被选中时为 0
+        int checkType = list.get(position).getChecktype();
+        if(checkType == 0) {
+            Bitmap bitmapNoCheck = BitmapUtils.readBitMap(context, R.mipmap.wt_group_nochecked);
+            holder.imageCheck.setImageBitmap(bitmapNoCheck);
+        } else {
+            Bitmap bitmapCheck = BitmapUtils.readBitMap(context, R.mipmap.wt_group_checked);
+            holder.imageCheck.setImageBitmap(bitmapCheck);
         }
 
         return convertView;

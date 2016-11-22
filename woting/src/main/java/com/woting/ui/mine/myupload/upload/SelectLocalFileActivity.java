@@ -1,9 +1,11 @@
 package com.woting.ui.mine.myupload.upload;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -19,21 +21,25 @@ import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.mine.myupload.adapter.SelectFileListAdapter;
 import com.woting.ui.mine.myupload.model.MediaStoreInfo;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 选择本地音频文件
  */
-public class SelectAudioActivity extends AppBaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class SelectLocalFileActivity extends AppBaseActivity implements
+        View.OnClickListener, AdapterView.OnItemClickListener, SelectFileListAdapter.ImagePlayListener {
+
+    private SelectFileListAdapter adapter;
     private  List<MediaStoreInfo> list;
 
-//    private int index;
+    private int index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_audio);
+        setContentView(R.layout.activity_select_local_file);
 
         initView();
     }
@@ -57,8 +63,9 @@ public class SelectAudioActivity extends AppBaseActivity implements View.OnClick
 //            textTip.setVisibility(View.GONE);
 //            btnNext.setVisibility(View.VISIBLE);
             listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-            listView.setAdapter(new SelectFileListAdapter(context, list));
+            listView.setAdapter(adapter = new SelectFileListAdapter(context, list));
             listView.setOnItemClickListener(this);
+            adapter.setImagePlayListener(this);
         }
     }
 
@@ -72,16 +79,34 @@ public class SelectAudioActivity extends AppBaseActivity implements View.OnClick
                 ToastUtils.show_allways(context, "录音");
                 break;
             case R.id.btn_next:// 下一步
-                ToastUtils.show_allways(context, "下一步");
+                Intent intent = new Intent(context, UploadActivity.class);
+                intent.putExtra("MEDIA__FILE_PATH", list.get(index).getData());
+                startActivityForResult(intent, 0xeee);
                 break;
         }
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//        index = position;
-        MediaStoreInfo data = list.get(position);// 获取路径
-        ToastUtils.show_allways(context, data.getData());
+        if(index != position) {
+            index = position;
+            adapter.setIndex(index);
+        }
+//        MediaStoreInfo data = list.get(position);// 获取路径
+//        ToastUtils.show_allways(context, data.getData());
+    }
+
+    @Override
+    public void playClick() {
+        startActivity(getAudioFileIntent(list.get(index).getData()));
+    }
+
+    private Intent getAudioFileIntent(String audioFilePath) {
+        Intent mIntent = new Intent();
+        mIntent.setAction(android.content.Intent.ACTION_VIEW);
+        Uri uri = Uri.fromFile(new File(audioFilePath));
+        mIntent.setDataAndType(uri , "audio/*");
+        return mIntent;
     }
 
     // 获取本地音频文件
@@ -126,5 +151,16 @@ public class SelectAudioActivity extends AppBaseActivity implements View.OnClick
         cursor.close();
         Log.i("MainActivity", "--------- AUDIO END ---------");
         return list;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 0xeee) {
+            if(resultCode == RESULT_OK) {
+                setResult(RESULT_OK);
+                finish();
+            }
+        }
     }
 }
