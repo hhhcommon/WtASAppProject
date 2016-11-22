@@ -71,10 +71,8 @@ public class PianHaoAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         holder.tv_name.setText(list.get(position).getName());
-
         adapters = new PreferGridAdapter(context, list.get(position).getChildren());
         holder.gv.setAdapter(adapters);
-
         holder.gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int positions, long id) {

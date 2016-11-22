@@ -26,7 +26,7 @@ public class PreferGridAdapter extends BaseAdapter {
     }
     public void ChangeData( List<FenLeiName> list) {
         this.list = list;
-        notifyDataSetChanged();
+        notifyDataSetInvalidated();
     }
 
     @Override
