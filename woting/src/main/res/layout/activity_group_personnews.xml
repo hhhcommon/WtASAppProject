@@ -102,21 +102,22 @@
                 android:orientation="vertical" >
 
                 <RelativeLayout
+                    android:id="@+id/lin_add"
                     android:layout_width="65dp"
-                    android:layout_height="74dp"
+                    android:layout_height="80dp"
                     android:orientation="vertical" >
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:visibility="invisible"
                         android:layout_alignParentBottom="true"
                         android:src="@mipmap/addgroup_talk" />
 
                     <ImageView
                         android:id="@+id/image_xiugai"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:layout_alignParentRight="true"
                         android:src="@mipmap/xiugai" />
                 </RelativeLayout>
@@ -217,7 +218,7 @@
                 android:layout_height="40dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
-                android:background="@drawable/bg_edittext_normal"
+                android:background="@drawable/bg_edittext_gray"
                 android:gravity="left|center"
                 android:orientation="horizontal"
                 android:padding="5dip"
@@ -225,15 +226,16 @@
 
                 <EditText
                     android:id="@+id/et_news"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@color/WHITE"
                     android:ellipsize="end"
                     android:ems="10"
-                    android:hint="请输入验证信息"
+                    android:hint="   请输入验证信息"
                     android:maxLines="1"
-                    android:padding="1dp"
+                    android:paddingLeft="10dp"
+                    android:layout_marginLeft="5dp"
                     android:singleLine="true"
                     android:textColor="@color/beijing"
                     android:textColorHint="@color/gray"
@@ -244,13 +246,13 @@
                     android:id="@+id/lin_delete"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="5dp"
                     android:gravity="center"
                     android:orientation="vertical" >
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
                         android:src="@mipmap/wt_img_clearnew" />
                 </LinearLayout>
             </LinearLayout>

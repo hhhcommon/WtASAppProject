@@ -15,7 +15,7 @@ import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.GroupInfo;
-import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
+import com.woting.ui.interphone.model.UserInviteMeInside;
 
 /**
  * 展示二维码

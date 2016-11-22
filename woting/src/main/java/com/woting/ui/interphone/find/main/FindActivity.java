@@ -96,9 +96,9 @@ public class FindActivity extends AppBaseActivity implements OnClickListener {
 		stepVolume = maxVolume / 100;
 		setListener();
 		Dialog();
-		IntentFilter myfileter = new IntentFilter();
-		myfileter.addAction(BroadcastConstants.FINDVOICE);
-		registerReceiver(mBroadcastReceiver, myfileter);
+		IntentFilter f = new IntentFilter();
+		f.addAction(BroadcastConstants.FINDVOICE);
+		registerReceiver(mBroadcastReceiver, f);
 	}
 	
 	// 弹出框

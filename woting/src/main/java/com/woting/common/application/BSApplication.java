@@ -15,6 +15,7 @@ import com.woting.common.constant.KeyConstant;
 import com.woting.common.helper.CommonHelper;
 import com.woting.common.receiver.NetWorkChangeReceiver;
 import com.woting.common.service.LocationService;
+import com.woting.common.service.SocketService;
 import com.woting.common.service.SubclassService;
 import com.woting.common.util.PhoneMessage;
 import com.woting.ui.download.service.DownloadService;
@@ -63,8 +64,8 @@ public class BSApplication extends Application {
         _l.add("GOTO::8");                   //之后，调到第9步处理
         scc = new SocketClientConfig();
         scc.setReConnectWays(_l);
-       /* Socket = new Intent(this, SocketService.class);                //socket服务
-        startService(Socket);*/
+       Socket = new Intent(this, SocketService.class);                //socket服务
+        startService(Socket);
         record = new Intent(this, VoiceStreamRecordService.class);     //录音服务
         startService(record);
         voicePlayer = new Intent(this, VoiceStreamPlayerService.class);//播放服务

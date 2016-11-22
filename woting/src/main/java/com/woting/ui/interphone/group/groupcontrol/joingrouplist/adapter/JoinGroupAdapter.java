@@ -1,6 +1,7 @@
 package com.woting.ui.interphone.group.groupcontrol.joingrouplist.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.util.AssembleImageUrlUtils;
+import com.woting.common.util.BitmapUtils;
 import com.woting.ui.interphone.group.groupcontrol.joingrouplist.model.CheckInfo;
 import com.woting.common.config.GlobalConfig;
 
@@ -20,7 +23,7 @@ public class JoinGroupAdapter extends BaseAdapter implements OnClickListener{
 	private List<CheckInfo> list;
 	private Context context;
 	private Callback mCallback;
-	private String url;
+
 
 	public interface Callback {
 		public void click(View v);
@@ -54,7 +57,7 @@ public class JoinGroupAdapter extends BaseAdapter implements OnClickListener{
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		ViewHolder holder = null;
+		ViewHolder holder ;
 		if (convertView == null) {
 			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_userinviteme, null);
 			holder = new ViewHolder();
@@ -63,6 +66,9 @@ public class JoinGroupAdapter extends BaseAdapter implements OnClickListener{
 			holder.imageview_inviteimage = (ImageView) convertView.findViewById(R.id.imageView_inviter);// 该人头像
 			holder.textview_invitestauswait = (TextView) convertView.findViewById(R.id.textView_repeatstatus2);
 			holder.textview_invitestausyes = (TextView) convertView.findViewById(R.id.textView_repeatstatus);
+			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
+			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
+			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -80,11 +86,13 @@ public class JoinGroupAdapter extends BaseAdapter implements OnClickListener{
 				|| Inviter.getPortraitMini().equals("null") || Inviter.getPortraitMini().trim().equals("")) {
 			holder.imageview_inviteimage.setImageResource(R.mipmap.wt_image_tx_hy);
 		} else {
+			String url;
 			if(Inviter.getPortraitMini().startsWith("http:")){
 				url=Inviter.getPortraitMini();
 			}else{
 				url = GlobalConfig.imageurl+Inviter.getPortraitMini();
 			}
+			url=AssembleImageUrlUtils.assembleImageUrl150(url);
 			Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageview_inviteimage);
 		}
 		if (Inviter.getCheckType() == 1) {
@@ -105,6 +113,7 @@ public class JoinGroupAdapter extends BaseAdapter implements OnClickListener{
 		public ImageView imageview_inviteimage;
 		public TextView textview_invitestauswait;
 		public TextView textview_invitestausyes;
+		public ImageView img_zhezhao;
 	}
 
 	@Override

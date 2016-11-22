@@ -1,7 +1,6 @@
 package com.woting.ui.interphone.find.friendadd;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -14,15 +13,16 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.manager.MyActivityManager;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
+import com.woting.ui.interphone.model.UserInviteMeInside;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,18 +34,17 @@ import org.json.JSONObject;
  */
 public class FriendAddActivity extends AppBaseActivity implements OnClickListener {
 	private TextView tv_add;
-	private Dialog dialog;
-	private SharedPreferences sharedPreferences;
-	private String username;
 	private TextView tv_name;
-	private String url;
-	private ImageView image_touxiang;
 	private TextView tv_id;
-	private LinearLayout head_left_btn;
+	private TextView tv_sign;
 	private EditText et_news;
+	private Dialog dialog;
+	private SharedPreferences sharedPreferences= BSApplication.SharedPreferences;
+	private String username;
+	private ImageView image_touxiang;
+	private LinearLayout head_left_btn;
 	private LinearLayout lin_delete;
 	private UserInviteMeInside contact;
-	private TextView tv_sign;
 	private String tag = "FRIEND_ADD_VOLLEY_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
 	
@@ -53,13 +52,12 @@ public class FriendAddActivity extends AppBaseActivity implements OnClickListene
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friendadds);
-		sharedPreferences = this.getSharedPreferences("wotingfm",Context.MODE_PRIVATE);
 		username = sharedPreferences.getString(StringConstant.USERNAME, "");			//当前登录账号的姓名
 		contact = (UserInviteMeInside) this.getIntent().getSerializableExtra("contact");
 		setView();		//设置界面
 		setListener();	//设置监听
 		if(contact != null && !contact.equals("")){
-			setvalue();	//适配数据
+			setValue();	//适配数据
 		}
 	}
 
@@ -74,7 +72,7 @@ public class FriendAddActivity extends AppBaseActivity implements OnClickListene
 		tv_add = (TextView) findViewById(R.id.tv_add);//添加好友
 	}
 
-	private void setvalue() {		
+	private void setValue() {
 		//数据适配
 		if(contact.getUserName()==null||contact.getUserName().equals("")){
 			tv_name.setText("未知");
@@ -96,11 +94,13 @@ public class FriendAddActivity extends AppBaseActivity implements OnClickListene
 		if(contact.getPortraitMini()==null||contact.getPortraitMini().equals("")||contact.getPortraitMini().equals("null")||contact.getPortraitMini().trim().equals("")){
 			image_touxiang.setImageResource(R.mipmap.wt_image_tx_hy);
 		}else{
+			String url;
 			if(contact.getPortraitMini().startsWith("http:")){
 				url=contact.getPortraitMini();
 			}else{
 				url = GlobalConfig.imageurl+contact.getPortraitMini();
 			}
+			url=AssembleImageUrlUtils.assembleImageUrl150(url);
 			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(image_touxiang);
 		}
 		if(username==null||username.equals("")){
@@ -143,8 +143,15 @@ public class FriendAddActivity extends AppBaseActivity implements OnClickListene
 	}
 
 	private void sendRequest(){
-		VolleyRequest.RequestPost(GlobalConfig.sendInviteUrl, tag, setParam(), new VolleyCallback() {
-//			private String SessionId;
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+		try {
+			// 模块属性
+			jsonObject.put("BeInvitedUserId", contact.getUserId());
+			jsonObject.put("InviteMsg", et_news.getText().toString().trim());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		VolleyRequest.RequestPost(GlobalConfig.sendInviteUrl, tag, jsonObject, new VolleyCallback() {
 			private String ReturnType;
 			private String Message;
 
@@ -158,7 +165,6 @@ public class FriendAddActivity extends AppBaseActivity implements OnClickListene
 				}
 				try {
 					ReturnType = result.getString("ReturnType");
-//					SessionId = result.getString("SessionId");
 					Message = result.getString("Message");
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -200,18 +206,6 @@ public class FriendAddActivity extends AppBaseActivity implements OnClickListene
 			}
 		});
 	}
-	
-	private JSONObject setParam(){
-		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-		try {
-			// 模块属性
-			jsonObject.put("BeInvitedUserId", contact.getUserId());
-			jsonObject.put("InviteMsg", et_news.getText().toString().trim());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return jsonObject;
-	}
 
 	@Override
 	protected void onDestroy() {
@@ -229,7 +223,6 @@ public class FriendAddActivity extends AppBaseActivity implements OnClickListene
 		context = null;
 		dialog = null;
 		username = null;
-		url = null;
 		contact = null;
 		tag = null;
 		setContentView(R.layout.activity_null);

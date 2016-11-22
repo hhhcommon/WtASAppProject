@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.woting.common.database.SQLiteHelper;
-import com.woting.ui.home.common.model.CatalogName;
+import com.woting.ui.home.model.CatalogName;
 
 import java.util.ArrayList;
 import java.util.List;

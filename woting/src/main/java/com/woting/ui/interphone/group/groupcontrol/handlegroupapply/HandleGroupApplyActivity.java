@@ -19,10 +19,10 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.common.model.UserInfo;
 import com.woting.ui.interphone.group.groupcontrol.handlegroupapply.adapter.HandleGroupApplyAdapter;
 import com.woting.ui.interphone.group.groupcontrol.handlegroupapply.adapter.HandleGroupApplyAdapter.Callback;
-import com.woting.ui.common.model.UserInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +35,7 @@ import java.util.List;
  * @author 辛龙
  * 2016年4月13日
  */
-public class HandleGroupApplyActivity extends BaseActivity implements OnClickListener, Callback, OnItemLongClickListener {
+public class HandleGroupApplyActivity extends AppBaseActivity implements OnClickListener, Callback, OnItemLongClickListener {
     private HandleGroupApplyAdapter adapter;
     private List<UserInfo> userList = new ArrayList<>();// 存储服务器返回值的 list
 

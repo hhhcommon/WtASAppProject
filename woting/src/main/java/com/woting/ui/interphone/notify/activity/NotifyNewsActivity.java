@@ -11,11 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.woting.R;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.common.constant.BroadcastConstants;
+import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.interphone.linkman.dao.NotifyHistoryDao;
 import com.woting.ui.interphone.linkman.model.DBNotifyHistory;
 import com.woting.ui.interphone.notify.adapter.NotifyNewsAdapter;
-import com.woting.common.constant.BroadcastConstants;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ import java.util.List;
  * 作者：xinlong on 2016/5/5 21:18
  * 邮箱：645700751@qq.com
  */
-public class NotifyNewsActivity extends BaseActivity implements OnClickListener {
+public class NotifyNewsActivity extends AppBaseActivity implements OnClickListener {
 	private ListView mListView;
 	private LinearLayout lin_back;
 

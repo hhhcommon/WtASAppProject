@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.ui.interphone.linkman.model.DBNotifyHistory;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.BitmapUtils;
@@ -62,6 +63,9 @@ public class NotifyNewsAdapter extends BaseAdapter {
             holder.tile = (TextView) convertView.findViewById(R.id.title);
             holder.content = (TextView) convertView.findViewById(R.id.content);
             holder.Image = (ImageView) convertView.findViewById(R.id.Image);
+            holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
+            Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
+            holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -88,7 +92,13 @@ public class NotifyNewsAdapter extends BaseAdapter {
                 Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_linkman_news);
                 holder.Image.setImageBitmap(bmp);
             } else {
-                String url = GlobalConfig.imageurl + lists.getImageUrl();
+                String url;
+                if(lists.getImageUrl().startsWith("http:")){
+                    url=lists.getImageUrl();
+                }else{
+                    url = GlobalConfig.imageurl+lists.getImageUrl();
+                }
+                url= AssembleImageUrlUtils.assembleImageUrl150(url);
                 Picasso.with(context).load(url.replace("\\/", "/")).into(holder.Image);
             }
         }
@@ -100,5 +110,6 @@ public class NotifyNewsAdapter extends BaseAdapter {
         public TextView content;
         public TextView tile;
         public TextView time;
+        public ImageView img_zhezhao;
     }
 }

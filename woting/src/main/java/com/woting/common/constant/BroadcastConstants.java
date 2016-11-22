@@ -44,6 +44,9 @@ public class BroadcastConstants {
 	//PUSH_CALL-----push_call
 	public static final String PUSH_CALL="PUSH_CALL";
 
+	//PUSH-----push
+	public static final String PUSH="PUSH";
+
 	//PUSH_NOTIFY-----pushnotify
 	public static final String PUSH_NOTIFY="PUSH_NOTIFY";
 

@@ -1,7 +1,6 @@
 package com.woting.ui.interphone.find.groupadd;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,8 +14,11 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
@@ -35,26 +37,26 @@ import org.json.JSONObject;
  */
 public class  GroupAddActivity extends AppBaseActivity implements OnClickListener {
 	private TextView tv_add;
-	private Dialog dialog;
-	private SharedPreferences sharedPreferences;
-	private String username;
 	private TextView tv_name;
-	private String url;
-	private ImageView image_touxiang;
 	private TextView tv_id;
-	private LinearLayout head_left_btn;
+	private TextView tv_sign;
+	private ImageView image_touxiang;
+	private Dialog dialog;
+	private SharedPreferences sharedPreferences= BSApplication.SharedPreferences;
+	private String username;
+
 	private String GroupType;		// 验证群0；公开群1[原来的号码群]；密码群2
+	private String news;
+	private String psd = null;		// 密码
+	private String tag = "GROUP_ADD_VOLLEY_REQUEST_CANCEL_TAG";
+	private LinearLayout head_left_btn;
 	private LinearLayout lin_mm;
 	private LinearLayout lin_yzxx;
+	private LinearLayout lin_delete;
 	private EditText et_news;
-	private String news;
 	private EditText et_password;
 	private GroupInfo contact;
-	private String psd = null;		// 密码
-	private LinearLayout lin_delete;
 	private GroupAddActivity context;
-	private TextView tv_sign;
-	private String tag = "GROUP_ADD_VOLLEY_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
 
 	@Override
@@ -62,14 +64,13 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_groupadds);
 		context = this;
-		sharedPreferences = this.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
 		username = sharedPreferences.getString(StringConstant.USERNAME, "");			// 当前登录账号的姓名
 		contact = (GroupInfo) this.getIntent().getSerializableExtra("contact");
 		GroupType = contact.getGroupType();	// 当前组的类型
 		setView();							// 设置界面
 		setListener();						// 设置监听
 		if (contact != null && !contact.equals("")) {
-			setvalue(contact);				// 适配数据
+			setValue(contact);				// 适配数据
 		}
 	}
 
@@ -87,7 +88,7 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 		lin_delete = (LinearLayout) findViewById(R.id.lin_delete);
 	}
 
-	private void setvalue(GroupInfo contact) {
+	private void setValue(GroupInfo contact) {
 		if (GroupType == null || GroupType.equals("")) {
 			tv_add.setVisibility(View.INVISIBLE);
 		} else {
@@ -129,11 +130,13 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 				|| contact.getGroupImg().equals("null") || contact.getGroupImg().trim().equals("")) {
 			image_touxiang.setImageResource(R.mipmap.wt_image_tx_qz);
 		} else {
+			String url;
 			if(contact.getGroupImg().startsWith("http:")){
 				url = contact.getGroupImg();
 			}else{
 				url = GlobalConfig.imageurl+contact.getGroupImg();
 			}
+			url=AssembleImageUrlUtils.assembleImageUrl150(url);
 			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(image_touxiang);
 		}
 		if(username == null || username.equals("")){
@@ -177,7 +180,7 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 						if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 							// 进入验证群走单独接口
 							dialog = DialogUtils.Dialogph(GroupAddActivity.this,"正在发送请求");
-							sendrequest();
+							sendRequest();
 						} else {
 							ToastUtils.show_allways(getApplicationContext(),"网络连接失败，请稍后重试");
 						}
@@ -209,7 +212,7 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 		}
 	}
 
-	private void sendrequest() {
+	private void sendRequest() {
 		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
 			jsonObject.put("GroupId", contact.getGroupId());
@@ -222,8 +225,6 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 
 		VolleyRequest.RequestPost(GlobalConfig.JoinGroupVertifyUrl, tag, jsonObject, new VolleyCallback() {
 			private String ReturnType;
-			//			private String Message;
-			//			private String SessionId;
 
 			@Override
 			protected void requestSuccess(JSONObject result) {
@@ -235,8 +236,6 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 				}
 				try {
 					ReturnType = result.getString("ReturnType");
-					//					SessionId = result.getString("SessionId");
-					//					Message = result.getString("Message");
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -308,8 +307,8 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 						ToastUtils.show_allways(GroupAddActivity.this, "无法获取用户组ID");
 					} else if (ReturnType.equals("1001")) {
 						ToastUtils.show_allways(GroupAddActivity.this, "成功返回，用户已经成功加入了这个群组");
-						Intent pushintent = new Intent("push_refreshlinkman");
-						context. sendBroadcast(pushintent);
+						Intent P = new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN);
+						context. sendBroadcast(P);
 						Intent intent = new Intent(GroupAddActivity.this, TalkGroupNewsActivity.class);
 						Bundle bundle = new Bundle();
 						bundle.putString("type", "groupaddactivity");
@@ -370,7 +369,6 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 		context = null;
 		dialog = null;
 		username = null;
-		url = null;
 		GroupType = null;
 		news = null;
 		contact = null;

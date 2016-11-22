@@ -20,7 +20,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.Result;
@@ -28,17 +27,17 @@ import com.woting.R;
 import com.woting.common.manager.MyActivityManager;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.PhoneMessage;
+import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.common.scanning.DecodeThread;
 import com.woting.ui.common.scanning.InactivityTimer;
 import com.woting.ui.common.scanning.handle.CaptureActivityHandler;
 import com.woting.ui.common.scanning.manager.BeepManager;
 import com.woting.ui.common.scanning.manager.CameraManager;
 import com.woting.ui.common.scanning.model.MessageInfo;
-import com.woting.ui.interphone.find.findresult.model.UserInviteMeInside;
 import com.woting.ui.interphone.find.friendadd.FriendAddActivity;
 import com.woting.ui.interphone.find.groupadd.GroupAddActivity;
 import com.woting.ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivity;
-import com.woting.ui.common.model.GroupInfo;
+import com.woting.ui.interphone.model.UserInviteMeInside;
 
 import java.io.IOException;
 import java.lang.reflect.Field;

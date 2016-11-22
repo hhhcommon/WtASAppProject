@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.ui.interphone.message.model.MessageInFo;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.BitmapUtils;
@@ -68,6 +69,9 @@ public class NewsAdapter extends BaseAdapter {
 			holder.time = (TextView)convertView.findViewById(R.id.tv_time);
 			holder.tv_res = (TextView)convertView.findViewById(R.id.tv_res);
 			holder.tv_acc = (TextView)convertView.findViewById(R.id.tv_acc);
+			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
+			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
+			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
 			convertView.setTag(holder); 
 		}else{
 			holder = (ViewHolder) convertView.getTag();
@@ -104,6 +108,7 @@ public class NewsAdapter extends BaseAdapter {
 					}else{
 						url = GlobalConfig.imageurl+lists.getPortrait();
 					}
+					url=AssembleImageUrlUtils.assembleImageUrl150(url);
 					Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.Image);
 				}
 			}else{
@@ -135,6 +140,7 @@ public class NewsAdapter extends BaseAdapter {
 					}else{
 						url = GlobalConfig.imageurl+lists.getProtraitMini();
 					}
+					url=AssembleImageUrlUtils.assembleImageUrl150(url);
 					Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.Image);
 				}
 
@@ -165,5 +171,6 @@ public class NewsAdapter extends BaseAdapter {
 		public TextView time;
 		public TextView tv_news;
 		public ImageView Image;
+		public ImageView img_zhezhao;
 	}
 }

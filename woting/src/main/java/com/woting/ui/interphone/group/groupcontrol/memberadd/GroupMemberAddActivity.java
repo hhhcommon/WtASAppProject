@@ -21,14 +21,14 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.common.model.UserInfo;
 import com.woting.ui.interphone.group.groupcontrol.memberadd.adapter.CreateGroupMembersAddAdapter;
 import com.woting.ui.interphone.group.groupcontrol.memberadd.adapter.CreateGroupMembersAddAdapter.friendCheck;
 import com.woting.ui.interphone.linkman.view.CharacterParser;
 import com.woting.ui.interphone.linkman.view.PinyinComparator;
 import com.woting.ui.interphone.linkman.view.SideBar;
 import com.woting.ui.interphone.linkman.view.SideBar.OnTouchingLetterChangedListener;
-import com.woting.ui.common.model.UserInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,7 +42,7 @@ import java.util.List;
  * @author 辛龙
  * 2016年3月25日
  */
-public class GroupMemberAddActivity extends BaseActivity implements
+public class GroupMemberAddActivity extends AppBaseActivity implements
         OnClickListener, TextWatcher, OnTouchingLetterChangedListener {
 
     private CharacterParser characterParser = CharacterParser.getInstance();// 实例化汉字转拼音类
