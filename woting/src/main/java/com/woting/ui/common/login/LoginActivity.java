@@ -112,7 +112,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                 mShareAPI.doOauthVerify(this, platform, new UMAuthListener() {
                     @Override
                     public void onError(SHARE_MEDIA arg0, int arg1, Throwable arg2) {
-                        ToastUtils.show_allways(context, "认证异常" + arg2.toString());
+                        ToastUtils.show_always(context, "认证异常" + arg2.toString());
                     }
 
                     @Override
@@ -122,7 +122,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
                     @Override
                     public void onCancel(SHARE_MEDIA arg0, int arg1) {
-                        ToastUtils.show_allways(context, "用户退出认证");
+                        ToastUtils.show_always(context, "用户退出认证");
                     }
                 });
                 break;
@@ -131,7 +131,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                 mShareAPI.doOauthVerify(this, platform1, new UMAuthListener() {
                     @Override
                     public void onError(SHARE_MEDIA arg0, int arg1, Throwable arg2) {
-                        ToastUtils.show_allways(context, "认证异常" + arg2.toString());
+                        ToastUtils.show_always(context, "认证异常" + arg2.toString());
                     }
 
                     @Override
@@ -141,7 +141,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
                     @Override
                     public void onCancel(SHARE_MEDIA arg0, int arg1) {
-                        ToastUtils.show_allways(context, "用户退出认证");
+                        ToastUtils.show_always(context, "用户退出认证");
                     }
                 });
                 break;
@@ -150,7 +150,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                 mShareAPI.doOauthVerify(LoginActivity.this, platform2, new UMAuthListener() {
                     @Override
                     public void onError(SHARE_MEDIA arg0, int arg1, Throwable arg2) {
-                        ToastUtils.show_allways(context, "认证异常" + arg2.toString());
+                        ToastUtils.show_always(context, "认证异常" + arg2.toString());
                     }
 
                     @Override
@@ -160,7 +160,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
                     @Override
                     public void onCancel(SHARE_MEDIA arg0, int arg1) {
-                        ToastUtils.show_allways(context, "用户退出认证");
+                        ToastUtils.show_always(context, "用户退出认证");
                     }
                 });
                 break;
@@ -172,18 +172,18 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         userName = editUserName.getText().toString().trim();
         password = editPassword.getText().toString().trim();
         if (userName == null || userName.trim().equals("")) {
-            ToastUtils.show_allways(context, "用户名不能为空");
+            ToastUtils.show_always(context, "用户名不能为空");
             return;
         }
         if (password == null || password.trim().equals("")) {
-            ToastUtils.show_allways(context, "密码不能为空");
+            ToastUtils.show_always(context, "密码不能为空");
             return;
         }
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             dialog = DialogUtils.Dialogph(context, "登录中");
             send();
         } else {
-            ToastUtils.show_allways(context, "网络失败，请检查网络");
+            ToastUtils.show_always(context, "网络失败，请检查网络");
         }
     }
 
@@ -359,16 +359,16 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         }
 
                     } else if (ReturnType != null && ReturnType.equals("1002")) {
-                        ToastUtils.show_allways(context, "您输入的用户暂未注册!");
+                        ToastUtils.show_always(context, "您输入的用户暂未注册!");
                     } else if (ReturnType != null && ReturnType.equals("1003")) {
-                        ToastUtils.show_allways(context, "您输入的密码错误!");
+                        ToastUtils.show_always(context, "您输入的密码错误!");
                     } else if (ReturnType != null && ReturnType.equals("0000")) {
-                        ToastUtils.show_allways(context, "发生未知错误，请稍后重试!");
+                        ToastUtils.show_always(context, "发生未知错误，请稍后重试!");
                     } else if (ReturnType != null && ReturnType.equals("T")) {
-                        ToastUtils.show_allways(context, "发生未知错误，请稍后重试!");
+                        ToastUtils.show_always(context, "发生未知错误，请稍后重试!");
                     } else {
                         if (Message != null && !Message.trim().equals("")) {
-                            ToastUtils.show_allways(context, Message + "");
+                            ToastUtils.show_always(context, Message + "");
                         }
                     }
                 }
@@ -564,14 +564,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                     }
 
                 } else if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_allways(context, "登录失败,请稍后再试!");
+                    ToastUtils.show_always(context, "登录失败,请稍后再试!");
                 } else if (ReturnType != null && ReturnType.equals("T")) {
-                    ToastUtils.show_allways(context, "异常返回值");
+                    ToastUtils.show_always(context, "异常返回值");
                 } else if (ReturnType != null && ReturnType.equals("1011")) {
-                    ToastUtils.show_allways(context, "没有好友");
+                    ToastUtils.show_always(context, "没有好友");
                 } else {
                     if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_allways(context, Message + "");
+                        ToastUtils.show_always(context, Message + "");
                     }
                 }
             }
@@ -591,7 +591,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         switch (requestCode) {
             case 0: // 从注册界面返回数据，注册成功
                 if (resultCode == 1) {
-                    ToastUtils.show_allways(context, "账号注册成功，已进行自动登录!");
+                    ToastUtils.show_always(context, "账号注册成功，已进行自动登录!");
                     setResult(1);
                     finish();
                 }
@@ -623,7 +623,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         dialog = DialogUtils.Dialogph(context, "正在用新浪信息注册");
                         sendThird();
                     } else {
-                        ToastUtils.show_allways(context, "网络失败，请检查网络");
+                        ToastUtils.show_always(context, "网络失败，请检查网络");
                     }
                 } else if (platform.equals(SHARE_MEDIA.WEIXIN)) {
                     thirdNickName = data.get("nickname");
@@ -637,7 +637,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         dialog = DialogUtils.Dialogph(context, "正在用微信信息注册");
                         sendThird();
                     } else {
-                        ToastUtils.show_allways(context, "网络失败，请检查网络");
+                        ToastUtils.show_always(context, "网络失败，请检查网络");
                     }
                 } else {
                     thirdNickName = data.get("screen_name");
@@ -651,22 +651,22 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         dialog = DialogUtils.Dialogph(context, "正在用qq信息注册");
                         sendThird();
                     } else {
-                        ToastUtils.show_allways(context, "网络失败，请检查网络");
+                        ToastUtils.show_always(context, "网络失败，请检查网络");
                     }
                 }
             } else {
-                ToastUtils.show_allways(context, "个人信息获取异常!");
+                ToastUtils.show_always(context, "个人信息获取异常!");
             }
         }
 
         @Override
         public void onError(SHARE_MEDIA platform, int action, Throwable t) {
-            ToastUtils.show_allways(context, "个人信息获取异常!");
+            ToastUtils.show_always(context, "个人信息获取异常!");
         }
 
         @Override
         public void onCancel(SHARE_MEDIA platform, int action) {
-            ToastUtils.show_allways(context, "您已取消操作，本程序无法获取到您的个人信息!");
+            ToastUtils.show_always(context, "您已取消操作，本程序无法获取到您的个人信息!");
         }
     };
 

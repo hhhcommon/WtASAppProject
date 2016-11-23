@@ -100,7 +100,7 @@ public class TotalFragment extends Fragment implements OnClickListener {
 				dialog = DialogUtils.Dialogph(context, "正在获取全部喜欢信息");
 				send();
 			} else {
-				ToastUtils.show_allways(context, "网络失败，请检查网络");
+				ToastUtils.show_always(context, "网络失败，请检查网络");
 			}
 		}
 		return rootView;
@@ -170,7 +170,7 @@ public class TotalFragment extends Fragment implements OnClickListener {
                     delList.add(type + "::" + contentId);
                     sendRequest();
                 } else {
-                    ToastUtils.show_allways(context, "网络失败，请检查网络");
+                    ToastUtils.show_always(context, "网络失败，请检查网络");
                 }
                 delDialog.dismiss();
                 break;
@@ -203,7 +203,7 @@ public class TotalFragment extends Fragment implements OnClickListener {
                     context.sendBroadcast(new Intent(FavoriteActivity.VIEW_UPDATE));
                     send();
 				} else {
-					ToastUtils.show_allways(context, "删除失败，请检查网络或稍后重试!");
+					ToastUtils.show_always(context, "删除失败，请检查网络或稍后重试!");
 				}
 			}
 			
@@ -324,11 +324,11 @@ public class TotalFragment extends Fragment implements OnClickListener {
 							}
                             setItemListener();
 						} else {
-							ToastUtils.show_allways(context, "还没有喜欢的内容!");
+							ToastUtils.show_always(context, "还没有喜欢的内容!");
 						}
 					}
 				} else {
-					ToastUtils.show_allways(context, "还没有喜欢的内容!");
+					ToastUtils.show_always(context, "还没有喜欢的内容!");
 				}
 			}
 			
@@ -445,7 +445,7 @@ public class TotalFragment extends Fragment implements OnClickListener {
 				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 					send();
 				} else {
-					ToastUtils.show_allways(context, "网络失败，请检查网络");
+					ToastUtils.show_always(context, "网络失败，请检查网络");
 				}
 			}
 		}
@@ -476,7 +476,7 @@ public class TotalFragment extends Fragment implements OnClickListener {
 			}
 			sendRequest();
 		} else {
-			ToastUtils.show_allways(context, "网络连接失败，请检查网络!");
+			ToastUtils.show_always(context, "网络连接失败，请检查网络!");
 		}
 	}
 

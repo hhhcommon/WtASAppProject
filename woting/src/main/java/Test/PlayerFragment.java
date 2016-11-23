@@ -565,7 +565,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 					adapter.notifyDataSetChanged();
 					if(alllist.get(number).getLocalurl()!=null){
 						musicPlay(alllist.get(number).getLocalurl(), "AUDIO");
-						ToastUtil.show_allways(context, "正在播放本地内容");
+						ToastUtil.show_always(context, "正在播放本地内容");
 					}else{
 						musicPlay(alllist.get(number).getContentPlay(), "AUDIO");
 					}
@@ -607,7 +607,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 					adapter.notifyDataSetChanged();
 					if(alllist.get(number).getLocalurl()!=null){
 						musicPlay(alllist.get(number).getLocalurl(), "RADIO");
-						ToastUtil.show_allways(context, "正在播放本地内容");
+						ToastUtil.show_always(context, "正在播放本地内容");
 					}else{
 						musicPlay(alllist.get(number).getContentPlay(), "RADIO");
 					}
@@ -686,7 +686,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 						play(number);
 						num = number;
 					}else{
-						ToastUtil.show_allways(context, "无网络连接");
+						ToastUtil.show_always(context, "无网络连接");
 					}
 				}
 			} else {
@@ -730,7 +730,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 					dialogs = Utils.Dialogph(context, "通讯中", dialogs);
 					getLuKuangTTS();// 获取路况数据播报
 				} else {
-					ToastUtil.show_allways(context, "网络连接失败，请稍后重试");
+					ToastUtil.show_always(context, "网络连接失败，请稍后重试");
 				}
 			}
 			break;
@@ -762,7 +762,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 				getnetwork(num, context);
 				stopCurrentTimer();
 			} else {
-				ToastUtil.show_allways(context, "已经是第一条数据了");
+				ToastUtil.show_always(context, "已经是第一条数据了");
 			}
 			break;
 		case R.id.lin_center:
@@ -791,12 +791,12 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 		case R.id.lin_download:
 			if (GlobalConfig.playerobject != null) {
 				if (GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
-					 ToastUtil.show_allways(context, "已经将该节目添加到下载列表"); 
+					 ToastUtil.show_always(context, "已经将该节目添加到下载列表");
 					// 此处执行将当前播放任务加到数据库的操作
 					LanguageSearchInside datals = GlobalConfig.playerobject;
 				
 					if(datals.getLocalurl()!=null){
-						ToastUtil.show_allways(context, "此节目已经保存到本地，请到已下载界面查看");
+						ToastUtil.show_always(context, "此节目已经保存到本地，请到已下载界面查看");
 						return;
 					}
 					// 对数据进行转换
@@ -853,10 +853,10 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 							}
 						}
 						if (isdownload) {
-							ToastUtil.show_allways(context, mcontent.getContentName() + "已经存在于下载列表");
+							ToastUtil.show_always(context, mcontent.getContentName() + "已经存在于下载列表");
 						} else {
 							FID.insertfileinfo(datalist);
-							ToastUtil.show_allways(context, mcontent.getContentName() + "已经插入了下载列表");
+							ToastUtil.show_always(context, mcontent.getContentName() + "已经插入了下载列表");
 							// 未下载列表
 							List<FileInfo> fileundownloadlist = FID.queryFileinfo("false", Utils.getUserId(context));
 							FileInfo file = null;
@@ -885,7 +885,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 						 * 此时库里没数据
 						 *//*
 						FID.insertfileinfo(datalist);
-						ToastUtil.show_allways(context, mcontent.getContentName() + "已经插入了下载列表");
+						ToastUtil.show_always(context, mcontent.getContentName() + "已经插入了下载列表");
 						// 未下载列表
 						List<FileInfo> fileundownloadlist = FID.queryFileinfo("false", Utils.getUserId(context));
 						FileInfo file = null;
@@ -901,10 +901,10 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 						}
 					}
 				} else {
-					ToastUtil.show_allways(context, "您现在播放的是电台节目，不支持下载");
+					ToastUtil.show_always(context, "您现在播放的是电台节目，不支持下载");
 				}
 			} else {
-				ToastUtil.show_allways(context, "当前播放器播放对象为空");
+				ToastUtil.show_always(context, "当前播放器播放对象为空");
 			}
 			break;
 		}
@@ -950,7 +950,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 						if (GlobalConfig.playerobject.getContentPlay() != null) {
 							musicPlay(GlobalConfig.playerobject.getContentPlay(), "AUDIO");
 						} else {
-							ToastUtil.show_allways(context, "暂不支持播放");
+							ToastUtil.show_always(context, "暂不支持播放");
 						}
 					}
 					img_play.setImageResource(R.drawable.wt_play_play);
@@ -980,14 +980,14 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 					if (GlobalConfig.playerobject.getContentPlay() != null) {
 						musicPlay(GlobalConfig.playerobject.getContentPlay(), "RADIO");
 					} else {
-						ToastUtil.show_allways(context, "暂不支持播放");
+						ToastUtil.show_always(context, "暂不支持播放");
 					}
 					img_play.setImageResource(R.drawable.wt_play_play);
 				}else {
 					if (GlobalConfig.playerobject.getContentPlay() != null) {
 						musicPlay(GlobalConfig.playerobject.getContentPlay(), "RADIO");
 					} else {
-						ToastUtil.show_allways(context, "暂不支持播放");
+						ToastUtil.show_always(context, "暂不支持播放");
 					}
 					img_play.setImageResource(R.drawable.wt_play_play);
 				}
@@ -1016,7 +1016,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 						TTSPlay(GlobalConfig.playerobject.getContentURI());
 						img_play.setImageResource(R.drawable.wt_play_play);
 					} else {
-						ToastUtil.show_allways(context, "暂不支持播放");
+						ToastUtil.show_always(context, "暂不支持播放");
 					}
 				}
 			}
@@ -1067,7 +1067,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 					dialogs = Utils.Dialogph(context, "通讯中", dialogs);
 					firstsend();// 搜索第一次数据
 				} else {
-					ToastUtil.show_allways(context, "网络连接失败，请稍后重试");
+					ToastUtil.show_always(context, "网络连接失败，请稍后重试");
 				}
 			}
 			first = false;
@@ -2186,7 +2186,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 
 			if (GlobalConfig.playerobject.getMediaType().equals("Radio")) {
 				// 不支持分享
-				ToastUtil.show_allways(context, "电台节目目前不支持分享");
+				ToastUtil.show_always(context, "电台节目目前不支持分享");
 				return;
 				// 设置灰色界面
 			} else {
@@ -2205,10 +2205,10 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 			} else {
 				tv_like.setText("喜欢");
 				img_like.setImageResource(R.drawable.wt_dianzan_nomal);
-				// ToastUtil.show_allways(context, "本节目不支持喜欢");
+				// ToastUtil.show_always(context, "本节目不支持喜欢");
 			}
 		} else {
-			// ToastUtil.show_allways(context,"当前播放对象异常");
+			// ToastUtil.show_always(context,"当前播放对象异常");
 		}
 	}
 
@@ -2511,24 +2511,24 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 						}
 
 					} else if (ReturnType.equals("0000")) {
-						ToastUtil.show_allways(context, "无法获取相关的参数");
+						ToastUtil.show_always(context, "无法获取相关的参数");
 					} else if (ReturnType.equals("1002")) {
-						ToastUtil.show_allways(context, "无法获得内容类别");
+						ToastUtil.show_always(context, "无法获得内容类别");
 					} else if (ReturnType.equals("1003")) {
-						ToastUtil.show_allways(context, "无法获得内容Id");
+						ToastUtil.show_always(context, "无法获得内容Id");
 					} else if (ReturnType.equals("1004")) {
-						ToastUtil.show_allways(context, "所指定的节目不存在");
+						ToastUtil.show_always(context, "所指定的节目不存在");
 					} else if (ReturnType.equals("1005")) {
-						ToastUtil.show_allways(context, "已经喜欢了此内容");
+						ToastUtil.show_always(context, "已经喜欢了此内容");
 					} else if (ReturnType.equals("1006")) {
-						ToastUtil.show_allways(context, "还未喜欢此内容");
+						ToastUtil.show_always(context, "还未喜欢此内容");
 					} else if (ReturnType.equals("T")) {
-						ToastUtil.show_allways(context, "获取列表异常");
+						ToastUtil.show_always(context, "获取列表异常");
 					} else {
-						ToastUtil.show_allways(context, Message + "");
+						ToastUtil.show_always(context, Message + "");
 					}
 				} else {
-					ToastUtil.show_allways(context, "Returntype==null");
+					ToastUtil.show_always(context, "Returntype==null");
 				}
 			}
 		};

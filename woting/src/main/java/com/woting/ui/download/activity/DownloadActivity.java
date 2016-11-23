@@ -144,7 +144,7 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
         if (event.getAction() == KeyEvent.ACTION_DOWN && KeyEvent.KEYCODE_BACK == keyCode) {
             long currentTime = System.currentTimeMillis();
             if ((currentTime - touchTime) >= waitTime) {
-                ToastUtils.show_allways(context, "再按一次退出");
+                ToastUtils.show_always(context, "再按一次退出");
                 touchTime = currentTime;
             } else {
                 MobclickAgent.onKillProcess(context);

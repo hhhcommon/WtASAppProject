@@ -132,11 +132,11 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                 send();//获取评论列表
             } else {
-                ToastUtils.show_allways(context, "网络失败，请检查网络");
+                ToastUtils.show_always(context, "网络失败，请检查网络");
             }
 
         } else {
-            ToastUtils.show_allways(context, "网络异常，无法获取到对应的评论列表");
+            ToastUtils.show_always(context, "网络异常，无法获取到对应的评论列表");
         }
     }
 
@@ -162,7 +162,7 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
                     sendDelComment(discussId);
                     confirmDialog.dismiss();
                 } else {
-                    ToastUtils.show_allways(context, "网络失败，请检查网络");
+                    ToastUtils.show_always(context, "网络失败，请检查网络");
                 }
             }
         });
@@ -193,13 +193,13 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
                         if (time1 - time2 > 5000) {
                             sendComment(s);
                         } else {
-                            ToastUtils.show_allways(context, "您发言太快了，请稍候");
+                            ToastUtils.show_always(context, "您发言太快了，请稍候");
                         }
                     } else {
                         ToastUtils.show_short(context, "网络失败，请检查网络");
                     }
                 } else {
-                    ToastUtils.show_allways(context, "请输入您要输入的评论");
+                    ToastUtils.show_always(context, "请输入您要输入的评论");
                 }
                 break;
         }
@@ -229,10 +229,10 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
                         } else {
                             ToastUtils.show_short(context, "网络失败，请检查网络");
                         }
-                        ToastUtils.show_allways(context, "已经删除本条评论");
+                        ToastUtils.show_always(context, "已经删除本条评论");
                         setResult(1);
                     } else {
-                        ToastUtils.show_allways(context, "网络失败，请检查网络");
+                        ToastUtils.show_always(context, "网络失败，请检查网络");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -241,7 +241,7 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
 
             @Override
             protected void requestError(VolleyError error) {
-                ToastUtils.show_allways(context, "网络异常，无法获取到对应的评论列表");
+                ToastUtils.show_always(context, "网络异常，无法获取到对应的评论列表");
             }
         });
     }
@@ -290,7 +290,7 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
                     } else{
                         ContentNoAdapter adapter = new ContentNoAdapter(context);
                         lv_comment.setAdapter(adapter);
-                        ToastUtils.show_allways(context, "暂无评论");
+                        ToastUtils.show_always(context, "暂无评论");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -299,7 +299,7 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
 
             @Override
             protected void requestError(VolleyError error) {
-                ToastUtils.show_allways(context, "网络异常，无法获取到对应的评论列表");
+                ToastUtils.show_always(context, "网络异常，无法获取到对应的评论列表");
             }
         });
     }
@@ -314,13 +314,13 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
                         if (discussId != null && !discussId.trim().equals("")) {
                             confirmDialog.show();
                         } else {
-                            ToastUtils.show_allways(context, "服务器返回数据异常,请稍后重试");
+                            ToastUtils.show_always(context, "服务器返回数据异常,请稍后重试");
                         }
                     } else {
-                        ToastUtils.show_allways(context, "这条评论不是您提交的，您无权删除");
+                        ToastUtils.show_always(context, "这条评论不是您提交的，您无权删除");
                     }
                 } else {
-                    ToastUtils.show_allways(context, "删除评论需要您先登录");
+                    ToastUtils.show_always(context, "删除评论需要您先登录");
                 }
                 return false;
             }
@@ -359,9 +359,9 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
                         }
                         setResult(1);
                     } else if (ReturnType != null && ReturnType.equals("1002")) {
-                        ToastUtils.show_allways(context, "网络异常，无法获取到对应的评论列表");
+                        ToastUtils.show_always(context, "网络异常，无法获取到对应的评论列表");
                     } else {
-                        ToastUtils.show_allways(context, "网络异常，无法获取到对应的评论列表");
+                        ToastUtils.show_always(context, "网络异常，无法获取到对应的评论列表");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -370,7 +370,7 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
 
             @Override
             protected void requestError(VolleyError error) {
-                ToastUtils.show_allways(context, "网络异常，无法获取到对应的评论列表");
+                ToastUtils.show_always(context, "网络异常，无法获取到对应的评论列表");
             }
         });
     }

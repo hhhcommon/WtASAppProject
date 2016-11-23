@@ -132,7 +132,7 @@ public class DownLoadCompleted extends Fragment implements OnClickListener {
             mListView.setVisibility(View.GONE);
             relativeDownload.setVisibility(View.GONE);
             linearNoData.setVisibility(View.VISIBLE);
-            ToastUtils.show_allways(context, "还没有下载完成的任务");
+            ToastUtils.show_always(context, "还没有下载完成的任务");
         }
     }
 

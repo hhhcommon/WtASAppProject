@@ -84,7 +84,7 @@ public class FMListActivity extends AppBaseActivity implements OnClickListener {
             dialog = DialogUtils.Dialogph(FMListActivity.this, "正在获取数据");
             sendRequest();
         } else {
-            ToastUtils.show_allways(this, "网络连接失败，请稍后重试");
+            ToastUtils.show_always(this, "网络连接失败，请稍后重试");
         }
     }
 

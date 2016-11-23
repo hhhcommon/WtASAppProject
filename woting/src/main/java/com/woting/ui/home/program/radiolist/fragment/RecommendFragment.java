@@ -164,7 +164,7 @@ public class RecommendFragment extends Fragment{
                         }
                         setOnItem();
                     } else {
-                        ToastUtils.show_allways(context, "暂没有该分类数据");
+                        ToastUtils.show_always(context, "暂没有该分类数据");
                     }
 				} catch (JSONException e) {
 					e.printStackTrace();

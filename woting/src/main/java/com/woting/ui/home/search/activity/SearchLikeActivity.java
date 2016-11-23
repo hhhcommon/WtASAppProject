@@ -171,7 +171,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
             dialog = DialogUtils.Dialogph(context, "通讯中");
             send();
         } else {
-            ToastUtils.show_allways(context, "网络失败，请检查网络");
+            ToastUtils.show_always(context, "网络失败，请检查网络");
         }
         IntentFilter myFilter = new IntentFilter();
         myFilter.addAction(BroadcastConstants.SEARCHVOICE);
@@ -237,7 +237,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
-                    ToastUtils.show_allways(context, "网络失败，请检查网络");
+                    ToastUtils.show_always(context, "网络失败，请检查网络");
                     return true;
                 }
                 switch (event.getAction()) {
@@ -377,7 +377,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                         sendKey(s.toString());// 发送搜索变更内容
                     } else {
-                        ToastUtils.show_allways(SearchLikeActivity.this, "网络失败，请检查网络");
+                        ToastUtils.show_always(SearchLikeActivity.this, "网络失败，请检查网络");
                     }
                     lin_status_first.setVisibility(View.GONE);
                     lin_status_second.setVisibility(View.VISIBLE);
@@ -497,7 +497,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
                 adapterHistory.notifyDataSetChanged();
             }
         } else {
-            ToastUtils.show_allways(getApplicationContext(), "网络连接失败，请稍后重试");
+            ToastUtils.show_always(getApplicationContext(), "网络连接失败，请稍后重试");
         }
     }
 
@@ -547,13 +547,13 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
                         }
                         setItemListener();
                     } else {
-                        ToastUtils.show_allways(context, "数据异常");
+                        ToastUtils.show_always(context, "数据异常");
                     }
                 } else if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_allways(getApplicationContext(), "没有查询到内容" + Message);
+                    ToastUtils.show_always(getApplicationContext(), "没有查询到内容" + Message);
                 } else {
                     if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_allways(getApplicationContext(), Message + "请稍后重试");
+                        ToastUtils.show_always(getApplicationContext(), Message + "请稍后重试");
                     }
                 }
             }
@@ -676,12 +676,12 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
             } else if (mediaType.equals("TTS")) {
                 index = 4;
             } else {
-                ToastUtils.show_allways(context, "mediaType不属于已经分类的四种类型");
+                ToastUtils.show_always(context, "mediaType不属于已经分类的四种类型");
             }
             mPager.setCurrentItem(index);
             viewChange(index);
         } else {
-            ToastUtils.show_allways(context, "传进来的mediaType值为空");
+            ToastUtils.show_always(context, "传进来的mediaType值为空");
 
         }
     }

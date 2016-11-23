@@ -80,8 +80,7 @@
                 android:id="@+id/view_cover"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="95dp"
-                android:background="@drawable/person_color">
+                android:minHeight="95dp">
 
                 <View style="@style/LineStyle"/>
 
@@ -120,8 +119,7 @@
                 android:id="@+id/view_sequ"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="43dp"
-                android:background="@drawable/person_color">
+                android:minHeight="43dp">
 
                 <View style="@style/LineStyle"/>
 
@@ -153,8 +151,7 @@
                 android:id="@+id/view_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="43dp"
-                android:background="@drawable/person_color">
+                android:minHeight="43dp">
 
                 <View style="@style/LineStyle"/>
 

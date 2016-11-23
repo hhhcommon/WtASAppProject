@@ -13,7 +13,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
+import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
@@ -71,7 +73,7 @@ public class SelectSequActivity extends AppBaseActivity implements View.OnClickL
             case R.id.text_confirm:// 确定
                 if(list != null && list.size() > 0) {
                     Intent intent = new Intent();
-                    intent.putExtra("SEQU_NAME", list.get(index).getContentName());
+                    intent.putExtra("SEQU_NAME", list.get(index).getSequId());
                     setResult(RESULT_OK, intent);
                 }
                 finish();
@@ -95,17 +97,22 @@ public class SelectSequActivity extends AppBaseActivity implements View.OnClickL
     // 发送网络请求获取专辑列表
     private void sendRequest() {
         if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
-            ToastUtils.show_allways(context, "网络连接失败，请检查网络连接!");
+            ToastUtils.show_always(context, "网络连接失败，请检查网络连接!");
             if(dialog != null) dialog.dismiss();
             return ;
         }
-        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("MediaType", "SEQU");
+            jsonObject.put("DeviceId", PhoneMessage.imei);
+            jsonObject.put("PCDType", GlobalConfig.PCDType);
+            jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
+            jsonObject.put("UserId", CommonUtils.getUserId(context));
+            jsonObject.put("FlagFlow", "2");
+            jsonObject.put("ChannelId", "0");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        VolleyRequest.RequestPost(GlobalConfig.getFavoriteListUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.RequestPost(GlobalConfig.getSequMediaList, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if(dialog != null) dialog.dismiss();

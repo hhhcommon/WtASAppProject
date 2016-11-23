@@ -67,10 +67,10 @@ public class JoinGroupListActivity extends AppBaseActivity implements OnClickLis
 				dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
 				send();
 			} else {
-				ToastUtils.show_allways(context, "网络失败，请检查网络");
+				ToastUtils.show_always(context, "网络失败，请检查网络");
 			}
 		} else {
-			ToastUtils.show_allways(context, "获取groupid失败，请返回上一级界面重试");
+			ToastUtils.show_always(context, "获取groupid失败，请返回上一级界面重试");
 		}
 		DelDialog();
 	}
@@ -100,7 +100,7 @@ public class JoinGroupListActivity extends AppBaseActivity implements OnClickLis
 					dealType=2;
 					sendRequest();
 				} else {
-					ToastUtils.show_allways(context, "网络失败，请检查网络");
+					ToastUtils.show_always(context, "网络失败，请检查网络");
 				}
 			}
 		});
@@ -168,14 +168,14 @@ public class JoinGroupListActivity extends AppBaseActivity implements OnClickLis
 						}
 					});
 				}else if (ReturnType != null && ReturnType.equals("1002")) {
-					ToastUtils.show_allways(context, "无法获取用户Id");
+					ToastUtils.show_always(context, "无法获取用户Id");
 				} else if (ReturnType != null && ReturnType.equals("T")) {
-					ToastUtils.show_allways(context, "异常返回值");
+					ToastUtils.show_always(context, "异常返回值");
 				} else if (ReturnType != null && ReturnType.equals("1011")) {
-					ToastUtils.show_allways(context, "没有待您审核的消息");
+					ToastUtils.show_always(context, "没有待您审核的消息");
 				} else {
 					if (Message != null && !Message.trim().equals("")) {
-						ToastUtils.show_allways(context, Message + "");
+						ToastUtils.show_always(context, Message + "");
 					}
 				}
 			}
@@ -249,24 +249,24 @@ public class JoinGroupListActivity extends AppBaseActivity implements OnClickLis
 					adapter.notifyDataSetChanged();
 					dealType = 1;
 				} else if (ReturnType != null && ReturnType.equals("1002")) {
-					ToastUtils.show_allways(context, "无法获取用户Id");
+					ToastUtils.show_always(context, "无法获取用户Id");
 				} else if (ReturnType != null && ReturnType.equals("T")) {
-					ToastUtils.show_allways(context, "异常返回值");
+					ToastUtils.show_always(context, "异常返回值");
 				} else if (ReturnType != null && ReturnType.equals("200")) {
-					ToastUtils.show_allways(context, "尚未登录");
+					ToastUtils.show_always(context, "尚未登录");
 				} else if (ReturnType != null && ReturnType.equals("1003")) {
-					ToastUtils.show_allways(context, "异常返回值");
+					ToastUtils.show_always(context, "异常返回值");
 				} else if (ReturnType != null && ReturnType.equals("10031")) {
-					ToastUtils.show_allways(context, "用户组不是验证群，不能采取这种方式邀请");
+					ToastUtils.show_always(context, "用户组不是验证群，不能采取这种方式邀请");
 				} else if (ReturnType != null && ReturnType.equals("0000")) {
-					ToastUtils.show_allways(context, "无法获取用户ID");
+					ToastUtils.show_always(context, "无法获取用户ID");
 				} else if (ReturnType != null && ReturnType.equals("1004")) {
-					ToastUtils.show_allways(context, "被邀请人不存在");
+					ToastUtils.show_always(context, "被邀请人不存在");
 				} else if (ReturnType != null && ReturnType.equals("1011")) {
-					ToastUtils.show_allways(context, "没有待您审核的消息");
+					ToastUtils.show_always(context, "没有待您审核的消息");
 				} else {
 					if (Message != null && !Message.trim().equals("")) {
-						ToastUtils.show_allways(context, Message + "");
+						ToastUtils.show_always(context, Message + "");
 					}
 				}
 			}
@@ -288,7 +288,7 @@ public class JoinGroupListActivity extends AppBaseActivity implements OnClickLis
 			dialog = DialogUtils.Dialogph(context, "正在获取数据");
 			sendRequest();
 		} else {
-			ToastUtils.show_allways(this, "网络连接失败，请稍后重试");
+			ToastUtils.show_always(this, "网络连接失败，请稍后重试");
 		}
 	}
 

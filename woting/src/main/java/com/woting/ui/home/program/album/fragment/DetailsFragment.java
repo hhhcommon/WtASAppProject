@@ -94,11 +94,11 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                 if (!isConcern) {
                     imageConcern.setImageDrawable(context.getResources().getDrawable(R.mipmap.focus_concern));
                     textConcern.setText("已关注");
-                    ToastUtils.show_allways(context, "测试---关注成功");
+                    ToastUtils.show_always(context, "测试---关注成功");
                 } else {
                     imageConcern.setImageDrawable(context.getResources().getDrawable(R.mipmap.focus));
                     textConcern.setText("关注");
-                    ToastUtils.show_allways(context, "测试---取消关注");
+                    ToastUtils.show_always(context, "测试---取消关注");
                 }
                 isConcern = !isConcern;
                 break;
@@ -223,24 +223,24 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                             }
                         } else {
                             if (ReturnType.equals("0000")) {
-//                                ToastUtils.show_allways(context, "无法获取相关的参数");
-                                ToastUtils.show_allways(context, "出错了，请您稍后再试");
+//                                ToastUtils.show_always(context, "无法获取相关的参数");
+                                ToastUtils.show_always(context, "出错了，请您稍后再试");
                             } else if (ReturnType.equals("1002")) {
-//                                ToastUtils.show_allways(context, "无此分类信息");
-                                ToastUtils.show_allways(context, "出错了，请您稍后再试");
+//                                ToastUtils.show_always(context, "无此分类信息");
+                                ToastUtils.show_always(context, "出错了，请您稍后再试");
                             } else if (ReturnType.equals("1003")) {
-//                                ToastUtils.show_allways(context, "无法获得列表");
-                                ToastUtils.show_allways(context, "出错了，请您稍后再试");
+//                                ToastUtils.show_always(context, "无法获得列表");
+                                ToastUtils.show_always(context, "出错了，请您稍后再试");
                             } else if (ReturnType.equals("1011")) {
-//                                ToastUtils.show_allways(context, "列表为空（列表为空[size==0]");
-                                ToastUtils.show_allways(context, "出错了，请您稍后再试");
+//                                ToastUtils.show_always(context, "列表为空（列表为空[size==0]");
+                                ToastUtils.show_always(context, "出错了，请您稍后再试");
                             } else if (ReturnType.equals("T")) {
-//                                ToastUtils.show_allways(context, "获取列表异常");
-                                ToastUtils.show_allways(context, "出错了，请您稍后再试");
+//                                ToastUtils.show_always(context, "获取列表异常");
+                                ToastUtils.show_always(context, "出错了，请您稍后再试");
                             }
                         }
                     } else {
-                        ToastUtils.show_allways(context, "出错了，请您稍后再试");
+                        ToastUtils.show_always(context, "出错了，请您稍后再试");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

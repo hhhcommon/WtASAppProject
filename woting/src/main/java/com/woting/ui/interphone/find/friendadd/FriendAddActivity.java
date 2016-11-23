@@ -128,14 +128,14 @@ public class FriendAddActivity extends AppBaseActivity implements OnClickListene
 		case R.id.tv_add://点击申请添加按钮
 			String news = et_news.getText().toString().trim();
 			if(news==null||news.equals("")){
-				ToastUtils.show_allways(FriendAddActivity.this, "请输入验证信息");
+				ToastUtils.show_always(FriendAddActivity.this, "请输入验证信息");
 			}else{
 				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 					//发送验证请求
 					dialog = DialogUtils.Dialogph(FriendAddActivity.this, "申请中");
 					sendRequest();
 				} else {
-					ToastUtils.show_allways(getApplicationContext(),"网络连接失败，请稍后重试");
+					ToastUtils.show_always(getApplicationContext(),"网络连接失败，请稍后重试");
 				}
 			}
 			break;
@@ -170,30 +170,30 @@ public class FriendAddActivity extends AppBaseActivity implements OnClickListene
 					e.printStackTrace();
 				}
 				if (ReturnType != null && ReturnType.equals("1001")) {
-					ToastUtils.show_allways(FriendAddActivity.this, "验证发送成功，等待好友审核" );
+					ToastUtils.show_always(FriendAddActivity.this, "验证发送成功，等待好友审核" );
 				}else if (ReturnType != null && ReturnType.equals("1002")) {
-					ToastUtils.show_allways(FriendAddActivity.this, "添加失败, 请稍后再试 ");
+					ToastUtils.show_always(FriendAddActivity.this, "添加失败, 请稍后再试 ");
 				} else if (ReturnType != null && ReturnType.equals("T")) {
-					ToastUtils.show_allways(FriendAddActivity.this, "添加失败, 请稍后再试 ");
+					ToastUtils.show_always(FriendAddActivity.this, "添加失败, 请稍后再试 ");
 				} else if (ReturnType != null && ReturnType.equals("200")) {
-					ToastUtils.show_allways(FriendAddActivity.this, "您未登录 ");
+					ToastUtils.show_always(FriendAddActivity.this, "您未登录 ");
 				} else if (ReturnType != null && ReturnType.equals("0000")) {
-					ToastUtils.show_allways(FriendAddActivity.this, "添加失败, 请稍后再试 ");
+					ToastUtils.show_always(FriendAddActivity.this, "添加失败, 请稍后再试 ");
 				} else if (ReturnType != null && ReturnType.equals("1003")) {
-					ToastUtils.show_allways(FriendAddActivity.this, "添加好友不存在 ");
+					ToastUtils.show_always(FriendAddActivity.this, "添加好友不存在 ");
 				} else if (ReturnType != null && ReturnType.equals("1004")) {
-					ToastUtils.show_allways(FriendAddActivity.this, "您已经是他好友了 ");
+					ToastUtils.show_always(FriendAddActivity.this, "您已经是他好友了 ");
 				} else if (ReturnType != null && ReturnType.equals("1005")) {
-					ToastUtils.show_allways(FriendAddActivity.this, "对方已经邀请您为好友了，请查看 ");
+					ToastUtils.show_always(FriendAddActivity.this, "对方已经邀请您为好友了，请查看 ");
 				} else if (ReturnType != null && ReturnType.equals("1006")) {
-					ToastUtils.show_allways(FriendAddActivity.this, "添加失败, 请稍后再试 ");
+					ToastUtils.show_always(FriendAddActivity.this, "添加失败, 请稍后再试 ");
 				} else if (ReturnType != null && ReturnType.equals("1007")) {
-					ToastUtils.show_allways(FriendAddActivity.this, "您已经添加过了 ");
+					ToastUtils.show_always(FriendAddActivity.this, "您已经添加过了 ");
 				} else {
 					if (Message != null && !Message.trim().equals("")) {
-						ToastUtils.show_allways(FriendAddActivity.this, Message + "");
+						ToastUtils.show_always(FriendAddActivity.this, Message + "");
 					}else{
-						ToastUtils.show_allways(FriendAddActivity.this, "添加失败, 请稍后再试 ");
+						ToastUtils.show_always(FriendAddActivity.this, "添加失败, 请稍后再试 ");
 					}
 				}
 			}

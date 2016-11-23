@@ -79,10 +79,10 @@ public class ModifyGroupPasswordActivity extends AppBaseActivity {
 							send();
 							/* ToastUtil.show_short(context, "接口尚未完成"); */
 						} else {
-							ToastUtils.show_allways(ModifyGroupPasswordActivity.this, "网络连接失败，请稍后重试");
+							ToastUtils.show_always(ModifyGroupPasswordActivity.this, "网络连接失败，请稍后重试");
 						}
 					} else {
-						ToastUtils.show_allways(context, "获取groupid失败，请返回上一级界面重试");
+						ToastUtils.show_always(context, "获取groupid失败，请返回上一级界面重试");
 					}
 				}
 
@@ -171,13 +171,13 @@ public class ModifyGroupPasswordActivity extends AppBaseActivity {
 					e.printStackTrace();
 				}
 				if (ReturnType != null && ReturnType.equals("1001")) {
-					ToastUtils.show_allways(ModifyGroupPasswordActivity.this, "密码修改成功");
+					ToastUtils.show_always(ModifyGroupPasswordActivity.this, "密码修改成功");
 					finish();
 				}else if (ReturnType != null && ReturnType.equals("1002")) {
-					ToastUtils.show_allways(ModifyGroupPasswordActivity.this, "" + Message);
+					ToastUtils.show_always(ModifyGroupPasswordActivity.this, "" + Message);
 				} else {
 					if (Message != null && !Message.trim().equals("")) {
-						ToastUtils.show_allways(ModifyGroupPasswordActivity.this, Message + "");
+						ToastUtils.show_always(ModifyGroupPasswordActivity.this, Message + "");
 					}
 				}
 			}

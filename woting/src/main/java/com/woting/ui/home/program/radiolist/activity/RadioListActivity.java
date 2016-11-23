@@ -137,7 +137,7 @@ public class RadioListActivity extends AppBaseFragmentActivity implements OnClic
 						pageSlidingTab.setVisibility(View.GONE);
 					}
 				} else {
-					ToastUtils.show_allways(RadioListActivity.this, "暂没有该分类数据");
+					ToastUtils.show_always(RadioListActivity.this, "暂没有该分类数据");
 				}
 			}
 

@@ -93,7 +93,7 @@ public class CenterFragment extends Fragment {
             sendRequest();
 
         } else {
-            ToastUtils.show_allways(context, "网络连接失败，请稍后重试");
+            ToastUtils.show_always(context, "网络连接失败，请稍后重试");
 
         }
     }

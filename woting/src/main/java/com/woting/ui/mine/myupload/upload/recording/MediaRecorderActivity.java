@@ -63,6 +63,7 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
     private boolean isSave = true;          // 判断已录制的文件是否保存
     private boolean isPlay;                 // 是否正在播放录音
     private int ringerMode;                 // 保存用户铃声震动模式的设置
+    private int curVolume;                  // 保存当前音量
 
     private Handler mHandler = new Handler();
 
@@ -171,7 +172,7 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
             btnSave.setTextColor(getResources().getColor(R.color.gray));
         } catch (Exception e) {
             e.printStackTrace();
-            ToastUtils.show_allways(context, "您已禁止录音，请到安全中心设置权限！");
+            ToastUtils.show_always(context, "您已禁止录音，请到安全中心设置权限！");
             recorder = null;
             finish();
         }
@@ -264,6 +265,7 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
         Intent intent = new Intent(context, UploadActivity.class);
         intent.putExtra("GOTO_TYPE", "MEDIA_RECORDER");// 录制文件跳转
         intent.putExtra("MEDIA__FILE_PATH", audioFile.getAbsolutePath());
+        intent.putExtra("TIME_LONG", audioTime);
         startActivityForResult(intent, 0xeee);
     }
 
@@ -315,7 +317,7 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
         ringerMode = am.getRingerMode();
         Log.v("ringerMode", "ringerMode -- > > " + ringerMode);
 
-        changeRingStatus(0);// 设置成静音模式
+        changeRingStatus(-1);// 设置成静音模式
     }
 
     // 更改铃声和震动模式
@@ -323,15 +325,23 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
         switch (ringStatus) {
             case 0:// 静音
                 am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                am.setStreamVolume(AudioManager.STREAM_MUSIC,curVolume, AudioManager.FLAG_PLAY_SOUND);
                 break;
             case 1:// 震动
                 am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                am.setStreamVolume(AudioManager.STREAM_MUSIC,curVolume, AudioManager.FLAG_PLAY_SOUND);
                 break;
             case 2:// 铃声
                 am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                am.setStreamVolume(AudioManager.STREAM_MUSIC,curVolume, AudioManager.FLAG_PLAY_SOUND);
+                break;
+            default:// 静音并且将音乐音量设置为 0
+                am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                curVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+                am.setStreamVolume(AudioManager.STREAM_MUSIC, 0, AudioManager.FLAG_PLAY_SOUND);
                 break;
         }
-        Log.v("ringStatus", "ringStatus -- > > " + ringStatus);
+        Log.v("ringStatus", "ringStatus -- > > " + ringStatus + "  curVolume -- > > " + curVolume);
     }
 
     @Override

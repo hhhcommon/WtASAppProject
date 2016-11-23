@@ -114,7 +114,7 @@ public class TTSFragment extends Fragment {
                 } else {
                     mListView.stopLoadMore();
                     mListView.setPullLoadEnable(false);
-                    ToastUtils.show_allways(context, "已经是最后一页了");
+                    ToastUtils.show_always(context, "已经是最后一页了");
                 }
             }
         });
@@ -177,7 +177,7 @@ public class TTSFragment extends Fragment {
                         PlayerFragment.SendTextRequest(newList.get(position - 1).getContentName(), context);
                         context.finish();
                     } else {
-                        ToastUtils.show_allways(context, "暂不支持的Type类型");
+                        ToastUtils.show_always(context, "暂不支持的Type类型");
                     }
                 }
             }
@@ -186,7 +186,7 @@ public class TTSFragment extends Fragment {
 
     private void sendRequest() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
-            ToastUtils.show_allways(context, "连接网络失败，请检查网络设置!");
+            ToastUtils.show_always(context, "连接网络失败，请检查网络设置!");
             if (refreshType == 1) {
                 mListView.stopRefresh();
             } else {

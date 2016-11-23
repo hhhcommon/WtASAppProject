@@ -277,7 +277,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 			String action = intent.getAction();
 			if(action.equals(BroadcastConstants.PUSH_REFRESH_LINKMAN)){
 				send();
-				ToastUtils.show_allways(context, "重新获取了新数据");
+				ToastUtils.show_always(context, "重新获取了新数据");
 			}else if(action.equals(BroadcastConstants.PUSH_NEWPERSON)){
 				String messages = intent.getStringExtra("outmessage");
 				if(messages!=null&&!messages.equals("")){
@@ -429,7 +429,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 				}
 			});
 		} else {
-			ToastUtils.show_allways(context, "网络失败，请检查网络");
+			ToastUtils.show_always(context, "网络失败，请检查网络");
 		}
 	}
 

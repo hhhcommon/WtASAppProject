@@ -75,11 +75,11 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                         RefreshType = 1;
                         getFriend();
                     } else {
-                        ToastUtils.show_allways(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
+                        ToastUtils.show_always(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
                     }
                 } else {
                     // 如果当前界面没有接收到数据就给以友好提示
-                    ToastUtils.show_allways(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
+                    ToastUtils.show_always(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
                 }
             } else if (type.equals("group")) {
                 // 搜索群组
@@ -90,16 +90,16 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                         RefreshType = 1;
                         getGroup();
                     } else {
-                        ToastUtils.show_allways(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
+                        ToastUtils.show_always(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
                     }
                 } else {
                     // 如果当前界面没有接收到数据就给以友好提示
-                    ToastUtils.show_allways(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
+                    ToastUtils.show_always(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
                 }
             }
         } else {
             // 如果当前界面没有接收到搜索类型数据就给以友好提示
-            ToastUtils.show_allways(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
+            ToastUtils.show_always(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
         }
     }
 
@@ -124,7 +124,7 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                             PageNum = 1;
                             getFriend();
                         } else {
-                            ToastUtils.show_allways(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
+                            ToastUtils.show_always(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
                         }
                     } else if (type.equals("group")) {
                         // 获取刷新群组数据
@@ -133,7 +133,7 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                             PageNum = 1;
                             getGroup();
                         } else {
-                            ToastUtils.show_allways(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
+                            ToastUtils.show_always(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
                         }
                     }
                 }
@@ -149,7 +149,7 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                             PageNum = PageNum + 1;
                             getFriend();
                         } else {
-                            ToastUtils.show_allways(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
+                            ToastUtils.show_always(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
                         }
                     } else if (type.equals("group")) {
                         // 获取加载更多群组数据
@@ -158,7 +158,7 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                             PageNum = PageNum + 1;
                             getGroup();
                         } else {
-                            ToastUtils.show_allways(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
+                            ToastUtils.show_always(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
                         }
                     }
                 }
@@ -180,7 +180,7 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                                 intent.putExtras(bundle);
                                 startActivity(intent);
                             } else {
-                                ToastUtils.show_allways(FindNewsResultActivity.this, "获取数据异常");
+                                ToastUtils.show_always(FindNewsResultActivity.this, "获取数据异常");
                             }
                         }
                     } else if (type.equals("group")) {
@@ -201,7 +201,7 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                                     startActivity(intent);
                                 }
                             } else {
-                                ToastUtils.show_allways(FindNewsResultActivity.this, "获取数据异常");
+                                ToastUtils.show_always(FindNewsResultActivity.this, "获取数据异常");
                             }
                         }
                     }
@@ -269,7 +269,7 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                         }
                         setItemListener();    // 设置item的点击事件
                     } else {
-                        ToastUtils.show_allways(FindNewsResultActivity.this, "数据获取失败，请稍候再试");    // json解析失败
+                        ToastUtils.show_always(FindNewsResultActivity.this, "数据获取失败，请稍候再试");    // json解析失败
                     }
                 } else if (ReturnType != null && ReturnType.equals("1002")) {
                     if (RefreshType == 1) {
@@ -279,9 +279,9 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                     }
                     // 获取数据失败
                     if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_allways(FindNewsResultActivity.this, Message);
+                        ToastUtils.show_always(FindNewsResultActivity.this, Message);
                     } else {
-                        ToastUtils.show_allways(FindNewsResultActivity.this, "数据获取失败，请稍候再试");
+                        ToastUtils.show_always(FindNewsResultActivity.this, "数据获取失败，请稍候再试");
                     }
                 } else {
                     if (RefreshType == 1) {
@@ -290,9 +290,9 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                         mxlistview.stopLoadMore();
                     }
                     if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_allways(FindNewsResultActivity.this, Message);
+                        ToastUtils.show_always(FindNewsResultActivity.this, Message);
                     } else {
-                        ToastUtils.show_allways(FindNewsResultActivity.this, "数据获取失败，请稍候再试");
+                        ToastUtils.show_always(FindNewsResultActivity.this, "数据获取失败，请稍候再试");
                     }
                 }
             }
@@ -357,7 +357,7 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                         }
                         setItemListener();    // 设置item的点击事件
                     } else {
-                        ToastUtils.show_allways(FindNewsResultActivity.this, "数据获取失败，请稍候再试");    // json解析失败
+                        ToastUtils.show_always(FindNewsResultActivity.this, "数据获取失败，请稍候再试");    // json解析失败
                     }
                 } else if (ReturnType != null && ReturnType.equals("1002")) {
                     if (RefreshType == 1) {
@@ -367,9 +367,9 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                     }
                     // 获取数据失败
                     if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_allways(FindNewsResultActivity.this, Message);
+                        ToastUtils.show_always(FindNewsResultActivity.this, Message);
                     } else {
-                        ToastUtils.show_allways(FindNewsResultActivity.this, "数据获取失败，请稍候再试");
+                        ToastUtils.show_always(FindNewsResultActivity.this, "数据获取失败，请稍候再试");
                     }
                 } else {
                     if (RefreshType == 1) {
@@ -378,9 +378,9 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                         mxlistview.stopLoadMore();
                     }
                     if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_allways(FindNewsResultActivity.this, Message);
+                        ToastUtils.show_always(FindNewsResultActivity.this, Message);
                     } else {
-                        ToastUtils.show_allways(FindNewsResultActivity.this, "数据获取失败，请稍候再试");
+                        ToastUtils.show_always(FindNewsResultActivity.this, "数据获取失败，请稍候再试");
                     }
                 }
             }

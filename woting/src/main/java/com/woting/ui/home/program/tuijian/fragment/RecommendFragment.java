@@ -125,7 +125,7 @@ public class RecommendFragment extends Fragment {
                     sendRequest();
                 } else {
                     mListView.stopLoadMore();
-                    ToastUtils.show_allways(context, "已经没有最新的数据了");
+                    ToastUtils.show_always(context, "已经没有最新的数据了");
                 }
             }
         });
@@ -135,7 +135,7 @@ public class RecommendFragment extends Fragment {
     private void sendRequest() {
         // 以下操作需要网络支持 所以没有网络则直接提示用户设置网络
         if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
-            ToastUtils.show_allways(context, "网络连接失败，请检查网络设置!");
+            ToastUtils.show_always(context, "网络连接失败，请检查网络设置!");
             mListView.stopRefresh();
             mListView.stopLoadMore();
             return ;
@@ -193,7 +193,7 @@ public class RecommendFragment extends Fragment {
                     }
                     setListener();
                 } else {
-                    ToastUtils.show_allways(context, "暂无推荐列表");
+                    ToastUtils.show_always(context, "暂无推荐列表");
                 }
 
                 // 无论何种返回值，都需要终止掉下拉刷新及上拉加载的滚动状态

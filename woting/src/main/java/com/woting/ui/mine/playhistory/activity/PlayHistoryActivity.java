@@ -229,7 +229,7 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
                     confirmDialog();
                     confirmDialog.show();
                 } else {
-                    ToastUtils.show_allways(this, "没有历史播放记录");
+                    ToastUtils.show_always(this, "没有历史播放记录");
                 }
                 break;
             case R.id.open_edit:        //编辑

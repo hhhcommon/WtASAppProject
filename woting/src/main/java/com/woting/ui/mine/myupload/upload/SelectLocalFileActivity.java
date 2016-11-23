@@ -34,6 +34,10 @@ public class SelectLocalFileActivity extends AppBaseActivity implements
     private SelectFileListAdapter adapter;
     private  List<MediaStoreInfo> list;
 
+    private ListView listView;// 可选择列表
+    private TextView textTip;// 列表没有数据时的提示
+    private Button btnNext;// 下一步
+
     private int index;
 
     @Override
@@ -49,17 +53,23 @@ public class SelectLocalFileActivity extends AppBaseActivity implements
         findViewById(R.id.image_left_back).setOnClickListener(this);// 返回
         findViewById(R.id.text_recording).setOnClickListener(this);// 录音
 
-        Button btnNext = (Button) findViewById(R.id.btn_next);// 下一步
+        btnNext = (Button) findViewById(R.id.btn_next);// 下一步
         btnNext.setOnClickListener(this);
 
-        TextView textTip = (TextView) findViewById(R.id.text_tip);
-        ListView listView = (ListView) findViewById(R.id.list_view);// 文件列表
+        textTip = (TextView) findViewById(R.id.text_tip);
+        listView = (ListView) findViewById(R.id.list_view);// 文件列表
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         list = getLocalAudioFile();
         if(list == null || list.size() <= 0) {
             textTip.setVisibility(View.VISIBLE);
             btnNext.setVisibility(View.GONE);
         } else {
+            textTip.setVisibility(View.GONE);
+            btnNext.setVisibility(View.VISIBLE);
             listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
             listView.setAdapter(adapter = new SelectFileListAdapter(context, list));
             listView.setOnItemClickListener(this);
@@ -80,6 +90,7 @@ public class SelectLocalFileActivity extends AppBaseActivity implements
                 Intent intent = new Intent(context, UploadActivity.class);
                 intent.putExtra("GOTO_TYPE", "LOCAL_FILE");// 选择本地文件跳转
                 intent.putExtra("MEDIA__FILE_PATH", list.get(index).getData());
+                intent.putExtra("TIME_LONG", list.get(index).getDuration());
                 startActivityForResult(intent, 0xeee);
                 break;
         }
@@ -92,7 +103,7 @@ public class SelectLocalFileActivity extends AppBaseActivity implements
             adapter.setIndex(index);
         }
 //        MediaStoreInfo data = list.get(position);// 获取路径
-//        ToastUtils.show_allways(context, data.getData());
+//        ToastUtils.show_always(context, data.getData());
     }
 
     @Override

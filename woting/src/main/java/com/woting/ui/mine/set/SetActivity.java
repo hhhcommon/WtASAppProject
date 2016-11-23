@@ -163,7 +163,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 if (updateType == 1) {
                     updateDialog.dismiss();
                 } else {
-                    ToastUtils.show_allways(context, "本次需要更新");
+                    ToastUtils.show_always(context, "本次需要更新");
                 }
                 break;
             case R.id.tv_confirm:           // 确定清除
@@ -301,7 +301,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                             Log.e("检查更新返回值", "返回值为1001，但是返回的数值有误");
                         }
                     } else {
-                        ToastUtils.show_allways(context, "当前已是最新版本");
+                        ToastUtils.show_always(context, "当前已是最新版本");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -352,9 +352,9 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                     updateDialog.show();
                 }
             } else if (versionNew == versionOld) {
-                ToastUtils.show_allways(context, "已经是最新版本");
+                ToastUtils.show_always(context, "已经是最新版本");
             }else{
-                ToastUtils.show_allways(context, "已经是最新版本");
+                ToastUtils.show_always(context, "已经是最新版本");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -405,7 +405,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 dialog.dismiss();
             }
             if (clearResult) {
-                ToastUtils.show_allways(context, "缓存已清除");
+                ToastUtils.show_always(context, "缓存已清除");
                 textCache.setText("0MB");
             } else {
                 Log.e("缓存异常", "缓存清理异常");

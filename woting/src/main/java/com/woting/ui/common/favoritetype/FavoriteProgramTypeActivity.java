@@ -222,7 +222,7 @@ public class FavoriteProgramTypeActivity extends BaseActivity implements View.On
         }
         String prefStr = builder.toString();
         if(prefStr.length() != 0) {
-//            ToastUtils.show_allways(context, prefStr.substring(0, prefStr.length() - 1));
+//            ToastUtils.show_always(context, prefStr.substring(0, prefStr.length() - 1));
 
             dialog = DialogUtils.Dialogph(context, "Loading...");
             sendPreferenceOkRequest(prefStr.substring(0, prefStr.length() - 1));
@@ -232,7 +232,7 @@ public class FavoriteProgramTypeActivity extends BaseActivity implements View.On
     // 获取偏好分类数据
     private void getPreferenceDataRequest() {
         if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
-            ToastUtils.show_allways(context, "网络连接失败，请检查网络设置!");
+            ToastUtils.show_always(context, "网络连接失败，请检查网络设置!");
             return ;
         }
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
@@ -266,7 +266,7 @@ public class FavoriteProgramTypeActivity extends BaseActivity implements View.On
     private void sendPreferenceOkRequest(String preStr) {
         if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
             if(dialog != null) dialog.dismiss();
-            ToastUtils.show_allways(context, "网络连接失败，请检查网络设置!");
+            ToastUtils.show_always(context, "网络连接失败，请检查网络设置!");
             return ;
         }
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
@@ -283,7 +283,7 @@ public class FavoriteProgramTypeActivity extends BaseActivity implements View.On
                 try {
                     String returnType = result.getString("ReturnType");
                     if(returnType != null && returnType.equals("1001")) {
-                        ToastUtils.show_allways(context, "设置成功!");
+                        ToastUtils.show_always(context, "设置成功!");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

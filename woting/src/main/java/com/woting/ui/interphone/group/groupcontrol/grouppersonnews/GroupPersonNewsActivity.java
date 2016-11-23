@@ -197,7 +197,7 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
                         dialogs = DialogUtils.Dialogph(context, "提交中");
                         update(biename, groupSignature);
                     } else {
-                        ToastUtils.show_allways(context, "网络失败，请检查网络");
+                        ToastUtils.show_always(context, "网络失败，请检查网络");
                     }
                     et_b_name.setEnabled(false);
                     et_groupSignature.setEnabled(false);
@@ -248,14 +248,14 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
             public void onClick(View v) {
                 String news = et_news.getText().toString().trim();
                 if (news == null || news.equals("")) {
-                    ToastUtils.show_allways(context, "请输入验证信息");
+                    ToastUtils.show_always(context, "请输入验证信息");
                 } else {
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                         //发送验证请求
                         dialog = DialogUtils.Dialogph(context, "申请中");
                         send();
                     } else {
-                        ToastUtils.show_allways(getApplicationContext(), "网络连接失败，请稍后重试");
+                        ToastUtils.show_always(getApplicationContext(), "网络连接失败，请稍后重试");
                     }
                 }
             }
@@ -291,30 +291,30 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
                     e.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
-                    ToastUtils.show_allways(context, "验证发送成功，等待好友审核");
+                    ToastUtils.show_always(context, "验证发送成功，等待好友审核");
                 } else if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_allways(context, "添加失败, 请稍后再试 ");
+                    ToastUtils.show_always(context, "添加失败, 请稍后再试 ");
                 } else if (ReturnType != null && ReturnType.equals("T")) {
-                    ToastUtils.show_allways(context, "添加失败, 请稍后再试 ");
+                    ToastUtils.show_always(context, "添加失败, 请稍后再试 ");
                 } else if (ReturnType != null && ReturnType.equals("200")) {
-                    ToastUtils.show_allways(context, "您未登录 ");
+                    ToastUtils.show_always(context, "您未登录 ");
                 } else if (ReturnType != null && ReturnType.equals("0000")) {
-                    ToastUtils.show_allways(context, "添加失败, 请稍后再试 ");
+                    ToastUtils.show_always(context, "添加失败, 请稍后再试 ");
                 } else if (ReturnType != null && ReturnType.equals("1003")) {
-                    ToastUtils.show_allways(context, "添加好友不存在 ");
+                    ToastUtils.show_always(context, "添加好友不存在 ");
                 } else if (ReturnType != null && ReturnType.equals("1004")) {
-                    ToastUtils.show_allways(context, "您已经是他好友了 ");
+                    ToastUtils.show_always(context, "您已经是他好友了 ");
                 } else if (ReturnType != null && ReturnType.equals("1005")) {
-                    ToastUtils.show_allways(context, "对方已经邀请您为好友了，请查看 ");
+                    ToastUtils.show_always(context, "对方已经邀请您为好友了，请查看 ");
                 } else if (ReturnType != null && ReturnType.equals("1006")) {
-                    ToastUtils.show_allways(context, "添加失败, 请稍后再试 ");
+                    ToastUtils.show_always(context, "添加失败, 请稍后再试 ");
                 } else if (ReturnType != null && ReturnType.equals("1007")) {
-                    ToastUtils.show_allways(context, "您已经添加过了 ");
+                    ToastUtils.show_always(context, "您已经添加过了 ");
                 } else {
                     if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_allways(context, Message + "");
+                        ToastUtils.show_always(context, Message + "");
                     } else {
-                        ToastUtils.show_allways(context, "添加失败, 请稍后再试 ");
+                        ToastUtils.show_always(context, "添加失败, 请稍后再试 ");
                     }
                 }
             }
@@ -362,30 +362,30 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
                         et_b_name.setText(b_name2);
                         // 保存通讯录是否刷新的属性
                         setResult(1);
-                        ToastUtils.show_allways(context, "修改成功");
+                        ToastUtils.show_always(context, "修改成功");
                     } else if (ReturnType.equals("0000")) {
-                        ToastUtils.show_allways(context, "无法获取相关的参数");
+                        ToastUtils.show_always(context, "无法获取相关的参数");
                     } else if (ReturnType.equals("1002")) {
-                        ToastUtils.show_allways(context, "用户不存在");
+                        ToastUtils.show_always(context, "用户不存在");
                     } else if (ReturnType.equals("1003")) {
-                        ToastUtils.show_allways(context, "用户组不存在");
+                        ToastUtils.show_always(context, "用户组不存在");
                     } else if (ReturnType.equals("10021")) {
-                        ToastUtils.show_allways(context, "修改用户不在组");
+                        ToastUtils.show_always(context, "修改用户不在组");
                     } else if (ReturnType.equals("1004")) {
-                        ToastUtils.show_allways(context, "无法获得被修改用户Id");
+                        ToastUtils.show_always(context, "无法获得被修改用户Id");
                     } else if (ReturnType.equals("10041")) {
-                        ToastUtils.show_allways(context, "被修改用户不在组");
+                        ToastUtils.show_always(context, "被修改用户不在组");
                     } else if (ReturnType.equals("1005")) {
-                        ToastUtils.show_allways(context, "无法获得修改所需的新信息");
+                        ToastUtils.show_always(context, "无法获得修改所需的新信息");
                     } else if (ReturnType.equals("1006")) {
-                        ToastUtils.show_allways(context, "修改人和被修改人不能是同一个人");
+                        ToastUtils.show_always(context, "修改人和被修改人不能是同一个人");
                     } else if (ReturnType.equals("T")) {
-                        ToastUtils.show_allways(context, "获取列表异常");
+                        ToastUtils.show_always(context, "获取列表异常");
                     } else if (ReturnType.equals("200")) {
-                        ToastUtils.show_allways(context, "您没有登录");
+                        ToastUtils.show_always(context, "您没有登录");
                     }
                 } else {
-                    ToastUtils.show_allways(context, "列表处理异常");
+                    ToastUtils.show_always(context, "列表处理异常");
                 }
             }
 

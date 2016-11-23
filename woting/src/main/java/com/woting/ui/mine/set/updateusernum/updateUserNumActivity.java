@@ -94,7 +94,7 @@ public class updateUserNumActivity extends AppActivity implements View.OnClickLi
                     dialog = DialogUtils.Dialogph(context, "正在获取数据");
                     send();
                 } else {
-                    ToastUtils.show_allways(context, "网络失败，请检查网络");
+                    ToastUtils.show_always(context, "网络失败，请检查网络");
                 }
                 break;
         }
@@ -116,7 +116,7 @@ public class updateUserNumActivity extends AppActivity implements View.OnClickLi
                 try {
                     String returnType = result.getString("ReturnType");
                     if (returnType != null && returnType.equals("1001")) {
-                        ToastUtils.show_allways(context, "用户号修改成功!");
+                        ToastUtils.show_always(context, "用户号修改成功!");
                         SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
                         et.putString(StringConstant.USER_NUM, userNum);
                         if (!et.commit()) {
@@ -125,7 +125,7 @@ public class updateUserNumActivity extends AppActivity implements View.OnClickLi
                         setResult(1);
                         finish();
                     } else {
-                        ToastUtils.show_allways(context, "用户号修改失败!");
+                        ToastUtils.show_always(context, "用户号修改失败!");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

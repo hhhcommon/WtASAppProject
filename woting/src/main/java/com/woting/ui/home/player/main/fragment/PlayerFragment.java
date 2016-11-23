@@ -570,7 +570,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 					adapter.notifyDataSetChanged();
 					if (allList.get(number).getLocalurl() != null) {
 						musicPlay("file:///"+ allList.get(number).getLocalurl());
-						ToastUtils.show_allways(context, "正在播放本地内容");
+						ToastUtils.show_always(context, "正在播放本地内容");
 					} else {
 						musicPlay(allList.get(number).getContentPlay());
 					}
@@ -648,7 +648,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 						play(number);
 						num = number;
 					} else {
-						ToastUtils.show_allways(context, "无网络连接");
+						ToastUtils.show_always(context, "无网络连接");
 					}
 				}
 			} else {
@@ -690,12 +690,12 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 					}
 					audioPlay = TtsPlayer.getInstance(context);
 				}
-				ToastUtils.show_allways(context, "点击了路况TTS按钮");
+				ToastUtils.show_always(context, "点击了路况TTS按钮");
 				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 					dialogs = DialogUtils.Dialogph(context, "通讯中");
 					getLuKuangTTS();// 获取路况数据播报
 				} else {
-					ToastUtils.show_allways(context, "网络连接失败，请稍后重试");
+					ToastUtils.show_always(context, "网络连接失败，请稍后重试");
 				}
 				break;
 			case R.id.tv_cancle:
@@ -714,7 +714,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 						&& !GlobalConfig.playerobject.getContentFavorite().equals("")) {
 					sendFavorite();
 				} else {
-					ToastUtils.show_allways(context, "本节目信息获取有误，暂时不支持喜欢");
+					ToastUtils.show_always(context, "本节目信息获取有误，暂时不支持喜欢");
 				}
 				break;
 			case R.id.lin_left:
@@ -771,7 +771,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				break;
 			case R.id.lin_ly_ckzb:
 				linChoseClose();
-				ToastUtils.show_allways(context,"查看主播");
+				ToastUtils.show_always(context,"查看主播");
 				break;
 			case R.id.lin_ly_ckzj:
 				linChoseClose();
@@ -783,10 +783,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
                     intent.putExtras(bundle);
 					startActivity(intent);
 				}else{
-					ToastUtils.show_allways(context,"本节目没有所属专辑");
+					ToastUtils.show_always(context,"本节目没有所属专辑");
 				}
 
-			/*	ToastUtils.show_allways(context,"查看专辑");*/
+			/*	ToastUtils.show_always(context,"查看专辑");*/
 				break;
 			case R.id.lin_comment:
 				if(!TextUtils.isEmpty(GlobalConfig.playerobject.getContentId())&&!TextUtils.isEmpty(GlobalConfig.playerobject.getMediaType())){
@@ -795,7 +795,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				intent.putExtra("MediaType",GlobalConfig.playerobject.getMediaType());
 				startActivity(intent);
 				}else{
-					ToastUtils.show_allways(context,"当前播放的节目的信息有误，无法获取评论列表");
+					ToastUtils.show_always(context,"当前播放的节目的信息有误，无法获取评论列表");
 				}
 				break;
 			case R.id.lin_download:
@@ -804,7 +804,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 						// 此处执行将当前播放任务加到数据库的操作
 						LanguageSearchInside data = GlobalConfig.playerobject;
 						if (data.getLocalurl() != null) {
-							ToastUtils.show_allways(context, "此节目已经保存到本地，请到已下载界面查看");
+							ToastUtils.show_always(context, "此节目已经保存到本地，请到已下载界面查看");
 							return;
 						}
 						// 对数据进行转换
@@ -861,10 +861,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 								}
 							}
 							if (isDownload) {
-								ToastUtils.show_allways(context,mcontent.getContentName() + "已经存在于下载列表");
+								ToastUtils.show_always(context,mcontent.getContentName() + "已经存在于下载列表");
 							} else {
 								FID.insertFileInfo(dataList);
-								ToastUtils.show_allways(context,mcontent.getContentName() + "已经插入了下载列表");
+								ToastUtils.show_always(context,mcontent.getContentName() + "已经插入了下载列表");
 								// 未下载列表
 								List<FileInfo> fileUnDownLoadList = FID.queryFileInfo("false",CommonUtils.getUserId(context));
 								for (int kk = 0; kk < fileUnDownLoadList.size(); kk++) {
@@ -890,7 +890,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 							 * 此时库里没数据
 							 */
 							FID.insertFileInfo(dataList);
-							ToastUtils.show_allways(context,mcontent.getContentName() + "已经插入了下载列表");
+							ToastUtils.show_always(context,mcontent.getContentName() + "已经插入了下载列表");
 							// 未下载列表
 							List<FileInfo> fileUnDownloadList = FID.queryFileInfo("false", CommonUtils.getUserId(context));
 							for (int k = 0; k < fileUnDownloadList.size(); k++) {
@@ -905,10 +905,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 							}
 						}
 					} else {
-						ToastUtils.show_allways(context, "您现在播放的节目，目前不支持下载");
+						ToastUtils.show_always(context, "您现在播放的节目，目前不支持下载");
 					}
 				} else {
-					ToastUtils.show_allways(context, "当前播放器播放对象为空");
+					ToastUtils.show_always(context, "当前播放器播放对象为空");
 				}
 				break;
 		}
@@ -932,7 +932,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			getNetWork(num, context);
 			stopCurrentTimer();
 		} else {
-			ToastUtils.show_allways(context, "已经是第一条数据了");
+			ToastUtils.show_always(context, "已经是第一条数据了");
 		}
 
 	}
@@ -1022,7 +1022,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 					adapter.notifyDataSetChanged();
 					if (GlobalConfig.playerobject.getLocalurl() != null) {
 						musicPlay("file:///"+ GlobalConfig.playerobject.getLocalurl());
-						ToastUtils.show_allways(context, "正在播放本地内容");
+						ToastUtils.show_always(context, "正在播放本地内容");
 					} else {
 						musicPlay(GlobalConfig.playerobject.getContentPlay());
 					}
@@ -1071,7 +1071,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				}
 			}
 		} else {
-			ToastUtils.show_allways(context, "当前播放对象为空");
+			ToastUtils.show_always(context, "当前播放对象为空");
 		}
 	}
 
@@ -1126,7 +1126,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 					dialogs = DialogUtils.Dialogph(context, "通讯中");
 					firstSend();// 搜索第一次数据
 				} else {
-					ToastUtils.show_allways(context, "网络连接失败，请稍后重试");
+					ToastUtils.show_always(context, "网络连接失败，请稍后重试");
 				}
 			}
 			first = false;
@@ -1505,9 +1505,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				} else if (ReturnType.equals("1011")) {
 					mListView.stopLoadMore();
 					mListView.setPullLoadEnable(false);
-					ToastUtils.show_allways(context,"已经没有相关数据啦");
+					ToastUtils.show_always(context,"已经没有相关数据啦");
 				} else {
-					ToastUtils.show_allways(context,"已经没有相关数据啦");
+					ToastUtils.show_always(context,"已经没有相关数据啦");
 					mListView.stopLoadMore();
 					mListView.setPullLoadEnable(false);
 				}
@@ -1855,7 +1855,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 				img_like.setImageResource(R.mipmap.wt_dianzan_nomal);
 			}
 		} else {
-               ToastUtils.show_allways(context,"播放器数据获取异常，请退出程序后尝试");
+               ToastUtils.show_always(context,"播放器数据获取异常，请退出程序后尝试");
 		}
 	}
 
@@ -1940,11 +1940,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 						e.printStackTrace();
 					}
 				} else if (ReturnType.equals("1011")) {
-					ToastUtils.show_allways(context, "已经没有相关数据啦");
+					ToastUtils.show_always(context, "已经没有相关数据啦");
 					mListView.stopLoadMore();
 					mListView.setPullLoadEnable(false);
 				} else {
-					ToastUtils.show_allways(context, "已经没有相关数据啦");
+					ToastUtils.show_always(context, "已经没有相关数据啦");
 					mListView.stopLoadMore();
 					mListView.setPullLoadEnable(false);
 				}
@@ -2104,26 +2104,26 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 							}
 						}
 					} else if (ReturnType.equals("0000")) {
-						ToastUtils.show_allways(context, "无法获取相关的参数");
+						ToastUtils.show_always(context, "无法获取相关的参数");
 					} else if (ReturnType.equals("1002")) {
-						ToastUtils.show_allways(context, "无法获得内容类别");
+						ToastUtils.show_always(context, "无法获得内容类别");
 					} else if (ReturnType.equals("1003")) {
-						ToastUtils.show_allways(context, "无法获得内容Id");
+						ToastUtils.show_always(context, "无法获得内容Id");
 					} else if (ReturnType.equals("1004")) {
-						ToastUtils.show_allways(context, "所指定的节目不存在");
+						ToastUtils.show_always(context, "所指定的节目不存在");
 					} else if (ReturnType.equals("1005")) {
-						ToastUtils.show_allways(context, "已经喜欢了此内容");
+						ToastUtils.show_always(context, "已经喜欢了此内容");
 					} else if (ReturnType.equals("1006")) {
-						ToastUtils.show_allways(context, "还未喜欢此内容");
+						ToastUtils.show_always(context, "还未喜欢此内容");
 					} else if (ReturnType.equals("200")) {
-					ToastUtils.show_allways(context, "喜欢该节目，需要您登录");
+					ToastUtils.show_always(context, "喜欢该节目，需要您登录");
 					} else if (ReturnType.equals("T")) {
-						ToastUtils.show_allways(context, "获取列表异常");
+						ToastUtils.show_always(context, "获取列表异常");
 					} else {
-						ToastUtils.show_allways(context, Message + "");
+						ToastUtils.show_always(context, Message + "");
 					}
 				} else {
-					ToastUtils.show_allways(context, "ReturnType==null");
+					ToastUtils.show_always(context, "ReturnType==null");
 				}
 			}
 
@@ -2189,9 +2189,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 			}
 			resetHeadView();
 			musicPlay("file:///"+GlobalConfig.playerobject.getLocalurl());
-			ToastUtils.show_allways(context, "正在播放本地内容");
+			ToastUtils.show_always(context, "正在播放本地内容");
 		} else {
-			ToastUtils.show_allways(context,"数据异常");
+			ToastUtils.show_always(context,"数据异常");
 		}
 
 	}

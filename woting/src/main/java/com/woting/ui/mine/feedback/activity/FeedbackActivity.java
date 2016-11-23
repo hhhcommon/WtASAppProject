@@ -95,12 +95,12 @@ public class FeedbackActivity extends AppBaseActivity implements OnClickListener
                 try {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {
-                        ToastUtils.show_allways(getApplicationContext(), "提交成功");
+                        ToastUtils.show_always(getApplicationContext(), "提交成功");
                         Intent intent = new Intent(FeedbackActivity.this, FeedbackListActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
-                        ToastUtils.show_allways(FeedbackActivity.this, "提交失败,请稍后再试!");
+                        ToastUtils.show_always(FeedbackActivity.this, "提交失败,请稍后再试!");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -6,11 +6,14 @@ import android.app.Dialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -21,19 +24,29 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.StringConstant;
+import com.woting.common.http.MyHttp;
 import com.woting.common.manager.FileManager;
 import com.woting.common.util.BitmapUtils;
+import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
+import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.photocut.PhotoCutActivity;
+import com.woting.ui.mine.myupload.model.FileContentInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -53,14 +66,16 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
     private EditText editDescribe;// 标签
 
     private String outputFilePath;
-//    private String photoCutAfterImagePath;
+    private String filePath;
+    private String photoCutAfterImagePath;
+    private String miniUri;
     private String title;// 标题
     private String sequ;// 专辑
     private String describe;// 描述
     private String tag = "UPLOAD_ADD_CONTENT_VOLLEY_REQUEST_CANCEL_TAG";
     private String gotoType;// 跳转类型  本地 OR 录制
 
-//    private int imageNum;
+    private long timeLong;
     private final int TO_GALLERY = 1;           // 标识 打开系统图库
     private final int TO_CAMERA = 2;            // 标识 打开系统照相机
     private final int PHOTO_REQUEST_CUT = 7;    // 标识 跳转到图片裁剪界面
@@ -104,7 +119,8 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
         if(intent != null) {
             gotoType = intent.getStringExtra("GOTO_TYPE");
             String path = intent.getStringExtra("MEDIA__FILE_PATH");
-            ToastUtils.show_allways(context, path);
+            timeLong = intent.getLongExtra("TIME_LONG", 0);
+            ToastUtils.show_always(context, path);
             list.add(path);
         }
     }
@@ -161,17 +177,17 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
         sequ = textSequ.getText().toString().trim();// 获取用户选择的专辑
         describe = editDescribe.getText().toString().trim();// 获取用户添加的描述
         if(title == null || title.equals("")) {
-            ToastUtils.show_allways(context, "请输入标题!");
+            ToastUtils.show_always(context, "请输入标题!");
             return ;
         }
-        ToastUtils.show_allways(context, "文件开始上传...");
+        ToastUtils.show_always(context, "文件开始上传...");
 //        new HttpMultipartPost(context, list).execute();
     }
 
     // 文件上传成功之后将文件内容添加进去
     public void addFileContent(String filePath) {
         if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
-            ToastUtils.show_allways(context, "网络连接失败，请检查网络连接!");
+            ToastUtils.show_always(context, "网络连接失败，请检查网络连接!");
             return ;
         }
 
@@ -180,23 +196,30 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
     }
 
     // 上传完成
-    public void finishUpload(String filePath) {
+    private void finishUpload(String filePath) {
         JSONObject jsonObject = new JSONObject();
         try {
-//            jsonObject.put("UserId", CommonUtils.getUserId(context));
-            jsonObject.put("ContentTitle", title);
-            jsonObject.put("FilePath", filePath);
-//            jsonObject.put("ChannelId", "6");
+            jsonObject.put("DeviceId", PhoneMessage.imei);
+            jsonObject.put("PCDType", GlobalConfig.PCDType);
+            jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
+            jsonObject.put("UserId", CommonUtils.getUserId(context));
+            jsonObject.put("ContentName", title);// 标题
+            jsonObject.put("ContentImg", miniUri);// 封面图片
+            jsonObject.put("SeqMediaId", sequ);// 添加专辑的 ID
+            jsonObject.put("TimeLong", timeLong);// 时长
+            jsonObject.put("ContentURI", filePath);// 上传文件成功得到的地址
+            jsonObject.put("TagList", "");// 标签 可以为空
+            jsonObject.put("FlowFlag", "2");// 发布
             if (!describe.equals("")) {
-                jsonObject.put("ContentDecsn", describe);
+                jsonObject.put("ContentDecsn", describe);// 描述 可以为空
             } else {
                 jsonObject.put("ContentDecsn", " ");
             }
-        } catch (Exception e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.uploadWorksFileContentUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.RequestPost(GlobalConfig.addMediaInfo, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if(dialog != null) dialog.dismiss();
@@ -213,14 +236,13 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
                         } else {
                             setResult(RESULT_OK);
                         }
-                        ToastUtils.show_allways(context, message);
+                        ToastUtils.show_always(context, message);
                         finish();
                     } else {
-                        ToastUtils.show_allways(context, message);
+                        ToastUtils.show_always(context, message);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    ToastUtils.show_allways(context, "发生未知异常，请稍后重试!");
                 }
             }
 
@@ -281,9 +303,12 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
                 break;
             case PHOTO_REQUEST_CUT:
                 if (resultCode == 1) {
-                    String photoCutAfterImagePath = data.getStringExtra("return");
+                    photoCutAfterImagePath = data.getStringExtra("return");
                     Log.v("photoCutAfterImagePath", "photoCutAfterImagePath -- > > " + photoCutAfterImagePath);
-                    imageCover.setImageBitmap(BitmapUtils.decodeFile(new File(photoCutAfterImagePath)));
+//                    imageCover.setImageBitmap(BitmapUtils.decodeFile(new File(photoCutAfterImagePath)));
+
+                    dialog = DialogUtils.Dialogph(context, "头像上传中");
+                    dealt();
                 }
                 break;
             case 0xeee:
@@ -301,6 +326,90 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
         intent.putExtra("URI", uri.toString());
         intent.putExtra("type", 1);
         startActivityForResult(intent, PHOTO_REQUEST_CUT);
+    }
+
+    // 图片处理
+    private void dealt() {
+        final Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == 1) {
+                    ToastUtils.show_always(context, "保存成功");
+                    SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
+                    String imageUrl;
+                    if (miniUri.startsWith("http:")) {
+                        imageUrl = miniUri;
+                    } else {
+                        imageUrl = GlobalConfig.imageurl + miniUri;
+                    }
+                    et.putString(StringConstant.IMAGEURL, imageUrl);
+                    if(!et.commit()) {
+                        Log.v("commit", "数据 commit 失败!");
+                    }
+                    // 正常切可用代码 已从服务器获得返回值，但是无法正常显示
+                    Picasso.with(context).load(imageUrl.replace("\\/", "/")).into(imageCover);
+                } else if (msg.what == 0) {
+                    ToastUtils.show_always(context, "保存失败，请稍后再试");
+                } else if (msg.what == -1) {
+                    ToastUtils.show_always(context, "图片未上传成功，请重新发布");
+                }
+                if (dialog != null) dialog.dismiss();
+                if (imageDialog != null) imageDialog.dismiss();
+            }
+        };
+
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                Message msg = new Message();
+                try {
+                    filePath = photoCutAfterImagePath;
+                    String ExtName = filePath.substring(filePath.lastIndexOf("."));
+                    String TestURI = GlobalConfig.uploadFileUrl + "?FType=UserP&ExtName=";
+                    String Response = MyHttp.postFile(new File(filePath), TestURI
+                            + ExtName
+                            + "&DeviceId=" + PhoneMessage.imei
+                            + "&PCDType=" + GlobalConfig.PCDType
+                            + "&MobileClass=" + PhoneMessage.model + "::" + PhoneMessage.productor
+                            + "&UserId=" + CommonUtils.getUserId(context)
+                            + "&SrcType=" + "1"
+                            + "&Purpose=" + "2");
+
+                    Log.e("图片上传数据", TestURI
+                            + ExtName
+                            + "&DeviceId=" + PhoneMessage.imei
+                            + "&PCDType=" + GlobalConfig.PCDType
+                            + "&MobileClass=" + PhoneMessage.model + "::" + PhoneMessage.productor
+                            + "&UserId=" + CommonUtils.getUserId(context)
+                            + "&SrcType=" + "1"
+                            + "&Purpose=" + "2");
+                    Log.e("图片上传结果", Response);
+
+                    JSONTokener jsonParser = new JSONTokener(Response);
+                    JSONObject arg1 = (JSONObject) jsonParser.nextValue();
+                    String ful = arg1.getString("ful");
+                    List<FileContentInfo> fileContentInfo = new Gson().fromJson(ful, new TypeToken<List<FileContentInfo>>() {}.getType());
+                    if(fileContentInfo.get(0).getSuccess().equals("TRUE")) {
+                        miniUri = fileContentInfo.get(0).getFilePath();
+                        msg.what = 1;
+                    } else {
+                        msg.what = 0;
+                    }
+                } catch (Exception e) {
+                    if (e.getMessage() != null) {
+                        msg.obj = "异常" + e.getMessage();
+                        Log.e("图片上传返回值异常", "" + e.getMessage());
+                    } else {
+                        Log.e("图片上传返回值异常", "" + e);
+                        msg.obj = "异常";
+                    }
+                    msg.what = -1;
+                }
+                handler.sendMessage(msg);
+            }
+        }.start();
     }
 
     // API 19 以下获取图片路径的方法

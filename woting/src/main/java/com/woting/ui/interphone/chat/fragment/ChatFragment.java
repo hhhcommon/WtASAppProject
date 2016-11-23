@@ -644,7 +644,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
                 }
             });
         } else {
-            ToastUtils.show_allways(context, "网络失败，请检查网络");
+            ToastUtils.show_always(context, "网络失败，请检查网络");
         }
     }
 
@@ -966,19 +966,19 @@ public class ChatFragment extends Fragment implements OnClickListener {
                                             //请求通话出异常了
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
                                             VoiceStreamRecordService.stop();
-                                            ToastUtils.show_allways(context, "请求通话—出异常了");
+                                            ToastUtils.show_always(context, "请求通话—出异常了");
                                             break;
                                         case 0x00:
                                             //没有有效登录用户
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
                                             VoiceStreamRecordService.stop();
-                                            ToastUtils.show_allways(context, "没有有效登录用户");
+                                            ToastUtils.show_always(context, "没有有效登录用户");
                                             break;
                                         case 0x02:
                                             //无法获取用户组
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
                                             VoiceStreamRecordService.stop();
-                                            ToastUtils.show_allways(context, "无法获取用户组");
+                                            ToastUtils.show_always(context, "无法获取用户组");
                                             break;
                                         case 0x01:
                                             //用户可以通话了
@@ -991,25 +991,25 @@ public class ChatFragment extends Fragment implements OnClickListener {
                                             //用户不在所指定的组
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
                                             VoiceStreamRecordService.stop();
-                                            ToastUtils.show_allways(context, "用户不在所指定的组");
+                                            ToastUtils.show_always(context, "用户不在所指定的组");
                                             break;
                                         case 0x05:
                                             //进入组的人员不足两人
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
                                             VoiceStreamRecordService.stop();
-                                            ToastUtils.show_allways(context, "进入组的人员不足两人");
+                                            ToastUtils.show_always(context, "进入组的人员不足两人");
                                             break;
                                         case 0x08:
                                             //有人在说话，无权通话
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
                                             VoiceStreamRecordService.stop();
-                                            ToastUtils.show_allways(context, "有人在说话");
+                                            ToastUtils.show_always(context, "有人在说话");
                                             break;
                                         case 0x90:
                                             //用户在电话通话
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
                                             VoiceStreamRecordService.stop();
-                                            ToastUtils.show_allways(context, "用户在电话通话");
+                                            ToastUtils.show_always(context, "用户在电话通话");
                                             break;
                                         default:
                                             break;
@@ -1025,12 +1025,12 @@ public class ChatFragment extends Fragment implements OnClickListener {
                                         case 0x00:
                                             //没有有效登录用户
                                             isTalking = false;
-                                            ToastUtils.show_allways(context, "数据出错，请注销后重新登录账户");
+                                            ToastUtils.show_always(context, "数据出错，请注销后重新登录账户");
                                             break;
                                         case 0x02:
                                             //无法获取用户组
                                             isTalking = false;
-                                            ToastUtils.show_allways(context, "无法获取用户组");
+                                            ToastUtils.show_always(context, "无法获取用户组");
                                             break;
                                         case 0x01:
                                             //成功结束对讲
@@ -1083,7 +1083,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
                                         case 0x00:
                                             //没有有效登录用户
                                             isCalling = false;
-                                            ToastUtils.show_allways(context, "数据出错，请注销后重新登录账户");
+                                            ToastUtils.show_always(context, "数据出错，请注销后重新登录账户");
                                             break;
                                         case 0x01:
                                             //进入组成功
@@ -1143,7 +1143,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
                                         case 0x00:
                                             //没有有效登录用户
                                             isCalling = false;
-                                            ToastUtils.show_allways(context, "数据出错，请注销后重新登录账户");
+                                            ToastUtils.show_always(context, "数据出错，请注销后重新登录账户");
                                             break;
                                         case 0x01:
                                             //退出租成功
@@ -1171,7 +1171,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
 
                                 } else if (command == 0x10) {
                                     //服务端发来的组内成员的变化
-                                    ToastUtils.show_allways(context, "服务端发来的组内成员的变化");
+                                    ToastUtils.show_always(context, "服务端发来的组内成员的变化");
                                     try {
                                         MapContent data = (MapContent) message.getMsgContent();
                                         Map<String, Object> map = data.getContentMap();
@@ -1254,13 +1254,13 @@ public class ChatFragment extends Fragment implements OnClickListener {
                                             //请求通话出异常了
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
                                             VoiceStreamRecordService.stop();
-                                            ToastUtils.show_allways(context, "请求通话—出异常了");
+                                            ToastUtils.show_always(context, "请求通话—出异常了");
                                             break;
                                         case 0x02:
                                             //无权通话
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
                                             VoiceStreamRecordService.stop();
-                                            ToastUtils.show_allways(context, "当前有人在说话");
+                                            ToastUtils.show_always(context, "当前有人在说话");
                                             break;
                                         case 0x01:
                                             //用户可以通话了
@@ -1278,13 +1278,13 @@ public class ChatFragment extends Fragment implements OnClickListener {
                                             //用户无权通话
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
                                             VoiceStreamRecordService.stop();
-                                            ToastUtils.show_allways(context, "不能对讲，有人在说话");
+                                            ToastUtils.show_always(context, "不能对讲，有人在说话");
                                             break;
                                         case 0x05:
                                             //无权通话
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
                                             VoiceStreamRecordService.stop();
-                                            ToastUtils.show_allways(context, "不能对讲，状态错误");
+                                            ToastUtils.show_always(context, "不能对讲，状态错误");
                                             break;
                                         default:
                                             break;
