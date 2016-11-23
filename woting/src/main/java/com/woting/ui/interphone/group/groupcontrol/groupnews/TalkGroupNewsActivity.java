@@ -379,7 +379,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
             dialog = DialogUtils.Dialogph(context, "通讯中");
             sendNet();
         } else {
-            ToastUtils.show_allways(context, "网络失败，请检查网络");
+            ToastUtils.show_always(context, "网络失败，请检查网络");
         }
     }
 
@@ -407,7 +407,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 if (returnType != null && returnType.equals("1011")) {
                     context.sendBroadcast(pushIntent);
                     finish();
-                    ToastUtils.show_allways(context, "对讲组内没有成员自动解散!");
+                    ToastUtils.show_always(context, "对讲组内没有成员自动解散!");
                 } else {
                     try {
                         list = new Gson().fromJson(result.getString("UserList"), new TypeToken<List<GroupInfo>>() {
@@ -502,7 +502,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                         dialog = DialogUtils.Dialogph(context, "正在提交本次修改");
                         update(groupName, groupSignature);
                     } else {
-                        ToastUtils.show_allways(context, "网络失败，请检查网络");
+                        ToastUtils.show_always(context, "网络失败，请检查网络");
                     }
                 } else {// 此时是未编辑状态
                     if (groupCreator.equals(CommonUtils.getUserId(context))) {// 此时我是群主
@@ -559,7 +559,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                     confirmDialog.dismiss();
                     SendExitRequest();
                 } else {
-                    ToastUtils.show_allways(context, "网络失败，请检查网络");
+                    ToastUtils.show_always(context, "网络失败，请检查网络");
                 }
                 break;
         }
@@ -586,10 +586,10 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                     Log.v("ReturnType", "ReturnType -- > > " + ReturnType);
 
                     if (ReturnType.equals("1001")) {
-                        ToastUtils.show_allways(context, "已经成功修改该组信息");
+                        ToastUtils.show_always(context, "已经成功修改该组信息");
                         sendBroadcast(pushIntent);
                     } else {
-                        ToastUtils.show_allways(context, "修改群组信息失败，请稍后重试!");
+                        ToastUtils.show_always(context, "修改群组信息失败，请稍后重试!");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -633,7 +633,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                     Log.v("ReturnType", "ReturnType -- > > " + ReturnType);
 
                     if (ReturnType.equals("1001") || ReturnType.equals("10011")) {
-                        ToastUtils.show_allways(context, "已经成功退出该组");
+                        ToastUtils.show_always(context, "已经成功退出该组");
                         sendBroadcast(pushIntent);
                         if (ChatFragment.context != null && ChatFragment.interPhoneId != null &&
                                 ChatFragment.interPhoneId.equals(groupId)) {
@@ -646,7 +646,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                         }
                         delete();
                     } else {
-                        ToastUtils.show_allways(context, "退出群组失败，请稍后重试!");
+                        ToastUtils.show_always(context, "退出群组失败，请稍后重试!");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -815,7 +815,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 if (msg.what == 1) {
-                    ToastUtils.show_allways(context, "群头像保存成功");
+                    ToastUtils.show_always(context, "群头像保存成功");
                     if (!miniUri.startsWith("http:")) {
                         miniUri = GlobalConfig.imageurl + miniUri;
                     }
@@ -826,7 +826,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 } else if (msg.what == 0) {
                     ToastUtils.show_short(context, "头像保存失败，请稍后再试");
                 } else if (msg.what == -1) {
-                    ToastUtils.show_allways(context, "头像保存异常，图片未上传成功，请重新发布");
+                    ToastUtils.show_always(context, "头像保存异常，图片未上传成功，请重新发布");
                 }
                 if (dialog != null) dialog.dismiss();
             }

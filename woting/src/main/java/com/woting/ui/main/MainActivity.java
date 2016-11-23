@@ -134,7 +134,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             sendRequest();
         } else {
-            ToastUtils.show_allways(context, "网络失败，请检查网络");
+            ToastUtils.show_always(context, "网络失败，请检查网络");
         }
     }
 
@@ -405,7 +405,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 }
             } else {
                 Log.v("检查版本更新", "已经是最新版本");
-//                ToastUtils.show_allways(context, "已经是最新版本");
+//                ToastUtils.show_always(context, "已经是最新版本");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -443,7 +443,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 if (upDataType == 1) {
                     upDataDialog.dismiss();
                 } else {
-                    ToastUtils.show_allways(MainActivity.this, "本次需要更新");
+                    ToastUtils.show_always(MainActivity.this, "本次需要更新");
                 }
             }
         });
@@ -553,7 +553,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(BroadcastConstants.TIMER_END)) {
-                ToastUtils.show_allways(MainActivity.this, "定时关闭应用时间就要到了，应用即将退出");
+                ToastUtils.show_always(MainActivity.this, "定时关闭应用时间就要到了，应用即将退出");
                 stopService(new Intent(MainActivity.this, timeroffservice.class));    // 停止服务
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -577,7 +577,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         if (event.getAction() == KeyEvent.ACTION_DOWN && KeyEvent.KEYCODE_BACK == keyCode) {
             long currentTime = System.currentTimeMillis();
             if ((currentTime - touchTime) >= waitTime) {
-                ToastUtils.show_allways(MainActivity.this, "再按一次退出");
+                ToastUtils.show_always(MainActivity.this, "再按一次退出");
                 touchTime = currentTime;
             } else {
                 MobclickAgent.onKillProcess(this);

@@ -173,7 +173,7 @@ public class DownLoadUnCompleted extends Fragment {
                             @Override
                             public void run() {
                                 if (DownloadTask.downloadStatus == -1) {
-                                    ToastUtils.show_allways(context, fileInfoList.get(num).getFileName() + "的下载出现问题");
+                                    ToastUtils.show_always(context, fileInfoList.get(num).getFileName() + "的下载出现问题");
                                     getFileInfo(fileInfoList.get(getNum()));
                                 }
                             }

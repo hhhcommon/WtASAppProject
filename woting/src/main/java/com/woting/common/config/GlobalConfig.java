@@ -255,9 +255,20 @@ public class GlobalConfig {
     // 设置偏好列表
     public static final String setPreferenceUrl=baseUrl+"wt/setPreference.do";
 
-    // 上传文件(音频)文件
-    public static final String uploadWorksFileUrl = baseUrl + "Chopin/common/uploadCM.do";
-    // 上传文件内容
-    public static final String uploadWorksFileContentUrl = baseUrl + "Chopin/content/addByApp.do";
-
+    // "我的上传" 相关接口
+    private static final String uploadBaseUrl = "http://123.56.254.75:908/CM/";
+    // 获取专辑列表
+    public static final String getSequMediaList = uploadBaseUrl + "content/seq/getSeqMediaList.do";
+    // 删除专辑
+    public static final String removeSequMedia = uploadBaseUrl + "content/seq/removeSeqMedia.do";
+    // 获取节目列表
+    public static final String getMediaList = uploadBaseUrl + "content/media/getMediaList.do";
+    // 删除节目
+    public static final String removeMedia = uploadBaseUrl + "content/media/removeMedia.do";
+    // 获取标签列表
+    public static final String getTags = uploadBaseUrl + "content/getTags.do";
+    // 上传文件 SrcType == 1、图片  == 2、音频
+    public static final String uploadFileUrl = uploadBaseUrl + "common/uploadCM.do";
+    // 新增节目
+    public static final String addMediaInfo = uploadBaseUrl + "content/media/addMediaInfo.do";
 }

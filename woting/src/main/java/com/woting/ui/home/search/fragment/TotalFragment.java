@@ -205,18 +205,18 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                             setItemListener();
                         } else {
                             searchAdapter.setList(list);
-                            ToastUtils.show_allways(context, "没有数据");
+                            ToastUtils.show_always(context, "没有数据");
                         }
                     } else {
-                        ToastUtils.show_allways(context, "数据获取异常");
+                        ToastUtils.show_always(context, "数据获取异常");
                     }
                 } else if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_allways(context, "" + Message);
+                    ToastUtils.show_always(context, "" + Message);
                 } else if (ReturnType != null && ReturnType.equals("1011")) {
-                    ToastUtils.show_allways(context, "" + Message);
+                    ToastUtils.show_always(context, "" + Message);
                 } else {
                     if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_allways(context, Message + "");
+                        ToastUtils.show_always(context, Message + "");
                     }
                 }
             }
@@ -299,7 +299,7 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                     intent.putExtras(bundle);
                     startActivity(intent);
                 } else {
-                    ToastUtils.show_allways(context, "暂不支持的Type类型");
+                    ToastUtils.show_always(context, "暂不支持的Type类型");
                 }
                 return true;
             }
@@ -333,7 +333,7 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                         sendRequest();
                     }
                 } else {
-                    ToastUtils.show_allways(context, "网络失败，请检查网络");
+                    ToastUtils.show_always(context, "网络失败，请检查网络");
                 }
             }
         }

@@ -193,7 +193,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 						getActivity().setResult(1);
 						getActivity().finish();
 					} else {
-						ToastUtils.show_allways(context, "暂不支持播放");
+						ToastUtils.show_always(context, "暂不支持播放");
 					}
 				}
 			}
@@ -277,20 +277,20 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 							}
 						}else{
 							if (ReturnType.equals("0000")) {
-//							ToastUtils.show_allways(context, "无法获取相关的参数");
-								ToastUtils.show_allways(context, "数据出错了，请稍后再试！");
+//							ToastUtils.show_always(context, "无法获取相关的参数");
+								ToastUtils.show_always(context, "数据出错了，请稍后再试！");
 							} else if (ReturnType.equals("1002")) {
-//							ToastUtils.show_allways(context, "无此分类信息");
-								ToastUtils.show_allways(context, "数据出错了，请稍后再试！");
+//							ToastUtils.show_always(context, "无此分类信息");
+								ToastUtils.show_always(context, "数据出错了，请稍后再试！");
 							} else if (ReturnType.equals("1003")) {
-//							ToastUtils.show_allways(context, "无法获得列表");
-								ToastUtils.show_allways(context, "数据出错了，请稍后再试！");
+//							ToastUtils.show_always(context, "无法获得列表");
+								ToastUtils.show_always(context, "数据出错了，请稍后再试！");
 							} else if (ReturnType.equals("1011")) {
-//							ToastUtils.show_allways(context, "列表为空（列表为空[size==0]");
-								ToastUtils.show_allways(context, "数据出错了，请稍后再试！");
+//							ToastUtils.show_always(context, "列表为空（列表为空[size==0]");
+								ToastUtils.show_always(context, "数据出错了，请稍后再试！");
 							} else if (ReturnType.equals("T")) {
-//							ToastUtils.show_allways(context, "获取列表异常");
-								ToastUtils.show_allways(context, "数据出错了，请稍后再试！");
+//							ToastUtils.show_always(context, "获取列表异常");
+								ToastUtils.show_always(context, "数据出错了，请稍后再试！");
 							}
 						}
 					}
@@ -320,7 +320,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if (SubListAll != null && SubListAll.get(position) != null) {
 					if (SubListAll.get(position).getCheckType() == 3) {
-						ToastUtils.show_allways(context, "已经下载过");
+						ToastUtils.show_always(context, "已经下载过");
 					} else {
 						if (SubListAll.get(position).getCheckType() == 1) {
 							SubListAll.get(position).setCheckType(2);
@@ -482,7 +482,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 					context.sendBroadcast(p_intent);
 					lin_status2.setVisibility(View.GONE);
 				} else {
-					ToastUtils.show_allways(context, "请重新选择数据");
+					ToastUtils.show_always(context, "请重新选择数据");
 					return;
 				}
 				break;

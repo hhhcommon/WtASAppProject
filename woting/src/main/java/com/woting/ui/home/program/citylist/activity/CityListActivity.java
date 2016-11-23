@@ -86,7 +86,7 @@ public class CityListActivity extends AppBaseActivity implements OnClickListener
 			dialog = DialogUtils.Dialogph(context, "正在获取信息");
 			sendRequest();
 		} else {
-			ToastUtils.show_allways(context, "网络失败，请检查网络");
+			ToastUtils.show_always(context, "网络失败，请检查网络");
 		}
 	}
 
@@ -145,7 +145,7 @@ public class CityListActivity extends AppBaseActivity implements OnClickListener
 							e.printStackTrace();
 						}
 						if (srcList.size() == 0) {
-							ToastUtils.show_allways(context, "获取分类列表为空");
+							ToastUtils.show_always(context, "获取分类列表为空");
 						} else {
 							userList.clear();
 							userList.addAll(srcList);
@@ -156,16 +156,16 @@ public class CityListActivity extends AppBaseActivity implements OnClickListener
 							setInterface();
 						}
 					} else if (ReturnType.equals("1002")) {
-						ToastUtils.show_allways(context, "无此分类信息");
+						ToastUtils.show_always(context, "无此分类信息");
 					} else if (ReturnType.equals("1003")) {
-						ToastUtils.show_allways(context, "分类不存在");
+						ToastUtils.show_always(context, "分类不存在");
 					} else if (ReturnType.equals("1011")) {
-						ToastUtils.show_allways(context, "当前暂无分类");
+						ToastUtils.show_always(context, "当前暂无分类");
 					} else if (ReturnType.equals("T")) {
-						ToastUtils.show_allways(context, "获取列表异常");
+						ToastUtils.show_always(context, "获取列表异常");
 					}
 				} else {
-					ToastUtils.show_allways(context, "数据获取异常，请稍候重试");
+					ToastUtils.show_always(context, "数据获取异常，请稍候重试");
 				}
 			}
 

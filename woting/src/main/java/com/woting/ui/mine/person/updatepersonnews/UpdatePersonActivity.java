@@ -113,7 +113,7 @@ public class UpdatePersonActivity extends AppBaseActivity implements
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             send();
         } else {
-            ToastUtils.show_allways(context, "网络失败，请检查网络");
+            ToastUtils.show_always(context, "网络失败，请检查网络");
         }
     }
 
@@ -268,7 +268,7 @@ public class UpdatePersonActivity extends AppBaseActivity implements
                             Log.e("", "获取城市列表为空");
                         }
                     } else {
-                        ToastUtils.show_allways(context, "数据获取异常，请稍候重试");
+                        ToastUtils.show_always(context, "数据获取异常，请稍候重试");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -561,7 +561,7 @@ public class UpdatePersonActivity extends AppBaseActivity implements
         calendar.set(year, monthOfYear, dayOfMonth);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
         String dateTime = sdf.format(calendar.getTime());
-        ToastUtils.show_allways(context, "选中的日期为" + dateTime);
+        ToastUtils.show_always(context, "选中的日期为" + dateTime);
     }
 
     @Override

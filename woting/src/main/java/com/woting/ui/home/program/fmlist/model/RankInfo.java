@@ -21,7 +21,17 @@ public class RankInfo implements Serializable {
 	private String ContentTimes;
 	private String ContentPub;
 	private String ContentSubCount;
-	private String PlayCount;
+    private String ContentSeqId;
+
+    public String getContentSeqId() {
+        return ContentSeqId;
+    }
+
+    public void setContentSeqId(String contentSeqId) {
+        ContentSeqId = contentSeqId;
+    }
+
+    private String PlayCount;
 	private String sequId;//专辑ID
 	private String sequImg;//专辑图片
 	private String sequDesc;//专辑描述

@@ -21,7 +21,7 @@ public class ToastUtils {
 	}
 
 	/**一直提示*/
-	public static void show_allways(Context context, String content){
+	public static void show_always(Context context, String content){
 		Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
 	}
 

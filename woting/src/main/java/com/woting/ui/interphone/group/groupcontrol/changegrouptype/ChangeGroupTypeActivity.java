@@ -85,7 +85,7 @@ public class ChangeGroupTypeActivity extends Activity implements OnClickListener
 			break;
 		case R.id.head_right_btn:// 我是确定
 			if (judegeflag == -1) {
-				ToastUtils.show_allways(context, "您还没有选择要更改的群类型，点击左侧返回按钮可以返回上一层");
+				ToastUtils.show_always(context, "您还没有选择要更改的群类型，点击左侧返回按钮可以返回上一层");
 			} else if (judegeflag == 1) {
 				checkEdit();
 			} else {
@@ -93,7 +93,7 @@ public class ChangeGroupTypeActivity extends Activity implements OnClickListener
 					dialog = DialogUtils.Dialogph(context, "正在为您创建群组");
 					send();
 				} else {
-					ToastUtils.show_allways(context, "网络失败，请检查网络");
+					ToastUtils.show_always(context, "网络失败，请检查网络");
 				}
 			}
 			break;
@@ -139,7 +139,7 @@ public class ChangeGroupTypeActivity extends Activity implements OnClickListener
 			dialog = DialogUtils.Dialogph(context, "正在为您创建群组");
 			send();
 		} else {
-			ToastUtils.show_allways(context, "网络失败，请检查网络");
+			ToastUtils.show_always(context, "网络失败，请检查网络");
 		}
 
 	}
@@ -174,24 +174,24 @@ public class ChangeGroupTypeActivity extends Activity implements OnClickListener
 					// TODO
 				}
 				if (ReturnType != null && ReturnType.equals("1002")) {
-					ToastUtils.show_allways(context, "未登陆无法创建群组");
+					ToastUtils.show_always(context, "未登陆无法创建群组");
 				} else if (ReturnType != null && ReturnType.equals("1003")) {
-					ToastUtils.show_allways(context, "无法得到用户分类" + Message);
+					ToastUtils.show_always(context, "无法得到用户分类" + Message);
 				} else if (ReturnType != null && ReturnType.equals("1004")) {
-					ToastUtils.show_allways(context, "无法得到组密码" + Message);
+					ToastUtils.show_always(context, "无法得到组密码" + Message);
 				} else if (ReturnType != null && ReturnType.equals("1005")) {
-					ToastUtils.show_allways(context, "无法得到组员信息" + Message);
+					ToastUtils.show_always(context, "无法得到组员信息" + Message);
 				} else if (ReturnType != null && ReturnType.equals("1006")) {
-					ToastUtils.show_allways(context, "给定的组员信息不存在" + Message);
+					ToastUtils.show_always(context, "给定的组员信息不存在" + Message);
 				} else if (ReturnType != null && ReturnType.equals("1007")) {
-					ToastUtils.show_allways(context, "只有一个有效成员，无法构建用户组" + Message);
+					ToastUtils.show_always(context, "只有一个有效成员，无法构建用户组" + Message);
 				} else if (ReturnType != null && ReturnType.equals("1008")) {
-					ToastUtils.show_allways(context, "您所创建的组已达50个，不能再创建了" + Message);
+					ToastUtils.show_always(context, "您所创建的组已达50个，不能再创建了" + Message);
 				} else if (ReturnType != null && ReturnType.equals("1009")) {
-					ToastUtils.show_allways(context, "20分钟内创建组不能超过5个" + Message);
+					ToastUtils.show_always(context, "20分钟内创建组不能超过5个" + Message);
 				} else {
 					if (Message != null && !Message.trim().equals("")) {
-						ToastUtils.show_allways(context, Message + "");
+						ToastUtils.show_always(context, Message + "");
 					}
 				}
 			}

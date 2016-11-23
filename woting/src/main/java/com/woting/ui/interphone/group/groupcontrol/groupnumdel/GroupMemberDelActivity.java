@@ -98,10 +98,10 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
                 dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
                 send();
             } else {
-                ToastUtils.show_allways(context, "网络失败，请检查网络");
+                ToastUtils.show_always(context, "网络失败，请检查网络");
             }
         } else {
-            ToastUtils.show_allways(context, "获取数据异常请返回重试!");
+            ToastUtils.show_always(context, "获取数据异常请返回重试!");
         }
     }
 
@@ -131,7 +131,7 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
                     try {
                         userList = new Gson().fromJson(result.getString("UserList"), new TypeToken<List<UserInfo>>() {}.getType());
                         if(userList == null || userList.size() == 0) {
-                            ToastUtils.show_allways(context, "当前组内已经没有其他联系人了");
+                            ToastUtils.show_always(context, "当前组内已经没有其他联系人了");
                             return ;
                         }
                         String userId = CommonUtils.getUserId(context);// 从返回的 list 当中去掉用户自己
@@ -151,14 +151,14 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
                     }
                 }
                 if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_allways(context, "无法获取组Id");
+                    ToastUtils.show_always(context, "无法获取组Id");
                 } else if (ReturnType != null && ReturnType.equals("T")) {
-                    ToastUtils.show_allways(context, "异常返回值");
+                    ToastUtils.show_always(context, "异常返回值");
                 } else if (ReturnType != null && ReturnType.equals("1011")) {
-                    ToastUtils.show_allways(context, "组中无成员");
+                    ToastUtils.show_always(context, "组中无成员");
                 } else {
                     if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_allways(context, Message + "");
+                        ToastUtils.show_always(context, Message + "");
                     }
                 }
             }
@@ -249,10 +249,10 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
                         dialog = DialogUtils.Dialogph(context, "正在发送邀请");
                         sendMemberDelete();
                     } else {
-                        ToastUtils.show_allways(context, "网络失败，请检查网络");
+                        ToastUtils.show_always(context, "网络失败，请检查网络");
                     }
                 } else {
-                    ToastUtils.show_allways(context, "请您勾选您要删除的成员");
+                    ToastUtils.show_always(context, "请您勾选您要删除的成员");
                 }
                 break;
             case R.id.image_clear:
@@ -288,12 +288,12 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
                     e.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
-                    ToastUtils.show_allways(context, "群成员已经成功删除");
+                    ToastUtils.show_always(context, "群成员已经成功删除");
                     setResult(1);
                     finish();
                 } else {
                     if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_allways(context, Message + "");
+                        ToastUtils.show_always(context, Message + "");
                     }
                 }
             }

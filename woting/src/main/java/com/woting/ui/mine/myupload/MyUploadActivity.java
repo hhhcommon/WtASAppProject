@@ -163,7 +163,7 @@ public class MyUploadActivity extends AppBaseFragmentActivity implements View.On
                 }
                 break;
             case R.id.lin_favorite_shanchu:// 删除
-                ToastUtils.show_allways(context, "删除数据!");
+                ToastUtils.show_always(context, "删除数据!");
 //                switch (currIndex) {
 //                    case 0:
 //                        myUploadSequFragment.delItem();

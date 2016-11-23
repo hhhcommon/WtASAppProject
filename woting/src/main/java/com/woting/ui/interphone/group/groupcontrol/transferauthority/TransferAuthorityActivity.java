@@ -98,10 +98,10 @@ public class TransferAuthorityActivity extends AppBaseActivity implements OnClic
                 dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
                 send();
             } else {
-                ToastUtils.show_allways(context, "网络失败，请检查网络");
+                ToastUtils.show_always(context, "网络失败，请检查网络");
             }
         } else {
-            ToastUtils.show_allways(context, "获取数据异常，请返回重试!");
+            ToastUtils.show_always(context, "获取数据异常，请返回重试!");
         }
     }
 
@@ -122,14 +122,14 @@ public class TransferAuthorityActivity extends AppBaseActivity implements OnClic
                     }
                 }
                 if (!isHave) {
-                    ToastUtils.show_allways(context, "请您勾选您要移交权限的成员");
+                    ToastUtils.show_always(context, "请您勾选您要移交权限的成员");
                     return;
                 }
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {// 发送进入组的邀请
                     dialog = DialogUtils.Dialogph(context, "正在发送邀请");
                     sendTransferAuthority();
                 } else {
-                    ToastUtils.show_allways(context, "网络失败，请检查网络");
+                    ToastUtils.show_always(context, "网络失败，请检查网络");
                 }
                 break;
             case R.id.image_clear:
@@ -165,7 +165,7 @@ public class TransferAuthorityActivity extends AppBaseActivity implements OnClic
                     try {
                         userList = new Gson().fromJson(result.getString("UserList"), new TypeToken<List<UserInfo>>() {}.getType());
                         if(userList == null || userList.size() <= 1) {
-                            ToastUtils.show_allways(context, "当前组内已经没有其他联系人了");
+                            ToastUtils.show_always(context, "当前组内已经没有其他联系人了");
                             return ;
                         }
                         String userId = CommonUtils.getUserId(context);
@@ -184,14 +184,14 @@ public class TransferAuthorityActivity extends AppBaseActivity implements OnClic
                         e1.printStackTrace();
                     }
                 } else if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_allways(context, "无法获取组Id");
+                    ToastUtils.show_always(context, "无法获取组Id");
                 } else if (ReturnType != null && ReturnType.equals("T")) {
-                    ToastUtils.show_allways(context, "异常返回值");
+                    ToastUtils.show_always(context, "异常返回值");
                 } else if (ReturnType != null && ReturnType.equals("1011")) {
-                    ToastUtils.show_allways(context, "组中无成员");
+                    ToastUtils.show_always(context, "组中无成员");
                 } else {
                     if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_allways(context, Message + "");
+                        ToastUtils.show_always(context, Message + "");
                     }
                 }
             }
@@ -283,28 +283,28 @@ public class TransferAuthorityActivity extends AppBaseActivity implements OnClic
                     e.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
-                    ToastUtils.show_allways(context, "管理员权限移交成功");
+                    ToastUtils.show_always(context, "管理员权限移交成功");
                     setResult(1);
                     finish();
                 } else if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_allways(context, "无法获取用户Id");
+                    ToastUtils.show_always(context, "无法获取用户Id");
                 } else if (ReturnType != null && ReturnType.equals("1003")) {
-                    ToastUtils.show_allways(context, "用户不存在");
+                    ToastUtils.show_always(context, "用户不存在");
                 } else if (ReturnType != null && ReturnType.equals("10021")) {
-                    ToastUtils.show_allways(context, "用户不是该组的管理员");
+                    ToastUtils.show_always(context, "用户不是该组的管理员");
                 } else if (ReturnType != null && ReturnType.equals("0000")) {
-                    ToastUtils.show_allways(context, "无法获取相关的参数");
+                    ToastUtils.show_always(context, "无法获取相关的参数");
                 } else if (ReturnType != null && ReturnType.equals("1004")) {
-                    ToastUtils.show_allways(context, "无法获取移交用户Id");
+                    ToastUtils.show_always(context, "无法获取移交用户Id");
                 } else if (ReturnType != null && ReturnType.equals("10041")) {
-                    ToastUtils.show_allways(context, "被移交用户不在该组");
+                    ToastUtils.show_always(context, "被移交用户不在该组");
                 } else if (ReturnType != null && ReturnType.equals("T")) {
-                    ToastUtils.show_allways(context, "异常返回值");
+                    ToastUtils.show_always(context, "异常返回值");
                 } else if (ReturnType != null && ReturnType.equals("200")) {
-                    ToastUtils.show_allways(context, "尚未登录");
+                    ToastUtils.show_always(context, "尚未登录");
                 } else {
                     if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_allways(context, Message + "");
+                        ToastUtils.show_always(context, Message + "");
                     }
                 }
             }

@@ -55,7 +55,7 @@ public class ModifyPasswordActivity extends AppBaseActivity implements OnClickLi
 //                            sendModifyPassword();
 //                        }
                     } else {
-                        ToastUtils.show_allways(context, "网络连接失败，请稍后重试");
+                        ToastUtils.show_always(context, "网络连接失败，请稍后重试");
                     }
                 }
                 break;
@@ -107,17 +107,17 @@ public class ModifyPasswordActivity extends AppBaseActivity implements OnClickLi
 //                    e.printStackTrace();
 //                }
 //                if (ReturnType != null && ReturnType.equals("1001")) {
-//                    ToastUtils.show_allways(context, "密码修改成功");
+//                    ToastUtils.show_always(context, "密码修改成功");
 //                    Intent intent = new Intent(context, LoginActivity.class);
 //                    intent.putExtra("phonenum", phoneNum);
 //                    startActivity(intent);
 //                    finish();
 //                }
 //                if (ReturnType != null && ReturnType.equals("1002")) {
-//                    ToastUtils.show_allways(context, "" + Message);
+//                    ToastUtils.show_always(context, "" + Message);
 //                } else {
 //                    if (Message != null && !Message.trim().equals("")) {
-//                        ToastUtils.show_allways(context, Message + "");
+//                        ToastUtils.show_always(context, Message + "");
 //                    }
 //                }
 //            }
@@ -186,14 +186,14 @@ public class ModifyPasswordActivity extends AppBaseActivity implements OnClickLi
                     e.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
-                    ToastUtils.show_allways(context, "密码修改成功");
+                    ToastUtils.show_always(context, "密码修改成功");
                     finish();
                 }
                 if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_allways(context, "" + Message);
+                    ToastUtils.show_always(context, "" + Message);
                 } else {
                     if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_allways(context, Message + "");
+                        ToastUtils.show_always(context, Message + "");
                     }
                 }
             }

@@ -114,9 +114,9 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
                     FID.deleteFileInfo(fileInfoList.get(positionNow).getLocalurl(), CommonUtils.getUserId(context));
                     setListValue();
                     context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));
-                    ToastUtils.show_allways(context, "此目录内已经没有内容");
+                    ToastUtils.show_always(context, "此目录内已经没有内容");
                 } catch (Exception e) {
-                    ToastUtils.show_allways(context, "文件删除失败，请稍后重试");
+                    ToastUtils.show_always(context, "文件删除失败，请稍后重试");
                 }
                 break;
         }
@@ -187,7 +187,7 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
             adapter = new DownLoadListAdapter(context, fileInfoList);
             mListView.setAdapter(adapter);
             context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));
-            ToastUtils.show_allways(context, "此目录内已经没有内容");
+            ToastUtils.show_always(context, "此目录内已经没有内容");
         }
     }
 

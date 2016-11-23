@@ -139,10 +139,10 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
                         dialogs = DialogUtils.Dialogph(context, "正在获取数据");
                         send();
                     } else {
-                        ToastUtils.show_allways(context, "网络失败，请检查网络");
+                        ToastUtils.show_always(context, "网络失败，请检查网络");
                     }
                 } else {
-                    ToastUtils.show_allways(context, "用户ID为空，无法删除该好友，请稍后重试");
+                    ToastUtils.show_always(context, "用户ID为空，无法删除该好友，请稍后重试");
                 }
             }
         });
@@ -333,7 +333,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
                         dialogs = DialogUtils.Dialogph(context, "提交中");
                         update(biename, groupSignature);
                     } else {
-                        ToastUtils.show_allways(context, "网络失败，请检查网络");
+                        ToastUtils.show_always(context, "网络失败，请检查网络");
                     }
                     et_b_name.setEnabled(false);
                     et_groupSignature.setEnabled(false);
@@ -427,30 +427,30 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
                             et_b_name.setText(b_name2);
                             context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                             context.sendBroadcast(new Intent(BroadcastConstants.GROUP_DETAIL_CHANGE));
-                            ToastUtils.show_allways(context, "修改成功");
+                            ToastUtils.show_always(context, "修改成功");
                         } else if (ReturnType.equals("0000")) {
-                            ToastUtils.show_allways(context, "无法获取相关的参数");
+                            ToastUtils.show_always(context, "无法获取相关的参数");
                         } else if (ReturnType.equals("1002")) {
-                            ToastUtils.show_allways(context, "无法获取用ID");
+                            ToastUtils.show_always(context, "无法获取用ID");
                         } else if (ReturnType.equals("1003")) {
-                            ToastUtils.show_allways(context, "好友Id无法获取");
+                            ToastUtils.show_always(context, "好友Id无法获取");
                         } else if (ReturnType.equals("1004")) {
-                            ToastUtils.show_allways(context, "好友不存在");
+                            ToastUtils.show_always(context, "好友不存在");
                         } else if (ReturnType.equals("1005")) {
-                            ToastUtils.show_allways(context, "好友为自己无法修改");
+                            ToastUtils.show_always(context, "好友为自己无法修改");
                         } else if (ReturnType.equals("1006")) {
-                            ToastUtils.show_allways(context, "没有可修改信息");
+                            ToastUtils.show_always(context, "没有可修改信息");
                         } else if (ReturnType.equals("1007")) {
-                            ToastUtils.show_allways(context, "不是好友，无法修改");
+                            ToastUtils.show_always(context, "不是好友，无法修改");
                         } else if (ReturnType.equals("1008")) {
-                            ToastUtils.show_allways(context, "修改失败");
+                            ToastUtils.show_always(context, "修改失败");
                         } else if (ReturnType.equals("T")) {
-                            ToastUtils.show_allways(context, "获取列表异常");
+                            ToastUtils.show_always(context, "获取列表异常");
                         } else if (ReturnType.equals("200")) {
-                            ToastUtils.show_allways(context, "您没有登录");
+                            ToastUtils.show_always(context, "您没有登录");
                         }
                     } else {
-                        ToastUtils.show_allways(context, "列表处理异常");
+                        ToastUtils.show_always(context, "列表处理异常");
                     }
                 }
 
@@ -501,23 +501,23 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
                             et.putString(StringConstant.PERSONREFRESHB, "true");
                             et.commit();
                         }
-                        ToastUtils.show_allways(context, "已经删除成功");
+                        ToastUtils.show_always(context, "已经删除成功");
                         finish();
                     } else if (ReturnType.equals("0000")) {
-                        ToastUtils.show_allways(context, "无法获取相关的参数");
+                        ToastUtils.show_always(context, "无法获取相关的参数");
                     } else if (ReturnType.equals("1002")) {
-                        ToastUtils.show_allways(context, "无法获取用ID");
+                        ToastUtils.show_always(context, "无法获取用ID");
                     } else if (ReturnType.equals("1003")) {
-                        ToastUtils.show_allways(context, "好友Id无法获取");
+                        ToastUtils.show_always(context, "好友Id无法获取");
                     } else if (ReturnType.equals("1004")) {
-                        ToastUtils.show_allways(context, "好友不存在");
+                        ToastUtils.show_always(context, "好友不存在");
                     } else if (ReturnType.equals("1005")) {
-                        ToastUtils.show_allways(context, "不是好友，不必删除");
+                        ToastUtils.show_always(context, "不是好友，不必删除");
                     } else if (ReturnType.equals("T")) {
-                        ToastUtils.show_allways(context, "获取列表异常");
+                        ToastUtils.show_always(context, "获取列表异常");
                     }
                 } else {
-                    ToastUtils.show_allways(context, "列表处理异常");
+                    ToastUtils.show_always(context, "列表处理异常");
                 }
             }
 

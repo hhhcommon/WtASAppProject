@@ -12,6 +12,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.CommonUtils;
+import com.woting.common.util.PhoneMessage;
 import com.woting.ui.mine.myupload.model.FileContentInfo;
 import com.woting.ui.mine.myupload.upload.UploadActivity;
 
@@ -66,7 +68,7 @@ public class HttpMultipartPost extends AsyncTask<String, Integer, String> {
         String serverResponse = null;
         HttpClient httpClient = new DefaultHttpClient();
         HttpContext httpContext = new BasicHttpContext();
-        HttpPost httpPost = new HttpPost(GlobalConfig.uploadWorksFileUrl);
+        HttpPost httpPost = new HttpPost(GlobalConfig.uploadFileUrl);
 
         try {
             CustomMultipartEntity multipartContent = new CustomMultipartEntity(new CustomMultipartEntity.ProgressListener() {
@@ -78,7 +80,13 @@ public class HttpMultipartPost extends AsyncTask<String, Integer, String> {
 
             // 把上传内容添加到MultipartEntity
             for (int i = 0; i < filePathList.size(); i++) {
+                multipartContent.addPart("DeviceId", new StringBody(PhoneMessage.imei));
+                multipartContent.addPart("PCDType", new StringBody("1"));
+                multipartContent.addPart("MobileClass", new StringBody(PhoneMessage.model + "::" + PhoneMessage.productor));
+                multipartContent.addPart("UserId", new StringBody(CommonUtils.getUserId(context)));
                 multipartContent.addPart("ContentFile", new FileBody(new File(filePathList.get(i))));
+                multipartContent.addPart("SrcType", new StringBody("2"));
+                multipartContent.addPart("Purpose", new StringBody("1"));
                 multipartContent.addPart("data", new StringBody(filePathList.get(i), Charset.forName(org.apache.http.protocol.HTTP.UTF_8)));
             }
             totalSize = multipartContent.getContentLength();
@@ -116,7 +124,7 @@ public class HttpMultipartPost extends AsyncTask<String, Integer, String> {
             String ful = arg1.getString("ful");
             List<FileContentInfo> fileContentInfo = new Gson().fromJson(ful, new TypeToken<List<FileContentInfo>>() {}.getType());
             if(fileContentInfo.get(0).getSuccess().equals("TRUE")) {
-                String filePath = fileContentInfo.get(0).getStoreFilepath();
+                String filePath = fileContentInfo.get(0).getFilePath();
                 ((UploadActivity)context).addFileContent(filePath);// 上传完成回到原界面
             } else {
                 uploadFail();
