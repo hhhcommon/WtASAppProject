@@ -49,6 +49,12 @@ public class MyUploadListAdapter extends BaseAdapter {
         this.list = list;
     }
 
+    public MyUploadListAdapter(Context context, List<RankInfo> list, boolean isVisible) {
+        this.context = context;
+        this.list = list;
+        this.isVisible = isVisible;
+    }
+
     @Override
     public int getCount() {
         return list.size();

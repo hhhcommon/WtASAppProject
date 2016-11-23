@@ -44,7 +44,7 @@
             android:layout_marginTop="11dp"
             android:singleLine="true"
             android:text="我听之声"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="70dp"
             android:textColor="@color/dinglan_orange"
             android:textSize="15sp"/>
 
