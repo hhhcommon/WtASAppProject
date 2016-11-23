@@ -196,9 +196,7 @@ public class MyUploadSequFragment extends Fragment implements XListView.IXListVi
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if(position <= 0) {
-            return ;
-        }
+        if(position <= 0) return ;
         if(((MyUploadActivity)context).getEditState()) {
             int checkType = newList.get(position - 1).getChecktype();
             if(checkType == 0) {
@@ -227,18 +225,16 @@ public class MyUploadSequFragment extends Fragment implements XListView.IXListVi
                 checkList.remove(newList.get(i));
             }
         }
-        if(checkList.size() == newList.size()){
+        if(checkList.size() == newList.size()) {
             Intent intentAll = new Intent();
             intentAll.setAction(BroadcastConstants.UPDATE_MY_UPLOAD_CHECK_ALL);
             context.sendBroadcast(intentAll);
             isAll = true;
-        }else{
-            if(isAll) {
-                Intent intentNoCheck = new Intent();
-                intentNoCheck.setAction(BroadcastConstants.UPDATE_MY_UPLOAD_CHECK_NO);
-                context.sendBroadcast(intentNoCheck);
-                isAll = false;
-            }
+        } else if(isAll) {
+            Intent intentNoCheck = new Intent();
+            intentNoCheck.setAction(BroadcastConstants.UPDATE_MY_UPLOAD_CHECK_NO);
+            context.sendBroadcast(intentNoCheck);
+            isAll = false;
         }
     }
 
@@ -267,7 +263,7 @@ public class MyUploadSequFragment extends Fragment implements XListView.IXListVi
             }
             sendDeleteItemRequest();
         } else {
-            ToastUtils.show_allways(context, "网络失败，请检查网络");
+            ToastUtils.show_allways(context, "网络连接失败，请检查网络!");
         }
     }
 

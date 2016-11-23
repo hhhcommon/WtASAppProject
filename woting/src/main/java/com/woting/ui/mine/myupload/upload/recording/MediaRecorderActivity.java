@@ -2,7 +2,9 @@ package com.woting.ui.mine.myupload.upload.recording;
 
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
@@ -34,31 +36,33 @@ import java.util.Locale;
  * Created by Administrator on 2016/11/21.
  */
 public class MediaRecorderActivity extends BaseActivity implements View.OnClickListener {
-    private MediaRecorder recorder;// 录制音频对象
-    private MediaPlayer player;// 播放录音媒体对象
+    private MediaRecorder recorder;         // 录制音频对象
+    private MediaPlayer player;             // 播放录音媒体对象
+    private AudioManager am;                // 声音管理对象
     private RotateAnimation animation;
     private File fPath;
     private File audioFile;
 
-    private Dialog remindSaveDialog;// 提醒保存文件对话框
-    private Button btnPlay;// 开始播放
-    private Button btnStart;// 开始录制
-    private Button btnSave;// 保存录制的音频
+    private Dialog remindSaveDialog;        // 提醒保存文件对话框
+    private Button btnPlay;                 // 开始播放
+    private Button btnStart;                // 开始录制
+    private Button btnSave;                 // 保存录制的音频
 
-    private TextView mHourPrefix;// 时 十位
-    private TextView mHourText;// 时 个位
-    private TextView mMinutePrefix;// 分 十位
-    private TextView mMinuteText;// 分 个位
-    private TextView mSecondPrefix;// 秒 十位
-    private TextView mSecondText;// 秒 个位
+    private TextView mHourPrefix;           // 时 十位
+    private TextView mHourText;             // 时 个位
+    private TextView mMinutePrefix;         // 分 十位
+    private TextView mMinuteText;           // 分 个位
+    private TextView mSecondPrefix;         // 秒 十位
+    private TextView mSecondText;           // 秒 个位
 
-    private TextView textRecordState;// 录制状态
-    private ImageView imageRecording;// 开始录制时转圈
+    private TextView textRecordState;       // 录制状态
+    private ImageView imageRecording;       // 开始录制时转圈
 
-    private long audioTime;// 录制的时间
-    private boolean isRecording;// 正在录制
-    private boolean isSave = true;// 判断已录制的文件是否保存
-    private boolean isPlay;// 是否正在播放录音
+    private long audioTime;                 // 录制的时间
+    private boolean isRecording;            // 正在录制
+    private boolean isSave = true;          // 判断已录制的文件是否保存
+    private boolean isPlay;                 // 是否正在播放录音
+    private int ringerMode;                 // 保存用户铃声震动模式的设置
 
     private Handler mHandler = new Handler();
 
@@ -75,33 +79,33 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
         initDialog();
         initAnimation();
 
-        findViewById(R.id.image_back).setOnClickListener(this);// 返回
+        findViewById(R.id.image_back).setOnClickListener(this);                     // 返回
 
         ImageView imageBackground = (ImageView) findViewById(R.id.image_background);// 背景图
         imageBackground.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_image_recording_background));
 
-        imageRecording = (ImageView) findViewById(R.id.image_recording);// 开始录制时转圈
+        imageRecording = (ImageView) findViewById(R.id.image_recording);            // 开始录制时转圈
         imageRecording.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_image_audio_recording));
 
-        btnPlay = (Button) findViewById(R.id.btn_play);// 开始播放
+        btnPlay = (Button) findViewById(R.id.btn_play);                             // 开始播放
         btnPlay.setOnClickListener(this);
 
-        btnStart = (Button) findViewById(R.id.btn_start);// 开始录制
+        btnStart = (Button) findViewById(R.id.btn_start);                           // 开始录制
         btnStart.setOnClickListener(this);
 
-        btnSave = (Button) findViewById(R.id.btn_save);// 保存录制的音频
+        btnSave = (Button) findViewById(R.id.btn_save);                             // 保存录制的音频
         btnSave.setOnClickListener(this);
 
-        mHourPrefix = (TextView) findViewById(R.id.timestamp_hour_prefix);// 时 十位
-        mHourText = (TextView) findViewById(R.id.timestamp_hour_text);// 时 个位
+        mHourPrefix = (TextView) findViewById(R.id.timestamp_hour_prefix);          // 时 十位
+        mHourText = (TextView) findViewById(R.id.timestamp_hour_text);              // 时 个位
 
-        mMinutePrefix = (TextView) findViewById(R.id.timestamp_minute_prefix);// 分 十位
-        mMinuteText = (TextView) findViewById(R.id.timestamp_minute_text);// 分 个位
+        mMinutePrefix = (TextView) findViewById(R.id.timestamp_minute_prefix);      // 分 十位
+        mMinuteText = (TextView) findViewById(R.id.timestamp_minute_text);          // 分 个位
 
-        mSecondPrefix = (TextView) findViewById(R.id.timestamp_second_prefix);// 秒 十位
-        mSecondText = (TextView) findViewById(R.id.timestamp_second_text);// 秒 个位
+        mSecondPrefix = (TextView) findViewById(R.id.timestamp_second_prefix);      // 秒 十位
+        mSecondText = (TextView) findViewById(R.id.timestamp_second_text);          // 秒 个位
 
-        textRecordState = (TextView) findViewById(R.id.text_record_state);// 录制状态
+        textRecordState = (TextView) findViewById(R.id.text_record_state);          // 录制状态
     }
 
     // 初始化录制对象
@@ -144,13 +148,14 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
             isSave = false;
             isRecording = true;
             textRecordState.setText("正在录音");// 更新状态
+            getRingStatus();// 获取用户铃声震动的设置并将其设置为静音模式
 
             audioFile = File.createTempFile("recording", ".mp3", fPath);// 创建临时文件
             recorder.setOutputFile(audioFile.getAbsolutePath());
             recorder.prepare(); // 准备好录制
             recorder.start();   // 开始录制
 
-            mHandler.postDelayed(mTimestampRunnable, 1000);// 开始录像后，每隔1s去更新录像的时间戳
+            mHandler.postDelayed(mTimestampRunnable, 1000);// 开始录像后，每隔 1s 去更新录像的时间戳
             imageRecording.setVisibility(View.VISIBLE);
             imageRecording.startAnimation(animation);
 
@@ -179,6 +184,7 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
         recorder.release();
         isRecording = false;
         textRecordState.setText("已停止");
+        changeRingStatus(ringerMode);// 恢复用户之前设置的铃声震动模式
 
         int s = Integer.parseInt(mSecondText.getText().toString());
         int m = Integer.parseInt(mMinuteText.getText().toString());
@@ -210,6 +216,7 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
                 btnPlay.setTextColor(getResources().getColor(R.color.gray));
 
                 btnStart.setEnabled(true);// 播放完时可以重新录制
+                btnStart.setTextColor(getResources().getColor(R.color.dinglan_orange));
 
                 btnSave.setEnabled(true);// 播放完保存按钮可用
                 btnSave.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.mipmap.wt_image_recorder_save), null, null);
@@ -267,6 +274,7 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
             mHandler.removeCallbacks(playTimestampRunnable);
             player.pause();// 暂停播放
             btnStart.setEnabled(true);// 播放停止时可以重新开始录制
+            btnStart.setTextColor(getResources().getColor(R.color.dinglan_orange));
 
             imageRecording.setVisibility(View.GONE);
             imageRecording.clearAnimation();
@@ -283,6 +291,7 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
             imageRecording.startAnimation(animation);
             player.start();// 开始播放
             btnStart.setEnabled(false);// 播放时不可录制
+            btnStart.setTextColor(getResources().getColor(R.color.gray));
 
             btnSave.setEnabled(false);// 播放时保存按钮不可用
             btnSave.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.mipmap.wt_image_recorder_save_unavailable), null, null);
@@ -298,12 +307,39 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
         animation = (RotateAnimation) AnimationUtils.loadAnimation(context, R.anim.running_circle);
     }
 
+    // 获取用户设置的铃声震动模式 开始录制时设置为静音模式
+    private void getRingStatus() {
+        if(am == null) {
+            am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        }
+        ringerMode = am.getRingerMode();
+        Log.v("ringerMode", "ringerMode -- > > " + ringerMode);
+
+        changeRingStatus(0);// 设置成静音模式
+    }
+
+    // 更改铃声和震动模式
+    private void changeRingStatus(int ringStatus) {
+        switch (ringStatus) {
+            case 0:// 静音
+                am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                break;
+            case 1:// 震动
+                am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                break;
+            case 2:// 铃声
+                am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                break;
+        }
+        Log.v("ringStatus", "ringStatus -- > > " + ringStatus);
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_start:// 开始录制
                 // 判断是否正在录制
-                if(isRecording) {// 否则停止录制
+                if(isRecording) {// 有则停止录制
                     btnEndRecorder();
                 } else {// 没有则开始录制
                     btnStartRecorder();
@@ -324,7 +360,7 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
                 break;
             case R.id.tv_confirm:// 确定放弃
                 remindSaveDialog.dismiss();
-                if (audioFile != null) {// 没有点保存则意味着不保存即删除刚才录制的文件
+                if (audioFile != null) {// 放弃保存则意味着不保存即删除刚才录制的文件
                     File file = new File(audioFile.getAbsolutePath());
                     if (file.exists()) {
                         boolean isDelete = file.delete();
@@ -364,6 +400,7 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
         int second = Integer.parseInt(mSecondText.getText().toString());
         int minute = Integer.parseInt(mMinuteText.getText().toString());
         int hour = Integer.parseInt(mHourText.getText().toString());
+
         second++;
         Log.d("recording time", "second: " + second);
 
