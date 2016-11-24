@@ -85,7 +85,7 @@ public class FindActivity extends AppBaseActivity implements OnClickListener {
 				et_news.setHint("群名称");
 			}
 		} else {
-			ToastUtils.show_allways(context, "类型获取异常，请返回上一级界面重试");
+			ToastUtils.show_always(context, "类型获取异常，请返回上一级界面重试");
 		}
 		audioMgr = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 		// 获取最大音乐音量
@@ -244,7 +244,7 @@ public class FindActivity extends AppBaseActivity implements OnClickListener {
 		case R.id.lin_contactsearch:
 			String SearchStr = et_news.getText().toString().trim();
 			if (SearchStr == "" || SearchStr.equals("")) {
-				ToastUtils.show_allways(context, "您所输入的内容为空");
+				ToastUtils.show_always(context, "您所输入的内容为空");
 				return;
 			}
 			Intent intent1 = new Intent(context, FindNewsResultActivity.class);

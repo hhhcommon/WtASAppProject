@@ -205,40 +205,40 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 				}else{
 					if (ReturnType != null && ReturnType.equals("1002")) {
 						/* ToastUtil.show_short(context, "无创建者" + Message); */
-						ToastUtils.show_allways(context, "未登陆无法创建群组");
+						ToastUtils.show_always(context, "未登陆无法创建群组");
 						head_name_tv.setText("创建失败");
 						tv_group_entry.setVisibility(View.INVISIBLE);
 					} else if (ReturnType != null && ReturnType.equals("1003")) {
-						ToastUtils.show_allways(context, "无法得到用户分类" + Message);
+						ToastUtils.show_always(context, "无法得到用户分类" + Message);
 						head_name_tv.setText("创建失败");
 						tv_group_entry.setVisibility(View.INVISIBLE);
 					} else if (ReturnType != null && ReturnType.equals("1004")) {
-						ToastUtils.show_allways(context, "无法得到组密码" + Message);
+						ToastUtils.show_always(context, "无法得到组密码" + Message);
 						head_name_tv.setText("创建失败");
 						tv_group_entry.setVisibility(View.INVISIBLE);
 					} else if (ReturnType != null && ReturnType.equals("1005")) {
-						ToastUtils.show_allways(context, "无法得到组员信息" + Message);
+						ToastUtils.show_always(context, "无法得到组员信息" + Message);
 						head_name_tv.setText("创建失败");
 						tv_group_entry.setVisibility(View.INVISIBLE);
 					} else if (ReturnType != null && ReturnType.equals("1006")) {
-						ToastUtils.show_allways(context, "给定的组员信息不存在" + Message);
+						ToastUtils.show_always(context, "给定的组员信息不存在" + Message);
 						head_name_tv.setText("创建失败");
 						tv_group_entry.setVisibility(View.INVISIBLE);
 					} else if (ReturnType != null && ReturnType.equals("1007")) {
-						ToastUtils.show_allways(context, "只有一个有效成员，无法构建用户组" + Message);
+						ToastUtils.show_always(context, "只有一个有效成员，无法构建用户组" + Message);
 						head_name_tv.setText("创建失败");
 						tv_group_entry.setVisibility(View.INVISIBLE);
 					} else if (ReturnType != null && ReturnType.equals("1008")) {
-						ToastUtils.show_allways(context, "您所创建的组已达50个，不能再创建了" + Message);
+						ToastUtils.show_always(context, "您所创建的组已达50个，不能再创建了" + Message);
 						head_name_tv.setText("创建失败");
 						tv_group_entry.setVisibility(View.INVISIBLE);
 					} else if (ReturnType != null && ReturnType.equals("1009")) {
-						ToastUtils.show_allways(context, "20分钟内创建组不能超过5个" + Message);
+						ToastUtils.show_always(context, "20分钟内创建组不能超过5个" + Message);
 						head_name_tv.setText("创建失败");
 						tv_group_entry.setVisibility(View.INVISIBLE);
 					} else {
 						if (Message != null && !Message.trim().equals("")) {
-							ToastUtils.show_allways(context, Message + "");
+							ToastUtils.show_always(context, Message + "");
 						}
 					}
 				}
@@ -257,7 +257,7 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 	private void handleIntent() {
 		GroupType = context.getIntent().getStringExtra("Type");
 		if (GroupType==null||GroupType.equals("")) {
-			ToastUtils.show_allways(context, "获取组类型异常，请返回上一界面重新选择");
+			ToastUtils.show_always(context, "获取组类型异常，请返回上一界面重新选择");
 		} else if (GroupType.equals("Open")) {
 			RequestStatus = 1;
 			groupType = 1;
@@ -306,10 +306,10 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 			NICK=et_group_nick.getText().toString().trim();
 			SIGN=et_group_sign.getText().toString().trim();
 			if(NICK==null||NICK.equals("")){
-				ToastUtils.show_allways(context, "请输入群名");
+				ToastUtils.show_always(context, "请输入群名");
 				return;
 			} else if (SIGN == null || SIGN.equals("")) {
-				ToastUtils.show_allways(context, "请输入群签名");
+				ToastUtils.show_always(context, "请输入群签名");
 				return;
 			} else {
 				if (RequestStatus == 2) {
@@ -319,7 +319,7 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 						dialog = DialogUtils.Dialogph(context, "正在为您创建群组");
 						send();
 					} else {
-						ToastUtils.show_allways(context, "网络失败，请检查网络");
+						ToastUtils.show_always(context, "网络失败，请检查网络");
 					}
 				}
 			}
@@ -346,7 +346,7 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 			dialog = DialogUtils.Dialogph(context, "正在为您创建群组");
 			send();
 		} else {
-			ToastUtils.show_allways(context, "网络失败，请检查网络");
+			ToastUtils.show_always(context, "网络失败，请检查网络");
 		}
 	}
 
@@ -403,7 +403,7 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
                  ImageUrl.setImageURI(Uri.parse(PhotoCutAfterImagePath));
 				 ViewSuccess=1;
 			}else{
-				ToastUtils.show_allways(context, "用户退出上传图片");
+				ToastUtils.show_always(context, "用户退出上传图片");
 			}
 			break;
 		}
@@ -431,9 +431,9 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 					context. sendBroadcast(p);
 					setResult(1);
 					if(groupinfo==null||groupinfo.equals("")){
-						ToastUtils.show_allways(context, "创建成功");
+						ToastUtils.show_always(context, "创建成功");
 					}else{
-						ToastUtils.show_allways(context, "创建成功");
+						ToastUtils.show_always(context, "创建成功");
 						Intent intent = new Intent(CreateGroupContentActivity.this,TalkGroupNewsActivity.class);
 						Bundle bundle = new Bundle();
 						bundle.putString("type", "CreateGroupContentActivity");
@@ -447,12 +447,12 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 					if (dialog != null) {
 						dialog.dismiss();
 					}
-					ToastUtils.show_allways(context, "头像保存失败，请稍后再试");
+					ToastUtils.show_always(context, "头像保存失败，请稍后再试");
 				} else if (msg.what == -1) {
 					if (dialog != null) {
 						dialog.dismiss();
 					}
-					ToastUtils.show_allways(context, "头像保存异常，图片未上传成功，请重新发布");
+					ToastUtils.show_always(context, "头像保存异常，图片未上传成功，请重新发布");
 				}
 			}
 		};

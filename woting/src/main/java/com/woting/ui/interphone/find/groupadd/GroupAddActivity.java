@@ -169,33 +169,33 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 			 * 3.输入密码的添加
 			 */
 			if (GroupType == null || GroupType.equals("")) {
-				ToastUtils.show_allways(getApplicationContext(), "数据异常，请稍后重试");
+				ToastUtils.show_always(getApplicationContext(), "数据异常，请稍后重试");
 			} else {
 				if (GroupType.equals("0")) {
 					// 验证群
 					news = et_news.getText().toString().trim();
 					if (news == null || news.equals("")) {
-						ToastUtils.show_allways(getApplicationContext(), "请输入验证信息");
+						ToastUtils.show_always(getApplicationContext(), "请输入验证信息");
 					} else {
 						if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 							// 进入验证群走单独接口
 							dialog = DialogUtils.Dialogph(GroupAddActivity.this,"正在发送请求");
 							sendRequest();
 						} else {
-							ToastUtils.show_allways(getApplicationContext(),"网络连接失败，请稍后重试");
+							ToastUtils.show_always(getApplicationContext(),"网络连接失败，请稍后重试");
 						}
 					}
 				} else if (GroupType.equals("2")) {
 					// 密码群
 					psd = et_password.getText().toString().trim();
 					if (psd == null || psd.equals("")) {
-						ToastUtils.show_allways(getApplicationContext(), "请输入验证密码");
+						ToastUtils.show_always(getApplicationContext(), "请输入验证密码");
 					} else {
 						if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 							dialog = DialogUtils.Dialogph(GroupAddActivity.this,"通讯中");
 							send();
 						} else {
-							ToastUtils.show_allways(getApplicationContext(),"网络连接失败，请稍后重试");
+							ToastUtils.show_always(getApplicationContext(),"网络连接失败，请稍后重试");
 						}
 					}
 				} else {
@@ -204,7 +204,7 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 						dialog = DialogUtils.Dialogph(GroupAddActivity.this, "通讯中");
 						send();
 					} else {
-						ToastUtils.show_allways(getApplicationContext(),"网络连接失败，请稍后重试");
+						ToastUtils.show_always(getApplicationContext(),"网络连接失败，请稍后重试");
 					}
 				}
 			}
@@ -241,22 +241,22 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 				}
 				if (ReturnType != null) {		// 根据返回值来对程序进行解析
 					if (ReturnType.equals("1001")) {
-						ToastUtils.show_allways(context, "验证请求已经发送，请等待管理员审核");
+						ToastUtils.show_always(context, "验证请求已经发送，请等待管理员审核");
 					} else if (ReturnType.equals("0000")) {
-						ToastUtils.show_allways(context, "无法获取相关的参数");
+						ToastUtils.show_always(context, "无法获取相关的参数");
 					} else if (ReturnType.equals("1002")) {
-						ToastUtils.show_allways(context, "无此分类信息");
+						ToastUtils.show_always(context, "无此分类信息");
 					} else if (ReturnType.equals("1003")) {
-						ToastUtils.show_allways(context, "无法获得列表");
+						ToastUtils.show_always(context, "无法获得列表");
 					} else if (ReturnType.equals("1011")) {
-						ToastUtils.show_allways(context, "列表为空（列表为空[size==0]");
+						ToastUtils.show_always(context, "列表为空（列表为空[size==0]");
 					} else if (ReturnType.equals("1006")) {
-						ToastUtils.show_allways(context, "您已经邀请过，请等待");
+						ToastUtils.show_always(context, "您已经邀请过，请等待");
 					} else if (ReturnType.equals("T")) {
-						ToastUtils.show_allways(context, "获取列表异常");
+						ToastUtils.show_always(context, "获取列表异常");
 					}
 				} else {
-					ToastUtils.show_allways(context, "获取数据失败");
+					ToastUtils.show_always(context, "获取数据失败");
 				}
 			}
 
@@ -302,11 +302,11 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 				}
 				if (ReturnType != null) {
 					if (ReturnType.equals('T')) {
-						ToastUtils.show_allways(GroupAddActivity.this, "异常返回值");
+						ToastUtils.show_always(GroupAddActivity.this, "异常返回值");
 					} else if (ReturnType.equals("1000")) {
-						ToastUtils.show_allways(GroupAddActivity.this, "无法获取用户组ID");
+						ToastUtils.show_always(GroupAddActivity.this, "无法获取用户组ID");
 					} else if (ReturnType.equals("1001")) {
-						ToastUtils.show_allways(GroupAddActivity.this, "成功返回，用户已经成功加入了这个群组");
+						ToastUtils.show_always(GroupAddActivity.this, "成功返回，用户已经成功加入了这个群组");
 						Intent P = new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN);
 						context. sendBroadcast(P);
 						Intent intent = new Intent(GroupAddActivity.this, TalkGroupNewsActivity.class);
@@ -317,7 +317,7 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 						startActivity(intent);
 						finish();
 					} else if (ReturnType.equals("1101")) {
-						ToastUtils.show_allways(GroupAddActivity.this,"成功返回，已经在用户组");
+						ToastUtils.show_always(GroupAddActivity.this,"成功返回，已经在用户组");
 						Intent intent = new Intent(GroupAddActivity.this,TalkGroupNewsActivity.class);
 						Bundle bundle = new Bundle();
 						bundle.putString("type", "groupaddactivity");
@@ -326,18 +326,18 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 						startActivity(intent);
 						finish();
 					} else if (ReturnType.equals("1002")) {
-						ToastUtils.show_allways(GroupAddActivity.this, "用户不存在");
+						ToastUtils.show_always(GroupAddActivity.this, "用户不存在");
 					} else if (ReturnType.equals("1003")) {
-						ToastUtils.show_allways(GroupAddActivity.this, "用户组不存在");
+						ToastUtils.show_always(GroupAddActivity.this, "用户组不存在");
 					} else if (ReturnType.equals("1004")) {
-						ToastUtils.show_allways(GroupAddActivity.this, "用户组已经超过五十人，不允许再加入了");
+						ToastUtils.show_always(GroupAddActivity.this, "用户组已经超过五十人，不允许再加入了");
 					} else if (ReturnType.equals("1006")) {
-						ToastUtils.show_allways(GroupAddActivity.this, "加入密码群 ,需要提供密码");
+						ToastUtils.show_always(GroupAddActivity.this, "加入密码群 ,需要提供密码");
 					} else if (ReturnType.equals("1007")) {
-						ToastUtils.show_allways(GroupAddActivity.this, "加入密码群 , 密码不正确");
+						ToastUtils.show_always(GroupAddActivity.this, "加入密码群 , 密码不正确");
 					}
 				} else {
-					ToastUtils.show_allways(GroupAddActivity.this, "返回值异常，请稍后重试");
+					ToastUtils.show_always(GroupAddActivity.this, "返回值异常，请稍后重试");
 				}
 			}
 

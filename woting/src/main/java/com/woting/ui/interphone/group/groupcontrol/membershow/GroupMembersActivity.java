@@ -103,7 +103,7 @@ public class GroupMembersActivity extends AppBaseActivity implements
             dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
             send();
         } else {
-            ToastUtils.show_allways(context, "网络失败，请检查网络");
+            ToastUtils.show_always(context, "网络失败，请检查网络");
         }
     }
 
@@ -164,12 +164,12 @@ public class GroupMembersActivity extends AppBaseActivity implements
                         listView.setAdapter(adapter = new CreateGroupMembersAdapter(context, userList));
                     }
                 } else if (ReturnType != null && ReturnType.equals("T")) {
-                    ToastUtils.show_allways(context, "异常返回值");
+                    ToastUtils.show_always(context, "异常返回值");
                 } else if (ReturnType != null && ReturnType.equals("1011")) {
-                    ToastUtils.show_allways(context, "组中无成员");
+                    ToastUtils.show_always(context, "组中无成员");
                 } else {
                     if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_allways(context, Message + "");
+                        ToastUtils.show_always(context, Message + "");
                     }
                 }
             }
@@ -235,7 +235,7 @@ public class GroupMembersActivity extends AppBaseActivity implements
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         boolean isFriend = false;
         if (userList.get(position).getUserId().equals(CommonUtils.getUserId(context))) {
-            ToastUtils.show_allways(context, "点击的是本人");
+            ToastUtils.show_always(context, "点击的是本人");
         } else {
             if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() != 0) {
                 for (int i = 0; i < GlobalConfig.list_person.size(); i++) {

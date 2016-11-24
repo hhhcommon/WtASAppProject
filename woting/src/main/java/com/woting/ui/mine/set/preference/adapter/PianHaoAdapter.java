@@ -83,7 +83,7 @@ public class PianHaoAdapter extends BaseAdapter {
                     list.get(position).getChildren().get(positions).setchecked("false");
                 }
                 PreferenceActivity.RefreshView(list);
-                ToastUtils.show_allways( context,list.get(position).getChildren().get(positions).getName());
+                ToastUtils.show_always( context,list.get(position).getChildren().get(positions).getName());
             }
         });
         int a=list.get(position).getTag();

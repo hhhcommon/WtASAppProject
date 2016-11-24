@@ -80,8 +80,7 @@
                 android:id="@+id/view_cover"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="95dp"
-                android:background="@drawable/person_color">
+                android:minHeight="95dp">
 
                 <View style="@style/LineStyle"/>
 
@@ -120,8 +119,7 @@
                 android:id="@+id/view_sequ"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="43dp"
-                android:background="@drawable/person_color">
+                android:minHeight="43dp">
 
                 <View style="@style/LineStyle"/>
 
@@ -144,6 +142,7 @@
                     android:layout_height="wrap_content"
                     android:hint="选择专辑"
                     android:layout_toLeftOf="@id/image_right_2"
+                    android:layout_marginLeft="66dp"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="9dp"/>
 
@@ -153,8 +152,7 @@
                 android:id="@+id/view_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="43dp"
-                android:background="@drawable/person_color">
+                android:minHeight="43dp">
 
                 <View style="@style/LineStyle"/>
 
@@ -177,6 +175,8 @@
                     android:layout_height="wrap_content"
                     android:hint="添加标签"
                     android:layout_toLeftOf="@id/image_right_3"
+                    android:layout_marginLeft="66dp"
+                    android:ellipsize="end"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="9dp"/>
 
@@ -210,6 +210,7 @@
                     android:textSize="14sp"
                     android:background="@color/WHITE"
                     android:maxLength="150"
+                    android:ems="20"
                     android:layout_marginTop="15dp"
                     android:paddingRight="10dp"
                     android:layout_marginLeft="19dp"/>

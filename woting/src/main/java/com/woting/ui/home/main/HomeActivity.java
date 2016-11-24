@@ -183,7 +183,7 @@ public class HomeActivity extends FragmentActivity {
         if (event.getAction() == KeyEvent.ACTION_DOWN && KeyEvent.KEYCODE_BACK == keyCode) {
             long currentTime = System.currentTimeMillis();
             if ((currentTime - touchTime) >= waitTime) {
-                ToastUtils.show_allways(HomeActivity.this, "再按一次退出");
+                ToastUtils.show_always(HomeActivity.this, "再按一次退出");
                 touchTime = currentTime;
             } else {
                 MobclickAgent.onKillProcess(this);

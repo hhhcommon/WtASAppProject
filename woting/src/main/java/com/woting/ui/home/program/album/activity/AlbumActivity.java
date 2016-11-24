@@ -260,7 +260,7 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
             new ShareAction(context).setPlatform(Platform).setCallback(umShareListener).withMedia(image)
                     .withText(shareDesc).withTitle(shareName).withTargetUrl(shareUrl).share();
         } else {
-            ToastUtils.show_allways(context, "分享失败，请稍后再试！");
+            ToastUtils.show_always(context, "分享失败，请稍后再试！");
         }
     }
 
@@ -281,7 +281,7 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
 
         @Override
         public void onCancel(SHARE_MEDIA platform) {
-            ToastUtils.show_allways(context, "用户退出认证");
+            ToastUtils.show_always(context, "用户退出认证");
             shareDialog.dismiss();
         }
     };
@@ -343,10 +343,10 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
                         dialog = DialogUtils.Dialogph(context, "正在获取数据");
                         sendFavorite();
                     } else {
-                        ToastUtils.show_allways(context, "网络失败，请检查网络");
+                        ToastUtils.show_always(context, "网络失败，请检查网络");
                     }
                 } else {
-                    ToastUtils.show_allways(context, "数据出错了请稍后再试！");
+                    ToastUtils.show_always(context, "数据出错了请稍后再试！");
                 }
                 break;
             case R.id.text_details: // 详情
@@ -366,7 +366,7 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
                     intent.putExtra("MediaType","SEQU");
                     startActivity(intent);
                 }else{
-                    ToastUtils.show_allways(context,"当前播放的节目的信息有误，无法获取评论列表");
+                    ToastUtils.show_always(context,"当前播放的节目的信息有误，无法获取评论列表");
                 }
                 break;
         }
@@ -420,24 +420,24 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
                             imageFavorite.setImageDrawable(getResources().getDrawable(R.mipmap.wt_img_like));
                         }
                     } else if (ReturnType.equals("0000")) {
-                        ToastUtils.show_allways(context, "无法获取相关的参数");
+                        ToastUtils.show_always(context, "无法获取相关的参数");
                     } else if (ReturnType.equals("1002")) {
-                        ToastUtils.show_allways(context, "无法获得内容类别");
+                        ToastUtils.show_always(context, "无法获得内容类别");
                     } else if (ReturnType.equals("1003")) {
-                        ToastUtils.show_allways(context, "无法获得内容Id");
+                        ToastUtils.show_always(context, "无法获得内容Id");
                     } else if (ReturnType.equals("1004")) {
-                        ToastUtils.show_allways(context, "所指定的节目不存在");
+                        ToastUtils.show_always(context, "所指定的节目不存在");
                     } else if (ReturnType.equals("1005")) {
-                        ToastUtils.show_allways(context, "已经喜欢了此内容");
+                        ToastUtils.show_always(context, "已经喜欢了此内容");
                     } else if (ReturnType.equals("1006")) {
-                        ToastUtils.show_allways(context, "还未喜欢此内容");
+                        ToastUtils.show_always(context, "还未喜欢此内容");
                     } else if (ReturnType.equals("T")) {
-                        ToastUtils.show_allways(context, "获取列表异常");
+                        ToastUtils.show_always(context, "获取列表异常");
                     } else {
-                        ToastUtils.show_allways(context, Message + "");
+                        ToastUtils.show_always(context, Message + "");
                     }
                 } else {
-                    ToastUtils.show_allways(context, "ReturnType==null");
+                    ToastUtils.show_always(context, "ReturnType==null");
                 }
             }
 

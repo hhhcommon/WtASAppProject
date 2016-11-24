@@ -179,7 +179,7 @@ public class SequFragment extends Fragment {
 	private void send() {
         if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
             if(dialog != null) dialog.dismiss();
-            ToastUtils.show_allways(context, "网络连接失败，请检查网络连接!");
+            ToastUtils.show_always(context, "网络连接失败，请检查网络连接!");
             if(refreshType == 1) {
                 mListView.stopRefresh();
             } else {
@@ -207,7 +207,7 @@ public class SequFragment extends Fragment {
 
                     if (ReturnType != null && ReturnType.equals("1001")) {
                         if(isDel){
-                            ToastUtils.show_allways(context, "已删除");
+                            ToastUtils.show_always(context, "已删除");
                             isDel = false;
                         }
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
@@ -336,7 +336,7 @@ public class SequFragment extends Fragment {
             refreshType = 1;
             sendRequest();
 		} else {
-			ToastUtils.show_allways(context, "网络失败，请检查网络");
+			ToastUtils.show_always(context, "网络失败，请检查网络");
 		}
 	}
 
@@ -366,7 +366,7 @@ public class SequFragment extends Fragment {
 				if (returnType != null && returnType.equals("1001")) {
 					context.sendBroadcast(new Intent(FavoriteActivity.VIEW_UPDATE));
 				} else {
-					ToastUtils.show_allways(context, "删除失败，请检查网络或稍后重试!");
+					ToastUtils.show_always(context, "删除失败，请检查网络或稍后重试!");
 				}
 			}
 			

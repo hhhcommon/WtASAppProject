@@ -63,7 +63,7 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
             dialog = DialogUtils.Dialogph(context, "正在获取信息");
             send();
         } else {
-            ToastUtils.show_allways(context, "网络失败，请检查网络");
+            ToastUtils.show_always(context, "网络失败，请检查网络");
         }
 
     }
@@ -106,12 +106,12 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                     dialog = DialogUtils.Dialogph(context, "通讯中...");
                     sendRequest();
-                    ToastUtils.show_allways(context,preferenceList.toString());
+                    ToastUtils.show_always(context,preferenceList.toString());
                 } else {
-                    ToastUtils.show_allways(context, "网络失败，请检查网络");
+                    ToastUtils.show_always(context, "网络失败，请检查网络");
                 }
                 }else{
-                    ToastUtils.show_allways(context,"您还没有选择偏好");
+                    ToastUtils.show_always(context,"您还没有选择偏好");
                 }
                 break;
         }
@@ -161,24 +161,24 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
                 if (ReturnType != null) {
                     if (ReturnType.equals("1001")) {
                         try {
-                         ToastUtils.show_allways(context,"偏好已经设置成功");
+                         ToastUtils.show_always(context,"偏好已经设置成功");
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     } else if (ReturnType.equals("1002")) {
-                        ToastUtils.show_allways(context, "无此分类信息");
+                        ToastUtils.show_always(context, "无此分类信息");
                     } else if (ReturnType.equals("1003")) {
-                        ToastUtils.show_allways(context, "分类不存在");
+                        ToastUtils.show_always(context, "分类不存在");
                     } else if (ReturnType.equals("1011")) {
-                        ToastUtils.show_allways(context, "当前暂无分类");
+                        ToastUtils.show_always(context, "当前暂无分类");
                     } else if (ReturnType.equals("T")) {
-                        ToastUtils.show_allways(context, "获取列表异常");
+                        ToastUtils.show_always(context, "获取列表异常");
                     } else {
-                        ToastUtils.show_allways(context, "获取列表异常");
+                        ToastUtils.show_always(context, "获取列表异常");
                     }
 
                 } else {
-                    ToastUtils.show_allways(context, "数据获取异常，请稍候重试");
+                    ToastUtils.show_always(context, "数据获取异常，请稍候重试");
                 }
             }
 
@@ -251,25 +251,25 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
 
                                           }
                             } else {
-                                ToastUtils.show_allways(context, "获取分类列表为空");
+                                ToastUtils.show_always(context, "获取分类列表为空");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     } else if (ReturnType.equals("1002")) {
-                        ToastUtils.show_allways(context, "无此分类信息");
+                        ToastUtils.show_always(context, "无此分类信息");
                     } else if (ReturnType.equals("1003")) {
-                        ToastUtils.show_allways(context, "分类不存在");
+                        ToastUtils.show_always(context, "分类不存在");
                     } else if (ReturnType.equals("1011")) {
-                        ToastUtils.show_allways(context, "当前暂无分类");
+                        ToastUtils.show_always(context, "当前暂无分类");
                     } else if (ReturnType.equals("T")) {
-                        ToastUtils.show_allways(context, "获取列表异常");
+                        ToastUtils.show_always(context, "获取列表异常");
                     } else {
-                        ToastUtils.show_allways(context, "获取列表异常");
+                        ToastUtils.show_always(context, "获取列表异常");
                     }
 
                 } else {
-                    ToastUtils.show_allways(context, "数据获取异常，请稍候重试");
+                    ToastUtils.show_always(context, "数据获取异常，请稍候重试");
                 }
             }
 
@@ -349,9 +349,9 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
                             e.printStackTrace();
                         }
                     } else if (ReturnType.equals("1002")) {
-                        ToastUtils.show_allways(context, "无此分类信息");
+                        ToastUtils.show_always(context, "无此分类信息");
                     } else if (ReturnType.equals("1003")) {
-                        ToastUtils.show_allways(context, "分类不存在");
+                        ToastUtils.show_always(context, "分类不存在");
                     } else if (ReturnType.equals("1011")) {
                         if (adapter == null) {
                             adapter = new PianHaoAdapter(context,tempList);
@@ -360,7 +360,7 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
                             adapter.notifyDataSetChanged();
                         }
                         setInterface();
-                        ToastUtils.show_allways(context, "当前暂无分类");
+                        ToastUtils.show_always(context, "当前暂无分类");
                         if (adapter == null) {
                             adapter = new PianHaoAdapter(context,tempList);
                             lv_prefer.setAdapter(adapter);
@@ -369,13 +369,13 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
                         }
                         setInterface();
                     } else if (ReturnType.equals("T")) {
-                        ToastUtils.show_allways(context, "获取列表异常");
+                        ToastUtils.show_always(context, "获取列表异常");
                     } else {
-                        ToastUtils.show_allways(context, "获取列表异常");
+                        ToastUtils.show_always(context, "获取列表异常");
                     }
 
                 } else {
-                    ToastUtils.show_allways(context, "数据获取异常，请稍候重试");
+                    ToastUtils.show_always(context, "数据获取异常，请稍候重试");
                 }
             }
 

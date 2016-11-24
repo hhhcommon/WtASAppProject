@@ -147,7 +147,7 @@ public class OnLineFragment extends Fragment {
                     send();
                     getCity();
                 } else {
-                    ToastUtils.show_allways(context, "网络异常");
+                    ToastUtils.show_always(context, "网络异常");
                 }
                 Editor et = shared.edit();
                 et.putString(StringConstant.CITYTYPE, "false");
@@ -458,11 +458,11 @@ public class OnLineFragment extends Fragment {
                             }
                             setItemListener();
                         } else {
-                            ToastUtils.show_allways(context, "暂无数据");
+                            ToastUtils.show_always(context, "暂无数据");
                         }
                     } else {
 
-                        ToastUtils.show_allways(context, "暂无数据");
+                        ToastUtils.show_always(context, "暂无数据");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

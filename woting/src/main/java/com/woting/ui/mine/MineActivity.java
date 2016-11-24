@@ -256,10 +256,10 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                 startActivity(new Intent(context, FavoriteActivity.class));
                 break;
             case R.id.lin_anchor:           // 我的主播  我关注的主播
-                ToastUtils.show_allways(context, "我的主播!");
+                ToastUtils.show_always(context, "我的主播!");
                 break;
             case R.id.lin_subscribe:        // 我的订阅
-                ToastUtils.show_allways(context, "我的订阅!");
+                ToastUtils.show_always(context, "我的订阅!");
                 break;
             case R.id.lin_album:            // 我的专辑  我上传的专辑
                 startActivity(new Intent(context, MyUploadActivity.class));
@@ -434,7 +434,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                     pModel = (UpdatePerson) bundle.getSerializable("data");
                     regionId = bundle.getString("regionId");
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
-                        ToastUtils.show_allways(context, "网络失败，请检查网络");
+                        ToastUtils.show_always(context, "网络失败，请检查网络");
                         return;
                     }
                     sendUpdate(pModel);
@@ -467,7 +467,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 if (msg.what == 1) {
-                    ToastUtils.show_allways(context, "保存成功");
+                    ToastUtils.show_always(context, "保存成功");
                     Editor et = sharedPreferences.edit();
                     String imageUrl;
                     if (miniUri.startsWith("http:")) {
@@ -482,9 +482,9 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                     // 正常切可用代码 已从服务器获得返回值，但是无法正常显示
                     Picasso.with(context).load(imageUrl.replace("\\/", "/")).into(imageHead);
                 } else if (msg.what == 0) {
-                    ToastUtils.show_allways(context, "头像保存失败，请稍后再试");
+                    ToastUtils.show_always(context, "头像保存失败，请稍后再试");
                 } else if (msg.what == -1) {
-                    ToastUtils.show_allways(context, "头像保存异常，图片未上传成功，请重新发布");
+                    ToastUtils.show_always(context, "头像保存异常，图片未上传成功，请重新发布");
                 }
                 if (dialog != null) {
                     dialog.dismiss();
@@ -701,7 +701,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         if (event.getAction() == KeyEvent.ACTION_DOWN && KeyEvent.KEYCODE_BACK == keyCode) {
             long currentTime = System.currentTimeMillis();
             if ((currentTime - touchTime) >= waitTime) {
-                ToastUtils.show_allways(context, "再按一次退出");
+                ToastUtils.show_always(context, "再按一次退出");
                 touchTime = currentTime;
             } else {
                 MobclickAgent.onKillProcess(this);
@@ -771,7 +771,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                         jsonObject.put("MailAddr", email);
                         isUpdate = true;
                     } else {
-                        ToastUtils.show_allways(context, "邮箱格式不正确，请重新修改!");
+                        ToastUtils.show_always(context, "邮箱格式不正确，请重新修改!");
                     }
                 } else {
                     jsonObject.put("MailAddr", "&null");
@@ -858,7 +858,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                             textUserArea.setText(region);
                         }
                     } else {
-//                        ToastUtils.show_allways(context, "信息修改失败!");
+//                        ToastUtils.show_always(context, "信息修改失败!");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

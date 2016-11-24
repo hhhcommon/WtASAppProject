@@ -75,7 +75,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
             dialog = DialogUtils.Dialogph(context, "通讯中");
             sendPerson();
         } else {
-            ToastUtils.show_allways(this, "网络连接失败，请稍后重试");
+            ToastUtils.show_always(this, "网络连接失败，请稍后重试");
         }
         DelDialog();
     }
@@ -106,7 +106,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                         dialog = DialogUtils.Dialogph(context, "正在获取数据");
                         sendRequest(mes.get(Position), 2);
                     } else {
-                        ToastUtils.show_allways(context, "网络连接失败，请稍后重试");
+                        ToastUtils.show_always(context, "网络连接失败，请稍后重试");
                     }
                 }
             }
@@ -289,7 +289,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
             mListView.setAdapter(adapter);
             setAdapterListener();
         } else {
-            ToastUtils.show_allways(context, "您没有未处理消息");
+            ToastUtils.show_always(context, "您没有未处理消息");
         }
     }
 
@@ -303,7 +303,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                         Position = position;
                         sendRequest(mes.get(position), 1);
                     } else {
-                        ToastUtils.show_allways(context, "网络连接失败，请稍后重试");
+                        ToastUtils.show_always(context, "网络连接失败，请稍后重试");
                     }
                 }
             }
@@ -372,7 +372,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                 if (messageInFo.MSType.equals("person")) {
                     if (type == 1) {
                         if (ReturnType != null && ReturnType.equals("1001")) {
-                            ToastUtils.show_allways(context, "添加成功");
+                            ToastUtils.show_always(context, "添加成功");
                             /*
                              * 此处删除该条数据
 							 */
@@ -380,12 +380,12 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                             adapter.notifyDataSetChanged();
                             context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                         } else if (ReturnType != null && ReturnType.equals("1002")) {
-                            ToastUtils.show_allways(context, "添加失败，" + Message);
+                            ToastUtils.show_always(context, "添加失败，" + Message);
                         } else {
                             if (Message != null && !Message.trim().equals("")) {
-                                ToastUtils.show_allways(context, Message + "");
+                                ToastUtils.show_always(context, Message + "");
                             } else {
-                                ToastUtils.show_allways(context, "出现异常请稍后重试");
+                                ToastUtils.show_always(context, "出现异常请稍后重试");
                             }
                         }
                     } else {
@@ -393,14 +393,14 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                          * 不管拒绝结果如何此条数据需要删除
 						 * 此处删除该条数据
 						 */
-                        ToastUtils.show_allways(context, "已拒绝");
+                        ToastUtils.show_always(context, "已拒绝");
                         mes.remove(Position);
                         adapter.notifyDataSetChanged();
                     }
                 } else {
                     if (type == 1) {
                         if (ReturnType != null && ReturnType.equals("1001")) {
-                            ToastUtils.show_allways(context, "您已成功进入该组");
+                            ToastUtils.show_always(context, "您已成功进入该组");
                             /*
                              * 此处删除该条数据
 							 */
@@ -408,14 +408,14 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                             adapter.notifyDataSetChanged();
                             context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                         } else if (ReturnType != null && ReturnType.equals("1002")) {
-                            ToastUtils.show_allways(context, "添加失败，" + Message);
+                            ToastUtils.show_always(context, "添加失败，" + Message);
                         } else if (ReturnType != null && ReturnType.equals("10011")) {
-                            ToastUtils.show_allways(context, "已经在组内了");
+                            ToastUtils.show_always(context, "已经在组内了");
                         } else {
                             if (Message != null && !Message.trim().equals("")) {
-                                ToastUtils.show_allways(context, Message + "");
+                                ToastUtils.show_always(context, Message + "");
                             } else {
-                                ToastUtils.show_allways(context, "出现异常请稍后重试");
+                                ToastUtils.show_always(context, "出现异常请稍后重试");
                             }
                         }
                     } else {
@@ -423,7 +423,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
 						 * 不管拒绝结果如何此条数据需要删除
 						 * 此处删除该条数据
 						 */
-                        ToastUtils.show_allways(context, "已拒绝");
+                        ToastUtils.show_always(context, "已拒绝");
                         mes.remove(Position);
                         adapter.notifyDataSetChanged();
                     }

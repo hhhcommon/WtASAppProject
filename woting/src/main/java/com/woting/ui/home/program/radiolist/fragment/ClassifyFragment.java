@@ -186,7 +186,7 @@ public class ClassifyFragment extends Fragment{
 						e.printStackTrace();
 					}
 				} else {
-					ToastUtils.show_allways(context, "暂没有该分类数据");
+					ToastUtils.show_always(context, "暂没有该分类数据");
 				}
 			}
 
