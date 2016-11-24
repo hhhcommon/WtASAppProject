@@ -45,10 +45,12 @@ public class HttpMultipartPost extends AsyncTask<String, Integer, String> {
     private ProgressBar progressBar;
 
     private long totalSize;
+    private int srcType;// == 1 图片  == 2 音频
 
-    public HttpMultipartPost(Context context, List<String> filePathList) {
+    public HttpMultipartPost(Context context, List<String> filePathList, int srcType) {
         this.context = context;
         this.filePathList = filePathList;
+        this.srcType = srcType;
     }
 
     @Override
@@ -85,8 +87,12 @@ public class HttpMultipartPost extends AsyncTask<String, Integer, String> {
                 multipartContent.addPart("MobileClass", new StringBody(PhoneMessage.model + "::" + PhoneMessage.productor));
                 multipartContent.addPart("UserId", new StringBody(CommonUtils.getUserId(context)));
                 multipartContent.addPart("ContentFile", new FileBody(new File(filePathList.get(i))));
-                multipartContent.addPart("SrcType", new StringBody("2"));
-                multipartContent.addPart("Purpose", new StringBody("1"));
+                multipartContent.addPart("SrcType", new StringBody(String.valueOf(srcType)));
+                if(srcType == 1) {
+                    multipartContent.addPart("Purpose", new StringBody("2"));
+                } else {
+                    multipartContent.addPart("Purpose", new StringBody("1"));
+                }
                 multipartContent.addPart("data", new StringBody(filePathList.get(i), Charset.forName(org.apache.http.protocol.HTTP.UTF_8)));
             }
             totalSize = multipartContent.getContentLength();

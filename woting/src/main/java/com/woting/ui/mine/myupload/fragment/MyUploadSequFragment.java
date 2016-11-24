@@ -45,7 +45,7 @@ public class MyUploadSequFragment extends Fragment implements AdapterView.OnItem
     private Context context;
     private MyUploadListAdapter adapter;
 //    private List<RankInfo> subList;
-    private List<String> delList;
+//    private List<String> delList;
     private List<RankInfo> newList = new ArrayList<>();
     private List<RankInfo> checkList = new ArrayList<>();
 
@@ -204,17 +204,19 @@ public class MyUploadSequFragment extends Fragment implements AdapterView.OnItem
     public void delItem() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             dialog = DialogUtils.Dialogph(context, "正在删除...");
-            String contentId = null;
+            StringBuilder builder = new StringBuilder();
             for (int i = 0; i < newList.size(); i++) {
                 if (newList.get(i).getChecktype() == 1) {
-                    if (delList == null) {
-                        delList = new ArrayList<>();
-                    }
-                    contentId = newList.get(i).getContentId();
-                    delList.add(contentId);
+//                    if (delList == null) {
+//                        delList = new ArrayList<>();
+//                    }
+                    builder.append(newList.get(i).getContentId());
+//                    contentId = newList.get(i).getContentId();
+//                    delList.add(contentId);
                 }
             }
-            sendDeleteItemRequest(contentId);
+            String contentId = builder.toString();
+            sendDeleteItemRequest(contentId.substring(0, contentId.length() - 1));
         } else {
             ToastUtils.show_always(context, "网络连接失败，请检查网络!");
         }
@@ -240,7 +242,7 @@ public class MyUploadSequFragment extends Fragment implements AdapterView.OnItem
             protected void requestSuccess(JSONObject result) {
                 if(dialog != null) dialog.dismiss();
                 if(isCancelRequest) return ;
-                delList.clear();
+//                delList.clear();
                 try {
                     returnType = result.getString("ReturnType");
                 } catch (JSONException e) {
@@ -263,7 +265,7 @@ public class MyUploadSequFragment extends Fragment implements AdapterView.OnItem
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
-                delList.clear();
+//                delList.clear();
             }
         });
     }
