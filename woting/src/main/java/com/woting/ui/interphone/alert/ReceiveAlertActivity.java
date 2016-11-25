@@ -1,6 +1,7 @@
 package com.woting.ui.interphone.alert;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.util.BitmapUtils;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
 import com.woting.ui.interphone.chat.fragment.ChatFragment;
 import com.woting.ui.interphone.chat.model.DBTalkHistorary;
@@ -51,8 +53,10 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
 		imageview = (ImageView) findViewById(R.id.image);	
 		tv_name = (TextView) findViewById(R.id.tv_name);	
 		lin_call = (LinearLayout) findViewById(R.id.lin_call);	
-		lin_guaduan = (LinearLayout) findViewById(R.id.lin_guaduan);	
-		
+		lin_guaduan = (LinearLayout) findViewById(R.id.lin_guaduan);
+		ImageView img_zhezhao = (ImageView) findViewById(R.id.img_zhezhao);
+		Bitmap bmp_zhezhao = BitmapUtils.readBitMap(instance, R.mipmap.liubianxing_orange_big);
+		img_zhezhao.setImageBitmap(bmp_zhezhao);
 		
 		//查找当前好友的展示信息
 		id = SubclassService.callerId;
