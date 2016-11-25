@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.kingsoft.media.httpcache.KSYProxyService;
 import com.umeng.socialize.PlatformConfig;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.config.SocketClientConfig;
@@ -40,6 +41,8 @@ public class BSApplication extends Application {
     public static SocketClientConfig scc;
     public static SharedPreferences SharedPreferences;
     private ArrayList<String> staticFacesList;
+    private static KSYProxyService proxyService = null;
+    public static BSApplication mBSApplication;
 
     @Override
     public void onCreate() {
@@ -85,6 +88,19 @@ public class BSApplication extends Application {
     public static Context getAppContext() {
         return instance;
     }
+
+    public static KSYProxyService getKSYProxy(Context context) {
+        instance = context;
+        if(mBSApplication == null){
+            mBSApplication = new BSApplication();
+        }
+        return mBSApplication.proxyService == null ? (mBSApplication.proxyService = newKSYProxy()) : BSApplication.proxyService;
+    }
+
+    private static KSYProxyService newKSYProxy() {
+        return new KSYProxyService(instance);
+    }
+
 
     private void initStaticFaces() {
         try {

@@ -6,7 +6,7 @@
     android:background="@color/dinglan_orange"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -43,17 +43,24 @@
         android:orientation="vertical"
         android:background="@color/app_bg">
 
-        <EditText
-            android:id="@+id/edit_label"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="最多添加 5 个标签，每个标签最长 8 个汉字，标签之间用逗号隔开"
+            android:textSize="10sp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/gray"/>
+
+        <com.zhy.view.flowlayout.FlowLayout
+            android:id="@+id/tag_container"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:padding="8dp"
             android:background="@color/WHITE"
-            android:hint="最多5个标签，单个标签最长8个汉字，每个标签请用逗号隔开"
-            android:gravity="top"
-            android:textSize="14sp"
-            android:maxLength="45"
-            android:padding="15dp"
-            android:layout_margin="15dp"/>
+            android:horizontalSpacing="20dp"
+            android:verticalSpacing="20dp"/>
 
         <TextView
             android:id="@+id/text_my_label"
@@ -63,6 +70,19 @@
             android:textSize="16sp"
             android:textColor="@color/wt_login_third"
             android:layout_marginLeft="15dp"/>
+
+        <GridView
+            android:id="@+id/grid_my_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:horizontalSpacing="20dp"
+            android:numColumns="4"
+            android:paddingBottom="10dp"
+            android:paddingLeft="11dp"
+            android:paddingRight="11dp"
+            android:paddingTop="18dp"
+            android:scrollbars="none"
+            android:verticalSpacing="15dp" />
 
     </LinearLayout>
 

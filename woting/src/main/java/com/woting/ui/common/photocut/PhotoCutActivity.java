@@ -28,7 +28,8 @@ public class PhotoCutActivity extends AppBaseActivity implements OnClickListener
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.lin_save) {
+        switch (v.getId()){
+            case R.id.lin_save:
             bitmap = mClipImageLayout.clip();
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             if (bitmap.compress(Bitmap.CompressFormat.PNG, 10, outputStream)) {
@@ -56,7 +57,12 @@ public class PhotoCutActivity extends AppBaseActivity implements OnClickListener
                     e.printStackTrace();
                 }
             }
+            break;
+            case R.id.head_left_btn:
+                finish();
+                break;
         }
+
     }
 
     @Override
@@ -69,6 +75,8 @@ public class PhotoCutActivity extends AppBaseActivity implements OnClickListener
     // 初始化视图
     private void initView() {
         findViewById(R.id.lin_save).setOnClickListener(this);// 保存
+        findViewById(R.id.head_left_btn).setOnClickListener(this);// 保存
+
         mClipImageLayout = (ClipImageLayout) findViewById(R.id.id_clipImageLayout);
 
         if (getIntent() != null) {

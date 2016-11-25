@@ -94,7 +94,7 @@
                         android:layout_width="55dp"
                         android:layout_height="55dp"
                         android:layout_centerInParent="true"
-                        android:src="@mipmap/liubianxing_white"/>
+                        android:src="@mipmap/liubianxing_gray"/>
                 </RelativeLayout>
             </LinearLayout>
 
