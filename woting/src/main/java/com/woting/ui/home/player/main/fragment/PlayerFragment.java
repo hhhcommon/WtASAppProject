@@ -41,6 +41,9 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.kingsoft.media.httpcache.KSYProxyService;
+import com.kingsoft.media.httpcache.OnCacheStatusListener;
+import com.kingsoft.media.httpcache.OnErrorListener;
 import com.squareup.picasso.Picasso;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.ShareAction;
@@ -48,6 +51,7 @@ import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.woting.R;
+import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
@@ -90,9 +94,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -102,7 +108,8 @@ import java.util.TimeZone;
  *
  * @author 辛龙
  */
-public class PlayerFragment extends Fragment implements OnClickListener, IXListViewListener {
+public class PlayerFragment extends Fragment implements OnClickListener,
+        IXListViewListener,OnErrorListener{
     public static FragmentActivity context;
     public static WtAudioPlay audioPlay;
     private static SimpleDateFormat format;
@@ -181,6 +188,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
 
     private static ArrayList<LanguageSearchInside> allList = new ArrayList<LanguageSearchInside>();
     private ArrayList<String> testList;
+    private static KSYProxyService proxy;
+    private static int cachePercents;                             // 缓存长度
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -198,6 +208,22 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
         initDao();                                                   // 初始化数据库命令执行对象
         UMShareAPI.get(context);                                     // 初始化友盟
         setVoice();                                                  // 初始化音频控制器
+        initCache();                                                 // 初始化缓存
+    }
+
+    private void initCache() {
+        proxy = BSApplication.getKSYProxy(context);
+     /*   proxy.registerCacheStatusListener(context);*/
+        proxy.registerErrorListener(this);
+
+        File file=new File(GlobalConfig.playCacheDir);               // 设置缓存目录
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        proxy.setCacheRoot(file);
+
+        proxy.setMaxCacheSize(500*1024*1024);                        // 缓存大小 500MB
+        proxy.startServer();
     }
 
     // 注册广播接收器
@@ -1134,6 +1160,13 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
                         updateTextViewWithTimeFormat(time_start, (int) (currPosition / 1000));
                         updateTextViewWithTimeFormat(time_end, (int) (duration / 1000));
                         seekBar.setMax((int) duration);
+                        if(IsCache(local)==true){
+                           // ToastUtils.show_always(context,"缓存完成");
+                            int Length =(int)(audioPlay.getTotalTime()) * 100 / 100;
+                            seekBar.setSecondaryProgress(Length);
+                        }else{
+                           // ToastUtils.show_always(context,"缓存未完成");
+                        }
                         timerService = (int) (duration - currPosition);
                         if (audioPlay.isPlaying()) {
                             seekBar.setProgress((int) currPosition);
@@ -1170,7 +1203,16 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
                     tv_speak_status.setText("请按住讲话");
                     break;
                 case PLAY:
-                    audioPlay.play(local);
+                    String proxyUrl = proxy.getProxyUrl(local);
+                    audioPlay.play(proxyUrl);
+                    proxy.registerCacheStatusListener(new OnCacheStatusListener() {
+                        @Override
+                        public void OnCacheStatus(String url, long sourceLength,int percentsAvailable) {
+                            int a=percentsAvailable;
+                            int Length = (int)(audioPlay.getTotalTime()) * percentsAvailable / 100;
+                            seekBar.setSecondaryProgress(Length);
+                        }
+                    }, local);
                     break;
                 case PAUSE:
                     audioPlay.pause();
@@ -1184,6 +1226,21 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
             }
         }
     };
+
+
+    //判断某个链接是否已经缓存完毕的方法
+    private static Boolean IsCache(String url) {
+
+        HashMap<String, File> cacheMap = proxy.getCachedFileList();
+
+        File CacheFile=cacheMap.get(url);
+
+        if(CacheFile==null||CacheFile.equals("")){
+            return  false;
+        }
+
+        return true;
+    }
 
     private static void updateTextViewWithTimeFormat(TextView view, long second) {
         int hh = (int) (second / 3600);
@@ -1674,9 +1731,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
             if (GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
                 img_download.setImageResource(R.mipmap.wt_play_xiazai);
                 tv_download.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
+                tv_download.setText("下载");
             } else {
                 img_download.setImageResource(R.mipmap.wt_play_xiazai_no);
                 tv_download.setTextColor(context.getResources().getColor(R.color.gray));
+                tv_download.setText("下载");
             }
 
             if (!TextUtils.isEmpty(GlobalConfig.playerobject.getLocalurl())) {
@@ -1823,6 +1882,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
             }
         });
     }
+
+
 
     private static void getContentNews(String id, final int number) {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
@@ -2080,6 +2141,26 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
     }
 
     /**
+     * 缓存错误的监听回调方法
+     */
+    @Override
+    public void OnError(int errCode) {
+
+        Log.d("cachetest", "播放器缓存代码异常:" + errCode);
+    }
+
+ /*   *//**
+     * 缓存状态的回调方法
+     *//*
+    @Override
+    public void OnCacheStatus(String url, long sourceLength,int percentsAvailable) {
+
+        int cachelength = Integer.getInteger(GlobalConfig.playerobject.getPlayerAllTime()) * percentsAvailable / 100;
+        this.cachePercents = percentsAvailable;
+        seekBar.setSecondaryProgress(cachelength);
+    }*/
+
+    /**
      * 广播接收器
      */
     class MessageReceiver extends BroadcastReceiver {
@@ -2191,6 +2272,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
         }
     }
 
+
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -2202,5 +2285,14 @@ public class PlayerFragment extends Fragment implements OnClickListener, IXListV
             context.unregisterReceiver(Receiver);
             Receiver = null;
         }
+      /*  if(GlobalConfig.playerobject!=null){
+            if(GlobalConfig.playerobject.getMediaType()!=null&&
+                    GlobalConfig.playerobject.getMediaType().equals("AUDIO")){
+                proxy.unregisterCacheStatusListener(this, GlobalConfig.playerobject.getContentPlay());
+            }
+
+        }*/
+        proxy.unregisterErrorListener(this);
+        proxy.shutDownServer();
     }
 }
