@@ -16,6 +16,16 @@ public class TagInfo {
 
     private String TagId;
 
+    public boolean isContains() {
+        return isContains;
+    }
+
+    public void setContains(boolean contains) {
+        isContains = contains;
+    }
+
+    private boolean isContains;
+
     public String getTagName() {
         return TagName;
     }
