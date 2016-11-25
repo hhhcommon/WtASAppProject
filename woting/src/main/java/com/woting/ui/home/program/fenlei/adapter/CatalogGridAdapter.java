@@ -17,20 +17,26 @@ public class CatalogGridAdapter extends BaseAdapter {
 	private Context context;
 	private ViewHolder holder;
 
-	public CatalogGridAdapter(Context context, List<FenLeiName> list) {
+	public CatalogGridAdapter(Context context,List<FenLeiName> list) {
 		super();
-		this.list = list;
 		this.context = context;
+		this.list = list;
+	}
+
+	public void changeData(List<FenLeiName> list) {
+		this.list = list;
+		notifyDataSetChanged();
 	}
 
 	@Override
 	public int getCount() {
-		return list.size();
+			return list.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return list.get(position);
+			return list.get(position);
+
 	}
 
 	@Override

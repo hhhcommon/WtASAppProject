@@ -79,7 +79,7 @@ public class AddLabelActivity extends AppBaseActivity implements View.OnClickLis
                 subLabel = subLabel.substring(0, subLabel.length() - 1);
             }
             if(subLabel.contains(",")) {
-                subLabel.replaceAll(",", "，");
+                subLabel = subLabel.replaceAll(",", "，");
             }
             String[] sub = subLabel.split("，");
             if(sub.length > 5) {

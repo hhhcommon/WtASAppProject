@@ -25,6 +25,7 @@ public class CatalogListAdapter extends BaseAdapter {
     private ViewHolder holder;
     private CatalogGridAdapter adapters;
 
+
     public CatalogListAdapter(Context context, List<FenLei> list) {
         super();
         this.list = list;
@@ -54,15 +55,14 @@ public class CatalogListAdapter extends BaseAdapter {
             holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
             holder.gv = (MyGridView) convertView.findViewById(R.id.gridView);
             holder.gv.setSelector(new ColorDrawable(Color.TRANSPARENT));
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         holder.tv_name.setText(list.get(position).getName());
-
-        adapters = new CatalogGridAdapter(context, list.get(position).getChildren());
+        adapters = new CatalogGridAdapter(context,list.get(position).getChildren());
         holder.gv.setAdapter(adapters);
-
         holder.gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int positions, long id) {
