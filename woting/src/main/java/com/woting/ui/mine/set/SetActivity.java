@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.kingsoft.media.httpcache.KSYProxyService;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
@@ -64,6 +65,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
     private String cachePath;           // 缓存路径
     private String tag = "SET_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
+    private KSYProxyService proxy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +105,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
 
         textCache = (TextView) findViewById(R.id.text_cache);               // 缓存
         initCache();
+        proxy = BSApplication.getKSYProxy(context);                         // 播放缓存
     }
 
     @Override
@@ -381,6 +384,8 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 }
             }
         }).start();
+
+
     }
 
     // 清除缓存异步任务
@@ -396,6 +401,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         @Override
         protected Void doInBackground(Void... params) {
             clearResult = CacheManager.delAllFile(cachePath);
+            proxy.cleanCaches();
             return null;
         }
 
