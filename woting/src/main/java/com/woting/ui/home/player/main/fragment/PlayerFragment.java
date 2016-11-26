@@ -1203,6 +1203,7 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                     tv_speak_status.setText("请按住讲话");
                     break;
                 case PLAY:
+                    if(playType.equals("AUDIO")){
                     String proxyUrl = proxy.getProxyUrl(local);
                     audioPlay.play(proxyUrl);
                     proxy.registerCacheStatusListener(new OnCacheStatusListener() {
@@ -1213,6 +1214,9 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                             seekBar.setSecondaryProgress(Length);
                         }
                     }, local);
+                    }else{
+                        audioPlay.play(local);
+                    }
                     break;
                 case PAUSE:
                     audioPlay.pause();
