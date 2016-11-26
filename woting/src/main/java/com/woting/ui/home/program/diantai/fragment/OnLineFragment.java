@@ -226,10 +226,10 @@ public class OnLineFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(context, FMListActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("fromtype", "online");
+                bundle.putString("fromtype", "net"); //界面判断标签
                 bundle.putString("name", "网络台");
-                bundle.putString("type", "2");
-                bundle.putString("id", cityId);
+                bundle.putString("type", "9");
+                bundle.putString("id", "dtfl2002");
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
