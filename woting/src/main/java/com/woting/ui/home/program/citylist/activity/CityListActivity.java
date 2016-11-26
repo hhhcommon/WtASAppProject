@@ -33,7 +33,7 @@ import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.model.Catalog;
 import com.woting.ui.home.model.CatalogName;
 import com.woting.ui.home.program.citylist.adapter.CityListAdapter;
-import com.woting.ui.home.program.fmlist.activity.FMListActivity;
+import com.woting.ui.home.program.diantai.activity.CityRadioActivity;
 import com.woting.ui.interphone.linkman.view.CharacterParser;
 import com.woting.ui.interphone.linkman.view.PinyinComparator_d;
 import com.woting.ui.interphone.linkman.view.SideBar;
@@ -77,7 +77,6 @@ public class CityListActivity extends AppBaseActivity implements OnClickListener
 		setContentView(R.layout.activity_citylists);
 		context = this;
 		type=this.getIntent().getStringExtra("type");
-
 		characterParser = CharacterParser.getInstance();								// 实例化汉字转拼音类
 		pinyinComparator = new PinyinComparator_d();
 		setView();
@@ -229,14 +228,15 @@ public class CityListActivity extends AppBaseActivity implements OnClickListener
 					et.commit();
 					finish();
 				}else{
-					Intent intent = new Intent(context, FMListActivity.class);
+					Intent intent = new Intent(context,CityRadioActivity.class);
 					Bundle bundle = new Bundle();
-					bundle.putString("fromtype", "online");
+					bundle.putString("fromtype", "city");
 					bundle.putString("name", userList.get(position).getCatalogName());
 					bundle.putString("type", "2");
 					bundle.putString("id", userList.get(position).getCatalogId());
 					intent.putExtras(bundle);
 					startActivity(intent);
+					finish();
 				}
 			}
 		});
