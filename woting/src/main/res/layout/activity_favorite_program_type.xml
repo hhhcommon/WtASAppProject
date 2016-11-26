@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/dinglan_orange"
     android:clipToPadding="true"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,21 +14,21 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:text="选择几个你喜欢的节目类型"
             android:textColor="@color/WHITE"
-            android:textSize="17sp"
-            android:layout_centerInParent="true"/>
+            android:textSize="17sp" />
 
         <TextView
             android:id="@+id/text_skip"
             android:layout_width="48dp"
             android:layout_height="match_parent"
-            android:gravity="center"
             android:layout_alignParentRight="true"
             android:layout_marginRight="6dp"
-            android:textSize="16sp"
+            android:gravity="center"
             android:text="跳过"
-            android:textColor="@color/WHITE"/>
+            android:textColor="@color/WHITE"
+            android:textSize="16sp" />
 
     </RelativeLayout>
 
@@ -41,7 +40,7 @@
         <ImageView
             android:id="@+id/image_background"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <ImageView
             android:id="@+id/view_literature"
@@ -49,36 +48,36 @@
             android:layout_height="60dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="30dp"
-            android:layout_marginTop="38dp"/>
+            android:layout_marginTop="38dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="爱文艺"
-            android:textColor="@color/up_bg_unselected"
-            android:layout_toLeftOf="@id/view_literature"
             android:layout_alignBottom="@id/view_literature"
             android:layout_marginBottom="7dp"
-            android:textSize="14sp"/>
+            android:layout_toLeftOf="@id/view_literature"
+            android:text="爱文艺"
+            android:textColor="@color/up_bg_unselected"
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/view_life"
             android:layout_width="62dp"
             android:layout_height="60dp"
-            android:layout_toLeftOf="@id/view_literature"
             android:layout_below="@id/view_literature"
             android:layout_marginRight="6dp"
-            android:layout_marginTop="35dp"/>
+            android:layout_marginTop="35dp"
+            android:layout_toLeftOf="@id/view_literature" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="会生活"
-            android:textColor="@color/up_bg_unselected"
-            android:layout_toLeftOf="@id/view_life"
             android:layout_alignTop="@id/view_life"
             android:layout_marginTop="2dp"
-            android:textSize="14sp"/>
+            android:layout_toLeftOf="@id/view_life"
+            android:text="会生活"
+            android:textColor="@color/up_bg_unselected"
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/view_joke"
@@ -86,17 +85,17 @@
             android:layout_height="60dp"
             android:layout_alignTop="@id/view_life"
             android:layout_marginLeft="75dp"
-            android:layout_marginTop="33dp"/>
+            android:layout_marginTop="33dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="讲笑话"
-            android:textColor="@color/up_bg_unselected"
-            android:layout_marginLeft="33dp"
             android:layout_alignBottom="@id/view_joke"
             android:layout_marginBottom="17dp"
-            android:textSize="14sp"/>
+            android:layout_marginLeft="33dp"
+            android:text="讲笑话"
+            android:textColor="@color/up_bg_unselected"
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/view_world"
@@ -105,18 +104,18 @@
             android:layout_alignParentRight="true"
             android:layout_below="@id/view_life"
             android:layout_marginRight="120dp"
-            android:layout_marginTop="38dp"/>
+            android:layout_marginTop="38dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="看世界"
-            android:textColor="@color/up_bg_unselected"
-            android:layout_alignTop="@id/view_world"
             android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/view_world"
             android:layout_marginRight="78dp"
             android:layout_marginTop="20dp"
-            android:textSize="14sp"/>
+            android:text="看世界"
+            android:textColor="@color/up_bg_unselected"
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/view_story"
@@ -124,68 +123,68 @@
             android:layout_height="60dp"
             android:layout_below="@id/view_world"
             android:layout_marginLeft="70dp"
-            android:layout_marginTop="40dp"/>
+            android:layout_marginTop="40dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/view_story"
+            android:layout_marginBottom="7dp"
+            android:layout_marginLeft="28dp"
             android:text="听故事"
             android:textColor="@color/up_bg_unselected"
-            android:layout_alignBottom="@id/view_story"
-            android:layout_marginLeft="28dp"
-            android:layout_marginBottom="7dp"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/view_knowledge"
             android:layout_width="63dp"
             android:layout_height="60dp"
             android:layout_alignParentRight="true"
+            android:layout_below="@id/view_world"
             android:layout_marginRight="46dp"
-            android:layout_marginTop="93dp"
-            android:layout_below="@id/view_world"/>
+            android:layout_marginTop="93dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/view_knowledge"
+            android:layout_marginBottom="3dp"
+            android:layout_toLeftOf="@id/view_knowledge"
             android:text="涨知识"
             android:textColor="@color/up_bg_unselected"
-            android:layout_alignBottom="@id/view_knowledge"
-            android:layout_toLeftOf="@id/view_knowledge"
-            android:layout_marginBottom="3dp"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/view_taste"
             android:layout_width="47dp"
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
+            android:layout_below="@id/view_knowledge"
             android:layout_marginRight="144dp"
-            android:layout_marginTop="20dp"
-            android:layout_below="@id/view_knowledge"/>
+            android:layout_marginTop="20dp" />
 
-        <TextView
+          x<TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="有情趣"
-            android:textColor="@color/up_bg_unselected"
             android:layout_alignBottom="@id/view_taste"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="102dp"
             android:layout_marginBottom="3dp"
-            android:textSize="14sp"/>
+            android:layout_marginRight="102dp"
+            android:text="有情趣"
+            android:textColor="@color/up_bg_unselected"
+            android:textSize="14sp" />
 
-        <Button
+         <Button
             android:id="@+id/btn_finish"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:text="确定"
-            android:textSize="16sp"
-            android:textColor="@color/WHITE"
             android:layout_alignParentBottom="true"
-            android:enabled="false"
             android:layout_margin="10dp"
-            android:background="@drawable/d_btn_background"/>
+            android:background="@drawable/d_btn_background"
+            android:enabled="false"
+            android:text="确定"
+            android:textColor="@color/WHITE"
+            android:textSize="16sp" />
 
     </RelativeLayout>
 
