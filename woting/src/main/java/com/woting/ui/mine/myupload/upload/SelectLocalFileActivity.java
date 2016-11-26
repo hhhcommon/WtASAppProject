@@ -58,6 +58,8 @@ public class SelectLocalFileActivity extends AppBaseActivity implements
 
         textTip = (TextView) findViewById(R.id.text_tip);
         listView = (ListView) findViewById(R.id.list_view);// 文件列表
+        listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+        listView.setOnItemClickListener(this);
     }
 
     @Override
@@ -70,10 +72,9 @@ public class SelectLocalFileActivity extends AppBaseActivity implements
         } else {
             textTip.setVisibility(View.GONE);
             btnNext.setVisibility(View.VISIBLE);
-            listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
             listView.setAdapter(adapter = new SelectFileListAdapter(context, list));
-            listView.setOnItemClickListener(this);
             adapter.setImagePlayListener(this);
+            adapter.setIndex(index);
         }
     }
 

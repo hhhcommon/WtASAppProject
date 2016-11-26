@@ -23,6 +23,7 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.common.model.UserInfo;
 
 import org.json.JSONException;
@@ -100,7 +101,7 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
             num = data.getUserNum();
             b_name = data.getUserAliasName();
         } else if (type.equals("TalkGroupNewsActivity_p")) {
-            UserInfo data = (UserInfo) this.getIntent().getSerializableExtra("data");
+            GroupInfo data = (GroupInfo) this.getIntent().getSerializableExtra("data");
             name = data.getUserName();
             imageUrl = data.getPortraitBig();
             id = data.getUserId();

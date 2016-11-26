@@ -154,7 +154,10 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
                 startActivityForResult(new Intent(context, SelectSequActivity.class), 0xeee);
                 break;
             case R.id.view_label:// 设置标签
-                startActivityForResult(new Intent(context, AddLabelActivity.class), 0xaaa);
+                Intent intent = new Intent(context, AddLabelActivity.class);
+                String stringLabel = textLabel.getText().toString();
+                intent.putExtra("EDIT_LABEL", stringLabel);
+                startActivityForResult(intent, 0xaaa);
                 break;
             case R.id.tv_gallery:// 从图库选择
                 doDialogClick(0);
