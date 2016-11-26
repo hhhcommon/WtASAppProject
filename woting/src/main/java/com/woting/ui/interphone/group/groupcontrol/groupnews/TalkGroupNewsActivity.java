@@ -488,7 +488,10 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                     editAliasName.setTextColor(getResources().getColor(R.color.white));
                     editSignature.setBackgroundColor(getResources().getColor(R.color.dinglan_orange));
                     editSignature.setTextColor(getResources().getColor(R.color.white));
-                    imageModify.setImageResource(R.mipmap.xiugai);
+
+                    Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.xiugai);
+                    imageModify.setImageBitmap(bmp);
+
                     update = false;
 
                     String name = editAliasName.getText().toString().trim();
@@ -513,8 +516,8 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                     editAliasName.setEnabled(true);
                     editAliasName.setBackgroundColor(getResources().getColor(R.color.white));
                     editAliasName.setTextColor(getResources().getColor(R.color.gray));
-
-                    imageModify.setImageResource(R.mipmap.wancheng);
+                    Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wancheng);
+                    imageModify.setImageBitmap(bmp);
                     update = true;
                 }
                 break;

@@ -497,12 +497,12 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 						TalkPersonNoAdapter adapters = new TalkPersonNoAdapter(context);
 						sortListView.setAdapter(adapters);
 					} else {
-						if(adapter==null){
+//						if(adapter==null){
 							adapter = new SortGroupMemberAdapter(context, srclist_p);
 							sortListView.setAdapter(adapter);
-						}else{
-							adapter.updateListView(srclist_p);
-						}
+//						}else{
+//							adapter.updateListView(srclist_p);
+//						}
 					}
 				} else {		// 关键词不为空
 					image_clear.setVisibility(View.VISIBLE);
