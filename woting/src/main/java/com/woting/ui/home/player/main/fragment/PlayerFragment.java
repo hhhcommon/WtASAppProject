@@ -221,7 +221,7 @@ public class PlayerFragment extends Fragment implements OnClickListener,
             file.mkdir();
         }
         proxy.setCacheRoot(file);
-
+        proxy.setMaxSingleFileSize(10*1024*1024);
         proxy.setMaxCacheSize(500*1024*1024);                        // 缓存大小 500MB
         proxy.startServer();
     }
