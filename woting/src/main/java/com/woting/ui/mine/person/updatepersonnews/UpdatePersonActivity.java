@@ -110,10 +110,15 @@ public class UpdatePersonActivity extends AppBaseActivity implements
         setContentView(R.layout.activity_updateperson);
         initView();
         setValueByPrefer();
+        if(GlobalConfig.CityCatalogList!=null&&GlobalConfig.CityCatalogList.size()>0){
+            handleCityList(GlobalConfig.CityCatalogList);
+        }else
+        {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             send();
         } else {
             ToastUtils.show_always(context, "网络失败，请检查网络");
+        }
         }
     }
 
@@ -199,74 +204,11 @@ public class UpdatePersonActivity extends AppBaseActivity implements
                 try {
                     String ReturnType = result.getString("ReturnType");
                     Log.v("ReturnType", "ReturnType -- > > " + ReturnType);
-
                     if (ReturnType != null && ReturnType.equals("1001")) {
                         Catalog subListAll = new Gson().fromJson(result.getString("CatalogData"), new TypeToken<Catalog>() {}.getType());
                         List<CatalogName> catalogNameList = subListAll.getSubCata();
-                        if (catalogNameList != null && catalogNameList.size() > 0) {
-                            tempMap = new HashMap<>();
-                            provinceList = new ArrayList<>();
-                            for (int i = 0; i < catalogNameList.size(); i++) {
-                                if (!TextUtils.isEmpty(catalogNameList.get(i).getCatalogId()) && !TextUtils.isEmpty(catalogNameList.get(i).getCatalogName())) {
-                                    if (catalogNameList.get(i).getSubCata() != null && catalogNameList.get(i).getSubCata().size() > 0) {
-                                        // 所返回的 list 有下一级的且不为 0
-                                        if (!catalogNameList.get(i).getSubCata().get(0).getCatalogName().equals("市辖区")) {
-                                            // 不是直辖市
-                                            provinceList.add(catalogNameList.get(i).getCatalogName());
-                                            myList = catalogNameList.get(i).getSubCata();
-                                            tempMap.put(catalogNameList.get(i).getCatalogName(), myList);
-                                        } else {
-                                            // 直辖市
-                                            List<CatalogName> myList1 = new ArrayList<>();
-                                            provinceList.add(catalogNameList.get(i).getCatalogName());
-                                            myList1.addAll(catalogNameList.get(i).getSubCata().get(0).getSubCata());
-                                            myList1.addAll(catalogNameList.get(i).getSubCata().get(1).getSubCata());
-                                            tempMap.put(catalogNameList.get(i).getCatalogName(), myList1);
-                                        }
-                                    } else {
-                                        // 港澳台
-                                        List<CatalogName> myList1 = new ArrayList<>();
-                                        for (int t = 0; t < 4; t++) {
-                                            CatalogName mCatalog = new CatalogName();
-                                            mCatalog.setCatalogId(catalogNameList.get(i).getCatalogId());
-                                            mCatalog.setCatalogName(" ");
-                                            myList1.add(mCatalog);
-                                        }
-                                        if (catalogNameList.get(i).getCatalogId().equals("710000")) {
-                                            provinceList.add("台湾");
-                                            tempMap.put("台湾", myList1);
-                                        } else if (catalogNameList.get(i).getCatalogId().equals("810000")) {
-                                            provinceList.add("香港");
-                                            tempMap.put("香港", myList1);
-                                        } else if (catalogNameList.get(i).getCatalogId().equals("820000")) {
-                                            provinceList.add("澳门");
-                                            tempMap.put("澳门", myList1);
-                                        }
-                                    }
-                                }
-                            }
-                            if (tempMap.size() > 0) {
-                                for (int i = 0; i < provinceList.size(); i++) {
-                                    List<CatalogName> mList = tempMap.get(provinceList.get(i));
-                                    ArrayList<String> cityList = new ArrayList<>();
-                                    for (int j = 0; j < mList.size(); j++) {
-                                        if (mList.get(j).getCatalogName() != null) {
-                                            cityList.add(mList.get(j).getCatalogName());
-                                        }
-                                    }
-                                    positionMap.put(provinceList.get(i), cityList);
-                                }
-                            }
-                            cityPickerDialog();
-                            viewArea.setOnClickListener(new OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    cityDialog.show();
-                                }
-                            });
-                        } else {
-                            Log.e("", "获取城市列表为空");
-                        }
+                        GlobalConfig.CityCatalogList=catalogNameList;
+                        handleCityList(catalogNameList);
                     } else {
                         ToastUtils.show_always(context, "数据获取异常，请稍候重试");
                     }
@@ -281,6 +223,76 @@ public class UpdatePersonActivity extends AppBaseActivity implements
             }
         });
     }
+
+
+    private void handleCityList(List<CatalogName> catalogNameList){
+
+        if (catalogNameList != null && catalogNameList.size() > 0) {
+            tempMap = new HashMap<>();
+            provinceList = new ArrayList<>();
+            for (int i = 0; i < catalogNameList.size(); i++) {
+                if (!TextUtils.isEmpty(catalogNameList.get(i).getCatalogId()) && !TextUtils.isEmpty(catalogNameList.get(i).getCatalogName())) {
+                    if (catalogNameList.get(i).getSubCata() != null && catalogNameList.get(i).getSubCata().size() > 0) {
+                        // 所返回的 list 有下一级的且不为 0
+                        if (!catalogNameList.get(i).getSubCata().get(0).getCatalogName().equals("市辖区")) {
+                            // 不是直辖市
+                            provinceList.add(catalogNameList.get(i).getCatalogName());
+                            myList = catalogNameList.get(i).getSubCata();
+                            tempMap.put(catalogNameList.get(i).getCatalogName(), myList);
+                        } else {
+                            // 直辖市
+                            List<CatalogName> myList1 = new ArrayList<>();
+                            provinceList.add(catalogNameList.get(i).getCatalogName());
+                            myList1.addAll(catalogNameList.get(i).getSubCata().get(0).getSubCata());
+                            myList1.addAll(catalogNameList.get(i).getSubCata().get(1).getSubCata());
+                            tempMap.put(catalogNameList.get(i).getCatalogName(), myList1);
+                        }
+                    } else {
+                        // 港澳台
+                        List<CatalogName> myList1 = new ArrayList<>();
+                        for (int t = 0; t < 4; t++) {
+                            CatalogName mCatalog = new CatalogName();
+                            mCatalog.setCatalogId(catalogNameList.get(i).getCatalogId());
+                            mCatalog.setCatalogName(" ");
+                            myList1.add(mCatalog);
+                        }
+                        if (catalogNameList.get(i).getCatalogId().equals("710000")) {
+                            provinceList.add("台湾");
+                            tempMap.put("台湾", myList1);
+                        } else if (catalogNameList.get(i).getCatalogId().equals("810000")) {
+                            provinceList.add("香港");
+                            tempMap.put("香港", myList1);
+                        } else if (catalogNameList.get(i).getCatalogId().equals("820000")) {
+                            provinceList.add("澳门");
+                            tempMap.put("澳门", myList1);
+                        }
+                    }
+                }
+            }
+            if (tempMap.size() > 0) {
+                for (int i = 0; i < provinceList.size(); i++) {
+                    List<CatalogName> mList = tempMap.get(provinceList.get(i));
+                    ArrayList<String> cityList = new ArrayList<>();
+                    for (int j = 0; j < mList.size(); j++) {
+                        if (mList.get(j).getCatalogName() != null) {
+                            cityList.add(mList.get(j).getCatalogName());
+                        }
+                    }
+                    positionMap.put(provinceList.get(i), cityList);
+                }
+            }
+            cityPickerDialog();
+            viewArea.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cityDialog.show();
+                }
+            });
+        } else {
+            Log.e("", "获取城市列表为空");
+        }
+    }
+
 
     @Override
     public void onClick(View v) {

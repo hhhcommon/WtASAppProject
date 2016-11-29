@@ -289,7 +289,7 @@
                     android:gravity="left|center"
                     android:background="@null"
                     android:maxLines="1"
-                    android:maxLength="20"
+                    android:maxLength="50"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/text_yx"
                     android:textSize="14sp"/>
