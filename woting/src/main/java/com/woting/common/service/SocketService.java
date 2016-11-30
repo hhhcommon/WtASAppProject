@@ -443,7 +443,7 @@ public class SocketService extends Service  {
 							if (msgType==-1) msgType= MessageUtils.decideMsg(ba);
 							if (msgType==0) {//0=控制消息(一般消息)
 								if (isAck==-1&&i==12) {
-									if (((ba[2]&0x80)==0x80)&&((ba[2]&0x00)==0x00)&&((ba[i-1]&0xF0)==0x00)) isAck=1; else isAck=0;
+									if (((ba[2]&0x80)==0x80)&&((ba[2]&0x00)==0x00)&&(((ba[i-1]&0xF0)==0x00)||((ba[i-1]&0xF0)==0xF0))) isAck=1; else isAck=0;
 									if ((ba[i-1]&0xF0)==0xF0) isRegist=1;
 								} else  if (isAck==1) {//是回复消息
 									if (isRegist==1) { //是注册消息

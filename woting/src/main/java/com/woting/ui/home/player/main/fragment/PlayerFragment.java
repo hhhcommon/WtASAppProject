@@ -1256,7 +1256,7 @@ public class PlayerFragment extends Fragment implements OnClickListener,
 
     static String local;
 
-    private static void musicPlay(String s) {
+    private static void          musicPlay(String s) {
         if (local == null) {
             local = s;
             mUIHandler.sendEmptyMessage(PLAY);
