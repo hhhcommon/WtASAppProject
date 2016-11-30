@@ -934,6 +934,7 @@ public class PlayerFragment extends Fragment implements OnClickListener,
         Animation mAnimation = AnimationUtils.loadAnimation(context, R.anim.umeng_socialize_slide_out_from_bottom);
         lin_chose.setAnimation(mAnimation);
         lin_chose.setVisibility(View.GONE);
+
     }
 
     private void linChoseOpen() {
