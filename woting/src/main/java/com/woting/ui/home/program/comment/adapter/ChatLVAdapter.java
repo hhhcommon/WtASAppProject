@@ -104,7 +104,7 @@ public class ChatLVAdapter extends BaseAdapter {
                     url = GlobalConfig.imageurl + opinion.getUserInfo().getPortraitMini();
                 }
                 url = AssembleImageUrlUtils.assembleImageUrl150(url);
-                Picasso.with(mContext).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.img);
+                Picasso.with(mContext).load(url.replace("\\/", "/")).into(holder.img);
             } else {
                 Bitmap bmp = BitmapUtils.readBitMap(mContext, R.mipmap.person_nologinimage);
                 holder.img.setImageBitmap(bmp);
