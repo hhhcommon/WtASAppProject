@@ -65,20 +65,12 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/timestamp_hour_prefix"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/dinglan_orange"
-                android:textSize="25sp"
-                android:text="0"/>
-
-            <TextView
                 android:id="@+id/timestamp_hour_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/dinglan_orange"
                 android:textSize="25sp"
-                android:text="0"/>
+                android:text="00"/>
 
             <TextView
                 android:id="@+id/text_hour_dian"
@@ -89,20 +81,12 @@
                 android:text=":"/>
 
             <TextView
-                android:id="@+id/timestamp_minute_prefix"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/dinglan_orange"
-                android:textSize="25sp"
-                android:text="0"/>
-
-            <TextView
                 android:id="@+id/timestamp_minute_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/dinglan_orange"
                 android:textSize="25sp"
-                android:text="0"/>
+                android:text="00"/>
 
             <TextView
                 android:id="@+id/text_dian"
@@ -113,25 +97,16 @@
                 android:text=":"/>
 
             <TextView
-                android:id="@+id/timestamp_second_prefix"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/dinglan_orange"
-                android:textSize="25sp"
-                android:text="0"/>
-
-            <TextView
                 android:id="@+id/timestamp_second_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/dinglan_orange"
                 android:textSize="25sp"
-                android:text="0"/>
+                android:text="00"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/linear_btn"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:orientation="horizontal"

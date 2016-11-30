@@ -2,6 +2,7 @@ package com.woting.common.config;
 
 import android.os.Environment;
 
+import com.woting.ui.home.model.CatalogName;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
 import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.common.model.UserInfo;
@@ -36,6 +37,8 @@ public class GlobalConfig {
     public static LanguageSearchInside playerobject;//播放器播放对象
     //缓存路径
     public static String playCacheDir= Environment.getExternalStorageDirectory() + "/woting/playCache/";
+    //缓存的城市列表
+    public static List<CatalogName> CityCatalogList;
 
     /**
      * 数据库版本号

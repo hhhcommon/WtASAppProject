@@ -48,7 +48,7 @@ import java.io.File;
 /**
  * 设置
  * @author 辛龙
- *         2016年2月26日
+ * 2016年2月26日
  */
 public class SetActivity extends BaseActivity implements OnClickListener {
     private Dialog updateDialog;        // 版本更新对话框
@@ -178,7 +178,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
             case R.id.lin_bindPhone:        // 绑定手机号
                 String phoneNumber = BSApplication.SharedPreferences.getString(StringConstant.PHONENUMBER, ""); // 用户手机号
                 Intent intent = new Intent(context, PhoneCheckActivity.class);
-                if(!phoneNumber.equals("")){// 已经有存在的手机号
+                if(!phoneNumber.equals("") || !phoneNumber.equals("null")){// 已经有存在的手机号
                     intent.putExtra("PhoneType","1");
                     intent.putExtra("PhoneNumber",phoneNumber);
                 }else{// 手机号为空
