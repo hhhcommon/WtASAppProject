@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.BitmapUtils;
@@ -103,7 +104,8 @@ public class PlayerListAdapter extends BaseAdapter {
                 } else {
                     url = GlobalConfig.imageurl + searchlist.getContentImg();
                 }
-                Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
+                url= AssembleImageUrlUtils.assembleImageUrl150(url);
+                Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageview_rankimage);
             } else {
                 holder.imageview_rankimage.setImageBitmap(bmp);
             }
