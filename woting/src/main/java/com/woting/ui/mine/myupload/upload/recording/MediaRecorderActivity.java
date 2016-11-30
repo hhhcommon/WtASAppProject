@@ -2,8 +2,10 @@ package com.woting.ui.mine.myupload.upload.recording;
 
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioFormat;
+import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -44,6 +46,7 @@ import java.util.Locale;
  */
 public class MediaRecorderActivity extends BaseActivity implements View.OnClickListener {
     private MediaPlayer player;// 播放录音媒体对象
+    private AudioManager am;// 声音管理对象
     private AudioRecord audioRecord;
     private AACEncoder encoder;
     private RotateAnimation animation;// 动画
@@ -63,6 +66,8 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
     private String mAudioRecordFileName;
     private long audioTime;// 录音时长
     private int inBufSize;
+    private int ringerMode;// 保存用户铃声震动模式的设置
+    private int curVolume;// 保存当前音量
 
     private boolean isPlay;// 是否正在播放录音
     private boolean isRecord;
@@ -158,6 +163,7 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
     // 暂停录音
     private void pauseRecord() {
         isRecord = false;
+        changeRingStatus(ringerMode);// 恢复用户之前设置的铃声震动模式
 
         mHandler.removeCallbacks(mTimestampRunnable);
         mRecordState.setText("已停止");
@@ -306,6 +312,7 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
             super.onPreExecute();
             try {
                 isRecord = true;// 判断是否正在录制
+                getRingStatus();// 获取用户铃声震动的设置并将其设置为静音模式
                 if(player != null) {
                     player.stop();
                     player.release();
@@ -451,5 +458,85 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
                 if(isPlay) initPlayer();
             }
         }).start();
+    }
+
+    // 获取用户设置的铃声震动模式 开始录制时设置为静音模式
+    private void getRingStatus() {
+        if(am == null) {
+            am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        }
+        ringerMode = am.getRingerMode();
+        Log.v("ringerMode", "ringerMode -- > > " + ringerMode);
+
+        changeRingStatus(-1);// 设置成静音模式
+    }
+
+    // 更改铃声和震动模式
+    private void changeRingStatus(int ringStatus) {
+        switch (ringStatus) {
+            case 0:// 静音
+                am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                am.setStreamVolume(AudioManager.STREAM_MUSIC,curVolume, AudioManager.FLAG_PLAY_SOUND);
+                break;
+            case 1:// 震动
+                am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                am.setStreamVolume(AudioManager.STREAM_MUSIC,curVolume, AudioManager.FLAG_PLAY_SOUND);
+                break;
+            case 2:// 铃声
+                am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                am.setStreamVolume(AudioManager.STREAM_MUSIC,curVolume, AudioManager.FLAG_PLAY_SOUND);
+                break;
+            default:// 静音并且将音乐音量设置为 0
+                am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                curVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+                am.setStreamVolume(AudioManager.STREAM_MUSIC, 0, AudioManager.FLAG_PLAY_SOUND);
+                break;
+        }
+        Log.v("ringStatus", "ringStatus -- > > " + ringStatus + "  curVolume -- > > " + curVolume);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 0xeee) {
+            if(resultCode == RESULT_OK) {
+                int type = data.getIntExtra("MEDIA_RECORDER", -1);
+                if(type == 1) {
+                    setResult(RESULT_OK);
+                }
+                finish();
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(!isSave) {
+            remindSaveDialog.show();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (player != null) {
+            player.stop();
+            player.release();
+            player = null;
+        }
+
+        if (isRecord) {
+            if (audioRecord != null) {
+                audioRecord.stop();
+                audioRecord.release();
+                audioRecord = null;
+            }
+        }
+
+        if(mTimestampRunnable != null) {
+            mHandler.removeCallbacks(mTimestampRunnable);
+        }
     }
 }
