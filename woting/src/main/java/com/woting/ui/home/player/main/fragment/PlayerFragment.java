@@ -212,7 +212,7 @@ public class PlayerFragment extends Fragment implements OnClickListener,
     }
 
     private void initCache() {
-        proxy = BSApplication.getKSYProxy(context);
+        proxy = BSApplication.getKSYProxy();
      /*   proxy.registerCacheStatusListener(context);*/
         proxy.registerErrorListener(this);
 

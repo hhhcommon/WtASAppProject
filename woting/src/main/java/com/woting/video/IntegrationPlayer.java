@@ -11,11 +11,11 @@ public class IntegrationPlayer {
 
     private static IntegrationPlayer wtIPlayer;        // 集合播放器
     private static Context contexts;
+    private VPlayer vlcPlayer;                         // VLC播放器
     private KSYPlayer ksyPlayer;                       // 金山云播放器
     private TPlayer ttsPlayer;                         // TTS播放器
-    private VPlayer vlcPlayer;                         // VLC播放器
-    private int oldPType;                              // 上次内容播放器类型
-    private int newptype;                              // 最新内容播放器类型
+    private int oldPType;                              // 上次内容播放器类型  1=vlc,2=ksy,3=tts
+    private int newptype;                              // 最新内容播放器类型  1=vlc,2=ksy,3=tts
 
     private IntegrationPlayer() {
         if (vlcPlayer == null) {
@@ -54,6 +54,47 @@ public class IntegrationPlayer {
     }
 
     /**
+     * 暂停播放
+     */
+    public void pousePlay() {
+        if (newptype == 1) {
+
+        } else if (newptype == 2) {
+
+        } else {
+
+        }
+    }
+
+    /**
+     * 继续播放
+     */
+    public void continuePlay() {
+        if (newptype == 1) {
+
+        } else if (newptype == 2) {
+
+        } else {
+
+        }
+    }
+
+
+    /**
+     * 停止播放
+     */
+    public void stopPlay() {
+        if (newptype == 1) {
+
+        } else if (newptype == 2) {
+
+        } else {
+
+        }
+    }
+
+
+    /**
      * 设置播放进度
      *
      * @param time 此时的播放进度
@@ -62,5 +103,22 @@ public class IntegrationPlayer {
 
     }
 
+
+    /**
+     * 获取此时播放时间
+     */
+    public long getTime() {
+
+
+        return 0;
+    }
+
+    /**
+     * 获取总时长
+     */
+    public long getTotalTime() {
+
+        return 0;
+    }
 
 }

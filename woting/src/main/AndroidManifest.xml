@@ -7,6 +7,14 @@
         android:name="android.hardware.camera"
         android:required="false"/>
 
+    <!-- 读取联系人权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <!-- 读取联系人 -->
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
+
+
+
     <!-- 蓝牙管理 -->
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE"/>
@@ -21,11 +29,6 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <!-- 使用蓝牙 -->
     <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <!-- 读取联系人权限 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <!-- 读取联系人 -->
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <!-- SDK1.5需要android.permission.GET_TASKS权限判断本程序是否为当前运行的应用? -->
     <!-- 获取任务信息 -->
     <uses-permission android:name="android.permission.GET_TASKS"/>
     <!-- 拍照权限 -->
@@ -45,16 +48,6 @@
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
     <!-- 读取电话状态 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <!-- 读写发送短信 -->
-    <!--
-    <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
-    -->
-    <!-- <uses-permission android:name="android.permission.WRITE_SMS" /> -->
-    <!--
-    拨打电话权限
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    -->
     <!-- 修改声音设置 -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
@@ -79,8 +72,6 @@
     <!-- 用于访问GPS定位 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
-    <!-- 在sdcard中创建/删除文件的权限 -->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <permission
         android:name="com.wotingfm.permission.C2D_MESSAGE"
         android:protectionLevel="signature"/>
@@ -89,22 +80,9 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
     <!-- Needed to use our own Contact editor -->
     <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
-    <!--  -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!-- 在sdcard中创建/删除文件的权限 -->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <!-- 使用权限 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_SINTERNETWIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
-    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-feature android:name="android.hardware.camera.autofocus"/>
 
     <application

@@ -42,7 +42,6 @@ public class BSApplication extends Application {
     public static SharedPreferences SharedPreferences;
     private ArrayList<String> staticFacesList;
     private static KSYProxyService proxyService = null;
-    public static BSApplication mBSApplication;
 
     @Override
     public void onCreate() {
@@ -89,12 +88,8 @@ public class BSApplication extends Application {
         return instance;
     }
 
-    public static KSYProxyService getKSYProxy(Context context) {
-        instance = context;
-        if (mBSApplication == null) {
-            mBSApplication = new BSApplication();
-        }
-        return mBSApplication.proxyService == null ? (mBSApplication.proxyService = newKSYProxy()) : BSApplication.proxyService;
+    public static KSYProxyService getKSYProxy() {
+        return proxyService == null ? (proxyService = newKSYProxy()) : proxyService;
     }
 
     private static KSYProxyService newKSYProxy() {
@@ -113,8 +108,6 @@ public class BSApplication extends Application {
             //去掉删除图片
             staticFacesList.remove("emotion_del_normal.png");
             GlobalConfig.staticFacesList = staticFacesList;
-            int a = staticFacesList.size();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
