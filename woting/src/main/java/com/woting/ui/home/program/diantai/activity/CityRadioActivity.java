@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
@@ -26,7 +27,7 @@ import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.fragment.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
-import com.woting.ui.home.program.diantai.activity.adapter.RadioNationAdapter;
+import com.woting.ui.home.program.diantai.activity.adapter.OnLinesRadioAdapter;
 import com.woting.ui.home.program.diantai.model.RadioPlay;
 
 import org.json.JSONException;
@@ -38,19 +39,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class RadioNationalActivity extends AppBaseActivity implements View.OnClickListener {
+public class CityRadioActivity extends AppBaseActivity implements View.OnClickListener {
 
     private LinearLayout head_left_btn;
     private TextView mTextView_Head;
     private Dialog dialog;
-
-    private String tag = "RADIO_NATION_VOLLEY_REQUEST_CANCEL_TAG";
+    private String tag = "RADIO_CITY_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
     private ArrayList<RadioPlay> newList = new ArrayList<>();
     protected List<RadioPlay> SubList;
     private SearchPlayerHistoryDao dbDao;
     private ExpandableListView mListView;
-    private RadioNationAdapter adapter;
+    private OnLinesRadioAdapter adapter;
+    private String CatalogName;
+    private String CatalogId;
+    private String CatalogType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,18 +61,37 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
         setContentView(R.layout.activity_radio_nation);
         context = this;
         setView();
+        handleIntent();
         setListener();
         initDao();
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在获取数据");
-            sendRequest();
-        } else {
-            ToastUtils.show_always(this, "网络连接失败，请稍后重试");
+    }
+
+    private void handleIntent() {
+        String type = this.getIntent().getStringExtra("fromtype");
+        if (type != null && type.trim().equals("city")) {
+            CatalogName = this.getIntent().getStringExtra("name");
+            CatalogId = this.getIntent().getStringExtra("id");
+            CatalogType = this.getIntent().getStringExtra("type");
+        }
+        if (!TextUtils.isEmpty(CatalogName)) {
+            mTextView_Head.setText(CatalogName);
         }
     }
 
-    private void sendRequest() {
-        VolleyRequest.RequestPost(GlobalConfig.getContentUrl, tag, setParam(), new VolleyCallback() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            dialog = DialogUtils.Dialogph(context, "正在获取数据");
+            send();
+        } else {
+            ToastUtils.show_always(this, "网络连接失败，请稍后重试");
+        }
+
+    }
+
+    private void send() {
+        VolleyRequest.RequestPost(GlobalConfig.getContentUrl, tag, setParamSend(), new VolleyCallback() {
             private String ResultList;
             private String StringSubList;
             private String ReturnType;
@@ -98,20 +120,17 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
                             e.printStackTrace();
                         }
                         try {
-                            SubList = new Gson().fromJson(StringSubList, new TypeToken<List<RadioPlay>>() {}.getType());
-                            String s=SubList.get(0).getCatalogName();
-                            String s1=SubList.get(0).getList().get(0).getContentName();
+                            SubList = new Gson().fromJson(StringSubList, new TypeToken<List<RadioPlay>>() {
+                            }.getType());
                             if (adapter == null) {
-                                adapter = new RadioNationAdapter(context, SubList);
+                                adapter = new OnLinesRadioAdapter(context, SubList);
                                 mListView.setAdapter(adapter);
                             } else {
                                 adapter.notifyDataSetChanged();
                             }
-
                             for (int i = 0; i < SubList.size(); i++) {
                                 mListView.expandGroup(i);
                             }
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -121,7 +140,7 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
                     }
                 } else {
 
-                    ToastUtils.show_always(context,"已经没有相关数据啦");
+                    ToastUtils.show_always(context, "已经没有相关数据啦");
                 }
             }
 
@@ -134,13 +153,13 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
         });
     }
 
-    private JSONObject setParam() {
+    private JSONObject setParamSend() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("MediaType", "RADIO");
-            jsonObject.put("CatalogId","dtfl2001");
-            jsonObject.put("CatalogType", "9");
-            jsonObject.put("PerSize", "20");
+            jsonObject.put("CatalogId", CatalogId);
+            jsonObject.put("CatalogType", "2");
+            jsonObject.put("PerSize", "3");
             jsonObject.put("ResultType", "1");
             jsonObject.put("PageSize", "50");
         } catch (JSONException e) {

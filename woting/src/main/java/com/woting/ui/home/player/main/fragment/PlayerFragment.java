@@ -221,7 +221,7 @@ public class PlayerFragment extends Fragment implements OnClickListener,
             file.mkdir();
         }
         proxy.setCacheRoot(file);
-
+   //   proxy.setMaxSingleFileSize(10*1024*1024);                    // 单个文件缓存大小
         proxy.setMaxCacheSize(500*1024*1024);                        // 缓存大小 500MB
         proxy.startServer();
     }
@@ -614,6 +614,7 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                     adapter.notifyDataSetChanged();
                     if (allList.get(number).getLocalurl() != null) {
                         musicPlay("file:///" + allList.get(number).getLocalurl());
+         /*               musicPlay( allList.get(number).getLocalurl());*/
                         ToastUtils.show_always(context, "正在播放本地内容");
                     } else {
                         musicPlay(allList.get(number).getContentPlay());
@@ -1203,16 +1204,25 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                     tv_speak_status.setText("请按住讲话");
                     break;
                 case PLAY:
-                    String proxyUrl = proxy.getProxyUrl(local);
-                    audioPlay.play(proxyUrl);
-                    proxy.registerCacheStatusListener(new OnCacheStatusListener() {
+                    if(GlobalConfig.playerobject.getMediaType().equals("AUDIO")){
+                        if(GlobalConfig.playerobject.getLocalurl()!=null){
+                            //本地内容无法通过缓存加载 直接播放
+                            audioPlay.play(local);
+                        }else{
+                          String proxyUrl = proxy.getProxyUrl(local);
+                             audioPlay.play(proxyUrl);
+                             proxy.registerCacheStatusListener(new OnCacheStatusListener() {
                         @Override
                         public void OnCacheStatus(String url, long sourceLength,int percentsAvailable) {
-                            int a=percentsAvailable;
-                            int Length = (int)(audioPlay.getTotalTime()) * percentsAvailable / 100;
-                            seekBar.setSecondaryProgress(Length);
+                             int a=percentsAvailable;
+                             int Length = (int)(audioPlay.getTotalTime()) * percentsAvailable / 100;
+                             seekBar.setSecondaryProgress(Length);
+                               }
+                             }, local);
                         }
-                    }, local);
+                    }else{
+                        audioPlay.play(local);
+                    }
                     break;
                 case PAUSE:
                     audioPlay.pause();
@@ -2062,8 +2072,11 @@ public class PlayerFragment extends Fragment implements OnClickListener,
 
     public static void playNoNet() {
         LanguageSearchInside mContent = getDaoList(context);
+
         GlobalConfig.playerobject = mContent;
-/*		String s=mContent.getContentName();
+        playType= mContent.getMediaType();
+        /*
+        String s=mContent.getContentName();
         String s1=mContent.getLocalurl();*/
         if (allList.size() > 0) {
             allList.clear();
@@ -2113,6 +2126,7 @@ public class PlayerFragment extends Fragment implements OnClickListener,
             }
             resetHeadView();
             musicPlay("file:///" + GlobalConfig.playerobject.getLocalurl());
+
             ToastUtils.show_always(context, "正在播放本地内容");
         } else {
             ToastUtils.show_always(context, "数据异常");

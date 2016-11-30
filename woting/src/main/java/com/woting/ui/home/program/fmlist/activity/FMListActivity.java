@@ -59,7 +59,6 @@ public class FMListActivity extends AppBaseActivity implements OnClickListener {
     private int ViewType = 1;
     private int page = 1;
     private int RefreshType;// refreshType 1为下拉加载 2为上拉加载更多
-    private int pageSizeNum;
 
     private String CatalogName;
     private String CatalogId;
@@ -69,6 +68,7 @@ public class FMListActivity extends AppBaseActivity implements OnClickListener {
     protected List<RankInfo> SubList;
     private SharedPreferences shared = BSApplication.SharedPreferences;
     private SearchPlayerHistoryDao dbDao;
+    private String CatalogType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,12 +118,7 @@ public class FMListActivity extends AppBaseActivity implements OnClickListener {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        try {
-                            String pageSize = arg1.getString("PageSize");
-                            pageSizeNum = Integer.valueOf(pageSize);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+
                         try {
                             SubList = new Gson().fromJson(StringSubList, new TypeToken<List<RankInfo>>() {
                             }.getType());
@@ -147,6 +142,7 @@ public class FMListActivity extends AppBaseActivity implements OnClickListener {
                     }
                 } else {
                     mListView.stopLoadMore();
+                    mListView.setPullLoadEnable(false);
                 }
             }
 
@@ -168,7 +164,24 @@ public class FMListActivity extends AppBaseActivity implements OnClickListener {
                 //获取当前城市下所有分类内容
                 jsonObject.put("CatalogId", cityId);
                 jsonObject.put("CatalogType", "2");//
-            } else {
+                jsonObject.put("PerSize", "3");
+                jsonObject.put("ResultType", "3");
+                jsonObject.put("PageSize", "10");
+                jsonObject.put("Page", String.valueOf(page));
+            } else if(ViewType ==2){
+                jsonObject.put("CatalogId",CatalogId);
+                jsonObject.put("CatalogType",CatalogType);
+                jsonObject.put("PerSize", "3");
+                jsonObject.put("ResultType", "3");
+                jsonObject.put("PageSize", "10");
+                jsonObject.put("Page", String.valueOf(page));
+            }else if(ViewType==3){
+                jsonObject.put("CatalogId",CatalogId);
+                jsonObject.put("CatalogType",CatalogType);
+                jsonObject.put("ResultType", "3");
+                jsonObject.put("PageSize", "50");
+                jsonObject.put("Page", String.valueOf(page));
+            }else{
                 //按照分类获取内容
                 JSONObject js = new JSONObject();
                 jsonObject.put("CatalogType", "1");
@@ -177,10 +190,7 @@ public class FMListActivity extends AppBaseActivity implements OnClickListener {
                 js.put("CatalogId", cityId);
                 jsonObject.put("FilterData", js);
             }
-            jsonObject.put("PerSize", "3");
-            jsonObject.put("ResultType", "3");
-            jsonObject.put("PageSize", "10");
-            jsonObject.put("Page", String.valueOf(page));
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -232,6 +242,9 @@ public class FMListActivity extends AppBaseActivity implements OnClickListener {
                         dbDao.deleteHistory(playerurl);
                         dbDao.addHistory(history);
                         HomeActivity.UpdateViewPager();
+                        if(ViewType==3){
+                            finish();
+                        }
                         PlayerFragment.TextPage=1;
                         PlayerFragment.SendTextRequest(newList.get(position - 1).getContentName(), context);
                         finish();
@@ -253,7 +266,17 @@ public class FMListActivity extends AppBaseActivity implements OnClickListener {
         if (type != null && type.trim().equals("online")) {
             CatalogName = this.getIntent().getStringExtra("name");
             CatalogId = this.getIntent().getStringExtra("id");
-        } else {
+        } else if (type != null && type.trim().equals("net")) {
+            CatalogName = this.getIntent().getStringExtra("name");
+            CatalogId = this.getIntent().getStringExtra("id");
+            CatalogType = this.getIntent().getStringExtra("type");
+            ViewType=2;
+        }else if(type != null && type.trim().equals("cityRadio")) {
+            CatalogName = this.getIntent().getStringExtra("name");
+            CatalogId = this.getIntent().getStringExtra("id");
+            CatalogType = this.getIntent().getStringExtra("type");
+            ViewType=3;
+        } else{
             list = (RadioPlay) this.getIntent().getSerializableExtra("list");
             CatalogName = list.getCatalogName();
             CatalogId = list.getCatalogId();
@@ -287,17 +310,10 @@ public class FMListActivity extends AppBaseActivity implements OnClickListener {
 
             @Override
             public void onLoadMore() {
-                if (page <= pageSizeNum) {
-                    if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        RefreshType = 2;
-                        sendRequest();
-                    } else {
-                        ToastUtils.show_short(FMListActivity.this, "网络失败，请检查网络");
-                    }
-                } else {
-                    mListView.stopLoadMore();
-                    ToastUtils.show_short(FMListActivity.this, "已经没有最新的数据了");
-                }
+               if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                   RefreshType = 2;
+                   sendRequest();
+               }
             }
         });
     }

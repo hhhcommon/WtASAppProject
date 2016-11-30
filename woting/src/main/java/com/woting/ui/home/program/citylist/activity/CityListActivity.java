@@ -33,7 +33,7 @@ import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.model.Catalog;
 import com.woting.ui.home.model.CatalogName;
 import com.woting.ui.home.program.citylist.adapter.CityListAdapter;
-import com.woting.ui.home.program.fmlist.activity.FMListActivity;
+import com.woting.ui.home.program.diantai.activity.CityRadioActivity;
 import com.woting.ui.interphone.linkman.view.CharacterParser;
 import com.woting.ui.interphone.linkman.view.PinyinComparator_d;
 import com.woting.ui.interphone.linkman.view.SideBar;
@@ -77,16 +77,19 @@ public class CityListActivity extends AppBaseActivity implements OnClickListener
 		setContentView(R.layout.activity_citylists);
 		context = this;
 		type=this.getIntent().getStringExtra("type");
-
 		characterParser = CharacterParser.getInstance();								// 实例化汉字转拼音类
 		pinyinComparator = new PinyinComparator_d();
 		setView();
 		setListener();
+		if(GlobalConfig.CityCatalogList!=null&&GlobalConfig.CityCatalogList.size()>0){
+		   handleCityList(GlobalConfig.CityCatalogList);
+		}else{
 		if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 			dialog = DialogUtils.Dialogph(context, "正在获取信息");
 			sendRequest();
 		} else {
 			ToastUtils.show_always(context, "网络失败，请检查网络");
+		}
 		}
 	}
 
@@ -110,6 +113,21 @@ public class CityListActivity extends AppBaseActivity implements OnClickListener
 				break;
 		}
 	}
+
+	 private void handleCityList(List<CatalogName> srcList){
+		 if (srcList.size() == 0) {
+			 ToastUtils.show_always(context, "获取分类列表为空");
+		 } else {
+			 userList.clear();
+			 userList.addAll(srcList);
+			 filledData(userList);
+			 Collections.sort(userList, pinyinComparator);
+			 adapter = new CityListAdapter(context, userList);
+			 listView.setAdapter(adapter);
+			 setInterface();
+		 }
+
+	 }
 
 	/**
 	 * 发送网络请求
@@ -141,19 +159,10 @@ public class CityListActivity extends AppBaseActivity implements OnClickListener
 							String ResultList = result.getString("CatalogData");
 							Catalog SubList_all = new Gson().fromJson(ResultList, new TypeToken<Catalog>() {}.getType());
 							srcList = SubList_all.getSubCata();
+							GlobalConfig.CityCatalogList=srcList;
+							handleCityList(srcList);
 						} catch (JSONException e) {
 							e.printStackTrace();
-						}
-						if (srcList.size() == 0) {
-							ToastUtils.show_always(context, "获取分类列表为空");
-						} else {
-							userList.clear();
-							userList.addAll(srcList);
-							filledData(userList);
-							Collections.sort(userList, pinyinComparator);
-							adapter = new CityListAdapter(context, userList);
-							listView.setAdapter(adapter);
-							setInterface();
 						}
 					} else if (ReturnType.equals("1002")) {
 						ToastUtils.show_always(context, "无此分类信息");
@@ -229,14 +238,15 @@ public class CityListActivity extends AppBaseActivity implements OnClickListener
 					et.commit();
 					finish();
 				}else{
-					Intent intent = new Intent(context, FMListActivity.class);
+					Intent intent = new Intent(context,CityRadioActivity.class);
 					Bundle bundle = new Bundle();
-					bundle.putString("fromtype", "online");
+					bundle.putString("fromtype", "city");
 					bundle.putString("name", userList.get(position).getCatalogName());
 					bundle.putString("type", "2");
 					bundle.putString("id", userList.get(position).getCatalogId());
 					intent.putExtras(bundle);
 					startActivity(intent);
+					finish();
 				}
 			}
 		});

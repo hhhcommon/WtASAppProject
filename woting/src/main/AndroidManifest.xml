@@ -226,6 +226,11 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".ui.home.program.diantai.activity.CityRadioActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan"/>
         <!--  -->
         <activity
             android:name=".common.widgetui.wheelview.ui.TimeActivity"

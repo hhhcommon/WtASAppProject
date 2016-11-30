@@ -44,10 +44,7 @@ import java.util.List;
 public class CenterFragment extends Fragment {
     private FragmentActivity context;
     private View rootView;
-
     private ArrayList<RankInfo> newList = new ArrayList<>();
-
-    private View headView;
     private String tag = "CENTER_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
     private SearchPlayerHistoryDao dbDao;
@@ -216,7 +213,6 @@ public class CenterFragment extends Fragment {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("MediaType", "RADIO");
-
                 //获取当前城市下所有分类内容
                 jsonObject.put("CatalogId", 110000);
                 jsonObject.put("CatalogType", "2");//写死的 给北京就行 后面有了分类了 改这个
