@@ -56,6 +56,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.helper.CommonHelper;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -221,7 +222,7 @@ public class PlayerFragment extends Fragment implements OnClickListener,
             file.mkdir();
         }
         proxy.setCacheRoot(file);
-   //   proxy.setMaxSingleFileSize(10*1024*1024);                    // 单个文件缓存大小
+        //   proxy.setMaxSingleFileSize(10*1024*1024);                    // 单个文件缓存大小
         proxy.setMaxCacheSize(500*1024*1024);                        // 缓存大小 500MB
         proxy.startServer();
     }
@@ -506,7 +507,7 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                 playerInTime, playerContentDesc, playerNum, playerZanType,
                 playerFrom, playerFromId, playerFromUrl, playerAddTime,
                 bjUserId, playContentShareUrl, ContentFavorite, ContentID, localUrl, sequName, sequId, sequDesc, sequImg);
-        
+
         if(dbDao==null)dbDao = new SearchPlayerHistoryDao(context);// 如果数据库没有初始化，则初始化db
         if (playerMediaType != null && playerMediaType.trim().length() > 0 && playerMediaType.equals("TTS")) {
             dbDao.deleteHistoryById(ContentID);
@@ -602,7 +603,8 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                         } else {
                             url = GlobalConfig.imageurl + allList.get(number).getContentImg();
                         }
-                        Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(img_news);
+                        url= AssembleImageUrlUtils.assembleImageUrl180(url);
+                        Picasso.with(context).load(url.replace("\\/", "/")).into(img_news);
                     } else {
                         Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
                         img_news.setImageBitmap(bmp);
@@ -649,7 +651,8 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                         } else {
                             url = GlobalConfig.imageurl + allList.get(number).getContentImg();
                         }
-                        Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(img_news);
+                        url= AssembleImageUrlUtils.assembleImageUrl180(url);
+                        Picasso.with(context).load(url.replace("\\/", "/")).into(img_news);
                     } else {
                         Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
                         img_news.setImageBitmap(bmp);
@@ -1023,7 +1026,8 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                         } else {
                             url = GlobalConfig.imageurl + GlobalConfig.playerobject.getContentImg();
                         }
-                        Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(img_news);
+                        url= AssembleImageUrlUtils.assembleImageUrl180(url);
+                        Picasso.with(context).load(url.replace("\\/", "/")).into(img_news);
                     } else {
                         Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
                         img_news.setImageBitmap(bmp);
@@ -1067,7 +1071,8 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                         } else {
                             url = GlobalConfig.imageurl + GlobalConfig.playerobject.getContentImg();
                         }
-                        Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(img_news);
+                        url= AssembleImageUrlUtils.assembleImageUrl180(url);
+                        Picasso.with(context).load(url.replace("\\/", "/")).into(img_news);
                     } else {
                         Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
                         img_news.setImageBitmap(bmp);
@@ -1162,11 +1167,11 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                         updateTextViewWithTimeFormat(time_end, (int) (duration / 1000));
                         seekBar.setMax((int) duration);
                         if(IsCache(local)==true){
-                           // ToastUtils.show_always(context,"缓存完成");
+                            // ToastUtils.show_always(context,"缓存完成");
                             int Length =(int)(audioPlay.getTotalTime()) * 100 / 100;
                             seekBar.setSecondaryProgress(Length);
                         }else{
-                           // ToastUtils.show_always(context,"缓存未完成");
+                            // ToastUtils.show_always(context,"缓存未完成");
                         }
                         timerService = (int) (duration - currPosition);
                         if (audioPlay.isPlaying()) {
@@ -1209,16 +1214,16 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                             //本地内容无法通过缓存加载 直接播放
                             audioPlay.play(local);
                         }else{
-                          String proxyUrl = proxy.getProxyUrl(local);
-                             audioPlay.play(proxyUrl);
-                             proxy.registerCacheStatusListener(new OnCacheStatusListener() {
-                        @Override
-                        public void OnCacheStatus(String url, long sourceLength,int percentsAvailable) {
-                             int a=percentsAvailable;
-                             int Length = (int)(audioPlay.getTotalTime()) * percentsAvailable / 100;
-                             seekBar.setSecondaryProgress(Length);
-                               }
-                             }, local);
+                            String proxyUrl = proxy.getProxyUrl(local);
+                            audioPlay.play(proxyUrl);
+                            proxy.registerCacheStatusListener(new OnCacheStatusListener() {
+                                @Override
+                                public void OnCacheStatus(String url, long sourceLength,int percentsAvailable) {
+                                    int a=percentsAvailable;
+                                    int Length = (int)(audioPlay.getTotalTime()) * percentsAvailable / 100;
+                                    seekBar.setSecondaryProgress(Length);
+                                }
+                            }, local);
                         }
                     }else{
                         audioPlay.play(local);
@@ -1673,7 +1678,8 @@ public class PlayerFragment extends Fragment implements OnClickListener,
             } else {
                 url = GlobalConfig.imageurl + fList.getContentImg();
             }
-            Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(img_news);
+            url= AssembleImageUrlUtils.assembleImageUrl180(url);
+            Picasso.with(context).load(url.replace("\\/", "/")).into(img_news);
         } else {
             Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
             img_news.setImageBitmap(bmp);
@@ -1717,7 +1723,8 @@ public class PlayerFragment extends Fragment implements OnClickListener,
             } else {
                 url = GlobalConfig.imageurl + list.get(0).getContentImg();
             }
-            Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(img_news);
+            url= AssembleImageUrlUtils.assembleImageUrl180(url);
+            Picasso.with(context).load(url.replace("\\/", "/")).into(img_news);
         } else {
             Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
             img_news.setImageBitmap(bmp);
@@ -1950,7 +1957,8 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                                 } else {
                                     url = GlobalConfig.imageurl + allList.get(number).getContentImg();
                                 }
-                                Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(img_news);
+                                url= AssembleImageUrlUtils.assembleImageUrl180(url);
+                                Picasso.with(context).load(url.replace("\\/", "/")).into(img_news);
                             } else {
                                 Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
                                 img_news.setImageBitmap(bmp);
@@ -2104,7 +2112,8 @@ public class PlayerFragment extends Fragment implements OnClickListener,
             } else {
                 url = GlobalConfig.imageurl + GlobalConfig.playerobject.getContentImg();
             }
-            Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(img_news);
+            url= AssembleImageUrlUtils.assembleImageUrl180(url);
+            Picasso.with(context).load(url.replace("\\/", "/")).into(img_news);
         } else {
             Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
             img_news.setImageBitmap(bmp);
