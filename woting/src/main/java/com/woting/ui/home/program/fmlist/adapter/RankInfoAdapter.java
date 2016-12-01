@@ -99,7 +99,7 @@ public class RankInfoAdapter extends BaseAdapter   {
 				 url = GlobalConfig.imageurl + lists.getContentImg();
 			}
 			url= AssembleImageUrlUtils.assembleImageUrl150(url);
-			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
+			Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageview_rankimage);
 		}
 		if (lists.getPlayCount() == null
 				|| lists.getPlayCount().equals("") || lists.getPlayCount().equals("null")) {

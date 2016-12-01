@@ -168,7 +168,7 @@ public class OnLinesAdapter extends BaseExpandableListAdapter  {
 							url = GlobalConfig.imageurl + lists.getContentImg();
 						}
 						url=AssembleImageUrlUtils.assembleImageUrl150(url);
-						Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
+						Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageview_rankimage);
 					}
 				} else {
 					// 判断mediatype==AUDIO的情况
@@ -191,7 +191,7 @@ public class OnLinesAdapter extends BaseExpandableListAdapter  {
 							url = GlobalConfig.imageurl + lists.getContentImg();
 						}
 						url= AssembleImageUrlUtils.assembleImageUrl150(url);
-						Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
+						Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageview_rankimage);
 					}
 					holder.lin_CurrentPlay.setVisibility(View.INVISIBLE);
 				}
