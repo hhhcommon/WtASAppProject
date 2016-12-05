@@ -345,7 +345,7 @@
                 android:background="#ededed"
                 android:visibility="gone" />
 
-            <GridView
+            <com.woting.common.widgetui.MyGridView
                 android:id="@+id/gridView_person"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"

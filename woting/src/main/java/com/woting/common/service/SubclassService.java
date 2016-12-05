@@ -13,6 +13,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.ui.interphone.alert.CallAlertActivity;
 import com.woting.ui.interphone.alert.ReceiveAlertActivity;
 import com.woting.ui.interphone.commom.message.MessageUtils;
@@ -50,11 +51,11 @@ public class SubclassService extends Service {
 		if(Receiver==null) {
 			Receiver=new MessageReceiver();
 			IntentFilter filter=new IntentFilter();
-			filter.addAction("push_service");
+			filter.addAction(BroadcastConstants.PUSH_SERVICE);
 			getApplicationContext().registerReceiver(Receiver, filter);
 
 			IntentFilter filterb3=new IntentFilter();
-			filterb3.addAction("push_back");
+			filterb3.addAction(BroadcastConstants.PUSH_BACK);
 			filterb3.setPriority(1000);
 			getApplicationContext().registerReceiver(Receiver, filterb3);
 		}
@@ -69,7 +70,7 @@ public class SubclassService extends Service {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action=intent.getAction();
-			if(action.equals("push_back")){////////////////////////////////////////////////////////////////////////////////
+			if(action.equals(BroadcastConstants.PUSH_BACK)){////////////////////////////////////////////////////////////////////////////////
 				if(ReceiveAlertActivity.instance==null){
 				}else{
 					abortBroadcast();
@@ -103,7 +104,7 @@ public class SubclassService extends Service {
 						e.printStackTrace();
 					}
 				}
-			}else  if(action.equals("push_service")){///////////////////////////////////////////////////////////////////////
+			}else  if(action.equals(BroadcastConstants.PUSH_SERVICE)){///////////////////////////////////////////////////////////////////////
 				//				MsgNormal message = (MsgNormal) intent.getSerializableExtra("outmessage");
 				//				Log.i("弹出框服务push_service", "接收到的socket服务的信息"+message+"");
 				byte[] bt = intent.getByteArrayExtra("outmessage");

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -150,7 +151,7 @@ public class BSApplication extends Application {
     }
 
     //app退出时执行该操作
-    private void onStop() {
+    public static void onStop() {
         instance.stopService(Socket);
         instance.stopService(record);
         instance.stopService(voicePlayer);
@@ -158,5 +159,6 @@ public class BSApplication extends Application {
         instance.stopService(download);
         instance.stopService(Location);
         instance.stopService(Notification);
+        Log.v("--- onStop ---", "--- 杀死进程 ---");
     }
 }

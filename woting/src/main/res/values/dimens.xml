@@ -98,4 +98,5 @@
     <!--  group-->
     <dimen name="wt_group_main_33">33sp</dimen>
     <dimen name="wt_group_detail_16">16sp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

@@ -2,10 +2,8 @@ package com.woting.ui.interphone.commom.message;
 
 import com.woting.common.util.StringUtils;
 import com.woting.ui.interphone.commom.message.content.MapContent;
-
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
-
 
 /**
  * 一般消息：既控制类消息
@@ -21,11 +19,11 @@ public class MsgNormal extends Message {
     private int command; //命令编号
     private int returnType; //返回值类型
 
-    private int PCDType; //设备：设备类型
+    private int PCDType; //设备：设备类型:1手机;2设备;3网站;0服务器
     private String userId; //设备：当前登录用户
     private String IMEI; //设备：设备串号
 
-    private MessageContent msgContent; //消息内容    
+    private MessageContent msgContent; //消息内容
 
     public MsgNormal(byte[] msgBytes) throws Exception {
         super();
@@ -343,13 +341,15 @@ public class MsgNormal extends Message {
             if (bizType!=15) {
                 ret[_offset++]=END_HEAD[1];
                 ret[_offset++]=END_HEAD[0];
-                _tempBytes=msgContent.toBytes();
-                short len=(short)(_tempBytes==null?0:_tempBytes.length);
-                ret[_offset++]=(byte)(len>>0);
-                ret[_offset++]=(byte)(len>>8);
-                //组装消息体
-                if (_tempBytes!=null&&_tempBytes.length>0) {
-                    for (i=0; i<_tempBytes.length; i++) ret[_offset++]=_tempBytes[i];
+                if (msgContent!=null) {
+                    _tempBytes=msgContent.toBytes();
+                    short len=(short)(_tempBytes==null?0:_tempBytes.length);
+                    ret[_offset++]=(byte)(len>>0);
+                    ret[_offset++]=(byte)(len>>8);
+                    //组装消息体
+                    if (_tempBytes!=null&&_tempBytes.length>0) {
+                        for (i=0; i<_tempBytes.length; i++) ret[_offset++]=_tempBytes[i];
+                    }
                 }
             }
         } else {
@@ -361,7 +361,7 @@ public class MsgNormal extends Message {
                     if (StringUtils.isNullOrEmptyOrSpace(userId)) ret[_offset++]=0x00;
                     else {
                         try {
-                            _offset=MessageUtils.set_String(ret, _offset, 12, userId, null);
+                            _offset= MessageUtils.set_String(ret, _offset, 12, userId, null);
                         } catch (UnsupportedEncodingException e) {
                         }
                     }

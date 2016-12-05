@@ -79,6 +79,7 @@ import com.woting.ui.home.player.main.model.LanguageSearch;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.player.main.model.ShareModel;
+import com.woting.ui.home.player.programme.ProgrammeActivity;
 import com.woting.ui.home.player.timeset.activity.TimerPowerOffActivity;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
@@ -325,7 +326,7 @@ public class PlayerFragment extends Fragment implements OnClickListener,
         headView.findViewById(R.id.lin_lukuangtts).setOnClickListener(this);
         headView.findViewById(R.id.lin_like).setOnClickListener(this);
         headView.findViewById(R.id.lin_right).setOnClickListener(this);
-
+        headView.findViewById(R.id.lin_programme).setOnClickListener(this);
         img_like = (ImageView) headView.findViewById(R.id.img_like);
         img_news = (ImageView) headView.findViewById(R.id.img_news);
         img_play = (ImageView) headView.findViewById(R.id.img_play);
@@ -432,7 +433,7 @@ public class PlayerFragment extends Fragment implements OnClickListener,
             historyNews.setContentDescn(historyNew.getPlayerContentDescn());
             historyNews.setContentImg(historyNew.getPlayerImage());
             try {
-                if (historyNew.getPlayerAllTime().equals("")) {
+                if (historyNew.getPlayerAllTime()!=null&&historyNew.getPlayerAllTime().equals("")) {
                     historyNews.setPlayerAllTime("0");
                 } else {
                     historyNews.setPlayerAllTime(historyNew.getPlayerAllTime());
@@ -442,7 +443,7 @@ public class PlayerFragment extends Fragment implements OnClickListener,
             }
 
             try {
-                if (historyNew.getPlayerInTime().equals("")) {
+                if (historyNew.getPlayerInTime()!=null&&historyNew.getPlayerInTime().equals("")) {
                     historyNews.setPlayerInTime("0");
                 } else {
                     historyNews.setPlayerInTime(historyNew.getPlayerInTime());
@@ -784,6 +785,13 @@ public class PlayerFragment extends Fragment implements OnClickListener,
             case R.id.lin_ly_history:
                 linChoseClose();
                 startActivity(new Intent(context, PlayHistoryActivity.class));
+                break;
+            case R.id.lin_programme:// 节目单
+                Intent p=new Intent(context, ProgrammeActivity.class);
+                Bundle b=new Bundle();
+                b.putString("BcId",GlobalConfig.playerobject.getContentId());
+                p.putExtras(b);
+                startActivity(p);
                 break;
             case R.id.lin_ly_ckzb:
                 linChoseClose();

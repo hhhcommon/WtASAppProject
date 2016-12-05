@@ -59,9 +59,6 @@ public class BroadcastConstants {
 	//PUSH_NOTIFICATION-----pushnnn
 	public static final String PUSH_NOTIFICATION="PUSH_NOTIFICATION";
 
-	// 更新 WiFi 列表
-	public static final String UPDATE_WIFI_LIST = "UPDATE_WIFI_LIST";
-
 	// 搜索
 	public static final String SEARCH_VIEW_UPDATE = "SEARCH_VIEW_UPDATE";
 
@@ -71,21 +68,29 @@ public class BroadcastConstants {
 	// 播放历史
 	public static final String UPDATE_ACTION_CHECK = "UPDATE_ACTION_CHECK";
 
-	// 专辑列表界面发送广播到下载界面  用于更新下载界面
-	public static final String PUSH_DOWN_UNCOMPLETED = "push_down_uncompleted";
-
 	// 删除好友刷新界面广播
 	public static final String GROUP_DETAIL_CHANGE = "GROUP_DETAIL_CHANGE";
 
 	// duijiang页  UP_DATA_GROUP = "com.woting.UPDATA_GROUP";
 	public static final String UP_DATA_GROUP = "UP_DATA_GROUP";
 
-    // 刷新下载完成界面
-    public static final String PUSH_DOWN_COMPLETED= "push_down_completed";
+
 
     // 我的上传界面非全选
     public static final String UPDATE_MY_UPLOAD_CHECK_NO = "UPDATE_MY_UPLOAD_CHECK_NO";
 
     // 我的上传界面全选
     public static final String UPDATE_MY_UPLOAD_CHECK_ALL = "UPDATE_MY_UPLOAD_CHECK_ALL";
+
+	//pushmusic
+	public static final String PUSH_MUSIC = "PUSH_MUSIC";
+
+
+
+
+
+	// 专辑列表界面发送广播到下载界面  用于更新下载界面
+	public static final String PUSH_DOWN_UNCOMPLETED = "push_down_uncompleted";
+	// 刷新下载完成界面
+	public static final String PUSH_DOWN_COMPLETED= "push_down_completed";
 }

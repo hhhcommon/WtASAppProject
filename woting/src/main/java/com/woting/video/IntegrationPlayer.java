@@ -2,6 +2,13 @@ package com.woting.video;
 
 import android.content.Context;
 
+import com.kingsoft.media.httpcache.KSYProxyService;
+import com.kingsoft.media.httpcache.OnErrorListener;
+import com.woting.common.application.BSApplication;
+import com.woting.common.config.GlobalConfig;
+
+import java.io.File;
+
 /**
  * 集成播放器
  * 作者：xinlong on 2016/11/29 15:54
@@ -16,6 +23,7 @@ public class IntegrationPlayer {
     private TPlayer ttsPlayer;                         // TTS播放器
     private int oldPType;                              // 上次内容播放器类型  1=vlc,2=ksy,3=tts
     private int newptype;                              // 最新内容播放器类型  1=vlc,2=ksy,3=tts
+    private KSYProxyService proxy;
 
     private IntegrationPlayer() {
         if (vlcPlayer == null) {
@@ -27,6 +35,25 @@ public class IntegrationPlayer {
         if (ttsPlayer == null) {
             ttsPlayer = TPlayer.getInstance(contexts);
         }
+        initCache();
+    }
+
+    private void initCache() {
+        proxy = BSApplication.getKSYProxy();
+        proxy.registerErrorListener(new OnErrorListener() {
+            @Override
+            public void OnError(int i) {
+
+            }
+        });
+        File file = new File(GlobalConfig.playCacheDir);               // 设置缓存目录
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        proxy.setCacheRoot(file);
+        // proxy.setMaxSingleFileSize(10*1024*1024);               // 单个文件缓存大小
+        proxy.setMaxCacheSize(500 * 1024 * 1024);                        // 缓存大小 500MB
+        proxy.startServer();
     }
 
     /**
@@ -121,4 +148,11 @@ public class IntegrationPlayer {
         return 0;
     }
 
+    /**
+     * 获取总时长
+     */
+    public KSYProxyService getProxy() {
+
+        return proxy;
+    }
 }

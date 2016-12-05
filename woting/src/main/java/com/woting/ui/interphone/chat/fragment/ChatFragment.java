@@ -24,7 +24,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -48,8 +47,11 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.util.VibratorUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.MyGridView;
 import com.woting.common.widgetui.MyLinearLayout;
 import com.woting.ui.common.login.LoginActivity;
+import com.woting.ui.common.model.GroupInfo;
+import com.woting.ui.common.model.UserInfo;
 import com.woting.ui.interphone.alert.CallAlertActivity;
 import com.woting.ui.interphone.chat.adapter.ChatListAdapter;
 import com.woting.ui.interphone.chat.adapter.ChatListAdapter.OnListener;
@@ -67,8 +69,6 @@ import com.woting.ui.interphone.group.groupcontrol.grouppersonnews.GroupPersonNe
 import com.woting.ui.interphone.group.groupcontrol.personnews.TalkPersonNewsActivity;
 import com.woting.ui.interphone.linkman.model.LinkMan;
 import com.woting.ui.interphone.main.DuiJiangActivity;
-import com.woting.ui.common.model.GroupInfo;
-import com.woting.ui.common.model.UserInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -111,7 +111,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
 
     private Button image_button;
     private View rootView;
-    private GridView gridView_person;
+    private MyGridView gridView_person;
     private Dialog dialog;
     private static Dialog confirmDialog;
 
@@ -147,8 +147,15 @@ public class ChatFragment extends Fragment implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this.getActivity();
-        initDao();// 初始化数据库
-        if (Receiver == null) {//注册广播接收socketservice的数据
+        initDao();      // 初始化数据库
+        setReceiver();  // 注册广播接收socketService的数据
+    }
+
+    /*
+     *注册广播接收socketservice的数据
+     */
+    private void setReceiver() {
+        if (Receiver == null) {
             Receiver = new MessageReceiver();
             IntentFilter filter = new IntentFilter();
             filter.addAction(BroadcastConstants.PUSH);
@@ -196,7 +203,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
                 lin_foot.setVisibility(View.GONE);
                 GlobalConfig.isactive = false;
                 lin_second.setVisibility(View.GONE);
-                gettxl();
+                getTXL();
                 Editor et = shared.edit();
                 et.putString(StringConstant.PERSONREFRESHB, "false");
                 et.commit();
@@ -214,30 +221,30 @@ public class ChatFragment extends Fragment implements OnClickListener {
     }
 
     private void setView() {
-        lin_notalk = (LinearLayout) rootView.findViewById(R.id.lin_notalk);//没有对讲时候的界面
-        lin_personhead = (LinearLayout) rootView.findViewById(R.id.lin_personhead);//有个人对讲时候的界面
-        tv_personname = (TextView) rootView.findViewById(R.id.tv_personname);    //个人对讲时候的好友名字
-        image_persontx = (ImageView) rootView.findViewById(R.id.image_persontx);    //个人对讲时候的好友头像
-        image_personvoice = (ImageView) rootView.findViewById(R.id.image_personvoice);    //个人对讲声音波
-        lin_head = (LinearLayout) rootView.findViewById(R.id.lin_head);//有群组对讲时候的界面
-        image_grouptx = (ImageView) rootView.findViewById(R.id.image_grouptx);    //群组对讲时候群组头像
-        tv_groupname = (TextView) rootView.findViewById(R.id.tv_groupname);    //群组对讲时候的群名
-        tv_grouptype = (TextView) rootView.findViewById(R.id.tv_grouptype);    //群组对讲时候的群类型名
-        tv_num = (TextView) rootView.findViewById(R.id.tv_num);    //群组对讲时候的群在线人数
-        tv_allnum = (TextView) rootView.findViewById(R.id.tv_allnum);    //群组对讲时候的群所有成员人数
-        talkingName = (TextView) rootView.findViewById(R.id.talkingname);    //群组对讲时候对讲人姓名
-        image_group_persontx = (ImageView) rootView.findViewById(R.id.image_group_persontx);    //群组对讲时候对讲人头像
-        gridView_person = (GridView) rootView.findViewById(R.id.gridView_person);    //群组对讲时候对讲成员展示
-        gridView_person.setSelector(new ColorDrawable(Color.TRANSPARENT));    // 取消GridView的默认背景色
-        gridView_tv = (TextView) rootView.findViewById(R.id.gridView_tv);    //群组对讲时候通话解释
-        image_voice = (ImageView) rootView.findViewById(R.id.image_voice);    //群组对讲声音波
-        talking_news = (TextView) rootView.findViewById(R.id.talking_news);    //群组对讲时候通话解释
-        mListView = (ListView) rootView.findViewById(R.id.listView);    //
-        lin_foot = (MyLinearLayout) rootView.findViewById(R.id.lin_foot);//对讲按钮
-        imageView_answer = (ImageView) rootView.findViewById(R.id.imageView_answer);    //
-        image_button = (Button) rootView.findViewById(R.id.image_button);//
-        Relative_listview = (RelativeLayout) rootView.findViewById(R.id.Relative_listview);//
-        lin_second = (LinearLayout) rootView.findViewById(R.id.lin_second);//
+        lin_notalk = (LinearLayout) rootView.findViewById(R.id.lin_notalk);                     // 没有对讲时候的界面
+        lin_personhead = (LinearLayout) rootView.findViewById(R.id.lin_personhead);             // 有个人对讲时候的界面
+        tv_personname = (TextView) rootView.findViewById(R.id.tv_personname);                   // 个人对讲时候的好友名字
+        image_persontx = (ImageView) rootView.findViewById(R.id.image_persontx);                // 个人对讲时候的好友头像
+        image_personvoice = (ImageView) rootView.findViewById(R.id.image_personvoice);          // 个人对讲声音波
+        lin_head = (LinearLayout) rootView.findViewById(R.id.lin_head);                         // 有群组对讲时候的界面
+        image_grouptx = (ImageView) rootView.findViewById(R.id.image_grouptx);                  // 群组对讲时候群组头像
+        tv_groupname = (TextView) rootView.findViewById(R.id.tv_groupname);                     // 群组对讲时候的群名
+        tv_grouptype = (TextView) rootView.findViewById(R.id.tv_grouptype);                     // 群组对讲时候的群类型名
+        tv_num = (TextView) rootView.findViewById(R.id.tv_num);                                 // 群组对讲时候的群在线人数
+        tv_allnum = (TextView) rootView.findViewById(R.id.tv_allnum);                           // 群组对讲时候的群所有成员人数
+        talkingName = (TextView) rootView.findViewById(R.id.talkingname);                       // 群组对讲时候对讲人姓名
+        image_group_persontx = (ImageView) rootView.findViewById(R.id.image_group_persontx);    // 群组对讲时候对讲人头像
+        gridView_person = (MyGridView) rootView.findViewById(R.id.gridView_person);               // 群组对讲时候对讲成员展示
+        gridView_person.setSelector(new ColorDrawable(Color.TRANSPARENT));                      // 取消GridView的默认背景色
+        gridView_tv = (TextView) rootView.findViewById(R.id.gridView_tv);                       // 群组对讲时候通话解释
+        image_voice = (ImageView) rootView.findViewById(R.id.image_voice);                      // 群组对讲声音波
+        talking_news = (TextView) rootView.findViewById(R.id.talking_news);                     // 群组对讲时候通话解释
+        mListView = (ListView) rootView.findViewById(R.id.listView);                            //
+        lin_foot = (MyLinearLayout) rootView.findViewById(R.id.lin_foot);                       // 对讲按钮
+        imageView_answer = (ImageView) rootView.findViewById(R.id.imageView_answer);            //
+        image_button = (Button) rootView.findViewById(R.id.image_button);                       //
+        Relative_listview = (RelativeLayout) rootView.findViewById(R.id.Relative_listview);     //
+        lin_second = (LinearLayout) rootView.findViewById(R.id.lin_second);                     //
         image_personvoice.setBackgroundResource(R.drawable.talk_show);
         draw = (AnimationDrawable) image_personvoice.getBackground();
         image_personvoice.setVisibility(View.INVISIBLE);
@@ -473,24 +480,24 @@ public class ChatFragment extends Fragment implements OnClickListener {
     /**
      * 设置对讲组为激活状态
      *
-     * @param groupids
+     * @param groupIdS
      */
-    public static void zhidinggroupss(String groupids) {
+    public static void zhiDingGroupSS(String groupIdS) {
         Intent intent = new Intent();
         intent.setAction(BroadcastConstants.UP_DATA_GROUP);
         context.sendBroadcast(intent);
         enterGroupType = 1;
-        groupId = groupids;
+        groupId = groupIdS;
         tv_num.setText("1");
         listInfo = null;
-        InterPhoneControl.Enter(context, groupids);//发送进入组的数据，socket
-        getgridViewperson(groupids);//获取群成员
+        InterPhoneControl.Enter(context, groupId);//发送进入组的数据，socket
+        getGridViewPerson(groupId);//获取群成员
     }
 
     /**
      * 设置对讲组为激活状态
      */
-    public static void zhidinggroup(GroupInfo talkGroupInside) {
+    public static void zhiDingGroup(GroupInfo talkGroupInside) {
         Intent intent = new Intent();
         intent.setAction(BroadcastConstants.UP_DATA_GROUP);
         context.sendBroadcast(intent);
@@ -499,13 +506,13 @@ public class ChatFragment extends Fragment implements OnClickListener {
         tv_num.setText("1");
         listInfo = null;
         InterPhoneControl.Enter(context, talkGroupInside.getGroupId());//发送进入组的数据，socket
-        getgridViewperson(talkGroupInside.getGroupId());//获取群成员
+        getGridViewPerson(talkGroupInside.getGroupId());//获取群成员
     }
 
     /**
      * 设置对讲组2为激活状态
      */
-    public static void zhidinggroups(GroupInfo talkGroupInside) {
+    public static void zhiDingGroupS(GroupInfo talkGroupInside) {
         Intent intent = new Intent();
         intent.setAction(BroadcastConstants.UP_DATA_GROUP);
         context.sendBroadcast(intent);
@@ -514,16 +521,16 @@ public class ChatFragment extends Fragment implements OnClickListener {
         tv_num.setText("1");
         listInfo = null;
         InterPhoneControl.Enter(context, talkGroupInside.getGroupId());//发送进入组的数据，socket
-        getgridViewperson(talkGroupInside.getGroupId());//获取群成员
+        getGridViewPerson(talkGroupInside.getGroupId());//获取群成员
     }
 
     /**
      * 设置个人为激活状态/设置第一条为激活状态
      */
-    public static void zhidingperson(DBTalkHistorary talkdb) {
+    public static void zhiDingPerson(DBTalkHistorary talkdb) {
         historyDataBaseList = dbDao.queryHistory();//得到数据库里边数据
         getList();
-        setdateperson();
+        setDatePerson();
     }
 
     private static void setListener() {
@@ -549,7 +556,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
                         if (t != null && !t.equals("") && t.equals("user")) {
                             call(allList.get(position).getId());
                         } else {
-                            zhidinggroupss(groupId);
+                            zhiDingGroupSS(groupId);
                         }
                     }
                 } else {
@@ -557,7 +564,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
                     if (t != null && !t.equals("") && t.equals("user")) {
                         call(allList.get(position).getId());
                     } else {
-                        zhidinggroupss(groupId);
+                        zhiDingGroupSS(groupId);
                     }
                 }
             }
@@ -598,7 +605,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
         context.startActivity(it);
     }
 
-    public void gettxl() {
+    public void getTXL() {
         //第一次获取群成员跟组
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             dialog = DialogUtils.Dialogph(context, "正在获取数据");
@@ -685,13 +692,13 @@ public class ChatFragment extends Fragment implements OnClickListener {
         switch (requestCode) {
             case 1:
                 if (resultCode == 1) {
-                    getgridViewperson(interPhoneId);//获取群成员
+                    getGridViewPerson(interPhoneId);//获取群成员
                 }
                 break;
         }
     }
 
-    public void addgroup(String id) {
+    public void addGroup(String id) {
         //获取最新激活状态的数据
         String groupid = id;
         String type = "group";
@@ -704,7 +711,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
         getList();
     }
 
-    public void setdategroup() {
+    public void setDateGroup() {
         //设置组为激活状态
         lin_notalk.setVisibility(View.GONE);
         lin_personhead.setVisibility(View.GONE);
@@ -753,7 +760,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
         setListener();
     }
 
-    public static void setdateperson() {
+    public static void setDatePerson() {
         //设置个人为激活状态
         isCalling = true;
         GroupInfo firstdate = allList.remove(0);
@@ -854,7 +861,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
         }
     }
 
-    private static void getgridViewperson(String id) {
+    private static void getGridViewPerson(String id) {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("GroupId", id);
@@ -932,7 +939,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
                     lin_head.setVisibility(View.GONE);
                     lin_foot.setVisibility(View.GONE);
                     GlobalConfig.isactive = false;
-                    zhidinggroupss(groupId);
+                    zhiDingGroupSS(groupId);
                     //对讲主页界面更新
                     DuiJiangActivity.update();
                     confirmDialog.dismiss();
@@ -1093,13 +1100,13 @@ public class ChatFragment extends Fragment implements OnClickListener {
                                                 InterPhoneControl.Quit(context, interPhoneId);//退出小组
                                                 String id = groupId;//对讲组：groupid
                                                 dbDao.deleteHistory(id);
-                                                addgroup(id);//加入到数据库
-                                                setdategroup();
+                                                addGroup(id);//加入到数据库
+                                                setDateGroup();
                                             } else {
                                                 String id = groupId;//对讲组：groupid
                                                 dbDao.deleteHistory(id);
-                                                addgroup(id);//加入到数据库
-                                                setdategroup();
+                                                addGroup(id);//加入到数据库
+                                                setDateGroup();
                                             }
                                             break;
                                         case 0x02:
@@ -1119,13 +1126,13 @@ public class ChatFragment extends Fragment implements OnClickListener {
                                                 InterPhoneControl.Quit(context, interPhoneId);//退出小组
                                                 String id = groupId;//对讲组：groupid
                                                 dbDao.deleteHistory(id);
-                                                addgroup(id);//加入到数据库
-                                                setdategroup();
+                                                addGroup(id);//加入到数据库
+                                                setDateGroup();
                                             } else {
                                                 String id = groupId;//对讲组：groupid
                                                 dbDao.deleteHistory(id);
-                                                addgroup(id);//加入到数据库
-                                                setdategroup();
+                                                addGroup(id);//加入到数据库
+                                                setDateGroup();
                                             }
                                             ToastUtils.show_short(context, "进入组—用户已在组");
                                             break;
@@ -1206,7 +1213,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
                                         listInfo.add(userinfo);
                                         Log.i("组内成员人数", listInfo.size() + "");
                                         tv_num.setText(listInfo.size() + "");
-                                        getgridViewperson(groupids);
+                                        getGridViewPerson(groupids);
                                         //有人加入组
                                         ToastUtils.show_short(context, "有人加入组");
                                     } catch (Exception e) {
@@ -1235,7 +1242,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
                                         }
                                         Log.i("组内成员人数", listInfo.size() + "");
                                         tv_num.setText(listInfo.size() + "");
-                                        getgridViewperson(groupids);
+                                        getGridViewPerson(groupids);
                                         ToastUtils.show_short(context, "有人退出组");
                                     } catch (Exception e) {
                                         e.printStackTrace();
