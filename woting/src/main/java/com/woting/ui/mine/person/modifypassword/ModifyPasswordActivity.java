@@ -166,7 +166,7 @@ public class ModifyPasswordActivity extends AppBaseActivity implements OnClickLi
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("OldPassword", oldPassword);// 待改
-            jsonObject.put("newPassword", newPassword);
+            jsonObject.put("NewPassword", newPassword);
         } catch (JSONException e) {
             e.printStackTrace();
         }
