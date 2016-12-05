@@ -354,7 +354,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             musicPlayer.stop();
                                             musicPlayer = null;
                                         }
-                                        addUser();
+                                        if(isCall) addUser();
                                     } else if (ACKType != null && !ACKType.equals("") && ACKType.equals("2")) {
                                         //拒绝通话，挂断电话
                                         if (musicPlayer != null) {

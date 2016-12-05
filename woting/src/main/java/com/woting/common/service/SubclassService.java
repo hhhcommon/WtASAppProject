@@ -73,7 +73,7 @@ public class SubclassService extends Service {
 			if(action.equals(BroadcastConstants.PUSH_BACK)){////////////////////////////////////////////////////////////////////////////////
 				if(ReceiveAlertActivity.instance==null){
 				}else{
-					abortBroadcast();
+//					abortBroadcast();//中断广播传递
 					//					MsgNormal message = (MsgNormal) intent.getSerializableExtra("outmessage");
 					byte[] bt = intent.getByteArrayExtra("outmessage");
 					Log.e("push_back接收器中数据", Arrays.toString(bt)+"");

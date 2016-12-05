@@ -147,48 +147,12 @@ public class ChatFragment extends Fragment implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this.getActivity();
+
         initDao();      // 初始化数据库
         setReceiver();  // 注册广播接收socketService的数据
     }
 
-    /*
-     *注册广播接收socketservice的数据
-     */
-    private void setReceiver() {
-        if (Receiver == null) {
-            Receiver = new MessageReceiver();
-            IntentFilter filter = new IntentFilter();
-            filter.addAction(BroadcastConstants.PUSH);
-            filter.addAction(BroadcastConstants.UP_DATA_GROUP);
-            filter.addAction(BroadcastConstants.PUSH_VOICE_IMAGE_REFRESH);
-            context.registerReceiver(Receiver, filter);
-
-            IntentFilter f = new IntentFilter();
-            f.addAction(BroadcastConstants.PUSH_BACK);
-            f.setPriority(500);
-            context.registerReceiver(Receiver, f);
-
-            ToastUtils.show_short(context, "注册了广播接收器");
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_talkoldlist, container, false);
-        setView();//设置界面
-        return rootView;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        listener();
-        Dialog();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
+    private void setOnResumeView() {
         //此处在splashActivity中refreshB设置成true
         UserName = shared.getString(StringConstant.USERNAME, "");
         String p = shared.getString(StringConstant.PERSONREFRESHB, "false");
@@ -213,6 +177,48 @@ public class ChatFragment extends Fragment implements OnClickListener {
             Relative_listview.setVisibility(View.GONE);
             lin_second.setVisibility(View.VISIBLE);
         }
+    }
+
+    /*
+     *注册广播接收socketservice的数据
+     */
+    private void setReceiver() {
+        if (Receiver == null) {
+            Receiver = new MessageReceiver();
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(BroadcastConstants.PUSH);
+            filter.addAction(BroadcastConstants.UP_DATA_GROUP);
+            filter.addAction(BroadcastConstants.PUSH_VOICE_IMAGE_REFRESH);
+            context.registerReceiver(Receiver, filter);
+
+            IntentFilter f = new IntentFilter();
+            f.addAction(BroadcastConstants.PUSH_BACK);
+            f.setPriority(1000);
+            context.registerReceiver(Receiver, f);
+
+            ToastUtils.show_short(context, "注册了广播接收器");
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_talkoldlist, container, false);
+        setView();//设置界面
+        setOnResumeView();
+        return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        listener();
+        Dialog();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setOnResumeView();
     }
 
     // 初始化数据库命令执行对象

@@ -5,26 +5,26 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
+import com.woting.common.manager.MyActivityManager;
+import com.woting.common.service.SubclassService;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
+import com.woting.common.util.CommonUtils;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
 import com.woting.ui.interphone.chat.fragment.ChatFragment;
 import com.woting.ui.interphone.chat.model.DBTalkHistorary;
 import com.woting.ui.interphone.commom.service.InterPhoneControl;
 import com.woting.ui.interphone.main.DuiJiangActivity;
 import com.woting.ui.main.MainActivity;
-import com.woting.common.config.GlobalConfig;
-import com.woting.common.manager.MyActivityManager;
-import com.woting.common.service.SubclassService;
-import com.woting.common.util.CommonUtils;
 
 /**
  * 来电话弹出框
@@ -44,6 +44,11 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_receivecall);
         instance = this;
+        if (DuiJiangActivity.context == null) {
+            //对讲主页界面更新
+            MainActivity.changeTwo();
+            DuiJiangActivity.update();
+        }
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        //透明状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    //透明导航栏
         getSource();        // 获取展示数据
@@ -121,6 +126,7 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
 //			//intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |Intent.FLAG_ACTIVITY_SINGLE_TOP);
 //			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 //			startActivity(intent);
+
                 addUser();
                 break;
             case R.id.lin_guaduan:
@@ -144,12 +150,12 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
         DBTalkHistorary history = new DBTalkHistorary(bjuserid, "user", id, addtime);
         dbDao.addTalkHistory(history);
         DBTalkHistorary talkdb = dbDao.queryHistory().get(0);//得到数据库里边数据
+        //对讲主页界面更新
+        MainActivity.changeTwo();
+        DuiJiangActivity.update();
         ChatFragment.zhiDingPerson(talkdb);
         MyActivityManager mam = MyActivityManager.getInstance();
         mam.finishAllActivity();
-        //对讲主页界面更新
-        MainActivity.tabHost.setCurrentTabByTag("two");
-        DuiJiangActivity.update();
         finish();
     }
 

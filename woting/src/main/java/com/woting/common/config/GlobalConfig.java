@@ -65,8 +65,8 @@ public class GlobalConfig {
      * socket请求ip
      */
 //	public static final String socketUrl = "182.92.175.134";//生产服务器地址
-//    public static final String socketUrl = "123.56.254.75";//测试服务器地址
-	public static final String socketUrl = "192.168.5.17";//
+    public static final String socketUrl = "123.56.254.75";//测试服务器地址
+//	public static final String socketUrl = "192.168.5.17";//
     /**
      * http请求总url
      */

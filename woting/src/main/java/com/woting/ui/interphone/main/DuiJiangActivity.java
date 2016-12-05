@@ -45,7 +45,7 @@ public class DuiJiangActivity extends FragmentActivity {
 	private SharedPreferences sharedPreferences= BSApplication.SharedPreferences;
 	private PopupWindow addDialog;
 	private static ViewPager mPager;
-	private static DuiJiangActivity context;
+	public static DuiJiangActivity context;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
