@@ -19,7 +19,7 @@ public class ContentInfo implements Serializable {
 	private String ContentSource;
 	private String ContentURIS;
 	private String MediaType;
-	private String ContentDesc;
+	private String ContentDescn;
 	private String ContentImg;
 	//以上全部内容针对内容
 	private String sequname;
@@ -258,12 +258,12 @@ public class ContentInfo implements Serializable {
 		ContentId = contentId;
 	}
 
-	public String getContentDesc() {
-		return ContentDesc;
+	public String getContentDescn() {
+		return ContentDescn;
 	}
 
-	public void setContentDesc(String contentDesc) {
-		ContentDesc = contentDesc;
+	public void setContentDescn(String contentDesc) {
+		ContentDescn = contentDesc;
 	}
 
 	public String getContentImg() {
