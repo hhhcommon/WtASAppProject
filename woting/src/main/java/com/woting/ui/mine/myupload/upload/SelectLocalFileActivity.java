@@ -22,8 +22,6 @@ import com.woting.ui.mine.myupload.model.MediaStoreInfo;
 import com.woting.ui.mine.myupload.upload.recording.MediaRecorderActivity;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -138,16 +136,14 @@ public class SelectLocalFileActivity extends AppBaseActivity implements
             String type = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE));
             int id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
             long size = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
-//            long addTime = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));// 修改时间
-//            long addTime1 = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_MODIFIED));// 修改时间
-            long addTime2 = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED));// 修改时间
+            long addTime = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_MODIFIED));// 修改时间
             long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
             mediaStoreInfo.setData(data1);
             mediaStoreInfo.setTitle(title);
             mediaStoreInfo.setType(type);
             mediaStoreInfo.setId(id);
             mediaStoreInfo.setSize(size);
-            mediaStoreInfo.setAddTime(addTime2);
+            mediaStoreInfo.setAddTime(addTime);
             mediaStoreInfo.setDuration(duration);
             list.add(mediaStoreInfo);
             if(counter < 5) {
@@ -156,7 +152,7 @@ public class SelectLocalFileActivity extends AppBaseActivity implements
                 Log.i("MainActivity", "title=" + title);
                 Log.i("MainActivity", "type=" + type);
                 Log.i("MainActivity", "id=" + id);
-                Log.i("MainActivity", "addTime2=" + addTime2);
+                Log.i("MainActivity", "addTime2=" + addTime);
                 Log.i("MainActivity", "size=" + size);
                 Log.i("MainActivity", "duration=" + duration);
             }
@@ -164,43 +160,6 @@ public class SelectLocalFileActivity extends AppBaseActivity implements
         }
         cursor.close();
         Log.i("MainActivity", "--------- AUDIO END ---------");
-        return list;
-    }
-
-    // 获取文件
-    private List<MediaStoreInfo> getFileLiat(File path) {
-        List<MediaStoreInfo> list = new ArrayList<>();
-        if(path.isDirectory()) {// 如果是文件夹
-            // 返回文件夹中所有数据
-            File[] files = path.listFiles();
-            // 先判断是否有权限获取其中的文件 没有权限则不往下执行
-            if(files != null) {
-                for(File file : files) {
-                    getFileLiat(file);
-                }
-            }
-        } else {// 如果是文件
-            Log.i("FilePath", "FilePath -- > > " + path.getAbsolutePath());
-
-            String fileName = path.getName();
-            if(fileName.contains(".m4a") || fileName.contains(".mp3")) {
-                try {
-                    String data1 = path.getAbsolutePath();// 文件路径
-                    String title = path.getName().split(".")[0];
-                    long size = new FileInputStream(path).available();
-                    long addTime = path.lastModified();// 最后修改时间
-
-                    Log.i("MainActivity", "data1=" + data1);
-                    Log.i("MainActivity", "title=" + title);
-                    Log.i("MainActivity", "size=" + size);
-                    Log.i("MainActivity", "addTime=" + addTime);
-//                    Log.i("MainActivity", "duration=" + duration);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
         return list;
     }
 
