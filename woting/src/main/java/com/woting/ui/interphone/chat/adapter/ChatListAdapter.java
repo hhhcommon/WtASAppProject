@@ -68,6 +68,7 @@ public class ChatListAdapter extends BaseAdapter {
 			holder.tv_content = (TextView) convertView.findViewById(R.id.tv_content);
 			holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
 			holder.textView_bg = (TextView) convertView.findViewById(R.id.textView_bg);
+			holder.tv_b_id = (TextView) convertView.findViewById(R.id.tv_b_id);//id
 			holder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
 			holder.lin_zhiding = (LinearLayout) convertView.findViewById(R.id.lin_zhiding);
 			holder.imageView_touxiang = (ImageView) convertView.findViewById(R.id.image);
@@ -91,6 +92,22 @@ public class ChatListAdapter extends BaseAdapter {
 			holder.tv_content.setVisibility(View.VISIBLE);
 			holder.tv_content.setText(lists.getGroupSignature());
 		}
+		if (lists.getTyPe().equals("user")) {
+			if (lists.getUserNum()== null || lists.getUserNum().equals("")) {
+				holder.tv_b_id.setVisibility(View.GONE);
+			} else {
+				holder.tv_b_id.setVisibility(View.VISIBLE);
+				holder.tv_b_id.setText("ID: "+lists.getUserNum());//id
+			}
+		} else {
+			if (lists.getGroupNum()== null || lists.getGroupNum().equals("")) {
+				holder.tv_b_id.setVisibility(View.GONE);
+			} else {
+				holder.tv_b_id.setVisibility(View.VISIBLE);
+				holder.tv_b_id.setText("ID: "+lists.getGroupNum());//id
+			}
+		}
+
 
 		if (lists.getName() == null || lists.getName().equals("")) {
 			holder.tv_name.setText("未知");
@@ -149,5 +166,6 @@ public class ChatListAdapter extends BaseAdapter {
 		public TextView tv_name;
 		public TextView textGroupNumber;
 		public ImageView img_zhezhao;
+		public TextView tv_b_id;
 	}
 }

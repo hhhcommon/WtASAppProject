@@ -201,7 +201,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                     groupCreator = talkListGP.getGroupManager();
                 }
                 groupSignature = talkListGP.getGroupSignature();
-                groupIntroduce = talkListGP.getGroupDesc();
+                groupIntroduce = talkListGP.getGroupDescn();
                 groupAlias = talkListGP.getGroupMyAlias();
                 groupType = talkListGP.getGroupType();
                 break;
@@ -319,16 +319,24 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
             groupName = "我听科技";
         }
         textGroupName.setText(groupName);
-        if (groupId != null && !groupId.equals("")) {// 群 ID
-            String idString = "ID:" + groupId;
+
+        if (groupNumber!= null && !groupNumber.equals("")) {// 群 ID
+            String idString = "ID:" + groupNumber;
             textGroupId.setText(idString);
         }
+
+//        if (groupId != null && !groupId.equals("")) {// 群 ID
+//            String idString = "ID:" + groupId;
+//            textGroupId.setText(idString);
+//        }
         if (groupAlias == null || groupAlias.equals("")) {// 群别名
             groupAlias = groupName;
         }
         editAliasName.setText(groupAlias);
         if (groupSignature != null && !groupSignature.equals("")) {// 群描述
             editSignature.setText(groupSignature);
+        }else{
+            editSignature.setText("这家伙很懒，什么也没写");
         }
         if (headUrl == null || headUrl.equals("null") || headUrl.trim().equals("")) {// 群头像
             Bitmap bitmap = BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_qz);

@@ -348,9 +348,11 @@
             <com.woting.common.widgetui.MyGridView
                 android:id="@+id/gridView_person"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="wrap_content"
                 android:background="@color/WHITE"
                 android:gravity="center"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
                 android:numColumns="4"
                 android:scrollbars="none"
                 android:verticalSpacing="10dp"

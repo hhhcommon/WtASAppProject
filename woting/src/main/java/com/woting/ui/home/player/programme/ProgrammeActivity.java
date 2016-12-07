@@ -1,10 +1,10 @@
 package com.woting.ui.home.player.programme;
 
-import android.app.Dialog;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -12,37 +12,22 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.woting.R;
-import com.woting.common.config.GlobalConfig;
-import com.woting.common.util.DialogUtils;
 import com.woting.common.util.PhoneMessage;
-import com.woting.common.util.ToastUtils;
-import com.woting.common.volley.VolleyCallback;
+import com.woting.common.util.TimeUtils;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.baseactivity.AppBaseFragmentActivity;
 import com.woting.ui.home.player.programme.adapter.MyPagerAdapter;
-import com.woting.ui.home.player.programme.model.DProgram;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ProgrammeActivity extends AppBaseFragmentActivity {
 
     private ViewPager viewPager;
     private TextView tv1, tv2, tv3, tv4, tv5, tv6, tv7;
     private String tag = "ACTIVITY_PROGRAM_REQUEST_CANCEL_TAG";
-    private Dialog dialog;
-    private boolean isCancelRequest;
+    public static boolean isCancelRequest;
     private ImageView image;
     private int offset;
 
@@ -52,17 +37,49 @@ public class ProgrammeActivity extends AppBaseFragmentActivity {
         setContentView(R.layout.activity_programme);
         String bcid = this.getIntent().getStringExtra("BcId");
         long nowT = System.currentTimeMillis();
-        int d = getWeek(nowT);                 // 获取当天是属于周几
-        String st = getTimeForString(d, nowT); // 获取组装后的请求时间
+        int d = TimeUtils.getWeek(nowT);                 // 获取当天是属于周几
+        ArrayList<Long> st = getTimeForString(d, nowT); // 获取组装后的请求时间
 
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(this, "正在获取数据");
-            send(bcid, st);                     // 获取网络数据
-        } else {
-            ToastUtils.show_always(this, "网络连接失败，请稍后重试");
-        }
         setView();
         InitImage();
+
+        setFragment(bcid,st);
+    }
+
+    private void setFragment(String bcid, ArrayList<Long> st) {
+
+        List arr = new ArrayList();// 保存表头日期
+        arr.add("周一");
+        arr.add("周二");
+        arr.add("周三");
+        arr.add("周四");
+        arr.add("周五");
+        arr.add("周六");
+        arr.add("周日");
+
+        List<Fragment> fragmentList = new ArrayList<>();// 存放 Fragment
+        for(int i=0; i<7; i++){
+            Log.e("ProgrammeActivity",i+"");
+            int d = TimeUtils.getWeek(System.currentTimeMillis())-2;
+            boolean isT;
+            if(d==-1){
+              if(i==6){
+                  isT=true;
+              }else{
+                  isT=false;
+              }
+            }else{
+                if(d==i){
+                    isT=true;
+                }else{
+                    isT=false;
+                }
+            }
+            fragmentList.add(ProgrammeFragment.instance(st.get(i),bcid,isT));
+        }
+        viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), arr,fragmentList));
+        viewPager.setOnPageChangeListener(new MyOnPageChangeListener());// 页面变化时的监听器
+        viewPager.setCurrentItem(0);// 设置当前显示标签页为第一页mPager
     }
 
     private void setView() {
@@ -253,9 +270,10 @@ public class ProgrammeActivity extends AppBaseFragmentActivity {
     /*
      *获取组装后的请求时间
      */
-    private String getTimeForString(int D, long nowT) {
+    private ArrayList<Long> getTimeForString(int D, long nowT) {
+        ArrayList<Long> timeList = new ArrayList<Long>();
         long T = 86400000;
-        String s;
+//        String s;
         if (D == 2) { // 当天是周一
             long a = nowT;
             long b = nowT + T;
@@ -264,13 +282,23 @@ public class ProgrammeActivity extends AppBaseFragmentActivity {
             long e = nowT + T * 4;
             long f = nowT + T * 5;
             long g = nowT + T * 6;
-            s = String.valueOf(a) + "," +
-                    String.valueOf(b) + "," +
-                    String.valueOf(c) + "," +
-                    String.valueOf(d) + "," +
-                    String.valueOf(e) + "," +
-                    String.valueOf(f) + "," +
-                    String.valueOf(g);
+
+            timeList.add(a);
+            timeList.add(b);
+            timeList.add(c);
+            timeList.add(d);
+            timeList.add(e);
+            timeList.add(f);
+            timeList.add(g);
+
+//            s = String.valueOf(a) + "," +
+//                    String.valueOf(b) + "," +
+//                    String.valueOf(c) + "," +
+//                    String.valueOf(d) + "," +
+//                    String.valueOf(e) + "," +
+//                    String.valueOf(f) + "," +
+//                    String.valueOf(g);
+
         } else if (D == 3) { // 当天是周二
             long a = nowT - T;
             long b = nowT;
@@ -279,13 +307,22 @@ public class ProgrammeActivity extends AppBaseFragmentActivity {
             long e = nowT + T * 3;
             long f = nowT + T * 4;
             long g = nowT + T * 5;
-            s = String.valueOf(a) + "," +
-                    String.valueOf(b) + "," +
-                    String.valueOf(c) + "," +
-                    String.valueOf(d) + "," +
-                    String.valueOf(e) + "," +
-                    String.valueOf(f) + "," +
-                    String.valueOf(g);
+
+            timeList.add(a);
+            timeList.add(b);
+            timeList.add(c);
+            timeList.add(d);
+            timeList.add(e);
+            timeList.add(f);
+            timeList.add(g);
+
+//            s = String.valueOf(a) + "," +
+//                    String.valueOf(b) + "," +
+//                    String.valueOf(c) + "," +
+//                    String.valueOf(d) + "," +
+//                    String.valueOf(e) + "," +
+//                    String.valueOf(f) + "," +
+//                    String.valueOf(g);
 
         } else if (D == 4) { // 当天是周三
             long a = nowT - T * 2;
@@ -295,13 +332,22 @@ public class ProgrammeActivity extends AppBaseFragmentActivity {
             long e = nowT + T * 2;
             long f = nowT + T * 3;
             long g = nowT + T * 4;
-            s = String.valueOf(a) + "," +
-                    String.valueOf(b) + "," +
-                    String.valueOf(c) + "," +
-                    String.valueOf(d) + "," +
-                    String.valueOf(e) + "," +
-                    String.valueOf(f) + "," +
-                    String.valueOf(g);
+
+            timeList.add(a);
+            timeList.add(b);
+            timeList.add(c);
+            timeList.add(d);
+            timeList.add(e);
+            timeList.add(f);
+            timeList.add(g);
+
+//            s = String.valueOf(a) + "," +
+//                    String.valueOf(b) + "," +
+//                    String.valueOf(c) + "," +
+//                    String.valueOf(d) + "," +
+//                    String.valueOf(e) + "," +
+//                    String.valueOf(f) + "," +
+//                    String.valueOf(g);
 
         } else if (D == 5) { // 当天是周四
             long a = nowT - T * 3;
@@ -311,13 +357,22 @@ public class ProgrammeActivity extends AppBaseFragmentActivity {
             long e = nowT + T;
             long f = nowT + T * 2;
             long g = nowT + T * 3;
-            s = String.valueOf(a) + "," +
-                    String.valueOf(b) + "," +
-                    String.valueOf(c) + "," +
-                    String.valueOf(d) + "," +
-                    String.valueOf(e) + "," +
-                    String.valueOf(f) + "," +
-                    String.valueOf(g);
+
+            timeList.add(a);
+            timeList.add(b);
+            timeList.add(c);
+            timeList.add(d);
+            timeList.add(e);
+            timeList.add(f);
+            timeList.add(g);
+
+//            s = String.valueOf(a) + "," +
+//                    String.valueOf(b) + "," +
+//                    String.valueOf(c) + "," +
+//                    String.valueOf(d) + "," +
+//                    String.valueOf(e) + "," +
+//                    String.valueOf(f) + "," +
+//                    String.valueOf(g);
 
         } else if (D == 6) { // 当天是周五
             long a = nowT - T * 4;
@@ -327,13 +382,22 @@ public class ProgrammeActivity extends AppBaseFragmentActivity {
             long e = nowT;
             long f = nowT + T;
             long g = nowT + T * 2;
-            s = String.valueOf(a) + "," +
-                    String.valueOf(b) + "," +
-                    String.valueOf(c) + "," +
-                    String.valueOf(d) + "," +
-                    String.valueOf(e) + "," +
-                    String.valueOf(f) + "," +
-                    String.valueOf(g);
+
+            timeList.add(a);
+            timeList.add(b);
+            timeList.add(c);
+            timeList.add(d);
+            timeList.add(e);
+            timeList.add(f);
+            timeList.add(g);
+
+//            s = String.valueOf(a) + "," +
+//                    String.valueOf(b) + "," +
+//                    String.valueOf(c) + "," +
+//                    String.valueOf(d) + "," +
+//                    String.valueOf(e) + "," +
+//                    String.valueOf(f) + "," +
+//                    String.valueOf(g);
 
         } else if (D == 7) { // 当天是周六
             long a = nowT - T * 5;
@@ -343,13 +407,22 @@ public class ProgrammeActivity extends AppBaseFragmentActivity {
             long e = nowT - T;
             long f = nowT;
             long g = nowT + T;
-            s = String.valueOf(a) + "," +
-                    String.valueOf(b) + "," +
-                    String.valueOf(c) + "," +
-                    String.valueOf(d) + "," +
-                    String.valueOf(e) + "," +
-                    String.valueOf(f) + "," +
-                    String.valueOf(g);
+
+            timeList.add(a);
+            timeList.add(b);
+            timeList.add(c);
+            timeList.add(d);
+            timeList.add(e);
+            timeList.add(f);
+            timeList.add(g);
+
+//            s = String.valueOf(a) + "," +
+//                    String.valueOf(b) + "," +
+//                    String.valueOf(c) + "," +
+//                    String.valueOf(d) + "," +
+//                    String.valueOf(e) + "," +
+//                    String.valueOf(f) + "," +
+//                    String.valueOf(g);
 
         } else if (D == 1) { // 当天是周日
             long a = nowT - T * 6;
@@ -359,126 +432,28 @@ public class ProgrammeActivity extends AppBaseFragmentActivity {
             long e = nowT - T * 2;
             long f = nowT - T;
             long g = nowT;
-            s = String.valueOf(a) + "," +
-                    String.valueOf(b) + "," +
-                    String.valueOf(c) + "," +
-                    String.valueOf(d) + "," +
-                    String.valueOf(e) + "," +
-                    String.valueOf(f) + "," +
-                    String.valueOf(g);
+
+            timeList.add(a);
+            timeList.add(b);
+            timeList.add(c);
+            timeList.add(d);
+            timeList.add(e);
+            timeList.add(f);
+            timeList.add(g);
+
+//            s = String.valueOf(a) + "," +
+//                    String.valueOf(b) + "," +
+//                    String.valueOf(c) + "," +
+//                    String.valueOf(d) + "," +
+//                    String.valueOf(e) + "," +
+//                    String.valueOf(f) + "," +
+//                    String.valueOf(g);
         } else {
-            s = "";
+            timeList = null;
         }
-        return s;
+        return timeList;
 
     }
-
-    private int getWeek(long timeStamp) {
-        Calendar cd = Calendar.getInstance();
-        cd.setTime(new Date(timeStamp));
-        int d = cd.get(Calendar.DAY_OF_WEEK);
-        // 获取指定日期转换成星期几
-//        if (mydate == 1) {/
-//            week = "周日";
-//        } else if (mydate == 2) {
-//            week = "周一";
-//        } else if (mydate == 3) {
-//            week = "周二";
-//        } else if (mydate == 4) {
-//            week = "周三";
-//        } else if (mydate == 5) {
-//            week = "周四";
-//        } else if (mydate == 6) {
-//            week = "周五";
-//        } else if (mydate == 7) {
-//            week = "周六";
-//        }
-        return d;
-    }
-
-
-    /**
-     * 请求网络获取分类信息
-     */
-    private void send(String bcid, String time) {
-        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        try {
-            jsonObject.put("BcId", bcid);
-            jsonObject.put("RequestTimes", time);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-                                                                VolleyRequest.RequestPost(GlobalConfig.getProgrammeUrl, tag, jsonObject, new VolleyCallback() {
-            private String ReturnType;
-            @Override
-            protected void requestSuccess(JSONObject result) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-                if (isCancelRequest) {
-                    return;
-                }
-                try {
-                    ReturnType = result.getString("ReturnType");
-                    try {
-                       String rt = result.getString("ResultList");
-                        if (ReturnType != null && ReturnType.equals("1001")) {
-                            List<DProgram>   dpList = new Gson().fromJson(rt, new TypeToken<List<DProgram>>() {}.getType());
-                        if (dpList != null && dpList.size() > 0) {
-                            List arr = new ArrayList();// 保存表头日期
-                            arr.add("周一");
-                            arr.add("周二");
-                            arr.add("周三");
-                            arr.add("周四");
-                            arr.add("周五");
-                            arr.add("周六");
-                            arr.add("周日");
-
-
-                            List<Fragment> fragmentList = new ArrayList<>();// 存放 Fragment
-                            List t = new ArrayList(); // 保存了存在的日期
-                            Map m = new HashMap();
-                            for(int i=0; i<dpList.size(); i++){
-
-                                    if(dpList.get(i).getDay()!=null&&!dpList.get(i).getDay().equals("")){
-                                        int _t=getWeek(Long.valueOf(dpList.get(i).getDay()));
-                                        t.add(_t);
-                                        m.put(_t,dpList.get(i).getList());
-                                    }
-//                                    fragmentList.add(ProgrammeFragment.instance(dpList.get(i).getList()));
-                                }
-
-//                            if()
-                            viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), arr,fragmentList));
-                            viewPager.setOnPageChangeListener(new MyOnPageChangeListener());// 页面变化时的监听器
-                            viewPager.setCurrentItem(0);// 设置当前显示标签页为第一页mPager
-
-                        } else {
-                            ToastUtils.show_always(ProgrammeActivity.this, "数据获取失败，请稍候再试");    // json解析失败
-                        }
-                    } else  {
-                            ToastUtils.show_always(ProgrammeActivity.this, "数据获取失败，请稍候再试");
-                    }
-                    } catch (JSONException e1) {
-                        e1.printStackTrace();
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            protected void requestError(VolleyError error) {
-                if (dialog != null) dialog.dismiss();
-                ToastUtils.showVolleyError(context);
-            }
-        });
-    }
-
-
 
     @Override
     protected void onDestroy() {

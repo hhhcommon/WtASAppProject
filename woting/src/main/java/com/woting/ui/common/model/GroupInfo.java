@@ -33,7 +33,7 @@ public class GroupInfo implements Serializable {
     private String UserAliasName;
     private String Portrait;
     private String Id;
-    private String GroupDesc;
+//    private String GroupDesc;
     private String TyPe;			// 类别 user，group
     private String AddTime;			// 添加时间
     private String UserNum;			// 用户码
@@ -89,13 +89,13 @@ public class GroupInfo implements Serializable {
         Id = id;
     }
 
-    public String getGroupDesc() {
-        return GroupDesc;
-    }
-
-    public void setGroupDesc(String groupDesc) {
-        GroupDesc = groupDesc;
-    }
+//    public String getGroupDesc() {
+//        return GroupDesc;
+//    }
+//
+//    public void setGroupDesc(String groupDesc) {
+//        GroupDesc = groupDesc;
+//    }
 
     public String getTyPe() {
         return TyPe;

@@ -252,6 +252,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             tv_news.setText("呼叫失败");
                                             lin_guaduan.setVisibility(View.GONE);
                                             lin_call.setVisibility(View.VISIBLE);
+                                            isCall=false;
                                             Log.e("服务端拨号状态", "呼叫用户不在线");
                                             break;
                                         case 3:
@@ -262,6 +263,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             tv_news.setText("呼叫失败，用户不在线");
                                             lin_guaduan.setVisibility(View.GONE);
                                             lin_call.setVisibility(View.VISIBLE);
+                                            isCall=false;
                                             Log.e("服务端拨号状态", "被叫用户不在线");
                                             break;
                                         case 4:
@@ -272,6 +274,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             tv_news.setText("呼叫失败");
                                             lin_guaduan.setVisibility(View.GONE);
                                             lin_call.setVisibility(View.VISIBLE);
+                                            isCall=false;
                                             Log.e("服务端拨号状态", "呼叫用户占线（在通电话）");
                                             break;
                                         case 5:
@@ -282,6 +285,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             tv_news.setText("呼叫失败");
                                             lin_guaduan.setVisibility(View.GONE);
                                             lin_call.setVisibility(View.VISIBLE);
+                                            isCall=false;
                                             Log.e("服务端拨号状态", "呼叫用户占线（在对讲）");
                                             break;
                                         case 6:
@@ -292,6 +296,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             tv_news.setText("呼叫失败");
                                             lin_guaduan.setVisibility(View.GONE);
                                             lin_call.setVisibility(View.VISIBLE);
+                                            isCall=false;
                                             Log.e("服务端拨号状态", "呼叫用户占线（自己呼叫自己）");
                                             break;
                                         case 0x81:
@@ -302,6 +307,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             tv_news.setText("呼叫失败");
                                             lin_guaduan.setVisibility(View.GONE);
                                             lin_call.setVisibility(View.VISIBLE);
+                                            isCall=false;
                                             Log.e("服务端拨号状态", "此通话已被占用");
                                             break;
                                         case 0x82:
@@ -312,6 +318,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             tv_news.setText("呼叫失败");
                                             lin_guaduan.setVisibility(View.GONE);
                                             lin_call.setVisibility(View.VISIBLE);
+                                            isCall=false;
                                             //此通话对象状态错误（status应该为0，这个消息若没有特殊情况，是永远不会返回的）
                                             Log.e("服务端拨号状态", "此通话对象状态错误");
                                             break;
@@ -323,6 +330,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             tv_news.setText("呼叫失败");
                                             lin_guaduan.setVisibility(View.GONE);
                                             lin_call.setVisibility(View.VISIBLE);
+                                            isCall=false;
                                             Log.e("服务端拨号状态", "异常返回值");
                                             break;
                                         default:
@@ -343,6 +351,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                         tv_news.setText("对方不在线");
                                         lin_guaduan.setVisibility(View.GONE);
                                         lin_call.setVisibility(View.VISIBLE);
+                                        isCall=false;
                                     }
                                     break;
                                 case 0x20:
@@ -364,6 +373,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                         tv_news.setText("呼叫失败");
                                         lin_guaduan.setVisibility(View.GONE);
                                         lin_call.setVisibility(View.VISIBLE);
+                                        isCall=false;
                                     } else if (ACKType != null && !ACKType.equals("") && ACKType.equals("31")) {
                                         //被叫客户端超时应答，挂断电话
                                         if (musicPlayer != null) {
@@ -373,6 +383,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                         tv_news.setText("呼叫失败");
                                         lin_guaduan.setVisibility(View.GONE);
                                         lin_call.setVisibility(View.VISIBLE);
+                                        isCall=false;
                                     } else if (ACKType != null && !ACKType.equals("") && ACKType.equals("32")) {
                                         //长时间不接听，服务器超时，挂断电话
                                         if (musicPlayer != null) {
@@ -382,6 +393,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                         tv_news.setText("呼叫失败");
                                         lin_guaduan.setVisibility(View.GONE);
                                         lin_call.setVisibility(View.VISIBLE);
+                                        isCall=false;
                                     } else {
                                         if (musicPlayer != null) {
                                             musicPlayer.stop();
@@ -390,6 +402,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                         tv_news.setText("呼叫失败");
                                         lin_guaduan.setVisibility(View.GONE);
                                         lin_call.setVisibility(View.VISIBLE);
+                                        isCall=false;
                                     }
                                     break;
                                 default:

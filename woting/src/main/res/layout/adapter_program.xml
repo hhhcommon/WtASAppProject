@@ -26,8 +26,8 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="我听之声"
-                android:textColor="@color/wt_login_third"
-                android:textSize="16sp" />
+                android:textColor="@color/darkgray"
+                android:textSize="14sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -45,8 +45,8 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="00:30-00:30"
-                android:textColor="@color/wt_login_third"
-                android:textSize="@dimen/wt_dinglan_text_right" />
+                android:textColor="@color/darkgray"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -60,7 +60,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="3dp"
                 android:text="直播"
                 android:textColor="@color/white"
                 android:textSize="12sp" />

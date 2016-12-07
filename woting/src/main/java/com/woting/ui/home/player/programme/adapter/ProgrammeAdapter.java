@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,12 +19,18 @@ import java.util.List;
  * 邮箱：645700751@qq.com
  */
 public class ProgrammeAdapter extends BaseAdapter {
+    private final int onTime;
     private List<program> list;
     private Context context;
+    private boolean isT;
+    private String eTime;
+    private String bTime;
 
-    public ProgrammeAdapter(Context context, List<program> list) {
+    public ProgrammeAdapter(Context context, List<program> list, boolean isT, int onTime) {
         this.context = context;
         this.list = list;
+        this.isT = isT;
+        this.onTime = onTime;
     }
 
     @Override
@@ -64,6 +69,46 @@ public class ProgrammeAdapter extends BaseAdapter {
             holder.tv_name.setText("未知");
         } else {
             holder.tv_name.setText(lists.getTitle());
+        }
+
+
+        if (lists.getBeginTime() == null || lists.getBeginTime().equals("") || lists.getBeginTime().equals("null")) {
+            bTime = "";
+        } else {
+            bTime = lists.getBeginTime().substring(0, lists.getBeginTime().length() - 3);
+        }
+
+        if (lists.getEndTime() == null || lists.getEndTime().equals("") || lists.getEndTime().equals("null")) {
+            eTime = "";
+        } else {
+            eTime = lists.getEndTime().substring(0, lists.getEndTime().length() - 3);
+        }
+        holder.tv_time.setText(bTime + "-" + eTime);
+        try {
+            if (isT) {
+
+                int bT = Integer.parseInt(lists.getBeginTime().substring(0, 2)) * 60 + Integer.parseInt(lists.getBeginTime().substring(3, 5));
+                int eT = Integer.parseInt(lists.getEndTime().substring(0, 2)) * 60 + Integer.parseInt(lists.getEndTime().substring(3, 5));
+
+                if (bT <= onTime && onTime < eT) {
+                    holder.tv_time.setTextColor(context.getResources().getColor(R.color.black));
+                    holder.tv_name.setTextColor(context.getResources().getColor(R.color.black));
+                    holder.lin_show.setVisibility(View.VISIBLE);
+                } else {
+                    holder.tv_time.setTextColor(context.getResources().getColor(R.color.darkgray));
+                    holder.tv_name.setTextColor(context.getResources().getColor(R.color.darkgray));
+                    holder.lin_show.setVisibility(View.INVISIBLE);
+                }
+            } else {
+                holder.tv_time.setTextColor(context.getResources().getColor(R.color.darkgray));
+                holder.tv_name.setTextColor(context.getResources().getColor(R.color.darkgray));
+                holder.lin_show.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            holder.tv_time.setTextColor(context.getResources().getColor(R.color.darkgray));
+            holder.tv_name.setTextColor(context.getResources().getColor(R.color.darkgray));
+            holder.lin_show.setVisibility(View.GONE);
         }
 
         return convertView;
