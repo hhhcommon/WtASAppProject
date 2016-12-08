@@ -57,6 +57,8 @@ public class FileInfoDao {
 				String contentid=cursor.getString(cursor.getColumnIndex("contentid"));
 				String playAllTime=cursor.getString(cursor.getColumnIndex("playeralltime"));
 				String playfrom=cursor.getString(cursor.getColumnIndex("playerfrom"));
+				String contentDescn=cursor.getString(cursor.getColumnIndex("contentdescn"));
+				String playcount=cursor.getString(cursor.getColumnIndex("playcount"));
 				// 把每个对象都放到history对象里
 				FileInfo h = new FileInfo(url, filename,id,seqimageurl);
 				/*	h.setId(id);*/
@@ -73,6 +75,8 @@ public class FileInfoDao {
 				h.setContentId(contentid);
 				h.setPlayAllTime(playAllTime);
 				h.setPlayFrom(playfrom);
+				h.setContentDescn(contentDescn);
+				h.setPlayCount(playcount);
 				/*	h.setFinished(finished);*/
 				// 往m里储存每个history对象
 				m.add(h);
@@ -117,6 +121,8 @@ public class FileInfoDao {
 				String url=cursor.getString(cursor.getColumnIndex("url"));
 				String playAllTime=cursor.getString(cursor.getColumnIndex("playeralltime"));
 				String playfrom=cursor.getString(cursor.getColumnIndex("playerfrom"));
+				String contentDescn=cursor.getString(cursor.getColumnIndex("contentdescn"));
+				String playcount=cursor.getString(cursor.getColumnIndex("playcount"));
 				// 把每个对象都放到history对象里
 				FileInfo h = new FileInfo();
 				h.setLocalurl(localurl);
@@ -130,6 +136,8 @@ public class FileInfoDao {
 				h.setContentId(contentid);
 				h.setPlayAllTime(playAllTime);
 				h.setPlayFrom(playfrom);
+				h.setContentDescn(contentDescn);
+				h.setPlayCount(playcount);
 				// 往m里储存每个history对象
 				m.add(h);
 			}
@@ -206,11 +214,11 @@ public class FileInfoDao {
 			}
 
 			db.execSQL("insert into fileinfo(url,imageurl,filename,sequname,sequimgurl,sequdesc,finished,sequid,userid,downloadtype,author," +
-					"playshareurl,playfavorite,contentid,playeralltime,playerfrom) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",new Object[] { content.getContentPlay(),
+					"playshareurl,playfavorite,contentid,playeralltime,playerfrom,playcount,contentdescn) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",new Object[] { content.getContentPlay(),
 					content.getContentImg(), playname,
 					content.getSequname(), content.getSequimgurl(),
 					content.getSequdesc(), "false",sequid,content.getUserid(),content.getDownloadtype(),content.getAuthor(),content.getContentShareURL(),
-					content.getContentFavorite(),content.getContentId(),content.getContentTimes(),content.getContentPub()});// sql语句
+					content.getContentFavorite(),content.getContentId(),content.getContentTimes(),content.getContentPub(),content.getPlayCount(),content.getContentDescn()});// sql语句
 		}
 		db.close();// 关闭数据库对象
 	}

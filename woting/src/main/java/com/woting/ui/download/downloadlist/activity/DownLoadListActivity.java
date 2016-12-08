@@ -217,12 +217,12 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
                             String playlocalrurl = mFileInfo.getLocalurl();
                             String playermediatype = "AUDIO";
                             String playercontentshareurl = mFileInfo.getContentShareURL();
-                            String plaplayeralltime = "0";
+                            String plaplayeralltime = mFileInfo.getPlayAllTime();
                             String playerintime = "0";
-                            String playercontentdesc = mFileInfo.getPlaycontent();
-                            String playernum = "0";
+                            String playercontentdesc = mFileInfo.getContentDescn();
+                            String playernum = mFileInfo.getPlayCount();
                             String playerzantype = "0";
-                            String playerfrom = "";
+                            String playerfrom = mFileInfo.getPlayFrom();
                             String playerfromid = "";
                             String playerfromurl = "";
                             String playeraddtime = Long.toString(System.currentTimeMillis());

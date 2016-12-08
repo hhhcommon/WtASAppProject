@@ -271,7 +271,7 @@ public class PlayerFragment extends Fragment implements OnClickListener,
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 //定时服务开启当前节目播放完关闭时拖动进度条时更新定时时间
-                new Handler().postDelayed(new Runnable() {
+             /*   new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         if (PlayerFragment.isCurrentPlay) {
@@ -282,7 +282,7 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                             context.startService(intent);
                         }
                     }
-                }, 1000);
+                }, 1000);*/
             }
 
             @Override
@@ -420,10 +420,11 @@ public class PlayerFragment extends Fragment implements OnClickListener,
             historyNews.setType("1");
             historyNews.setContentURI(historyNew.getPlayerUrI());
             historyNews.setContentPersons(historyNew.getPlayerNum());
+            historyNews.setPlayCount(historyNew.getPlayerNum());
             historyNews.setContentKeyWord("");
             historyNews.setcTime("");
             historyNews.setContentSubjectWord("");
-            historyNews.setContentTimes("");
+            historyNews.setContentTimes(historyNew.getPlayerAllTime());
             historyNews.setContentName(historyNew.getPlayerName());
             historyNews.setContentPubTime("");
             historyNews.setContentPub(historyNew.getPlayerFrom());
@@ -846,6 +847,9 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                         mcontent.setContentPub(data.getContentPub());
                         mcontent.setContentTimes(data.getContentTimes());
                         mcontent.setUserid(CommonUtils.getUserId(context));
+                        String s=data.getPlayCount();
+                        mcontent.setPlayCount(data.getPlayCount());
+                        mcontent.setContentDescn(data.getContentDescn());
                         mcontent.setDownloadtype("0");
                         if (data.getSeqInfo() == null
                                 || data.getSeqInfo().getContentName() == null

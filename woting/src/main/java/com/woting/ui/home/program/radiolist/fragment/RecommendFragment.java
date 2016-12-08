@@ -210,10 +210,10 @@ public class RecommendFragment extends Fragment{
 							String playUrI = newList.get(position - 2).getContentURI();
 							String playContentShareUrl=newList.get(position - 2).getContentShareURL();
 							String playMediaType = newList.get(position - 2).getMediaType();
-							String playAllTime = "0";
+							String playAllTime = newList.get(position - 2).getContentTimes();
 							String playInTime = "0";
-							String playContentDesc = newList.get(position - 2).getCurrentContent();
-							String playNum = newList.get(position - 2).getWatchPlayerNum();
+							String playContentDesc = newList.get(position - 2).getContentDesc();
+							String playNum = newList.get(position - 2).getPlayCount();
 							String playZanType = "0";
 							String playFrom = newList.get(position - 2).getContentPub();
 							String playFromId = "";

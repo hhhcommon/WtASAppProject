@@ -362,12 +362,12 @@ public class OnLineFragment extends Fragment {
                         String playUri = mainLists.get(position).getContentURI();
                         String playMediaType = mainLists.get(position).getMediaType();
                         String playContentShareUrl = mainLists.get(position).getContentShareURL();
-                        String playAllTime = "0";
+                        String playAllTime = mainLists.get(position).getContentTimes();
                         String playInTime = "0";
-                        String playContentDesc = mainLists.get(position).getCurrentContent();
+                        String playContentDesc = mainLists.get(position).getContentDesc();
                         String playerNum = mainLists.get(position).getPlayCount();
                         String playZanType = "0";
-                        String playFrom = "";
+                        String playFrom = mainLists.get(position).getContentPub();
                         String playFromId = "";
                         String playFromUrl = "";
                         String playAddTime = Long.toString(System.currentTimeMillis());

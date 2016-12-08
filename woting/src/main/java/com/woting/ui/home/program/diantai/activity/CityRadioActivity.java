@@ -348,9 +348,9 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                      String playerurI =SubListList.get(position).getContentURI();
                      String playcontentshareurl = SubListList.get(position).getContentShareURL();
                      String playermediatype = SubListList.get(position).getMediaType();
-                     String plaplayeralltime = "0";
+                     String plaplayeralltime = SubListList.get(position).getContentTimes();
                      String playerintime = "0";
-                     String playercontentdesc = SubListList.get(position).getCurrentContent();
+                     String playercontentdesc = SubListList.get(position).getContentDesc();
                      String playernum = SubListList.get(position).getPlayCount();
                      String playerzantype = "0";
                      String playerfrom = SubListList.get(position).getContentPub();

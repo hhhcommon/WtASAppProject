@@ -37,6 +37,24 @@ public class FileInfo implements Serializable {
 	private String ContentId;
 	private String playAllTime;
 	private String playFrom;
+	private String playCount;
+	private String ContentDescn;
+
+	public String getContentDescn() {
+		return ContentDescn;
+	}
+
+	public void setContentDescn(String contentDescn) {
+		ContentDescn = contentDescn;
+	}
+
+	public String getPlayCount() {
+		return playCount;
+	}
+
+	public void setPlayCount(String playCount) {
+		this.playCount = playCount;
+	}
 
 	public String getPlayFrom() {
 		return playFrom;
