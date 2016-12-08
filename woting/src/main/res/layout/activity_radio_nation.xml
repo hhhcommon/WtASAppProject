@@ -67,4 +67,14 @@
         android:scrollbars="none" >
     </ExpandableListView>
 
+    <ListView
+        android:id="@+id/listview_lv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/WHITE"
+        android:scrollbars="none"
+        android:visibility="gone"
+        >
+    </ListView>
+
 </LinearLayout>

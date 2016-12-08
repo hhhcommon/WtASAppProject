@@ -89,13 +89,16 @@ public class RadioListAdapter extends BaseAdapter  {
 		} else {
 			holder.mTv_number.setText(lists.getPlayCount());
 		}
-		
-		if (lists.getContentPub() == null
-				|| lists.getContentPub().equals("")
-				|| lists.getContentPub().equals("null")) {
+
+		try{
+			if (lists.getContentPub() == null
+					|| lists.getContentPub().equals("")
+					|| lists.getContentPub().equals("null")) {
+				holder.textRankPlaying.setText("未知");
+			} else {
+				holder.textRankPlaying.setText(lists.getContentPub());
+			}}catch (Exception e){
 			holder.textRankPlaying.setText("未知");
-		} else {
-			holder.textRankPlaying.setText(lists.getContentPub());
 		}
 
         String mediaType = lists.getMediaType();
