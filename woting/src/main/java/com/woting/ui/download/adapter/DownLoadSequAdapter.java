@@ -85,10 +85,10 @@ public class DownLoadSequAdapter extends BaseAdapter {
 			String url = AssembleImageUrlUtils.assembleImageUrl150(lists.getSequimgurl());
 			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 		}
-		if (lists.getAuthor() == null || lists.getAuthor().equals("")) {
+		if (lists.getPlayFrom() == null || lists.getPlayFrom() .equals("")) {
 			holder.tv_RankContent.setText("我听科技");
 		} else {
-			holder.tv_RankContent.setText(lists.getAuthor());
+			holder.tv_RankContent.setText(lists.getPlayFrom());
 		}
 		if(lists.getViewtype()==0){
 			/*0状态时 为点选框隐藏状态

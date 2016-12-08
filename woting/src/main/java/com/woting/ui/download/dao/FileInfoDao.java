@@ -280,7 +280,7 @@ public class FileInfoDao {
 			// 执行查询语句 返回一个cursor对象
 			/*cursor = db.rawQuery("Select * from fileinfo where finished='true' and userid =? group by sequid ", new String[]{userid});*/
 
-			cursor = db.rawQuery("Select count(filename),sum(end),sequname,sequimgurl,sequdesc,sequid,filename,author from fileinfo where finished='true' and userid =? group by sequid ", new String[]{userid});
+			cursor = db.rawQuery("Select count(filename),sum(end),sequname,sequimgurl,sequdesc,sequid,filename,author,playerfrom from fileinfo where finished='true' and userid =? group by sequid ", new String[]{userid});
 			// 循环遍历cursor中储存的键值对
 			while (cursor.moveToNext()) {
 				int count=cursor.getInt(0);
@@ -291,6 +291,7 @@ public class FileInfoDao {
 				String sequid = cursor.getString(cursor.getColumnIndex("sequid"));
 				String filename= cursor.getString(cursor.getColumnIndex("filename"));
 				String author= cursor.getString(cursor.getColumnIndex("author"));
+				String playerfrom=cursor.getString(cursor.getColumnIndex("playerfrom"));
 				// 把每个对象都放到history对象里
 				FileInfo h = new FileInfo();
 				h.setSequname(sequname);
@@ -301,6 +302,7 @@ public class FileInfoDao {
 				h.setAuthor(author);
 				h.setCount(count);
 				h.setSum(sum);
+				h.setPlayFrom(playerfrom);
 				// 网m里储存每个history对象
 				m.add(h);
 			}
