@@ -28,6 +28,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
+import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
@@ -81,7 +82,7 @@ public class OnLineFragment extends Fragment {
     //	private MyGridView gridView;
     private ListView gridView;
     private List<RankInfo> mainLists;
-    private SharedPreferences shared;
+    private SharedPreferences shared= BSApplication.SharedPreferences;
     private SearchPlayerHistoryDao dbDao;
     private String cityId;
     private String tag = "ONLINE_VOLLEY_REQUEST_CANCEL_TAG";
@@ -94,7 +95,6 @@ public class OnLineFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this.getActivity();
-        shared = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
         initDao();// 初始化数据库命令执行对象
 
     }
