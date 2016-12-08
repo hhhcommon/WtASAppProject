@@ -47,7 +47,7 @@ public class ListInfoAdapter extends BaseAdapter  {
 		ViewHolder holder;
 		if (convertView == null) {
 			holder = new ViewHolder();
-			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_item_radiolist, null);
+			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_item_radiolist, parent, false);
 			holder.textview_ranktitle = (TextView) convertView.findViewById(R.id.RankTitle);// 台名
 			holder.imageview_rankimage = (ImageView) convertView.findViewById(R.id.RankImageUrl);// 电台图标
 			holder.mTv_number = (TextView) convertView.findViewById(R.id.tv_num);
@@ -56,6 +56,7 @@ public class ListInfoAdapter extends BaseAdapter  {
 			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
 			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
 			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
+            holder.imageLast = (ImageView) convertView.findViewById(R.id.image_last);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -97,20 +98,32 @@ public class ListInfoAdapter extends BaseAdapter  {
 			holder.textRankPlaying.setText(lists.getContentPub());
 		}
 
-		//节目时长
-		if (lists.getContentTimes() == null
-				|| lists.getContentTimes().equals("")
-				|| lists.getContentTimes().equals("null")) {
-			holder.textTime.setText(context.getString(R.string.play_time));
-		} else {
-			int minute = Integer.valueOf(lists.getContentTimes()) / (1000 * 60);
-			int second = (Integer.valueOf(lists.getContentTimes()) / 1000) % 60;
-			if(second < 10){
-				holder.textTime.setText(minute + "\'" + " " + "0" + second + "\"");
-			}else{
-				holder.textTime.setText(minute + "\'" + " " + second + "\"");
-			}
-		}
+        String mediaType = lists.getMediaType();
+        if(mediaType.equals("SEQU")) {
+            holder.imageLast.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.image_program_number));
+            if (lists.getContentSubCount() == null || lists.getContentSubCount().equals("")
+                    || lists.getContentSubCount().equals("null")) {
+                holder.textTime.setText("0" + "集");
+            } else {
+                holder.textTime.setText(lists.getContentSubCount() + "集");
+            }
+        } else {
+            // 节目时长
+            holder.imageLast.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.image_program_time));
+            if (lists.getContentTimes() == null
+                    || lists.getContentTimes().equals("")
+                    || lists.getContentTimes().equals("null")) {
+                holder.textTime.setText(context.getString(R.string.play_time));
+            } else {
+                int minute = Integer.valueOf(lists.getContentTimes()) / (1000 * 60);
+                int second = (Integer.valueOf(lists.getContentTimes()) / 1000) % 60;
+                if(second < 10){
+                    holder.textTime.setText(minute + "\'" + " " + "0" + second + "\"");
+                }else{
+                    holder.textTime.setText(minute + "\'" + " " + second + "\"");
+                }
+            }
+        }
 		return convertView;
 	}
 
@@ -121,5 +134,6 @@ public class ListInfoAdapter extends BaseAdapter  {
 		public TextView textTime;
 		public TextView textRankPlaying;
 		public ImageView img_zhezhao;
+        public ImageView imageLast;
 	}
 }

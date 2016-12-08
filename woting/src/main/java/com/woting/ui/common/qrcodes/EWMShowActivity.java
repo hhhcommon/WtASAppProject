@@ -27,6 +27,7 @@ public class EWMShowActivity extends AppBaseActivity implements OnClickListener 
     private ImageView imageHead;
     private TextView textName;
     private TextView textNews;
+    private TextView textTip;
     private Bitmap bmp;
 
     @Override
@@ -49,6 +50,11 @@ public class EWMShowActivity extends AppBaseActivity implements OnClickListener 
     private void initView() {
         findViewById(R.id.head_left_btn).setOnClickListener(this);// 返回
 
+        ImageView imageBackground = (ImageView) findViewById(R.id.id_image_background);
+        imageBackground.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_image_qrcode_background));
+
+        textTip = (TextView) findViewById(R.id.id_text_tip);
+
         imageEwm = (ImageView) findViewById(R.id.imageView_ewm);
         imageHead = (ImageView) findViewById(R.id.image);
         textName = (TextView) findViewById(R.id.name);
@@ -67,10 +73,12 @@ public class EWMShowActivity extends AppBaseActivity implements OnClickListener 
     private void setData(int type, String imageUrl, String news, String name) {
         if (type == 1) {
             UserInviteMeInside meInside = (UserInviteMeInside) getIntent().getSerializableExtra("person");
-            bmp = CreateQRImageHelper.getInstance().createQRImage(type, null, meInside, 600, 600);
+            bmp = CreateQRImageHelper.getInstance().createQRImage(type, null, meInside, 220, 220);
         } else if (type == 2) {
             GroupInfo groupNews = (GroupInfo) getIntent().getSerializableExtra("group");
-            bmp = CreateQRImageHelper.getInstance().createQRImage(type, groupNews, null, 400, 400);
+            bmp = CreateQRImageHelper.getInstance().createQRImage(type, groupNews, null, 220, 220);
+
+            textTip.setText("扫面上面的二维码图案，加入群组");
         }
         if (name != null && !name.equals("")) {
             textName.setText(name);

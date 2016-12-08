@@ -95,6 +95,7 @@
                     android:textSize="@dimen/text_size_9"/>
                 
                 <ImageView
+                    android:id="@+id/image_last"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:src="@mipmap/image_program_time"

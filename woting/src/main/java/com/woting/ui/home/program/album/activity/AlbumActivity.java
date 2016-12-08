@@ -33,6 +33,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ShareUtils;
@@ -361,10 +362,14 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
                 break;
             case R.id.lin_pinglun: // 评论
                 if(!TextUtils.isEmpty(id)){
+                    if(CommonUtils.getUserIdNoImei(context)!=null&&!CommonUtils.getUserIdNoImei(context).equals("")){
                     Intent intent=new Intent(context, CommentActivity.class);
                     intent.putExtra("contentId",id);
                     intent.putExtra("MediaType","SEQU");
                     startActivity(intent);
+                    }else{
+                        ToastUtils.show_always(context,"请先登录~~");
+                    }
                 }else{
                     ToastUtils.show_always(context,"当前播放的节目的信息有误，无法获取评论列表");
                 }
