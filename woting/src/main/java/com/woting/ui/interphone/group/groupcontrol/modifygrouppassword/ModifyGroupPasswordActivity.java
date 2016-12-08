@@ -1,6 +1,5 @@
 package com.woting.ui.interphone.group.groupcontrol.modifygrouppassword;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -123,7 +122,7 @@ public class ModifyGroupPasswordActivity extends AppBaseActivity {
 			return flag;
 		}
 		if (!newpassword.equals(passwordconfirm)) {
-			new AlertDialog.Builder(this).setMessage("两次输入的密码不一致").setPositiveButton("确定", null).show();
+			Toast.makeText(this, "两次输入的密码不一致", Toast.LENGTH_LONG).show();
 			flag = false;
 			return flag;
 		}

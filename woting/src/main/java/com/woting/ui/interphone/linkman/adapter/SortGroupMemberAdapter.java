@@ -64,6 +64,7 @@ public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexe
             holder = new ViewHolder();
             holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);//名
             holder.tv_b_name = (TextView) convertView.findViewById(R.id.tv_b_name);//名
+            holder.tv_b_id = (TextView) convertView.findViewById(R.id.tv_b_id);//id
             holder.imageView_touxiang = (ImageView) convertView.findViewById(R.id.image);
             holder.indexLayut = (LinearLayout) convertView.findViewById(R.id.index);
             holder.lin_add = (LinearLayout) convertView.findViewById(R.id.lin_add);
@@ -87,6 +88,13 @@ public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexe
             holder.indexTv.setText(list.get(position).getSortLetters());
         } else {
             holder.indexLayut.setVisibility(View.GONE);
+        }
+
+        if (lists.getUserNum()== null || lists.getUserNum().equals("")) {
+            holder.tv_b_id.setVisibility(View.GONE);
+        } else {
+            holder.tv_b_id.setVisibility(View.VISIBLE);
+            holder.tv_b_id.setText("ID: "+lists.getUserNum());//id
         }
 
         if (lists.getUserName() == null || lists.getUserName().equals("")) {
@@ -136,6 +144,7 @@ public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexe
         public ImageView imageView_touxiang;
         public TextView tv_name;
         public ImageView img_zhezhao;
+        public TextView tv_b_id;
     }
 
     /**

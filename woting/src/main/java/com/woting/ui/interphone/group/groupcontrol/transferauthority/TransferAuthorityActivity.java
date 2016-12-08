@@ -319,6 +319,9 @@ public class TransferAuthorityActivity extends AppBaseActivity implements OnClic
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if(userList == null || userList.size() <= 1) {
+            return ;
+        }
         String search_name = s.toString();
         if (search_name.trim().equals("")) {
             imageClear.setVisibility(View.INVISIBLE);

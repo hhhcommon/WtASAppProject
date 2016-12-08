@@ -57,6 +57,10 @@ public class DownLoadListAdapter extends BaseAdapter {
             holder.textview_ranktitle = (TextView) convertView.findViewById(R.id.RankTitle);// 台名
             holder.imageview_rankimage = (ImageView) convertView.findViewById(R.id.RankImageUrl);// 电台图标
             holder.tv_RankContent = (TextView) convertView.findViewById(R.id.RankContent);
+
+            holder.tv_count = (TextView) convertView.findViewById(R.id.tv_count);//节目时长
+            holder.tv_sum = (TextView) convertView.findViewById(R.id.tv_sum);//节目大小
+
             holder.lin_delete = (LinearLayout) convertView.findViewById(R.id.lin_clear);
             holder.img_liu = (ImageView) convertView.findViewById(R.id.img_liu);
             Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
@@ -88,10 +92,25 @@ public class DownLoadListAdapter extends BaseAdapter {
             Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
         }
         if (lists.getAuthor() == null || lists.getAuthor().equals("")) {
-            holder.tv_RankContent.setText("我听科技");
+            holder.tv_RankContent.setText("未知");
         } else {
             holder.tv_RankContent.setText(lists.getAuthor());
         }
+
+
+        //此处需要修改，添加时长与内容大小
+        if (lists.getFileName() == null || lists.getFileName().equals("")) {
+            holder.tv_count.setText(context.getString(R.string.play_time));
+        } else {
+            holder.tv_count.setText(lists.getFileName());
+        }
+
+        if (lists.getFileName() == null || lists.getFileName().equals("")) {
+            holder.tv_sum.setText("0");
+        } else {
+            holder.tv_sum.setText(lists.getFileName());
+        }
+
 
         holder.lin_delete.setOnClickListener(new OnClickListener() {
             @Override
@@ -107,10 +126,8 @@ public class DownLoadListAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-        public ImageView imageview_rankimage;
-        public TextView textview_ranktitle;
-        public TextView tv_RankContent;
+        public ImageView imageview_rankimage, img_liu;
         public LinearLayout lin_delete;
-        public ImageView img_liu;
+        public TextView tv_count, tv_sum, tv_RankContent, textview_ranktitle;
     }
 }

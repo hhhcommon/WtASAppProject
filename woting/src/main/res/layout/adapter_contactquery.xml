@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/WHITE"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,57 +11,67 @@
         android:layout_marginLeft="2dp"
         android:background="@color/WHITE"
         android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:paddingBottom="10dp"
         android:paddingLeft="15dp"
         android:paddingRight="10dp"
-        android:paddingTop="10dp" >
+        android:paddingTop="10dp">
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/RankImageUrl"
-                android:layout_width="40dip"
-                android:layout_height="40dip"
+                android:layout_width="50dip"
+                android:layout_height="50dip"
                 android:layout_centerInParent="true"
                 android:scaleType="centerCrop" />
 
             <ImageView
                 android:id="@+id/img_zhezhao"
-                android:layout_width="40dip"
-                android:layout_height="40dip"
-                android:layout_centerInParent="true"/>
+                android:layout_width="50dip"
+                android:layout_height="50dip"
+                android:layout_centerInParent="true" />
         </RelativeLayout>
 
         <LinearLayout
             android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="18dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
             android:layout_weight="2"
             android:gravity="left|center"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/RankTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
                 android:singleLine="true"
                 android:text="朋友"
                 android:textColor="@color/dinglan_orange"
                 android:textSize="@dimen/wt_button_default_text" />
-
+            <TextView
+                android:id="@+id/RankId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="ID:000000"
+                android:textColor="@color/beijing"
+                android:textSize="11sp" />
             <TextView
                 android:id="@+id/RankContent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="朋 友"
                 android:textColor="@color/beijing"
-                android:textSize="@dimen/wt_login_text_wjmm" />
+                android:textSize="11sp" />
+
+
         </LinearLayout>
     </LinearLayout>
 

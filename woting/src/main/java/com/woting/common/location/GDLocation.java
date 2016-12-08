@@ -40,7 +40,7 @@ public class GDLocation {
 	/**
 	 * 定位
 	 */
-	public void startlocation() {
+	public void startLocation() {
 		mLocationClient.startLocation(); // 启动定位
 		mLocationClient.setLocationListener(mLocationListener);// 设置定位回调监听
 	}

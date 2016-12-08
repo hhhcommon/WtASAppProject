@@ -29,7 +29,7 @@ public class LocationService extends Service implements GDLocation.Location {
     public void onCreate() {
         super.onCreate();
         mGDLocation = GDLocation.getInstance(getApplicationContext(), this);//获取定位实例
-        mGDLocation.startlocation();//开启定位服务
+        mGDLocation.startLocation();//开启定位服务
     }
 
     //设置定位 并给整个程序提供数据支持

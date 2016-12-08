@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -42,7 +43,6 @@ public class BSApplication extends Application {
     public static SharedPreferences SharedPreferences;
     private ArrayList<String> staticFacesList;
     private static KSYProxyService proxyService = null;
-    public static BSApplication mBSApplication;
 
     @Override
     public void onCreate() {
@@ -89,12 +89,8 @@ public class BSApplication extends Application {
         return instance;
     }
 
-    public static KSYProxyService getKSYProxy(Context context) {
-        instance = context;
-        if(mBSApplication == null){
-            mBSApplication = new BSApplication();
-        }
-        return mBSApplication.proxyService == null ? (mBSApplication.proxyService = newKSYProxy()) : BSApplication.proxyService;
+    public static KSYProxyService getKSYProxy() {
+        return proxyService == null ? (proxyService = newKSYProxy()) : proxyService;
     }
 
     private static KSYProxyService newKSYProxy() {
@@ -112,9 +108,7 @@ public class BSApplication extends Application {
             }
             //去掉删除图片
             staticFacesList.remove("emotion_del_normal.png");
-            GlobalConfig.staticFacesList=staticFacesList;
-            int a=staticFacesList.size();
-
+            GlobalConfig.staticFacesList = staticFacesList;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -157,7 +151,7 @@ public class BSApplication extends Application {
     }
 
     //app退出时执行该操作
-    private void onStop() {
+    public static void onStop() {
         instance.stopService(Socket);
         instance.stopService(record);
         instance.stopService(voicePlayer);
@@ -165,5 +159,6 @@ public class BSApplication extends Application {
         instance.stopService(download);
         instance.stopService(Location);
         instance.stopService(Notification);
+        Log.v("--- onStop ---", "--- 杀死进程 ---");
     }
 }

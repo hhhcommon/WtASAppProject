@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.rectsoft.ppsip.G729ACodec;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.helper.BytesTransHelper;
 
 import java.io.File;
@@ -44,7 +45,7 @@ public  class VoiceStreamPlayerService   extends  Service{
 	public void onCreate() {
 		super.onCreate();
 		context=this;
-		push=new Intent("push_voiceimagerefresh");
+		push=new Intent(BroadcastConstants.PUSH_VOICE_IMAGE_REFRESH);
 		creatPlayer();//创建播放器
 		//压缩方法
 		try {
