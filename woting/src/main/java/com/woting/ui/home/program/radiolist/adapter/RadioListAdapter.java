@@ -88,28 +88,34 @@ public class RadioListAdapter extends BaseAdapter  {
 		} else {
 			holder.mTv_number.setText(lists.getPlayCount());
 		}
-		
-		if (lists.getContentPub() == null
-				|| lists.getContentPub().equals("")
-				|| lists.getContentPub().equals("null")) {
+
+		try{
+			if (lists.getContentPub() == null
+					|| lists.getContentPub().equals("")
+					|| lists.getContentPub().equals("null")) {
+				holder.textRankPlaying.setText("未知");
+			} else {
+				holder.textRankPlaying.setText(lists.getContentPub());
+			}}catch (Exception e){
 			holder.textRankPlaying.setText("未知");
-		} else {
-			holder.textRankPlaying.setText(lists.getContentPub());
 		}
-		
+
 		//节目时长
-		if (lists.getContentTimes() == null
-				|| lists.getContentTimes().equals("")
-				|| lists.getContentTimes().equals("null")) {
+		try{
+			if (lists.getContentTimes() == null
+					|| lists.getContentTimes().equals("")
+					|| lists.getContentTimes().equals("null")) {
+				holder.textTime.setText(context.getString(R.string.play_time));
+			} else {
+				int minute = Integer.valueOf(lists.getContentTimes()) / (1000 * 60);
+				int second = (Integer.valueOf(lists.getContentTimes()) / 1000) % 60;
+				if(second < 10){
+					holder.textTime.setText(minute + "\'" + " " + "0" + second + "\"");
+				}else{
+					holder.textTime.setText(minute + "\'" + " " + second + "\"");
+				}
+			}}catch (Exception e){
 			holder.textTime.setText(context.getString(R.string.play_time));
-		} else {
-			int minute = Integer.valueOf(lists.getContentTimes()) / (1000 * 60);
-			int second = (Integer.valueOf(lists.getContentTimes()) / 1000) % 60;
-			if(second < 10){
-				holder.textTime.setText(minute + "\'" + " " + "0" + second + "\"");
-			}else{
-				holder.textTime.setText(minute + "\'" + " " + second + "\"");
-			}
 		}
 		return convertView;
 	}

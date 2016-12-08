@@ -67,7 +67,7 @@ public class BSApplication extends Application {
         _l.add("GOTO::8");                   //之后，调到第9步处理
         scc = new SocketClientConfig();
         scc.setReConnectWays(_l);
-       Socket = new Intent(this, SocketService.class);                //socket服务
+        Socket = new Intent(this, SocketService.class);                //socket服务
         startService(Socket);
         record = new Intent(this, VoiceStreamRecordService.class);     //录音服务
         startService(record);

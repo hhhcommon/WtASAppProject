@@ -806,10 +806,15 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                 break;
             case R.id.lin_comment:
                 if (!TextUtils.isEmpty(GlobalConfig.playerobject.getContentId()) && !TextUtils.isEmpty(GlobalConfig.playerobject.getMediaType())) {
-                    Intent intent = new Intent(context, CommentActivity.class);
-                    intent.putExtra("contentId", GlobalConfig.playerobject.getContentId());
-                    intent.putExtra("MediaType", GlobalConfig.playerobject.getMediaType());
-                    startActivity(intent);
+                    if(CommonUtils.getUserIdNoImei(context)!=null&&!CommonUtils.getUserIdNoImei(context).equals("")){
+                        Intent intent = new Intent(context, CommentActivity.class);
+                        intent.putExtra("contentId", GlobalConfig.playerobject.getContentId());
+                        intent.putExtra("MediaType", GlobalConfig.playerobject.getMediaType());
+                        startActivity(intent);
+                    }else{
+                        ToastUtils.show_always(context,"请先登录~~");
+                    }
+
                 } else {
                     ToastUtils.show_always(context, "当前播放的节目的信息有误，无法获取评论列表");
                 }

@@ -7,8 +7,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -29,6 +31,8 @@ import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.diantai.activity.adapter.OnLinesRadioAdapter;
 import com.woting.ui.home.program.diantai.model.RadioPlay;
+import com.woting.ui.home.program.fmlist.adapter.RankInfoAdapter;
+import com.woting.ui.home.program.fmlist.model.RankInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,6 +58,9 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
     private String CatalogName;
     private String CatalogId;
     private String CatalogType;
+    private ArrayList<RankInfo> SubListList;
+    private RankInfoAdapter adapterList;
+    private ListView mlistView_main;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,17 +83,26 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
         if (!TextUtils.isEmpty(CatalogName)) {
             mTextView_Head.setText(CatalogName);
         }
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1&&CatalogId!=null) {
+            dialog = DialogUtils.Dialogph(context, "正在获取数据");
+            if(CatalogId.equals("810000")||CatalogId.equals("710000")||CatalogId.equals("820000")){
+                //处理那几个特殊的崩溃省市
+                sendTwice();
+                mListView.setVisibility(View.GONE);
+                mlistView_main.setVisibility(View.VISIBLE);
+            }else{
+                send();
+            }
+        } else {
+            ToastUtils.show_always(this, "网络连接失败，请稍后重试");
+        }
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在获取数据");
-            send();
-        } else {
-            ToastUtils.show_always(this, "网络连接失败，请稍后重试");
-        }
+
 
     }
 
@@ -122,6 +138,12 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                         try {
                             SubList = new Gson().fromJson(StringSubList, new TypeToken<List<RadioPlay>>() {
                             }.getType());
+                            if(SubList==null||SubList.size()==0){
+                                mListView.setVisibility(View.GONE);
+                                mlistView_main.setVisibility(View.VISIBLE);
+                              sendTwice();
+                            }else{
+
                             if (adapter == null) {
                                 adapter = new OnLinesRadioAdapter(context, SubList);
                                 mListView.setAdapter(adapter);
@@ -131,10 +153,12 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                             for (int i = 0; i < SubList.size(); i++) {
                                 mListView.expandGroup(i);
                             }
+                            }
+                            setListViewExpand();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        setListView();
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -153,27 +177,7 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
         });
     }
 
-    private JSONObject setParamSend() {
-        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        try {
-            jsonObject.put("MediaType", "RADIO");
-            jsonObject.put("CatalogId", CatalogId);
-            jsonObject.put("CatalogType", "2");
-            jsonObject.put("PerSize", "3");
-            jsonObject.put("ResultType", "1");
-            jsonObject.put("PageSize", "50");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
-    }
-
-    private void initDao() {// 初始化数据库命令执行对象
-        dbDao = new SearchPlayerHistoryDao(context);
-    }
-
-    // 这里要改
-    protected void setListView() {
+    private void setListViewExpand() {
 
         mListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
@@ -235,13 +239,159 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
         });
     }
 
+    private void sendTwice() {
+        VolleyRequest.RequestPost(GlobalConfig.getContentUrl, tag, setParam(), new VolleyCallback() {
+            private String ResultList;
+            private String StringSubList;
+            private String ReturnType;
+
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+                if (isCancelRequest) {
+                    return;
+                }
+                try {
+                    ReturnType = result.getString("ReturnType");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (ReturnType != null && ReturnType.equals("1001")) {
+                    try {
+                        ResultList = result.getString("ResultList");
+                        JSONTokener jsonParser = new JSONTokener(ResultList);
+                        JSONObject arg1 = (JSONObject) jsonParser.nextValue();
+                        try {
+                            StringSubList = arg1.getString("List");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            SubListList = new Gson().fromJson(StringSubList, new TypeToken<List<RankInfo>>() {
+                            }.getType());
+                                if (adapterList== null) {
+                                    adapterList = new RankInfoAdapter(context, SubListList);
+                                    mlistView_main.setAdapter(adapterList);
+                                } else {
+                                    adapter.notifyDataSetChanged();
+                                }
+                            setListView();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+
+                    ToastUtils.show_always(context, "已经没有相关数据啦");
+                }
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+    }
+
+    private JSONObject setParam() {
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("MediaType", "RADIO");
+            jsonObject.put("CatalogId", CatalogId);
+            jsonObject.put("CatalogType", "2");
+            jsonObject.put("ResultType", "3");
+            jsonObject.put("PageSize", "20");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    private JSONObject setParamSend() {
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("MediaType", "RADIO");
+            jsonObject.put("CatalogId", CatalogId);
+            jsonObject.put("CatalogType", "2");
+            jsonObject.put("PerSize", "3");
+            jsonObject.put("ResultType", "1");
+            jsonObject.put("PageSize", "50");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    private void initDao() {// 初始化数据库命令执行对象
+        dbDao = new SearchPlayerHistoryDao(context);
+    }
+
+    // 这里要改
+    protected void setListView() {
+     mlistView_main.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+         @Override
+         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+             if (SubListList != null && SubListList.get(position) != null && SubListList.get(position).getMediaType() != null) {
+                 String MediaType = SubListList.get(position).getMediaType();
+                 if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
+                     String playername = SubListList.get(position).getContentName();
+                     String playerimage = SubListList.get(position).getContentImg();
+                     String playerurl = SubListList.get(position).getContentPlay();
+                     String playerurI =SubListList.get(position).getContentURI();
+                     String playcontentshareurl = SubListList.get(position).getContentShareURL();
+                     String playermediatype = SubListList.get(position).getMediaType();
+                     String plaplayeralltime = "0";
+                     String playerintime = "0";
+                     String playercontentdesc = SubListList.get(position).getCurrentContent();
+                     String playernum = SubListList.get(position).getPlayCount();
+                     String playerzantype = "0";
+                     String playerfrom = SubListList.get(position).getContentPub();
+                     String playerfromid = "";
+                     String playerfromurl = "";
+                     String playeraddtime = Long.toString(System.currentTimeMillis());
+                     String bjuserid = CommonUtils.getUserId(context);
+                     String ContentFavorite = SubListList.get(position).getContentFavorite();
+                     String ContentId = SubListList.get(position).getContentId();
+                     String localurl = SubListList.get(position).getLocalurl();
+                     String sequName = SubListList.get(position).getSequName();
+                     String sequId = SubListList.get(position).getSequId();
+                     String sequDesc = SubListList.get(position).getSequDesc();
+                     String sequImg = SubListList.get(position).getSequImg();
+
+                     //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+                     PlayerHistory history = new PlayerHistory(
+                             playername, playerimage, playerurl, playerurI, playermediatype,
+                             plaplayeralltime, playerintime, playercontentdesc, playernum,
+                             playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playcontentshareurl,
+                             ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg);
+                     dbDao.deleteHistory(playerurl);
+                     dbDao.addHistory(history);
+                     HomeActivity.UpdateViewPager();
+
+                     PlayerFragment.TextPage=1;
+                     PlayerFragment.SendTextRequest(SubListList.get(position).getContentName(), context);
+                     finish();
+                 }
+             }
+         }
+     });
+    }
+
 
 
     private void setView() {
         mListView = (ExpandableListView) findViewById(R.id.listview_fm);
+        mlistView_main=(ListView)findViewById(R.id.listview_lv);
         head_left_btn = (LinearLayout) findViewById(R.id.head_left_btn);
         mTextView_Head = (TextView) findViewById(R.id.head_name_tv);
-        mTextView_Head.setText("国家台");
         mListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
 
             @Override
