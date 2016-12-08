@@ -57,6 +57,7 @@ public class FindGroupResultAdapter extends BaseAdapter {
 			holder = new ViewHolder();
 			holder.textview_invitename = (TextView) convertView.findViewById(R.id.RankTitle);		// 人名
 			holder.textview_invitemessage = (TextView) convertView.findViewById(R.id.RankContent);	// 介绍
+			holder.tv_b_id = (TextView) convertView.findViewById(R.id.RankId);//id
 			holder.imageview_inviteimage = (ImageView) convertView.findViewById(R.id.RankImageUrl);	// 该人头像
 			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
 			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
@@ -71,6 +72,14 @@ public class FindGroupResultAdapter extends BaseAdapter {
 		} else {
 			holder.textview_invitename.setText(Inviter.getGroupName());
 		}
+
+		if (Inviter.getGroupNum()== null || Inviter.getGroupNum().equals("")) {
+			holder.tv_b_id.setVisibility(View.GONE);
+		} else {
+			holder.tv_b_id.setVisibility(View.VISIBLE);
+			holder.tv_b_id.setText("ID: "+Inviter.getGroupNum());//id
+		}
+
 		if (Inviter.getGroupOriDescn()== null || Inviter.getGroupOriDescn().equals("")) {
 			 holder.textview_invitemessage.setVisibility(View.GONE);
 		} else {
@@ -98,5 +107,6 @@ public class FindGroupResultAdapter extends BaseAdapter {
 		public TextView textview_invitemessage;
 		public ImageView imageview_inviteimage;
 		public ImageView img_zhezhao;
+		public TextView tv_b_id;
 	}
 }

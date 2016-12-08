@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.helper.CommonHelper;
 /**
  * 网络变化监听者
@@ -44,7 +45,7 @@ public class NetWorkChangeReceiver extends BroadcastReceiver {
 
 	/**没连接上的处理*/
 	public void doUnConnected(){
-		Intent intent = new Intent("NetWorkPush");
+		Intent intent = new Intent(BroadcastConstants.PUSH_NetWorkPush);
 		Bundle bundle=new Bundle();
 		bundle.putString("message","false");
 		intent.putExtras(bundle);
@@ -53,7 +54,7 @@ public class NetWorkChangeReceiver extends BroadcastReceiver {
 
 	/**连接OK的处理*/
 	public void doConnected(){
-		Intent intent = new Intent("NetWorkPush");
+		Intent intent = new Intent(BroadcastConstants.PUSH_NetWorkPush);
 		Bundle bundle=new Bundle();
 		bundle.putString("message","true");
 		intent.putExtras(bundle);

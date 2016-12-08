@@ -201,7 +201,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                     groupCreator = talkListGP.getGroupManager();
                 }
                 groupSignature = talkListGP.getGroupSignature();
-                groupIntroduce = talkListGP.getGroupDesc();
+                groupIntroduce = talkListGP.getGroupDescn();
                 groupAlias = talkListGP.getGroupMyAlias();
                 groupType = talkListGP.getGroupType();
                 break;
@@ -269,38 +269,38 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
 
     // 初始化视图
     private void setView() {
-        findViewById(R.id.head_left_btn).setOnClickListener(this);// 返回
-        findViewById(R.id.lin_ewm).setOnClickListener(this);// 二维码
-        findViewById(R.id.image_add).setOnClickListener(this);// 添加群成员
-        findViewById(R.id.lin_allperson).setOnClickListener(this);// 查看所有群成员
+        findViewById(R.id.head_left_btn).setOnClickListener(this); // 返回
+        findViewById(R.id.lin_ewm).setOnClickListener(this);       // 二维码
+        findViewById(R.id.image_add).setOnClickListener(this);     // 添加群成员
+        findViewById(R.id.lin_allperson).setOnClickListener(this); // 查看所有群成员
         findViewById(R.id.lin_changetype).setOnClickListener(this);// 更改群类型
-        findViewById(R.id.tv_delete).setOnClickListener(this);// 退出群
+        findViewById(R.id.tv_delete).setOnClickListener(this);     // 退出群
 
-        imageHead = (ImageView) findViewById(R.id.image_touxiang);// 群头像
+        imageHead = (ImageView) findViewById(R.id.image_touxiang); // 群头像
         imageHead.setOnClickListener(this);
 
-        imageModify = (ImageView) findViewById(R.id.image_xiugai);// 修改群组资料
+        imageModify = (ImageView) findViewById(R.id.image_xiugai); // 修改群组资料
         imageModify.setOnClickListener(this);
 
         linearModifyPassword = findViewById(R.id.lin_modifypassword);// 修改密码
         linearModifyPassword.setOnClickListener(this);
 
-        linearGroupApply = findViewById(R.id.lin_groupapply);// 审核消息
+        linearGroupApply = findViewById(R.id.lin_groupapply);      // 审核消息
         linearGroupApply.setOnClickListener(this);
 
-        linearAddMessage = findViewById(R.id.lin_jiaqun);// 加群消息
+        linearAddMessage = findViewById(R.id.lin_jiaqun);          // 加群消息
         linearAddMessage.setOnClickListener(this);
 
-        LinearTransferAuthority = findViewById(R.id.lin_yijiao);// 移交管理员权限
+        LinearTransferAuthority = findViewById(R.id.lin_yijiao);   // 移交管理员权限
         LinearTransferAuthority.setOnClickListener(this);
 
-        imageEwm = (ImageView) findViewById(R.id.imageView_ewm);// 二维码
-        textGroupNumber = (TextView) findViewById(R.id.tv_number);// 群成员数量
-        editAliasName = (EditText) findViewById(R.id.et_b_name);// 别名
+        imageEwm = (ImageView) findViewById(R.id.imageView_ewm);   // 二维码
+        textGroupNumber = (TextView) findViewById(R.id.tv_number); // 群成员数量
+        editAliasName = (EditText) findViewById(R.id.et_b_name);   // 别名
         editSignature = (EditText) findViewById(R.id.et_groupSignature);// 描述
-        textGroupId = (TextView) findViewById(R.id.tv_id);// 群号
+        textGroupId = (TextView) findViewById(R.id.tv_id);         // 群号
 
-        gridView = (MyGridView) findViewById(R.id.gridView);// 展示群成员
+        gridView = (MyGridView) findViewById(R.id.gridView);      // 展示群成员
         gridView.setOnItemClickListener(this);
         gridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 
@@ -319,16 +319,24 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
             groupName = "我听科技";
         }
         textGroupName.setText(groupName);
-        if (groupId != null && !groupId.equals("")) {// 群 ID
-            String idString = "ID:" + groupId;
+
+        if (groupNumber!= null && !groupNumber.equals("")) {// 群 ID
+            String idString = "ID:" + groupNumber;
             textGroupId.setText(idString);
         }
+
+//        if (groupId != null && !groupId.equals("")) {// 群 ID
+//            String idString = "ID:" + groupId;
+//            textGroupId.setText(idString);
+//        }
         if (groupAlias == null || groupAlias.equals("")) {// 群别名
             groupAlias = groupName;
         }
         editAliasName.setText(groupAlias);
         if (groupSignature != null && !groupSignature.equals("")) {// 群描述
             editSignature.setText(groupSignature);
+        }else{
+            editSignature.setText("这家伙很懒，什么也没写");
         }
         if (headUrl == null || headUrl.equals("null") || headUrl.trim().equals("")) {// 群头像
             Bitmap bitmap = BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_qz);
@@ -488,7 +496,10 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                     editAliasName.setTextColor(getResources().getColor(R.color.white));
                     editSignature.setBackgroundColor(getResources().getColor(R.color.dinglan_orange));
                     editSignature.setTextColor(getResources().getColor(R.color.white));
-                    imageModify.setImageResource(R.mipmap.xiugai);
+
+                    Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.xiugai);
+                    imageModify.setImageBitmap(bmp);
+
                     update = false;
 
                     String name = editAliasName.getText().toString().trim();
@@ -513,8 +524,8 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                     editAliasName.setEnabled(true);
                     editAliasName.setBackgroundColor(getResources().getColor(R.color.white));
                     editAliasName.setTextColor(getResources().getColor(R.color.gray));
-
-                    imageModify.setImageResource(R.mipmap.wancheng);
+                    Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wancheng);
+                    imageModify.setImageBitmap(bmp);
                     update = true;
                 }
                 break;
@@ -608,7 +619,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         if (ChatFragment.isCalling && ChatFragment.interPhoneType.equals("user")) {// 此时有对讲状态 对讲状态为个人时弹出框展示
             InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
         }
-        ChatFragment.zhidinggroupss(groupId);
+        ChatFragment.zhiDingGroupSS(groupId);
         DuiJiangActivity.update();
         MyActivityManager mam = MyActivityManager.getInstance();
         mam.finishAllActivity();

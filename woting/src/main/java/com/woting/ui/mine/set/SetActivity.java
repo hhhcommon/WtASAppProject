@@ -105,7 +105,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
 
         textCache = (TextView) findViewById(R.id.text_cache);               // 缓存
         initCache();
-        proxy = BSApplication.getKSYProxy(context);                         // 播放缓存
+        proxy = BSApplication.getKSYProxy();                         // 播放缓存
     }
 
     @Override
