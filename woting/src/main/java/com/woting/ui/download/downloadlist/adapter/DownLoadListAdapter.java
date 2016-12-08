@@ -17,6 +17,7 @@ import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.ui.download.model.FileInfo;
 import com.woting.common.util.BitmapUtils;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class DownLoadListAdapter extends BaseAdapter {
@@ -91,25 +92,44 @@ public class DownLoadListAdapter extends BaseAdapter {
             String url = AssembleImageUrlUtils.assembleImageUrl150(lists.getImageurl());
             Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
         }
-        if (lists.getAuthor() == null || lists.getAuthor().equals("")) {
+
+        if (lists.getPlayFrom() == null || lists.getPlayFrom().equals("")) {
             holder.tv_RankContent.setText("未知");
         } else {
-            holder.tv_RankContent.setText(lists.getAuthor());
+            holder.tv_RankContent.setText(lists.getPlayFrom());
         }
 
 
-        //此处需要修改，添加时长与内容大小
-        if (lists.getFileName() == null || lists.getFileName().equals("")) {
+        //  时长
+        try {
+        if (lists.getPlayAllTime() == null || lists.getPlayAllTime().equals("")) {
             holder.tv_count.setText(context.getString(R.string.play_time));
         } else {
-            holder.tv_count.setText(lists.getFileName());
+            int minute = Integer.valueOf(lists.getPlayAllTime()) / (1000 * 60);
+            int second = (Integer.valueOf(lists.getPlayAllTime()) / 1000) % 60;
+            if (second < 10) {
+                holder.tv_count.setText(minute + "\'" + " " + "0" + second + "\"");
+            } else {
+                holder.tv_count.setText(minute + "\'" + " " + second + "\"");
+            }
+        }
+        }catch (Exception e){
+            e.printStackTrace();
+            holder.tv_count.setText(context.getString(R.string.play_time));
         }
 
-        if (lists.getFileName() == null || lists.getFileName().equals("")) {
-            holder.tv_sum.setText("0");
+        // 大小
+        try {
+        if (lists.getEnd()<=0) {
+            holder.tv_sum.setText("0MB");
         } else {
-            holder.tv_sum.setText(lists.getFileName());
+            holder.tv_sum.setText( new DecimalFormat("0.00").format(lists.getEnd()/ 1000.0 / 1000.0) + "MB");
         }
+        }catch (Exception e){
+            e.printStackTrace();
+            holder.tv_sum.setText("0MB");
+        }
+
 
 
         holder.lin_delete.setOnClickListener(new OnClickListener() {

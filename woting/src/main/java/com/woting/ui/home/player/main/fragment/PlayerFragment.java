@@ -843,6 +843,8 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                         mcontent.setContentPlay(data.getContentPlay());
                         mcontent.setContentImg(data.getContentImg());
                         mcontent.setContentName(data.getContentName());
+                        mcontent.setContentPub(data.getContentPub());
+                        mcontent.setContentTimes(data.getContentTimes());
                         mcontent.setUserid(CommonUtils.getUserId(context));
                         mcontent.setDownloadtype("0");
                         if (data.getSeqInfo() == null
