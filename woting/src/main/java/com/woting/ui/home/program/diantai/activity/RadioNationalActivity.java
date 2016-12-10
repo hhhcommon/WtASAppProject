@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
@@ -199,7 +200,11 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
                         HomeActivity.UpdateViewPager();
                         finish();
                         PlayerFragment.TextPage=1;
-                        PlayerFragment.SendTextRequest(SubList.get(groupPosition).getList().get(childPosition).getContentName(), context);
+                        Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                        Bundle bundle1=new Bundle();
+                        bundle1.putString("text",SubList.get(groupPosition).getList().get(childPosition).getContentName());
+                        push.putExtras(bundle1);
+                        context.sendBroadcast(push);
                     } else if (MediaType.equals("SEQU")) {
                         Intent intent = new Intent(context, AlbumActivity.class);
                         Bundle bundle = new Bundle();

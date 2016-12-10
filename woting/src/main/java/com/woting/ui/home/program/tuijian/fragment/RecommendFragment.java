@@ -20,6 +20,7 @@ import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
@@ -270,7 +271,11 @@ public class RecommendFragment extends Fragment {
                         dbDao.addHistory(history);
                         HomeActivity.UpdateViewPager();
                         PlayerFragment.TextPage=1;
-                        PlayerFragment.SendTextRequest(newList.get(position - 2).getContentName(), context);
+                        Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                        Bundle bundle1=new Bundle();
+                        bundle1.putString("text",newList.get(position - 2).getContentName());
+                        push.putExtras(bundle1);
+                        context.sendBroadcast(push);
                     } else if (MediaType.equals("SEQU")) {
                         Intent intent = new Intent(context, AlbumActivity.class);
                         Bundle bundle = new Bundle();

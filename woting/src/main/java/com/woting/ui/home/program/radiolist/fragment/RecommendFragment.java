@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.fragment.PlayerFragment;
@@ -239,7 +240,11 @@ public class RecommendFragment extends Fragment{
 							dbDao.addHistory(history);
 							HomeActivity.UpdateViewPager();
 							PlayerFragment.TextPage=1;
-							PlayerFragment.SendTextRequest(newList.get(position - 2).getContentName(),context);
+							Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+							Bundle bundle1=new Bundle();
+							bundle1.putString("text",newList.get(position - 2).getContentName());
+							push.putExtras(bundle1);
+							context.sendBroadcast(push);
 							getActivity().finish();
 						} else if (MediaType.equals("SEQU")) {
 							Intent intent = new Intent(context, AlbumActivity.class);

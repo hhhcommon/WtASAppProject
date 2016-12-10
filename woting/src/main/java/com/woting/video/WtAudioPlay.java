@@ -1,7 +1,7 @@
 package com.woting.video;
 
 public interface WtAudioPlay {
-	
+
 	/**
      * 播放
      */
@@ -18,22 +18,22 @@ public interface WtAudioPlay {
      * 继续播放
      */
     public void continuePlay();
-    
+
     /**
      * 是否播放
      */
     public boolean isPlaying();
-    
+
 	/**
      * 获取音量
-     */  
+     */
     public int getVolume();
-    
+
 	/**
      * 设置音量
-     */  
+     */
     public  int setVolume();
-    
+
 	/**
      * 设置播放时间
      */
@@ -54,5 +54,5 @@ public interface WtAudioPlay {
      * 获取标志
      */
     public String mark();
-    
+
 }
