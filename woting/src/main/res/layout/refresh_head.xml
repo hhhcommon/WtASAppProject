@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/head_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,38 +11,49 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:paddingBottom="20dp"
-        android:paddingTop="20dp" >
+        android:paddingTop="20dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true" >
+            android:layout_centerInParent="true">
 
             <ImageView
                 android:id="@+id/pull_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="60dp"
-                android:background="@mipmap/pull_icon_big" />
+                android:layout_marginRight="20dp"
+                android:visibility="visible"
+                android:layout_toLeftOf="@+id/refreshing_time"
+                android:background="@mipmap/xlistview_arrow"/>
 
-            <ImageView
+            <ProgressBar
                 android:id="@+id/refreshing_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="60dp"
-                android:background="@mipmap/refreshing"
-                android:visibility="gone" />
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_toLeftOf="@+id/refreshing_time"
+                android:layout_marginRight="20dp"
+                android:visibility="gone"
+                android:layout_centerVertical="true"/>
 
             <TextView
                 android:id="@+id/state_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/pull_to_refresh"
-            android:textColor="@color/gray"
-                android:textSize="16sp" />
+                android:layout_centerHorizontal="true"
+                android:text="@string/pull_to_refresh"/>
+
+            <TextView
+                android:id="@+id/refreshing_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/gray"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/state_tv"
+                android:layout_marginTop="3dp"
+                android:text="最近更新："/>
 
             <ImageView
                 android:id="@+id/state_iv"
@@ -50,8 +62,10 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="8dp"
                 android:layout_toLeftOf="@id/state_tv"
-                android:visibility="gone" />
+                android:visibility="gone"/>
+
         </RelativeLayout>
+
     </RelativeLayout>
 
 </RelativeLayout>

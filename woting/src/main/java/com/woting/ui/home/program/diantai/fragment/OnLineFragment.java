@@ -344,7 +344,7 @@ public class OnLineFragment extends Fragment {
 
             @Override
             protected void requestError(VolleyError error) {
-                // 请求错误信息已经在方法中统一打印了  这里就不需要重复打印
+                ToastUtils.showVolleyError(context);
             }
         });
     }
@@ -475,7 +475,7 @@ public class OnLineFragment extends Fragment {
 
             @Override
             protected void requestError(VolleyError error) {
-
+                ToastUtils.showVolleyError(context);
             }
         });
     }
@@ -556,7 +556,7 @@ public class OnLineFragment extends Fragment {
         if (GlobalConfig.CityName != null) {
             cityName = GlobalConfig.CityName;
         }
-        if (cityType != null && cityType.equals("true")) {
+        if (cityType.equals("true")) {
             tv_Name.setText(cityName);
             page = 1;
             BeginCatalogId = "";

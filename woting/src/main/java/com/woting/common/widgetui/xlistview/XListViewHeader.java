@@ -20,12 +20,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.woting.R;
+import com.woting.common.util.TimeUtils;
 
 public class XListViewHeader extends LinearLayout {
 	private LinearLayout mContainer;
 	private ImageView mArrowImageView;
 	private ProgressBar mProgressBar;
 	private TextView mHintTextView;
+    private TextView mRefreshTimeTextView;// 最近更新时间
 	private int mState = STATE_NORMAL;
 
 	private Animation mRotateUpAnim;
@@ -36,6 +38,8 @@ public class XListViewHeader extends LinearLayout {
 	public final static int STATE_NORMAL = 0;
 	public final static int STATE_READY = 1;
 	public final static int STATE_REFRESHING = 2;
+
+    private long refreshTime;
 
 	public XListViewHeader(Context context) {
 		super(context);
@@ -66,6 +70,10 @@ public class XListViewHeader extends LinearLayout {
 		mArrowImageView = (ImageView)findViewById(R.id.xlistview_header_arrow);
 		mHintTextView = (TextView)findViewById(R.id.xlistview_header_hint_textview);
 		mProgressBar = (ProgressBar)findViewById(R.id.xlistview_header_progressbar);
+        mRefreshTimeTextView = (TextView) findViewById(R.id.xlistview_header_time);
+
+        refreshTime = System.currentTimeMillis();
+        mRefreshTimeTextView.setText(TimeUtils.converTime(refreshTime));
 
 		mRotateUpAnim = new RotateAnimation(0.0f, -180.0f,
 				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
@@ -93,6 +101,7 @@ public class XListViewHeader extends LinearLayout {
 		case STATE_NORMAL:
 			if (mState == STATE_READY) {
 				mArrowImageView.startAnimation(mRotateDownAnim);
+                mRefreshTimeTextView.setText(TimeUtils.converTime(refreshTime));
 			}
 			if (mState == STATE_REFRESHING) {
 				mArrowImageView.clearAnimation();
@@ -108,6 +117,7 @@ public class XListViewHeader extends LinearLayout {
 			break;
 		case STATE_REFRESHING:
 			mHintTextView.setText(R.string.xlistview_header_hint_loading);
+            refreshTime = System.currentTimeMillis();
 			break;
 			default:
 		}

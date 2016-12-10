@@ -239,7 +239,7 @@ public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
             if (lists.getPlayerFrom() == null || lists.getPlayerFrom().equals("")) {
                 holder.textRankContent.setText("未知");
             } else {
-                holder.textRankContent.setText(lists.getContentPub());
+                holder.textRankContent.setText(lists.getPlayerFrom());
             }
             if (lists.getPlayerInTime() == null || lists.getPlayerInTime().equals("")) {
                 holder.textView_PlayIntroduce.setText("未知");
