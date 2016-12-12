@@ -34,7 +34,9 @@ public class SearchPlayerHistoryDao {
 		SQLiteDatabase db = helper.getWritableDatabase();
 		String s=playerhistory.getPlayerNum();
 		db.execSQL("insert into playerhistory(playername,playerimage,playerurl,playerurI,playermediatype,playeralltime"
-						+ ",playerintime,playercontentdesc,playernum,playerzantype,playerfrom,playerfromid,playeraddtime,bjuserid,playshareurl,playfavorite,contentid,localurl,sequname,sequimg,sequdesc,sequid) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+						+ ",playerintime,playercontentdesc,playernum,playerzantype,playerfrom,playerfromid,"
+				+ "playeraddtime,bjuserid,playshareurl,playfavorite,"
+				+ "contentid,localurl,sequname,sequimg,sequdesc,sequid,playtag,contentplaytype) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
 				new Object[] { playerhistory.getPlayerName(), playerhistory.getPlayerImage()
 						, playerhistory.getPlayerUrl(),playerhistory.getPlayerUrI()
 						,playerhistory.getPlayerMediaType()
@@ -44,7 +46,7 @@ public class SearchPlayerHistoryDao {
 						, playerhistory.getBJUserid(),playerhistory.getPlayContentShareUrl()
 						,playerhistory.getContentFavorite(),playerhistory.getContentID(),playerhistory.getLocalurl()
 						, playerhistory.getSequName(),playerhistory.getSequImg(),playerhistory.getSequDesc()
-						,playerhistory.getSequId()});//sql语句
+						,playerhistory.getSequId(),playerhistory.getPlayTag(),playerhistory.getContentPlayType()});//sql语句
 		db.close();//关闭数据库对象
 	}
 
@@ -86,11 +88,13 @@ public class SearchPlayerHistoryDao {
 				String sequid=cursor.getString(cursor.getColumnIndex("sequid"));
 				String sequdesc=cursor.getString(cursor.getColumnIndex("sequdesc"));
 				String sequimg=cursor.getString(cursor.getColumnIndex("sequimg"));
+				//String playtag=cursor.getString(cursor.getColumnIndex("playtag"));
+				String contentplaytype=cursor.getString(cursor.getColumnIndex("contentplaytype"));
 
 
 				PlayerHistory h = new PlayerHistory(playername, playerimage, playerurl,playerurI, playermediatype, playeralltime,
 						playerintime, playercontentdesc, playernum, playerzantype, playerfrom, playerfromid,playerfromurl,playeraddtime,bjuserid,playcontentshareurl,ContentFavorite,ContentID
-						,localurl,sequname,sequid,sequdesc,sequimg);
+						,localurl,sequname,sequid,sequdesc,sequimg,contentplaytype);
 
 
 				myList.add(h);
@@ -142,9 +146,11 @@ public class SearchPlayerHistoryDao {
 				String sequid=cursor.getString(cursor.getColumnIndex("sequid"));
 				String sequdesc=cursor.getString(cursor.getColumnIndex("sequdesc"));
 				String sequimg=cursor.getString(cursor.getColumnIndex("sequimg"));
+				String contentplaytype=cursor.getString(cursor.getColumnIndex("contentplaytype"));
+
 				PlayerHistory h = new PlayerHistory(playername, playerimage, playerurl,playerurI, playermediatype, playeralltime,
 						playerintime, playercontentdesc, playernum, playerzantype, playerfrom, playerfromid,playerfromurl,playeraddtime,bjuserid,playcontentshareurl,ContentFavorite,ContentID
-						,localurl,sequname,sequid,sequdesc,sequimg);
+						,localurl,sequname,sequid,sequdesc,sequimg,contentplaytype);
 				mylist.add(h);
 			}
 		} catch (Exception e) {
@@ -195,9 +201,11 @@ public class SearchPlayerHistoryDao {
 				String sequid=cursor.getString(cursor.getColumnIndex("sequid"));
 				String sequdesc=cursor.getString(cursor.getColumnIndex("sequdesc"));
 				String sequimg=cursor.getString(cursor.getColumnIndex("sequimg"));
+				String contentplaytype=cursor.getString(cursor.getColumnIndex("contentplaytype"));
+
 				PlayerHistory h = new PlayerHistory(playername, playerimage, playerurl,playerurI, playermediatype, playeralltime,
 						playerintime, playercontentdesc, playernum, playerzantype, playerfrom, playerfromid,playerfromurl,playeraddtime,bjuserid,playcontentshareurl,ContentFavorite,ContentID
-						,localurl,sequname,sequid,sequdesc,sequimg);
+						,localurl,sequname,sequid,sequdesc,sequimg,contentplaytype);
 				mylist.add(h);
 			}
 		} catch (Exception e) {

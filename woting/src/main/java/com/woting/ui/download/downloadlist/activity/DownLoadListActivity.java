@@ -233,13 +233,14 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
                             String sequId = mFileInfo.getSequid();
                             String sequImg = mFileInfo.getSequimgurl();
                             String sequDesc = mFileInfo.getSequdesc();
+                            String ContentPlayType=mFileInfo.getContentPlayType();
 
                             // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                             PlayerHistory history = new PlayerHistory(
                                     playername, playerimage, playerurl, playerurI, playermediatype,
                                     plaplayeralltime, playerintime, playercontentdesc, playernum,
                                     playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playercontentshareurl, ContentFavorite,
-                                    ContentId, playlocalrurl, sequName, sequId, sequDesc, sequImg);
+                                    ContentId, playlocalrurl, sequName, sequId, sequDesc, sequImg,ContentPlayType);
                             dbDao.deleteHistory(playerurl);
                             dbDao.addHistory(history);
                             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {

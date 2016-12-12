@@ -189,12 +189,14 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
                         String sequDesc = SubList.get(groupPosition).getList().get(childPosition).getSequDesc();
                         String sequImg =  SubList.get(groupPosition).getList().get(childPosition).getSequImg();
 
+                        String ContentPlayType= SubList.get(groupPosition).getList().get(childPosition).getContentPlayType();
+
                         //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playName, playImage, playUrl, playUri, playMediaType,
                                 playAllTime, playInTime, playContentDesc, playerNum,
                                 playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg);
+                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg,ContentPlayType);
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
                         HomeActivity.UpdateViewPager();

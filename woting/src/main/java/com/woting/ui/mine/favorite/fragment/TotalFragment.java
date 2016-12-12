@@ -362,10 +362,10 @@ public class TotalFragment extends Fragment implements OnClickListener {
 					String playerurl = list.get(groupPosition).getList().get(childPosition).getContentPlay();
 					String playerurI = list.get(groupPosition).getList().get(childPosition).getContentURI();
 					String playermediatype = list.get(groupPosition).getList().get(childPosition).getMediaType();
-					String plaplayeralltime = "0";
+					String plaplayeralltime =list.get(groupPosition).getList().get(childPosition).getContentTimes();
 					String playerintime = "0";
-					String playercontentdesc = list.get(groupPosition).getList().get(childPosition).getCurrentContent();
-					String playernum = list.get(groupPosition).getList().get(childPosition).getWatchPlayerNum();
+					String playercontentdesc = list.get(groupPosition).getList().get(childPosition).getContentDesc();
+					String playernum = list.get(groupPosition).getList().get(childPosition).getPlayCount();
 					String playerzantype = "0";
 					String playerfrom = list.get(groupPosition).getList().get(childPosition).getContentPub();
 					String playerfromid = "";
@@ -381,13 +381,15 @@ public class TotalFragment extends Fragment implements OnClickListener {
 					String sequId=list.get(groupPosition).getList().get(childPosition).getSequId();
 					String sequDesc=list.get(groupPosition).getList().get(childPosition).getSequDesc();
 					String sequImg=list.get(groupPosition).getList().get(childPosition).getSequImg();
+					String ContentPlayType= list.get(groupPosition).getList().get(childPosition).getContentPlayType();
+
 
 					// 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
 					PlayerHistory history = new PlayerHistory(
 							playername,  playerimage, playerurl, playerurI,playermediatype,
 							plaplayeralltime, playerintime, playercontentdesc, playernum,
 							playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
-							ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
+							ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg,ContentPlayType);
                     if(mediaType.equals("TTS")){
                         dbDao.deleteHistoryById(ContentId);
                     }else {

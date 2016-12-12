@@ -260,13 +260,14 @@ public class RecommendFragment extends Fragment {
                         String sequId = newList.get(position - 2).getSequId();
                         String sequDesc = newList.get(position - 2).getSequDesc();
                         String sequImg = newList.get(position - 2).getSequImg();
+                        String ContentPlayType= newList.get(position-2).getContentPlayType();
 
                         //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playername, playerimage, playerurl, playerurI, playermediatype,
                                 plaplayeralltime, playerintime, playercontentdesc, playernum,
                                 playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playerContentShareUrl,
-                                ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg);
+                                ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg,ContentPlayType);
                         dbDao.deleteHistory(playerurl);
                         dbDao.addHistory(history);
                         HomeActivity.UpdateViewPager();

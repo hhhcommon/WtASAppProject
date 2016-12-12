@@ -28,11 +28,29 @@ public class PlayerHistory implements Serializable{
 	private String ContentID;
 	private String ContentPub;
 
-	private String localurl;// 本地播放地址
-	private String sequId;//专辑ID
-	private String sequImg;//专辑图片
-	private String sequDesc;//专辑描述
-	private String sequName;//专辑名称
+	private String localurl;        // 本地播放地址
+	private String sequId;          // 专辑ID
+	private String sequImg;         // 专辑图片
+	private String sequDesc;        // 专辑描述
+	private String sequName;        // 专辑名称
+	private String playTag;         // 标签<预留>
+	private String ContentPlayType; // 内容后缀
+
+	public String getContentPlayType() {
+		return ContentPlayType;
+	}
+
+	public String getPlayTag() {
+		return playTag;
+	}
+
+	public void setContentPlayType(String contentPlayType) {
+		ContentPlayType = contentPlayType;
+	}
+
+	public void setPlayTag(String playTag) {
+		this.playTag = playTag;
+	}
 
 	public String getSequImg() {
 		return sequImg;
@@ -160,7 +178,9 @@ public class PlayerHistory implements Serializable{
 	public PlayerHistory(String playername,String  playerimage,String playerurl,String playerurI,String playermediatype,
 						 String playeralltime,String playerintime,String playercontentdesc,String playernum,
 						 String playerzantype,String  playerfrom,String playerfromid,String Playerfromurl,
-						 String playeraddtime,String bjuserid,String playcontentshareurl,String ContentFavorite,String ContentID,String localurl,String sequName,String sequId,String sequDesc,String sequImg) {
+						 String playeraddtime,String bjuserid,String playcontentshareurl,String ContentFavorite,
+						 String ContentID,String localurl,String sequName,
+						 String sequId,String sequDesc,String sequImg,String contentPlayType) {
 		super();
 		PlayerName = playername;
 		PlayerImage = playerimage;
@@ -178,6 +198,7 @@ public class PlayerHistory implements Serializable{
 		PlayerAddTime=playeraddtime;
 		BJUserid=bjuserid;
 		PlayContentShareUrl=playcontentshareurl;
+		ContentPlayType=contentPlayType;
 		this.sequName=sequName;
 		this.sequDesc=sequDesc;
 		this.sequId=sequId;

@@ -88,13 +88,11 @@ public class GroupTalkAdapter extends BaseAdapter{
 			holder.tv_name.setText("添加");
 			holder.headFrame.setVisibility(View.GONE);		// 08/04  头像的六边形边框  添加和剔除图标本身是六边形图标  所以隐藏其六边形边框
 			Bitmap bp=BitmapUtils.readBitMap(context, R.mipmap.wt_img_groupdetail_gridview_itemnull);
-	/*		holder.imageView_touxiang.setImageResource(R.drawable.image_add);*/
 			holder.imageView_touxiang.setImageBitmap(bp);
 		}else{
 			holder.tv_name.setText("删除");
 			holder.headFrame.setVisibility(View.GONE);		// 08/04  头像的六边形边框  添加和剔除图标本身是六边形图标  所以隐藏其六边形边框
 			Bitmap bp=BitmapUtils.readBitMap(context, R.mipmap.image_tichu);
-		/*	holder.imageView_touxiang.setImageResource(R.drawable.image_tichu);*/
 			holder.imageView_touxiang.setImageBitmap(bp);
 		}
 		//		holder.lin_shanchu.setOnClickListener(new View.OnClickListener() {

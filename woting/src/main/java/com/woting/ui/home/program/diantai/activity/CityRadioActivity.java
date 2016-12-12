@@ -212,12 +212,14 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                         String sequDesc = SubList.get(groupPosition).getList().get(childPosition).getSequDesc();
                         String sequImg =  SubList.get(groupPosition).getList().get(childPosition).getSequImg();
 
+                        String ContentPlayType= SubList.get(groupPosition).getList().get(childPosition).getContentPlayType();
+
                         //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playName, playImage, playUrl, playUri, playMediaType,
                                 playAllTime, playInTime, playContentDesc, playerNum,
                                 playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg);
+                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg,ContentPlayType);
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
                         HomeActivity.UpdateViewPager();
@@ -371,13 +373,14 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                      String sequId = SubListList.get(position).getSequId();
                      String sequDesc = SubListList.get(position).getSequDesc();
                      String sequImg = SubListList.get(position).getSequImg();
+                     String ContentPlayType= SubListList.get(position).getContentPlayType();
 
                      //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                      PlayerHistory history = new PlayerHistory(
                              playername, playerimage, playerurl, playerurI, playermediatype,
                              plaplayeralltime, playerintime, playercontentdesc, playernum,
                              playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playcontentshareurl,
-                             ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg);
+                             ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg,ContentPlayType);
                      dbDao.deleteHistory(playerurl);
                      dbDao.addHistory(history);
                      HomeActivity.UpdateViewPager();

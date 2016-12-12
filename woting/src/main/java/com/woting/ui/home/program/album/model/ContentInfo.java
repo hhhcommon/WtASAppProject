@@ -36,6 +36,24 @@ public class ContentInfo implements Serializable {
 	private String ContentFavorite;
 	private String ContentId;
 	private String localurl;
+	private String playTag;         // 标签<预留>
+	private String ContentPlayType; // 内容后缀
+
+	public String getContentPlayType() {
+		return ContentPlayType;
+	}
+
+	public String getPlayTag() {
+		return playTag;
+	}
+
+	public void setContentPlayType(String contentPlayType) {
+		ContentPlayType = contentPlayType;
+	}
+
+	public void setPlayTag(String playTag) {
+		this.playTag = playTag;
+	}
 	
 	public String getLocalurl() {
 		return localurl;
