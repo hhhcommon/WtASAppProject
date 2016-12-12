@@ -158,10 +158,10 @@ public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
             } else {
                 holder.textNumber.setText(lists.getPlayerNum());
             }
-            if (lists.getContentPub() == null || lists.getContentPub().equals("")) {
-                holder.textRankContent.setText("我听科技");
+            if (lists.getPlayerFrom() == null || lists.getPlayerFrom().equals("")) {
+                holder.textRankContent.setText("未知");
             } else {
-                holder.textRankContent.setText(lists.getContentPub());
+                holder.textRankContent.setText(lists.getPlayerFrom());
             }
             if (lists.getPlayerInTime() == null | lists.getPlayerInTime().equals("")) {
                 holder.textView_PlayIntroduce.setText("未知");
@@ -198,7 +198,7 @@ public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
                 holder.textNumber.setText(lists.getPlayerNum());
             }
             if (lists.getPlayerFrom() == null || lists.getPlayerFrom().equals("")) {
-                holder.textRankContent.setText("我听科技");
+                holder.textRankContent.setText("未知");
             } else {
                 holder.textRankContent.setText(lists.getPlayerFrom());
             }
@@ -236,10 +236,10 @@ public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
             } else {
                 holder.textNumber.setText(lists.getPlayerNum());
             }
-            if (lists.getContentPub() == null || lists.getContentPub().equals("")) {
-                holder.textRankContent.setText("我听科技");
+            if (lists.getPlayerFrom() == null || lists.getPlayerFrom().equals("")) {
+                holder.textRankContent.setText("未知");
             } else {
-                holder.textRankContent.setText(lists.getContentPub());
+                holder.textRankContent.setText(lists.getPlayerFrom());
             }
             if (lists.getPlayerInTime() == null || lists.getPlayerInTime().equals("")) {
                 holder.textView_PlayIntroduce.setText("未知");

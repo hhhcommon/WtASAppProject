@@ -16,7 +16,7 @@
             android:animationCache="false"
             android:divider="@color/WHITE"
             android:scrollbars="none"
-            android:scrollingCache="false"/>
+            android:scrollingCache="false" />
 
         <LinearLayout
             android:id="@+id/lin_chose"
@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical"/>
+                android:orientation="vertical" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -230,14 +230,6 @@
                         android:textColor="@color/wt_login_third"
                         android:textSize="14sp" />
 
-                    <TextView
-                        android:id="@+id/text_speak_content"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:textColor="@color/orange"
-                        android:textSize="14sp"
-                        android:visibility="gone" />
                 </LinearLayout>
 
                 <TextView

@@ -38,13 +38,13 @@ public class WtDefaultControl {
 	 * 点击上一首按钮
 	 */
 	public void pushUpButton() {
-		PlayerFragment.playLast();
+//		PlayerFragment.playLast();
 	}
 	/**
 	 * 点击下一首按钮
 	 */
 	public void pushDownButton() {
-		PlayerFragment.playNext();
+//		PlayerFragment.playNext();
 	}
 
 	/**

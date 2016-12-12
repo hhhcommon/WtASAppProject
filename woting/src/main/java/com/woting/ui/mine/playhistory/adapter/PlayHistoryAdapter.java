@@ -114,7 +114,7 @@ public class PlayHistoryAdapter extends BaseAdapter {
 			holder.textNumber.setText(lists.getPlayerNum());
 		}
 		if (lists.getPlayerFrom() == null || lists.getPlayerFrom().equals("")) {
-			holder.textRankContent.setText("我听科技");
+			holder.textRankContent.setText("未知");
 		} else {
 			holder.textRankContent.setText(lists.getPlayerFrom());
 		}

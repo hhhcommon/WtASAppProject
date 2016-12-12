@@ -211,7 +211,11 @@ public class MyUploadSoundFragment extends Fragment implements AdapterView.OnIte
                     MainActivity.change();
                     HomeActivity.UpdateViewPager();
                     PlayerFragment.TextPage = 1;
-                    PlayerFragment.SendTextRequest(newList.get(position).getContentName(), context);
+                    Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                    Bundle bundle1=new Bundle();
+                    bundle1.putString("text",newList.get(position).getContentName());
+                    push.putExtras(bundle1);
+                    context.sendBroadcast(push);
                     getActivity().finish();
                 } else {
                     SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();

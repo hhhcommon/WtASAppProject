@@ -1,18 +1,18 @@
 /*****************************************************************************
  * LibVLC.java
- *****************************************************************************
+ * ****************************************************************************
  * Copyright © 2010-2013 VLC authors and VideoLAN
- *
+ * <p>
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
@@ -20,14 +20,14 @@
 
 package org.videolan.libvlc;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Map;
-
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 import android.view.Surface;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class LibVLC {
     private static final String TAG = "VLC/LibVLC";
@@ -95,6 +95,7 @@ public class LibVLC {
     public native void detachSurface();
 
     public native void attachSubtitlesSurface(Surface surface);
+
     public native void detachSubtitlesSurface();
 
     public native void eventVideoPlayerActivityCreated(boolean created);
@@ -102,16 +103,26 @@ public class LibVLC {
     /* Load library before object instantiation */
     static {
         try {
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1)
+//            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1)
+//                System.loadLibrary("iomx-gingerbread");
+//            else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB_MR2)
+//                System.loadLibrary("iomx-hc");
+//            else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1)
+//                System.loadLibrary("iomx-ics");
+//            else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2)
+//                System.loadLibrary("iomx-jbmr2");
+//            else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2)
+//                System.loadLibrary("iomx-kk");
+
+
+            if (Build.VERSION.SDK_INT <= 10) {
                 System.loadLibrary("iomx-gingerbread");
-            else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB_MR2)
+            } else if (Build.VERSION.SDK_INT <= 13) {
                 System.loadLibrary("iomx-hc");
-            else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1)
+            }else if (Build.VERSION.SDK_INT > 18){
                 System.loadLibrary("iomx-ics");
-            else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2)
-                System.loadLibrary("iomx-jbmr2");
-            else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2)
-                System.loadLibrary("iomx-kk");
+            }
+
         } catch (Throwable t) {
             // No need to warn if it isn't found, when we intentionally don't build these except for debug
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
@@ -259,8 +270,7 @@ public class LibVLC {
                 this.hardwareAcceleration = HW_ACCELERATION_FULL;
             else
                 this.hardwareAcceleration = HW_ACCELERATION_DISABLED;
-        }
-        else
+        } else
             this.hardwareAcceleration = hardwareAcceleration;
     }
 
@@ -304,7 +314,7 @@ public class LibVLC {
 
     public int getDeblocking() {
         int ret = deblocking;
-        if(deblocking < 0) {
+        if (deblocking < 0) {
             /**
              * Set some reasonable deblocking defaults:
              *
@@ -313,16 +323,16 @@ public class LibVLC {
              * Skip non-key (3) for all devices that don't meet anything above
              */
             LibVlcUtil.MachineSpecs m = LibVlcUtil.getMachineSpecs();
-            if( (m.hasArmV6 && !(m.hasArmV7)) || m.hasMips )
+            if ((m.hasArmV6 && !(m.hasArmV7)) || m.hasMips)
                 ret = 4;
-            else if(m.frequency >= 1200 && m.processors > 2)
+            else if (m.frequency >= 1200 && m.processors > 2)
                 ret = 1;
-            else if(m.bogoMIPS >= 1200 && m.processors > 2) {
+            else if (m.bogoMIPS >= 1200 && m.processors > 2) {
                 ret = 1;
                 Log.d(TAG, "Used bogoMIPS due to lack of frequency info");
             } else
                 ret = 3;
-        } else if(deblocking > 4) { // sanity check
+        } else if (deblocking > 4) { // sanity check
             ret = 3;
         }
         return ret;
@@ -348,21 +358,19 @@ public class LibVLC {
         this.verboseMode = verboseMode;
     }
 
-    public float[] getEqualizer()
-    {
+    public float[] getEqualizer() {
         return equalizer;
     }
 
-    public void setEqualizer(float[] equalizer)
-    {
+    public void setEqualizer(float[] equalizer) {
         this.equalizer = equalizer;
         applyEqualizer();
     }
 
-    private void applyEqualizer()
-    {
+    private void applyEqualizer() {
         setNativeEqualizer(mInternalMediaPlayerInstance, this.equalizer);
     }
+
     private native int setNativeEqualizer(long mediaPlayer, float[] bands);
 
     public boolean frameSkipEnabled() {
@@ -400,7 +408,7 @@ public class LibVLC {
         Log.v(TAG, "Initializing LibVLC");
         mDebugLogBuffer = new StringBuffer();
         if (!mIsInitialized) {
-            if(!LibVlcUtil.hasCompatibleCPU(context)) {
+            if (!LibVlcUtil.hasCompatibleCPU(context)) {
                 Log.e(TAG, LibVlcUtil.getErrorMsg());
                 throw new LibVlcException();
             }
@@ -532,7 +540,9 @@ public class LibVLC {
      * Start buffering to the mDebugLogBuffer.
      */
     public native void startDebugBuffer();
+
     public native void stopDebugBuffer();
+
     public String getBufferContent() {
         return mDebugLogBuffer.toString();
     }
@@ -657,7 +667,7 @@ public class LibVLC {
 
     public native int getAudioTracksCount();
 
-    public native Map<Integer,String> getAudioTrackDescription();
+    public native Map<Integer, String> getAudioTrackDescription();
 
     public native Map<String, Object> getStats();
 
@@ -669,7 +679,7 @@ public class LibVLC {
 
     public native int addSubtitleTrack(String path);
 
-    public native Map<Integer,String> getSpuTrackDescription();
+    public native Map<Integer, String> getSpuTrackDescription();
 
     public native int getSpuTrack();
 
@@ -678,8 +688,8 @@ public class LibVLC {
     public native int getSpuTracksCount();
 
     public static native String nativeToURI(String path);
-    
-    public native static void sendMouseEvent( int action, int button, int x, int y);
+
+    public native static void sendMouseEvent(int action, int button, int x, int y);
 
     /**
      * Quickly converts path to URIs, which are mandatory in libVLC.
@@ -689,7 +699,7 @@ public class LibVLC {
      * @return A URI representation of path
      */
     public static String PathToURI(String path) {
-        if(path == null) {
+        if (path == null) {
             throw new NullPointerException("Cannot convert null path!");
         }
         return LibVLC.nativeToURI(path);
@@ -699,14 +709,14 @@ public class LibVLC {
 
     public native static boolean nativeIsPathDirectory(String path);
 
-     /**
-      * Expand and continue playing the current media.
-      *
-      * @return the index of the media was expanded, and -1 if no media was expanded
-      */
+    /**
+     * Expand and continue playing the current media.
+     *
+     * @return the index of the media was expanded, and -1 if no media was expanded
+     */
     public int expandAndPlay() {
         int r = mMediaList.expandMedia(mInternalMediaPlayerIndex);
-        if(r == 0)
+        if (r == 0)
             this.playIndex(mInternalMediaPlayerIndex);
         return r;
     }
@@ -747,9 +757,13 @@ public class LibVLC {
     }
 
     public native int getTitle();
+
     public native void setTitle(int title);
+
     public native int getChapterCountForTitle(int title);
+
     public native int getTitleCount();
+
     public native void playerNavigate(int navigate);
 
 }

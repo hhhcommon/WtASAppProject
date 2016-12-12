@@ -247,7 +247,11 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
                                 MainActivity.change();
                                 HomeActivity.UpdateViewPager();
                                 PlayerFragment.TextPage=1;
-                                PlayerFragment.SendTextRequest(mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4), context);
+                                Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                                Bundle bundle1=new Bundle();
+                                bundle1.putString("text", mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4));
+                                push.putExtras(bundle1);
+                                context.sendBroadcast(push);
                             } else {
                                 SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
                                 et.putString(StringConstant.PLAYHISTORYENTER, "true");

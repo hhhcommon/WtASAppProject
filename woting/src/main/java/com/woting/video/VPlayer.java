@@ -141,14 +141,14 @@ public class VPlayer {
                     Log.e("url", "playerror+Url");
                     PlayerFragment.playNext();
                     break;
-                case EventHandler.MediaPlayerOpening:
-                    Log.e("url", "MediaPlayerOpenning()" + Url);
+//                case EventHandler.MediaPlayerOpening:
+//                    Log.e("url", "MediaPlayerOpenning()" + Url);
     /*			audioPlay.getTime();*/
-                    break;
-                case EventHandler.MediaParsedChanged:
-                    break;
-                case EventHandler.MediaPlayerTimeChanged:
-                    break;
+//                    break;
+//                case EventHandler.MediaParsedChanged:
+//                    break;
+//                case EventHandler.MediaPlayerTimeChanged:
+//                    break;
                 case EventHandler.MediaPlayerPositionChanged:
                     break;
                 case EventHandler.MediaPlayerPlaying:
@@ -157,12 +157,12 @@ public class VPlayer {
                 case EventHandler.MediaPlayerEndReached://这个回调
                     Log.e("url", "MediaPlayerEndReached()");
                     PlayerFragment.playNext();
-                case EventHandler.MediaPlayerBuffering:
-    /*			String s=audioPlay.getCachePath();
-				int a=audioPlay.getNetworkCaching();
-				float s1=msg.getData().getFloat("data");
-				Log.e("缓冲了",""+msg.getData().getFloat("data"));*/
-                    break;
+//                case EventHandler.MediaPlayerBuffering:
+//    /*			String s=audioPlay.getCachePath();
+//				int a=audioPlay.getNetworkCaching();
+//				float s1=msg.getData().getFloat("data");
+//				Log.e("缓冲了",""+msg.getData().getFloat("data"));*/
+//                    break;
             }
         }
     };

@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
@@ -289,7 +290,11 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                     MainActivity.change();
                     HomeActivity.UpdateViewPager();
                     PlayerFragment.TextPage=1;
-                    PlayerFragment.SendTextRequest(list.get(groupPosition).getList().get(childPosition).getContentName(), context.getApplicationContext());
+                    Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                    Bundle bundle1=new Bundle();
+                    bundle1.putString("text",list.get(groupPosition).getList().get(childPosition).getContentName());
+                    push.putExtras(bundle1);
+                    context.sendBroadcast(push);
                     context.finish();
                 } else if (MediaType != null && MediaType.equals("SEQU")) {
                     Intent intent = new Intent(context, AlbumActivity.class);
