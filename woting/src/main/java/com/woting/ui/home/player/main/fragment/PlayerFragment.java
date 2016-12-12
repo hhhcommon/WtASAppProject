@@ -184,14 +184,14 @@ public class PlayerFragment extends Fragment implements OnClickListener,
     private boolean details_flag = false;
     private boolean first = true;                          // 第一次进入界面
 
-    private static String playType;                        // 当前播放的媒体类型
+    private static String playType;                                 // 当前播放的媒体类型
     private static String ContentFavorite;
     private String voiceStr;
 
     private static ArrayList<LanguageSearchInside> allList = new ArrayList<LanguageSearchInside>();
     private ArrayList<String> testList;
     private static KSYProxyService proxy;
-    private static int cachePercents;                             // 缓存长度
+    private static int cachePercents;                                // 缓存长度
 
 
     @Override
@@ -844,10 +844,9 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                         mcontent.setContentPlay(data.getContentPlay());
                         mcontent.setContentImg(data.getContentImg());
                         mcontent.setContentName(data.getContentName());
-                        mcontent.setContentPub(data.getContentPub());
                         mcontent.setContentTimes(data.getContentTimes());
                         mcontent.setUserid(CommonUtils.getUserId(context));
-                        String s=data.getPlayCount();
+                        mcontent.setContentPub(data.getContentPub());
                         mcontent.setPlayCount(data.getPlayCount());
                         mcontent.setContentDescn(data.getContentDescn());
                         mcontent.setDownloadtype("0");
