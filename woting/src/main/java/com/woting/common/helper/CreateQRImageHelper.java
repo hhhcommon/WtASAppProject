@@ -81,7 +81,6 @@ public class CreateQRImageHelper {
 
             //判断URL合法性
             if (url == null || "".equals(url) || url.length() < 1) {
-                map = null;
                 return null;
             } else {
                 Hashtable<EncodeHintType, String> hints = new Hashtable<>();

@@ -169,9 +169,7 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 
 			@Override
 			protected void requestSuccess(JSONObject result) {
-				if (dialog != null) {
-					dialog.dismiss();
-				}
+
 				if(isCancelRequest){
 					return ;
 				}
@@ -191,6 +189,9 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 					if(ViewSuccess == 1){
 						chuLi(groupinfo);
 					}else{
+						if (dialog != null) {
+							dialog.dismiss();
+						}
 						Intent p=new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN);
 						context. sendBroadcast(p);
 						Intent intent = new Intent(CreateGroupContentActivity.this, TalkGroupNewsActivity.class);
@@ -203,6 +204,9 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 						finish();
 					}
 				}else{
+					if (dialog != null) {
+						dialog.dismiss();
+					}
 					if (ReturnType != null && ReturnType.equals("1002")) {
 						/* ToastUtil.show_short(context, "无创建者" + Message); */
 						ToastUtils.show_always(context, "未登陆无法创建群组");

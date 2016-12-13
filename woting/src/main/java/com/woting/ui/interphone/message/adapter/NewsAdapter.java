@@ -11,10 +11,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
-import com.woting.common.util.AssembleImageUrlUtils;
-import com.woting.ui.interphone.message.model.MessageInFo;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
+import com.woting.ui.interphone.message.model.MessageInFo;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -94,8 +94,8 @@ public class NewsAdapter extends BaseAdapter {
 				if(lists.getInviteTime()== null || lists.getInviteTime().equals("")|| lists.getInviteTime().equals("null")){
 					holder.time.setText("0000-00-00  00:00");
 				}else{
-					long time = Long.parseLong(lists.getInviteTime())/1000;
-					holder.time.setText( format.format(new Date(time)));
+					long time = Long.parseLong(lists.getInviteTime());
+					holder.time.setText(format.format(time));
 				}
 				if (lists.getPortrait()== null || lists.getPortrait().equals("")
 						|| lists.getPortrait().equals("null") || lists.getPortrait().trim().equals("")) {
