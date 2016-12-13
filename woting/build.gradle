@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId "com.woting"
         minSdkVersion 11
-        targetSdkVersion
+        targetSdkVersion 21
         versionCode 21
         versionName "0.1.0.X.021"
     }

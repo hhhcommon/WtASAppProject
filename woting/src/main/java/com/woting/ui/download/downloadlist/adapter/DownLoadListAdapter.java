@@ -98,8 +98,6 @@ public class DownLoadListAdapter extends BaseAdapter {
         } else {
             holder.tv_RankContent.setText(lists.getPlayFrom());
         }
-
-
         //  时长
         try {
         if (lists.getPlayAllTime() == null || lists.getPlayAllTime().equals("")) {

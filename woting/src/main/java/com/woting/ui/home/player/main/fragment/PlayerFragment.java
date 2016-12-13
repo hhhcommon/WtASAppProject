@@ -940,6 +940,7 @@ public class PlayerFragment extends Fragment implements OnClickListener,
     // 设置headView的界面
     protected static void resetHeadView() {
         if (GlobalConfig.playerobject != null) {
+            ToastUtils.show_always(context,"playType="+GlobalConfig.playerobject.getContentPlayType());
             //判断下载类型的方法
             if (GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
                 img_download.setImageResource(R.mipmap.wt_play_xiazai);
@@ -1323,6 +1324,7 @@ public class PlayerFragment extends Fragment implements OnClickListener,
             historyNews.setSequName(historyNew.getSequName());
             historyNews.setSequDesc(historyNew.getSequDesc());
             historyNews.setSequImg(historyNew.getSequImg());
+            historyNews.setContentPlayType(historyNew.getContentPlayType());
 
             return historyNews;
         } else {
@@ -1364,12 +1366,13 @@ public class PlayerFragment extends Fragment implements OnClickListener,
         String sequId = languageSearchInside.getSequId();
         String sequDesc = languageSearchInside.getSequDesc();
         String sequImg = languageSearchInside.getSequImg();
+        String ContentPlayType=languageSearchInside.getContentPlayType();
 
         PlayerHistory history = new PlayerHistory(playerName, playerImage,
                 playerUrl, playerUrI, playerMediaType, playerAllTime,
                 playerInTime, playerContentDesc, playerNum, playerZanType,
                 playerFrom, playerFromId, playerFromUrl, playerAddTime,
-                bjUserId, playContentShareUrl, ContentFavorite, ContentID, localUrl, sequName, sequId, sequDesc, sequImg);
+                bjUserId, playContentShareUrl, ContentFavorite, ContentID, localUrl, sequName, sequId, sequDesc, sequImg,ContentPlayType);
 
         if (dbDao == null) dbDao = new SearchPlayerHistoryDao(context);// 如果数据库没有初始化，则初始化db
         if (playerMediaType != null && playerMediaType.trim().length() > 0 && playerMediaType.equals("TTS")) {

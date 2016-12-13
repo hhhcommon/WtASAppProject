@@ -362,12 +362,12 @@ public class OnLineFragment extends Fragment {
                         String playUri = mainLists.get(position).getContentURI();
                         String playMediaType = mainLists.get(position).getMediaType();
                         String playContentShareUrl = mainLists.get(position).getContentShareURL();
-                        String playAllTime = "0";
+                        String playAllTime = mainLists.get(position).getContentTimes();
                         String playInTime = "0";
-                        String playContentDesc = mainLists.get(position).getCurrentContent();
+                        String playContentDesc = mainLists.get(position).getContentDesc();
                         String playerNum = mainLists.get(position).getPlayCount();
                         String playZanType = "0";
-                        String playFrom = "";
+                        String playFrom = mainLists.get(position).getContentPub();
                         String playFromId = "";
                         String playFromUrl = "";
                         String playAddTime = Long.toString(System.currentTimeMillis());
@@ -380,13 +380,14 @@ public class OnLineFragment extends Fragment {
                         String sequId = mainLists.get(position).getSequId();
                         String sequDesc = mainLists.get(position).getSequDesc();
                         String sequImg = mainLists.get(position).getSequImg();
+                        String ContentPlayType= mainLists.get(position).getContentPlayType();
 
 						//如果该数据已经存在数据库则删除原有数据，然后添加最新数据
 						PlayerHistory history = new PlayerHistory(
 								playName, playImage,playUrl,playUri,playMediaType,
 								playAllTime, playInTime, playContentDesc,playerNum,
 								playZanType,playFrom,playFromId,playFromUrl,playAddTime,bjUserId,playContentShareUrl,
-								ContentFavorite,ContentId,localUrl,sequName,sequId,sequDesc,sequImg);
+								ContentFavorite,ContentId,localUrl,sequName,sequId,sequDesc,sequImg,ContentPlayType);
 						dbDao.deleteHistory(playUrl);
 						dbDao.addHistory(history);
 						PlayerFragment.TextPage=1;
@@ -514,12 +515,14 @@ public class OnLineFragment extends Fragment {
                         String sequDesc = newList.get(groupPosition).getList().get(childPosition).getSequDesc();
                         String sequImg = newList.get(groupPosition).getList().get(childPosition).getSequImg();
 
+                        String ContentPlayType= newList.get(groupPosition).getList().get(childPosition).getContentPlayType();
+
                         //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playName, playImage, playUrl, playUri, playMediaType,
                                 playAllTime, playInTime, playContentDesc, playerNum,
                                 playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg);
+                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg,ContentPlayType);
 
 						dbDao.deleteHistory(playUrl);
 						dbDao.addHistory(history);

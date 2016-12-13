@@ -200,11 +200,13 @@ public class TotalFragment extends Fragment {
 					String sequDesc=  list.get(groupPosition).getHistoryList().get(childPosition).getSequDesc();
 					String sequImg= list.get(groupPosition).getHistoryList().get(childPosition).getSequImg();
 
+					String ContentPlayType= list.get(groupPosition).getHistoryList().get(childPosition).getContentPlayType();
+
 					PlayerHistory history = new PlayerHistory(
 							playername,  playerimage, playerurl, playerurI,playermediatype,
 							plaplayeralltime, playerintime, playercontentdesc, playernum,
 							playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
-							ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
+							ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg,ContentPlayType);
 
 					// 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
 					if(playermediatype != null && playermediatype.equals("TTS")){

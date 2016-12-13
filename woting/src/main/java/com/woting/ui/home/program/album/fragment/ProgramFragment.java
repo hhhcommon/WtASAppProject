@@ -170,12 +170,13 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 						String sequId1=sequId;
 						String sequDesc1=sequDesc;
 						String sequImg1=sequImg;
+						String ContentPlayType=SubList.get(position).getContentPlayType();
 
 						PlayerHistory history = new PlayerHistory(
 								playerName,  playerImage, playUrl, playUrI,playMediaType,
 								playAllTime, playInTime, playContentDesc, playNum,
 								playZanType, playFrom , playFromId,playFromUrl,playAddTime,bjUserId,playContentShareUrl,
-								ContentFavorite,ContentId,localUrl,sequName1,sequId1,sequDesc1,sequImg1);
+								ContentFavorite,ContentId,localUrl,sequName1,sequId1,sequDesc1,sequImg1,ContentPlayType);
 						dbDao.deleteHistory(playUrl);
 						dbDao.addHistory(history);
 						if(PlayerFragment.context!=null){

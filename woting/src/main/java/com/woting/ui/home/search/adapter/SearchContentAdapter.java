@@ -279,10 +279,10 @@ public class SearchContentAdapter extends BaseExpandableListAdapter {
                 }
             }
 		}
-		if (lists.getWatchPlayerNum() == null|| lists.getWatchPlayerNum().equals("")|| lists.getWatchPlayerNum().equals("null")) {
+		if (lists.getPlayCount() == null|| lists.getPlayCount().equals("")|| lists.getPlayCount().equals("null")) {
 			holder.mTv_number.setText("0");
 		} else {
-			holder.mTv_number.setText(lists.getWatchPlayerNum());
+			holder.mTv_number.setText(lists.getPlayCount());
 		}
 		return convertView;
 	}
