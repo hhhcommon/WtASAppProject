@@ -11,7 +11,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.common.util.ToastUtils;
 import com.woting.common.widgetui.MyGridView;
 import com.woting.ui.home.program.fenlei.model.FenLei;
 import com.woting.ui.mine.set.preference.activity.PreferenceActivity;
@@ -79,14 +78,31 @@ public class PianHaoAdapter extends BaseAdapter {
                 String s=list.get(position).getChildren().get(positions).getchecked();
                 if(list.get(position).getChildren().get(positions).getchecked().equals("false")){
                     list.get(position).getChildren().get(positions).setchecked("true");
+                    for(int i=0;i<list.get(position).getChildren().size();i++){
+                        if(list.get(position).getChildren().get(i).getchecked().equals("false")){
+                            break;
+                        }else{
+                            if(i==list.get(position).getChildren().size()-1){
+                            list.get(position).setTag(position);
+                            list.get(position).setTagType(1);
+                            }
+                        }
+                    }
                 }else{
                     list.get(position).getChildren().get(positions).setchecked("false");
+                    for(int i=0;i<list.get(position).getChildren().size();i++){
+                        if(list.get(position).getChildren().get(i).getchecked().equals("false")){
+                            list.get(position).setTag(position);
+                            list.get(position).setTagType(0);
+                        }
+                    }
                 }
                 PreferenceActivity.RefreshView(list);
-                ToastUtils.show_always( context,list.get(position).getChildren().get(positions).getName());
+                /*ToastUtils.show_always( context,list.get(position).getChildren().get(positions).getName());*/
             }
         });
         int a=list.get(position).getTag();
+        int b=list.get(position).getTagType();
         if(list.get(position).getTag()==position){
             if(list.get(position).getTagType()==1){
                 holder.tv_quanxuan.setText("取消全选");
