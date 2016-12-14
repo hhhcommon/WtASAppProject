@@ -19,19 +19,16 @@ public class IntegrationPlayer {
     private static IntegrationPlayer wtIPlayer;        // 集合播放器
     private static Context contexts;
     private VPlayer vlcPlayer;                         // VLC播放器
-    private KSYPlayer ksyPlayer;                       // 金山云播放器
     private TPlayer ttsPlayer;                         // TTS播放器
-    private int oldPType;                              // 上次内容播放器类型  1=vlc,2=ksy,3=tts
-    private int newptype;                              // 最新内容播放器类型  1=vlc,2=ksy,3=tts
+    private int oldPType = 0;                            // 上次内容播放器类型  0=null,1=tts,2=vlc
+    private int newptype;                              // 最新内容播放器类型  1=tts,2=vlc
     private KSYProxyService proxy;
 
     private IntegrationPlayer() {
         if (vlcPlayer == null) {
             vlcPlayer = VPlayer.getInstance();
         }
-        if (ksyPlayer == null) {
-            ksyPlayer = KSYPlayer.getInstance();
-        }
+
         if (ttsPlayer == null) {
             ttsPlayer = TPlayer.getInstance(contexts);
         }
@@ -72,12 +69,47 @@ public class IntegrationPlayer {
 
     /**
      * 每个节目的第一次播放
-     *
-     * @param url  播放路径
-     * @param type 节目播放类型
+     * @param localUrl 本地播放路径
+     * @param url      播放路径或者TTS内容
+     * @param type     节目播放类型
      */
-    public void startPlay(String url, String type) {
+    public void startPlay(String type, String url, String localUrl) {
+        if (oldPType == 0) {
+            /*
+             * 说明：此时是打开本次app的第一次播放
+             * 1.判断本次播放类型
+             * 2.判断是否本地已经下载
+             */
+           if(type.trim().equals("TTS")){
+               //对上次播放类型进行赋值，TTS
+               oldPType=1;
+               ttsPlayer.play(url);
+           }else{
+               //对上次播放类型进行赋值,VLC
+               oldPType=2;
+               if(localUrl!=null){
+                   /*
+                    * 播放本地音频
+                    */
+               }else{
+                   /*
+                    * 播放网络音频
+                    */
+               }
+           }
 
+        } else if (oldPType == 1) {
+            /*
+             * 上一次播放类型是TTS
+             * 1.停止播放TTS
+             */
+
+        }else{
+            /*
+             * 上一次播放类型是非TTS的所有类型
+             */
+
+        }
     }
 
     /**

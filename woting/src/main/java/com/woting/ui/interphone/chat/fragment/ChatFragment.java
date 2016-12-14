@@ -43,6 +43,7 @@ import com.woting.common.constant.StringConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
+import com.woting.common.util.JsonEncloseUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.util.VibratorUtils;
 import com.woting.common.volley.VolleyCallback;
@@ -187,6 +188,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
             Receiver = new MessageReceiver();
             IntentFilter filter = new IntentFilter();
             filter.addAction(BroadcastConstants.PUSH);
+            filter.addAction(BroadcastConstants.PUSH_NOTIFY);
             filter.addAction(BroadcastConstants.UP_DATA_GROUP);
             filter.addAction(BroadcastConstants.PUSH_VOICE_IMAGE_REFRESH);
             context.registerReceiver(Receiver, filter);
@@ -868,7 +870,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
     }
 
     private static void getGridViewPerson(String id) {
-        Log.e("fasfasfa","0");
+        Log.e("fasfasfa", "0");
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("GroupId", id);
@@ -880,7 +882,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
 
             @Override
             protected void requestSuccess(JSONObject result) {
-                Log.e("fasfasfa","1");
+                Log.e("fasfasfa", "1");
                 String UserList = null;
                 try {
                     UserList = result.getString("UserList");
@@ -907,7 +909,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
 
             @Override
             protected void requestError(VolleyError error) {
-                Log.e("fasfasfa","2");
+                Log.e("fasfasfa", "2");
             }
         });
     }
@@ -963,9 +965,9 @@ public class ChatFragment extends Fragment implements OnClickListener {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(BroadcastConstants.PUSH)) {
-                //				MsgNormal message = (MsgNormal) intent.getSerializableExtra("outmessage");
+                //	MsgNormal message = (MsgNormal) intent.getSerializableExtra("outmessage");
                 byte[] bt = intent.getByteArrayExtra("outmessage");
-                //				Log.e("接收器中数据", Arrays.toString(bt)+"");
+                //	Log.e("接收器中数据", Arrays.toString(bt)+"");
                 try {
                     MsgNormal message = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
 
@@ -1003,7 +1005,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
                                             image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.wt_duijiang_button_pressed));
                                             // headview中展示自己的头像
                                             String url = BSApplication.SharedPreferences.getString(StringConstant.IMAGEURL, "");
-                                            setImageView(1,UserName,url);
+                                            setImageView(1, UserName, url);
                                             VoiceStreamRecordService.send();
                                             break;
                                         case 0x04:
@@ -1215,58 +1217,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
-                                } else if (command == 0x20) {
-                                    try {
-                                        MapContent data = (MapContent) message.getMsgContent();
-                                        Map<String, Object> map = data.getContentMap();
-                                        String news = new Gson().toJson(map);
-
-                                        JSONTokener jsonParser = new JSONTokener(news);
-                                        JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                                        String userinfos = arg1.getString("UserInfo");
-
-                                        ListInfo userinfo = new Gson().fromJson(userinfos, new TypeToken<ListInfo>() {
-                                        }.getType());
-                                        String groupids = data.get("GroupId") + "";
-                                        listInfo.add(userinfo);
-                                        Log.i("组内成员人数", listInfo.size() + "");
-                                        tv_num.setText(listInfo.size() + "");
-                                        getGridViewPerson(groupids);
-                                        //有人加入组
-                                        ToastUtils.show_short(context, "有人加入组");
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                } else if (command == 0x30) {
-                                    //有人退出组
-                                    try {
-                                        MapContent data = (MapContent) message.getMsgContent();
-                                        Map<String, Object> map = data.getContentMap();
-                                        String news = new Gson().toJson(map);
-
-                                        JSONTokener jsonParser = new JSONTokener(news);
-                                        JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                                        String userinfos = arg1.getString("UserInfo");
-
-                                        ListInfo userinfo = new Gson().fromJson(userinfos, new TypeToken<ListInfo>() {
-                                        }.getType());
-
-                                        String userinfoid = userinfo.getUserId();
-                                        String groupids = data.get("GroupId") + "";
-                                        for (int i = 0; i < listInfo.size(); i++) {
-                                            if (listInfo.get(i).getUserId().equals(userinfoid)) {
-                                                listInfo.remove(i);
-                                            }
-                                        }
-                                        Log.i("组内成员人数", listInfo.size() + "");
-                                        tv_num.setText(listInfo.size() + "");
-                                        getGridViewPerson(groupids);
-                                        ToastUtils.show_short(context, "有人退出组");
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
                                 }
-
                             }
                         } else if (biztype == 2) {
                             int cmdType = message.getCmdType();
@@ -1377,10 +1328,9 @@ public class ChatFragment extends Fragment implements OnClickListener {
                     gridView_person.setVisibility(View.GONE);
                 }
             } else if (action.equals(BroadcastConstants.PUSH_BACK)) {
-                //				MsgNormal message = (MsgNormal) intent.getSerializableExtra("outmessage");
-                //				Log.i("talkoldlistfragment弹出框服务push_back", "接收到的socket服务的信息"+message+"");
+                //	MsgNormal message = (MsgNormal) intent.getSerializableExtra("outmessage");
                 byte[] bt = intent.getByteArrayExtra("outmessage");
-                Log.e("弹出框服务push_back", Arrays.toString(bt) + "");
+                Log.e("chatFragment的push_back", Arrays.toString(bt) + "");
                 try {
                     MsgNormal message = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
 
@@ -1443,6 +1393,79 @@ public class ChatFragment extends Fragment implements OnClickListener {
                             }
                         }
                     }
+                }
+            } else if (action.equals(BroadcastConstants.PUSH_NOTIFY)) {
+                byte[] bt = intent.getByteArrayExtra("outmessage");
+                Log.e("chat的PUSH_NOTIFY", Arrays.toString(bt) + "");
+                try {
+                    Log.e("chat的PUSH_NOTIFY", JsonEncloseUtils.btToString(bt) + "");
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
+                try {
+                    MsgNormal message = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
+                    if (message != null) {
+                        int cmdType = message.getCmdType();
+                        switch (cmdType) {
+                            case 2:
+                                int command2 = message.getCommand();
+                                if (command2 == 4) {
+                                    try {
+                                        MapContent data = (MapContent) message.getMsgContent();
+                                        Map<String, Object> map = data.getContentMap();
+                                        String news = new Gson().toJson(map);
+
+                                        JSONTokener jsonParser = new JSONTokener(news);
+                                        JSONObject arg1 = (JSONObject) jsonParser.nextValue();
+                                        String userinfos = arg1.getString("UserInfo");
+
+                                        ListInfo userinfo = new Gson().fromJson(userinfos, new TypeToken<ListInfo>() {
+                                        }.getType());
+                                        String groupids = data.get("GroupId") + "";
+                                        listInfo.add(userinfo);
+                                        Log.i("组内成员人数", listInfo.size() + "");
+                                        tv_num.setText(listInfo.size() + "");
+                                        getGridViewPerson(groupids);
+                                        //有人加入组
+                                        ToastUtils.show_short(context, "有人加入组");
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                } else if (command2 == 5) {
+                                    //有人退出组
+                                    try {
+                                        MapContent data = (MapContent) message.getMsgContent();
+                                        Map<String, Object> map = data.getContentMap();
+                                        String news = new Gson().toJson(map);
+
+                                        JSONTokener jsonParser = new JSONTokener(news);
+                                        JSONObject arg1 = (JSONObject) jsonParser.nextValue();
+                                        String userinfos = arg1.getString("UserInfo");
+
+                                        ListInfo userinfo = new Gson().fromJson(userinfos, new TypeToken<ListInfo>() {
+                                        }.getType());
+
+                                        String userinfoid = userinfo.getUserId();
+                                        String groupids = data.get("GroupId") + "";
+                                        for (int i = 0; i < listInfo.size(); i++) {
+                                            if (listInfo.get(i).getUserId().equals(userinfoid)) {
+                                                listInfo.remove(i);
+                                            }
+                                        }
+                                        Log.i("组内成员人数", listInfo.size() + "");
+                                        tv_num.setText(listInfo.size() + "");
+                                        getGridViewPerson(groupids);
+                                        ToastUtils.show_short(context, "有人退出组");
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            default:
+                                break;
+                        }
+                    }
+                } catch (Exception e1) {
+                    e1.printStackTrace();
                 }
             }
         }

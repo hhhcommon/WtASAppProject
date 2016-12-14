@@ -24,6 +24,7 @@ import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -169,19 +170,24 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 						String sequId1=sequId;
 						String sequDesc1=sequDesc;
 						String sequImg1=sequImg;
+						String ContentPlayType=SubList.get(position).getContentPlayType();
 
 						PlayerHistory history = new PlayerHistory(
 								playerName,  playerImage, playUrl, playUrI,playMediaType,
 								playAllTime, playInTime, playContentDesc, playNum,
 								playZanType, playFrom , playFromId,playFromUrl,playAddTime,bjUserId,playContentShareUrl,
-								ContentFavorite,ContentId,localUrl,sequName1,sequId1,sequDesc1,sequImg1);
+								ContentFavorite,ContentId,localUrl,sequName1,sequId1,sequDesc1,sequImg1,ContentPlayType);
 						dbDao.deleteHistory(playUrl);
 						dbDao.addHistory(history);
 						if(PlayerFragment.context!=null){
 							MainActivity.change();
 							HomeActivity.UpdateViewPager();
 							PlayerFragment.TextPage=1;
-							PlayerFragment.SendTextRequest(SubList.get(position).getContentName(), context);
+							Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+							Bundle bundle1=new Bundle();
+							bundle1.putString("text", SubList.get(position).getContentName());
+							push.putExtras(bundle1);
+							context.sendBroadcast(push);
 						}else{
 							Editor et = BSApplication.SharedPreferences.edit();
 							et.putString(StringConstant.PLAYHISTORYENTER, "true");

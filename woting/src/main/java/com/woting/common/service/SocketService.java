@@ -591,7 +591,7 @@ public class SocketService extends Service  {
 							bundle1.putByteArray("outmessage", msg.toBytes());
 							//							Log.e("广播中数据", Arrays.toString(msg.toBytes())+"");
 							push.putExtras(bundle1);
-							context. sendBroadcast(push);
+							context.sendBroadcast(push);
 							break;
 						case 2://电话通话
 

@@ -44,7 +44,7 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="选择喜好"
+                android:text="偏好设置"
                 android:textColor="@color/WHITE"
                 android:textSize="@dimen/activity_head_center_s" />
         </LinearLayout>

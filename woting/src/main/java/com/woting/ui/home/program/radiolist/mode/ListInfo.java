@@ -39,6 +39,25 @@ public class ListInfo implements Serializable{
 	private String sequDesc;//专辑描述
 	private String sequName;//专辑名称
 
+	private String playTag;         // 标签<预留>
+	private String ContentPlayType; // 内容后缀
+
+	public String getContentPlayType() {
+		return ContentPlayType;
+	}
+
+	public String getPlayTag() {
+		return playTag;
+	}
+
+	public void setContentPlayType(String contentPlayType) {
+		ContentPlayType = contentPlayType;
+	}
+
+	public void setPlayTag(String playTag) {
+		this.playTag = playTag;
+	}
+
 	public static long getSerialVersionUID() {
 		return serialVersionUID;
 	}

@@ -3,6 +3,7 @@ package com.woting.ui.mine.playhistory.fragment;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.common.application.BSApplication;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.ToastUtils;
@@ -198,11 +200,13 @@ public class TotalFragment extends Fragment {
 					String sequDesc=  list.get(groupPosition).getHistoryList().get(childPosition).getSequDesc();
 					String sequImg= list.get(groupPosition).getHistoryList().get(childPosition).getSequImg();
 
+					String ContentPlayType= list.get(groupPosition).getHistoryList().get(childPosition).getContentPlayType();
+
 					PlayerHistory history = new PlayerHistory(
 							playername,  playerimage, playerurl, playerurI,playermediatype,
 							plaplayeralltime, playerintime, playercontentdesc, playernum,
 							playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
-							ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
+							ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg,ContentPlayType);
 
 					// 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
 					if(playermediatype != null && playermediatype.equals("TTS")){
@@ -216,7 +220,11 @@ public class TotalFragment extends Fragment {
 						HomeActivity.UpdateViewPager();
 						String s = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerName();
 						PlayerFragment.TextPage=1;
-						PlayerFragment.SendTextRequest(s, context);
+						Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+						Bundle bundle1=new Bundle();
+						bundle1.putString("text",s);
+						push.putExtras(bundle1);
+						context.sendBroadcast(push);
 						getActivity().finish();
 					}else{
 						Editor et = BSApplication.SharedPreferences.edit();

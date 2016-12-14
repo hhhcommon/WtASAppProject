@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
@@ -211,18 +212,25 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                         String sequDesc = SubList.get(groupPosition).getList().get(childPosition).getSequDesc();
                         String sequImg =  SubList.get(groupPosition).getList().get(childPosition).getSequImg();
 
+                        String ContentPlayType= SubList.get(groupPosition).getList().get(childPosition).getContentPlayType();
+
                         //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playName, playImage, playUrl, playUri, playMediaType,
                                 playAllTime, playInTime, playContentDesc, playerNum,
                                 playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg);
+                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg,ContentPlayType);
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
                         HomeActivity.UpdateViewPager();
                         finish();
                         PlayerFragment.TextPage=1;
-                        PlayerFragment.SendTextRequest(SubList.get(groupPosition).getList().get(childPosition).getContentName(), context);
+
+                        Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                        Bundle bundle1=new Bundle();
+                        bundle1.putString("text", SubList.get(groupPosition).getList().get(childPosition).getContentName());
+                        push.putExtras(bundle1);
+                        context.sendBroadcast(push);
                     } else if (MediaType.equals("SEQU")) {
                         Intent intent = new Intent(context, AlbumActivity.class);
                         Bundle bundle = new Bundle();
@@ -348,9 +356,9 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                      String playerurI =SubListList.get(position).getContentURI();
                      String playcontentshareurl = SubListList.get(position).getContentShareURL();
                      String playermediatype = SubListList.get(position).getMediaType();
-                     String plaplayeralltime = "0";
+                     String plaplayeralltime = SubListList.get(position).getContentTimes();
                      String playerintime = "0";
-                     String playercontentdesc = SubListList.get(position).getCurrentContent();
+                     String playercontentdesc = SubListList.get(position).getContentDesc();
                      String playernum = SubListList.get(position).getPlayCount();
                      String playerzantype = "0";
                      String playerfrom = SubListList.get(position).getContentPub();
@@ -365,19 +373,24 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                      String sequId = SubListList.get(position).getSequId();
                      String sequDesc = SubListList.get(position).getSequDesc();
                      String sequImg = SubListList.get(position).getSequImg();
+                     String ContentPlayType= SubListList.get(position).getContentPlayType();
 
                      //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                      PlayerHistory history = new PlayerHistory(
                              playername, playerimage, playerurl, playerurI, playermediatype,
                              plaplayeralltime, playerintime, playercontentdesc, playernum,
                              playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playcontentshareurl,
-                             ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg);
+                             ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg,ContentPlayType);
                      dbDao.deleteHistory(playerurl);
                      dbDao.addHistory(history);
                      HomeActivity.UpdateViewPager();
 
                      PlayerFragment.TextPage=1;
-                     PlayerFragment.SendTextRequest(SubListList.get(position).getContentName(), context);
+                     Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                     Bundle bundle1=new Bundle();
+                     bundle1.putString("text",SubListList.get(position).getContentName());
+                     push.putExtras(bundle1);
+                     context.sendBroadcast(push);
                      finish();
                  }
              }

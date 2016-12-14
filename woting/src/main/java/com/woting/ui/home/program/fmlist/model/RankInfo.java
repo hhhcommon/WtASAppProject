@@ -41,6 +41,27 @@ public class RankInfo implements Serializable {
 	private int viewtype=0;//界面决定组件 1为显示点选框 0是没有
 	private int checktype=0;//点选框被选中为1 未被选中时为0
 
+	private String playTag;         // 标签<预留>
+	private String ContentPlayType; // 内容后缀
+
+	public String getContentPlayType() {
+		return ContentPlayType;
+	}
+
+	public String getPlayTag() {
+		return playTag;
+	}
+
+	public void setContentPlayType(String contentPlayType) {
+		ContentPlayType = contentPlayType;
+	}
+
+	public void setPlayTag(String playTag) {
+		this.playTag = playTag;
+	}
+
+
+
 	public String getPlayCount() {
 		return PlayCount;
 	}

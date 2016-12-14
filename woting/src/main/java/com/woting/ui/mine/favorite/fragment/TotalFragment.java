@@ -27,6 +27,7 @@ import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -361,10 +362,10 @@ public class TotalFragment extends Fragment implements OnClickListener {
 					String playerurl = list.get(groupPosition).getList().get(childPosition).getContentPlay();
 					String playerurI = list.get(groupPosition).getList().get(childPosition).getContentURI();
 					String playermediatype = list.get(groupPosition).getList().get(childPosition).getMediaType();
-					String plaplayeralltime = "0";
+					String plaplayeralltime =list.get(groupPosition).getList().get(childPosition).getContentTimes();
 					String playerintime = "0";
-					String playercontentdesc = list.get(groupPosition).getList().get(childPosition).getCurrentContent();
-					String playernum = list.get(groupPosition).getList().get(childPosition).getWatchPlayerNum();
+					String playercontentdesc = list.get(groupPosition).getList().get(childPosition).getContentDesc();
+					String playernum = list.get(groupPosition).getList().get(childPosition).getPlayCount();
 					String playerzantype = "0";
 					String playerfrom = list.get(groupPosition).getList().get(childPosition).getContentPub();
 					String playerfromid = "";
@@ -380,13 +381,15 @@ public class TotalFragment extends Fragment implements OnClickListener {
 					String sequId=list.get(groupPosition).getList().get(childPosition).getSequId();
 					String sequDesc=list.get(groupPosition).getList().get(childPosition).getSequDesc();
 					String sequImg=list.get(groupPosition).getList().get(childPosition).getSequImg();
+					String ContentPlayType= list.get(groupPosition).getList().get(childPosition).getContentPlayType();
+
 
 					// 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
 					PlayerHistory history = new PlayerHistory(
 							playername,  playerimage, playerurl, playerurI,playermediatype,
 							plaplayeralltime, playerintime, playercontentdesc, playernum,
 							playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
-							ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
+							ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg,ContentPlayType);
                     if(mediaType.equals("TTS")){
                         dbDao.deleteHistoryById(ContentId);
                     }else {
@@ -397,7 +400,11 @@ public class TotalFragment extends Fragment implements OnClickListener {
 						MainActivity.change();
 						HomeActivity.UpdateViewPager();
 						PlayerFragment.TextPage=1;
-						PlayerFragment.SendTextRequest(list.get(groupPosition).getList().get(childPosition).getContentName(), context);
+						Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+						Bundle bundle1=new Bundle();
+						bundle1.putString("text",list.get(groupPosition).getList().get(childPosition).getContentName());
+						push.putExtras(bundle1);
+						context.sendBroadcast(push);
 						getActivity().finish();
 					} else {
 						Editor et = BSApplication.SharedPreferences.edit();

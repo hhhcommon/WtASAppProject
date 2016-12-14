@@ -16,6 +16,7 @@ import android.widget.ListView;
 
 import com.woting.R;
 import com.woting.common.application.BSApplication;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.ui.home.main.HomeActivity;
@@ -178,11 +179,13 @@ public class RadioFragment extends Fragment{
 						String sequDesc= playList.get(position).getSequDesc();
 						String sequImg=playList.get(position).getSequImg();
 
+						String ContentPlayType= playList.get(position).getContentPlayType();
+
 						PlayerHistory history = new PlayerHistory(
 								playername,  playerimage, playerurl, playerurI,playermediatype,
 								plaplayeralltime, playerintime, playercontentdesc, playernum,
 								playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
-								ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg);
+								ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg,ContentPlayType);
                         dbdDao.deleteHistory(playerurl);
                         dbdDao.addHistory(history);
 						
@@ -191,7 +194,11 @@ public class RadioFragment extends Fragment{
 							HomeActivity.UpdateViewPager();
 							String s = playList.get(position).getPlayerName();
 							PlayerFragment.TextPage=1;
-							PlayerFragment.SendTextRequest(s, context);
+							Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+							Bundle bundle1=new Bundle();
+							bundle1.putString("text",s);
+							push.putExtras(bundle1);
+							context.sendBroadcast(push);
 							getActivity().finish();
 						}else{
 							Editor et = BSApplication.SharedPreferences.edit();

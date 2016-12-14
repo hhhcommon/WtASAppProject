@@ -249,40 +249,44 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
 
     protected void setData() {
         mes.clear();
-        if (UserList != null && UserList.size() > 0) {
-            for (int i = 0; i < UserList.size(); i++) {
-                MessageInFo msInfo = new MessageInFo();
-                msInfo.setMSType("person");
-                msInfo.setInviteMesage(UserList.get(i).getInviteMesage());
-                msInfo.setUserId(UserList.get(i).getUserId());
-                msInfo.setUserName(UserList.get(i).getUserName());
-                msInfo.setType(UserList.get(i).getType());
-                msInfo.setInviteTime(UserList.get(i).getInviteTime());
-                //				msInfo.setUserAliasName(UserList.get(i).getUserAliasName());
-                //				msInfo.setRealName(UserList.get(i).getRealName());
-                //				msInfo.setUserNum(UserList.get(i).getUserNum());
-                //				msInfo.setPhoneNum(UserList.get(i).getPhoneNum());
-                //				msInfo.setEmail(UserList.get(i).getEmail());
-                //				msInfo.setDescn(UserList.get(i).getDescn());
-                msInfo.setPortrait(UserList.get(i).getPortrait());
-                //				msInfo.setPortraitBig(UserList.get(i).getPortraitBig());
-                //				msInfo.setPortraitMini(UserList.get(i).getPortraitMini());
-                mes.add(msInfo);
+        try {
+            if (UserList != null && UserList.size() > 0) {
+                for (int i = 0; i < UserList.size(); i++) {
+                    MessageInFo msInfo = new MessageInFo();
+                    msInfo.setMSType("person");
+                    msInfo.setInviteMesage(UserList.get(i).getInviteMesage());
+                    msInfo.setUserId(UserList.get(i).getUserId());
+                    msInfo.setUserName(UserList.get(i).getUserName());
+                    msInfo.setType(UserList.get(i).getType());
+                    msInfo.setInviteTime(UserList.get(i).getInviteTime());
+                    //				msInfo.setUserAliasName(UserList.get(i).getUserAliasName());
+                    //				msInfo.setRealName(UserList.get(i).getRealName());
+                    //				msInfo.setUserNum(UserList.get(i).getUserNum());
+                    //				msInfo.setPhoneNum(UserList.get(i).getPhoneNum());
+                    //				msInfo.setEmail(UserList.get(i).getEmail());
+                    //				msInfo.setDescn(UserList.get(i).getDescn());
+                    msInfo.setPortrait(UserList.get(i).getPortrait());
+                    //				msInfo.setPortraitBig(UserList.get(i).getPortraitBig());
+                    //				msInfo.setPortraitMini(UserList.get(i).getPortraitMini());
+                    mes.add(msInfo);
+                }
             }
-        }
-        if (GroupList != null && GroupList.size() > 0) {
-            for (int i = 0; i < GroupList.size(); i++) {
-                MessageInFo msInfo = new MessageInFo();
-                msInfo.setMSType("group");
-                msInfo.setType(GroupList.get(i).getType());
-                msInfo.setGroupName(GroupList.get(i).getGroupName());
-                msInfo.setGroupId(GroupList.get(i).getGroupId());
-                msInfo.setUserName(GroupList.get(i).getUserName());
-                msInfo.setPortraitMini(GroupList.get(i).getPortraitMini());
-                msInfo.setUserId(GroupList.get(i).getUserId());
-                msInfo.setInviteTime(GroupList.get(i).getInviteTime());
-                mes.add(msInfo);
+            if (GroupList != null && GroupList.size() > 0) {
+                for (int i = 0; i < GroupList.size(); i++) {
+                    MessageInFo msInfo = new MessageInFo();
+                    msInfo.setMSType("group");
+                    msInfo.setType(GroupList.get(i).getType());
+                    msInfo.setGroupName(GroupList.get(i).getGroupName());
+                    msInfo.setGroupId(GroupList.get(i).getGroupId());
+                    msInfo.setUserName(GroupList.get(i).getUserName());
+                    msInfo.setPortraitMini(GroupList.get(i).getPortraitMini());
+                    msInfo.setUserId(GroupList.get(i).getUserId());
+                    msInfo.setInviteTime(GroupList.get(i).getInviteTime());
+                    mes.add(msInfo);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         if (mes != null && mes.size() > 0) {
             adapter = new NewsAdapter(context, mes);

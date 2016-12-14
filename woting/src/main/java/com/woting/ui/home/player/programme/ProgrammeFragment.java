@@ -93,9 +93,7 @@ public class ProgrammeFragment extends Fragment{
 			private String ReturnType;
 			@Override
 			protected void requestSuccess(JSONObject result) {
-				if (ProgrammeActivity.isCancelRequest) {
-					return;
-				}
+				if(((ProgrammeActivity)getActivity()).isCancel()) return ;
 				try {
 					ReturnType = result.getString("ReturnType");
 					try {

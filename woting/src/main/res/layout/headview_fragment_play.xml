@@ -266,7 +266,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/wt_play_xiazai" />
+                        android:src="@mipmap/img_play_more_jiemudan" />
 
                     <TextView
                         android:layout_width="wrap_content"
