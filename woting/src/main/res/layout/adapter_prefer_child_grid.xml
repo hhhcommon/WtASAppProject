@@ -25,12 +25,12 @@
             android:gravity="center"
             android:text="我听"
             android:textColor="@color/wt_login_third"
-            android:textSize="14sp"/>
+            android:textSize="12sp"/>
     </RelativeLayout>>
     <ImageView
         android:id="@+id/img_prefer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="15dp"
         android:src="@mipmap/wt_dianzan_nomal"
 
         android:layout_above="@+id/tv_name"
