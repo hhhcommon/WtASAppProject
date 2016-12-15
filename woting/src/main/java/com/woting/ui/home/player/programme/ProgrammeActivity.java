@@ -104,13 +104,13 @@ public class ProgrammeActivity extends AppBaseFragmentActivity {
         tv6 = (TextView) findViewById(R.id.tv_guid6);// 周六
         tv7 = (TextView) findViewById(R.id.tv_guid7);// 周日
 
-        tv1.setOnClickListener(new TxListener(1));
-        tv2.setOnClickListener(new TxListener(2));
-        tv3.setOnClickListener(new TxListener(3));
-        tv4.setOnClickListener(new TxListener(4));
-        tv5.setOnClickListener(new TxListener(5));
-        tv6.setOnClickListener(new TxListener(6));
-        tv7.setOnClickListener(new TxListener(7));
+        tv1.setOnClickListener(new TxListener(0));
+        tv2.setOnClickListener(new TxListener(1));
+        tv3.setOnClickListener(new TxListener(2));
+        tv4.setOnClickListener(new TxListener(3));
+        tv5.setOnClickListener(new TxListener(4));
+        tv6.setOnClickListener(new TxListener(5));
+        tv7.setOnClickListener(new TxListener(6));
 
     }
 
@@ -140,7 +140,7 @@ public class ProgrammeActivity extends AppBaseFragmentActivity {
         @Override
         public void onClick(View v) {
             viewPager.setCurrentItem(index);
-            if (index == 1) {
+            if (index == 0) {
                 tv1.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
                 tv2.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv3.setTextColor(context.getResources().getColor(R.color.group_item_text2));
@@ -148,7 +148,7 @@ public class ProgrammeActivity extends AppBaseFragmentActivity {
                 tv5.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv6.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv7.setTextColor(context.getResources().getColor(R.color.group_item_text2));
-            } else if (index == 2) {
+            } else if (index == 1) {
                 tv1.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv2.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
                 tv3.setTextColor(context.getResources().getColor(R.color.group_item_text2));
@@ -156,7 +156,7 @@ public class ProgrammeActivity extends AppBaseFragmentActivity {
                 tv5.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv6.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv7.setTextColor(context.getResources().getColor(R.color.group_item_text2));
-            } else if (index == 3) {
+            } else if (index == 2) {
                 tv1.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv2.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv3.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
@@ -164,7 +164,7 @@ public class ProgrammeActivity extends AppBaseFragmentActivity {
                 tv5.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv6.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv7.setTextColor(context.getResources().getColor(R.color.group_item_text2));
-            } else if (index == 4) {
+            } else if (index == 3) {
                 tv1.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv2.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv3.setTextColor(context.getResources().getColor(R.color.group_item_text2));
@@ -172,7 +172,7 @@ public class ProgrammeActivity extends AppBaseFragmentActivity {
                 tv5.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv6.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv7.setTextColor(context.getResources().getColor(R.color.group_item_text2));
-            } else if (index == 5) {
+            } else if (index == 4) {
                 tv1.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv2.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv3.setTextColor(context.getResources().getColor(R.color.group_item_text2));
@@ -180,7 +180,7 @@ public class ProgrammeActivity extends AppBaseFragmentActivity {
                 tv5.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
                 tv6.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv7.setTextColor(context.getResources().getColor(R.color.group_item_text2));
-            } else if (index == 6) {
+            } else if (index == 5) {
                 tv1.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv2.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv3.setTextColor(context.getResources().getColor(R.color.group_item_text2));
@@ -188,7 +188,7 @@ public class ProgrammeActivity extends AppBaseFragmentActivity {
                 tv5.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv6.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
                 tv7.setTextColor(context.getResources().getColor(R.color.group_item_text2));
-            } else if (index == 7) {
+            } else if (index == 6) {
                 tv1.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv2.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 tv3.setTextColor(context.getResources().getColor(R.color.group_item_text2));
