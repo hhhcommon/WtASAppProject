@@ -253,12 +253,15 @@ public class ChatFragment extends Fragment implements OnClickListener {
         image_button = (Button) rootView.findViewById(R.id.image_button);                       //
         Relative_listview = (RelativeLayout) rootView.findViewById(R.id.Relative_listview);     //
         lin_second = (LinearLayout) rootView.findViewById(R.id.lin_second);                     //
+
         image_personvoice.setBackgroundResource(R.drawable.talk_show);
         draw = (AnimationDrawable) image_personvoice.getBackground();
+
         image_personvoice.setVisibility(View.INVISIBLE);
         image_voice.setBackgroundResource(R.drawable.talk_show);
         draw_group = (AnimationDrawable) image_voice.getBackground();
         image_voice.setVisibility(View.INVISIBLE);
+
         talkingName.setVisibility(View.INVISIBLE);
     }
 
@@ -1164,35 +1167,44 @@ public class ChatFragment extends Fragment implements OnClickListener {
                                     switch (returnType) {
                                         case 0xff://TT
                                             //退出租出异常
+                                            jack();
                                             ToastUtils.show_short(context, "退出租—出异常");
                                             isCalling = false;
                                             break;
                                         case 0x00:
                                             //没有有效登录用户
+                                            jack();
                                             isCalling = false;
                                             ToastUtils.show_always(context, "数据出错，请注销后重新登录账户");
                                             break;
                                         case 0x01:
                                             //退出租成功
+                                            jack();
                                             ToastUtils.show_short(context, "退出组—成功");
                                             isCalling = false;
                                             break;
                                         case 0x02:
                                             //退出租成功
+                                            jack();
                                             isCalling = false;
                                             ToastUtils.show_short(context, "无法获取用户组");
                                             break;
                                         case 0x04:
                                             //用户不在该组
+                                            jack();
                                             ToastUtils.show_short(context, "退出租—用户不在该组");
                                             isCalling = false;
                                             break;
                                         case 0x08:
                                             //用户已退出组
+                                            jack();
                                             ToastUtils.show_short(context, "退出租—用户已退出组");
                                             isCalling = false;
                                             break;
                                         default:
+                                            jack();
+                                            ToastUtils.show_short(context, "退出租—用户已退出组");
+                                            isCalling = false;
                                             break;
                                     }
 
@@ -1359,6 +1371,10 @@ public class ChatFragment extends Fragment implements OnClickListener {
                                     }
                                 }
                                 setListener();
+                                if (draw.isRunning()) {
+                                    draw.stop();
+                                }
+                                image_personvoice.setVisibility(View.INVISIBLE);
                                 lin_notalk.setVisibility(View.VISIBLE);
                                 lin_personhead.setVisibility(View.GONE);
                                 lin_head.setVisibility(View.GONE);
@@ -1481,8 +1497,8 @@ public class ChatFragment extends Fragment implements OnClickListener {
                         VoiceStreamRecordService.stop();
                         image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
                         InterPhoneControl.Loosen(context, interPhoneId);//发送取消说话控制
-                        if (draw.isRunning()) {
-                            draw.stop();
+                        if (draw_group.isRunning()) {
+                            draw_group.stop();
                         }
                         Log.e("对讲页面====", "录音机停止+发送取消说话控制+延时0.30秒");
                     }

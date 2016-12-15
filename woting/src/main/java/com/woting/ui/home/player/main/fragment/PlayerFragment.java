@@ -41,7 +41,6 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import com.kingsoft.media.httpcache.KSYProxyService;
 import com.kingsoft.media.httpcache.OnCacheStatusListener;
 import com.kingsoft.media.httpcache.OnErrorListener;
 import com.squareup.picasso.Picasso;
@@ -96,18 +95,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 
 /**
  * 播放主页
  * 2016年2月4日
- *
  * @author 辛龙
  */
 public class PlayerFragment extends Fragment implements OnClickListener,
@@ -163,8 +159,7 @@ public class PlayerFragment extends Fragment implements OnClickListener,
     private int RefreshType;                               // 是不是第一次请求数据
     private int voice_type = 2;                            // 判断此时是否按下语音按钮，1，按下2，松手
 
-    private Bitmap bmpPress;
-    private Bitmap bmp;
+    private Bitmap bmpPress,bmp;
 
     public static boolean isCurrentPlay;
     private static long currPosition = -1;                 // 当前的播放时间
@@ -178,8 +173,6 @@ public class PlayerFragment extends Fragment implements OnClickListener,
 
     private static ArrayList<LanguageSearchInside> allList = new ArrayList<LanguageSearchInside>();
     private ArrayList<String> testList;
-    private static KSYProxyService proxy;
-    private static int cachePercents;                               // 缓存长度
     private ImageView imageView_voice;
 
     /////////////////////////////////////////////////////////////
@@ -191,13 +184,9 @@ public class PlayerFragment extends Fragment implements OnClickListener,
         context = this.getActivity();
         initData();                                                  // 初始化数据
         setReceiver();                                               // 注册广播接收器
-        context.startService(new Intent(context, TtsPlayer.class));  // 开启播放器服务
-        // 线程优先级  THREAD_PRIORITY_AUDIO
-        android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
         initDao();                                                   // 初始化数据库命令执行对象
         UMShareAPI.get(context);                                     // 初始化友盟
         setVoice();                                                  // 初始化音频控制器
-        initCache();                                                 // 初始化缓存
     }
 
     @Override
@@ -219,6 +208,11 @@ public class PlayerFragment extends Fragment implements OnClickListener,
 
         lin_chose = (LinearLayout) rootView.findViewById(R.id.lin_chose);
         rl_voice = (MyLinearLayout) rootView.findViewById(R.id.rl_voice);
+        tv_speak_status = (TextView) rootView.findViewById(R.id.tv_speak_status);
+        tv_speak_status.setText("请按住讲话");
+
+        imageView_voice = (ImageView) rootView.findViewById(R.id.imageView_voice);
+        imageView_voice.setImageBitmap(bmp);
 
         rootView.findViewById(R.id.lin_ly_ckzj).setOnClickListener(this);
         rootView.findViewById(R.id.tv_cancle).setOnClickListener(this);
@@ -228,15 +222,21 @@ public class PlayerFragment extends Fragment implements OnClickListener,
         rootView.findViewById(R.id.lin_ly_timeover).setOnClickListener(this);
         rootView.findViewById(R.id.tv_ly_qx).setOnClickListener(this);
 
+
         View headView = LayoutInflater.from(context).inflate(R.layout.headview_fragment_play, null);
         headView.findViewById(R.id.lin_center).setOnClickListener(this);
-        lin_tuijian = (LinearLayout) headView.findViewById(R.id.lin_tuijian);
         headView.findViewById(R.id.lin_comment).setOnClickListener(this);
         headView.findViewById(R.id.lin_more).setOnClickListener(this);
         headView.findViewById(R.id.lin_lukuangtts).setOnClickListener(this);
         headView.findViewById(R.id.lin_like).setOnClickListener(this);
         headView.findViewById(R.id.lin_right).setOnClickListener(this);
         headView.findViewById(R.id.lin_programme).setOnClickListener(this);
+        headView.findViewById(R.id.lin_share).setOnClickListener(this);
+        headView.findViewById(R.id.lin_left).setOnClickListener(this);
+        headView.findViewById(R.id.lin_voicesearch).setOnClickListener(this); // 语音搜索
+        headView.findViewById(R.id.lin_download).setOnClickListener(this);    // 下载
+
+        lin_tuijian = (LinearLayout) headView.findViewById(R.id.lin_tuijian);
         img_like = (ImageView) headView.findViewById(R.id.img_like);
         img_news = (ImageView) headView.findViewById(R.id.img_news);
         img_play = (ImageView) headView.findViewById(R.id.img_play);
@@ -247,10 +247,17 @@ public class PlayerFragment extends Fragment implements OnClickListener,
         image_liu.setImageBitmap(bmp1);
 
         rv_details = (RelativeLayout) headView.findViewById(R.id.rv_details);      // 节目详情布局
+        seekBar = (SeekBar) headView.findViewById(R.id.seekBar);               // seekBar事件
+
         tv_like = (TextView) headView.findViewById(R.id.tv_like);
         tv_sequ = (TextView) headView.findViewById(R.id.tv_sequ);
         tv_desc = (TextView) headView.findViewById(R.id.tv_desc);
         tv_origin = (TextView) headView.findViewById(R.id.tv_origin);               // 来源
+        tv_name = (TextView) headView.findViewById(R.id.tv_name);
+        textTime = (TextView) headView.findViewById(R.id.text_time);
+        tv_download = (TextView) headView.findViewById(R.id.tv_download);
+        time_start = (TextView) headView.findViewById(R.id.time_start);
+        time_end = (TextView) headView.findViewById(R.id.time_end);
         tv_details_flag = (TextView) headView.findViewById(R.id.tv_details_flag);   // 展开或者隐藏按钮
         tv_details_flag.setOnClickListener(this);
         tv_details_flag.setText("  显示  ");
@@ -264,29 +271,11 @@ public class PlayerFragment extends Fragment implements OnClickListener,
         testList.add("影视资讯");
         flowTag.setAdapter(new SearchHotAdapter(context, testList));         // 展示热门搜索词
 
-        tv_name = (TextView) headView.findViewById(R.id.tv_name);
-        textTime = (TextView) headView.findViewById(R.id.text_time);
-        tv_download = (TextView) headView.findViewById(R.id.tv_download);
-        time_start = (TextView) headView.findViewById(R.id.time_start);
-        time_end = (TextView) headView.findViewById(R.id.time_end);
-
-        tv_speak_status = (TextView) rootView.findViewById(R.id.tv_speak_status);
-        tv_speak_status.setText("请按住讲话");
-
-        headView.findViewById(R.id.lin_share).setOnClickListener(this);
-        headView.findViewById(R.id.lin_left).setOnClickListener(this);
-        headView.findViewById(R.id.lin_voicesearch).setOnClickListener(this); // 语音搜索
-        headView.findViewById(R.id.lin_download).setOnClickListener(this);    // 下载
-
-        imageView_voice = (ImageView) rootView.findViewById(R.id.imageView_voice);
-        imageView_voice.setImageBitmap(bmp);
-
-        seekBar = (SeekBar) headView.findViewById(R.id.seekBar);               // seekBar事件
         mListView.addHeaderView(headView);
     }
 
     private void initData() {
-        RefreshType = 0;                                                       // 是不是第一次请求数据
+        RefreshType = 0;
         bmpPress = BitmapUtils.readBitMap(context, R.mipmap.wt_duijiang_button_pressed);
         bmp = BitmapUtils.readBitMap(context, R.mipmap.talknormal);
         format = new SimpleDateFormat("HH:mm:ss");
@@ -305,22 +294,6 @@ public class PlayerFragment extends Fragment implements OnClickListener,
             context.registerReceiver(Receiver, filter);
         }
     }
-
-    private void initCache() {
-        proxy = BSApplication.getKSYProxy();
-     /*   proxy.registerCacheStatusListener(context);*/
-        proxy.registerErrorListener(this);
-
-        File file = new File(GlobalConfig.playCacheDir);                   // 设置缓存目录
-        if (!file.exists()) {
-            file.mkdir();
-        }
-        proxy.setCacheRoot(file);
-        //   proxy.setMaxSingleFileSize(10*1024*1024);                     // 单个文件缓存大小
-        proxy.setMaxCacheSize(500 * 1024 * 1024);                          // 缓存大小 500MB
-        proxy.startServer();
-    }
-
 
     // 初始化数据库命令执行对象
     private void initDao() {
@@ -425,8 +398,6 @@ public class PlayerFragment extends Fragment implements OnClickListener,
             Receiver = null;
         }
 
-        proxy.unregisterErrorListener(this);
-        proxy.shutDownServer();
     }
 
 
@@ -1229,16 +1200,6 @@ public class PlayerFragment extends Fragment implements OnClickListener,
         }
     }
 
-    //判断某个链接是否已经缓存完毕的方法
-    private static Boolean IsCache(String url) {
-        HashMap<String, File> cacheMap = proxy.getCachedFileList();
-        File CacheFile = cacheMap.get(url);
-        if (CacheFile != null && CacheFile.length() > 0) {
-            return true;
-        }
-        return false;
-    }
-
     // 是否开启非wifi网络流量提醒
     private static boolean getWifiSet() {
         String wifiSet = sp.getString(StringConstant.WIFISET, "true");
@@ -1677,13 +1638,13 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                         updateTextViewWithTimeFormat(time_start, (int) (currPosition / 1000));
                         updateTextViewWithTimeFormat(time_end, (int) (duration / 1000));
                         seekBar.setMax((int) duration);
-                        if (IsCache(local) == true) {
-                            // ToastUtils.show_always(context,"缓存完成");
-                            int Length = (int) (audioPlay.getTotalTime()) * 100 / 100;
-                            seekBar.setSecondaryProgress(Length);
-                        } else {
-                            // ToastUtils.show_always(context,"缓存未完成");
-                        }
+//                        if (IsCache(local) == true) {
+//                            // ToastUtils.show_always(context,"缓存完成");
+//                            int Length = (int) (audioPlay.getTotalTime()) * 100 / 100;
+//                            seekBar.setSecondaryProgress(Length);
+//                        } else {
+//                            // ToastUtils.show_always(context,"缓存未完成");
+//                        }
                         timerService = (int) (duration - currPosition);
                         if (audioPlay.isPlaying()) {
                             seekBar.setProgress((int) currPosition);
@@ -1724,9 +1685,9 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                             //本地内容无法通过缓存加载 直接播放
                             audioPlay.play(local);
                         } else {
-                            String proxyUrl = proxy.getProxyUrl(local);
-                            audioPlay.play(proxyUrl);
-                            proxy.registerCacheStatusListener(new OnCacheStatusListener() {
+//                            String proxyUrl = proxy.getProxyUrl(local);
+//                            audioPlay.play(proxyUrl);
+                            BSApplication.getKSYProxy().registerCacheStatusListener(new OnCacheStatusListener() {
                                 @Override
                                 public void OnCacheStatus(String url, long sourceLength, int percentsAvailable) {
                                     int a = percentsAvailable;
@@ -1837,7 +1798,7 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                                 if (list != null && list.size() > 0) {
                                     // 此时有返回数据
                                     if (fList != null) {
-                                        // 此时数据库里边的数据为空
+                                        // 此时数据库里边的数据不为空
                                         num = -1;
                                         setData(fList, list);
                                     } else {
@@ -1847,6 +1808,8 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                                             setDataForNoList(list);
                                         } else {
                                             num = -2;
+                                            // 此时所有的数据都为空
+                                            setNoData();
                                         }
                                     }
                                 } else {
@@ -1855,11 +1818,10 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                                         num = -1;
                                         setData(fList, list);
                                     } else {
-                                        // 此时没有任何数据
+                                        // 此时所有的数据都为空
                                         num = -2;
-                                        mListView.setPullRefreshEnable(true);
-                                        mListView.setPullLoadEnable(false);
-                                        mListView.stopRefresh();
+                                        setNoData();
+
                                     }
                                 }
                             } else if (RefreshType == 1) {
@@ -1938,6 +1900,12 @@ public class PlayerFragment extends Fragment implements OnClickListener,
                 mListView.setRefreshTime(new Date().toLocaleString());
             }
         });
+    }
+
+    private void setNoData() {
+        mListView.setPullRefreshEnable(true);
+        mListView.setPullLoadEnable(false);
+        mListView.stopRefresh();
     }
 
     // 喜欢---不喜欢操作
