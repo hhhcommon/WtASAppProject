@@ -2,15 +2,14 @@ package com.woting.ui.interphone.commom.message;
 
 import java.io.Serializable;
 
-
 /**
  * 消息接口，主要是消息序列化和反序列化。
  * @author wanghui
  */
-public abstract class Message implements Comparable<Message>,Serializable {
-	private static final long serialVersionUID = -1177393259714876735L;
+public abstract class Message implements Comparable<Message>, Serializable {
+    private static final long serialVersionUID=-5568855516574485564L;
 
-	public final static byte[] END_FIELD={'|', '|'}; //字段结束标识||
+    public final static byte[] END_FIELD={'|', '|'}; //字段结束标识||
     public final static byte[] END_HEAD={'^', '^'}; //消息头结束标识^^
     public final static byte[] BEGIN_CTL={'|', '^'}; //控制消息开始|^
     public final static byte[] BEGIN_MDA={'^', '|'}; //媒体消息开始^|
@@ -87,7 +86,6 @@ public abstract class Message implements Comparable<Message>,Serializable {
     /**
      * 把消息序列化为字节数组
      * @return 消息对应的字节数组
-     * @throws Exception 
      */
     public abstract byte[] toBytes() throws Exception;
 
@@ -95,4 +93,17 @@ public abstract class Message implements Comparable<Message>,Serializable {
      * 判断是否是应答消息
      */
     public abstract boolean isAck();
+
+    /**
+     * 判断是否是应答消息
+     */
+    protected abstract boolean equals(Message msg);
+
+    protected boolean equalsMsg(Message msg) {
+        if (msgType!=msg.msgType) return false;
+        if (affirm!=msg.affirm) return false;
+        if (fromType!=msg.fromType) return false;
+        if (toType!=msg.toType) return false;
+        return true;
+    }
 }

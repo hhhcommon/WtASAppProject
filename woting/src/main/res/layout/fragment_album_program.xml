@@ -70,13 +70,13 @@
         android:layout_height="1dp"
         android:background="@color/view_color" />
 
-    <ListView
+    <com.woting.common.widgetui.xlistview.XListView
         android:id="@+id/lv_album"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none"
         android:layout_below="@id/text_view">
-    </ListView>
+    </com.woting.common.widgetui.xlistview.XListView>
 
     <LinearLayout
         android:id="@+id/lin_status2"

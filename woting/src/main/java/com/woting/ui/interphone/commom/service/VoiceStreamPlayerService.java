@@ -92,8 +92,10 @@ public  class VoiceStreamPlayerService   extends  Service{
 		bundle.putInt("seqNum", seqNum);
 		push.putExtras(bundle);
 		context.sendOrderedBroadcast(push, null);
-		byte[] vedioData=unCompress(mResults); //在这里解码，**重要
-		MsgQueue.add(vedioData);
+		if(mResults!=null){
+			byte[] vedioData=unCompress(mResults); //在这里解码，**重要
+			MsgQueue.add(vedioData);
+		}
 		voiceQueue.add(talkId+"::::::"+String.valueOf(seqNum)+"");
 		Log.i("接收到的所有seqNum", seqNum+"");
 

@@ -253,6 +253,7 @@
                 android:id="@+id/lin_group_introduce"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:visibility="gone"
                 android:background="@drawable/person_color">
 
                 <TextView

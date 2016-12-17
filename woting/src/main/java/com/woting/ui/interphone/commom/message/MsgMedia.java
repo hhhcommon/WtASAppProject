@@ -1,20 +1,21 @@
 package com.woting.ui.interphone.commom.message;
 
-import com.woting.common.util.StringUtils;
-
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
+import com.spiritdata.framework.util.StringUtils;
 
 /**
  * 媒体消息：媒体流数据
  * @author wanghui
  */
 public class MsgMedia extends Message {
+    private static final long serialVersionUID=-3827446721333425724L;
+
     private final static int COMPACT_LEN=36;//若删除ObjId，则这个值为24
 
     private int mediaType; //流类型:1音频2视频
-    private int bizType; //流业务类型:0对讲组；1电话
+    private int bizType; //流业务类型:1对讲组；2电话
     private String talkId; //会话Id，或一次媒体传输的信道编号
     private int seqNo; //流中包的序列号
     private int returnType; //返回消息类型
@@ -25,7 +26,7 @@ public class MsgMedia extends Message {
         return extInfo;
     }
     public void setExtInfo(Object extInfo) {
-        this.extInfo = extInfo;
+        this.extInfo=extInfo;
     }
 
     //以下信息在TCP原消息格式中有意义，在新的消息传输模型中需要删掉（不管是用TCP还是UDP）
@@ -46,9 +47,10 @@ public class MsgMedia extends Message {
     /**
      * 通过字节数组构造消息
      * @param binaryMsg 字节数组
+     * @throws Exception 
      */
     public MsgMedia(byte[] binaryMsg) throws Exception {
-        this.fromBytes(binaryMsg);
+        fromBytes(binaryMsg);
     }
 
     public int getMediaType() {
@@ -94,39 +96,39 @@ public class MsgMedia extends Message {
     }
 
     @Override
-    public void fromBytes(byte[] binaryMsg) throws Exception{
+    public void fromBytes(byte[] binaryMsg) throws Exception {
         if (MessageUtils.decideMsg(binaryMsg)!=1) throw new Exception("消息类型错误！");
 
         int _offset=2;
         byte f1=binaryMsg[_offset++];
-        this.setMsgType(((f1&0x80)==0x80)?1:0);
-        this.setAffirm(((f1&0x40)==0x40)?1:0);
+        setMsgType(((f1&0x80)==0x80)?1:0);
+        setAffirm(((f1&0x40)==0x40)?1:0);
 
         if (affirm==1&&msgType==1) throw new Exception("消息格式异常：回复消息不需要确认！");
         if (msgType==1&&binaryMsg.length!=COMPACT_LEN+1) throw new Exception("消息格式异常：回复消息长度错误！");
 
-        if ((f1&0x30)==0x10) this.setFromType(1);//服务器
+        if ((f1&0x30)==0x10) setFromType(1);//服务器
         else
-        if ((f1&0x30)==0x20) this.setFromType(0);//设备
+        if ((f1&0x30)==0x20) setFromType(0);//设备
         else
         throw new Exception("消息from位异常！");
 
-        if ((f1&0x0C)==0x04) this.setToType(1);//服务器
+        if ((f1&0x0C)==0x04) setToType(1);//服务器
         else
-        if ((f1&0x0C)==0x08) this.setToType(0);//设备
+        if ((f1&0x0C)==0x08) setToType(0);//设备
         else
         throw new Exception("消息to位异常！");
 
-        if ((f1&0x03)==0x01) this.setMediaType(1);//音频
+        if ((f1&0x03)==0x01) setMediaType(1);//音频
         else
-        if ((f1&0x02)==0x02) this.setMediaType(2);//视频
+        if ((f1&0x02)==0x02) setMediaType(2);//视频
         else
         throw new Exception("消息媒体类型位异常！");
 
-        this.setBizType(binaryMsg[_offset++]);
+        setBizType(binaryMsg[_offset++]);
 
         byte[] _tempBytes=Arrays.copyOfRange(binaryMsg, _offset, _offset+8);//ByteBuffer.wrap(binaryMsg, _offset, 8).array();
-        this.setSendTime(ByteConvert.bytes2long(_tempBytes));
+        setSendTime(ByteConvert.bytes2long(_tempBytes));
 
         _offset+=8;
         String _tempStr;
@@ -139,10 +141,10 @@ public class MsgMedia extends Message {
         if (_sa.length!=2) throw new Exception("消息会话Id异常！");
         if (Integer.parseInt(_sa[0])==-1) throw new Exception("消息会话Id异常！");
         _offset=Integer.parseInt(_sa[0]);
-        this.setTalkId(_sa[1]);
+        setTalkId(_sa[1]);
 
         _tempBytes=Arrays.copyOfRange(binaryMsg, _offset, _offset+4);
-        this.setSeqNo(ByteConvert.bytes2int(_tempBytes));
+        setSeqNo(ByteConvert.bytes2int(_tempBytes));
 
         _offset+=4;
         //objId，可能需要删除掉
@@ -155,10 +157,10 @@ public class MsgMedia extends Message {
         if (_sa.length!=2) throw new Exception("对象Id异常！");
         if (Integer.parseInt(_sa[0])==-1) throw new Exception("对象Id异常！");
         _offset=Integer.parseInt(_sa[0]);
-        this.setObjId(_sa[1]);
+        setObjId(_sa[1]);
         //删除结束
 
-        if (isAck()) this.setReturnType(binaryMsg[_offset]);
+        if (isAck()) setReturnType(binaryMsg[_offset]);
         else {
             short len=(short)(((binaryMsg[_offset+1]<<8)|binaryMsg[_offset]&0xff));
             if (len>0) mediaData=Arrays.copyOfRange(binaryMsg, _offset+2, _offset+2+len);
@@ -205,10 +207,8 @@ public class MsgMedia extends Message {
 
         if (!isAck()) {
             short len=(short)(mediaData==null?0:mediaData.length);
-            System.out.println("消息体长度::"+len);
             ret[_offset++]=(byte)(len>>0);
             ret[_offset++]=(byte)(len>>8);
-
             if (mediaData!=null) {
                 for (i=0; i<mediaData.length; i++) ret[_offset++]=mediaData[i];
             }
@@ -223,5 +223,38 @@ public class MsgMedia extends Message {
      */
     public boolean isAck() {
         return affirm==0&&msgType==1;
+    }
+
+    /**
+     * 比较两个媒体包是否相同
+     * @param msg 另一个参与比较的类
+     * @return 相同返回true，否则返回false
+     */
+    public boolean equals(Message msg) {
+        if (!(msg instanceof MsgMedia)) return false;
+
+        if (!equalsMsg(msg)) return false;
+
+        MsgMedia _m=(MsgMedia)msg;
+        if (bizType!=_m.bizType) return false;
+        if (mediaType!=_m.mediaType) return false;
+        if (talkId!=null) {
+            if (!talkId.equals(_m.talkId)) return false;
+        } else if (_m.talkId!=null) return false;
+        if (returnType!=_m.returnType) return false;
+        if (objId!=null) {
+            if (!objId.equals(_m.objId)) return false;
+        } else if (_m.objId!=null) return false;
+        if (seqNo!=_m.seqNo) return false;
+
+        if (mediaData!=null&&_m.mediaData!=null) {
+            if (mediaData.length!=_m.mediaData.length) return false;
+            for (int i=0; i<mediaData.length; i++) {
+                if (mediaData[i]!=_m.mediaData[i]) return false;
+            }
+        }
+        else if (mediaData==null&&_m.mediaData!=null) return false;
+        else if (mediaData!=null&&_m.mediaData==null) return false;
+        return true;
     }
 }

@@ -119,7 +119,7 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 		if (contact.getGroupNum() == null || contact.getGroupNum().equals("")) {
 			tv_id.setText("000000");
 		} else {
-			tv_id.setText("id:"+contact.getGroupNum());
+			tv_id.setText("ID: " +contact.getGroupNum());
 		}
 		if (contact.getGroupOriDescn() == null || contact.getGroupOriDescn().equals("")) {
 			tv_sign.setText("这家伙很懒，什么都没写");
@@ -251,7 +251,7 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 					} else if (ReturnType.equals("1011")) {
 						ToastUtils.show_always(context, "列表为空（列表为空[size==0]");
 					} else if (ReturnType.equals("1006")) {
-						ToastUtils.show_always(context, "您已经邀请过，请等待");
+						ToastUtils.show_always(context, "您已经申请过，请等待");
 					} else if (ReturnType.equals("T")) {
 						ToastUtils.show_always(context, "获取列表异常");
 					}
