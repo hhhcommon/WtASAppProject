@@ -1,9 +1,9 @@
 package com.woting.ui.interphone.commom.message;
 
+import com.woting.common.util.StringUtils;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
-
-import com.spiritdata.framework.util.StringUtils;
 
 /**
  * 媒体消息：媒体流数据
