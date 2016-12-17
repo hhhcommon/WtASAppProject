@@ -33,7 +33,6 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.manager.UpdateManager;
-import com.woting.common.service.SocketService;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
@@ -640,7 +639,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
-        SocketService.workStop();
+//        SocketService.workStop();
         unregisterReceiver(endApplicationBroadcast);    // 取消注册广播
         Log.v("--- Main ---", "--- 杀死进程 ---");
         android.os.Process.killProcess(android.os.Process.myPid());

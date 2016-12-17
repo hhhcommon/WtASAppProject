@@ -114,6 +114,7 @@ public class SocketService extends Service {
      * 结束工作：包括关闭所有线程，但消息仍然存在
      */
     public static void workStop() {
+        Log.e("结束工作", "关闭所有线程");
         toBeStop = true;
         int i = 0, limitCount = 6000;//一分钟后退出
         while ((healthWatch != null && healthWatch.isAlive()) ||
