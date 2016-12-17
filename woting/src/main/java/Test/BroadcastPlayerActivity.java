@@ -123,7 +123,7 @@ package Test;
 //
 //	private void setview() {
 //		head_left_btn = (LinearLayout) findViewById(R.id.head_left_btn);
-//		tv_Radioname = (TextView) findViewById(R.id.tv_name);
+//		tv_Radioname = (TextView) findViewById(R.id.mPlayAudioTitleName);
 //		img_RadioImg = (CircularImage) findViewById(R.id.image_radiobigimage);
 //		lin_like = (LinearLayout) findViewById(R.id.lin_like);
 //		lin_collect = (LinearLayout) findViewById(R.id.lin_collect);
@@ -135,8 +135,8 @@ package Test;
 //		img_play = (ImageView) findViewById(R.id.img_play);
 //		img_play_next = (ImageView) findViewById(R.id.img_play_next);
 //		img_morecatalog = (ImageView) findViewById(R.id.img_morecatalog);
-//		tv_start = (TextView) findViewById(R.id.time_start);
-//		tv_end = (TextView) findViewById(R.id.time_end);
+//		tv_start = (TextView) findViewById(R.id.mSeekBarStartTime);
+//		tv_end = (TextView) findViewById(R.id.mSeekBarEndTime);
 //		img_like = (ImageView) findViewById(R.id.img_like);
 //		img_collect = (ImageView) findViewById(R.id.img_collect);
 //		img_download = (ImageView) findViewById(R.id.img_download);

@@ -233,7 +233,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/tv_cancle"
+                    android:id="@+id/tv_cancel"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -258,8 +258,7 @@
                 <ImageView
                     android:id="@+id/imageView_voice"
                     android:layout_width="99dp"
-                    android:layout_height="99dp"
-                    android:src="@mipmap/talknormal" />
+                    android:layout_height="99dp" />
 
             </LinearLayout>
         </com.woting.common.widgetui.MyLinearLayout>

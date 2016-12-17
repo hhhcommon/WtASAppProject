@@ -142,8 +142,8 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 	private static BVideoView mVV;
 	private static SpeechSynthesizer mTts;
 	// 界面
-	private static TextView tv_speak_status;
-	private static TextView tv_name;
+	private static TextView mVoiceTextSpeakStatus;
+	private static TextView mPlayAudioTitleName;
 	private static TextView textSpeakContent;
 	private View headview;
 	private LinearLayout lin_right;
@@ -153,7 +153,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 	private View rootView;
 	private RelativeLayout lin_center;
 	public static TextView time_start;
-	public static TextView time_end;
+	public static TextView mSeekBarEndTime;
 	private LinearLayout lin_voicesearch;
 	private LinearLayout lin_time;
 	private static XListView mlistView;
@@ -224,7 +224,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 	private LinearLayout lin_lukuangtts;
 	private FileInfo filetemp;
 	private static SpeechSynthesizer lukuangTts;
-	private static TextView tv_like;
+	private static TextView mPlayAudioTextLike;
 	private static mVVHandler mVVHandler;
 
 	private final static int T5_START = 1;
@@ -309,7 +309,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 		lin_lukuangtts = (LinearLayout) headview.findViewById(R.id.lin_lukuangtts);
 		lin_like = (LinearLayout) headview.findViewById(R.id.lin_like);
 		img_like = (ImageView) headview.findViewById(R.id.img_like);
-		tv_like = (TextView) headview.findViewById(R.id.tv_like);
+		mPlayAudioTextLike = (TextView) headview.findViewById(R.id.mPlayAudioTextLike);
 		lin_right = (LinearLayout) headview.findViewById(R.id.lin_right);
 		img_news = (ImageView) headview.findViewById(R.id.img_news);
 		img_play = (ImageView) headview.findViewById(R.id.img_play);
@@ -318,21 +318,21 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 		image_liu.setImageBitmap(bmp1);
 		lin_time = (LinearLayout) headview.findViewById(R.id.lin_time);
 		lin_left = (LinearLayout) headview.findViewById(R.id.lin_left);
-		tv_name = (TextView) headview.findViewById(R.id.tv_name);
+		mPlayAudioTitleName = (TextView) headview.findViewById(R.id.mPlayAudioTitleName);
 		seekBar = (SeekBar) headview.findViewById(R.id.seekBar);
 		lin_share = (LinearLayout) headview.findViewById(R.id.lin_share);
 		textTime = (TextView) headview.findViewById(R.id.text_time);
 		seekBar.setEnabled(false);
 		// 配合seekbar使用的标签
-		time_start = (TextView) headview.findViewById(R.id.time_start);
-		time_end = (TextView) headview.findViewById(R.id.time_end);
+		mSeekBarStartTime = (TextView) headview.findViewById(R.id.mSeekBarStartTime);
+		mSeekBarEndTime = (TextView) headview.findViewById(R.id.mSeekBarEndTime);
 		lin_voicesearch = (LinearLayout) headview.findViewById(R.id.lin_voicesearch); // 语音搜索
 		rl_voice = (MyLinearLayout) rootView.findViewById(R.id.rl_voice);
 		imageView_voice = (ImageView) rootView.findViewById(R.id.imageView_voice);
 		imageView_voice.setImageBitmap(bmp);
 		tv_cancle = (TextView) rootView.findViewById(R.id.tv_cancle);
-		tv_speak_status = (TextView) rootView.findViewById(R.id.tv_speak_status);
-		tv_speak_status.setText("请按住讲话");
+		mVoiceTextSpeakStatus = (TextView) rootView.findViewById(R.id.mVoiceTextSpeakStatus);
+		mVoiceTextSpeakStatus.setText("请按住讲话");
 		textSpeakContent = (TextView) rootView.findViewById(R.id.text_speak_content);
 
 		mlistView.addHeaderView(headview);
@@ -371,7 +371,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 						mIatResults.clear(); // 设置参数
 						setParam(); // 开始听写
 						mIat.startListening(mRecoListener);
-						tv_speak_status.setText("开始语音转换");
+						mVoiceTextSpeakStatus.setText("开始语音转换");
 						imageView_voice.setImageBitmap(bmppresss);
 						textSpeakContent.setVisibility(View.GONE);
 					} else {
@@ -384,7 +384,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 					voice_type = 2;
 					mIat.stopListening();
 					imageView_voice.setImageBitmap(bmp);
-					tv_speak_status.setText("请按住讲话");
+					mVoiceTextSpeakStatus.setText("请按住讲话");
 					Log.i("---Main---", "--- > > > " + "抬起");
 					break;
 				}
@@ -543,9 +543,9 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 				if (alllist.get(number).getContentPlay() != null) {
 					img_play.setImageResource(R.drawable.wt_play_play);
 					if (alllist.get(number).getContentName() != null) {
-						tv_name.setText(alllist.get(number).getContentName());
+						mPlayAudioTitleName.setText(alllist.get(number).getContentName());
 					} else {
-						tv_name.setText("wotingkeji");
+						mPlayAudioTitleName.setText("wotingkeji");
 					}
 					if (alllist.get(number).getContentImg() != null) {
 						String url;
@@ -585,9 +585,9 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 					}
 					img_play.setImageResource(R.drawable.wt_play_play);
 					if (alllist.get(number).getContentName() != null) {
-						tv_name.setText(alllist.get(number).getContentName());
+						mPlayAudioTitleName.setText(alllist.get(number).getContentName());
 					} else {
-						tv_name.setText("wotingkeji");
+						mPlayAudioTitleName.setText("wotingkeji");
 					}
 					if (alllist.get(number).getContentImg() != null) {
 						String url;
@@ -622,9 +622,9 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 						&& alllist.get(number).getContentURI().trim().length() > 0) {
 					img_play.setImageResource(R.drawable.wt_play_play);
 					if (alllist.get(number).getContentName() != null) {
-						tv_name.setText(alllist.get(number).getContentName());
+						mPlayAudioTitleName.setText(alllist.get(number).getContentName());
 					} else {
-						tv_name.setText("wotingkeji");
+						mPlayAudioTitleName.setText("wotingkeji");
 					}
 					if (alllist.get(number).getContentImg() != null) {
 						String url;
@@ -1362,8 +1362,8 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 				&& GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
 					int currPosition = mVV.getCurrentPosition();
 					int duration = mVV.getDuration();
-					updateTextViewWithTimeFormat(time_start, currPosition);
-					updateTextViewWithTimeFormat(time_end, duration);
+					updateTextViewWithTimeFormat(mSeekBarStartTime, currPosition);
+					updateTextViewWithTimeFormat(mSeekBarEndTime, duration);
 					seekBar.setMax(duration);
 					timerService = duration - currPosition;
 					
@@ -1381,8 +1381,8 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 						&& GlobalConfig.playerobject.getMediaType().equals("RADIO")) {
 					int _currPosition = TimeUtil.getTime(System.currentTimeMillis());
 					int _duration = 24 * 60 * 60;
-					updateTextViewWithTimeFormat(time_start, _currPosition);
-					updateTextViewWithTimeFormat(time_end, _duration);
+					updateTextViewWithTimeFormat(mSeekBarStartTime, _currPosition);
+					updateTextViewWithTimeFormat(mSeekBarEndTime, _duration);
 					seekBar.setMax(_duration);
 					seekBar.setProgress(_currPosition);
 				} else if (GlobalConfig.playerobject != null && GlobalConfig.playerobject.getMediaType() != null
@@ -1391,8 +1391,8 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 
 					int _currPosition = TTS_SpeakProgress;
 					int _duration = (int) (TTSNews.length() / 4.15);
-					updateTextViewWithTimeFormat(time_start, _currPosition);
-					updateTextViewWithTimeFormat(time_end, _duration);
+					updateTextViewWithTimeFormat(mSeekBarStartTime, _currPosition);
+					updateTextViewWithTimeFormat(mSeekBarEndTime, _duration);
 					seekBar.setMax(_duration);
 					seekBar.setProgress(_currPosition);
 					TTS_SpeakProgress++;
@@ -1402,7 +1402,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 			case VOICE_UI:
 				rl_voice.setVisibility(View.GONE);
 				textSpeakContent.setVisibility(View.GONE);
-				tv_speak_status.setText("请按住讲话");
+				mVoiceTextSpeakStatus.setText("请按住讲话");
 				break;
 			}
 		}
@@ -1574,7 +1574,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				SHARE_MEDIA Platform = mylist.get(position).getSharePlatform();
-				CallShare(Platform);
+				callShare(Platform);
 				Sharedialog.dismiss();
 			}
 		});
@@ -1588,7 +1588,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 		});
 	}
 
-	protected void CallShare(SHARE_MEDIA Platform) {
+	protected void callShare(SHARE_MEDIA Platform) {
 		String sharename;
 		String shareDesc;
 		String shareContentImg;
@@ -1752,7 +1752,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 		 tv_news.setText(str); 
 		if (str != null && !str.equals("")) {
 			str = str.replaceAll("[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……& amp;*（）——+|{}【】‘；：”“’。，、？|-]", "");
-			tv_speak_status.setText("正在搜索: ");
+			mVoiceTextSpeakStatus.setText("正在搜索: ");
 			textSpeakContent.setVisibility(View.VISIBLE);
 			textSpeakContent.setText(str);
 			if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
@@ -2099,18 +2099,18 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 		GlobalConfig.playerobject = flist;
 		resetHeadView();
 		if (flist.getContentName() != null) {
-			tv_name.setText(flist.getContentName());
+			mPlayAudioTitleName.setText(flist.getContentName());
 		} else {
-			tv_name.setText("未知数据");
+			mPlayAudioTitleName.setText("未知数据");
 		}
 		// if (flist.getPlayerAllTime() == null||
 		// flist.getPlayerAllTime().trim().equals("")) {
-		time_start.setText("00:00:00");
-		time_end.setText("00:00:00");
+		mSeekBarStartTime.setText("00:00:00");
+		mSeekBarEndTime.setText("00:00:00");
 		// } else {
-		// time_start.setText("00:00:00");
+		// mSeekBarStartTime.setText("00:00:00");
 		// String ss = format.format(Long.parseLong(flist.getPlayerAllTime()));
-		// time_end.setText(ss);
+		// mSeekBarEndTime.setText(ss);
 		// }
 		if (flist.getContentImg() != null) {
 			String url;
@@ -2151,12 +2151,12 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 		GlobalConfig.playerobject = list.get(0);
 		resetHeadView();
 		if (list.get(0).getContentName() != null && list.get(0).getContentName().trim().length() > 0) {
-			tv_name.setText(list.get(0).getContentName());
+			mPlayAudioTitleName.setText(list.get(0).getContentName());
 		} else {
-			tv_name.setText("未知数据");
+			mPlayAudioTitleName.setText("未知数据");
 		}
-		time_start.setText("00:00:00");
-		time_end.setText("00:00:00");
+		mSeekBarStartTime.setText("00:00:00");
+		mSeekBarEndTime.setText("00:00:00");
 		if (list.get(0).getContentImg() != null) {
 			String url;
 			if (list.get(0).getContentImg().startsWith("http")) {
@@ -2195,15 +2195,15 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 			}
 			if (GlobalConfig.playerobject.getContentFavorite() != null && !GlobalConfig.playerobject.equals("")) {
 				if (GlobalConfig.playerobject.getContentFavorite().equals("1")) {
-					tv_like.setText("已喜欢");
+					mPlayAudioTextLike.setText("已喜欢");
 					img_like.setImageResource(R.drawable.wt_dianzan_select);
 				} else {
-					tv_like.setText("喜欢");
+					mPlayAudioTextLike.setText("喜欢");
 					img_like.setImageResource(R.drawable.wt_dianzan_nomal);
 				}
 
 			} else {
-				tv_like.setText("喜欢");
+				mPlayAudioTextLike.setText("喜欢");
 				img_like.setImageResource(R.drawable.wt_dianzan_nomal);
 				// ToastUtil.show_always(context, "本节目不支持喜欢");
 			}
@@ -2232,9 +2232,9 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 			}
 			num = 0;
 			if (flist.getContentName() != null) {
-				tv_name.setText(flist.getContentName());
+				mPlayAudioTitleName.setText(flist.getContentName());
 			} else {
-				tv_name.setText("wotingkeji");
+				mPlayAudioTitleName.setText("wotingkeji");
 			}
 			adapter = new PlayerListAdapter(context, alllist);
 			mlistView.setAdapter(adapter);
@@ -2383,9 +2383,9 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 						if (ContentURI != null && ContentURI.trim().length() > 0) {
 							img_play.setImageResource(R.drawable.wt_play_play);
 							if (alllist.get(number).getContentName() != null) {
-								tv_name.setText(alllist.get(number).getContentName());
+								mPlayAudioTitleName.setText(alllist.get(number).getContentName());
 							} else {
-								tv_name.setText("wotingkeji");
+								mPlayAudioTitleName.setText("wotingkeji");
 							}
 							if (alllist.get(number).getContentImg() != null) {
 								String url;
@@ -2491,7 +2491,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 				if (ReturnType != null) {
 					if (ReturnType.equals("1001")) {
 						if (GlobalConfig.playerobject.getContentFavorite().equals("0")) {
-							tv_like.setText("已喜欢");
+							mPlayAudioTextLike.setText("已喜欢");
 							img_like.setImageResource(R.drawable.wt_dianzan_select);
 							GlobalConfig.playerobject.setContentFavorite("1");
 							for (int i = 0; i < alllist.size(); i++) {
@@ -2500,7 +2500,7 @@ OnCompletionListener, OnPlayingBufferCacheListener, OnTotalCacheUpdateListener {
 								}
 							}
 						} else {
-							tv_like.setText("喜欢");
+							mPlayAudioTextLike.setText("喜欢");
 							img_like.setImageResource(R.drawable.wt_dianzan_nomal);
 							GlobalConfig.playerobject.setContentFavorite("0");
 							for (int i = 0; i < alllist.size(); i++) {

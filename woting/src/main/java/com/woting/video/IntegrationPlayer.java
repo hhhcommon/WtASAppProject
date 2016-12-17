@@ -1,190 +1,279 @@
 package com.woting.video;
 
 import android.content.Context;
+import android.os.Handler;
+import android.util.Log;
 
 import com.kingsoft.media.httpcache.KSYProxyService;
+import com.kingsoft.media.httpcache.OnCacheStatusListener;
 import com.kingsoft.media.httpcache.OnErrorListener;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 
 import java.io.File;
+import java.util.HashMap;
 
 /**
  * 集成播放器
  * 作者：xinlong on 2016/11/29 15:54
  * 邮箱：645700751@qq.com
  */
-public class IntegrationPlayer {
+public class IntegrationPlayer implements OnErrorListener {
+    private Context mContext;
 
-    private static IntegrationPlayer wtIPlayer;        // 集合播放器
-    private static Context contexts;
-    private VPlayer vlcPlayer;                         // VLC播放器
-    private TPlayer ttsPlayer;                         // TTS播放器
-    private int oldPType = 0;                            // 上次内容播放器类型  0=null,1=tts,2=vlc
-    private int newptype;                              // 最新内容播放器类型  1=tts,2=vlc
-    private KSYProxyService proxy;
+    private static IntegrationPlayer mPlayer;
+    private KSYProxyService mProxy;// 缓存对象
 
-    private IntegrationPlayer() {
-        if (vlcPlayer == null) {
-            vlcPlayer = VPlayer.getInstance();
+    private VlcPlayer mVlcPlayer;// VLC 播放器
+    private TtsPlayer mTtsPlayer;// TTS 播放器
+
+    private boolean mIsVlcPlaying;// VLC 播放器正在播放
+    private boolean mIsTtsPlaying;// TTS 播放器正在播放
+
+    private long mTotalTime;// 当前播放的总时间
+    private int secondProgress;// SeekBar 第二进度即缓存进度值
+
+    private String mediaType;// 播放的节目类型
+    private String httpUrl;
+    private String localUrl;
+
+    private Handler mHandler = new Handler();
+
+    private Runnable mVlcPlayRunnable = new Runnable() {
+        @Override
+        public void run() {
+            vlcPlay(httpUrl, localUrl);
         }
+    };
 
-        if (ttsPlayer == null) {
-            ttsPlayer = TPlayer.getInstance(contexts);
+    private Runnable mTtsPlayRunnable = new Runnable() {
+        @Override
+        public void run() {
+            ttsPlay(httpUrl, localUrl);
         }
+    };
+
+    // 实现单例 在这里执行初始化操作
+    private IntegrationPlayer(Context context) {
+        mContext = context;
         initCache();
+        initVlcPlayer();
+        initTtsPlayer(mContext);
     }
 
-    private void initCache() {
-        proxy = BSApplication.getKSYProxy();
-        proxy.registerErrorListener(new OnErrorListener() {
-            @Override
-            public void OnError(int i) {
-
-            }
-        });
-        File file = new File(GlobalConfig.playCacheDir);               // 设置缓存目录
-        if (!file.exists()) {
-            file.mkdir();
-        }
-        proxy.setCacheRoot(file);
-        // proxy.setMaxSingleFileSize(10*1024*1024);               // 单个文件缓存大小
-        proxy.setMaxCacheSize(500 * 1024 * 1024);                        // 缓存大小 500MB
-        proxy.startServer();
-    }
-
-    /**
-     * 初始化集合播放器
-     *
-     * @param context tts初始化的时候需要的上下文对象
-     * @return 集合播放器
-     */
     public static IntegrationPlayer getInstance(Context context) {
-        contexts = context;
-        if (wtIPlayer == null) {
-            wtIPlayer = new IntegrationPlayer();
+        if(mPlayer == null) {
+            synchronized (IntegrationPlayer.class) {
+                if(mPlayer == null) {
+                    mPlayer = new IntegrationPlayer(context);
+                }
+            }
         }
-        return wtIPlayer;
+        return mPlayer;
+    }
+
+    // 初始化 VLC 播放器
+    private void initVlcPlayer() {
+        if(mVlcPlayer == null) mVlcPlayer = VlcPlayer.getInstance();
+    }
+
+    // 初始化 TTS 播放器
+    private void initTtsPlayer(Context context) {
+        if(context == null) {
+            Log.w("TAG", "Init Error: Context is null.");
+            return ;
+        }
+        if(mTtsPlayer == null) mTtsPlayer = TtsPlayer.getInstance(context);
+    }
+
+    // 初始化播放缓存
+    private void initCache() {
+        mProxy = BSApplication.getKSYProxy();
+        mProxy.registerErrorListener(this);
+        File file = new File(GlobalConfig.playCacheDir);// 设置缓存目录
+        if (!file.exists()) if(!file.mkdir()) Log.v("TAG", "KSYProxy MkDir Error");
+        mProxy.setCacheRoot(file);
+        mProxy.setMaxCacheSize(500 * 1024 * 1024);// 缓存大小 500MB
+        mProxy.startServer();
     }
 
     /**
-     * 每个节目的第一次播放
-     * @param localUrl 本地播放路径
-     * @param url      播放路径或者TTS内容
-     * @param type     节目播放类型
+     * 播放
      */
-    public void startPlay(String type, String url, String localUrl) {
-        if (oldPType == 0) {
-            /*
-             * 说明：此时是打开本次app的第一次播放
-             * 1.判断本次播放类型
-             * 2.判断是否本地已经下载
-             */
-           if(type.trim().equals("TTS")){
-               //对上次播放类型进行赋值，TTS
-               oldPType=1;
-               ttsPlayer.play(url);
-           }else{
-               //对上次播放类型进行赋值,VLC
-               oldPType=2;
-               if(localUrl!=null){
-                   /*
-                    * 播放本地音频
-                    */
-               }else{
-                   /*
-                    * 播放网络音频
-                    */
-               }
-           }
+    public void startPlay(String mediaType, String httpUrl, String localUrl) {
+        this.mediaType = mediaType;
+        this.httpUrl = httpUrl;
+        this.localUrl = localUrl;
 
-        } else if (oldPType == 1) {
-            /*
-             * 上一次播放类型是TTS
-             * 1.停止播放TTS
-             */
+        // 播放类型为空无法判断使用哪个播放器
+        if(mediaType == null) return ;
+        Log.i("TAG", "startPlay: mediaType -- > " + mediaType);
 
-        }else{
-            /*
-             * 上一次播放类型是非TTS的所有类型
-             */
+        // 播放地址为空
+        if(isEmpty(this.httpUrl) && isEmpty(this.localUrl)) {
+            Log.e("TAG", "Player Error: this url is null!!!");
+            return ;
+        }
 
+        // 根据 mediaType 自动选择播放器
+        switch (mediaType) {
+            case "TTS":
+                if(mVlcPlayer != null && mVlcPlayer.isPlaying() && mIsVlcPlaying) mVlcPlayer.stop();
+                if(mVlcPlayRunnable != null) mHandler.removeCallbacks(mVlcPlayRunnable);
+                if(mTtsPlayer == null) initTtsPlayer(mContext);
+
+                mHandler.post(mTtsPlayRunnable);
+
+                mIsTtsPlaying = true;
+                mIsVlcPlaying = false;
+                break;
+            default:
+                if(mTtsPlayer != null && mTtsPlayer.isPlaying() && mIsTtsPlaying) mTtsPlayer.stop();
+                if(mTtsPlayRunnable != null) mHandler.removeCallbacks(mTtsPlayRunnable);
+                if(mVlcPlayer == null) initVlcPlayer();
+
+                mHandler.post(mVlcPlayRunnable);
+
+                mIsVlcPlaying = true;
+                mIsTtsPlaying = false;
+                break;
         }
     }
 
-    /**
-     * 暂停播放
-     */
-    public void pousePlay() {
-        if (newptype == 1) {
-
-        } else if (newptype == 2) {
-
+    // 使用 VLC 播放器播放
+    private void vlcPlay(String httpUrl, String localUrl) {
+        if(isEmpty(localUrl)) {
+            if(GlobalConfig.playerobject != null && GlobalConfig.playerobject.getMediaType() != null) {
+                if(GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
+                    httpUrl = mProxy.getProxyUrl(httpUrl);
+                    mProxy.registerCacheStatusListener(new OnCacheStatusListener() {
+                        @Override
+                        public void OnCacheStatus(String url, long sourceLength, int percentsAvailable) {
+                            secondProgress = (int) mTotalTime * percentsAvailable / 100;
+                        }
+                    }, httpUrl);
+                }
+            }
+            mVlcPlayer.play(httpUrl);
+            mTotalTime = mVlcPlayer.getTotalTime();
         } else {
-
+            mVlcPlayer.play(localUrl);
         }
+    }
+
+    // 使用 TTS 播放器播放
+    private void ttsPlay(String httpUrl, String localUrl) {
+        if(isEmpty(localUrl)) {
+            if(GlobalConfig.playerobject != null && GlobalConfig.playerobject.getMediaType() != null) {
+                if(GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
+                    httpUrl = mProxy.getProxyUrl(httpUrl);
+                    mProxy.registerCacheStatusListener(new OnCacheStatusListener() {
+                        @Override
+                        public void OnCacheStatus(String url, long sourceLength, int percentsAvailable) {
+                            secondProgress = (int) mTotalTime * percentsAvailable / 100;
+                        }
+                    }, httpUrl);
+                }
+            }
+            mTtsPlayer.play(httpUrl);
+            mTotalTime = mTtsPlayer.getTotalTime();
+        } else {
+            mTtsPlayer.play(localUrl);
+        }
+    }
+
+    /**
+     * 暂停
+     */
+    public void pausePlay() {
+        if(mIsVlcPlaying && mVlcPlayer.isPlaying()) mVlcPlayer.pause();
+        else if(mIsTtsPlaying && mTtsPlayer.isPlaying()) mTtsPlayer.pause();
     }
 
     /**
      * 继续播放
      */
     public void continuePlay() {
-        if (newptype == 1) {
-
-        } else if (newptype == 2) {
-
-        } else {
-
-        }
+        if(mIsVlcPlaying) mVlcPlayer.continuePlay();
+        else if(mIsTtsPlaying) mTtsPlayer.continuePlay();
     }
-
 
     /**
-     * 停止播放
+     * 回收播放器资源
      */
-    public void stopPlay() {
-        if (newptype == 1) {
-
-        } else if (newptype == 2) {
-
-        } else {
-
+    public void destroyPlayer() {
+        if(mVlcPlayer != null) mVlcPlayer.destroy();
+        if(mTtsPlayer != null) mTtsPlayer.destroy();
+        if(mTtsPlayRunnable != null) mHandler.removeCallbacks(mTtsPlayRunnable);
+        if(mVlcPlayRunnable != null) mHandler.removeCallbacks(mVlcPlayRunnable);
+        if(mProxy != null) {
+            mProxy.unregisterErrorListener(this);
+            mProxy.shutDownServer();
         }
     }
-
-
-    /**
-     * 设置播放进度
-     *
-     * @param time 此时的播放进度
-     */
-    public void setTime(Long time) {
-
-    }
-
 
     /**
      * 获取此时播放时间
      */
-    public long getTime() {
+    public long getCurrentTime() {
+        if(mediaType != null && mediaType.equals("TTS")) {
+            return mTtsPlayer.getTime();
+        } else {
+            return mVlcPlayer.getTime();
+        }
+    }
 
-
-        return 0;
+    /**
+     * 设置播放进度
+     * @param time 此时的播放进度
+     */
+    public void setCurrentTime(long time) {
+        if(mediaType != null && mediaType.equals("TTS")) {
+            mTtsPlayer.setTime(time);
+        } else {
+            mVlcPlayer.setTime(time);
+        }
     }
 
     /**
      * 获取总时长
      */
     public long getTotalTime() {
-
-        return 0;
+        if(mediaType != null && mediaType.equals("TTS")) {
+            return mTtsPlayer.getTotalTime();
+        } else {
+            return mVlcPlayer.getTotalTime();
+        }
     }
 
     /**
-     * 获取总时长
+     * 获取 SeekBar 的第二进度
      */
-    public KSYProxyService getProxy() {
+    public long getSeekBarSecondProgress() {
+        return secondProgress;
+    }
 
-        return proxy;
+    /**
+     * 播放器是否在播放
+     */
+    public boolean isPlaying() {
+        return (mVlcPlayer.isPlaying() && mIsVlcPlaying) || (mTtsPlayer.isPlaying() && mIsTtsPlaying);
+    }
+
+    @Override
+    public void OnError(int i) {
+        Log.v("TAG", "KSYProxyService Error");
+    }
+
+    // 判断是否已经缓存完成
+    public boolean isCacheFinish(String url) {
+        HashMap<String, File> cacheMap = mProxy.getCachedFileList();
+        File cacheFile = cacheMap.get(url);
+        return cacheFile != null && cacheFile.length() > 0;
+    }
+
+    // 判断播放地址是否为空
+    private boolean isEmpty(String url) {
+        return url == null || url.trim().equals("") || url.equals("null");
     }
 }
