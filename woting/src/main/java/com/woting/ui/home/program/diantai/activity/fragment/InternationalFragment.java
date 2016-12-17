@@ -218,17 +218,9 @@ public class InternationalFragment extends Fragment {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("MediaType", "RADIO");
-
             //获取当前城市下所有分类内容
             jsonObject.put("CatalogId", 110000);
             jsonObject.put("CatalogType", "2");//写死的 给北京就行 后面有了分类了 改这个
-/*                //按照分类获取内容
-                JSONObject js = new JSONObject();
-                jsonObject.put("CatalogType", "1");
-         *//*       jsonObject.put("CatalogId", CatalogId);
-                 js.put("CatalogType", "2");
-                js.put("CatalogId", cityId);*//*
-                jsonObject.put("FilterData", js);*/
             jsonObject.put("PerSize", "3");
             jsonObject.put("ResultType", "3");
             jsonObject.put("PageSize", "10");
