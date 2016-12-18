@@ -92,7 +92,7 @@ public class TPlayer implements WtAudioPlay {
 	}
 
 	@Override
-	public void destory() {
+	public void destroy() {
 		if(ttsplayer!=null){
 			ttsplayer=null;
 		}

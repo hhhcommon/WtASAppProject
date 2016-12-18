@@ -1,6 +1,5 @@
 package com.woting.ui.interphone.commom.message;
 
-
 /**
  * 已处理的消息对象
  * @author wanghui

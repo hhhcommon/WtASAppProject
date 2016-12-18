@@ -696,6 +696,12 @@
         <service android:name=".ui.download.service.DownloadService" />
         <service android:name=".common.service.FloatingWindowService" />
         <service android:name=".common.service.LocationService" />
+
+        <!--集成播放器服务-->
+        <service android:name=".common.service.IntegrationPlayerService"/>
+        <!--空服务-->
+        <service android:name=".common.service.AssistService"/>
+
         <!-- 高德地图定位服务 -->
         <service android:name="com.amap.api.location.APSService" />
 

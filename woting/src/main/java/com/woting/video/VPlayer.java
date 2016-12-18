@@ -18,13 +18,11 @@ import org.videolan.vlc.util.VLCInstance;
  * 邮箱：645700751@qq.com
  */
 public class VPlayer {
-
     private static VPlayer vlcPlayer;
     private LibVLC audioPlay;
     private String Url;
 
     private VPlayer() {
-
         try {
             audioPlay = VLCInstance.getLibVlcInstance();
         } catch (LibVlcException e) {
@@ -33,7 +31,6 @@ public class VPlayer {
 
         EventHandler em = EventHandler.getInstance();
         em.addHandler(mVlcHandler);
-
     }
 
     /**

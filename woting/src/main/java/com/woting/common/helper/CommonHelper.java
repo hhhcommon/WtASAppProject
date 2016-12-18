@@ -10,6 +10,7 @@ import android.telephony.TelephonyManager;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.PreferenceConstant;
 import com.woting.common.manager.SharePreferenceManager;
+import com.woting.common.util.ToastUtils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -68,6 +69,18 @@ public class CommonHelper {
 		return (GlobalConfig.CURRENT_NETWORK_STATE_TYPE = (proxyHost == null ? GlobalConfig.NETWORK_STATE_CMNET
 				: GlobalConfig.NETWORK_STATE_CMWAP));
 	}
+
+    /**
+     * 检查是否有网络
+     */
+    public static boolean checkNetwork(Context context) {
+        if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
+            ToastUtils.showNoNetwork(context);
+            return false;
+        } else {
+            return true;
+        }
+    }
 
 	/**
 	 * 获取手机设备号IMEI
