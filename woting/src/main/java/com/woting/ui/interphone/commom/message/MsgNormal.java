@@ -1,10 +1,10 @@
 package com.woting.ui.interphone.commom.message;
 
+import com.woting.common.util.StringUtils;
+import com.woting.ui.interphone.commom.message.content.MapContent;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
-
-import com.spiritdata.framework.util.StringUtils;
-import com.woting.push.core.message.content.MapContent;
 
 /**
  * 一般消息：既控制类消息

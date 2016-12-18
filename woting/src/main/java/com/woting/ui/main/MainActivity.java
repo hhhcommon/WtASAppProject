@@ -33,6 +33,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.manager.UpdateManager;
+import com.woting.common.util.JsonEncloseUtils;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
@@ -45,6 +46,8 @@ import com.woting.ui.home.model.CatalogName;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.citylist.dao.CityInfoDao;
+import com.woting.ui.interphone.commom.message.MessageUtils;
+import com.woting.ui.interphone.commom.message.MsgNormal;
 import com.woting.ui.interphone.linkman.model.LinkMan;
 import com.woting.ui.interphone.main.DuiJiangActivity;
 import com.woting.ui.mine.MineActivity;
@@ -54,6 +57,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -90,7 +94,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         tabHost = extracted();
         context = this;
         MobclickAgent.openActivityDurationTrack(false);
-        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=56275014");			// 初始化语音配置对象
+        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=56275014");            // 初始化语音配置对象
         upDataType = 1;    //不需要强制升级
         update();          //获取版本数据
         InitTextView();    //设置界面
@@ -113,7 +117,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
 //            startActivity(intent);
 //        }
 
-        if(!BSApplication.SharedPreferences.getBoolean(StringConstant.FAVORITE_PROGRAM_TYPE, false)) {
+        if (!BSApplication.SharedPreferences.getBoolean(StringConstant.FAVORITE_PROGRAM_TYPE, false)) {
             startActivity(new Intent(context, FavoriteProgramTypeActivity.class));
         }
     }
@@ -213,7 +217,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
                                 if (s != null && s.size() > 0) {
                                     //将数据写入数据库
-                                    GlobalConfig.CityCatalogList=s;
+                                    GlobalConfig.CityCatalogList = s;
                                     list = CID.queryCityInfo();
                                     List<CatalogName> m = new ArrayList<>();
                                     for (int i = 0; i < s.size(); i++) {
@@ -531,9 +535,11 @@ public class MainActivity extends TabActivity implements OnClickListener {
     public static void change() {
         setViewOne();
     }
+
     public static void changeTwo() {
         setViewTwo();
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -592,6 +598,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private void registerReceiver() {
         IntentFilter m = new IntentFilter();
         m.addAction(BroadcastConstants.TIMER_END);
+        m.addAction(BroadcastConstants.PUSH);
         registerReceiver(endApplicationBroadcast, m);
     }
 
@@ -608,10 +615,53 @@ public class MainActivity extends TabActivity implements OnClickListener {
                         finish();
                     }
                 }, 1000);
+            } else if (intent.getAction().equals(BroadcastConstants.PUSH)) {
+
+                byte[] bt = intent.getByteArrayExtra("outmessage");
+                Log.e("mainActivity接收器中数据", Arrays.toString(bt) + "");
+                try {
+                    MsgNormal outMessage = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
+                    if (outMessage != null) {
+                        int biztype = outMessage.getBizType();
+                        if (biztype == 1) {
+                            // 上次存在的组对讲消息
+                            int cmdType = outMessage.getCmdType();
+                            if (cmdType == 3) {
+                                int command = outMessage.getCommand();
+                                if(command==0){
+                                    Log.e("mainActivity接收器中数据", JsonEncloseUtils.btToString(bt)  + "");
+                                    showGroup();
+                                }
+                            }
+                        }else if (biztype == 2) {
+                            // 上次存在的单对单消息
+                            int cmdType = outMessage.getCmdType();
+                            if (cmdType == 3) {
+                                int command = outMessage.getCommand();
+                                if(command==0){
+                                    Log.e("mainActivity接收器中数据",JsonEncloseUtils.btToString(bt)  + "");
+                                    showPerson();
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         }
     };
 
+    // 展示上次存在的组对讲消息
+    private void showGroup() {
+        ToastUtils.show_always(MainActivity.this, "展示上次存在的组对讲消息");
+    }
+
+    // 展示上次存在的单对单消息
+    private void showPerson() {
+        ToastUtils.show_always(MainActivity.this, "展示上次存在的单对单消息");
+    }
 
     /**
      * 手机实体返回按键的处理 与onbackpress同理

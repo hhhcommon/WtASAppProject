@@ -104,7 +104,7 @@ public class PlayerListAdapter extends BaseAdapter {
                 } else {
                     url = GlobalConfig.imageurl + searchlist.getContentImg();
                 }
-                url= AssembleImageUrlUtils.assembleImageUrl150(url);
+                url= AssembleImageUrlUtils.assembleImageUrl180(url);
                 Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageview_rankimage);
             } else {
                 holder.imageview_rankimage.setImageBitmap(bmp);

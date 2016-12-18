@@ -55,8 +55,8 @@ public  class VoiceStreamPlayerService   extends  Service{
 			e.printStackTrace();
 			Log.i("编码器初始化异常", e.toString());
 		}
-		Receive re=new Receive();
-		re.start();
+//		Receive re=new Receive();
+//		re.start();
 		stPlay st=new stPlay();
 		st.start();
 	}

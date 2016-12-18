@@ -481,9 +481,11 @@ public class SocketService extends Service {
             byte[] endMsgFlag = {0x00, 0x00, 0x00};
             int isRegist = 0;
             while (true) {
+                Log.i("222222222", "222222222");
                 try {
                     int r = -1;
                     while (true) {
+                        Log.i("111111111", "111111");
                         try {
                             r = receiveByteQueue.take();
                             ba[i++] = (byte) r;
@@ -492,7 +494,7 @@ public class SocketService extends Service {
                             endMsgFlag[2] = (byte) r;
 
                             if (!hasBeginMsg) {
-                                if (endMsgFlag[0] == 'B' && endMsgFlag[1] == '^' && endMsgFlag[2] == '^') {
+                                      if (endMsgFlag[0] == 'B' && endMsgFlag[1] == '^' && endMsgFlag[2] == '^') {
                                     break;
                                 } else if ((endMsgFlag[0] == '|' && endMsgFlag[1] == '^') || (endMsgFlag[0] == '^' && endMsgFlag[1] == '|')) {
                                     hasBeginMsg = true;
@@ -565,7 +567,7 @@ public class SocketService extends Service {
                                     }
                                 }
                             }
-                        } catch (InterruptedException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -721,6 +723,14 @@ public class SocketService extends Service {
                                         //								Log.e("广播中数据", Arrays.toString(msg.toBytes())+"");
                                         push2.putExtras(bundle2);
                                         context.sendBroadcast(push2);
+                                        break;
+                                    case 3:
+                                        // 上次单对单通话消息
+                                        Intent push3 = new Intent(BroadcastConstants.PUSH);
+                                        Bundle bundle3 = new Bundle();
+                                        bundle3.putByteArray("outmessage", msg.toBytes());
+                                        push3.putExtras(bundle3);
+                                        context.sendBroadcast(push3);
                                         break;
                                     default:
                                         break;

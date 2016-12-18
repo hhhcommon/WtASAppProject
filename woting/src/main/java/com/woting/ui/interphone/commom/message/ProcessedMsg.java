@@ -1,6 +1,5 @@
 package com.woting.ui.interphone.commom.message;
 
-import com.woting.push.core.message.MsgNormal;
 
 /**
  * 已处理的消息对象

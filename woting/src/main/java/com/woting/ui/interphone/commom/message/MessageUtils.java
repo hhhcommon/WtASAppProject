@@ -1,8 +1,9 @@
 package com.woting.ui.interphone.commom.message;
 
+import com.woting.common.util.SequenceUUID;
+
 import java.io.UnsupportedEncodingException;
 
-import com.spiritdata.framework.util.SequenceUUID;
 
 /**
  * 消息处理中，对字节数组和消息内容的转换方法和公共判断方法的集合
