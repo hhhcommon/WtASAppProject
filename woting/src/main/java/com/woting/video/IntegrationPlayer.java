@@ -146,40 +146,39 @@ public class IntegrationPlayer implements OnErrorListener {
             if(GlobalConfig.playerobject != null && GlobalConfig.playerobject.getMediaType() != null) {
                 if(GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
                     httpUrl = mProxy.getProxyUrl(httpUrl);
-                    mProxy.registerCacheStatusListener(new OnCacheStatusListener() {
-                        @Override
-                        public void OnCacheStatus(String url, long sourceLength, int percentsAvailable) {
-                            secondProgress = (int) mTotalTime * percentsAvailable / 100;
-                        }
-                    }, httpUrl);
                 }
             }
             mVlcPlayer.play(httpUrl);
-            mTotalTime = mVlcPlayer.getTotalTime();
+            if(GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
+                mProxy.registerCacheStatusListener(new OnCacheStatusListener() {
+                    @Override
+                    public void OnCacheStatus(String url, long sourceLength, int percentsAvailable) {
+                        secondProgress = (int) mVlcPlayer.getTotalTime() * percentsAvailable / 100;
+                    }
+                }, httpUrl);
+            }
         } else {
             mVlcPlayer.play(localUrl);
+        }
+        mTotalTime = mVlcPlayer.getTotalTime();
+        // 从上次停止处开始播放
+        if(GlobalConfig.playerobject != null && GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
+            String string = GlobalConfig.playerobject.getPlayerInTime();
+            if(string != null && !string.equals("")) {
+                long playInTime = Long.valueOf(string);
+                mVlcPlayer.setTime(playInTime);
+            }
         }
     }
 
     // 使用 TTS 播放器播放
     private void ttsPlay(String httpUrl, String localUrl) {
         if(isEmpty(localUrl)) {
-            if(GlobalConfig.playerobject != null && GlobalConfig.playerobject.getMediaType() != null) {
-                if(GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
-                    httpUrl = mProxy.getProxyUrl(httpUrl);
-                    mProxy.registerCacheStatusListener(new OnCacheStatusListener() {
-                        @Override
-                        public void OnCacheStatus(String url, long sourceLength, int percentsAvailable) {
-                            secondProgress = (int) mTotalTime * percentsAvailable / 100;
-                        }
-                    }, httpUrl);
-                }
-            }
             mTtsPlayer.play(httpUrl);
-            mTotalTime = mTtsPlayer.getTotalTime();
         } else {
             mTtsPlayer.play(localUrl);
         }
+        mTotalTime = mTtsPlayer.getTotalTime();
     }
 
     /**
@@ -266,9 +265,9 @@ public class IntegrationPlayer implements OnErrorListener {
     }
 
     // 判断是否已经缓存完成
-    public boolean isCacheFinish(String url) {
+    public boolean isCacheFinish() {
         HashMap<String, File> cacheMap = mProxy.getCachedFileList();
-        File cacheFile = cacheMap.get(url);
+        File cacheFile = cacheMap.get(httpUrl);
         return cacheFile != null && cacheFile.length() > 0;
     }
 

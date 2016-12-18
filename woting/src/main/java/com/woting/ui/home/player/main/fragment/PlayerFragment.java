@@ -25,7 +25,6 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -73,7 +72,6 @@ import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.album.model.ContentInfo;
 import com.woting.ui.home.program.comment.CommentActivity;
-import com.woting.ui.home.search.adapter.SearchHotAdapter;
 import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
 import com.woting.video.IntegrationPlayer;
 import com.woting.video.VoiceRecognizer;
@@ -89,6 +87,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+/**
+ * 播放主界面
+ */
 public class PlayerFragment extends Fragment implements View.OnClickListener, XListView.IXListViewListener, AdapterView.OnItemClickListener {
     private final static int PLAY = 1;// 播放
     private final static int PAUSE = 2;// 暂停
@@ -160,7 +161,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private Bitmap bmp;// 语音搜索按钮未按下的状态图片
 
     public static boolean isCurrentPlay;
-    private static boolean playFlag = false;// 是否首次播放的控制
     private boolean detailsFlag = false;// 是否展示节目详情
     private boolean first = true;// 第一次进入界面
 
@@ -223,14 +223,17 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
         mRecommendText = (TextView) view.findViewById(R.id.tv_tuijian);// 推荐
 
-        GridView flowTag = (GridView) view.findViewById(R.id.gv_tag);
-        List<String> testList = new ArrayList<>();
-        testList.add("逻辑思维");
-        testList.add("不是我不明白");
-        testList.add("今天你吃饭了吗");
-        testList.add("看世界");
-        testList.add("影视资讯");
-        flowTag.setAdapter(new SearchHotAdapter(context, testList));// 展示热门搜索词
+        // ------- 暂无标签 ------
+//        GridView flowTag = (GridView) view.findViewById(R.id.gv_tag);
+//        List<String> testList = new ArrayList<>();
+//        testList.add("逻辑思维");
+//        testList.add("不是我不明白");
+//        testList.add("今天你吃饭了吗");
+//        testList.add("看世界");
+//        testList.add("影视资讯");
+//        flowTag.setAdapter(new SearchHotAdapter(context, testList));// 展示热门搜索词
+        // ------- 暂无标签 ------
+
         // -----------------  HeadView 相关控件初始化 END  ----------------
 
 
@@ -324,8 +327,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     // 初始化音频控制器
     private void setVoice() {
         audioMgr = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        // 获取最大音乐音量
-        int maxVolume = audioMgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        int maxVolume = audioMgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);// 获取最大音乐音量
         stepVolume = maxVolume / 100;
     }
 
@@ -372,11 +374,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 et.putString(StringConstant.PLAYHISTORYENTER, "false");
                 if(et.commit()) Log.v("TAG", "数据 commit 失败!");
             } else {
-                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                if(CommonHelper.checkNetwork(context)) {
                     dialog = DialogUtils.Dialogph(context, "通讯中");
                     firstSend();
-                } else {
-                    ToastUtils.show_always(context, "网络连接失败，请稍后重试");
                 }
             }
             first = false;
@@ -400,28 +400,15 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         }
     }
 
-
     /////////////////////////////////////////////////////////////
     // 以下是播放方法
     /////////////////////////////////////////////////////////////
-    // 点击item的播放事件
+    // 点击 item 的播放事件
     private static void itemPlay(int position) {
         if(CommonHelper.checkNetwork(context)) {
-            boolean isN = getWifiSet(); // 是否开启非wifi网络流量提醒
-            if (isN) {
-                if (getWifiShow(context)) {
-                    if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == 1) {
-                        GlobalConfig.playerobject = allList.get(position);
-                        addDb(allList.get(position));
-                        play(position);
-                    } else {
-                        wifiDialog.show();
-                    }
-                } else {
-                    GlobalConfig.playerobject = allList.get(position);
-                    addDb(allList.get(position));
-                    play(position);
-                }
+            boolean isN = getWifiSet(); // 是否开启非 wifi 网络流量提醒
+            if (isN && getWifiShow(context) && GlobalConfig.CURRENT_NETWORK_STATE_TYPE != 1) {
+                wifiDialog.show();
             } else {
                 GlobalConfig.playerobject = allList.get(position);
                 addDb(allList.get(position));
@@ -452,24 +439,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             if (playType.equals("AUDIO") || playType.equals("RADIO")) {
                 if (allList.get(number).getContentPlay() != null) {
                     mPlayImageStatus.setImageResource(R.mipmap.wt_play_play);
-                    if (allList.get(number).getContentName() != null) {
-                        mPlayAudioTitleName.setText(allList.get(number).getContentName());
-                    } else {
-                        mPlayAudioTitleName.setText("我听科技");
-                    }
-                    if (allList.get(number).getContentImg() != null) {
-                        String url;
-                        if (allList.get(number).getContentImg().startsWith("http")) {
-                            url = allList.get(number).getContentImg();
-                        } else {
-                            url = GlobalConfig.imageurl + allList.get(number).getContentImg();
-                        }
-                        url = AssembleImageUrlUtils.assembleImageUrl180(url);
-                        Picasso.with(context).load(url.replace("\\/", "/")).into(mPlayAudioImageCover);
-                    } else {
-                        Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
-                        mPlayAudioImageCover.setImageBitmap(bmp);
-                    }
                     for (int i = 0; i < allList.size(); i++) {
                         allList.get(i).setType("1");
                     }
@@ -487,24 +456,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             } else if (playType.equals("TTS")) {
                 if (allList.get(number).getContentURI() != null && allList.get(number).getContentURI().trim().length() > 0) {
                     mPlayImageStatus.setImageResource(R.mipmap.wt_play_play);
-                    if (allList.get(number).getContentName() != null) {
-                        mPlayAudioTitleName.setText(allList.get(number).getContentName());
-                    } else {
-                        mPlayAudioTitleName.setText("我听科技");
-                    }
-                    if (allList.get(number).getContentImg() != null) {
-                        String url;
-                        if (allList.get(number).getContentImg().startsWith("http")) {
-                            url = allList.get(number).getContentImg();
-                        } else {
-                            url = GlobalConfig.imageurl + allList.get(number).getContentImg();
-                        }
-                        url = AssembleImageUrlUtils.assembleImageUrl180(url);
-                        Picasso.with(context).load(url.replace("\\/", "/")).into(mPlayAudioImageCover);
-                    } else {
-                        Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
-                        mPlayAudioImageCover.setImageBitmap(bmp);
-                    }
                     for (int i = 0; i < allList.size(); i++) {
                         allList.get(i).setType("1");
                     }
@@ -524,11 +475,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     // TTS 的播放
     private void TTSPlay() {
         ToastUtils.show_always(context, "点击了路况TTS按钮");
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+        if(CommonHelper.checkNetwork(context)) {
             dialog = DialogUtils.Dialogph(context, "通讯中");
             getLuKuangTTS();// 获取路况数据播报
-        } else {
-            ToastUtils.show_always(context, "网络连接失败，请稍后重试");
         }
     }
 
@@ -540,7 +489,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             mUIHandler.sendEmptyMessage(PLAY);
             mPlayImageStatus.setImageResource(R.mipmap.wt_play_play);
             setPlayingType();
-            playFlag = true;
         } else {
             if (local.equals(s)) {
                 if (playType.equals("TTS")) {
@@ -553,7 +501,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                         mUIHandler.sendEmptyMessage(PLAY);
                         mPlayImageStatus.setImageResource(R.mipmap.wt_play_play);
                         setPlayingType();
-                        playFlag = true;
                     }
                 } else {
                     if (mPlayer.isPlaying()) {
@@ -574,7 +521,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 mUIHandler.sendEmptyMessage(PLAY);
                 mPlayImageStatus.setImageResource(R.mipmap.wt_play_play);
                 setPlayingType();
-                playFlag = true;
             }
         }
 
@@ -606,24 +552,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             adapter.notifyDataSetChanged();
         }
         mPlayImageStatus.setImageResource(R.mipmap.wt_play_play);
-        if (GlobalConfig.playerobject.getContentName() != null) {
-            mPlayAudioTitleName.setText(GlobalConfig.playerobject.getContentName());
-        } else {
-            mPlayAudioTitleName.setText("我听科技");
-        }
-        if (GlobalConfig.playerobject.getContentImg() != null) {
-            String url;
-            if (GlobalConfig.playerobject.getContentImg().startsWith("http")) {
-                url = GlobalConfig.playerobject.getContentImg();
-            } else {
-                url = GlobalConfig.imageurl + GlobalConfig.playerobject.getContentImg();
-            }
-            url = AssembleImageUrlUtils.assembleImageUrl180(url);
-            Picasso.with(context).load(url.replace("\\/", "/")).into(mPlayAudioImageCover);
-        } else {
-            Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
-            mPlayAudioImageCover.setImageBitmap(bmp);
-        }
         if (!TextUtils.isEmpty(GlobalConfig.playerobject.getLocalurl())) {
             mListView.setVisibility(View.VISIBLE);
             mListView.setPullRefreshEnable(false);
@@ -668,24 +596,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             playType = GlobalConfig.playerobject.getMediaType();
             if (playType.equals("AUDIO") || playType.equals("RADIO")) {
                 if (GlobalConfig.playerobject.getContentPlay() != null) {
-                    if (GlobalConfig.playerobject != null) {
-                        mPlayAudioTitleName.setText(GlobalConfig.playerobject.getContentName());
-                    } else {
-                        mPlayAudioTitleName.setText("我听科技");
-                    }
-                    if (GlobalConfig.playerobject.getContentImg() != null) {
-                        String url;
-                        if (GlobalConfig.playerobject.getContentImg().startsWith("http")) {
-                            url = GlobalConfig.playerobject.getContentImg();
-                        } else {
-                            url = GlobalConfig.imageurl + GlobalConfig.playerobject.getContentImg();
-                        }
-                        url = AssembleImageUrlUtils.assembleImageUrl180(url);
-                        Picasso.with(context).load(url.replace("\\/", "/")).into(mPlayAudioImageCover);
-                    } else {
-                        Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
-                        mPlayAudioImageCover.setImageBitmap(bmp);
-                    }
                     for (int i = 0; i < allList.size(); i++) {
                         allList.get(i).setType("1");
                     }
@@ -702,24 +612,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 }
             } else if (playType.equals("TTS")) {
                 if (GlobalConfig.playerobject.getContentURI() != null && GlobalConfig.playerobject.getContentURI().trim().length() > 0) {
-                    if (GlobalConfig.playerobject.getContentName() != null) {
-                        mPlayAudioTitleName.setText(GlobalConfig.playerobject.getContentName());
-                    } else {
-                        mPlayAudioTitleName.setText("我听科技");
-                    }
-                    if (GlobalConfig.playerobject.getContentImg() != null) {
-                        String url;
-                        if (GlobalConfig.playerobject.getContentImg().startsWith("http")) {
-                            url = GlobalConfig.playerobject.getContentImg();
-                        } else {
-                            url = GlobalConfig.imageurl + GlobalConfig.playerobject.getContentImg();
-                        }
-                        url = AssembleImageUrlUtils.assembleImageUrl180(url);
-                        Picasso.with(context).load(url.replace("\\/", "/")).into(mPlayAudioImageCover);
-                    } else {
-                        Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
-                        mPlayAudioImageCover.setImageBitmap(bmp);
-                    }
                     for (int i = 0; i < allList.size(); i++) {
                         allList.get(i).setType("1");
                     }
@@ -753,31 +645,22 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
     // 按下按钮的操作
     private void pressDown() {
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            // 获取此时的音量大小
-            curVolume = audioMgr.getStreamVolume(AudioManager.STREAM_MUSIC);
-            // 设置想要的音量大小
-            audioMgr.setStreamVolume(AudioManager.STREAM_MUSIC, stepVolume, AudioManager.FLAG_PLAY_SOUND);
-            // 此时是否按下语音按钮，1，按下2，松手
+        if(CommonHelper.checkNetwork(context)) {
+            curVolume = audioMgr.getStreamVolume(AudioManager.STREAM_MUSIC);// 获取此时的音量大小
+            audioMgr.setStreamVolume(AudioManager.STREAM_MUSIC, stepVolume, AudioManager.FLAG_PLAY_SOUND);// 设置想要的音量大小
             voiceType = 1;
-            // 讯飞开始
-            mVoiceRecognizer = VoiceRecognizer.getInstance(context, BroadcastConstants.PLAYERVOICE);
+            mVoiceRecognizer = VoiceRecognizer.getInstance(context, BroadcastConstants.PLAYERVOICE);// 讯飞开始
             mVoiceRecognizer.startListen();
             mVoiceTextSpeakStatus.setText("开始语音转换");
             mVoiceImageSpeak.setImageBitmap(bmpPress);
-        } else {
-            ToastUtils.show_short(context, "网络失败，请检查网络");
         }
     }
 
     // 抬起手后的操作
     private void putUp() {
-        // 还原原先音量大小
-        audioMgr.setStreamVolume(AudioManager.STREAM_MUSIC, curVolume, AudioManager.FLAG_PLAY_SOUND);
-        // 此时是否按下语音按钮，1，按下2，松手
+        audioMgr.setStreamVolume(AudioManager.STREAM_MUSIC, curVolume, AudioManager.FLAG_PLAY_SOUND);// 还原原先音量大小
         voiceType = 2;
-        // 讯飞停止
-        mVoiceRecognizer.stopListen();
+        mVoiceRecognizer.stopListen();// 讯飞停止
         mVoiceImageSpeak.setImageBitmap(bmp);
         mVoiceTextSpeakStatus.setText("请按住讲话");
     }
@@ -814,6 +697,26 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     protected static void resetHeadView() {
         if (GlobalConfig.playerobject != null) {
             String type = GlobalConfig.playerobject.getMediaType();
+
+            // 播放的节目标题
+            String contentTitle = GlobalConfig.playerobject.getContentName();
+            if(contentTitle != null) {
+                mPlayAudioTitleName.setText(contentTitle);
+            } else {
+                mPlayAudioTitleName.setText("未知");
+            }
+
+            // 播放的节目封面图片
+            String url = GlobalConfig.playerobject.getContentImg();
+            if(url != null) {// 有封面图片
+                if(!url.startsWith("http")) {
+                    url = GlobalConfig.imageurl + url;
+                }
+                url = AssembleImageUrlUtils.assembleImageUrl180(url);
+                Picasso.with(context).load(url.replace("\\/", "/")).into(mPlayAudioImageCover);
+            } else {// 没有封面图片设置默认图片
+                mPlayAudioImageCover.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx));
+            }
 
             // 喜欢状态
             String contentFavorite = GlobalConfig.playerobject.getContentFavorite();
@@ -916,30 +819,24 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         }
     }
 
-    // 关闭linChose界面
+    // 关闭 linChose 界面
     private void linChoseClose() {
         Animation mAnimation = AnimationUtils.loadAnimation(context, R.anim.umeng_socialize_slide_out_from_bottom);
         mViewMoreChose.setAnimation(mAnimation);
         mViewMoreChose.setVisibility(View.GONE);
     }
 
-    // 打开linChose界面
+    // 打开 linChose 界面
     private void linChoseOpen() {
         Animation mAnimation = AnimationUtils.loadAnimation(context, R.anim.umeng_socialize_slide_in_from_bottom);
         mViewMoreChose.setAnimation(mAnimation);
         mViewMoreChose.setVisibility(View.VISIBLE);
     }
 
-
     protected void setData(LanguageSearchInside fList, ArrayList<LanguageSearchInside> list) {
         // 如果数据库里边的数据不是空的，在 headView 设置该数据
         GlobalConfig.playerobject = fList;
         resetHeadView();
-        if (fList.getContentName() != null) {
-            mPlayAudioTitleName.setText(fList.getContentName());
-        } else {
-            mPlayAudioTitleName.setText("未知数据");
-        }
         // 如果进来就要看到 在这里设置界面
         if (!TextUtils.isEmpty(GlobalConfig.playerobject.getPlayerInTime()) &&
                 !TextUtils.isEmpty(GlobalConfig.playerobject.getPlayerAllTime())
@@ -955,19 +852,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             mSeekBarEndTime.setText("00:00:00");
         }
 
-        if (fList.getContentImg() != null) {
-            String url;
-            if (fList.getContentImg().startsWith("http")) {
-                url = fList.getContentImg();
-            } else {
-                url = GlobalConfig.imageurl + fList.getContentImg();
-            }
-            url = AssembleImageUrlUtils.assembleImageUrl180(url);
-            Picasso.with(context).load(url.replace("\\/", "/")).into(mPlayAudioImageCover);
-        } else {
-            Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
-            mPlayAudioImageCover.setImageBitmap(bmp);
-        }
         allList.clear();
         allList.addAll(list);
         if (GlobalConfig.playerobject != null && allList != null) {
@@ -982,8 +866,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             }
         }
         mRecommendText.setVisibility(View.VISIBLE);
-        adapter = new PlayerListAdapter(context, allList);
-        mListView.setAdapter(adapter);
+        mListView.setAdapter(adapter = new PlayerListAdapter(context, allList));
         mListView.setPullRefreshEnable(false);
         mListView.setPullLoadEnable(true);
         mListView.stopRefresh();
@@ -992,26 +875,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     protected void setDataForNoList(ArrayList<LanguageSearchInside> list) {
         GlobalConfig.playerobject = list.get(0);
         resetHeadView();
-        if (list.get(0).getContentName() != null && list.get(0).getContentName().trim().length() > 0) {
-            mPlayAudioTitleName.setText(list.get(0).getContentName());
-        } else {
-            mPlayAudioTitleName.setText("未知数据");
-        }
         mSeekBarStartTime.setText("00:00:00");
         mSeekBarEndTime.setText("00:00:00");
-        if (list.get(0).getContentImg() != null) {
-            String url;
-            if (list.get(0).getContentImg().startsWith("http")) {
-                url = list.get(0).getContentImg();
-            } else {
-                url = GlobalConfig.imageurl + list.get(0).getContentImg();
-            }
-            url = AssembleImageUrlUtils.assembleImageUrl180(url);
-            Picasso.with(context).load(url.replace("\\/", "/")).into(mPlayAudioImageCover);
-        } else {
-            Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
-            mPlayAudioImageCover.setImageBitmap(bmp);
-        }
         allList.clear();
         allList.addAll(list);
         allList.get(0).setType("0");
@@ -1535,30 +1400,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             switch (msg.what) {
                 case TIME_UI: // 更新进度及时间
                     if (GlobalConfig.playerobject != null && GlobalConfig.playerobject.getMediaType() != null
-                            && GlobalConfig.playerobject.getMediaType().trim().length() > 0
-                            && GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
-                        if (playFlag) {
-                            if (GlobalConfig.playerobject.getPlayerInTime() != null &&
-                                    !GlobalConfig.playerobject.getPlayerInTime().equals("")) {
-                                try {
-                                    mPlayer.setCurrentTime(Long.valueOf(GlobalConfig.playerobject.getPlayerInTime()));
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                currPosition = mPlayer.getCurrentTime();
-                                playFlag = false;
-                            } else {
-                                currPosition = mPlayer.getCurrentTime();
-                                playFlag = false;
-                            }
-                        } else {
-                            currPosition = mPlayer.getCurrentTime();
-                        }
+                            && GlobalConfig.playerobject.getMediaType().trim().length() > 0 && GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
+                        currPosition = mPlayer.getCurrentTime();
                         long duration = mPlayer.getTotalTime();
                         updateTextViewWithTimeFormat(mSeekBarStartTime, (int) (currPosition / 1000));
                         updateTextViewWithTimeFormat(mSeekBarEndTime, (int) (duration / 1000));
                         mSeekBar.setMax((int) duration);
-                        if (mPlayer.isCacheFinish(local)) {
+                        if (mPlayer.isCacheFinish()) {
                             int Length = (int) (mPlayer.getTotalTime()) * 100 / 100;
                             mSeekBar.setSecondaryProgress(Length);
                         }
@@ -1599,7 +1447,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     mViewVoice.setVisibility(View.GONE);
                     mVoiceTextSpeakStatus.setText("请按住讲话");
                     break;
-                case PLAY:
+                case PLAY:// 播放
                     if (GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
                         if (GlobalConfig.playerobject.getLocalurl() != null) {
                             mPlayer.startPlay("AUDIO", null, local);
@@ -1680,45 +1528,31 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     if (ReturnType.equals("1001")) {
                         page++;
                         try {
-                            String List = result.getString("ResultList");
-                            JSONTokener jsonParser = new JSONTokener(List);
-                            JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                            String MainList = arg1.getString("List");
-                            ArrayList<LanguageSearchInside> list = new Gson().fromJson(MainList, new TypeToken<List<LanguageSearchInside>>() {}.getType());
+                            JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
+                            ArrayList<LanguageSearchInside> list = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<LanguageSearchInside>>() {}.getType());
                             if (refreshType == 0) {
-                                // 得到数据库里边的第一条数据
-                                LanguageSearchInside fList = getDaoList(context);
-                                // 第一次进入该界面获取数据
-                                if (list != null && list.size() > 0) {
-                                    // 此时有返回数据
-                                    if (fList != null) {
-                                        // 此时数据库里边的数据为空
-                                        num = -1;
-                                        setData(fList, list);
+                                LanguageSearchInside fList = getDaoList(context);// 得到数据库里边的第一条数据
+                                if(list != null && list.size() > 0 && fList != null) {// 有返回数据并且数据库中有数据
+                                    num = -1;
+                                    setData(fList, list);
+                                } else if(list != null && list.size() > 0 && fList == null) {// 有返回数据但数据库中没有数据
+                                    if (list.get(0) != null) {
+                                        num = 0;
+                                        setDataForNoList(list);
                                     } else {
-                                        // 此时数据库里边的数据为空
-                                        if (list.get(0) != null) {
-                                            num = 0;
-                                            setDataForNoList(list);
-                                        } else {
-                                            num = -2;
-                                        }
-                                    }
-                                } else {
-                                    if (fList != null) {
-                                        list.add(fList);
-                                        num = -1;
-                                        setData(fList, list);
-                                    } else {
-                                        // 此时没有任何数据
                                         num = -2;
-                                        mListView.setPullRefreshEnable(true);
-                                        mListView.setPullLoadEnable(false);
-                                        mListView.stopRefresh();
                                     }
+                                } else if(list != null && list.size() == 0 && fList != null) {// 没有返回数据但数据库中有数据
+                                    list.add(fList);
+                                    num = -1;
+                                    setData(fList, list);
+                                } else {// 没有任何数据
+                                    num = -2;
+                                    mListView.setPullRefreshEnable(true);
+                                    mListView.setPullLoadEnable(false);
+                                    mListView.stopRefresh();
                                 }
-                            } else if (refreshType == 1) {
-                                // 下拉刷新--------暂未使用，注意：不要删除该段代码
+                            } else if (refreshType == 1) {// 下拉刷新
                                 allList.clear();
                                 allList.addAll(list);
                                 if (GlobalConfig.playerobject != null && allList != null) {
@@ -1729,23 +1563,18 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                                         }
                                     }
                                 }
-                                mRecommendText.setVisibility(View.VISIBLE);
-                                adapter = new PlayerListAdapter(context, allList);
-                                mListView.setAdapter(adapter);
+                                mListView.setAdapter(adapter = new PlayerListAdapter(context, allList));
                                 mListView.setPullRefreshEnable(false);
                                 mListView.setPullLoadEnable(true);
                                 mListView.stopRefresh();
-                            } else {
-                                // 加载更多
+                            } else {// 加载更多
                                 mListView.stopLoadMore();
                                 allList.addAll(list);
                                 adapter.notifyDataSetChanged();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            if (dialog != null) {
-                                dialog.dismiss();
-                            }
+                            if (dialog != null) dialog.dismiss();
                             allList.clear();
                             mRecommendText.setVisibility(View.GONE);
                             adapter = new PlayerListAdapter(context, allList);
@@ -1756,9 +1585,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                             mListView.stopLoadMore();
                         }
                     } else {
-                        if (dialog != null) {
-                            dialog.dismiss();
-                        }
+                        if (dialog != null) dialog.dismiss();
                         allList.clear();
                         mRecommendText.setVisibility(View.GONE);
                         adapter = new PlayerListAdapter(context, allList);
@@ -1912,8 +1739,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     try {
-                        LanguageSearchInside lists = new Gson().fromJson(MainList, new TypeToken<LanguageSearchInside>() {
-                        }.getType());
+                        LanguageSearchInside lists = new Gson().fromJson(MainList, new TypeToken<LanguageSearchInside>() {}.getType());
                         String ContentURI = lists.getContentURI();
                         Log.e("ContentURI", ContentURI + "");
                         if (ContentURI != null && ContentURI.trim().length() > 0) {
@@ -2016,13 +1842,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                                     }
                                     allList.addAll(list);
                                     GlobalConfig.playerobject = allList.get(num);
-                                    mRecommendText.setVisibility(View.VISIBLE);
                                 } else {
                                     allList.addAll(list);
                                 }
                                 if (adapter == null) {
-                                    adapter = new PlayerListAdapter(context, allList);
-                                    mListView.setAdapter(adapter);
+                                    mListView.setAdapter(adapter = new PlayerListAdapter(context, allList));
                                 } else {
                                     adapter.notifyDataSetChanged();
                                 }
