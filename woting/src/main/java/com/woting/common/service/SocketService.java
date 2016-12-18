@@ -481,11 +481,9 @@ public class SocketService extends Service {
             byte[] endMsgFlag = {0x00, 0x00, 0x00};
             int isRegist = 0;
             while (true) {
-                Log.i("222222222", "222222222");
                 try {
                     int r = -1;
                     while (true) {
-                        Log.i("111111111", "111111");
                         try {
                             r = receiveByteQueue.take();
                             ba[i++] = (byte) r;

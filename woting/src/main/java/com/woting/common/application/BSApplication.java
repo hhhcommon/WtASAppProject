@@ -2,10 +2,7 @@ package com.woting.common.application;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -14,16 +11,7 @@ import com.umeng.socialize.PlatformConfig;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.config.SocketClientConfig;
 import com.woting.common.constant.KeyConstant;
-import com.woting.common.helper.CommonHelper;
-import com.woting.common.receiver.NetWorkChangeReceiver;
-import com.woting.common.service.LocationService;
-import com.woting.common.service.SocketService;
-import com.woting.common.service.SubclassService;
 import com.woting.common.util.PhoneMessage;
-import com.woting.ui.download.service.DownloadService;
-import com.woting.ui.interphone.commom.service.NotificationService;
-import com.woting.ui.interphone.commom.service.VoiceStreamPlayerService;
-import com.woting.ui.interphone.commom.service.VoiceStreamRecordService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +23,8 @@ import java.util.List;
  */
 public class BSApplication extends Application {
 
-    private NetWorkChangeReceiver netWorkChangeReceiver = null;
     private static RequestQueue queues;
     private static Context instance;
-    private static Intent Socket, record, voicePlayer, Subclass, download, Location, Notification;
     public static SocketClientConfig scc;
     public static SharedPreferences SharedPreferences;
     private ArrayList<String> staticFacesList;
@@ -67,22 +53,6 @@ public class BSApplication extends Application {
         _l.add("GOTO::8");                   //之后，调到第9步处理
         scc = new SocketClientConfig();
         scc.setReConnectWays(_l);
-        Socket = new Intent(this, SocketService.class);                //socket服务
-        startService(Socket);
-        record = new Intent(this, VoiceStreamRecordService.class);     //录音服务
-        startService(record);
-        voicePlayer = new Intent(this, VoiceStreamPlayerService.class);//播放服务
-        startService(voicePlayer);
-        Location = new Intent(this, LocationService.class);            //定位服务
-        startService(Location);
-        Subclass = new Intent(this, SubclassService.class);            //单对单接听控制服务
-        startService(Subclass);
-        download = new Intent(this, DownloadService.class);
-        startService(download);
-        Notification = new Intent(this, NotificationService.class);
-        startService(Notification);
-        CommonHelper.checkNetworkStatus(instance);                     //网络设置获取
-        this.registerNetWorkChangeReceiver(new NetWorkChangeReceiver(this));// 注册网络状态及返回键监听
     }
 
     public static Context getAppContext() {
@@ -117,25 +87,6 @@ public class BSApplication extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
-        unRegisterNetWorkChangeReceiver(this.netWorkChangeReceiver);
-        onStop();
-    }
-
-    /***
-     * 注册网络监听者
-     */
-    private void registerNetWorkChangeReceiver(NetWorkChangeReceiver netWorkChangeReceiver) {
-        this.netWorkChangeReceiver = netWorkChangeReceiver;
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(NetWorkChangeReceiver.intentFilter);
-        this.registerReceiver(netWorkChangeReceiver, filter);
-    }
-
-    /**
-     * 取消网络变化监听者
-     */
-    private void unRegisterNetWorkChangeReceiver(NetWorkChangeReceiver netWorkChangeReceiver) {
-        this.unregisterReceiver(netWorkChangeReceiver);
     }
 
     //第三方使用的相关方法
@@ -150,15 +101,4 @@ public class BSApplication extends Application {
         return queues;
     }
 
-    //app退出时执行该操作
-    public static void onStop() {
-        instance.stopService(Socket);
-        instance.stopService(record);
-        instance.stopService(voicePlayer);
-        instance.stopService(Subclass);
-        instance.stopService(download);
-        instance.stopService(Location);
-        instance.stopService(Notification);
-        Log.v("--- onStop ---", "--- 杀死进程 ---");
-    }
 }

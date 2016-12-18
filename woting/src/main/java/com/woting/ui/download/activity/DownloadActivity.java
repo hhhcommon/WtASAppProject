@@ -148,7 +148,6 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
                 ToastUtils.show_always(context, "再按一次退出");
                 touchTime = currentTime;
             } else {
-                BSApplication.onStop();
                 MobclickAgent.onKillProcess(context);
                 finish();
                 android.os.Process.killProcess(android.os.Process.myPid());

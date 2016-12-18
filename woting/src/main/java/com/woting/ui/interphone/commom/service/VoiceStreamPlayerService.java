@@ -6,7 +6,6 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -15,9 +14,6 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.helper.BytesTransHelper;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**
@@ -39,7 +35,7 @@ public  class VoiceStreamPlayerService   extends  Service{
 	private static VoiceStreamPlayerService context;
 	private static Intent push;
 	private static ArrayBlockingQueue<byte[]>  MsgQueue = new ArrayBlockingQueue<byte[]>(1024); //已经发送的消息队列
-	private static ArrayBlockingQueue<String>  voiceQueue = new ArrayBlockingQueue<String>(1024); //已经发送的消息队列
+//	private static ArrayBlockingQueue<String>  voiceQueue = new ArrayBlockingQueue<String>(1024); //已经发送的消息队列
 
 	@Override
 	public void onCreate() {
@@ -96,7 +92,7 @@ public  class VoiceStreamPlayerService   extends  Service{
 			byte[] vedioData=unCompress(mResults); //在这里解码，**重要
 			MsgQueue.add(vedioData);
 		}
-		voiceQueue.add(talkId+"::::::"+String.valueOf(seqNum)+"");
+//		voiceQueue.add(talkId+"::::::"+String.valueOf(seqNum)+"");
 		Log.i("接收到的所有seqNum", seqNum+"");
 
 	}
@@ -129,40 +125,40 @@ public  class VoiceStreamPlayerService   extends  Service{
 		return BytesTransHelper.getInstance().Shorts2Bytes(_un);
 	}
 
-	//写播放的音频数据包
-	private class Receive extends Thread {
-		public void run() { 
-			while (true) {
-				try {
-					  String msg = voiceQueue.take();
-					if(msg!=null){
-						String filePath= Environment.getExternalStorageDirectory() + "/woting/playvoicelog/";
-						File dir=new File(filePath);
-						if (!dir.isDirectory()) dir.mkdirs();
-						filePath+="voicelog";
-						File f=new File(filePath);
-						if (!f.exists()) f.createNewFile();
-						String _sn=msg.toString();
-						FileWriter fw = null;
-						try {
-							fw = new FileWriter(f, true);
-							fw.write(_sn+"\n");
-							fw.flush();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}finally{
-							try {
-								fw.close();
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
-					}
-				} catch(Exception e) {
-				}
-			}
-		}
-	}
+//	//写播放的音频数据包
+//	private class Receive extends Thread {
+//		public void run() {
+//			while (true) {
+//				try {
+//					  String msg = voiceQueue.take();
+//					if(msg!=null){
+//						String filePath= Environment.getExternalStorageDirectory() + "/woting/playvoicelog/";
+//						File dir=new File(filePath);
+//						if (!dir.isDirectory()) dir.mkdirs();
+//						filePath+="voicelog";
+//						File f=new File(filePath);
+//						if (!f.exists()) f.createNewFile();
+//						String _sn=msg.toString();
+//						FileWriter fw = null;
+//						try {
+//							fw = new FileWriter(f, true);
+//							fw.write(_sn+"\n");
+//							fw.flush();
+//						} catch (Exception e) {
+//							e.printStackTrace();
+//						}finally{
+//							try {
+//								fw.close();
+//							} catch (IOException e) {
+//								e.printStackTrace();
+//							}
+//						}
+//					}
+//				} catch(Exception e) {
+//				}
+//			}
+//		}
+//	}
 	
 	@Override
 	public IBinder onBind(Intent intent) {

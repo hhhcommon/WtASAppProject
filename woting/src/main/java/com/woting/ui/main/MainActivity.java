@@ -32,7 +32,12 @@ import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
+import com.woting.common.helper.CommonHelper;
 import com.woting.common.manager.UpdateManager;
+import com.woting.common.receiver.NetWorkChangeReceiver;
+import com.woting.common.service.LocationService;
+import com.woting.common.service.SocketService;
+import com.woting.common.service.SubclassService;
 import com.woting.common.util.JsonEncloseUtils;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
@@ -40,6 +45,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.common.favoritetype.FavoriteProgramTypeActivity;
 import com.woting.ui.download.activity.DownloadActivity;
+import com.woting.ui.download.service.DownloadService;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.model.Catalog;
 import com.woting.ui.home.model.CatalogName;
@@ -48,6 +54,9 @@ import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.citylist.dao.CityInfoDao;
 import com.woting.ui.interphone.commom.message.MessageUtils;
 import com.woting.ui.interphone.commom.message.MsgNormal;
+import com.woting.ui.interphone.commom.service.NotificationService;
+import com.woting.ui.interphone.commom.service.VoiceStreamPlayerService;
+import com.woting.ui.interphone.commom.service.VoiceStreamRecordService;
 import com.woting.ui.interphone.linkman.model.LinkMan;
 import com.woting.ui.interphone.main.DuiJiangActivity;
 import com.woting.ui.mine.MineActivity;
@@ -69,6 +78,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     private static MainActivity context;
     public static TabHost tabHost;
+    private static Intent Socket, record, voicePlayer, Subclass, download, Location, Notification;
 
     private static ImageView image1;
     private static ImageView image2;
@@ -85,14 +95,20 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private boolean isCancelRequest;
     private List<CatalogName> list;
     private CityInfoDao CID;
+    private NetWorkChangeReceiver netWorkChangeReceiver = null;
+    private TextView push_dialog_text_context;
+    private Dialog pushDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wt_main);
+        context = this;
+        pushDialog();              // 展示处理上次未退出的对讲消息
+        createService();
         registerReceiver();        // 注册广播
         tabHost = extracted();
-        context = this;
+
         MobclickAgent.openActivityDurationTrack(false);
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=56275014");            // 初始化语音配置对象
         upDataType = 1;    //不需要强制升级
@@ -120,6 +136,25 @@ public class MainActivity extends TabActivity implements OnClickListener {
         if (!BSApplication.SharedPreferences.getBoolean(StringConstant.FAVORITE_PROGRAM_TYPE, false)) {
             startActivity(new Intent(context, FavoriteProgramTypeActivity.class));
         }
+    }
+
+    private void createService() {
+        Socket = new Intent(this, SocketService.class);                //socket服务
+        startService(Socket);
+        record = new Intent(this, VoiceStreamRecordService.class);     //录音服务
+        startService(record);
+        voicePlayer = new Intent(this, VoiceStreamPlayerService.class);//播放服务
+        startService(voicePlayer);
+        Location = new Intent(this, LocationService.class);            //定位服务
+        startService(Location);
+        Subclass = new Intent(this, SubclassService.class);            //单对单接听控制服务
+        startService(Subclass);
+        download = new Intent(this, DownloadService.class);
+        startService(download);
+        Notification = new Intent(this, NotificationService.class);
+        startService(Notification);
+        CommonHelper.checkNetworkStatus(context);                     //网络设置获取
+        this.registerNetWorkChangeReceiver(new NetWorkChangeReceiver(this));// 注册网络状态及返回键监听
     }
 
     public void getTXL() {
@@ -618,7 +653,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
             } else if (intent.getAction().equals(BroadcastConstants.PUSH)) {
 
                 byte[] bt = intent.getByteArrayExtra("outmessage");
-                Log.e("mainActivity接收器中数据", Arrays.toString(bt) + "");
+                Log.e("mainActivity接收器中数据=原始数据", Arrays.toString(bt) + "");
                 try {
                     MsgNormal outMessage = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
                     if (outMessage != null) {
@@ -628,19 +663,25 @@ public class MainActivity extends TabActivity implements OnClickListener {
                             int cmdType = outMessage.getCmdType();
                             if (cmdType == 3) {
                                 int command = outMessage.getCommand();
-                                if(command==0){
-                                    Log.e("mainActivity接收器中数据", JsonEncloseUtils.btToString(bt)  + "");
-                                    showGroup();
+                                if (command == 0) {
+                                    int rtType=outMessage.getReturnType();
+                                    if(rtType!=0) {
+                                        Log.e("mainActivity接收器中数据=组", JsonEncloseUtils.btToString(bt) + "");
+                                        showGroup();
+                                    }
                                 }
                             }
-                        }else if (biztype == 2) {
+                        } else if (biztype == 2) {
                             // 上次存在的单对单消息
                             int cmdType = outMessage.getCmdType();
                             if (cmdType == 3) {
                                 int command = outMessage.getCommand();
-                                if(command==0){
-                                    Log.e("mainActivity接收器中数据",JsonEncloseUtils.btToString(bt)  + "");
-                                    showPerson();
+                                if (command == 0) {
+                                    int rtType=outMessage.getReturnType();
+                                    if(rtType!=0) {
+                                        Log.e("mainActivity接收器中数据=单", JsonEncloseUtils.btToString(bt) + "");
+                                        showPerson();
+                                    }
                                 }
                             }
                         }
@@ -655,11 +696,13 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     // 展示上次存在的组对讲消息
     private void showGroup() {
+        pushDialog.show();
         ToastUtils.show_always(MainActivity.this, "展示上次存在的组对讲消息");
     }
 
     // 展示上次存在的单对单消息
     private void showPerson() {
+        pushDialog.show();
         ToastUtils.show_always(MainActivity.this, "展示上次存在的单对单消息");
     }
 
@@ -689,9 +732,69 @@ public class MainActivity extends TabActivity implements OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
-//        SocketService.workStop();
+        unRegisterNetWorkChangeReceiver(context.netWorkChangeReceiver);
+        stop();
         unregisterReceiver(endApplicationBroadcast);    // 取消注册广播
         Log.v("--- Main ---", "--- 杀死进程 ---");
         android.os.Process.killProcess(android.os.Process.myPid());
+    }
+
+    //app退出时执行该操作
+    private void stop() {
+        context.stopService(Socket);
+        context.stopService(record);
+        context.stopService(voicePlayer);
+        context.stopService(Subclass);
+        context.stopService(download);
+        context.stopService(Location);
+        context.stopService(Notification);
+        Log.v("--- onStop ---", "--- 杀死进程 ---");
+    }
+
+    /***
+     * 注册网络监听者
+     */
+    private void registerNetWorkChangeReceiver(NetWorkChangeReceiver netWorkChangeReceiver) {
+        context.netWorkChangeReceiver = netWorkChangeReceiver;
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(NetWorkChangeReceiver.intentFilter);
+        this.registerReceiver(netWorkChangeReceiver, filter);
+    }
+
+    /**
+     * 取消网络变化监听者
+     */
+    private void unRegisterNetWorkChangeReceiver(NetWorkChangeReceiver netWorkChangeReceiver) {
+        this.unregisterReceiver(netWorkChangeReceiver);
+    }
+
+    //版本更新对话框
+    private void pushDialog() {
+        View dialog = LayoutInflater.from(this).inflate(R.layout.dialog_push_message, null);
+        push_dialog_text_context = (TextView) dialog.findViewById(R.id.text_context);
+        TextView tv_update = (TextView) dialog.findViewById(R.id.tv_ok);
+        TextView tv_qx = (TextView) dialog.findViewById(R.id.tv_qx);
+        tv_update.setOnClickListener(this);
+        tv_qx.setOnClickListener(this);
+        pushDialog = new Dialog(this, R.style.MyDialog);
+        pushDialog.setContentView(dialog);
+        pushDialog.setCanceledOnTouchOutside(false);
+        pushDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
+
+        // 继续上次对讲
+        tv_update.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pushDialog.dismiss();
+            }
+        });
+
+        // 取消上次对讲
+        tv_qx.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pushDialog.dismiss();
+            }
+        });
     }
 }
