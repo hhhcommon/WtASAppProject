@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.woting.common.constant.BroadcastConstants;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -32,7 +34,7 @@ public class TalkPlayManage extends Thread {
 	public  TalkPlayManage(int maxTalks,Context contexts) {
 		this.maxTalkNum=maxTalks;
 		this.context=contexts;
-		 push=new Intent("push_voiceimagerefresh");
+		 push=new Intent(BroadcastConstants.PUSH_VOICE_IMAGE_REFRESH);
 		tpMap=new HashMap<String,TalkPlayer>();
 		deleteQ=new LinkedList<String>();
 		//		timeMsgQueue = new ArrayBlockingQueue<String>(1024);//初始化打印日志的数据消息队列

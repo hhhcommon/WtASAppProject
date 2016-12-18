@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
@@ -163,18 +164,24 @@ public class RadioFragment extends Fragment {
                         String sequDesc = newList.get(position - 1).getSequDesc();
                         String sequImg = newList.get(position - 1).getSequImg();
 
+                        String ContentPlayType= newList.get(position-1).getContentPlayType();
+
                         //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playername, playerimage, playerurl, playerurI, playermediatype,
                                 plaplayeralltime, playerintime, playercontentdesc, playernum,
                                 playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playcontentshareurl,
-                                ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg);
+                                ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg,ContentPlayType);
                         dbDao.deleteHistory(playerurl);
                         dbDao.addHistory(history);
                         MainActivity.change();
                         HomeActivity.UpdateViewPager();
                         PlayerFragment.TextPage=1;
-                        PlayerFragment.SendTextRequest(newList.get(position - 1).getContentName(), context);
+                        Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                        Bundle bundle1=new Bundle();
+                        bundle1.putString("text",newList.get(position - 1).getContentName());
+                        push.putExtras(bundle1);
+                        context.sendBroadcast(push);
                         context.finish();
                     } else {
                         ToastUtils.show_always(context, "暂不支持的Type类型");

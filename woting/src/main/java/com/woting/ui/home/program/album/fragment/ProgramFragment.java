@@ -24,12 +24,14 @@ import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.model.FileInfo;
 import com.woting.ui.download.service.DownloadService;
@@ -62,7 +64,8 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 	private FileInfoDao FID;
 	private SearchPlayerHistoryDao dbDao;
 	private Dialog dialog;
-	private ListView lv_album, lv_download; 		// 节目列表 下载列表
+	private XListView lv_album;         // 节目列表
+	private ListView  lv_download; 		// 下载列表
 	private ImageView img_download, img_quanxuan; 	// 下载 全选
 	private TextView tv_quxiao, tv_download, tv_sum, textTotal;
 	private LinearLayout lin_quanxuan, lin_status2;
@@ -83,6 +86,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 	protected String sequName;
 	protected String sequImg;
 	protected String sequDesc;
+	private int page=1;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -113,7 +117,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 	 * @param view
 	 */
 	private void findView(View view) {
-		lv_album = (ListView) view.findViewById(R.id.lv_album); 			// 专辑显示界面
+		lv_album = (XListView) view.findViewById(R.id.lv_album); 			// 专辑显示界面
 		img_download = (ImageView) view.findViewById(R.id.img_download);
 		img_download.setOnClickListener(this);
 		tv_quxiao = (TextView) view.findViewById(R.id.tv_quxiao); 			// 取消动画
@@ -133,6 +137,25 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 
 		imageSortDown = (ImageView) view.findViewById(R.id.img_sort_down);
 		imageSortDown.setOnClickListener(this);
+
+		lv_album.setPullLoadEnable(true);
+		lv_album.setPullRefreshEnable(false);
+		lv_album.setXListViewListener(new XListView.IXListViewListener() {
+			@Override
+			public void onRefresh() {
+
+			}
+			@Override
+			public void onLoadMore() {
+				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+					dialog = DialogUtils.Dialogph(context, "正在获取数据");
+					send();
+				} else {
+					ToastUtils.show_short(context, "网络失败，请检查网络");
+				}
+			}
+		});
+
 	}
 
 	/**
@@ -154,7 +177,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 						String ContentId = SubList.get(position).getContentId();
 						String playAllTime = SubList.get(position).getContentTimes();
 						String playInTime = "0";
-						String playContentDesc = SubList.get(position).getContentDesc();
+						String playContentDesc = SubList.get(position).getContentDescn();
 						String playNum = SubList.get(position).getPlayCount();
 						String playZanType = "0";
 						String playFrom = SubList.get(position).getContentPub();
@@ -169,19 +192,24 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 						String sequId1=sequId;
 						String sequDesc1=sequDesc;
 						String sequImg1=sequImg;
+						String ContentPlayType=SubList.get(position).getContentPlayType();
 
 						PlayerHistory history = new PlayerHistory(
 								playerName,  playerImage, playUrl, playUrI,playMediaType,
 								playAllTime, playInTime, playContentDesc, playNum,
 								playZanType, playFrom , playFromId,playFromUrl,playAddTime,bjUserId,playContentShareUrl,
-								ContentFavorite,ContentId,localUrl,sequName1,sequId1,sequDesc1,sequImg1);
+								ContentFavorite,ContentId,localUrl,sequName1,sequId1,sequDesc1,sequImg1,ContentPlayType);
 						dbDao.deleteHistory(playUrl);
 						dbDao.addHistory(history);
 						if(PlayerFragment.context!=null){
 							MainActivity.change();
 							HomeActivity.UpdateViewPager();
 							PlayerFragment.TextPage=1;
-							PlayerFragment.SendTextRequest(SubList.get(position).getContentName(), context);
+							Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+							Bundle bundle1=new Bundle();
+							bundle1.putString("text", SubList.get(position).getContentName());
+							push.putExtras(bundle1);
+							context.sendBroadcast(push);
 						}else{
 							Editor et = BSApplication.SharedPreferences.edit();
 							et.putString(StringConstant.PLAYHISTORYENTER, "true");
@@ -208,7 +236,8 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 		try {
 			jsonObject.put("MediaType", "SEQU");
 			jsonObject.put("ContentId", AlbumActivity.id);
-			jsonObject.put("Page", "1");
+			jsonObject.put("Page",String.valueOf(page));
+			jsonObject.put("PageSize","20");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -227,17 +256,26 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 					String ReturnType = result.getString("ReturnType");
 					if (ReturnType != null) { // 根据返回值来对程序进行解析
 						if (ReturnType.equals("1001")) {
+							page++;
 							try {
 								String	ResultList = result.getString("ResultInfo"); // 获取列表
 								JSONTokener jsonParser = new JSONTokener(ResultList);
 								JSONObject arg1 = (JSONObject) jsonParser.nextValue();
 								// 此处后期需要用typeToken将字符串StringSubList 转化成为一个list集合
+								try{
+									String total =arg1.getString("ContentSubCount");
+									textTotal.setText("共" + total + "集");
+								}catch(Exception e){
+									e.printStackTrace();
+								}
+
 								try {
 									String StringSubList = arg1.getString("SubList");
+
 									Gson gson = new Gson();
 									SubList = gson.fromJson(StringSubList, new TypeToken<List<ContentInfo>>() {}.getType());
 									if (SubList != null && SubList.size() > 0) {
-										SubListAll.clear();
+										//SubListAll.clear();
 										SubListAll.addAll(SubList);
 										mainAdapter = new AlbumMainAdapter(context, SubList);
 										lv_album.setAdapter(mainAdapter);
@@ -246,7 +284,6 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 										adapter = new AlbumAdapter(context, SubListAll);
 										lv_download.setAdapter(adapter);
 										setInterface();
-										textTotal.setText("共" + SubListAll.size() + "集");
 									}
 								}catch (Exception e){
 
@@ -271,9 +308,10 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 								}catch (Exception e){
 
 								}
-
+								lv_album.stopLoadMore();
 							} catch (Exception e) {
 								e.printStackTrace();
+								lv_album.stopLoadMore();
 							}
 						}else{
 							if (ReturnType.equals("0000")) {
@@ -292,6 +330,8 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 //							ToastUtils.show_always(context, "获取列表异常");
 								ToastUtils.show_always(context, "数据出错了，请稍后再试！");
 							}
+							lv_album.stopLoadMore();
+
 						}
 					}
 				} catch (JSONException e) {
@@ -304,6 +344,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 				if (dialog != null) {
 					dialog.dismiss();
 				}
+				lv_album.stopLoadMore();
 			}
 		});
 	}

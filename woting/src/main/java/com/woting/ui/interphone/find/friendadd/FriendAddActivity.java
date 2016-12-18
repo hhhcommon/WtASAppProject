@@ -80,16 +80,16 @@ public class FriendAddActivity extends AppBaseActivity implements OnClickListene
 			tv_name.setText(contact.getUserName());
 		}
 		if(contact.getUserNum()==null||contact.getUserNum().equals("")){
-			tv_id.setVisibility(View.INVISIBLE);
+			tv_id.setVisibility(View.GONE);
 		}else{
 			tv_id.setVisibility(View.VISIBLE);
-			tv_id.setText(contact.getUserNum());
+			tv_id.setText("ID: " + contact.getUserNum());
 		}
-		if(contact.getDescn()==null||contact.getDescn().equals("")){
-			tv_sign.setVisibility(View.INVISIBLE);
+		if(contact.getUserSign()==null||contact.getUserSign().equals("")){
+			tv_sign.setVisibility(View.GONE);
 		}else{
 			tv_sign.setVisibility(View.VISIBLE);
-			tv_sign.setText(contact.getDescn());
+			tv_sign.setText(contact.getUserSign());
 		}
 		if(contact.getPortraitMini()==null||contact.getPortraitMini().equals("")||contact.getPortraitMini().equals("null")||contact.getPortraitMini().trim().equals("")){
 			image_touxiang.setImageResource(R.mipmap.wt_image_tx_hy);

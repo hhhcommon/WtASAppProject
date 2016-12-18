@@ -82,7 +82,7 @@
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:layout_marginRight="6dp"
-                    android:src="@mipmap/image_program_number" />
+                    android:src="@mipmap/image_program_time" />
 
                 <TextView
                     android:id="@+id/tv_count"

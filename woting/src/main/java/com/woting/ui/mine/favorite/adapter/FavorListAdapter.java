@@ -233,10 +233,10 @@ public class FavorListAdapter extends BaseAdapter {
                 }
             }
         }
-        if (lists.getWatchPlayerNum() == null || lists.getWatchPlayerNum().equals("") || lists.getWatchPlayerNum().equals("null")) {
+        if (lists.getPlayCount() == null || lists.getPlayCount().equals("") || lists.getPlayCount().equals("null")) {
             holder.mTv_number.setText("0");
         } else {
-            holder.mTv_number.setText(lists.getWatchPlayerNum());
+            holder.mTv_number.setText(lists.getPlayCount());
         }
         if (lists.getViewtype() == 0) {
             holder.lin_check.setVisibility(View.GONE);

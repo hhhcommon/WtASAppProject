@@ -1,9 +1,13 @@
 package com.woting.ui.home.main;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -17,11 +21,13 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 import com.woting.R;
+import com.woting.common.application.BSApplication;
+import com.woting.common.service.IntegrationPlayerService;
+import com.woting.common.util.ToastUtils;
+import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.home.player.main.fragment.PlayerFragment;
 import com.woting.ui.home.program.main.ProgramFragment;
 import com.woting.ui.home.search.activity.SearchLikeActivity;
-import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
-import com.woting.common.util.ToastUtils;
 import com.woting.ui.interphone.notify.activity.NotifyNewsActivity;
 
 import java.util.ArrayList;
@@ -37,6 +43,10 @@ public class HomeActivity extends FragmentActivity {
     private static HomeActivity context;
     private static ViewPager mPager;
 
+    private MyServiceConnection sc = new MyServiceConnection();
+    public static IntegrationPlayerService mService;// 服务
+    private boolean mBound;// 绑定服务
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +55,34 @@ public class HomeActivity extends FragmentActivity {
         InitTextView();
         InitViewPager();
         setType();           // 适配顶栏样式
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!mBound) {
+            Intent intent = new Intent(this, IntegrationPlayerService.class);
+            bindService(intent, sc, Context.BIND_AUTO_CREATE);
+            startService(intent);
+        }
+    }
+
+    // 绑定服务
+    private class MyServiceConnection implements ServiceConnection {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mBound = true;
+            IntegrationPlayerService.MyBinder mBinder = (IntegrationPlayerService.MyBinder) service;
+            mService = mBinder.getService();
+
+            Log.v("TAG", "Service Bind success");
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
     }
 
     // 适配顶栏样式
@@ -186,6 +224,7 @@ public class HomeActivity extends FragmentActivity {
                 ToastUtils.show_always(HomeActivity.this, "再按一次退出");
                 touchTime = currentTime;
             } else {
+                BSApplication.onStop();
                 MobclickAgent.onKillProcess(this);
                 finish();
                 android.os.Process.killProcess(android.os.Process.myPid());
@@ -193,5 +232,20 @@ public class HomeActivity extends FragmentActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(mBound) {
+            mBound = false;
+            unbindService(sc);
+
+            Log.v("TAG", "Service Unbind success");
+        }
+
+        Intent intent = new Intent(this, IntegrationPlayerService.class);
+        stopService(intent);
     }
 }

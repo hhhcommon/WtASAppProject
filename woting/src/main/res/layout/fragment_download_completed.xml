@@ -9,7 +9,7 @@
         android:id="@+id/lin_dinglan"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="#f7f7f7"
+        android:background="@color/setting_bg_color"
         android:orientation="horizontal"
         android:visibility="visible" >
         <LinearLayout

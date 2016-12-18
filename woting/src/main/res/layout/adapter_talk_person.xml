@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/index"
@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:background="@color/group_head_background"
         android:orientation="vertical"
-        android:visibility="gone" >
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/indexTv"
@@ -28,48 +28,48 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/WHITE"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:gravity="left|center" >
+            android:gravity="left|center">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp" >
+                android:layout_marginLeft="20dp">
 
                 <ImageView
                     android:id="@+id/image"
                     android:layout_width="55dip"
                     android:layout_height="55dip"
                     android:layout_centerInParent="true"
-                    android:scaleType="centerCrop"/>
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/img_zhezhao"
                     android:layout_width="55dip"
                     android:layout_height="55dip"
-                    android:layout_centerInParent="true"/>
+                    android:layout_centerInParent="true" />
             </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="0dip"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left|center"
                 android:orientation="horizontal"
-                android:paddingLeft="15dip" >
+                android:paddingLeft="15dip">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="left|center"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tv_name"
@@ -82,14 +82,23 @@
                         android:textSize="16sp" />
 
                     <TextView
+                        android:id="@+id/tv_b_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="ID:000000"
+                        android:textColor="@color/beijing"
+                        android:textSize="11sp" />
+
+                    <TextView
                         android:id="@+id/tv_b_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
+                        android:layout_marginTop="2dp"
                         android:ellipsize="end"
                         android:singleLine="true"
                         android:text="朋友"
-                        android:textColor="@color/gray"
+                        android:textColor="@color/beijing"
                         android:textSize="13sp" />
                 </LinearLayout>
 
@@ -99,7 +108,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginRight="30dp"
                     android:gravity="center"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="wrap_content"

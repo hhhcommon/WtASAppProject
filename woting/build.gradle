@@ -14,7 +14,6 @@ android {
         versionName "0.1.0.X.021"
     }
 
-
     buildTypes {
         release {
             minifyEnabled false
@@ -23,12 +22,13 @@ android {
     }
 }
 
-
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.zhy:flowlayout-lib:1.0.3'
     compile files('libs/picasso-2.5.2.jar')
     compile files('libs/libksyhttpcache-proguard.jar')
+    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.zhy:flowlayout-lib:1.0.3'
+    compile 'com.android.support:design:23.3.0'
+    compile files('libs/libksystat.jar')
 }

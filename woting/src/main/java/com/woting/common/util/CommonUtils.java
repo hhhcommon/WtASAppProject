@@ -61,14 +61,20 @@ public class CommonUtils {
 	 */
 
 	public static String getSocketUserId(Context context){
-		SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
-		String UserId= sp.getString(StringConstant.USERID, "userid");
-		if(UserId==null||UserId.equals("")||UserId.equals("userid")){
+		try {
+			SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
+			String UserId= sp.getString(StringConstant.USERID, "userid");
+			if(UserId==null||UserId.equals("")||UserId.equals("userid")){
+                return null;
+            }else{
+                return UserId;
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
-		}else{
-			return UserId;
 		}
 	}
+
 	/**
 	 * 获取City 没有返回null
 	 * @param context

@@ -704,6 +704,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                 ToastUtils.show_always(context, "再按一次退出");
                 touchTime = currentTime;
             } else {
+                BSApplication.onStop();
                 MobclickAgent.onKillProcess(this);
                 finish();
                 android.os.Process.killProcess(android.os.Process.myPid());
@@ -728,7 +729,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             nickName = pM.getNickName();
             if(!nickName.equals(sharedPreferences.getString(StringConstant.NICK_NAME, ""))) {
                 if(nickName.trim().equals("")) {
-                    jsonObject.put("NickName", "&null");
+                    jsonObject.put("NickName", " ");
                 } else {
                     jsonObject.put("NickName", nickName);
                 }
@@ -738,7 +739,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             sign = pM.getUserSign();
             if(!sign.equals(sharedPreferences.getString(StringConstant.USER_SIGN, ""))) {
                 if(sign.trim().equals("")) {
-                    jsonObject.put("UserSign", "&null");
+                    jsonObject.put("UserSign", " ");
                 } else {
                     jsonObject.put("UserSign", sign);
                 }
@@ -753,19 +754,19 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             }
 
             birthday = pM.getBirthday();
-            if(!birthday.equals(sharedPreferences.getString(StringConstant.BIRTHDAY, ""))) {
+            if(!birthday.equals(sharedPreferences.getString(StringConstant.BIRTHDAY, " "))) {
                 jsonObject.put("Birthday",  Long.valueOf(birthday));
                 isUpdate = true;
             }
 
             starSign = pM.getStarSign();
-            if(!starSign.equals(sharedPreferences.getString(StringConstant.STAR_SIGN, ""))){
+            if(!starSign.equals(sharedPreferences.getString(StringConstant.STAR_SIGN, " "))){
                 jsonObject.put("StarSign", starSign);
                 isUpdate = true;
             }
 
             email = pM.getEmail();
-            if(!email.equals(sharedPreferences.getString(StringConstant.EMAIL, ""))){
+            if(!email.equals(sharedPreferences.getString(StringConstant.EMAIL, " "))){
                 if(!email.trim().equals("")) {
                     if(isEmail(email)) {
                         jsonObject.put("MailAddr", email);
@@ -774,13 +775,13 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                         ToastUtils.show_always(context, "邮箱格式不正确，请重新修改!");
                     }
                 } else {
-                    jsonObject.put("MailAddr", "&null");
+                    jsonObject.put("MailAddr", " ");
                     isUpdate = true;
                 }
             }
 
             area = pM.getRegion();
-            if(!area.equals(sharedPreferences.getString(StringConstant.REGION, ""))) {
+            if(!area.equals(sharedPreferences.getString(StringConstant.REGION, " "))) {
                 jsonObject.put("RegionDictId", regionId);
                 isUpdate = true;
             }

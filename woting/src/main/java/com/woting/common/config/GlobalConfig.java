@@ -2,12 +2,14 @@ package com.woting.common.config;
 
 import android.os.Environment;
 
+import com.woting.ui.home.model.CatalogName;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
 import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.common.model.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * GlobalConfig
  * 作者：xinlong on 2016/11/6 21:18
@@ -35,12 +37,14 @@ public class GlobalConfig {
     public static List<UserInfo> list_person;
     public static LanguageSearchInside playerobject;//播放器播放对象
     //缓存路径
-    public static String playCacheDir= Environment.getExternalStorageDirectory() + "/woting/playCache/";
+    public static String playCacheDir = Environment.getExternalStorageDirectory() + "/woting/playCache/";
+    //缓存的城市列表
+    public static List<CatalogName> CityCatalogList;
 
     /**
      * 数据库版本号
      */
-    public static final int dbVersonCode = 33;
+    public static final int dbVersonCode = 38;
     /**
      * 是否活跃状态，有活跃状态才能播放声音，否则即使收到音频包也不播放
      */
@@ -56,7 +60,7 @@ public class GlobalConfig {
     /**
      * socket请求端口
      */
-    public static final int socketport = 15678;
+    public static final int socketport = 16789;
     /**
      * socket请求ip
      */
@@ -67,7 +71,7 @@ public class GlobalConfig {
      * http请求总url
      */
 //	public static final String baseUrl = "http://182.92.175.134:808/";//生产服务器地址
-  public static final String baseUrl = "http://123.56.254.75:808/";//测试服务器地址
+    public static final String baseUrl = "http://123.56.254.75:808/";//测试服务器地址
 //    public static final String baseUrl = "http://192.168.5.17:808/";
 
     /**
@@ -225,6 +229,8 @@ public class GlobalConfig {
     public static final String getCatalogUrl = baseUrl + "wt/getCatalogInfo.do";
     //内容主页获取统一接口
     public static final String getContentUrl = baseUrl + "wt/content/getContents.do";
+    //内容主页获取节目单接口
+    public static final String getProgrammeUrl = baseUrl + "wt/content/getBCProgramme.do";
     //根据contentID获取内容列表
     public static final String getContentById = baseUrl + "wt/content/getContentInfo.do";
     //搜索检索热词
@@ -252,13 +258,13 @@ public class GlobalConfig {
     // 获取当前内容的评论列表
     public static final String getMyCommentListUrl = baseUrl + "wt/discuss/article/getList.do";
     // 发表评论
-    public static final String pushCommentUrl=baseUrl+"wt/discuss/add.do";
+    public static final String pushCommentUrl = baseUrl + "wt/discuss/add.do";
     // 删除评论
-    public static final String delCommentUrl=baseUrl+"wt/discuss/del.do";
+    public static final String delCommentUrl = baseUrl + "wt/discuss/del.do";
     // 获取偏好列表
-    public static final String getPreferenceUrl=baseUrl+"wt/getPreferenceCatalog.do";
+    public static final String getPreferenceUrl = baseUrl + "wt/getPreferenceCatalog.do";
     // 设置偏好列表
-    public static final String setPreferenceUrl=baseUrl+"wt/setPreference.do";
+    public static final String setPreferenceUrl = baseUrl + "wt/setPreference.do";
 
     // "我的上传" 相关接口
     private static final String uploadBaseUrl = "http://123.56.254.75:908/CM/";

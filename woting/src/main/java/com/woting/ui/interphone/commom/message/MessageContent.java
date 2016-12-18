@@ -2,7 +2,6 @@ package com.woting.ui.interphone.commom.message;
 
 import java.io.UnsupportedEncodingException;
 
-
 /**
  * 消息体内容接口，这个接口要实现两个方法：
  * <pre>
@@ -24,4 +23,6 @@ public interface MessageContent {
      * @throws UnsupportedEncodingException 
      */
     public abstract byte[] toBytes() throws UnsupportedEncodingException;
+
+    public abstract boolean equals(MessageContent mc);
 }

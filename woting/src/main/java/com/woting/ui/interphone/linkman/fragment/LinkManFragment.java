@@ -324,7 +324,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 					ChatFragment.lin_personhead.setVisibility(View.GONE);
 					ChatFragment.lin_head.setVisibility(View.GONE);
 					ChatFragment.lin_foot.setVisibility(View.GONE);
-					ChatFragment.zhidinggroup(group);
+					ChatFragment.zhiDingGroup(group);
 					//对讲主页界面更新
 					DuiJiangActivity.update();
 					confirmDialog.dismiss();
@@ -497,12 +497,12 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 						TalkPersonNoAdapter adapters = new TalkPersonNoAdapter(context);
 						sortListView.setAdapter(adapters);
 					} else {
-						if(adapter==null){
+//						if(adapter==null){
 							adapter = new SortGroupMemberAdapter(context, srclist_p);
 							sortListView.setAdapter(adapter);
-						}else{
-							adapter.updateListView(srclist_p);
-						}
+//						}else{
+//							adapter.updateListView(srclist_p);
+//						}
 					}
 				} else {		// 关键词不为空
 					image_clear.setVisibility(View.VISIBLE);
@@ -728,12 +728,12 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 						confirmDialog.show();
 					}else{
 						//这是zhidinggroups，不是zhidinggroup；
-						ChatFragment.zhidinggroups(group);
+						ChatFragment.zhiDingGroupS(group);
 						//对讲主页界面更新
 						DuiJiangActivity.update();
 					}
 				}else{
-					ChatFragment.zhidinggroup(group);
+					ChatFragment.zhiDingGroup(group);
 					//对讲主页界面更新
 					DuiJiangActivity.update();
 				}

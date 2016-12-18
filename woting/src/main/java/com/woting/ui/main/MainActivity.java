@@ -32,21 +32,22 @@ import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
+import com.woting.common.manager.UpdateManager;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.common.favoritetype.FavoriteProgramTypeActivity;
 import com.woting.ui.download.activity.DownloadActivity;
+import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.model.Catalog;
 import com.woting.ui.home.model.CatalogName;
-import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.citylist.dao.CityInfoDao;
+import com.woting.ui.interphone.linkman.model.LinkMan;
 import com.woting.ui.interphone.main.DuiJiangActivity;
 import com.woting.ui.mine.MineActivity;
-import com.woting.common.manager.UpdateManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -95,6 +96,10 @@ public class MainActivity extends TabActivity implements OnClickListener {
         InitTextView();    //设置界面
         setType();         //设置顶栏样式
         InitDao();
+        getTXL();
+//        tabHost.setCurrentTabByTag("five");
+//        tabHost.setCurrentTabByTag("four");
+//        tabHost.setCurrentTabByTag("two");
         tabHost.setCurrentTabByTag("one");
         handleIntent();
 //        String first = BSApplication.SharedPreferences.getString(StringConstant.PREFERENCE, "0");//是否是第一次打开偏好设置界面
@@ -110,6 +115,45 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
         if(!BSApplication.SharedPreferences.getBoolean(StringConstant.FAVORITE_PROGRAM_TYPE, false)) {
             startActivity(new Intent(context, FavoriteProgramTypeActivity.class));
+        }
+    }
+
+    public void getTXL() {
+        //第一次获取群成员跟组
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+            VolleyRequest.RequestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
+
+                @Override
+                protected void requestSuccess(JSONObject result) {
+                    if (isCancelRequest) {
+                        return;
+                    }
+                    try {
+                        LinkMan list;
+                        list = new Gson().fromJson(result.toString(), new TypeToken<LinkMan>() {
+                        }.getType());
+                        try {
+                            GlobalConfig.list_group = list.getGroupList().getGroups();
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+                        try {
+                            GlobalConfig.list_person = list.getFriendList().getFriends();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                protected void requestError(VolleyError error) {
+                }
+            });
+        } else {
+            ToastUtils.show_always(context, "网络失败，请检查网络");
         }
     }
 
@@ -165,10 +209,11 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                 String ResultList = result.getString("CatalogData");
                                 Catalog SubList_all = new Gson().fromJson(ResultList, new TypeToken<Catalog>() {
                                 }.getType());
-
                                 List<CatalogName> s = SubList_all.getSubCata();
+
                                 if (s != null && s.size() > 0) {
                                     //将数据写入数据库
+                                    GlobalConfig.CityCatalogList=s;
                                     list = CID.queryCityInfo();
                                     List<CatalogName> m = new ArrayList<>();
                                     for (int i = 0; i < s.size(); i++) {
@@ -486,7 +531,9 @@ public class MainActivity extends TabActivity implements OnClickListener {
     public static void change() {
         setViewOne();
     }
-
+    public static void changeTwo() {
+        setViewTwo();
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -513,7 +560,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
     }
 
-    private void setViewTwo() {
+    private static void setViewTwo() {
         tabHost.setCurrentTabByTag("two");
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_selected);
@@ -592,6 +639,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
+//        SocketService.workStop();
         unregisterReceiver(endApplicationBroadcast);    // 取消注册广播
         Log.v("--- Main ---", "--- 杀死进程 ---");
         android.os.Process.killProcess(android.os.Process.myPid());

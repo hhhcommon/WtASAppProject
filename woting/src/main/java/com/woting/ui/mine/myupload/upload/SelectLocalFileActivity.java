@@ -103,8 +103,6 @@ public class SelectLocalFileActivity extends AppBaseActivity implements
             index = position;
             adapter.setIndex(index);
         }
-//        MediaStoreInfo data = list.get(position);// 获取路径
-//        ToastUtils.show_always(context, data.getData());
     }
 
     @Override
@@ -138,7 +136,7 @@ public class SelectLocalFileActivity extends AppBaseActivity implements
             String type = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE));
             int id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
             long size = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
-            long addTime = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.YEAR));// 修改时间
+            long addTime = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_MODIFIED));// 修改时间
             long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
             mediaStoreInfo.setData(data1);
             mediaStoreInfo.setTitle(title);
@@ -148,14 +146,16 @@ public class SelectLocalFileActivity extends AppBaseActivity implements
             mediaStoreInfo.setAddTime(addTime);
             mediaStoreInfo.setDuration(duration);
             list.add(mediaStoreInfo);
-            Log.v("MainActivity", "position=" + counter);
-            Log.i("MainActivity", "data1=" + data1);
-            Log.i("MainActivity", "title=" + title);
-            Log.i("MainActivity", "type=" + type);
-            Log.i("MainActivity", "id=" + id);
-            Log.i("MainActivity", "size=" + size);
-            Log.i("MainActivity", "addTime=" + addTime);
-            Log.i("MainActivity", "duration=" + duration);
+            if(counter < 5) {
+                Log.v("MainActivity", "position=" + counter);
+                Log.i("MainActivity", "data1=" + data1);
+                Log.i("MainActivity", "title=" + title);
+                Log.i("MainActivity", "type=" + type);
+                Log.i("MainActivity", "id=" + id);
+                Log.i("MainActivity", "addTime2=" + addTime);
+                Log.i("MainActivity", "size=" + size);
+                Log.i("MainActivity", "duration=" + duration);
+            }
             cursor.moveToNext();
         }
         cursor.close();

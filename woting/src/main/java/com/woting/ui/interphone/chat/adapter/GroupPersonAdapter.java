@@ -87,10 +87,10 @@ public class GroupPersonAdapter extends BaseAdapter{
 			}
 		}else{
 			String url;
-			if(lists.getPortrait().startsWith("http")){
-				url =  lists.getPortrait();
+			if(lists.getPortraitBig().startsWith("http")){
+				url =  lists.getPortraitBig();
 			}else{
-				url = GlobalConfig.imageurl + lists.getPortrait();
+				url = GlobalConfig.imageurl + lists.getPortraitBig();
 			}
 			url= AssembleImageUrlUtils.assembleImageUrl150(url);
 			Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageView_touxiang);
@@ -99,7 +99,7 @@ public class GroupPersonAdapter extends BaseAdapter{
 			holder.tv_name.setTextColor(context.getResources().getColor(R.color.dinglan_orange) );
 			holder.image_bian.setImageBitmap(bmp);
 		}else{
-			holder.tv_name.setTextColor(context.getResources().getColor(R.color.gray) );
+			holder.tv_name.setTextColor(context.getResources().getColor(R.color.darkgray) );
 			holder.image_bian.setImageBitmap(bmps);
 		}
 		//		holder.lin_shanchu.setOnClickListener(new View.OnClickListener() {

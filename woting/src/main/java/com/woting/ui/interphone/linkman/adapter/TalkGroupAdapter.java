@@ -69,6 +69,7 @@ public class TalkGroupAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.adapter_talk_person, null);
             holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);//名
             holder.tv_b_name = (TextView) convertView.findViewById(R.id.tv_b_name);//名
+            holder.tv_b_id = (TextView) convertView.findViewById(R.id.tv_b_id);//id
             holder.imageView_touxiang = (ImageView) convertView.findViewById(R.id.image);
             holder.lin_add = (LinearLayout) convertView.findViewById(R.id.lin_add);
             holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
@@ -84,6 +85,14 @@ public class TalkGroupAdapter extends BaseAdapter {
         } else {
             holder.tv_name.setText(lists.getGroupName());//名
         }
+
+        if (lists.getGroupNum()== null || lists.getGroupNum().equals("")) {
+            holder.tv_b_id.setVisibility(View.GONE);
+        } else {
+            holder.tv_b_id.setVisibility(View.VISIBLE);
+            holder.tv_b_id.setText("ID: "+lists.getGroupNum());//id
+        }
+
         if (lists.getGroupMyAlias() == null || lists.getGroupMyAlias().equals("")) {
             holder.tv_b_name.setVisibility(View.GONE);
         } else {
@@ -123,5 +132,6 @@ public class TalkGroupAdapter extends BaseAdapter {
         public ImageView imageView_touxiang;
         public TextView tv_name;
         public ImageView img_zhezhao;
+        public TextView tv_b_id;
     }
 }

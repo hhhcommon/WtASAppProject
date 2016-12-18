@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -124,5 +125,52 @@ public class TimeUtils {
 		SimpleDateFormat sdf = new SimpleDateFormat(format);
 		String s=sdf.format(new Date(Long.valueOf(seconds)));
 		return s.replaceFirst("-","年").replaceFirst("-","月")+"日";
+	}
+
+	/**
+	 * 得到现在小时
+	 */
+	public static int getHour() {
+		Date currentTime = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String dateString = formatter.format(currentTime);
+		String hour;
+		hour = dateString.substring(11, 13);
+		return Integer.parseInt(hour);
+	}
+
+	/**
+	 * 得到现在分钟
+	 */
+	public static int getMinute() {
+		Date currentTime = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String dateString = formatter.format(currentTime);
+		String min;
+		min = dateString.substring(14, 16);
+		return Integer.parseInt(min);
+	}
+
+	public static int getWeek(long timeStamp) {
+		Calendar cd = Calendar.getInstance();
+		cd.setTime(new Date(timeStamp));
+		int d = cd.get(Calendar.DAY_OF_WEEK);
+		// 获取指定日期转换成星期几
+//        if (mydate == 1) {/
+//            week = "周日";
+//        } else if (mydate == 2) {
+//            week = "周一";
+//        } else if (mydate == 3) {
+//            week = "周二";
+//        } else if (mydate == 4) {
+//            week = "周三";
+//        } else if (mydate == 5) {
+//            week = "周四";
+//        } else if (mydate == 6) {
+//            week = "周五";
+//        } else if (mydate == 7) {
+//            week = "周六";
+//        }
+		return d;
 	}
 }

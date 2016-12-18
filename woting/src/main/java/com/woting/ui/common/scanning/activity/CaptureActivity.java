@@ -18,8 +18,8 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.Result;
@@ -61,7 +61,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 	private Rect mCropRect = null;
 	private boolean isHasSurface = false;
 	private CaptureActivity context;
-	private LinearLayout head_left_btn;
 	private Gson gson;
 	private TranslateAnimation animation;
 	
@@ -83,8 +82,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 		MyActivityManager mam = MyActivityManager.getInstance();
 		mam.pushOneActivity(context);
 		gson=new Gson();
-		head_left_btn = (LinearLayout) findViewById(R.id.head_left_btn);
-		head_left_btn.setOnClickListener(new OnClickListener() {
+        findViewById(R.id.head_left_btn).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				finish();				
@@ -105,7 +103,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 		animation = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f,
 				Animation.RELATIVE_TO_PARENT, 0.0f, 
 				Animation.RELATIVE_TO_PARENT,0.0f,
-				Animation.RELATIVE_TO_PARENT,0.9f);
+				Animation.RELATIVE_TO_PARENT,0.95f);
 		animation.setDuration(4500);
 		animation.setRepeatCount(-1);
 		animation.setRepeatMode(Animation.RESTART);
@@ -334,7 +332,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 		MyActivityManager mam = MyActivityManager.getInstance();
 		mam.popOneActivity(context);
 		gson = null;
-		head_left_btn = null;
 		scanPreview = null;
 		scanContainer = null;
 		scanCropView = null;

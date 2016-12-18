@@ -1,111 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.woting">
+    package="com.woting">
 
     <!--  -->
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false"/>
+        android:required="false" />
+
+    <!-- 读取联系人权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- 读取联系人 -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <!-- 蓝牙管理 -->
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE"/>
-    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     <!-- 改变WiFi状态 -->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <!-- 获取网络状态 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- 访问网络 -->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <!-- 获取WiFi状态 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!-- 使用蓝牙 -->
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <!-- 读取联系人权限 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <!-- 读取联系人 -->
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <!-- SDK1.5需要android.permission.GET_TASKS权限判断本程序是否为当前运行的应用? -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
     <!-- 获取任务信息 -->
-    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.GET_TASKS" />
     <!-- 拍照权限 -->
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
     <!-- 录音 -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!-- 写入外部存储 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <!-- 开机自动允许 -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- 连续广播 -->
-    <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <!-- 读写系统设置 -->
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <!-- 处理拨出电话 -->
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
     <!-- 读取电话状态 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <!-- 读写发送短信 -->
-    <!--
-    <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
-    -->
-    <!-- <uses-permission android:name="android.permission.WRITE_SMS" /> -->
-    <!--
-    拨打电话权限
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!-- 修改声音设置 -->
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.READ_LOGS"/>
-    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <!-- Push service 运行需要的权限 -->
-    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER"/>
-    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
-    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <!-- QQ、QQ空间所需权限 -->
-    <uses-permission android:name="android.permission.SET_DEBUG_APP"/>
-    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+    <uses-permission android:name="android.permission.SET_DEBUG_APP" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
     <!-- 定位包、导航包需要的额外权限（注：基础权限也需要） -->
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <!-- 用于进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- 用于访问GPS定位 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <!-- 在sdcard中创建/删除文件的权限 -->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <permission
         android:name="com.wotingfm.permission.C2D_MESSAGE"
-        android:protectionLevel="signature"/>
+        android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.wotingfm.permission.C2D_MESSAGE"/>
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <uses-permission android:name="com.wotingfm.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <!-- Needed to use our own Contact editor -->
-    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
-    <!--  -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!-- 在sdcard中创建/删除文件的权限 -->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <!-- 使用权限 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_SINTERNETWIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-feature android:name="android.hardware.camera.autofocus"/>
+
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:name=".common.application.BSApplication"
@@ -117,20 +93,17 @@
         <!--  -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="5715cf1e67e58e5955000896">
-        </meta-data>
+            android:value="5715cf1e67e58e5955000896"></meta-data>
 
         <!--  -->
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="Umeng">
-        </meta-data>
+            android:value="Umeng"></meta-data>
 
         <!-- 高德地图用户Key -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="21026ef522937c2d4c0c04127167eab9">
-        </meta-data>
+            android:value="21026ef522937c2d4c0c04127167eab9"></meta-data>
 
         <!--  -->
         <activity
@@ -138,9 +111,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -149,14 +122,14 @@
             android:name=".ui.interphone.alert.ReceiveAlertActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
             android:name=".ui.interphone.alert.CallAlertActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
@@ -164,12 +137,12 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="com.woting.htmlcallback"/>
+                <data android:scheme="com.woting.htmlcallback" />
             </intent-filter>
         </activity>
 
@@ -177,61 +150,66 @@
         <activity
             android:name=".ui.common.qrcodes.EWMShowActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"/>
+            android:theme="@android:style/Theme.Light.NoTitleBar" />
 
         <!--  -->
         <activity
             android:name=".ui.home.main.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
             android:name=".ui.interphone.notify.activity.NotifyNewsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
             android:name=".ui.download.activity.DownloadActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
             android:name=".ui.mine.set.preference.activity.PreferenceActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <!--  -->
         <activity
             android:name=".ui.common.agreement.AgreementActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
             android:name=".ui.mine.MineActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
             android:name=".ui.home.program.diantai.activity.RadioNationalActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.home.program.diantai.activity.CityRadioActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" />
         <!--  -->
         <activity
             android:name=".common.widgetui.wheelview.ui.TimeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
@@ -239,307 +217,307 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
         <!--  -->
         <activity
             android:name=".common.widgetui.wheelview.ui.CitiesActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
             android:name=".ui.home.program.citylist.activity.CityListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
             android:name=".ui.interphone.message.activity.NewsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <!--  -->
         <activity
             android:name=".ui.interphone.group.groupcontrol.grouppersonnews.GroupPersonNewsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
             android:name=".ui.common.login.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
             android:name=".ui.mine.set.SetActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
             android:name=".ui.interphone.main.DuiJiangActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
             android:name=".ui.common.photocut.PhotoCutActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
             android:name=".ui.interphone.group.groupcontrol.personnews.TalkPersonNewsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
             android:name=".ui.common.register.RegisterActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
             android:name=".ui.common.welcome.activity.WelcomeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
             android:name=".ui.mine.person.forgetpassword.ForgetPasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
             android:name=".ui.mine.set.about.AboutActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
             android:name=".ui.mine.set.help.HelpActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
             android:name=".ui.mine.playhistory.activity.PlayHistoryActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
             android:name=".ui.mine.person.modifypassword.ModifyPasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!--  -->
         <activity
             android:name=".ui.mine.feedback.activity.FeedbackActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.mine.feedback.feedbacklist.activity.FeedbackListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.common.scanning.activity.ResultActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.common.scanning.activity.CaptureActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.interphone.group.creatgroup.CreateGroupActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.interphone.group.creatgroup.creat.CreateGroupContentActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.home.search.activity.SearchLikeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.home.program.radiolist.activity.RadioListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.home.program.fmlist.activity.FMListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.interphone.find.friendadd.FriendAddActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.interphone.find.groupadd.GroupAddActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.interphone.find.findresult.FindNewsResultActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.interphone.find.main.FindActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.interphone.group.groupcontrol.memberadd.GroupMemberAddActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.interphone.group.groupcontrol.groupnumdel.GroupMemberDelActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.interphone.group.groupcontrol.transferauthority.TransferAuthorityActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.interphone.group.groupcontrol.membershow.GroupMembersActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.home.program.album.activity.AlbumActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.home.player.timeset.activity.TimerPowerOffActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.interphone.group.groupcontrol.changegrouptype.ChangeGroupTypeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.interphone.group.groupcontrol.modifygrouppassword.ModifyGroupPasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.interphone.group.groupcontrol.handlegroupapply.HandleGroupApplyActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.interphone.group.groupcontrol.joingrouplist.JoinGroupListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.download.downloadlist.activity.DownLoadListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.mine.set.downloadposition.DownloadPositionActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.mine.person.phonecheck.PhoneCheckActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
@@ -547,26 +525,26 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".ui.mine.set.updateusernum.updateUserNumActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.mine.set.contactus.ContactUsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <activity
             android:name=".ui.mine.favorite.activity.FavoriteActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!--  -->
         <!-- <activity -->
@@ -581,78 +559,84 @@
             android:name=".ui.mine.hardware.HardwareIntroduceActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!-- 应用分享 -->
         <activity
             android:name=".ui.mine.shapeapp.ShapeAppActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!-- 第一次进入应用时的偏好设置 -->
         <activity
             android:name=".ui.common.favoritetype.FavoriteProgramTypeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!-- 我的上传 -->
         <activity
             android:name=".ui.mine.myupload.MyUploadActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!-- 选择要上传的音频文件 -->
         <activity
             android:name=".ui.mine.myupload.upload.SelectLocalFileActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
-        <!--发布作品-->
+        <!-- 发布作品 -->
         <activity
             android:name=".ui.mine.myupload.upload.UploadActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
-        <!--选择专辑-->
+        <!-- 选择专辑 -->
         <activity
             android:name=".ui.mine.myupload.upload.SelectSequActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
-        <!--添加标签-->
+        <!-- 添加标签 -->
         <activity
             android:name=".ui.mine.myupload.upload.AddLabelActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
-        <!--音频录制-->
+        <!-- 音频录制 -->
         <activity
             android:name=".ui.mine.myupload.upload.recording.MediaRecorderActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
+
+        <activity
+            android:name=".ui.home.player.programme.ProgrammeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <!-- 友盟activity -->
         <activity
             android:name="com.umeng.socialize.editorpage.ShareActivity"
             android:excludeFromRecents="true"
-            android:theme="@style/Theme.UMDefault"/>
+            android:theme="@style/Theme.UMDefault" />
 
         <!--  -->
         <activity
-            android:name=".wxapi.WXEntryActivity"
+            android:name="com.woting.wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!-- 騰訊qq -->
         <activity
@@ -660,12 +644,12 @@
             android:launchMode="singleTask"
             android:noHistory="true">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="tencent1105341370"/>
+                <data android:scheme="tencent1105341370" />
             </intent-filter>
         </activity>
 
@@ -673,7 +657,7 @@
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!-- 新浪微博 -->
         <activity
@@ -681,9 +665,9 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY"/>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
@@ -692,28 +676,35 @@
             android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
             android:configChanges="keyboardHidden|orientation"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
 
         <!-- 开机启动 -->
         <receiver android:name=".common.receiver.AutoStartReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
 
-                <category android:name="android.intent.category.HOME"/>
+                <category android:name="android.intent.category.HOME" />
             </intent-filter>
         </receiver>
 
-        <service android:name=".common.service.SubclassService"/>
-        <service android:name=".ui.interphone.commom.service.NotificationService"/>
-        <service android:name=".ui.home.player.timeset.service.timeroffservice"/>
-        <service android:name=".common.service.SocketService"/>
-        <service android:name=".ui.interphone.commom.service.VoiceStreamRecordService"/>
-        <service android:name=".ui.interphone.commom.service.VoiceStreamPlayerService"/>
-        <service android:name=".ui.download.service.DownloadService"/>
-        <service android:name=".common.service.FloatingWindowService"/>
-        <service android:name=".common.service.LocationService"/>
+        <service android:name=".common.service.SubclassService" />
+        <service android:name=".ui.interphone.commom.service.NotificationService" />
+        <service android:name=".ui.home.player.timeset.service.timeroffservice" />
+        <service android:name=".common.service.SocketService" />
+        <service android:name=".ui.interphone.commom.service.VoiceStreamRecordService" />
+        <service android:name=".ui.interphone.commom.service.VoiceStreamPlayerService" />
+        <service android:name=".ui.download.service.DownloadService" />
+        <service android:name=".common.service.FloatingWindowService" />
+        <service android:name=".common.service.LocationService" />
+
+        <!--集成播放器服务-->
+        <service android:name=".common.service.IntegrationPlayerService"/>
+        <!--空服务-->
+        <service android:name=".common.service.AssistService"/>
+
         <!-- 高德地图定位服务 -->
-        <service android:name="com.amap.api.location.APSService"/>
+        <service android:name="com.amap.api.location.APSService" />
+
 
     </application>
 

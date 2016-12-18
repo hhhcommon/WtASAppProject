@@ -35,8 +35,61 @@ public class FileInfo implements Serializable {
 	private String ContentShareURL;
 	private String ContentFavorite;
 	private String ContentId;
-	
-	
+	private String playAllTime;
+	private String playFrom;
+	private String playCount;
+	private String ContentDescn;
+	private String playTag;         // 标签<预留>
+	private String ContentPlayType; // 内容后缀
+
+	public String getContentPlayType() {
+		return ContentPlayType;
+	}
+
+	public String getPlayTag() {
+		return playTag;
+	}
+
+	public void setContentPlayType(String contentPlayType) {
+		ContentPlayType = contentPlayType;
+	}
+
+	public void setPlayTag(String playTag) {
+		this.playTag = playTag;
+	}
+
+	public String getContentDescn() {
+		return ContentDescn;
+	}
+
+	public void setContentDescn(String contentDescn) {
+		ContentDescn = contentDescn;
+	}
+
+	public String getPlayCount() {
+		return playCount;
+	}
+
+	public void setPlayCount(String playCount) {
+		this.playCount = playCount;
+	}
+
+	public String getPlayFrom() {
+		return playFrom;
+	}
+
+	public void setPlayFrom(String playFrom) {
+		this.playFrom = playFrom;
+	}
+
+	public String getPlayAllTime() {
+		return playAllTime;
+	}
+
+	public void setPlayAllTime(String playAllTime) {
+		this.playAllTime = playAllTime;
+	}
+
 	public String getContentShareURL() {
 		return ContentShareURL;
 	}

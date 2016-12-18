@@ -45,7 +45,7 @@ public class DuiJiangActivity extends FragmentActivity {
 	private SharedPreferences sharedPreferences= BSApplication.SharedPreferences;
 	private PopupWindow addDialog;
 	private static ViewPager mPager;
-	private static DuiJiangActivity context;
+	public static DuiJiangActivity context;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -327,6 +327,7 @@ public class DuiJiangActivity extends FragmentActivity {
 				ToastUtils.show_always(DuiJiangActivity.this, "再按一次退出");
 				touchTime = currentTime;
 			} else {
+				BSApplication.onStop();
 				MobclickAgent.onKillProcess(this);
 				finish();
 				android.os.Process.killProcess(android.os.Process.myPid());
