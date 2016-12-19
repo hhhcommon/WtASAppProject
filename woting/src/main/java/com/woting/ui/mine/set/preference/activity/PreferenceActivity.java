@@ -49,7 +49,7 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
     private List<String> preferenceList=new ArrayList<>();
     private ListView lv_prefer;
     private static PianHaoAdapter adapter;
-    private static List<FenLei> tempList;
+    private static List<FenLei> tempList=new ArrayList<>();
 
 
     @Override
@@ -354,18 +354,19 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
                     } else if (ReturnType.equals("1003")) {
                         ToastUtils.show_always(context, "分类不存在");
                     } else if (ReturnType.equals("1011")) {
-                        setInterface();
+                            if (adapter == null) {
+                                adapter = new PianHaoAdapter(context,tempList);
+                                lv_prefer.setAdapter(adapter);
+                            } else {
+                                adapter.notifyDataSetChanged();
+                            }
+                            setInterface();
                     } else if (ReturnType.equals("T")) {
                         ToastUtils.show_always(context, "获取列表异常");
                     } else {
                         ToastUtils.show_always(context, "获取列表异常");
                     }
-                        if (adapter == null) {
-                            adapter = new PianHaoAdapter(context,tempList);
-                            lv_prefer.setAdapter(adapter);
-                        } else {
-                            adapter.notifyDataSetChanged();
-                        }
+
                     }
                 } else {
                     ToastUtils.show_always(context, "数据获取异常，请稍候重试");

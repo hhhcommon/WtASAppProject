@@ -1396,8 +1396,8 @@ public class PlayerFragment extends Fragment implements OnClickListener,
             } else {
                 shareName = "我听我享听";
             }
-            if (GlobalConfig.playerobject.getContentDescn() != null
-                    && !GlobalConfig.playerobject.getContentDescn().equals("")) {
+            String s=GlobalConfig.playerobject.getContentDescn();
+            if (GlobalConfig.playerobject.getContentDescn() != null  && !GlobalConfig.playerobject.getContentDescn().equals("")) {
                 shareDesc = GlobalConfig.playerobject.getContentDescn();
             } else {
                 shareDesc = "暂无本节目介绍";
