@@ -17,6 +17,15 @@ public class UserInviteMeInside implements Serializable {
 	private String PortraitBig;		//
 	private String Portrait;		//
 	private String PortraitMini;	//
+	private String UserSign;	    // 签名
+
+	public String getUserSign() {
+		return UserSign;
+	}
+
+	public void setUserSign(String userSign) {
+		UserSign = userSign;
+	}
 
 	public String getInviteTime() {
 		return InviteTime;

@@ -81,12 +81,12 @@ public class FindFriendResultAdapter extends BaseAdapter {
         }
 
 
-        if (Inviter.getDescn() == null || Inviter.getDescn().equals("")) {
+        if (Inviter.getUserSign() == null || Inviter.getUserSign().equals("")) {
             holder.textview_invitemessage.setVisibility(View.GONE);
 //			holder.textview_invitemessage.setText("驾车体验生活");
         } else {
             holder.textview_invitemessage.setVisibility(View.VISIBLE);
-            holder.textview_invitemessage.setText("" + Inviter.getDescn());
+            holder.textview_invitemessage.setText("" + Inviter.getUserSign());
         }
         if (Inviter.getPortraitMini() == null || Inviter.getPortraitMini().equals("")
                 || Inviter.getPortraitMini().equals("null") || Inviter.getPortraitMini().trim().equals("")) {

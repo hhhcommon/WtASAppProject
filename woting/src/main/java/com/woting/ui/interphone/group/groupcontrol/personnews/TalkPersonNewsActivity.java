@@ -181,7 +181,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             name = data.getUserName();
             imageUrl = data.getPortraitMini();
             id = data.getUserId();
-            descN = data.getDescn();
+            descN = data.getUserSign();
             num = data.getUserNum();
             b_name = data.getUserAliasName();
 
@@ -191,7 +191,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             name = data.getUserName();
             imageUrl = data.getPortraitBig();
             id = data.getUserId();
-            descN = data.getDescn();
+            descN = data.getUserSign();
             num = data.getUserNum();
             b_name = data.getUserAliasName();
             viewType = 1;
@@ -201,7 +201,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             name = data.getUserName();
             imageUrl = data.getPortrait();
             id = data.getUserId();
-            descN = data.getDescn();
+            descN = data.getUserSign();
             num = data.getUserNum();
             b_name = data.getUserAliasName();
             tv_delete.setVisibility(View.GONE);
@@ -212,20 +212,18 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             name = data.getUserName();
             imageUrl = data.getPortraitMini();
             id = data.getUserId();
-            descN = data.getDescn();
+            descN = data.getUserSign();
             b_name = data.getUserAliasName();
             num = data.getUserNum();
-            b_name = data.getUserAliasName();
             viewType = 1;
         } else {
             UserInfo data = (UserInfo) this.getIntent().getSerializableExtra("data");
             name = data.getUserName();
             imageUrl = data.getPortraitMini();
             id = data.getUserId();
-            descN = data.getDescn();
+            descN = data.getUserSign();
             b_name = data.getUserAliasName();
             num = data.getUserNum();
-            b_name = data.getUserAliasName();
         }
     }
 
@@ -250,8 +248,10 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
         }
         if (b_name == null || b_name.equals("")) {
             et_b_name.setText("暂无备注名");
+            et_b_name.setVisibility(View.GONE);
         } else {
             et_b_name.setText(b_name);
+            et_b_name.setVisibility(View.VISIBLE);
         }
         if (imageUrl == null || imageUrl.equals("") || imageUrl.equals("null")
                 || imageUrl.trim().equals("")) {

@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/WtASAppProject.iml" filepath="$PROJECT_DIR$/WtASAppProject.iml" />
-      <module fileurl="file://$PROJECT_DIR$/WtAppProject.iml" filepath="$PROJECT_DIR$/WtAppProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/woting/woting.iml" filepath="$PROJECT_DIR$/woting/woting.iml" />
     </modules>
   </component>
