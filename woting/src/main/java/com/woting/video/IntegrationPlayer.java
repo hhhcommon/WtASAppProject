@@ -5,13 +5,11 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.kingsoft.media.httpcache.KSYProxyService;
-import com.kingsoft.media.httpcache.OnCacheStatusListener;
 import com.kingsoft.media.httpcache.OnErrorListener;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 
 import java.io.File;
-import java.util.HashMap;
 
 /**
  * 集成播放器
@@ -30,8 +28,8 @@ public class IntegrationPlayer implements OnErrorListener {
     private boolean mIsVlcPlaying;// VLC 播放器正在播放
     private boolean mIsTtsPlaying;// TTS 播放器正在播放
 
-    private long mTotalTime;// 当前播放的总时间
-    private int secondProgress;// SeekBar 第二进度即缓存进度值
+//    private long mTotalTime;// 当前播放的总时间
+//    private int secondProgress;// SeekBar 第二进度即缓存进度值
 
     private String mediaType;// 播放的节目类型
     private String httpUrl;
@@ -149,18 +147,21 @@ public class IntegrationPlayer implements OnErrorListener {
                 }
             }
             mVlcPlayer.play(httpUrl);
-            if(GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
-                mProxy.registerCacheStatusListener(new OnCacheStatusListener() {
-                    @Override
-                    public void OnCacheStatus(String url, long sourceLength, int percentsAvailable) {
-                        secondProgress = (int) mVlcPlayer.getTotalTime() * percentsAvailable / 100;
-                    }
-                }, httpUrl);
-            }
+//            if(GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
+//                mProxy.registerCacheStatusListener(new OnCacheStatusListener() {
+//                    @Override
+//                    public void OnCacheStatus(String url, long sourceLength, int percentsAvailable) {
+//                        secondProgress = (int) mVlcPlayer.getTotalTime() * percentsAvailable / 100;
+//
+//                        Log.i("TAG", "percentsAvailable: -- > > " + percentsAvailable);
+//                        Log.i("TAG", "secondProgress: -- > > " + secondProgress);
+//                    }
+//                }, httpUrl);
+//            }
         } else {
             mVlcPlayer.play(localUrl);
         }
-        mTotalTime = mVlcPlayer.getTotalTime();
+//        mTotalTime = mVlcPlayer.getTotalTime();
         // 从上次停止处开始播放
         if(GlobalConfig.playerobject != null && GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
             String string = GlobalConfig.playerobject.getPlayerInTime();
@@ -178,7 +179,7 @@ public class IntegrationPlayer implements OnErrorListener {
         } else {
             mTtsPlayer.play(localUrl);
         }
-        mTotalTime = mTtsPlayer.getTotalTime();
+//        mTotalTime = mTtsPlayer.getTotalTime();
     }
 
     /**
@@ -195,6 +196,15 @@ public class IntegrationPlayer implements OnErrorListener {
     public void continuePlay() {
         if(mIsVlcPlaying) mVlcPlayer.continuePlay();
         else if(mIsTtsPlaying) mTtsPlayer.continuePlay();
+    }
+
+    /**
+     * TTS 停止播放
+     */
+    public void stopPlay() {
+        if(mIsTtsPlaying && mTtsPlayer.isPlaying()) {
+            mTtsPlayer.stop();
+        }
     }
 
     /**
@@ -248,9 +258,10 @@ public class IntegrationPlayer implements OnErrorListener {
     /**
      * 获取 SeekBar 的第二进度
      */
-    public long getSeekBarSecondProgress() {
-        return secondProgress;
-    }
+//    public long getSeekBarSecondProgress() {
+//        Log.i("TAG", "OnCacheStatus: -- > > " + secondProgress);
+//        return secondProgress;
+//    }
 
     /**
      * 播放器是否在播放
@@ -261,14 +272,8 @@ public class IntegrationPlayer implements OnErrorListener {
 
     @Override
     public void OnError(int i) {
-        Log.v("TAG", "KSYProxyService Error");
-    }
-
-    // 判断是否已经缓存完成
-    public boolean isCacheFinish() {
-        HashMap<String, File> cacheMap = mProxy.getCachedFileList();
-        File cacheFile = cacheMap.get(httpUrl);
-        return cacheFile != null && cacheFile.length() > 0;
+        Log.v("TAG", "PlayUrl -- > " + httpUrl);
+        Log.v("TAG", "KSYProxyService Error -- > " + i);
     }
 
     // 判断播放地址是否为空

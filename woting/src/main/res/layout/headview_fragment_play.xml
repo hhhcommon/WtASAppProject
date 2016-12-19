@@ -182,6 +182,7 @@
                 android:drawablePadding="4dp"
                 android:drawableTop="@mipmap/img_play_more_jiemudan"
                 android:text="节目单"
+                android:visibility="gone"
                 android:textColor="@color/dinglan_orange"
                 android:textSize="12sp"/>
 
