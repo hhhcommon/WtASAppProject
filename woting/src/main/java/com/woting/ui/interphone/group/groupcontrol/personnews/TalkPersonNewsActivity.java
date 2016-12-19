@@ -191,7 +191,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             name = data.getUserName();
             imageUrl = data.getPortraitBig();
             id = data.getUserId();
-            descN = data.getUserSign();
+            descN = data.getGroupSignature();
             num = data.getUserNum();
             b_name = data.getUserAliasName();
             viewType = 1;
