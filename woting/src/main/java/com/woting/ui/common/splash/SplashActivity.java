@@ -68,7 +68,7 @@ public class SplashActivity extends Activity {
                         Editor et = sharedPreferences.edit();
                         String UserInfo = result.getString("UserInfo");
                         if (UserInfo != null && !UserInfo.trim().equals("")) {
-                            com.woting.ui.common.model.UserInfo list = new Gson().fromJson(UserInfo, new TypeToken<UserInfo>() {}.getType());
+                            UserInfo list = new Gson().fromJson(UserInfo, new TypeToken<UserInfo>() {}.getType());
                             String userId = list.getUserId();// ID
                             String userName = list.getUserName();// 用户名
                             String userNum = list.getUserNum();// 用户号

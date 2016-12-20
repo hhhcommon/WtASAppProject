@@ -36,6 +36,7 @@ public class VolleyRequest {
 	public static void RequestGet(String url, JSONObject jsonObject, VolleyCallback callback) {
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, jsonObject, callback.loadingListener(), callback.errorListener());
 		jsonObjectRequest.setTag(TAG);// 设置标签
+		jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(GlobalConfig.HTTP_CONNECTION_TIMEOUT, 1, 1.0f));
 		BSApplication.getHttpQueues().add(jsonObjectRequest);// 加入队列
 		//		BSApplication.getHttpQueues().start();// 启动
 
@@ -52,6 +53,7 @@ public class VolleyRequest {
 	public static void RequestGet(String url, JSONObject jsonObject, String tag, VolleyCallback callback) {
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, jsonObject, callback.loadingListener(), callback.errorListener());
 		jsonObjectRequest.setTag(tag);// 设置标签
+		jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(GlobalConfig.HTTP_CONNECTION_TIMEOUT, 1, 1.0f));
 		BSApplication.getHttpQueues().add(jsonObjectRequest);// 加入队列
 		//		BSApplication.getHttpQueues().start();// 启动
 
@@ -90,6 +92,7 @@ public class VolleyRequest {
 				Method.POST, url, jsonObject, callback.loadingListener(), callback.errorListener());
 
 		jsonObjectRequest.setTag(tag);// 设置标签
+		jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(GlobalConfig.HTTP_CONNECTION_TIMEOUT, 1, 1.0f));
 		BSApplication.getHttpQueues().add(jsonObjectRequest);// 加入队列
 		//		BSApplication.getHttpQueues().start();// 启动
 

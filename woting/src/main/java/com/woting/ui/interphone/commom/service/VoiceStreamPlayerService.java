@@ -63,7 +63,7 @@ public  class VoiceStreamPlayerService   extends  Service{
 				while (true) {
 					byte[] vedioData = MsgQueue.take();
 					//此时有激活状态组
-					if(GlobalConfig.isactive){
+					if(GlobalConfig.isActive){
 						audioTrack.write(vedioData, 0, vedioData.length);
 					}
 				}

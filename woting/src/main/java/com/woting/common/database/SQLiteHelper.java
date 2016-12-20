@@ -11,7 +11,7 @@ import com.woting.common.config.GlobalConfig;
 public class SQLiteHelper extends SQLiteOpenHelper {
 
 	public SQLiteHelper(Context paramContext) {
-		super(paramContext, "woting.db", null, GlobalConfig.dbVersonCode);
+		super(paramContext, "woting.db", null, GlobalConfig.dbVersionCode);
 	}
 
 	public void onCreate(SQLiteDatabase db) {

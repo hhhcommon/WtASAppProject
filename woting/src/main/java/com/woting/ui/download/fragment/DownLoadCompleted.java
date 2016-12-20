@@ -70,6 +70,7 @@ public class DownLoadCompleted extends Fragment implements OnClickListener {
             receiver = new MessageReceiver();
             IntentFilter filter = new IntentFilter();
             filter.addAction(BroadcastConstants.PUSH_DOWN_COMPLETED);
+            filter.addAction(BroadcastConstants.PUSH_ALLURL_CHANGE);
             context.registerReceiver(receiver, filter);
         }
         rootView = inflater.inflate(R.layout.fragment_download_completed, container, false);
@@ -259,6 +260,8 @@ public class DownLoadCompleted extends Fragment implements OnClickListener {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(BroadcastConstants.PUSH_DOWN_COMPLETED)) {
+                setDownLoadSource();
+            }else if(intent.getAction().equals(BroadcastConstants.PUSH_ALLURL_CHANGE)){
                 setDownLoadSource();
             }
         }

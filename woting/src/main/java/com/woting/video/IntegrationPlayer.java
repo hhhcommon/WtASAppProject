@@ -140,13 +140,13 @@ public class IntegrationPlayer implements OnErrorListener {
     // 使用 VLC 播放器播放
     private void vlcPlay(String httpUrl, String localUrl) {
         if(isEmpty(localUrl)) {
-            if(GlobalConfig.playerobject != null && GlobalConfig.playerobject.getMediaType() != null) {
-                if(GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
+            if(GlobalConfig.playerObject != null && GlobalConfig.playerObject.getMediaType() != null) {
+                if(GlobalConfig.playerObject.getMediaType().equals("AUDIO")) {
                     httpUrl = mProxy.getProxyUrl(httpUrl);
                 }
             }
             mVlcPlayer.play(httpUrl);
-//            if(GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
+//            if(GlobalConfig.playerObject.getMediaType().equals("AUDIO")) {
 //                mProxy.registerCacheStatusListener(new OnCacheStatusListener() {
 //                    @Override
 //                    public void OnCacheStatus(String url, long sourceLength, int percentsAvailable) {
@@ -162,8 +162,8 @@ public class IntegrationPlayer implements OnErrorListener {
         }
 //        mTotalTime = mVlcPlayer.getTotalTime();
         // 从上次停止处开始播放
-        if(GlobalConfig.playerobject != null && GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
-            String string = GlobalConfig.playerobject.getPlayerInTime();
+        if(GlobalConfig.playerObject != null && GlobalConfig.playerObject.getMediaType().equals("AUDIO")) {
+            String string = GlobalConfig.playerObject.getPlayerInTime();
             if(string != null && !string.equals("")) {
                 long playInTime = Long.valueOf(string);
                 mVlcPlayer.setTime(playInTime);

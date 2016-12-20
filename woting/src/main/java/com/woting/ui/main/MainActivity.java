@@ -47,6 +47,8 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.common.favoritetype.FavoriteProgramTypeActivity;
+import com.woting.ui.common.login.LoginActivity;
+import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.download.activity.DownloadActivity;
 import com.woting.ui.download.service.DownloadService;
 import com.woting.ui.home.main.HomeActivity;
@@ -57,8 +59,15 @@ import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.citylist.dao.CityInfoDao;
+import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
+import com.woting.ui.interphone.chat.model.DBTalkHistorary;
 import com.woting.ui.interphone.commom.message.MessageUtils;
 import com.woting.ui.interphone.commom.message.MsgNormal;
+import com.woting.ui.interphone.commom.message.content.MapContent;
+import com.woting.ui.interphone.commom.model.CallerInfo;
+import com.woting.ui.interphone.commom.model.Data;
+import com.woting.ui.interphone.commom.model.MessageForMainGroup;
+import com.woting.ui.interphone.commom.service.InterPhoneControl;
 import com.woting.ui.interphone.commom.service.NotificationService;
 import com.woting.ui.interphone.commom.service.VoiceStreamPlayerService;
 import com.woting.ui.interphone.commom.service.VoiceStreamRecordService;
@@ -73,6 +82,7 @@ import org.json.JSONTokener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 主页
@@ -93,25 +103,28 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     private int upDataType;//1,不需要强制升级2，需要强制升级
     private String upDataNews;
-    private String contentName;
     private String contentId;
     private String mPageName = "MainActivity";
     private String tag = "MAIN_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
     private List<CatalogName> list;
-    private CityInfoDao CID;
     private NetWorkChangeReceiver netWorkChangeReceiver = null;
-    private TextView push_dialog_text_context;
-    private Dialog pushDialog;
-    private int pushDialogType = 0; // 0=默认值,1=被顶替,2=展示个人,3=展示群组
+
+    private CityInfoDao CID;
     private SearchPlayerHistoryDao dbDao;
+    private SearchTalkHistoryDao talkDao;
+    // 消息通知
+    public static GroupInfo groupInfo;
+    // private List<String> userIds;
+    private String callId, callerId;
+    public static DBTalkHistorary talkdb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wt_main);
         context = this;
-        pushDialog();              // 展示处理上次未退出的对讲消息
+
         createService();
         registerReceiver();        // 注册广播
         tabHost = extracted();
@@ -222,6 +235,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private void InitDao() {
         CID = new CityInfoDao(context);
         dbDao = new SearchPlayerHistoryDao(context);
+        talkDao = new SearchTalkHistoryDao(context);
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             sendRequest();
         } else {
@@ -508,7 +522,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                 }
                                 //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                                 PlayerHistory history = new PlayerHistory(
-                                        contentName, ContentImg, ContentPlay, "", mediatype,
+                                        ContentName, ContentImg, ContentPlay, "", mediatype,
                                         ContentTimes, "", ContentDescn, PlayCount,
                                         ContentFavorite, ContentPub, "", "", CTime, CommonUtils.getUserId(context), ContentShareURL,
                                         ContentFavorite, contentid, "", "", "", "", "", ContentPlayType);
@@ -517,7 +531,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
 //                                PlayerFragment.TextPage=1;
                                 Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                                 Bundle bundle1 = new Bundle();
-                                bundle1.putString("text", contentName);
+                                bundle1.putString("text", ContentName);
                                 push.putExtras(bundle1);
                                 context.sendBroadcast(push);
                             } catch (Exception e) {
@@ -817,9 +831,11 @@ public class MainActivity extends TabActivity implements OnClickListener {
         IntentFilter m = new IntentFilter();
         m.addAction(BroadcastConstants.TIMER_END);
         m.addAction(BroadcastConstants.PUSH_REGISTER);
+        m.addAction(BroadcastConstants.PUSH_NOTIFY);
         m.addAction(BroadcastConstants.PUSH);
         registerReceiver(endApplicationBroadcast, m);
     }
+
 
     //接收定时服务发送过来的广播  用于结束应用
     private BroadcastReceiver endApplicationBroadcast = new BroadcastReceiver() {
@@ -851,7 +867,33 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                     int rtType = outMessage.getReturnType();
                                     if (rtType != 0) {
                                         Log.e("mainActivity接收器中数据=组", JsonEncloseUtils.btToString(bt) + "");
-                                        showGroup(); // 展示上次存在的对讲组
+                                        try {
+                                            MapContent data = (MapContent) outMessage.getMsgContent();
+                                            Map<String, Object> map = data.getContentMap();
+                                            String news = new Gson().toJson(map);
+
+                                            JSONTokener jsonParser = new JSONTokener(news);
+                                            JSONObject arg1 = (JSONObject) jsonParser.nextValue();
+                                            String groupList = arg1.getString("GroupList");
+
+
+                                            List<MessageForMainGroup> gList = new Gson().fromJson(groupList, new TypeToken<List<MessageForMainGroup>>() {
+                                            }.getType());
+
+                                            if (gList != null && gList.size() > 0) {
+                                                try {
+                                                    MessageForMainGroup gInfo = gList.get(0);   // 本版本（2017元旦前）暂时只获取第一条数据，后续需要修改
+                                                    groupInfo = gInfo.getGroupInfo();
+//                                                    userIds = gInfo.getGroupEntryUserIds();
+                                                    String groupName = groupInfo.getGroupName();
+                                                    showGroup(groupName); // 展示上次存在的对讲组
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                     }
                                 }
                             }
@@ -864,7 +906,63 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                     int rtType = outMessage.getReturnType();
                                     if (rtType != 0) {
                                         Log.e("mainActivity接收器中数据=单", JsonEncloseUtils.btToString(bt) + "");
-                                        showPerson(); // 展示上次存在的单对单对讲
+
+                                        try {
+                                            MapContent data = (MapContent) outMessage.getMsgContent();
+                                            Map<String, Object> map = data.getContentMap();
+                                            String news = new Gson().toJson(map);
+
+                                            JSONTokener jsonParser = new JSONTokener(news);
+                                            JSONObject arg1 = (JSONObject) jsonParser.nextValue();
+                                            String callingList = arg1.getString("CallingList");
+
+                                            List<Data> userList = new Gson().fromJson(callingList, new TypeToken<List<Data>>() {
+                                            }.getType());
+
+                                            if (userList != null && userList.size() > 0) {
+                                                Data userInfo = userList.get(0);   // 本版本（2017元旦前）暂时只获取第一条数据，后续需要修改
+                                                try {
+                                                    callId = userInfo.getCallId(); // 本次通信的id
+
+                                                    if (CommonUtils.getUserIdNoImei(context) != null && !CommonUtils.getUserIdNoImei(context).equals("")) {
+                                                        if (CommonUtils.getUserIdNoImei(context).equals(userInfo.getCallerId())) {
+                                                            // 此次呼叫是"我"主动呼叫别人，所以callerId就是自己==主叫方
+                                                            callerId = userInfo.getCallerId();
+                                                            try {
+//                                                                String callerInfo = arg1.getString("CallerInfo");
+//                                                                CallerInfo caller = new Gson().fromJson(callerInfo, new TypeToken<CallerInfo>() {
+//                                                                }.getType());
+
+
+                                                                CallerInfo caller = userInfo.getCallerInfo();
+                                                                String name = caller.getUserName();
+                                                                showPerson(name); // 展示上次存在的单对单对讲
+
+                                                            } catch (Exception e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                        } else if (CommonUtils.getUserIdNoImei(context).equals(userInfo.getCallederId())) {
+                                                            // 此次呼叫是"我"被别人呼叫，所以callerId就是对方==被叫方
+                                                            callerId = userInfo.getCallederId();
+                                                            try {
+//                                                                String callederInfo = arg1.getString("CallederInfo");
+//                                                                CallerInfo calleder = new Gson().fromJson(callederInfo, new TypeToken<CallerInfo>() {
+//                                                                }.getType());
+                                                                CallerInfo calleder = userInfo.getCallederInfo();
+                                                                String name = calleder.getUserName();
+                                                                showPerson(name); // 展示上次存在的单对单对讲
+                                                            } catch (Exception e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                        }
+                                                    }
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                     }
                                 }
                             }
@@ -887,6 +985,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                 int command = outMessage.getCommand();
                                 if (command == 1) {
                                     Log.e("mainActivity接收器中数据=踢人", JsonEncloseUtils.btToString(bt) + "");
+                                    unRegisterLogin();
                                     showQuitPerson();// 展示账号被顶替的弹出框
                                 }
                             }
@@ -906,7 +1005,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                         if (biztype == 15) {
                             int rtType = outMessage.getReturnType();
                             if (rtType != 0) {
-                                // 此时是登录状态
+                                // 此时是登录状态,不需要处理
                             } else {
                                 // 此时是未登录状态,更改一下登录状态
                                 unRegisterLogin();
@@ -922,30 +1021,26 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     // 展示账号被顶替的弹出框
     private void showQuitPerson() {
-        pushDialogType = 1;
-        push_dialog_text_context.setText("您的账号在其他设备上登录，是否重新登录？");
-        pushDialog.show();
-        ToastUtils.show_always(MainActivity.this, "展示账号被顶替的 消息");
+        pushDialog("下线通知", "您的账号在其他设备上登录，是否重新登录？", 1);
+        ToastUtils.show_short(MainActivity.this, "展示账号被顶替的 消息");
     }
 
     // 展示上次存在的单对单消息
-    private void showPerson() {
-        pushDialogType = 2;
-        push_dialog_text_context.setText("您刚才在跟***通话，是否继续？");
-        pushDialog.show();
-        ToastUtils.show_always(MainActivity.this, "展示上次存在的单对单消息");
+    private void showPerson(String personName) {
+        pushDialog("对讲通知", "您刚刚在跟" + personName + "通话，是否继续？", 2);
+        ToastUtils.show_short(MainActivity.this, "展示上次存在的单对单消息");
     }
 
     // 展示上次存在的组对讲消息
-    private void showGroup() {
-        pushDialogType = 3;
-        push_dialog_text_context.setText("您上次仍在对讲组中对讲，是否继续？");
-        pushDialog.show();
-        ToastUtils.show_always(MainActivity.this, "展示上次存在的组对讲消息");
+    private void showGroup(String groupName) {
+        pushDialog("对讲通知", "您刚刚在" + groupName + "对讲组中聊天，是否继续？", 3);
+        ToastUtils.show_short(MainActivity.this, "展示上次存在的组对讲消息");
     }
 
     // 更改一下登录状态
     private void unRegisterLogin() {
+        // 发送全局广播，更改所有界面为未登录状态
+        context.sendBroadcast(new Intent(BroadcastConstants.PUSH_ALLURL_CHANGE));
         SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
         et.putString(StringConstant.ISLOGIN, "false");
         et.putString(StringConstant.USERID, "");
@@ -1029,47 +1124,88 @@ public class MainActivity extends TabActivity implements OnClickListener {
     }
 
     //版本更新对话框
-    private void pushDialog() {
+    private void pushDialog(String title, String message, final int type) {
+        //type 0=默认值,1=被顶替,2=展示个人,3=展示群组
+
         View dialog = LayoutInflater.from(this).inflate(R.layout.dialog_push_message, null);
-        push_dialog_text_context = (TextView) dialog.findViewById(R.id.text_context);
+        TextView push_dialog_text_context = (TextView) dialog.findViewById(R.id.text_context);// 展示内容
+        TextView tv_title = (TextView) dialog.findViewById(R.id.tv_title);// 展示标题
         TextView tv_update = (TextView) dialog.findViewById(R.id.tv_ok);
         TextView tv_qx = (TextView) dialog.findViewById(R.id.tv_qx);
+
+        push_dialog_text_context.setText("" + message);
+        tv_title.setText("" + title);
+
         tv_update.setOnClickListener(this);
         tv_qx.setOnClickListener(this);
-        pushDialog = new Dialog(this, R.style.MyDialog);
+
+        final Dialog pushDialog = new Dialog(this, R.style.MyDialog);
         pushDialog.setContentView(dialog);
         pushDialog.setCanceledOnTouchOutside(false);
         pushDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
+        pushDialog.show();
 
-        // 继续上次对讲
-        tv_update.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (pushDialogType == 1) {
-
-                } else if (pushDialogType == 2) {
-
-                } else if (pushDialogType == 3) {
-
-                }
-                pushDialog.dismiss();
-            }
-        });
-
-        // 取消上次对讲
+        // 取消
         tv_qx.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pushDialogType == 1) {
-
-                } else if (pushDialogType == 2) {
-
-                } else if (pushDialogType == 3) {
-
+                if (type == 1) {
+                    // 不需要处理
+                } else if (type == 2) {
+                    // 挂断电话
+                    InterPhoneControl.PersonTalkHangUp(context, callId);
+                } else if (type == 3) {
+                    // 退出组
+                    InterPhoneControl.Quit(context, groupInfo.getGroupId());//退出小组
                 }
                 pushDialog.dismiss();
             }
         });
+
+        // 继续
+        tv_update.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (type == 1) {
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                } else if (type == 2) {
+                    addUser();
+                } else if (type == 3) {
+                    addGroup();
+                }
+                pushDialog.dismiss();
+            }
+        });
+
+    }
+
+    /*
+     * 把此时还在对讲状态的组对讲数据设置活跃状态
+     */
+    public void addGroup() {
+        //对讲主页界面更新
+        changeTwo();
+        DuiJiangActivity.update();
+    }
+
+    /*
+     * 把此时还在对讲状态的单对单数据设置活跃状态
+     */
+    private void addUser() {
+        InterPhoneControl.bdcallid=callId;
+        //获取最新激活状态的数据
+        String addtime = Long.toString(System.currentTimeMillis());
+        String bjuserid = CommonUtils.getUserId(context);
+        //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+        talkDao.deleteHistory(callerId);
+        Log.e("=====callerid======",callerId+"");
+        DBTalkHistorary history = new DBTalkHistorary(bjuserid, "user", callerId, addtime);
+        talkDao.addTalkHistory(history);
+        talkdb = talkDao.queryHistory().get(0);//得到数据库里边数据
+        //对讲主页界面更新
+        MainActivity.changeTwo();
+        DuiJiangActivity.update();
+
     }
 
 //    private void test(){

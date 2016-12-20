@@ -53,6 +53,9 @@ public class BroadcastConstants {
 	//PUSH_NOTIFY-----pushnotify
 	public static final String PUSH_NOTIFY="PUSH_NOTIFY";
 
+	//PUSH_ALLURL_CHANGE-----新建===更改所有界面为未登录状态
+	public static final String PUSH_ALLURL_CHANGE="PUSH_ALLURL_CHANGE";
+
 	//PUSH_SERVICE-----push_service
 	public static final String PUSH_SERVICE="PUSH_SERVICE";
 

@@ -74,7 +74,7 @@ public class TimerPowerOffActivity extends AppBaseActivity implements OnClickLis
         imageTimeNoStart = (ImageView) findViewById(R.id.image_time_nostart);
 
         // 正在播放电台之外的节目时显示
-        if(GlobalConfig.playerobject != null && !GlobalConfig.playerobject.getMediaType().equals("RADIO")) {
+        if(GlobalConfig.playerObject != null && !GlobalConfig.playerObject.getMediaType().equals("RADIO")) {
             if(PlayerFragment.mPlayer.isPlaying()) {
                 viewPlayEnd.setVisibility(View.VISIBLE);
                 if (PlayerFragment.isCurrentPlay) {
