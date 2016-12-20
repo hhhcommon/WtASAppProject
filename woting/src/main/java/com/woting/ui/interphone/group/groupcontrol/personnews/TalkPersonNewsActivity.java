@@ -186,12 +186,12 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             b_name = data.getUserAliasName();
 
         } else if (type.equals("TalkGroupNewsActivity_p")) {
-            UserInfo data = (UserInfo) this.getIntent().getSerializableExtra("data");
+            GroupInfo data = (GroupInfo) this.getIntent().getSerializableExtra("data");
             groupId = this.getIntent().getStringExtra("id");
             name = data.getUserName();
             imageUrl = data.getPortraitBig();
             id = data.getUserId();
-            descN = data.getUserSign();
+            descN = data.getGroupSignature();
             num = data.getUserNum();
             b_name = data.getUserAliasName();
             viewType = 1;

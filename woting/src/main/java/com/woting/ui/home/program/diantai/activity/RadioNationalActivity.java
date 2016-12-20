@@ -172,7 +172,7 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
                         String playContentShareUrl =  SubList.get(groupPosition).getList().get(childPosition).getContentShareURL();
                         String playAllTime = SubList.get(groupPosition).getList().get(childPosition).getContentTimes();
                         String playInTime = "0";
-                        String playContentDesc = SubList.get(groupPosition).getList().get(childPosition).getContentDesc();
+                        String playContentDesc = SubList.get(groupPosition).getList().get(childPosition).getContentDescn();
                         String playerNum =  SubList.get(groupPosition).getList().get(childPosition).getPlayCount();
                         String playZanType = "0";
                         String playFrom =  SubList.get(groupPosition).getList().get(childPosition).getContentPub();

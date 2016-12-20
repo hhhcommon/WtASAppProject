@@ -293,17 +293,17 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
         if (type != null && type.trim().equals("radiolistactivity")) {
             RankInfo list = (RankInfo) getIntent().getSerializableExtra("list");
             RadioName = list.getContentName();
-            ContentDesc = list.getContentDesc();
+            ContentDesc = list.getContentDescn();
             id = list.getContentId();
         } else if (type != null && type.trim().equals("recommend")) {
             RankInfo list = (RankInfo) getIntent().getSerializableExtra("list");
             RadioName = list.getContentName();
-            ContentDesc = list.getContentDesc();
+            ContentDesc = list.getContentDescn();
             id = list.getContentId();
         } else if (type != null && type.trim().equals("search")) {
             RankInfo list = (RankInfo) getIntent().getSerializableExtra("list");
             RadioName = list.getContentName();
-            ContentDesc = list.getContentDesc();
+            ContentDesc = list.getContentDescn();
             id = list.getContentId();
         } else if (type != null && type.trim().equals("main")) {
             // 再做一个

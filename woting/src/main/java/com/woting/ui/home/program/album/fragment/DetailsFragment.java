@@ -205,6 +205,7 @@ public class DetailsFragment extends Fragment implements OnClickListener {
 
                             if (contentDesc != null && !contentDesc.equals("") && !contentDesc.equals("null")) {
                                 textContent.setText(contentDesc);
+                                AlbumActivity.ContentDesc=contentDesc;
                             } else {
                                 textContent.setText("暂无介绍内容");
                             }

@@ -244,7 +244,7 @@ public class RecommendFragment extends Fragment {
                         String playerContentShareUrl = newList.get(position - 2).getContentShareURL();
                         String plaplayeralltime =newList.get(position - 2).getContentTimes();
                         String playerintime = "0";
-                        String playercontentdesc = newList.get(position - 2).getContentDesc();
+                        String playercontentdesc = newList.get(position - 2).getContentDescn();
                         String playernum = newList.get(position - 2).getPlayCount();
                         String playerzantype = "0";
                         String playerfrom = newList.get(position - 2).getContentPub();
