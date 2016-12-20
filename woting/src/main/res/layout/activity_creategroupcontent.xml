@@ -83,7 +83,7 @@
                     android:layout_height="wrap_content" >
 
                     <ImageView
-                      android:id="@+id/ImageUrl"
+                        android:id="@+id/ImageUrl"
                         android:layout_width="55dp"
                         android:layout_height="55dp"
                         android:layout_centerInParent="true"

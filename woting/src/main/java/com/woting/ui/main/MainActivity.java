@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,23 +34,34 @@ import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
+import com.woting.common.helper.CommonHelper;
 import com.woting.common.manager.UpdateManager;
+import com.woting.common.receiver.NetWorkChangeReceiver;
+import com.woting.common.service.LocationService;
+import com.woting.common.service.SocketService;
+import com.woting.common.service.SubclassService;
 import com.woting.common.util.CommonUtils;
+import com.woting.common.util.JsonEncloseUtils;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.common.favoritetype.FavoriteProgramTypeActivity;
 import com.woting.ui.download.activity.DownloadActivity;
+import com.woting.ui.download.service.DownloadService;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.model.Catalog;
 import com.woting.ui.home.model.CatalogName;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.citylist.dao.CityInfoDao;
+import com.woting.ui.interphone.commom.message.MessageUtils;
+import com.woting.ui.interphone.commom.message.MsgNormal;
+import com.woting.ui.interphone.commom.service.NotificationService;
+import com.woting.ui.interphone.commom.service.VoiceStreamPlayerService;
+import com.woting.ui.interphone.commom.service.VoiceStreamRecordService;
 import com.woting.ui.interphone.linkman.model.LinkMan;
 import com.woting.ui.interphone.main.DuiJiangActivity;
 import com.woting.ui.mine.MineActivity;
@@ -59,6 +71,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -70,6 +83,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     private static MainActivity context;
     public static TabHost tabHost;
+    private static Intent Socket, record, voicePlayer, Subclass, download, Location, Notification;
 
     private static ImageView image1;
     private static ImageView image2;
@@ -86,33 +100,24 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private boolean isCancelRequest;
     private List<CatalogName> list;
     private CityInfoDao CID;
-    private String ContentPlayType;
-    private String contentid;
-    private String mediatype;
-    private String ContentImg;
-    private String ContentName;
-    private String ContentDescn;
-    private String PlayCount;
-    private String CTime;
-    private String ContentTimes;
-    private String ContentPub;
-    private String ContentPlay;
-    private String ContentShareURL;
-    private String ContentKeyWord;
+    private NetWorkChangeReceiver netWorkChangeReceiver = null;
+    private TextView push_dialog_text_context;
+    private Dialog pushDialog;
+    private int pushDialogType = 0; // 0=默认值,1=被顶替,2=展示个人,3=展示群组
     private SearchPlayerHistoryDao dbDao;
-    private String ContentFavorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wt_main);
-
+        context = this;
+        pushDialog();              // 展示处理上次未退出的对讲消息
+        createService();
         registerReceiver();        // 注册广播
         tabHost = extracted();
-        context = this;
+
         MobclickAgent.openActivityDurationTrack(false);
-        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=56275014");			// 初始化语音配置对象
+        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=56275014");            // 初始化语音配置对象
         upDataType = 1;    //不需要强制升级
         update();          //获取版本数据
         InitTextView();    //设置界面
@@ -135,9 +140,28 @@ public class MainActivity extends TabActivity implements OnClickListener {
 //            startActivity(intent);
 //        }
 
-        if(!BSApplication.SharedPreferences.getBoolean(StringConstant.FAVORITE_PROGRAM_TYPE, false)) {
+        if (!BSApplication.SharedPreferences.getBoolean(StringConstant.FAVORITE_PROGRAM_TYPE, false)) {
             startActivity(new Intent(context, FavoriteProgramTypeActivity.class));
         }
+    }
+
+    private void createService() {
+        Socket = new Intent(this, SocketService.class);                //socket服务
+        startService(Socket);
+        record = new Intent(this, VoiceStreamRecordService.class);     //录音服务
+        startService(record);
+        voicePlayer = new Intent(this, VoiceStreamPlayerService.class);//播放服务
+        startService(voicePlayer);
+        Location = new Intent(this, LocationService.class);            //定位服务
+        startService(Location);
+        Subclass = new Intent(this, SubclassService.class);            //单对单接听控制服务
+        startService(Subclass);
+        download = new Intent(this, DownloadService.class);
+        startService(download);
+        Notification = new Intent(this, NotificationService.class);
+        startService(Notification);
+        CommonHelper.checkNetworkStatus(context);                     //网络设置获取
+        this.registerNetWorkChangeReceiver(new NetWorkChangeReceiver(this));// 注册网络状态及返回键监听
     }
 
     public void getTXL() {
@@ -196,8 +220,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     //初始化数据库并且发送获取地理位置的请求
     private void InitDao() {
-        dbDao = new SearchPlayerHistoryDao(context);
         CID = new CityInfoDao(context);
+        dbDao = new SearchPlayerHistoryDao(context);
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             sendRequest();
         } else {
@@ -236,7 +260,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
                                 if (s != null && s.size() > 0) {
                                     //将数据写入数据库
-                                    GlobalConfig.CityCatalogList=s;
+                                    GlobalConfig.CityCatalogList = s;
                                     list = CID.queryCityInfo();
                                     List<CatalogName> m = new ArrayList<>();
                                     for (int i = 0; i < s.size(); i++) {
@@ -305,9 +329,9 @@ public class MainActivity extends TabActivity implements OnClickListener {
         Intent intent = getIntent();
         if (intent != null) {
             Uri uri = intent.getData();
-          //  Uri uri=Uri.parse("com.woting.htmlcallback://SEQU?jsonStr={'ContentName':'强强三人组','ContentId':'aa4064113e1b4ce8b69dc7d840c1878b','ContentImg':'http://www.wotingfm.com:908/CM/dataCenter/group03/bc12cf08e8b74d06a29b7a5082baa7e3.300_300.png','ContentDescn':'#####sequdescn#####'}");
+            //  Uri uri=Uri.parse("com.woting.htmlcallback://SEQU?jsonStr={'ContentName':'强强三人组','ContentId':'aa4064113e1b4ce8b69dc7d840c1878b','ContentImg':'http://www.wotingfm.com:908/CM/dataCenter/group03/bc12cf08e8b74d06a29b7a5082baa7e3.300_300.png','ContentDescn':'#####sequdescn#####'}");
             if (uri != null) {
-                String s=uri.toString();
+                String s = uri.toString();
                 String host = uri.getHost();
                 if (host != null && !host.equals("")) {
                     if (host.equals("AUDIO")) {
@@ -323,14 +347,14 @@ public class MainActivity extends TabActivity implements OnClickListener {
                             String contenttime = arg1.getString("ContentTimes");
                             String mediatype = "AUDIO";*/
                             String mediatype = "AUDIO";
-                            if(!TextUtils.isEmpty(contentId)){
-                            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                                sendContentInfo(contentId,mediatype);
+                            if (TextUtils.isEmpty(contentId)) {
+                                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                                    sendContentInfo(contentId, mediatype);
+                                } else {
+                                    ToastUtils.show_always(context, "网络失败，请检查网络");
+                                }
                             } else {
-                                ToastUtils.show_always(context, "网络失败，请检查网络");
-                            }
-                            }else{
-                                ToastUtils.show_always(context,"啊哦~由网页端传送的数据有误");
+                                ToastUtils.show_always(context, "啊哦~由网页端传送的数据有误");
                             }
 
                         } catch (Exception e) {
@@ -368,6 +392,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         }
     }
 
+
     private void sendContentInfo(final String ContentId, String MediaType) {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
@@ -381,8 +406,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
             @Override
             protected void requestSuccess(JSONObject result) {
 
-                if(isCancelRequest){
-                    return ;
+                if (isCancelRequest) {
+                    return;
                 }
                 try {
                     String ReturnType = result.getString("ReturnType");
@@ -390,113 +415,115 @@ public class MainActivity extends TabActivity implements OnClickListener {
                         if (ReturnType.equals("1001")) {
 
                             try {
-                                String	ResultList = result.getString("ResultInfo"); // 获取列表
+                                String ResultList = result.getString("ResultInfo"); // 获取列表
                                 JSONTokener jsonParser = new JSONTokener(ResultList);
                                 JSONObject arg1 = (JSONObject) jsonParser.nextValue();
                                 // 此处后期需要用typeToken将字符串StringSubList 转化成为一个list集合
-                                try{
-                                    ContentPlayType =arg1.getString("ContentPlayType");
-                                }catch(Exception e){
+                                String ContentPlayType, contentid, mediatype, ContentImg, ContentName, CTime, ContentTimes,
+                                        ContentKeyWord, ContentFavorite, ContentShareURL, ContentPlay, ContentPub, ContentDescn, PlayCount;
+                                try {
+                                    ContentPlayType = arg1.getString("ContentPlayType");
+                                } catch (Exception e) {
                                     e.printStackTrace();
-                                    ContentPlayType="";
+                                    ContentPlayType = "";
                                 }
                                 try {
-                                    contentid=arg1.getString("ContentId");
-                                }catch (Exception e){
+                                    contentid = arg1.getString("ContentId");
+                                } catch (Exception e) {
                                     e.printStackTrace();
-                                    contentid="";
+                                    contentid = "";
                                 }
                                 try {
-                                    mediatype=arg1.getString("MediaType");
-                                }catch (Exception e){
+                                    mediatype = arg1.getString("MediaType");
+                                } catch (Exception e) {
                                     e.printStackTrace();
-                                    mediatype="";
+                                    mediatype = "";
                                 }
                                 try {
-                                    ContentImg=arg1.getString("ContentImg");
-                                }catch (Exception e){
+                                    ContentImg = arg1.getString("ContentImg");
+                                } catch (Exception e) {
                                     e.printStackTrace();
-                                    ContentImg="";
+                                    ContentImg = "";
                                 }
                                 try {
-                                    ContentName=arg1.getString("ContentName");
-                                }catch (Exception e){
+                                    ContentName = arg1.getString("ContentName");
+                                } catch (Exception e) {
                                     e.printStackTrace();
-                                    ContentName="";
+                                    ContentName = "";
                                 }
                                 try {
-                                    ContentDescn=arg1.getString("ContentDescn");
-                                }catch (Exception e){
+                                    ContentDescn = arg1.getString("ContentDescn");
+                                } catch (Exception e) {
                                     e.printStackTrace();
-                                    ContentDescn="";
+                                    ContentDescn = "";
                                 }
                                 try {
-                                    PlayCount=arg1.getString("PlayCount");
-                                }catch (Exception e){
+                                    PlayCount = arg1.getString("PlayCount");
+                                } catch (Exception e) {
                                     e.printStackTrace();
-                                    PlayCount="";
+                                    PlayCount = "";
                                 }
                                 try {
-                                    CTime=arg1.getString("CTime");
-                                }catch (Exception e){
+                                    CTime = arg1.getString("CTime");
+                                } catch (Exception e) {
                                     e.printStackTrace();
-                                    CTime="";
+                                    CTime = "";
                                 }
                                 try {
-                                    ContentTimes=arg1.getString("ContentTimes");
-                                }catch (Exception e){
+                                    ContentTimes = arg1.getString("ContentTimes");
+                                } catch (Exception e) {
                                     e.printStackTrace();
-                                    ContentTimes="";
+                                    ContentTimes = "";
                                 }
                                 try {
-                                    ContentPub=arg1.getString("ContentPub");
-                                }catch (Exception e){
+                                    ContentPub = arg1.getString("ContentPub");
+                                } catch (Exception e) {
                                     e.printStackTrace();
-                                    ContentPub="";
+                                    ContentPub = "";
                                 }
                                 try {
-                                    ContentPlay=arg1.getString("ContentPlay");
-                                }catch (Exception e){
+                                    ContentPlay = arg1.getString("ContentPlay");
+                                } catch (Exception e) {
                                     e.printStackTrace();
-                                    ContentPlay="";
+                                    ContentPlay = "";
                                 }
                                 try {
-                                    ContentShareURL=arg1.getString("ContentShareURL");
-                                }catch (Exception e){
+                                    ContentShareURL = arg1.getString("ContentShareURL");
+                                } catch (Exception e) {
                                     e.printStackTrace();
-                                    ContentShareURL="";
+                                    ContentShareURL = "";
                                 }
                                 try {
-                                    ContentKeyWord=arg1.getString("ContentKeyWord");
-                                }catch (Exception e){
+                                    ContentKeyWord = arg1.getString("ContentKeyWord");
+                                } catch (Exception e) {
                                     e.printStackTrace();
-                                    ContentKeyWord="";
+                                    ContentKeyWord = "";
                                 }
 
                                 try {
-                                    ContentFavorite=arg1.getString("ContentFavorite");
-                                }catch (Exception e){
+                                    ContentFavorite = arg1.getString("ContentFavorite");
+                                } catch (Exception e) {
                                     e.printStackTrace();
-                                    ContentFavorite="";
+                                    ContentFavorite = "";
                                 }
                                 //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                                 PlayerHistory history = new PlayerHistory(
                                         contentName, ContentImg, ContentPlay, "", mediatype,
                                         ContentTimes, "", ContentDescn, PlayCount,
-                                        ContentFavorite, ContentPub, "","", CTime, CommonUtils.getUserId(context),ContentShareURL,
-                                        ContentFavorite, contentid, "","","","","",ContentPlayType);
+                                        ContentFavorite, ContentPub, "", "", CTime, CommonUtils.getUserId(context), ContentShareURL,
+                                        ContentFavorite, contentid, "", "", "", "", "", ContentPlayType);
                                 dbDao.deleteHistory(ContentPlay);
                                 dbDao.addHistory(history);
-                                PlayerFragment.TextPage=1;
-                                Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
-                                Bundle bundle1=new Bundle();
-                                bundle1.putString("text",contentName);
+//                                PlayerFragment.TextPage=1;
+                                Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                                Bundle bundle1 = new Bundle();
+                                bundle1.putString("text", contentName);
                                 push.putExtras(bundle1);
                                 context.sendBroadcast(push);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                        }else{
+                        } else {
                             if (ReturnType.equals("0000")) {
 //							ToastUtils.show_always(context, "无法获取相关的参数");
                                 ToastUtils.show_always(context, "数据出错了，请稍后再试！");
@@ -527,8 +554,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
         });
 
 
-
     }
+
 
     //更新数据交互
     private void update() {
@@ -726,9 +753,11 @@ public class MainActivity extends TabActivity implements OnClickListener {
     public static void change() {
         setViewOne();
     }
+
     public static void changeTwo() {
         setViewTwo();
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -787,6 +816,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private void registerReceiver() {
         IntentFilter m = new IntentFilter();
         m.addAction(BroadcastConstants.TIMER_END);
+        m.addAction(BroadcastConstants.PUSH_REGISTER);
+        m.addAction(BroadcastConstants.PUSH);
         registerReceiver(endApplicationBroadcast, m);
     }
 
@@ -803,10 +834,137 @@ public class MainActivity extends TabActivity implements OnClickListener {
                         finish();
                     }
                 }, 1000);
+            } else if (intent.getAction().equals(BroadcastConstants.PUSH)) {
+
+                byte[] bt = intent.getByteArrayExtra("outmessage");
+                Log.e("mainActivity接收器中数据=原始数据", Arrays.toString(bt) + "");
+                try {
+                    MsgNormal outMessage = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
+                    if (outMessage != null) {
+                        int biztype = outMessage.getBizType();
+                        if (biztype == 1) {
+                            // 上次存在的组对讲消息
+                            int cmdType = outMessage.getCmdType();
+                            if (cmdType == 3) {
+                                int command = outMessage.getCommand();
+                                if (command == 0) {
+                                    int rtType = outMessage.getReturnType();
+                                    if (rtType != 0) {
+                                        Log.e("mainActivity接收器中数据=组", JsonEncloseUtils.btToString(bt) + "");
+                                        showGroup(); // 展示上次存在的对讲组
+                                    }
+                                }
+                            }
+                        } else if (biztype == 2) {
+                            // 上次存在的单对单消息
+                            int cmdType = outMessage.getCmdType();
+                            if (cmdType == 3) {
+                                int command = outMessage.getCommand();
+                                if (command == 0) {
+                                    int rtType = outMessage.getReturnType();
+                                    if (rtType != 0) {
+                                        Log.e("mainActivity接收器中数据=单", JsonEncloseUtils.btToString(bt) + "");
+                                        showPerson(); // 展示上次存在的单对单对讲
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (intent.getAction().equals(BroadcastConstants.PUSH_NOTIFY)) {
+                byte[] bt = intent.getByteArrayExtra("outmessage");
+                Log.e("mainActivity接收器中数据=原始数据", Arrays.toString(bt) + "");
+                try {
+                    MsgNormal outMessage = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
+                    if (outMessage != null) {
+                        int biztype = outMessage.getBizType();
+                        if (biztype == 4) {
+                            // 上次存在的组对讲消息
+                            int cmdType = outMessage.getCmdType();
+                            if (cmdType == 3) {
+                                int command = outMessage.getCommand();
+                                if (command == 1) {
+                                    Log.e("mainActivity接收器中数据=踢人", JsonEncloseUtils.btToString(bt) + "");
+                                    showQuitPerson();// 展示账号被顶替的弹出框
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (intent.getAction().equals(BroadcastConstants.PUSH_REGISTER)) {
+                // 注册消息，biztype=15，returnType为0是没有登录，为1是登录状态
+                byte[] bt = intent.getByteArrayExtra("outmessage");
+                Log.e("mainActivity接收器中数据=原始数据", Arrays.toString(bt) + "");
+                try {
+                    MsgNormal outMessage = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
+                    if (outMessage != null) {
+                        int biztype = outMessage.getBizType();
+                        if (biztype == 15) {
+                            int rtType = outMessage.getReturnType();
+                            if (rtType != 0) {
+                                // 此时是登录状态
+                            } else {
+                                // 此时是未登录状态,更改一下登录状态
+                                unRegisterLogin();
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     };
 
+    // 展示账号被顶替的弹出框
+    private void showQuitPerson() {
+        pushDialogType = 1;
+        push_dialog_text_context.setText("您的账号在其他设备上登录，是否重新登录？");
+        pushDialog.show();
+        ToastUtils.show_always(MainActivity.this, "展示账号被顶替的 消息");
+    }
+
+    // 展示上次存在的单对单消息
+    private void showPerson() {
+        pushDialogType = 2;
+        push_dialog_text_context.setText("您刚才在跟***通话，是否继续？");
+        pushDialog.show();
+        ToastUtils.show_always(MainActivity.this, "展示上次存在的单对单消息");
+    }
+
+    // 展示上次存在的组对讲消息
+    private void showGroup() {
+        pushDialogType = 3;
+        push_dialog_text_context.setText("您上次仍在对讲组中对讲，是否继续？");
+        pushDialog.show();
+        ToastUtils.show_always(MainActivity.this, "展示上次存在的组对讲消息");
+    }
+
+    // 更改一下登录状态
+    private void unRegisterLogin() {
+        SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
+        et.putString(StringConstant.ISLOGIN, "false");
+        et.putString(StringConstant.USERID, "");
+        et.putString(StringConstant.USER_NUM, "");
+        et.putString(StringConstant.IMAGEURL, "");
+        et.putString(StringConstant.PHONENUMBER, "");
+        et.putString(StringConstant.USER_NUM, "");
+        et.putString(StringConstant.GENDERUSR, "");
+        et.putString(StringConstant.EMAIL, "");
+        et.putString(StringConstant.REGION, "");
+        et.putString(StringConstant.BIRTHDAY, "");
+        et.putString(StringConstant.USER_SIGN, "");
+        et.putString(StringConstant.STAR_SIGN, "");
+        et.putString(StringConstant.AGE, "");
+        et.putString(StringConstant.NICK_NAME, "");
+        if (!et.commit()) {
+            Log.v("commit", "数据 commit 失败!");
+        }
+    }
 
     /**
      * 手机实体返回按键的处理 与onbackpress同理
@@ -834,9 +992,96 @@ public class MainActivity extends TabActivity implements OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
-//        SocketService.workStop();
+        unRegisterNetWorkChangeReceiver(context.netWorkChangeReceiver);
+        stop();
         unregisterReceiver(endApplicationBroadcast);    // 取消注册广播
         Log.v("--- Main ---", "--- 杀死进程 ---");
         android.os.Process.killProcess(android.os.Process.myPid());
     }
+
+    //app退出时执行该操作
+    private void stop() {
+        context.stopService(Socket);
+        context.stopService(record);
+        context.stopService(voicePlayer);
+        context.stopService(Subclass);
+        context.stopService(download);
+        context.stopService(Location);
+        context.stopService(Notification);
+        Log.v("--- onStop ---", "--- 杀死进程 ---");
+    }
+
+    /***
+     * 注册网络监听者
+     */
+    private void registerNetWorkChangeReceiver(NetWorkChangeReceiver netWorkChangeReceiver) {
+        context.netWorkChangeReceiver = netWorkChangeReceiver;
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(NetWorkChangeReceiver.intentFilter);
+        this.registerReceiver(netWorkChangeReceiver, filter);
+    }
+
+    /**
+     * 取消网络变化监听者
+     */
+    private void unRegisterNetWorkChangeReceiver(NetWorkChangeReceiver netWorkChangeReceiver) {
+        this.unregisterReceiver(netWorkChangeReceiver);
+    }
+
+    //版本更新对话框
+    private void pushDialog() {
+        View dialog = LayoutInflater.from(this).inflate(R.layout.dialog_push_message, null);
+        push_dialog_text_context = (TextView) dialog.findViewById(R.id.text_context);
+        TextView tv_update = (TextView) dialog.findViewById(R.id.tv_ok);
+        TextView tv_qx = (TextView) dialog.findViewById(R.id.tv_qx);
+        tv_update.setOnClickListener(this);
+        tv_qx.setOnClickListener(this);
+        pushDialog = new Dialog(this, R.style.MyDialog);
+        pushDialog.setContentView(dialog);
+        pushDialog.setCanceledOnTouchOutside(false);
+        pushDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
+
+        // 继续上次对讲
+        tv_update.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (pushDialogType == 1) {
+
+                } else if (pushDialogType == 2) {
+
+                } else if (pushDialogType == 3) {
+
+                }
+                pushDialog.dismiss();
+            }
+        });
+
+        // 取消上次对讲
+        tv_qx.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (pushDialogType == 1) {
+
+                } else if (pushDialogType == 2) {
+
+                } else if (pushDialogType == 3) {
+
+                }
+                pushDialog.dismiss();
+            }
+        });
+    }
+
+//    private void test(){
+//        System.out.println("==========================");
+//        byte[] msgBytes1={124, 94, 0, 0, 0, 0, 0, 0, 0, 0, 0, 67, 1, 51, 98, 50, 48, 101, 50, 99, 51, 97, 55, 52, 49, 124, 124, 16, 94, 94, 85, 0, 123, 34, 85, 115, 101, 114, 73, 100, 34, 58, 34, 100, 56, 99, 51, 99, 99, 102, 56, 49, 49, 54, 98, 34, 44, 34, 80, 67, 68, 84, 121, 112, 101, 34, 58, 34, 49, 34, 44, 34, 68, 101, 118, 105, 99, 101, 73, 100, 34, 58, 34, 69, 56, 67, 56, 68, 48, 49, 52, 67, 67, 49, 70, 68, 54, 65, 57, 66, 52, 57, 66, 54, 57, 69, 52, 51, 57, 52, 57, 65, 51, 52, 66, 34, 125};
+//        System.out.println(new String(msgBytes1));
+//        MsgNormal test12= null;
+//        try {
+//            test12 = new MsgNormal(msgBytes1);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(JsonEncloseUtils.btToString(test12));
+//    }
 }

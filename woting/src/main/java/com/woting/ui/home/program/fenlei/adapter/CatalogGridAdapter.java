@@ -54,8 +54,11 @@ public class CatalogGridAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		holder.tv_name.setText(list.get(position).getName());
-
+		if(list.get(position).getName()!=null&&!list.get(position).getName().trim().equals("")){
+			holder.tv_name.setText(list.get(position).getName());
+		}else{
+			holder.tv_name.setText("未知");
+		}
 		return convertView;
 	}
 

@@ -112,16 +112,17 @@ public class CacheManager {
 	public static long getFolderSize(File file) throws Exception {
 		long size = 0;  
 		try {  
-			File[] fileList = file.listFiles();  
-			for (int i = 0; i < fileList.length; i++) {  
-				// 如果下面还有文件  
-				if (fileList[i].isDirectory()) {  
-					size = size + getFolderSize(fileList[i]);  
-				} else {  
-					size = size + fileList[i].length();  
-				}  
+			File[] fileList = file.listFiles();
+			if(fileList!=null) {
+				for (int i = 0; i < fileList.length; i++) {
+					// 如果下面还有文件
+					if (fileList[i].isDirectory()) {
+						size = size + getFolderSize(fileList[i]);
+					} else {
+						size = size + fileList[i].length();
+					}
+				}
 			}
-
 
 
 		} catch (Exception e) {  

@@ -5,6 +5,7 @@ import com.woting.common.util.StringUtils;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
+
 /**
  * 媒体消息：媒体流数据
  * @author wanghui

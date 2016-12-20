@@ -157,6 +157,8 @@ public class SplashActivity extends Activity {
                                 Log.v("commit", "数据 commit 失败!");
                             }
                         }
+                    }else{
+                        unRegisterLogin();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -182,6 +184,28 @@ public class SplashActivity extends Activity {
                 finish();
             }
         });
+    }
+
+    // 更改一下登录状态
+    private void unRegisterLogin() {
+        SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
+        et.putString(StringConstant.ISLOGIN, "false");
+        et.putString(StringConstant.USERID, "");
+        et.putString(StringConstant.USER_NUM, "");
+        et.putString(StringConstant.IMAGEURL, "");
+        et.putString(StringConstant.PHONENUMBER, "");
+        et.putString(StringConstant.USER_NUM, "");
+        et.putString(StringConstant.GENDERUSR, "");
+        et.putString(StringConstant.EMAIL, "");
+        et.putString(StringConstant.REGION, "");
+        et.putString(StringConstant.BIRTHDAY, "");
+        et.putString(StringConstant.USER_SIGN, "");
+        et.putString(StringConstant.STAR_SIGN, "");
+        et.putString(StringConstant.AGE, "");
+        et.putString(StringConstant.NICK_NAME, "");
+        if (!et.commit()) {
+            Log.v("commit", "数据 commit 失败!");
+        }
     }
 
     @Override
