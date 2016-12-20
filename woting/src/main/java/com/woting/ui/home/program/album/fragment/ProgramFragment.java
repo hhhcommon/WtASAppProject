@@ -3,7 +3,7 @@ package com.woting.ui.home.program.album.fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences.Editor;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -165,34 +165,35 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 		lv_album.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				if (SubList != null && SubList.get(position) != null && SubList.get(position).getMediaType() != null) {
-					String MediaType = SubList.get(position).getMediaType();
+				/*ToastUtils.show_always(context,SubListAll.get(position-1).getContentName());*/
+				if (SubListAll != null && SubListAll.get(position-1) != null && SubListAll.get(position-1).getMediaType() != null) {
+					String MediaType = SubListAll.get(position-1).getMediaType();
 					if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
-						String playerName = SubList.get(position).getContentName();
-						String playerImage = SubList.get(position).getContentImg();
-						String playUrl = SubList.get(position).getContentPlay();
-						String playUrI = SubList.get(position).getContentURI();
-						String playMediaType = SubList.get(position).getMediaType();
-						String playContentShareUrl = SubList.get(position).getContentShareURL();
-						String ContentId = SubList.get(position).getContentId();
-						String playAllTime = SubList.get(position).getContentTimes();
+						String playerName = SubListAll.get(position-1).getContentName();
+						String playerImage = SubListAll.get(position-1).getContentImg();
+						String playUrl = SubListAll.get(position-1).getContentPlay();
+						String playUrI = SubListAll.get(position-1).getContentURI();
+						String playMediaType = SubListAll.get(position-1).getMediaType();
+						String playContentShareUrl = SubListAll.get(position-1).getContentShareURL();
+						String ContentId = SubListAll.get(position-1).getContentId();
+						String playAllTime = SubListAll.get(position-1).getContentTimes();
 						String playInTime = "0";
-						String playContentDesc = SubList.get(position).getContentDescn();
-						String playNum = SubList.get(position).getPlayCount();
+						String playContentDesc = SubListAll.get(position-1).getContentDescn();
+						String playNum = SubListAll.get(position-1).getPlayCount();
 						String playZanType = "0";
-						String playFrom = SubList.get(position).getContentPub();
+						String playFrom = SubListAll.get(position-1).getContentPub();
 						String playFromId = "";
 						String playFromUrl = "";
 						String playAddTime = Long.toString(System.currentTimeMillis());
 						String bjUserId = CommonUtils.getUserId(context);
-						String ContentFavorite = SubList.get(position).getContentFavorite();
-						String localUrl=SubList.get(position).getLocalurl();
+						String ContentFavorite =SubListAll.get(position-1).getContentFavorite();
+						String localUrl=SubListAll.get(position-1).getLocalurl();
 						//name id desc img
 						String sequName1=sequName;
 						String sequId1=sequId;
 						String sequDesc1=sequDesc;
 						String sequImg1=sequImg;
-						String ContentPlayType=SubList.get(position).getContentPlayType();
+						String ContentPlayType=SubListAll.get(position-1).getContentPlayType();
 
 						PlayerHistory history = new PlayerHistory(
 								playerName,  playerImage, playUrl, playUrI,playMediaType,
@@ -207,13 +208,13 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 							PlayerFragment.TextPage=1;
 							Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
 							Bundle bundle1=new Bundle();
-							bundle1.putString("text", SubList.get(position).getContentName());
+							bundle1.putString("text", SubListAll.get(position-1).getContentName());
 							push.putExtras(bundle1);
 							context.sendBroadcast(push);
 						}else{
-							Editor et = BSApplication.SharedPreferences.edit();
+							SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
 							et.putString(StringConstant.PLAYHISTORYENTER, "true");
-							et.putString(StringConstant.PLAYHISTORYENTERNEWS,SubList.get(position).getContentName());
+							et.putString(StringConstant.PLAYHISTORYENTERNEWS,SubListAll.get(position-1).getContentName());
 							et.commit();
 							MainActivity.change();
 							HomeActivity.UpdateViewPager();
@@ -277,13 +278,20 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 									if (SubList != null && SubList.size() > 0) {
 										//SubListAll.clear();
 										SubListAll.addAll(SubList);
-										mainAdapter = new AlbumMainAdapter(context, SubList);
+										mainAdapter = new AlbumMainAdapter(context, SubListAll);
 										lv_album.setAdapter(mainAdapter);
 										setListener();
 										getData();
 										adapter = new AlbumAdapter(context, SubListAll);
 										lv_download.setAdapter(adapter);
 										setInterface();
+
+										if(SubList.size()!=20){
+											lv_album.setPullLoadEnable(false);
+											ToastUtils.show_always(context,"本专辑已经没有更多节目了");
+										}
+									/*	int showpage=page-1;
+										ToastUtils.show_always(context,"请求了第"+showpage+"页的信息,此时list的长度为"+SubListAll.size());*/
 									}
 								}catch (Exception e){
 
@@ -331,6 +339,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 								ToastUtils.show_always(context, "数据出错了，请稍后再试！");
 							}
 							lv_album.stopLoadMore();
+							lv_album.setPullLoadEnable(false);
 
 						}
 					}
@@ -391,6 +400,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 						}
 					}
 				}
+			/*	ToastUtils.show_always(context,SubListAll.get(position).getContentName());*/
 			}
 		});
 	}
@@ -434,12 +444,12 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.img_download: 	// 显示下载列表
-				if(SubList.size() == 0){
+				if(SubListAll.size() == 0){
 					return ;
 				}
-				SubListAll.clear();
-				SubListAll.addAll(SubList);
-				getData();
+		/*		SubListAll.clear();
+				SubListAll.addAll(SubList);*/
+		/*		getData();*/
 				if (adapter != null) {
 					adapter.notifyDataSetChanged();
 				} else {
@@ -528,16 +538,16 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 				}
 				break;
 			case R.id.img_sort:
-				if(SubList.size() != 0 && mainAdapter != null){
-					Collections.reverse(SubList);			// 倒序
+				if(SubListAll.size() != 0 && mainAdapter != null){
+					Collections.reverse(SubListAll);			// 倒序
 					mainAdapter.notifyDataSetChanged();
 					imageSortDown.setVisibility(View.VISIBLE);
 					imageSort.setVisibility(View.GONE);
 				}
 				break;
 			case R.id.img_sort_down:
-				if(SubList.size() != 0 && mainAdapter != null){
-					Collections.reverse(SubList);			// 倒序
+				if(SubListAll.size() != 0 && mainAdapter != null){
+					Collections.reverse(SubListAll);			// 倒序
 					mainAdapter.notifyDataSetChanged();
 					imageSortDown.setVisibility(View.GONE);
 					imageSort.setVisibility(View.VISIBLE);
