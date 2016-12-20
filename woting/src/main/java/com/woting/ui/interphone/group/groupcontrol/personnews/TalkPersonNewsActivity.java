@@ -1,10 +1,7 @@
 package com.woting.ui.interphone.group.groupcontrol.personnews;
 
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -77,7 +74,6 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
     private boolean update;
     private boolean isCancelRequest;
     private UserInviteMeInside news;
-    private MessageReceivers Receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,23 +86,10 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
         setData();
         setListener();
         dialogDelete();
-        if (Receiver == null) {
-            Receiver = new MessageReceivers();
-            IntentFilter filters = new IntentFilter();
-            filters.addAction(BroadcastConstants.GROUP_DETAIL_CHANGE);
-            context.registerReceiver(Receiver, filters);
-        }
+
     }
 
-    class MessageReceivers extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(BroadcastConstants.GROUP_DETAIL_CHANGE)) {
-                send();
-            }
-        }
-    }
+
 
     private void dialogDelete() {
         final View dialog = LayoutInflater.from(context).inflate(R.layout.dialog_exit_confirm, null);
@@ -542,10 +525,6 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (Receiver != null) {
-            context.unregisterReceiver(Receiver);
-            Receiver = null;
-        }
         isCancelRequest = VolleyRequest.cancelRequest(tag);
         if (bmp != null && !bmp.isRecycled()) {
             bmp.recycle();

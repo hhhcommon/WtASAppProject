@@ -103,13 +103,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     public static FragmentActivity context;
     public static IntegrationPlayer mPlayer;// 播放器
     private static SearchPlayerHistoryDao mSearchHistoryDao;// 搜索历史数据库
-    private static Handler mHandler;
-    private static PlayerListAdapter adapter;
-
     private FileInfoDao mFileDao;// 文件相关数据库
     private AudioManager audioMgr;// 声音管理
     private VoiceRecognizer mVoiceRecognizer;// 讯飞
     private MessageReceiver mReceiver;// 广播接收
+
+    private static Handler mHandler;
+    private static PlayerListAdapter adapter;
 
     private static Dialog dialog;// 加载数据对话框
     private static Dialog wifiDialog;// WIFI 提醒对话框
@@ -150,7 +150,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private static int sendType;// 第一次获取数据是有分页加载的
     private static int page = 1;// mainPage
     private static int voicePage = 1;// 语音搜索 page
-    private static int num;// == -2 播放器没有播放  == -1 播放器里边的数据不在list中 == 其它 是在 list 中
+    private static int num;// == -2 播放器没有播放  == -1 播放器里边的数据不在 list 中  == 其它 是在 list 中
 
     private int stepVolume;
     private int curVolume;// 当前音量
@@ -386,7 +386,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             context.unregisterReceiver(mReceiver);
             mReceiver = null;
         }
-
         if(mPlayer != null) {
             mPlayer.destroyPlayer();
         }
@@ -469,6 +468,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     static String local;
 
     private static void musicPlay(String s) {
+//        s = "http://www.wotingfm.com:908/CM//dataCenter/group01/71413d1fccad4220bc2f474614a72f6e.mp3";
         if (local == null) {
             local = s;
             mUIHandler.sendEmptyMessage(PLAY);
@@ -983,7 +983,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         }
     }
 
-    // 是否开启非wifi网络流量提醒
+    // 是否开启非 wifi 网络流量提醒
     private static boolean getWifiSet() {
         String wifiSet = sp.getString(StringConstant.WIFISET, "true");
         return !wifiSet.trim().equals("") && wifiSet.equals("true");
@@ -1032,7 +1032,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             try {
                 if (historyNew.getPlayerInTime() != null && historyNew.getPlayerInTime().equals("")) {
                     historyNews.setPlayerInTime("0");
@@ -1042,7 +1041,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             historyNews.setContentShareURL(historyNew.getPlayContentShareUrl());
             historyNews.setContentFavorite(historyNew.getContentFavorite());
             historyNews.setLocalurl(historyNew.getLocalurl());
@@ -1126,7 +1124,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             } else {
                 shareDesc = "暂无本节目介绍";
             }
-
             UMImage image;
             if (GlobalConfig.playerobject.getContentImg() != null && !GlobalConfig.playerobject.getContentImg().equals("")) {
                 shareContentImg = GlobalConfig.playerobject.getContentImg();
@@ -1135,7 +1132,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 shareContentImg = "http://182.92.175.134/img/logo-web.png";
                 image = new UMImage(context, shareContentImg);
             }
-
             if (GlobalConfig.playerobject.getContentShareURL() != null && !GlobalConfig.playerobject.getContentShareURL().equals("")) {
                 shareUrl = GlobalConfig.playerobject.getContentShareURL();
             } else {
@@ -1606,22 +1602,15 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 if (dialog != null) dialog.dismiss();
                 try {
                     ReturnType = result.getString("ReturnType");
-
                     if (ReturnType != null && (ReturnType.equals("1001") || ReturnType.equals("1005"))) {
                         if (GlobalConfig.playerobject.getContentFavorite().equals("0")) {
                             mPlayAudioTextLike.setText("已喜欢");
                             mPlayAudioTextLike.setCompoundDrawablesWithIntrinsicBounds(
                                     null, context.getResources().getDrawable(R.mipmap.wt_dianzan_select), null, null);
                             GlobalConfig.playerobject.setContentFavorite("1");
-//                            String contentUrl = GlobalConfig.playerobject.getContentURI();
                             if (num > 0) {
                                 allList.get(num).setContentFavorite("1");
                             }
-//                            for (int i = 0; i < allList.size(); i++) {
-//                                if (allList.get(i).getContentURI().equals(contentUrl)) {
-//                                    GlobalConfig.playerobject.setContentFavorite("1");
-//                                }
-//                            }
                         } else {
                             mPlayAudioTextLike.setText("喜欢");
                             mPlayAudioTextLike.setCompoundDrawablesWithIntrinsicBounds(
@@ -1630,12 +1619,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                             if (num > 0) {
                                 allList.get(num).setContentFavorite("0");
                             }
-//                            String contentUrl = GlobalConfig.playerobject.getContentURI();
-//                            for (int i = 0; i < allList.size(); i++) {
-//                                if (allList.get(i).getContentURI().equals(contentUrl)) {
-//                                    GlobalConfig.playerobject.setContentFavorite("0");
-//                                }
-//                            }
                         }
                     } else {
                         ToastUtils.show_always(context, "数据出错了，请您稍后再试!");
@@ -1741,7 +1724,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                             resetHeadView();// 页面的对象改变，根据对象重新设置属性
                             num = number;
                         }
-                    } catch (JsonSyntaxException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                         ToastUtils.show_always(context, "数据出错了，请您稍后再试!");
                     }
@@ -1757,15 +1740,19 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         });
     }
 
+    String sendTextContent = "";// 关键字
+
     // 获取与文字相关的内容数据
     private void SendTextRequest(String contentName) {
+        sendTextContent = contentName;
         final LanguageSearchInside fList = getDaoList(context);// 得到数据库里边的第一条数据
         sendType = 2;
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            jsonObject.put("SearchStr", contentName);
+            jsonObject.put("SearchStr", sendTextContent);
             jsonObject.put("PageType", "0");
             jsonObject.put("Page", TextPage);
+//            jsonObject.put("PageSize", "10");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -1812,7 +1799,23 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                                     allList.addAll(list);
                                     GlobalConfig.playerobject = allList.get(num);
                                 } else {
-                                    allList.addAll(list);
+                                    if(refreshType == 1) {// 刷新
+                                        if(allList.size() > 0) {
+                                            for(int i=0, size=allList.size(); i<size; i++) {
+                                                contentUrlList.add(allList.get(i).getContentURI());
+                                            }
+                                        }
+                                        if(list.size() > 0) {
+                                            for(int i=0, size=list.size(); i<size; i++) {
+                                                if(!contentUrlList.contains(list.get(i).getContentURI())) {
+                                                    allList.add(0, list.get(i));
+                                                }
+                                            }
+                                        }
+                                        contentUrlList.clear();
+                                    } else {// 加载更多
+                                        allList.addAll(list);
+                                    }
                                 }
                                 if (adapter == null) {
                                     mListView.setAdapter(adapter = new PlayerListAdapter(context, allList));
