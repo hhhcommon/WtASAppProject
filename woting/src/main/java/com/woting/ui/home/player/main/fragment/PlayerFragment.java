@@ -722,6 +722,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             if (type != null && type.equals("AUDIO")) {// 可以下载
                 mPlayAudioTextDownLoad.setVisibility(View.VISIBLE);
                 if(!TextUtils.isEmpty(GlobalConfig.playerobject.getLocalurl())) {// 已下载
+                    mPlayAudioTextDownLoad.setClickable(false);
                     mPlayAudioTextDownLoad.setCompoundDrawablesWithIntrinsicBounds(
                             null, context.getResources().getDrawable(R.mipmap.wt_play_xiazai_no), null, null);
                     mPlayAudioTextDownLoad.setTextColor(context.getResources().getColor(R.color.gray));
@@ -1420,8 +1421,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
                                         secondProgress = mPlayer.getTotalTime() * percentsAvailable / 100;
                                         mSeekBar.setSecondaryProgress((int)secondProgress);
-
-                                        Log.i("TAG", "OnCacheStatus: secondProgress == " + secondProgress);
                                     }
                                 }, local);
                             }

@@ -1,5 +1,6 @@
 package com.woting.ui.mine.myupload.upload;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -7,9 +8,11 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -55,7 +58,6 @@ public class AddLabelActivity extends AppBaseActivity implements
     private GridView gridMyLabel;// 展示标签
     private TextView textMyLabel;
 
-//    private String stringLabel;// 保存上一个界面传递过来的标签
     private String tag = "ADD_LABEL_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
 
@@ -85,8 +87,9 @@ public class AddLabelActivity extends AppBaseActivity implements
         // 创建编辑中的标签
         editText = new EditText(getApplicationContext());
         editText.setHint("添加标签");
-        editText.setMinEms(4);
+        editText.setMinEms(6);
         editText.setTextSize(12);
+        editText.setGravity(Gravity.CENTER);
         editText.setBackgroundResource(R.drawable.tag_edit);
         editText.setHintTextColor(getResources().getColor(R.color.gray));
         editText.setTextColor(getResources().getColor(R.color.wt_login_third));
@@ -113,6 +116,12 @@ public class AddLabelActivity extends AppBaseActivity implements
                 }
             }
         }
+
+        editText.setFocusable(true);
+        editText.setFocusableInTouchMode(true);
+        editText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
     }
 
     // 创建一个正常状态的标签
