@@ -336,11 +336,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        tabHost.setCurrentTabByTag("one");
-                        image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
-                        image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_selected);
-                        image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
-                        image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
                     } else if (host.equals("SEQU")) {
                         String s11 = uri.getQuery().substring(8);//不要jsonstr=
                         try {
@@ -487,6 +482,11 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                         ContentFavorite, contentid, "","","","","",ContentPlayType);
                                 dbDao.deleteHistory(ContentPlay);
                                 dbDao.addHistory(history);
+                                tabHost.setCurrentTabByTag("one");
+                                image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
+                                image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_selected);
+                                image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
+                                image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
                                 PlayerFragment.TextPage=1;
                                 Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                                 Bundle bundle1=new Bundle();
