@@ -323,7 +323,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                             String contenttime = arg1.getString("ContentTimes");
                             String mediatype = "AUDIO";*/
                             String mediatype = "AUDIO";
-                            if(TextUtils.isEmpty(contentId)){
+                            if(!TextUtils.isEmpty(contentId)){
                             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                                 sendContentInfo(contentId,mediatype);
                             } else {

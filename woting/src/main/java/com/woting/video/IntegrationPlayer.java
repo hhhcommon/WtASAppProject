@@ -116,7 +116,6 @@ public class IntegrationPlayer implements OnErrorListener {
                 if(mVlcPlayer != null && mVlcPlayer.isPlaying() && mIsVlcPlaying) mVlcPlayer.stop();
                 if(mVlcPlayRunnable != null) mHandler.removeCallbacks(mVlcPlayRunnable);
                 if(mTtsPlayer == null) initTtsPlayer(mContext);
-
                 mHandler.post(mTtsPlayRunnable);
 
                 mIsTtsPlaying = true;
