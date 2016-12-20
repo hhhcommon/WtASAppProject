@@ -7,6 +7,7 @@ import android.util.Log;
 import com.kingsoft.media.httpcache.KSYProxyService;
 import com.kingsoft.media.httpcache.OnCacheStatusListener;
 import com.kingsoft.media.httpcache.OnErrorListener;
+import com.kingsoft.media.httpcache.stats.OnLogEventListener;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 
@@ -18,7 +19,7 @@ import java.util.HashMap;
  * 作者：xinlong on 2016/11/29 15:54
  * 邮箱：645700751@qq.com
  */
-public class IntegrationPlayer implements OnErrorListener {
+public class IntegrationPlayer implements OnErrorListener ,OnLogEventListener{
     private Context mContext;
 
     private static IntegrationPlayer mPlayer;
@@ -156,6 +157,7 @@ public class IntegrationPlayer implements OnErrorListener {
                         secondProgress = (int) mVlcPlayer.getTotalTime() * percentsAvailable / 100;
                     }
                 }, httpUrl);
+
             }
         } else {
             mVlcPlayer.play(localUrl);
@@ -274,5 +276,10 @@ public class IntegrationPlayer implements OnErrorListener {
     // 判断播放地址是否为空
     private boolean isEmpty(String url) {
         return url == null || url.trim().equals("") || url.equals("null");
+    }
+
+    @Override
+    public void onLogEvent(String s) {
+        Log.e("ksy播放器打印===",s+"");
     }
 }

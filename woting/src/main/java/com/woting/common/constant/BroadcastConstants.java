@@ -44,6 +44,9 @@ public class BroadcastConstants {
 	//PUSH_CALL-----push_call
 	public static final String PUSH_CALL="PUSH_CALL";
 
+	//PUSH_REGISTER-----新加数据
+	public static final String PUSH_REGISTER="PUSH_REGISTER";
+
 	//PUSH-----push
 	public static final String PUSH="PUSH";
 

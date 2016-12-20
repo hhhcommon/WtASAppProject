@@ -474,7 +474,7 @@ public class SocketService extends Service {
             byte[] ba = new byte[2048];
             byte[] mba = null;
             int i = 0;
-            short _dataLen = -4;
+            short _dataLen = -3;
             boolean hasBeginMsg = false; //是否开始了一个消息
             int isAck = -1;
             int msgType = -1;//消息类型
@@ -735,16 +735,19 @@ public class SocketService extends Service {
                                 }
                                 break;
                             case 4://通知消息
-                                Intent pushnotify = new Intent(BroadcastConstants.PUSH_NOTIFY);
+                                Intent pushNotify = new Intent(BroadcastConstants.PUSH_NOTIFY);
                                 Bundle bundle4 = new Bundle();
                                 bundle4.putByteArray("outmessage", msg.toBytes());
-                                pushnotify.putExtras(bundle4);
-                                context.sendBroadcast(pushnotify);
+                                pushNotify.putExtras(bundle4);
+                                context.sendBroadcast(pushNotify);
                                 break;
                             case 0x0f://注册消息
-
+                                Intent pushRegister = new Intent(BroadcastConstants.PUSH_REGISTER);
+                                Bundle bundle15 = new Bundle();
+                                bundle15.putByteArray("outmessage", msg.toBytes());
+                                pushRegister.putExtras(bundle15);
+                                context.sendBroadcast(pushRegister);
                                 break;
-
                             default:
                                 break;
                         }

@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.android.volley.VolleyError;
@@ -41,12 +40,11 @@ import java.util.List;
  */
 public class PreferenceActivity extends AppBaseActivity implements View.OnClickListener {
 
-    private LinearLayout head_left_btn;
     private String tag = "PREFERENCE_SET_REQUEST_CANCEL_TAG"; // 取消网络请求标签
     private PreferenceActivity context;
     private Dialog dialog;
     private boolean isCancelRequest;
-    private List<String> preferenceList=new ArrayList<>();
+    private List<String> preferenceList = new ArrayList<>();
     private ListView lv_prefer;
     private static PianHaoAdapter adapter;
     private static List<FenLei> tempList;
@@ -56,9 +54,8 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preference);
-        context=this;
+        context = this;
         initView();
-        setListener();
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             dialog = DialogUtils.Dialogph(context, "正在获取信息");
             send();
@@ -69,14 +66,9 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
     }
 
     private void initView() {
-        head_left_btn = (LinearLayout) findViewById(R.id.head_left_btn);
-        lv_prefer=(ListView)findViewById(R.id.lv_prefer);
+        lv_prefer = (ListView) findViewById(R.id.lv_prefer);
         findViewById(R.id.tv_save).setOnClickListener(this);//保存
-    }
-
-    private void setListener() {
-        head_left_btn.setOnClickListener(this);
-
+        findViewById(R.id.head_left_btn).setOnClickListener(this);
     }
 
     @Override
@@ -88,60 +80,48 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
             case R.id.tv_save:
                 //判断点选
                 preferenceList.clear();
-                try{
-                for(int i=0;i<tempList.size();i++){
-                    for(int j=0;j<tempList.get(i).getChildren().size();j++){
-                        if(tempList.get(i).getChildren().get(j).getchecked().equals("true")){
-                            String s=tempList.get(i).getChildren().get(j).getAttributes().getmId()+"::"
-                                    +tempList.get(i).getChildren().get(j).getAttributes().getId();
-                            preferenceList.add(s);
+                try {
+                    for (int i = 0; i < tempList.size(); i++) {
+                        for (int j = 0; j < tempList.get(i).getChildren().size(); j++) {
+                            if (tempList.get(i).getChildren().get(j).getchecked().equals("true")) {
+                                String s = tempList.get(i).getChildren().get(j).getAttributes().getmId() + "::"
+                                        + tempList.get(i).getChildren().get(j).getAttributes().getId();
+                                preferenceList.add(s);
+                            }
                         }
                     }
-                }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if(preferenceList.size()!=0){
-                //发送网络请求
-                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                    dialog = DialogUtils.Dialogph(context, "通讯中...");
-                    sendRequest();
-                    ToastUtils.show_always(context,preferenceList.toString());
+                if (preferenceList.size() != 0) {
+                    //发送网络请求
+                    if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                        dialog = DialogUtils.Dialogph(context, "通讯中...");
+                        sendRequest();
+                        ToastUtils.show_always(context, preferenceList.toString());
+                    } else {
+                        ToastUtils.show_always(context, "网络失败，请检查网络");
+                    }
                 } else {
-                    ToastUtils.show_always(context, "网络失败，请检查网络");
-                }
-                }else{
-                    ToastUtils.show_always(context,"您还没有选择偏好");
+                    ToastUtils.show_always(context, "您还没有选择偏好");
                 }
                 break;
         }
     }
 
+    // 保存新的偏好设置
     private void sendRequest() {
-        JSONObject jsonObject = new JSONObject();
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            if(!TextUtils.isEmpty(CommonUtils.getUserIdNoImei(context))){
-                jsonObject.put("UserId",CommonUtils.getUserId(context));
-            }
-            String s=preferenceList.toString();
-            jsonObject.put("PrefStr", s.substring(1,s.length()-1));
-            jsonObject.put("IsOnlyCata",2);
-            jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-            jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-            jsonObject.put("IMEI", PhoneMessage.imei);
-            PhoneMessage.getGps(context);
-            jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-            jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-            jsonObject.put("PCDType", GlobalConfig.PCDType);
-
+            String s = preferenceList.toString();
+            jsonObject.put("PrefStr", s.substring(1, s.length() - 1));
+            jsonObject.put("IsOnlyCata", 2);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         VolleyRequest.RequestPost(GlobalConfig.setPreferenceUrl, tag, jsonObject, new VolleyCallback() {
-
             private String ReturnType;
-            private String ResultList;
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -160,25 +140,27 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
                 // 根据返回值来对程序进行解析
                 if (ReturnType != null) {
                     if (ReturnType.equals("1001")) {
-                        try {
-                         ToastUtils.show_always(context,"偏好已经设置成功");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        ToastUtils.show_always(context, "偏好设置保存成功！");
                     } else if (ReturnType.equals("1002")) {
-                        ToastUtils.show_always(context, "无此分类信息");
+//                        ToastUtils.show_always(context, "无此分类信息");
+                        ToastUtils.show_always(context, "保存失败，请稍候再试");
                     } else if (ReturnType.equals("1003")) {
-                        ToastUtils.show_always(context, "分类不存在");
+//                        ToastUtils.show_always(context, "分类不存在");
+                        ToastUtils.show_always(context, "保存失败，请稍候再试");
                     } else if (ReturnType.equals("1011")) {
-                        ToastUtils.show_always(context, "当前暂无分类");
+//                        ToastUtils.show_always(context, "当前暂无分类");
+                        ToastUtils.show_always(context, "保存失败，请稍候再试");
                     } else if (ReturnType.equals("T")) {
-                        ToastUtils.show_always(context, "获取列表异常");
+//                        ToastUtils.show_always(context, "获取列表异常");
+                        ToastUtils.show_always(context, "保存失败，请稍候再试");
+
                     } else {
-                        ToastUtils.show_always(context, "获取列表异常");
+//                        ToastUtils.show_always(context, "获取列表异常");
+                        ToastUtils.show_always(context, "保存失败，请稍候再试");
                     }
 
                 } else {
-                    ToastUtils.show_always(context, "数据获取异常，请稍候重试");
+                    ToastUtils.show_always(context, "保存失败，请稍候再试");
                 }
             }
 
@@ -191,7 +173,7 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
         });
     }
 
-    /**
+    /*
      * 发送网络请求
      */
     private void send() {
@@ -204,7 +186,6 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
             jsonObject.put("GPS-longitude", PhoneMessage.longitude);
             jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
             jsonObject.put("PCDType", GlobalConfig.PCDType);
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -212,7 +193,6 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
         VolleyRequest.RequestPost(GlobalConfig.getPreferenceUrl, tag, jsonObject, new VolleyCallback() {
 
             private String ReturnType;
-            private String ResultList;
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -233,23 +213,22 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
                     if (ReturnType.equals("1001")) {
                         try {
                             JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("PrefTree")).nextValue();
-                            ResultList = arg1.getString("children");
+                            String ResultList = arg1.getString("children");
                             tempList = new Gson().fromJson(ResultList, new TypeToken<List<FenLei>>() {
                             }.getType());
-                            if ( tempList != null&&tempList.size()>0) {
-                                if(!TextUtils.isEmpty(CommonUtils.getUserIdNoImei(context))){
-                                        sendTwice();
-                                    }else{
-                                        //对每个返回的分类做设置 默认为全部未选中状态 此时获取的为是所有的列表内容
-                                            if (adapter == null) {
-                                                adapter = new PianHaoAdapter(context,tempList);
-                                                lv_prefer.setAdapter(adapter);
-                                            } else {
-                                                adapter.notifyDataSetChanged();
-                                            }
-                                            setInterface();
-
-                                          }
+                            if (tempList != null && tempList.size() > 0) {
+                                if (!TextUtils.isEmpty(CommonUtils.getUserIdNoImei(context))) {
+                                    sendTwice();
+                                } else {
+                                    //对每个返回的分类做设置 默认为全部未选中状态 此时获取的为是所有的列表内容
+                                    if (adapter == null) {
+                                        adapter = new PianHaoAdapter(context, tempList);
+                                        lv_prefer.setAdapter(adapter);
+                                    } else {
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                    setInterface();
+                                }
                             } else {
                                 ToastUtils.show_always(context, "获取分类列表为空");
                             }
@@ -284,25 +263,11 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
 
 
     private void sendTwice() {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("UserId",CommonUtils.getUserIdNoImei(context));
-            jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
-            jsonObject.put("ScreenSize", PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);
-            jsonObject.put("IMEI", PhoneMessage.imei);
-            PhoneMessage.getGps(context);
-            jsonObject.put("GPS-longitude", PhoneMessage.longitude);
-            jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
-            jsonObject.put("PCDType", GlobalConfig.PCDType);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 
         VolleyRequest.RequestPost(GlobalConfig.getPreferenceUrl, tag, jsonObject, new VolleyCallback() {
 
             private String ReturnType;
-            private String ResultList;
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -323,23 +288,28 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
                     if (ReturnType.equals("1001")) {
                         try {
                             JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("PrefTree")).nextValue();
-                            ResultList = arg1.getString("children");
-                            List<FenLei> mList = new Gson().fromJson(ResultList, new TypeToken<List<FenLei>>() {}.getType());
+                            String ResultList = arg1.getString("children");
+                            List<FenLei> mList = new Gson().fromJson(ResultList, new TypeToken<List<FenLei>>() {
+                            }.getType());
                  /*           String s=mList.get(0).getName();
                             String s1=mList.get(1).getName();*/
-                            for(int i=0;i<mList.size();i++){
-                                for(int j=0;j<tempList.size();j++){
-                                    for(int k=0;k<tempList.get(j).getChildren().size();k++){
+                            try {
+                                for (int i = 0; i < mList.size(); i++) {
+                                    for (int j = 0; j < tempList.size(); j++) {
+                                        for (int k = 0; k < tempList.get(j).getChildren().size(); k++) {
                                    /*     String s1=tempList.get(j).getChildren().get(k).getId();
                                         String s=mList.get(i).getChildren().get(i).getId();*/
-                                        if(mList.get(i).getId().equals(tempList.get(j).getChildren().get(k).getId())){
-                                            tempList.get(j).getChildren().get(k).setchecked("true");
+                                            if (mList.get(i).getId().equals(tempList.get(j).getChildren().get(k).getId())) {
+                                                tempList.get(j).getChildren().get(k).setchecked("true");
+                                            }
                                         }
                                     }
                                 }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                             if (adapter == null) {
-                                adapter = new PianHaoAdapter(context,tempList);
+                                adapter = new PianHaoAdapter(context, tempList);
                                 lv_prefer.setAdapter(adapter);
                             } else {
                                 adapter.notifyDataSetChanged();
@@ -350,22 +320,23 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
                         }
                     } else {
                         if (ReturnType.equals("1002")) {
-                        ToastUtils.show_always(context, "无此分类信息");
-                    } else if (ReturnType.equals("1003")) {
-                        ToastUtils.show_always(context, "分类不存在");
-                    } else if (ReturnType.equals("1011")) {
-                        setInterface();
-                    } else if (ReturnType.equals("T")) {
-                        ToastUtils.show_always(context, "获取列表异常");
-                    } else {
-                        ToastUtils.show_always(context, "获取列表异常");
-                    }
+                            ToastUtils.show_always(context, "无此分类信息");
+                        } else if (ReturnType.equals("1003")) {
+                            ToastUtils.show_always(context, "分类不存在");
+                        } else if (ReturnType.equals("1011")) {
+                            ToastUtils.show_always(context, "");
+                        } else if (ReturnType.equals("T")) {
+                            ToastUtils.show_always(context, "获取列表异常");
+                        } else {
+                            ToastUtils.show_always(context, "获取列表异常");
+                        }
                         if (adapter == null) {
-                            adapter = new PianHaoAdapter(context,tempList);
+                            adapter = new PianHaoAdapter(context, tempList);
                             lv_prefer.setAdapter(adapter);
                         } else {
                             adapter.notifyDataSetChanged();
                         }
+                        setInterface();
                     }
                 } else {
                     ToastUtils.show_always(context, "数据获取异常，请稍候重试");
@@ -385,39 +356,39 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
         adapter.setOnListener(new PianHaoAdapter.preferCheck() {
             @Override
             public void clickPosition(int position) {
-                if(tempList.get(position).getChildren().get(0).getchecked().equals("false")){
-                    for(int i=0;i<tempList.get(position).getChildren().size();i++){
+                if (tempList.get(position).getChildren().get(0).getchecked().equals("false")) {
+                    for (int i = 0; i < tempList.get(position).getChildren().size(); i++) {
                         tempList.get(position).getChildren().get(i).setchecked("true");
                     }
                     tempList.get(position).setTag(position);
                     tempList.get(position).setTagType(1);
-                }else{
-                    for(int i=0;i<tempList.get(position).getChildren().size();i++){
+                } else {
+                    for (int i = 0; i < tempList.get(position).getChildren().size(); i++) {
                         tempList.get(position).getChildren().get(i).setchecked("false");
                     }
                     tempList.get(position).setTag(position);
                     tempList.get(position).setTagType(0);
-             }
+                }
                 adapter.notifyDataSetChanged();
             }
         });
 
     }
 
-    public static void RefreshView(List<FenLei> list){
-        if(adapter!=null){
-            tempList=list;
+    public static void RefreshView(List<FenLei> list) {
+        if (adapter != null) {
+            tempList = list;
             adapter.notifyDataSetChanged();
         }
     }
 
-    public static void allCheck(int position){
+    public static void allCheck(int position) {
         tempList.get(position).setTag(position);
         tempList.get(position).setTagType(1);
         RefreshView(tempList);
     }
 
-    public static void allUnCheck(int position){
+    public static void allUnCheck(int position) {
         tempList.get(position).setTag(position);
         tempList.get(position).setTagType(0);
         RefreshView(tempList);
@@ -443,7 +414,7 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
         et.putString(StringConstant.PREFERENCE, "1");
         et.commit();
         setContentView(R.layout.activity_null);
-        adapter=null;
-        tempList=null;
+        adapter = null;
+        tempList = null;
     }
 }

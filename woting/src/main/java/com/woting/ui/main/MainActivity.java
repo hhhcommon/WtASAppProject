@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -98,6 +99,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private NetWorkChangeReceiver netWorkChangeReceiver = null;
     private TextView push_dialog_text_context;
     private Dialog pushDialog;
+    private int pushDialogType=0; // 0=默认值,1=被顶替,2=展示个人,3=展示群组
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -664,10 +666,10 @@ public class MainActivity extends TabActivity implements OnClickListener {
                             if (cmdType == 3) {
                                 int command = outMessage.getCommand();
                                 if (command == 0) {
-                                    int rtType=outMessage.getReturnType();
-                                    if(rtType!=0) {
+                                    int rtType = outMessage.getReturnType();
+                                    if (rtType != 0) {
                                         Log.e("mainActivity接收器中数据=组", JsonEncloseUtils.btToString(bt) + "");
-                                        showGroup();
+                                        showGroup(); // 展示上次存在的对讲组
                                     }
                                 }
                             }
@@ -677,10 +679,10 @@ public class MainActivity extends TabActivity implements OnClickListener {
                             if (cmdType == 3) {
                                 int command = outMessage.getCommand();
                                 if (command == 0) {
-                                    int rtType=outMessage.getReturnType();
-                                    if(rtType!=0) {
+                                    int rtType = outMessage.getReturnType();
+                                    if (rtType != 0) {
                                         Log.e("mainActivity接收器中数据=单", JsonEncloseUtils.btToString(bt) + "");
-                                        showPerson();
+                                        showPerson(); // 展示上次存在的单对单对讲
                                     }
                                 }
                             }
@@ -689,21 +691,96 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
+            } else if (intent.getAction().equals(BroadcastConstants.PUSH_NOTIFY)) {
+                byte[] bt = intent.getByteArrayExtra("outmessage");
+                Log.e("mainActivity接收器中数据=原始数据", Arrays.toString(bt) + "");
+                try {
+                    MsgNormal outMessage = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
+                    if (outMessage != null) {
+                        int biztype = outMessage.getBizType();
+                        if (biztype == 4) {
+                            // 上次存在的组对讲消息
+                            int cmdType = outMessage.getCmdType();
+                            if (cmdType == 3) {
+                                int command = outMessage.getCommand();
+                                if (command == 1) {
+                                    Log.e("mainActivity接收器中数据=踢人", JsonEncloseUtils.btToString(bt) + "");
+                                    showQuitPerson();// 展示账号被顶替的弹出框
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }else if (intent.getAction().equals(BroadcastConstants.PUSH_REGISTER)) {
+                // 注册消息，biztype=15，returnType为0是没有登录，为1是登录状态
+                byte[] bt = intent.getByteArrayExtra("outmessage");
+                Log.e("mainActivity接收器中数据=原始数据", Arrays.toString(bt) + "");
+                try {
+                    MsgNormal outMessage = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
+                    if (outMessage != null) {
+                        int biztype = outMessage.getBizType();
+                        if (biztype == 15) {
+                            int rtType = outMessage.getReturnType();
+                            if (rtType != 0) {
+                                // 此时是登录状态
+                            }else {
+                                // 此时是未登录状态,更改一下登录状态
+                                unRegisterLogin();
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     };
 
-    // 展示上次存在的组对讲消息
-    private void showGroup() {
+    // 展示账号被顶替的弹出框
+    private void showQuitPerson() {
+        pushDialogType=1;
+        push_dialog_text_context.setText("");
         pushDialog.show();
-        ToastUtils.show_always(MainActivity.this, "展示上次存在的组对讲消息");
+        ToastUtils.show_always(MainActivity.this, "展示账号被顶替的 消息");
     }
 
     // 展示上次存在的单对单消息
     private void showPerson() {
+        pushDialogType=2;
         pushDialog.show();
         ToastUtils.show_always(MainActivity.this, "展示上次存在的单对单消息");
+    }
+
+    // 展示上次存在的组对讲消息
+    private void showGroup() {
+        pushDialogType=3;
+        pushDialog.show();
+        ToastUtils.show_always(MainActivity.this, "展示上次存在的组对讲消息");
+    }
+
+    // 更改一下登录状态
+    private void unRegisterLogin() {
+        SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
+        et.putString(StringConstant.ISLOGIN, "false");
+        et.putString(StringConstant.USERID, "");
+        et.putString(StringConstant.USER_NUM, "");
+        et.putString(StringConstant.IMAGEURL, "");
+        et.putString(StringConstant.PHONENUMBER, "");
+        et.putString(StringConstant.USER_NUM, "");
+        et.putString(StringConstant.GENDERUSR, "");
+        et.putString(StringConstant.EMAIL, "");
+        et.putString(StringConstant.REGION, "");
+        et.putString(StringConstant.BIRTHDAY, "");
+        et.putString(StringConstant.USER_SIGN, "");
+        et.putString(StringConstant.STAR_SIGN, "");
+        et.putString(StringConstant.AGE, "");
+        et.putString(StringConstant.NICK_NAME, "");
+        if (!et.commit()) {
+            Log.v("commit", "数据 commit 失败!");
+        }
+        sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));// 发送广播 更新已下载和未下载界面
     }
 
     /**
@@ -797,4 +874,17 @@ public class MainActivity extends TabActivity implements OnClickListener {
             }
         });
     }
+
+//    private void test(){
+//        System.out.println("==========================");
+//        byte[] msgBytes1={124, 94, 0, 0, 0, 0, 0, 0, 0, 0, 0, 67, 1, 51, 98, 50, 48, 101, 50, 99, 51, 97, 55, 52, 49, 124, 124, 16, 94, 94, 85, 0, 123, 34, 85, 115, 101, 114, 73, 100, 34, 58, 34, 100, 56, 99, 51, 99, 99, 102, 56, 49, 49, 54, 98, 34, 44, 34, 80, 67, 68, 84, 121, 112, 101, 34, 58, 34, 49, 34, 44, 34, 68, 101, 118, 105, 99, 101, 73, 100, 34, 58, 34, 69, 56, 67, 56, 68, 48, 49, 52, 67, 67, 49, 70, 68, 54, 65, 57, 66, 52, 57, 66, 54, 57, 69, 52, 51, 57, 52, 57, 65, 51, 52, 66, 34, 125};
+//        System.out.println(new String(msgBytes1));
+//        MsgNormal test12= null;
+//        try {
+//            test12 = new MsgNormal(msgBytes1);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(JsonEncloseUtils.btToString(test12));
+//    }
 }
