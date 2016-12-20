@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -39,6 +40,7 @@ import com.woting.common.receiver.NetWorkChangeReceiver;
 import com.woting.common.service.LocationService;
 import com.woting.common.service.SocketService;
 import com.woting.common.service.SubclassService;
+import com.woting.common.util.CommonUtils;
 import com.woting.common.util.JsonEncloseUtils;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
@@ -50,6 +52,8 @@ import com.woting.ui.download.service.DownloadService;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.model.Catalog;
 import com.woting.ui.home.model.CatalogName;
+import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
+import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.citylist.dao.CityInfoDao;
@@ -99,7 +103,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private NetWorkChangeReceiver netWorkChangeReceiver = null;
     private TextView push_dialog_text_context;
     private Dialog pushDialog;
-    private int pushDialogType=0; // 0=默认值,1=被顶替,2=展示个人,3=展示群组
+    private int pushDialogType = 0; // 0=默认值,1=被顶替,2=展示个人,3=展示群组
+    private SearchPlayerHistoryDao dbDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,6 +221,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     //初始化数据库并且发送获取地理位置的请求
     private void InitDao() {
         CID = new CityInfoDao(context);
+        dbDao = new SearchPlayerHistoryDao(context);
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             sendRequest();
         } else {
@@ -323,50 +329,60 @@ public class MainActivity extends TabActivity implements OnClickListener {
         Intent intent = getIntent();
         if (intent != null) {
             Uri uri = intent.getData();
+            //  Uri uri=Uri.parse("com.woting.htmlcallback://SEQU?jsonStr={'ContentName':'强强三人组','ContentId':'aa4064113e1b4ce8b69dc7d840c1878b','ContentImg':'http://www.wotingfm.com:908/CM/dataCenter/group03/bc12cf08e8b74d06a29b7a5082baa7e3.300_300.png','ContentDescn':'#####sequdescn#####'}");
             if (uri != null) {
+                String s = uri.toString();
                 String host = uri.getHost();
                 if (host != null && !host.equals("")) {
                     if (host.equals("AUDIO")) {
                         String queryString = uri.getQuery().substring(8);//不要jsonstr=
-                        JSONTokener jsonParser = new JSONTokener(queryString);
                         try {
+                            JSONTokener jsonParser = new JSONTokener(queryString);
                             JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                            contentName = arg1.getString("ContentName");
+                            /*contentName = arg1.getString("ContentName");*/
                             contentId = arg1.getString("ContentId");
-                            String contentimg = arg1.getString("ContentImg");
+                          /*  String contentimg = arg1.getString("ContentImg");
                             String contentdesc = arg1.getString("ContentDesc");
                             String contenturl = arg1.getString("ContentURL");
                             String contenttime = arg1.getString("ContentTimes");
+                            String mediatype = "AUDIO";*/
                             String mediatype = "AUDIO";
-                            //少MEDIATYPE
-                        } catch (JSONException e) {
+                            if (TextUtils.isEmpty(contentId)) {
+                                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                                    sendContentInfo(contentId, mediatype);
+                                } else {
+                                    ToastUtils.show_always(context, "网络失败，请检查网络");
+                                }
+                            } else {
+                                ToastUtils.show_always(context, "啊哦~由网页端传送的数据有误");
+                            }
+
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        tabHost.setCurrentTabByTag("two");
+                        tabHost.setCurrentTabByTag("one");
                         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
                         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_selected);
                         image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
                         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
                     } else if (host.equals("SEQU")) {
-                        String s = uri.getQuery().substring(8);//不要jsonstr=
-                        JSONTokener jsonParser = new JSONTokener(s);
+                        String s11 = uri.getQuery().substring(8);//不要jsonstr=
                         try {
+                            JSONTokener jsonParser = new JSONTokener(s11);
                             JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                            contentName = arg1.getString("ContentName");
+                           /* contentName = arg1.getString("ContentName");*/
                             contentId = arg1.getString("ContentId");
-                            String contentimg = arg1.getString("ContentImg");
+                       /*     String contentimg = arg1.getString("ContentImg");
                             String contentdesc = arg1.getString("ContentDesc");
-                            String contenturl = arg1.getString("ContentURL");
-                        } catch (JSONException e) {
+                            String contenturl = arg1.getString("ContentURL");*/
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                         //跳到专辑界面
                         Intent intent1 = new Intent(this, AlbumActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("type", "main");
-                        bundle.putString("id", contentId);
-                        bundle.putString("contentname", contentName);
-                        intent1.putExtras(bundle);
+                        intent1.putExtra("type", "main");
+                        intent1.putExtra("id", contentId);
+                      /*  intent1.putExtra("contentname", contentName);*/
                         startActivity(intent1);
                     } else {
                         ToastUtils.show_short(context, "返回的host值不属于AUDIO或者SEQU，请检查返回值");
@@ -375,6 +391,171 @@ public class MainActivity extends TabActivity implements OnClickListener {
             }
         }
     }
+
+
+    private void sendContentInfo(final String ContentId, String MediaType) {
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("MediaType", MediaType);
+            jsonObject.put("ContentId", ContentId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        VolleyRequest.RequestPost(GlobalConfig.getContentById, tag, jsonObject, new VolleyCallback() {
+
+            @Override
+            protected void requestSuccess(JSONObject result) {
+
+                if (isCancelRequest) {
+                    return;
+                }
+                try {
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null) { // 根据返回值来对程序进行解析
+                        if (ReturnType.equals("1001")) {
+
+                            try {
+                                String ResultList = result.getString("ResultInfo"); // 获取列表
+                                JSONTokener jsonParser = new JSONTokener(ResultList);
+                                JSONObject arg1 = (JSONObject) jsonParser.nextValue();
+                                // 此处后期需要用typeToken将字符串StringSubList 转化成为一个list集合
+                                String ContentPlayType, contentid, mediatype, ContentImg, ContentName, CTime, ContentTimes,
+                                        ContentKeyWord, ContentFavorite, ContentShareURL, ContentPlay, ContentPub, ContentDescn, PlayCount;
+                                try {
+                                    ContentPlayType = arg1.getString("ContentPlayType");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    ContentPlayType = "";
+                                }
+                                try {
+                                    contentid = arg1.getString("ContentId");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    contentid = "";
+                                }
+                                try {
+                                    mediatype = arg1.getString("MediaType");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    mediatype = "";
+                                }
+                                try {
+                                    ContentImg = arg1.getString("ContentImg");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    ContentImg = "";
+                                }
+                                try {
+                                    ContentName = arg1.getString("ContentName");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    ContentName = "";
+                                }
+                                try {
+                                    ContentDescn = arg1.getString("ContentDescn");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    ContentDescn = "";
+                                }
+                                try {
+                                    PlayCount = arg1.getString("PlayCount");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    PlayCount = "";
+                                }
+                                try {
+                                    CTime = arg1.getString("CTime");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    CTime = "";
+                                }
+                                try {
+                                    ContentTimes = arg1.getString("ContentTimes");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    ContentTimes = "";
+                                }
+                                try {
+                                    ContentPub = arg1.getString("ContentPub");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    ContentPub = "";
+                                }
+                                try {
+                                    ContentPlay = arg1.getString("ContentPlay");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    ContentPlay = "";
+                                }
+                                try {
+                                    ContentShareURL = arg1.getString("ContentShareURL");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    ContentShareURL = "";
+                                }
+                                try {
+                                    ContentKeyWord = arg1.getString("ContentKeyWord");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    ContentKeyWord = "";
+                                }
+
+                                try {
+                                    ContentFavorite = arg1.getString("ContentFavorite");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    ContentFavorite = "";
+                                }
+                                //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+                                PlayerHistory history = new PlayerHistory(
+                                        contentName, ContentImg, ContentPlay, "", mediatype,
+                                        ContentTimes, "", ContentDescn, PlayCount,
+                                        ContentFavorite, ContentPub, "", "", CTime, CommonUtils.getUserId(context), ContentShareURL,
+                                        ContentFavorite, contentid, "", "", "", "", "", ContentPlayType);
+                                dbDao.deleteHistory(ContentPlay);
+                                dbDao.addHistory(history);
+//                                PlayerFragment.TextPage=1;
+                                Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                                Bundle bundle1 = new Bundle();
+                                bundle1.putString("text", contentName);
+                                push.putExtras(bundle1);
+                                context.sendBroadcast(push);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            if (ReturnType.equals("0000")) {
+//							ToastUtils.show_always(context, "无法获取相关的参数");
+                                ToastUtils.show_always(context, "数据出错了，请稍后再试！");
+                            } else if (ReturnType.equals("1002")) {
+//							ToastUtils.show_always(context, "无此分类信息");
+                                ToastUtils.show_always(context, "数据出错了，请稍后再试！");
+                            } else if (ReturnType.equals("1003")) {
+//							ToastUtils.show_always(context, "无法获得列表");
+                                ToastUtils.show_always(context, "数据出错了，请稍后再试！");
+                            } else if (ReturnType.equals("1011")) {
+//							ToastUtils.show_always(context, "列表为空（列表为空[size==0]");
+                                ToastUtils.show_always(context, "数据出错了，请稍后再试！");
+                            } else if (ReturnType.equals("T")) {
+//							ToastUtils.show_always(context, "获取列表异常");
+                                ToastUtils.show_always(context, "数据出错了，请稍后再试！");
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+
+            }
+        });
+
+
+    }
+
 
     //更新数据交互
     private void update() {
@@ -635,6 +816,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private void registerReceiver() {
         IntentFilter m = new IntentFilter();
         m.addAction(BroadcastConstants.TIMER_END);
+        m.addAction(BroadcastConstants.PUSH_REGISTER);
         m.addAction(BroadcastConstants.PUSH);
         registerReceiver(endApplicationBroadcast, m);
     }
@@ -713,7 +895,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }else if (intent.getAction().equals(BroadcastConstants.PUSH_REGISTER)) {
+            } else if (intent.getAction().equals(BroadcastConstants.PUSH_REGISTER)) {
                 // 注册消息，biztype=15，returnType为0是没有登录，为1是登录状态
                 byte[] bt = intent.getByteArrayExtra("outmessage");
                 Log.e("mainActivity接收器中数据=原始数据", Arrays.toString(bt) + "");
@@ -725,7 +907,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                             int rtType = outMessage.getReturnType();
                             if (rtType != 0) {
                                 // 此时是登录状态
-                            }else {
+                            } else {
                                 // 此时是未登录状态,更改一下登录状态
                                 unRegisterLogin();
                             }
@@ -740,22 +922,24 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     // 展示账号被顶替的弹出框
     private void showQuitPerson() {
-        pushDialogType=1;
-        push_dialog_text_context.setText("");
+        pushDialogType = 1;
+        push_dialog_text_context.setText("您的账号在其他设备上登录，是否重新登录？");
         pushDialog.show();
         ToastUtils.show_always(MainActivity.this, "展示账号被顶替的 消息");
     }
 
     // 展示上次存在的单对单消息
     private void showPerson() {
-        pushDialogType=2;
+        pushDialogType = 2;
+        push_dialog_text_context.setText("您刚才在跟***通话，是否继续？");
         pushDialog.show();
         ToastUtils.show_always(MainActivity.this, "展示上次存在的单对单消息");
     }
 
     // 展示上次存在的组对讲消息
     private void showGroup() {
-        pushDialogType=3;
+        pushDialogType = 3;
+        push_dialog_text_context.setText("您上次仍在对讲组中对讲，是否继续？");
         pushDialog.show();
         ToastUtils.show_always(MainActivity.this, "展示上次存在的组对讲消息");
     }
@@ -780,7 +964,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         if (!et.commit()) {
             Log.v("commit", "数据 commit 失败!");
         }
-        sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));// 发送广播 更新已下载和未下载界面
     }
 
     /**
@@ -862,6 +1045,13 @@ public class MainActivity extends TabActivity implements OnClickListener {
         tv_update.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (pushDialogType == 1) {
+
+                } else if (pushDialogType == 2) {
+
+                } else if (pushDialogType == 3) {
+
+                }
                 pushDialog.dismiss();
             }
         });
@@ -870,6 +1060,13 @@ public class MainActivity extends TabActivity implements OnClickListener {
         tv_qx.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (pushDialogType == 1) {
+
+                } else if (pushDialogType == 2) {
+
+                } else if (pushDialogType == 3) {
+
+                }
                 pushDialog.dismiss();
             }
         });

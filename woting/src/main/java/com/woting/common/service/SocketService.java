@@ -130,25 +130,25 @@ public class SocketService extends Service {
             if (i++ > limitCount) break;
         }
 
-        if (healthWatch!=null&&healthWatch.isAlive()) {
+        if (healthWatch != null && healthWatch.isAlive()) {
             healthWatch.interrupt();
-            healthWatch=null;
+            healthWatch = null;
         }
-        if (reConn!=null&&reConn.isAlive()) {
+        if (reConn != null && reConn.isAlive()) {
             reConn.interrupt();
-            reConn=null;
+            reConn = null;
         }
-        if (sendBeat!=null&&sendBeat.isAlive()) {
+        if (sendBeat != null && sendBeat.isAlive()) {
             sendBeat.interrupt();
-            sendBeat=null;
+            sendBeat = null;
         }
-        if (sendMsg!=null&&sendMsg.isAlive()) {
+        if (sendMsg != null && sendMsg.isAlive()) {
             sendMsg.interrupt();
-            sendMsg=null;
+            sendMsg = null;
         }
-        if (receiveMsg!=null&&receiveMsg.isAlive()) {
+        if (receiveMsg != null && receiveMsg.isAlive()) {
             receiveMsg.interrupt();
-            receiveMsg=null;
+            receiveMsg = null;
         }
 
         try {
@@ -380,22 +380,34 @@ public class SocketService extends Service {
             System.out.println("<" + (new Date()).toString() + ">" + this.getName() + "线程启动");
             try {
                 while (true) {
-                    Log.e("toBeStop", toBeStop + "");
-                    if (toBeStop) break;
-                    if (socketOk()) {
-                        synchronized (socketSendLock) {
-                            byte[] rb = new byte[3];
-                            rb[0] = 'b';
-                            rb[1] = '^';
-                            rb[2] = '^';
-                            out.write(rb);
-                            out.flush();
-                            Log.i("心跳包", "Socket[" + socket.hashCode() + "]【发送】:【B】");
-                        }
-                    }
                     try {
-                        sleep(scc.getIntervalBeat());
-                    } catch (InterruptedException e) {
+                        Log.e("toBeStop", toBeStop + "");
+                        if (toBeStop) break;
+                        if (socketOk()) {
+                            synchronized (socketSendLock) {
+                                byte[] rb = new byte[3];
+                                rb[0] = 'b';
+                                rb[1] = '^';
+                                rb[2] = '^';
+                                out.write(rb);
+                                out.flush();
+                                Log.i("心跳包", "Socket[" + socket.hashCode() + "]【发送】:【B】");
+                            }
+                        }
+                        try {
+                            sleep(scc.getIntervalBeat());
+                        } catch (InterruptedException e) {
+                        }
+
+                    } catch (Exception e) {
+                        Log.e("心跳内线程异常", e.toString() + "");
+//                        if (e instanceof SocketException) {
+//                            try {
+//                                closeSocketAll();
+//                            } catch (IOException e1) {
+//                                break;
+//                            }
+//                        }
                     }
                 }
             } catch (Exception e) {
@@ -471,7 +483,7 @@ public class SocketService extends Service {
         private int _headLen = 36;
 
         public void run() {
-            byte[] ba = new byte[2048];
+            byte[] ba = new byte[20480];
             byte[] mba = null;
             int i = 0;
             short _dataLen = -3;
@@ -492,7 +504,7 @@ public class SocketService extends Service {
                             endMsgFlag[2] = (byte) r;
 
                             if (!hasBeginMsg) {
-                                      if (endMsgFlag[0] == 'B' && endMsgFlag[1] == '^' && endMsgFlag[2] == '^') {
+                                if (endMsgFlag[0] == 'B' && endMsgFlag[1] == '^' && endMsgFlag[2] == '^') {
                                     break;
                                 } else if ((endMsgFlag[0] == '|' && endMsgFlag[1] == '^') || (endMsgFlag[0] == '^' && endMsgFlag[1] == '|')) {
                                     hasBeginMsg = true;
@@ -669,7 +681,7 @@ public class SocketService extends Service {
                                 break;
                             case 1://组通话
                             /*
-							 * 接收该广播的地方
+                             * 接收该广播的地方
 							 */
                                 Intent push = new Intent(BroadcastConstants.PUSH);
                                 Bundle bundle1 = new Bundle();
