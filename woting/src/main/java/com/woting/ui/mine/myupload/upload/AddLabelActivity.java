@@ -1,6 +1,5 @@
 package com.woting.ui.mine.myupload.upload;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -8,11 +7,10 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -85,18 +83,23 @@ public class AddLabelActivity extends AppBaseActivity implements
         params.setMargins(10, 10, 10, 10);
 
         // 创建编辑中的标签
-        editText = new EditText(getApplicationContext());
+        editText = new EditText(context);
         editText.setHint("添加标签");
-        editText.setMinEms(6);
+        editText.setMinEms(4);
         editText.setTextSize(12);
-        editText.setGravity(Gravity.CENTER);
         editText.setBackgroundResource(R.drawable.tag_edit);
         editText.setHintTextColor(getResources().getColor(R.color.gray));
         editText.setTextColor(getResources().getColor(R.color.wt_login_third));
         editText.setLayoutParams(params);
         editText.setOnKeyListener(this);// 对软键盘的 Enter 和 Del 键监听
         editText.addTextChangedListener(this);// 监听编辑标签的输入事件
+        editText.setFocusable(true);
+        editText.setFocusableInTouchMode(true);
         layout.addView(editText);// 添加到 layout 中
+
+        // 获取焦点自动弹出键盘
+        editText.requestFocus();
+        AddLabelActivity.this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
         getMyLabel();// 获取我的标签
 
@@ -116,17 +119,11 @@ public class AddLabelActivity extends AppBaseActivity implements
                 }
             }
         }
-
-        editText.setFocusable(true);
-        editText.setFocusableInTouchMode(true);
-        editText.requestFocus();
-        InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
     }
 
     // 创建一个正常状态的标签
     private TextView getTag(String tag) {
-        TextView textView = new TextView(getApplicationContext());
+        TextView textView = new TextView(context);
         textView.setTextSize(12);
         textView.setBackgroundResource(R.drawable.tag_normal);
         textView.setTextColor(getResources().getColor(R.color.dinglan_orange));

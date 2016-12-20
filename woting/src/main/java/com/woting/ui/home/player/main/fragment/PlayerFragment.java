@@ -1607,29 +1607,35 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 try {
                     ReturnType = result.getString("ReturnType");
 
-                    if (ReturnType != null && ReturnType.equals("1001")) {
+                    if (ReturnType != null && (ReturnType.equals("1001") || ReturnType.equals("1005"))) {
                         if (GlobalConfig.playerobject.getContentFavorite().equals("0")) {
                             mPlayAudioTextLike.setText("已喜欢");
                             mPlayAudioTextLike.setCompoundDrawablesWithIntrinsicBounds(
                                     null, context.getResources().getDrawable(R.mipmap.wt_dianzan_select), null, null);
                             GlobalConfig.playerobject.setContentFavorite("1");
-                            String contentUrl = GlobalConfig.playerobject.getContentURI();
-                            for (int i = 0; i < allList.size(); i++) {
-                                if (allList.get(i).getContentURI().equals(contentUrl)) {
-                                    GlobalConfig.playerobject.setContentFavorite("1");
-                                }
+//                            String contentUrl = GlobalConfig.playerobject.getContentURI();
+                            if (num > 0) {
+                                allList.get(num).setContentFavorite("1");
                             }
+//                            for (int i = 0; i < allList.size(); i++) {
+//                                if (allList.get(i).getContentURI().equals(contentUrl)) {
+//                                    GlobalConfig.playerobject.setContentFavorite("1");
+//                                }
+//                            }
                         } else {
                             mPlayAudioTextLike.setText("喜欢");
                             mPlayAudioTextLike.setCompoundDrawablesWithIntrinsicBounds(
                                     null, context.getResources().getDrawable(R.mipmap.wt_dianzan_nomal), null, null);
                             GlobalConfig.playerobject.setContentFavorite("0");
-                            String contentUrl = GlobalConfig.playerobject.getContentURI();
-                            for (int i = 0; i < allList.size(); i++) {
-                                if (allList.get(i).getContentURI().equals(contentUrl)) {
-                                    GlobalConfig.playerobject.setContentFavorite("0");
-                                }
+                            if (num > 0) {
+                                allList.get(num).setContentFavorite("0");
                             }
+//                            String contentUrl = GlobalConfig.playerobject.getContentURI();
+//                            for (int i = 0; i < allList.size(); i++) {
+//                                if (allList.get(i).getContentURI().equals(contentUrl)) {
+//                                    GlobalConfig.playerobject.setContentFavorite("0");
+//                                }
+//                            }
                         }
                     } else {
                         ToastUtils.show_always(context, "数据出错了，请您稍后再试!");

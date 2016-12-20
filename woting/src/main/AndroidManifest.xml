@@ -607,8 +607,7 @@
         <activity
             android:name=".ui.mine.myupload.upload.AddLabelActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
+            android:theme="@android:style/Theme.Light.NoTitleBar" />
 
         <!-- 音频录制 -->
         <activity
