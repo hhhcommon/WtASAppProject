@@ -10,9 +10,17 @@ public class FileContentInfo {
 
     private String FileSize;// 文件大小
 
-    private String success;// 上传结果 TRUE OR FALSE
-
     private String FilePath;// 文件路径
+
+    private boolean Success;// 上传结果 TRUE OR FALSE
+
+    public boolean isSuccess() {
+        return Success;
+    }
+
+    public void setSuccess(boolean success) {
+        Success = success;
+    }
 
     public String getTimeConsuming() {
         return timeConsuming;
@@ -20,10 +28,6 @@ public class FileContentInfo {
 
     public void setTimeConsuming(String timeConsuming) {
         this.timeConsuming = timeConsuming;
-    }
-
-    public String getSuccess() {
-        return success;
     }
 
     public String getFileSize() {
@@ -40,9 +44,5 @@ public class FileContentInfo {
 
     public void setFilePath(String filePath) {
         FilePath = filePath;
-    }
-
-    public void setSuccess(String success) {
-        this.success = success;
     }
 }
