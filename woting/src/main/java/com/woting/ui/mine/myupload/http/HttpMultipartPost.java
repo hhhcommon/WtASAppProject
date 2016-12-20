@@ -26,8 +26,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -125,12 +123,12 @@ public class HttpMultipartPost extends AsyncTask<String, Integer, String> {
             return ;
         }
         try {
-            JSONTokener jsonParser = new JSONTokener(result);
-            JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-            String ful = arg1.getString("ful");
-            List<FileContentInfo> fileContentInfo = new Gson().fromJson(ful, new TypeToken<List<FileContentInfo>>() {}.getType());
-            if(fileContentInfo.get(0).getSuccess().equals("TRUE")) {
-                String filePath = fileContentInfo.get(0).getFilePath();
+//            JSONTokener jsonParser = new JSONTokener(result);
+//            JSONObject arg1 = (JSONObject) jsonParser.nextValue();
+//            String ful = arg1.getString("result");
+            FileContentInfo fileContentInfo = new Gson().fromJson(result, new TypeToken<FileContentInfo>() {}.getType());
+            if(fileContentInfo.isSuccess()) {
+                String filePath = fileContentInfo.getFilePath();
                 ((UploadActivity)context).addFileContent(filePath);// 上传完成回到原界面
             } else {
                 uploadFail();

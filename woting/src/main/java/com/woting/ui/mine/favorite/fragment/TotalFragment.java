@@ -364,7 +364,7 @@ public class TotalFragment extends Fragment implements OnClickListener {
 					String playermediatype = list.get(groupPosition).getList().get(childPosition).getMediaType();
 					String plaplayeralltime =list.get(groupPosition).getList().get(childPosition).getContentTimes();
 					String playerintime = "0";
-					String playercontentdesc = list.get(groupPosition).getList().get(childPosition).getContentDesc();
+					String playercontentdesc = list.get(groupPosition).getList().get(childPosition).getContentDescn();
 					String playernum = list.get(groupPosition).getList().get(childPosition).getPlayCount();
 					String playerzantype = "0";
 					String playerfrom = list.get(groupPosition).getList().get(childPosition).getContentPub();

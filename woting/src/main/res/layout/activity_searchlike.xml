@@ -36,78 +36,74 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical" >
+                android:orientation="horizontal" >
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal" >
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="5"
+                    android:background="@drawable/bg_dinglan_edittext"
+                    android:gravity="left|center" >
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_weight="5"
-                        android:background="@drawable/bg_dinglan_edittext"
-                        android:gravity="left|center" >
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginLeft="6dp"
+                        android:src="@mipmap/wt_img_search_gray"/>
 
-
-                        <EditText
-                            android:id="@+id/et_searchlike"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:paddingLeft="10dp"
-                            android:layout_marginLeft="5dp"
-                            android:background="@android:color/transparent"
-                            android:ellipsize="end"
-                            android:gravity="left|center"
-                            android:hint="   搜索声音/专辑/主播"
-                            android:singleLine="true"
-                            android:textColor="@color/wt_login_third"
-                            android:textColorHint="@color/gray"
-                            android:textCursorDrawable="@drawable/wt_edittext_cursor"
-                            android:textSize="@dimen/wt_edittext_default_text" />
-
-                        <ImageView
-                            android:id="@+id/img_edit_normal"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:padding="8dp"
-                            android:src="@mipmap/wt_img_voicenew"
-                            android:visibility="visible" />
-
-                        <ImageView
-                            android:id="@+id/img_edit_clear"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:padding="8dp"
-                            android:src="@mipmap/wt_img_clearnew"
-                            android:visibility="gone" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/lin_head_right"
+                    <EditText
+                        android:id="@+id/et_searchlike"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:visibility="visible" >
+                        android:paddingLeft="6dp"
+                        android:background="@android:color/transparent"
+                        android:ellipsize="end"
+                        android:hint="搜索声音/专辑/主播"
+                        android:singleLine="true"
+                        android:textColor="@color/wt_login_third"
+                        android:textColorHint="@color/gray"
+                        android:textCursorDrawable="@drawable/wt_edittext_cursor"
+                        android:textSize="@dimen/wt_edittext_default_text" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="搜索"
-                            android:textColor="@color/WHITE_1"
-                            android:textSize="@dimen/wt_dinglan_text_right" />
-                    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/img_edit_normal"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:src="@mipmap/wt_img_voicenew"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/img_edit_clear"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:src="@mipmap/wt_img_clearnew"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lin_head_right"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="visible" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="搜索"
+                        android:textColor="@color/WHITE_1"
+                        android:textSize="@dimen/wt_dinglan_text_right" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

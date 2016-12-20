@@ -49,6 +49,7 @@ import com.android.volley.VolleyError;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -144,27 +145,17 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
         // 初始化广播
         mIntent = new Intent();
         mIntent.setAction(SearchLikeActivity.SEARCH_VIEW_UPDATE);
-        setView();        // 初始化控件
+        setView();// 初始化控件
         dialog();
-        setListener();    // 设置监听
+        setListener();// 设置监听
         InitImage();
-        initDao();        // 初始化数据库命令执行对象
+        initDao();// 初始化数据库命令执行对象
         initTextWatcher();
         InitViewPager();
-        lin_status_first.setVisibility(View.GONE);
-        lin_status_second.setVisibility(View.GONE);
-        lin_status_third.setVisibility(View.VISIBLE);
-        lin_status_second.setVisibility(View.GONE);
-        lin_status_third.setVisibility(View.INVISIBLE);
-        lin_status_first.setVisibility(View.VISIBLE);
         // 设置 listView 内部 item 点击事件 接口完成后需 添加该方法进入到 returnType == 1001 中
         setListView();
         audioMgr = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        // 获取最大音乐音量
-        int maxVolume = audioMgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        // // 初始化音量大概为最大音量的1/2
-        // curVolume = maxVolume / 2;
-        // 每次调整的音量大概为最大音量的1/100
+        int maxVolume = audioMgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);// 获取最大音乐音量
         stepVolume = maxVolume / 100;
         // 此处获取热门搜索 对应接口HotKey
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
@@ -291,9 +282,6 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
         img_edit_clear = (ImageView) findViewById(R.id.img_edit_clear);
         // 正常状态
         img_edit_normal = (ImageView) findViewById(R.id.img_edit_normal);
-        // 初始化 lin 状态
-        lin_status_first.setVisibility(View.GONE);
-        lin_status_second.setVisibility(View.GONE);
 
         // 取消默认 selector
         gv_TopSearch.setSelector(new ColorDrawable(Color.TRANSPARENT));
@@ -374,10 +362,8 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
                 if (!s.toString().trim().equals("")) {
                     img_edit_clear.setVisibility(View.VISIBLE);
                     img_edit_normal.setVisibility(View.GONE);
-                    if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                    if(CommonHelper.checkNetwork(context)) {
                         sendKey(s.toString());// 发送搜索变更内容
-                    } else {
-                        ToastUtils.show_always(SearchLikeActivity.this, "网络失败，请检查网络");
                     }
                     lin_status_first.setVisibility(View.GONE);
                     lin_status_second.setVisibility(View.VISIBLE);
@@ -530,12 +516,19 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
                 topSearchList.clear();
                 try {
                     String s = result.getString("SysKeyList");
-                    String[] s1 = s.split(",");
-                    for (int i = 0; i < s1.length; i++) {
-                        topSearchList.add(s1[i]);
+                    if(s == null || s.trim().equals("")) {
+                        lv_mListView.setVisibility(View.GONE);
+                        return ;
+                    } else {
+                        lv_mListView.setVisibility(View.VISIBLE);
+                        String[] s1 = s.split(",");
+                        for (int i = 0; i < s1.length; i++) {
+                            topSearchList.add(s1[i]);
+                        }
                     }
                 } catch (JSONException e1) {
                     e1.printStackTrace();
+                    lv_mListView.setVisibility(View.GONE);
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     if (topSearchList != null && topSearchList.size() > 0) {
@@ -547,11 +540,14 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
                         }
                         setItemListener();
                     } else {
+                        lv_mListView.setVisibility(View.GONE);
                         ToastUtils.show_always(context, "数据异常");
                     }
                 } else if (ReturnType != null && ReturnType.equals("1002")) {
+                    lv_mListView.setVisibility(View.GONE);
                     ToastUtils.show_always(getApplicationContext(), "没有查询到内容" + Message);
                 } else {
+                    lv_mListView.setVisibility(View.GONE);
                     if (Message != null && !Message.trim().equals("")) {
                         ToastUtils.show_always(getApplicationContext(), Message + "请稍后重试");
                     }

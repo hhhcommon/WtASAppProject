@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.android.volley.VolleyError;
@@ -40,6 +41,7 @@ import java.util.List;
  */
 public class PreferenceActivity extends AppBaseActivity implements View.OnClickListener {
 
+    private LinearLayout head_left_btn;
     private String tag = "PREFERENCE_SET_REQUEST_CANCEL_TAG"; // 取消网络请求标签
     private PreferenceActivity context;
     private Dialog dialog;
@@ -47,7 +49,7 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
     private List<String> preferenceList = new ArrayList<>();
     private ListView lv_prefer;
     private static PianHaoAdapter adapter;
-    private static List<FenLei> tempList;
+    private static List<FenLei> tempList=new ArrayList<>();
 
 
     @Override
@@ -93,17 +95,17 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (preferenceList.size() != 0) {
-                    //发送网络请求
-                    if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(context, "通讯中...");
-                        sendRequest();
-                        ToastUtils.show_always(context, preferenceList.toString());
-                    } else {
-                        ToastUtils.show_always(context, "网络失败，请检查网络");
-                    }
+                if(preferenceList.size()!=0){
+                //发送网络请求
+                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                    dialog = DialogUtils.Dialogph(context, "通讯中...");
+                    sendRequest();
+                    ToastUtils.show_always(context,preferenceList.toString());
                 } else {
-                    ToastUtils.show_always(context, "您还没有选择偏好");
+                    ToastUtils.show_always(context, "网络失败，请检查网络");
+                }
+                }else{
+                    ToastUtils.show_always(context,"您还没有选择偏好");
                 }
                 break;
         }
@@ -121,7 +123,9 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
         }
 
         VolleyRequest.RequestPost(GlobalConfig.setPreferenceUrl, tag, jsonObject, new VolleyCallback() {
+
             private String ReturnType;
+            private String ResultList;
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -173,7 +177,7 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
         });
     }
 
-    /*
+    /**
      * 发送网络请求
      */
     private void send() {
@@ -186,6 +190,7 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
             jsonObject.put("GPS-longitude", PhoneMessage.longitude);
             jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
             jsonObject.put("PCDType", GlobalConfig.PCDType);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -193,6 +198,7 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
         VolleyRequest.RequestPost(GlobalConfig.getPreferenceUrl, tag, jsonObject, new VolleyCallback() {
 
             private String ReturnType;
+            private String ResultList;
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -268,6 +274,7 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
         VolleyRequest.RequestPost(GlobalConfig.getPreferenceUrl, tag, jsonObject, new VolleyCallback() {
 
             private String ReturnType;
+            private String ResultList;
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -337,6 +344,9 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
                             adapter.notifyDataSetChanged();
                         }
                         setInterface();
+                        ToastUtils.show_always(context, "无此分类信息");
+
+
                     }
                 } else {
                     ToastUtils.show_always(context, "数据获取异常，请稍候重试");

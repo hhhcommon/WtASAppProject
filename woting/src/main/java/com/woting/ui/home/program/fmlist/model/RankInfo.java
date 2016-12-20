@@ -16,7 +16,7 @@ public class RankInfo implements Serializable {
 	private String ContentPlay;
 	private String ContentShareURL;
 	private String ContentFavorite;
-	private String ContentDesc;
+	private String ContentDescn;
 	private String localurl;
 	private String ContentTimes;
 	private String ContentPub;
@@ -107,11 +107,11 @@ public class RankInfo implements Serializable {
 	public void setChecktype(int checktype) {
 		this.checktype = checktype;
 	}
-	public String getContentDesc() {
-		return ContentDesc;
+	public String getContentDescn() {
+		return ContentDescn;
 	}
-	public void setContentDesc(String contentDesc) {
-		ContentDesc = contentDesc;
+	public void setContentDescn(String contentDesc) {
+		ContentDescn = contentDesc;
 	}
 	public String getContentFavorite() {
 		return ContentFavorite;

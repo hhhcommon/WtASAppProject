@@ -22,7 +22,6 @@ import com.woting.ui.home.program.comment.model.opinion;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -87,11 +86,18 @@ public class ChatLVAdapter extends BaseAdapter {
             SpannableStringBuilder sb = handler(holder.fromContent, list.get(position).getDiscuss());
             holder.fromContent.setText(sb);
         }
+        try{
         if (opinion.getTime() != null && !opinion.equals("")) {
             SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
-            holder.time.setText(format.format(new Date(Long.parseLong(list.get(position).getTime()))));
+            String s1=opinion.getTime();
+      /*      Date date=new Date(Long.parseLong(opinion.getTime()));
+            String s=format.format(date);*/
+            holder.time.setText(s1);
         } else {
             holder.time.setText("00-00-00");
+        }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         if (opinion.getUserInfo() != null) {
             if (opinion.getUserInfo().getUserName() != null) {

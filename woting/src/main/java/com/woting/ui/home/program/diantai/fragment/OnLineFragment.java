@@ -364,7 +364,7 @@ public class OnLineFragment extends Fragment {
                         String playContentShareUrl = mainLists.get(position).getContentShareURL();
                         String playAllTime = mainLists.get(position).getContentTimes();
                         String playInTime = "0";
-                        String playContentDesc = mainLists.get(position).getContentDesc();
+                        String playContentDesc = mainLists.get(position).getContentDescn();
                         String playerNum = mainLists.get(position).getPlayCount();
                         String playZanType = "0";
                         String playFrom = mainLists.get(position).getContentPub();

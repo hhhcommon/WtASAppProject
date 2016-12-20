@@ -75,12 +75,12 @@ public class TimerPowerOffActivity extends AppBaseActivity implements OnClickLis
 
         // 正在播放电台之外的节目时显示
         if(GlobalConfig.playerobject != null && !GlobalConfig.playerobject.getMediaType().equals("RADIO")) {
-//            if(PlayerFragment.audioPlay.isPlaying()) {
-//                viewPlayEnd.setVisibility(View.VISIBLE);
-//                if (PlayerFragment.isCurrentPlay) {
-//                    viewPlayEnd.setClickable(false);
-//                }
-//            }
+            if(PlayerFragment.mPlayer.isPlaying()) {
+                viewPlayEnd.setVisibility(View.VISIBLE);
+                if (PlayerFragment.isCurrentPlay) {
+                    viewPlayEnd.setClickable(false);
+                }
+            }
         }
     }
 
