@@ -56,7 +56,11 @@ public class PreferGridAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.tv_name.setText(list.get(position).getName());
+        if(list.get(position).getName()!=null&&!list.get(position).getName().trim().equals("")){
+            holder.tv_name.setText(list.get(position).getName());
+        }else{
+            holder.tv_name.setText("未知");
+        }
         String s1= list.get(position).getName();
         String s= list.get(position).getchecked();
         if(list.get(position).getchecked().equals("false")){

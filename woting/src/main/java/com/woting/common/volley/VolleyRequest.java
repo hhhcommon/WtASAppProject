@@ -202,7 +202,7 @@ public class VolleyRequest {
 			jsonObject.put("GPS-longitude", PhoneMessage.longitude);
 			jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
 			jsonObject.put("PCDType", GlobalConfig.PCDType);
-			String userId = CommonUtils.getUserId(context);
+			String userId = CommonUtils.getSocketUserId(context);
 			if (userId != null && !userId.trim().equals("")) {
 				jsonObject.put("UserId", userId);
 			}

@@ -327,7 +327,6 @@ public class DuiJiangActivity extends FragmentActivity {
 				ToastUtils.show_always(DuiJiangActivity.this, "再按一次退出");
 				touchTime = currentTime;
 			} else {
-				BSApplication.onStop();
 				MobclickAgent.onKillProcess(this);
 				finish();
 				android.os.Process.killProcess(android.os.Process.myPid());

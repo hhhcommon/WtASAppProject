@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 import com.woting.R;
-import com.woting.common.application.BSApplication;
 import com.woting.common.service.IntegrationPlayerService;
 import com.woting.common.util.ToastUtils;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
@@ -224,7 +223,6 @@ public class HomeActivity extends FragmentActivity {
                 ToastUtils.show_always(HomeActivity.this, "再按一次退出");
                 touchTime = currentTime;
             } else {
-                BSApplication.onStop();
                 MobclickAgent.onKillProcess(this);
                 finish();
                 android.os.Process.killProcess(android.os.Process.myPid());

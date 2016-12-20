@@ -704,7 +704,6 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                 ToastUtils.show_always(context, "再按一次退出");
                 touchTime = currentTime;
             } else {
-                BSApplication.onStop();
                 MobclickAgent.onKillProcess(this);
                 finish();
                 android.os.Process.killProcess(android.os.Process.myPid());
