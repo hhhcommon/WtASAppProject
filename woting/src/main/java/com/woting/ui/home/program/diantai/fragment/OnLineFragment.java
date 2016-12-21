@@ -36,6 +36,7 @@ import com.woting.common.util.CommonUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.HeightListView;
 import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout;
 import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout.OnRefreshListener;
 import com.woting.ui.home.main.HomeActivity;
@@ -82,7 +83,7 @@ public class OnLineFragment extends Fragment {
     //	private MyGridView gridView;
     private ListView gridView;
     private List<RankInfo> mainLists;
-    private SharedPreferences shared= BSApplication.SharedPreferences;
+    private SharedPreferences shared = BSApplication.SharedPreferences;
     private SearchPlayerHistoryDao dbDao;
     private String cityId;
     private String tag = "ONLINE_VOLLEY_REQUEST_CANCEL_TAG";
@@ -330,38 +331,39 @@ public class OnLineFragment extends Fragment {
                         String MainList = arg1.getString("List");
                         mainLists = new Gson().fromJson(MainList, new TypeToken<List<RankInfo>>() {
                         }.getType());
-                      if(mainLists!=null&&mainLists.size()!=0){
-                        if(mainLists.size()>3){
-                          List tempList=new ArrayList();
-                            for(int i=0;i<3;i++){
-                                tempList.add(mainLists.get(i));
+                        if (mainLists != null && mainLists.size() != 0) {
+                            if (mainLists.size() > 3) {
+                                List tempList = new ArrayList();
+                                for (int i = 0; i < 3; i++) {
+                                    tempList.add(mainLists.get(i));
+                                }
+                                mainLists.clear();
+                                mainLists.addAll(tempList);
                             }
-                            mainLists.clear();
-                            mainLists.addAll(tempList);
-                        }
-                        if(mainLists.size()==1){
-                            height=250;
-                        }else if(mainLists.size()==2){
-                            height=490;
-                        }else if(mainLists.size()==3){
-                            height=730;
-                        }
-                        //设置gridview的高
-                        ViewGroup.LayoutParams params = gridView.getLayoutParams();
-                        params.height = height;
-                        gridView.setLayoutParams(params);
+//                        if(mainLists.size()==1){
+//                            height=250;
+//                        }else if(mainLists.size()==2){
+//                            height=490;
+//                        }else if(mainLists.size()==3){
+//                            height=730;
+//                        }
+//                        //设置gridview的高
+//                        ViewGroup.LayoutParams params = gridView.getLayoutParams();
+//                        params.height = height;
+//                        gridView.setLayoutParams(params);
 
-                        if (adapters == null) {
-                            adapters = new CityNewAdapter(context, mainLists);
-                            gridView.setAdapter(adapters);
+                            if (adapters == null) {
+                                adapters = new CityNewAdapter(context, mainLists);
+                                gridView.setAdapter(adapters);
+                            } else {
+                                adapters.notifyDataSetChanged();
+                            }
+                            gridListener();
+                            new HeightListView(context).setListViewHeightBasedOnChildren(gridView);
                         } else {
-                            adapters.notifyDataSetChanged();
-                        }
-                        gridListener();
-                      }else{
-                          gridView.setVisibility(View.GONE);
+                            gridView.setVisibility(View.GONE);
 
-                      }
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -406,28 +408,28 @@ public class OnLineFragment extends Fragment {
                         String sequId = mainLists.get(position).getSequId();
                         String sequDesc = mainLists.get(position).getSequDesc();
                         String sequImg = mainLists.get(position).getSequImg();
-                        String ContentPlayType= mainLists.get(position).getContentPlayType();
+                        String ContentPlayType = mainLists.get(position).getContentPlayType();
 
-						//如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-						PlayerHistory history = new PlayerHistory(
-								playName, playImage,playUrl,playUri,playMediaType,
-								playAllTime, playInTime, playContentDesc,playerNum,
-								playZanType,playFrom,playFromId,playFromUrl,playAddTime,bjUserId,playContentShareUrl,
-								ContentFavorite,ContentId,localUrl,sequName,sequId,sequDesc,sequImg,ContentPlayType);
-						dbDao.deleteHistory(playUrl);
-						dbDao.addHistory(history);
-						PlayerFragment.TextPage=1;
-                        Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
-                        Bundle bundle1=new Bundle();
-                        bundle1.putString("text",mainLists.get(position).getContentName());
+                        //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+                        PlayerHistory history = new PlayerHistory(
+                                playName, playImage, playUrl, playUri, playMediaType,
+                                playAllTime, playInTime, playContentDesc, playerNum,
+                                playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
+                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType);
+                        dbDao.deleteHistory(playUrl);
+                        dbDao.addHistory(history);
+                        PlayerFragment.TextPage = 1;
+                        Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                        Bundle bundle1 = new Bundle();
+                        bundle1.putString("text", mainLists.get(position).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
-						HomeActivity.UpdateViewPager();
-					}
-				}
-			}
-		});
-	}
+                        HomeActivity.UpdateViewPager();
+                    }
+                }
+            }
+        });
+    }
 
     private void send() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
@@ -541,22 +543,22 @@ public class OnLineFragment extends Fragment {
                         String sequDesc = newList.get(groupPosition).getList().get(childPosition).getSequDesc();
                         String sequImg = newList.get(groupPosition).getList().get(childPosition).getSequImg();
 
-                        String ContentPlayType= newList.get(groupPosition).getList().get(childPosition).getContentPlayType();
+                        String ContentPlayType = newList.get(groupPosition).getList().get(childPosition).getContentPlayType();
 
                         //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playName, playImage, playUrl, playUri, playMediaType,
                                 playAllTime, playInTime, playContentDesc, playerNum,
                                 playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg,ContentPlayType);
+                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType);
 
-						dbDao.deleteHistory(playUrl);
-						dbDao.addHistory(history);
-						HomeActivity.UpdateViewPager();
-						PlayerFragment.TextPage=1;
-                        Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
-                        Bundle bundle1=new Bundle();
-                        bundle1.putString("text",newList.get(groupPosition).getList().get(childPosition).getContentName());
+                        dbDao.deleteHistory(playUrl);
+                        dbDao.addHistory(history);
+                        HomeActivity.UpdateViewPager();
+                        PlayerFragment.TextPage = 1;
+                        Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                        Bundle bundle1 = new Bundle();
+                        bundle1.putString("text", newList.get(groupPosition).getList().get(childPosition).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
 

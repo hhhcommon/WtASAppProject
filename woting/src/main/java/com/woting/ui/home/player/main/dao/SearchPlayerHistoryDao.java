@@ -3,6 +3,7 @@ package com.woting.ui.home.player.main.dao;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.common.database.SQLiteHelper;
@@ -33,6 +34,10 @@ public class SearchPlayerHistoryDao {
 		//通过helper的实现对象获取可操作的数据库db
 		SQLiteDatabase db = helper.getWritableDatabase();
 		String s=playerhistory.getPlayerNum();
+		String s1=playerhistory.getPlayerName();
+		String s2=playerhistory.getPlayerUrl();
+		Log.e("加库地址======",""+s2);
+
 		db.execSQL("insert into playerhistory(playername,playerimage,playerurl,playerurI,playermediatype,playeralltime"
 						+ ",playerintime,playercontentdesc,playernum,playerzantype,playerfrom,playerfromid,"
 				+ "playeraddtime,bjuserid,playshareurl,playfavorite,"
