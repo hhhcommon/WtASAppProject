@@ -90,6 +90,7 @@ public class OnLineFragment extends Fragment {
     private PullToRefreshLayout mPullToRefreshLayout;
     private MessageReceiver Receiver;
     private String cityName;
+    private int height;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -329,6 +330,27 @@ public class OnLineFragment extends Fragment {
                         String MainList = arg1.getString("List");
                         mainLists = new Gson().fromJson(MainList, new TypeToken<List<RankInfo>>() {
                         }.getType());
+                      if(mainLists!=null&&mainLists.size()!=0){
+                        if(mainLists.size()>3){
+                          List tempList=new ArrayList();
+                            for(int i=0;i<3;i++){
+                                tempList.add(mainLists.get(i));
+                            }
+                            mainLists.clear();
+                            mainLists.addAll(tempList);
+                        }
+                        if(mainLists.size()==1){
+                            height=250;
+                        }else if(mainLists.size()==2){
+                            height=490;
+                        }else if(mainLists.size()==3){
+                            height=730;
+                        }
+                        //设置gridview的高
+                        ViewGroup.LayoutParams params = gridView.getLayoutParams();
+                        params.height = height;
+                        gridView.setLayoutParams(params);
+
                         if (adapters == null) {
                             adapters = new CityNewAdapter(context, mainLists);
                             gridView.setAdapter(adapters);
@@ -336,6 +358,10 @@ public class OnLineFragment extends Fragment {
                             adapters.notifyDataSetChanged();
                         }
                         gridListener();
+                      }else{
+                          gridView.setVisibility(View.GONE);
+
+                      }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

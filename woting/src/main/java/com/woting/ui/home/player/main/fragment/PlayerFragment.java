@@ -177,8 +177,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-        initData();// 初始化数据
         setReceiver();// 注册广播接收器
+        initData();// 初始化数据
         initDao();// 初始化数据库命令执行对象
     }
 
@@ -1451,6 +1451,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             switch (intent.getAction()) {
                 case BroadcastConstants.PLAY_TEXT_VOICE_SEARCH:
                     String s = intent.getStringExtra("text");
+                 /*   Log.e("接收到的文字信息=========",""+s);*/
                     SendTextRequest(s);
                     break;
                 case BroadcastConstants.PLAYERVOICE:

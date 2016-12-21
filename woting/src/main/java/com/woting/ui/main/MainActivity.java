@@ -55,6 +55,7 @@ import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.model.Catalog;
 import com.woting.ui.home.model.CatalogName;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
+import com.woting.ui.home.player.main.fragment.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
@@ -343,6 +344,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         Intent intent = getIntent();
         if (intent != null) {
             Uri uri = intent.getData();
+           /* uri=Uri.parse("com.woting.htmlcallback://AUDIO?jsonStr={'ContentId':'8304432559e2475c8ce8ef993c2f264d'}");*/
             //  Uri uri=Uri.parse("com.woting.htmlcallback://SEQU?jsonStr={'ContentName':'强强三人组','ContentId':'aa4064113e1b4ce8b69dc7d840c1878b','ContentImg':'http://www.wotingfm.com:908/CM/dataCenter/group03/bc12cf08e8b74d06a29b7a5082baa7e3.300_300.png','ContentDescn':'#####sequdescn#####'}");
             if (uri != null) {
                 String s = uri.toString();
@@ -361,7 +363,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                             String contenttime = arg1.getString("ContentTimes");
                             String mediatype = "AUDIO";*/
                             String mediatype = "AUDIO";
-                            if (TextUtils.isEmpty(contentId)) {
+                            if (!TextUtils.isEmpty(contentId)) {
                                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                                     sendContentInfo(contentId, mediatype);
                                 } else {
@@ -374,11 +376,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        tabHost.setCurrentTabByTag("one");
-                        image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
-                        image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_selected);
-                        image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
-                        image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+
                     } else if (host.equals("SEQU")) {
                         String s11 = uri.getQuery().substring(8);//不要jsonstr=
                         try {
@@ -521,6 +519,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                     ContentFavorite = "";
                                 }
                                 //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+
                                 PlayerHistory history = new PlayerHistory(
                                         ContentName, ContentImg, ContentPlay, "", mediatype,
                                         ContentTimes, "", ContentDescn, PlayCount,
@@ -528,7 +527,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                         ContentFavorite, contentid, "", "", "", "", "", ContentPlayType);
                                 dbDao.deleteHistory(ContentPlay);
                                 dbDao.addHistory(history);
-//                                PlayerFragment.TextPage=1;
+                                PlayerFragment.TextPage=1;
                                 Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                                 Bundle bundle1 = new Bundle();
                                 bundle1.putString("text", ContentName);
