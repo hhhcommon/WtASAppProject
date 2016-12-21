@@ -80,10 +80,10 @@ public class DetailsFragment extends Fragment implements OnClickListener {
      */
     private void findView(View view) {
         imageHead = (RoundImageView) view.findViewById(R.id.round_image_head);    //圆形头像
-//        imageHead.setOnClickListener(this);
+        imageHead.setOnClickListener(this);
 
         textAnchor = (TextView) view.findViewById(R.id.text_anchor_name);        //节目名
-//        textAnchor.setOnClickListener(this);
+        textAnchor.setOnClickListener(this);
 
         textContent = (TextView) view.findViewById(R.id.text_content);            //内容介绍
         textLabel = (TextView) view.findViewById(R.id.text_label);                //标签
