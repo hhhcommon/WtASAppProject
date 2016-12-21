@@ -129,21 +129,14 @@ public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
         }
         PlayerHistory lists = mSuperRankInfo.get(groupPosition).getHistoryList().get(childPosition);
 
-        if(lists.getPlayerMediaType() != null) {
-            if(lists.getPlayerMediaType().equals("RADIO")) {
+        String mediaType = lists.getPlayerMediaType();
+        if(mediaType != null) {
+            if(mediaType.equals("RADIO") || mediaType.equals("TTS")) {
                 holder.imageLast.setVisibility(View.GONE);
                 holder.textView_PlayIntroduce.setVisibility(View.GONE);
             } else {
                 holder.imageLast.setVisibility(View.VISIBLE);
                 holder.textView_PlayIntroduce.setVisibility(View.VISIBLE);
-            }
-
-            if(lists.getPlayerMediaType().equals("TTS")) {
-                holder.imageNum.setVisibility(View.GONE);
-                holder.textNumber.setVisibility(View.GONE);
-            } else {
-                holder.imageNum.setVisibility(View.VISIBLE);
-                holder.textNumber.setVisibility(View.VISIBLE);
             }
         }
 
