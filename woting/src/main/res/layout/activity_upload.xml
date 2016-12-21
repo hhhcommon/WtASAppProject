@@ -41,18 +41,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none"
-        android:background="@color/WHITE">
+        android:background="@color/app_bg">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/WHITE"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="43dp"
-                android:background="@color/WHITE"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -140,7 +140,7 @@
                     android:id="@+id/text_sequ"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="选择专辑"
+                    android:text="默认专辑"
                     android:layout_toLeftOf="@id/image_right_2"
                     android:layout_marginLeft="66dp"
                     android:layout_centerVertical="true"
@@ -215,10 +215,6 @@
                     android:layout_marginTop="15dp"
                     android:paddingRight="10dp"
                     android:layout_marginLeft="19dp"/>
-
-                <View
-                    style="@style/LineStyle"
-                    android:layout_alignParentBottom="true"/>
 
             </RelativeLayout>
 

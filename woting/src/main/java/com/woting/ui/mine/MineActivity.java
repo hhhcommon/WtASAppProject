@@ -376,6 +376,9 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                     url = AssembleImageUrlUtils.assembleImageUrl150(url);
                 }
                 Picasso.with(context).load(url.replace("\\/", "/")).into(imageHead);
+            } else {
+                Bitmap bitmap = BitmapUtils.readBitMap(context, R.mipmap.wt_image_default_head);
+                imageHead.setImageBitmap(bitmap);
             }
         } else {                        // 未登录
             linStatusNoLogin.setVisibility(View.VISIBLE);

@@ -28,9 +28,6 @@ public class IntegrationPlayer implements OnErrorListener {
     private boolean mIsVlcPlaying;// VLC 播放器正在播放
     private boolean mIsTtsPlaying;// TTS 播放器正在播放
 
-//    private long mTotalTime;// 当前播放的总时间
-//    private int secondProgress;// SeekBar 第二进度即缓存进度值
-
     private String mediaType;// 播放的节目类型
     private String httpUrl;
     private String localUrl;
@@ -140,30 +137,19 @@ public class IntegrationPlayer implements OnErrorListener {
     // 使用 VLC 播放器播放
     private void vlcPlay(String httpUrl, String localUrl) {
         if(isEmpty(localUrl)) {
-            if(GlobalConfig.playerObject != null && GlobalConfig.playerObject.getMediaType() != null) {
-                if(GlobalConfig.playerObject.getMediaType().equals("AUDIO")) {
+            if(GlobalConfig.playerobject != null && GlobalConfig.playerobject.getMediaType() != null) {
+                if(GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
                     httpUrl = mProxy.getProxyUrl(httpUrl);
                 }
             }
+            if(mVlcPlayer.isPlaying()) mVlcPlayer.stop();
             mVlcPlayer.play(httpUrl);
-//            if(GlobalConfig.playerObject.getMediaType().equals("AUDIO")) {
-//                mProxy.registerCacheStatusListener(new OnCacheStatusListener() {
-//                    @Override
-//                    public void OnCacheStatus(String url, long sourceLength, int percentsAvailable) {
-//                        secondProgress = (int) mVlcPlayer.getTotalTime() * percentsAvailable / 100;
-//
-//                        Log.i("TAG", "percentsAvailable: -- > > " + percentsAvailable);
-//                        Log.i("TAG", "secondProgress: -- > > " + secondProgress);
-//                    }
-//                }, httpUrl);
-//            }
         } else {
             mVlcPlayer.play(localUrl);
         }
-//        mTotalTime = mVlcPlayer.getTotalTime();
         // 从上次停止处开始播放
-        if(GlobalConfig.playerObject != null && GlobalConfig.playerObject.getMediaType().equals("AUDIO")) {
-            String string = GlobalConfig.playerObject.getPlayerInTime();
+        if(GlobalConfig.playerobject != null && GlobalConfig.playerobject.getMediaType().equals("AUDIO")) {
+            String string = GlobalConfig.playerobject.getPlayerInTime();
             if(string != null && !string.equals("")) {
                 long playInTime = Long.valueOf(string);
                 mVlcPlayer.setTime(playInTime);
@@ -178,7 +164,6 @@ public class IntegrationPlayer implements OnErrorListener {
         } else {
             mTtsPlayer.play(localUrl);
         }
-//        mTotalTime = mTtsPlayer.getTotalTime();
     }
 
     /**
@@ -253,14 +238,6 @@ public class IntegrationPlayer implements OnErrorListener {
             return mVlcPlayer.getTotalTime();
         }
     }
-
-    /**
-     * 获取 SeekBar 的第二进度
-     */
-//    public long getSeekBarSecondProgress() {
-//        Log.i("TAG", "OnCacheStatus: -- > > " + secondProgress);
-//        return secondProgress;
-//    }
 
     /**
      * 播放器是否在播放

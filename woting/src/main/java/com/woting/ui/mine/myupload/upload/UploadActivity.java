@@ -24,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.helper.CommonHelper;
 import com.woting.common.manager.FileManager;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
@@ -173,14 +174,10 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
     // 发布
     private void release() {
         title = editTitle.getText().toString().trim();// 获取用户输入标题
-        sequId = textSequ.getText().toString().trim();// 获取用户选择的专辑
+//        sequId = textSequ.getText().toString().trim();// 获取用户选择的专辑
         describe = editDescribe.getText().toString().trim();// 获取用户添加的描述
         if(title == null || title.equals("")) {
             ToastUtils.show_always(context, "请输入标题!");
-            return ;
-        }
-        if(sequId == null || sequId.equals("")) {
-            ToastUtils.show_always(context, "请选择要放入的专辑!");
             return ;
         }
         if(photoCutAfterImagePath == null || photoCutAfterImagePath.equals("")) {
@@ -194,23 +191,20 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
 
     // 文件上传成功之后将文件内容添加进去
     public void addFileContent(String filePath) {
-        if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
-            ToastUtils.show_always(context, "网络连接失败，请检查网络连接!");
-            return ;
-        }
-
-        if(srcType == 1) {// 上传封面
-            miniUri = filePath;
-            String imageUrl;
-            if (miniUri.startsWith("http:")) {
-                imageUrl = miniUri;
-            } else {
-                imageUrl = GlobalConfig.imageurl + miniUri;
+        if(CommonHelper.checkNetwork(context)) {
+            if(srcType == 1) {// 上传封面
+                miniUri = filePath;
+                String imageUrl;
+                if (miniUri.startsWith("http:")) {
+                    imageUrl = miniUri;
+                } else {
+                    imageUrl = GlobalConfig.imageurl + miniUri;
+                }
+                imageUrl = AssembleImageUrlUtils.assembleImageUrl150(imageUrl);
+                Picasso.with(context).load(imageUrl.replace("\\/", "/")).into(imageCover);
+            } else {// 上传音频文件
+                finishUpload(filePath);
             }
-            imageUrl = AssembleImageUrlUtils.assembleImageUrl150(imageUrl);
-            Picasso.with(context).load(imageUrl.replace("\\/", "/")).into(imageCover);
-        } else {// 上传音频文件
-            finishUpload(filePath);
         }
     }
 
@@ -224,7 +218,9 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
             jsonObject.put("UserId", CommonUtils.getUserId(context));
             jsonObject.put("ContentName", title);// 标题
             jsonObject.put("ContentImg", miniUri);// 封面图片
-            jsonObject.put("SeqMediaId", sequId);// 添加专辑的 ID
+            if(sequId != null && !sequId.trim().equals("")) {
+                jsonObject.put("SeqMediaId", sequId);// 添加专辑的 ID
+            }
             jsonObject.put("TimeLong", timeLong);// 时长
             jsonObject.put("ContentURI", filePath);// 上传文件成功得到的地址
             if(label != null) {
@@ -243,11 +239,11 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
         VolleyRequest.RequestPost(GlobalConfig.addMediaInfo, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
+                Log.e("TAG", "Upload File Result -- > > " + result);
                 if(dialog != null) dialog.dismiss();
                 if (isCancelRequest) return ;
                 try {
                     String returnType = result.getString("ReturnType");
-                    String message = result.getString("Message");
                     if (returnType.equals("1001")) {
                         isUpload = true;
                         if(gotoType.equals("MEDIA_RECORDER")) {
@@ -257,10 +253,10 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
                         } else {
                             setResult(RESULT_OK);
                         }
-                        ToastUtils.show_always(context, message);
+                        ToastUtils.show_always(context, "上传成功!");
                         finish();
                     } else {
-                        ToastUtils.show_always(context, message);
+                        ToastUtils.show_always(context, "上传失败!");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
