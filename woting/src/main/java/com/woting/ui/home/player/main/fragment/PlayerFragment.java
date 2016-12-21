@@ -358,7 +358,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             String news = sp.getString(StringConstant.PLAYHISTORYENTERNEWS, "");
             if (enter.equals("true")) {
                 TextPage = 1;
-                SendTextRequest(news);
+                sendTextRequest(news);
                 SharedPreferences.Editor et = sp.edit();
                 et.putString(StringConstant.PLAYHISTORYENTER, "false");
                 if(et.commit()) Log.v("TAG", "数据 commit 失败!");
@@ -825,6 +825,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         }
 
         allList.clear();
+        allList.add(fList);
         allList.addAll(list);
         if (GlobalConfig.playerObject != null && allList != null) {
             for (int i = 0; i < allList.size(); i++) {
@@ -943,7 +944,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 if (sendType == 1) {
                     firstSend();
                 } else if (sendType == 2) {
-                    SendTextRequest("");
+                    sendTextRequest(sendTextContent);
                 } else if (sendType == 3) {
                     searchByVoice(voiceStr);
                 }
@@ -965,7 +966,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 if (sendType == 1) {
                     firstSend();
                 } else if (sendType == 2) {
-                    SendTextRequest("");
+                    sendTextRequest(sendTextContent);
                 } else if (sendType == 3) {
                     searchByVoice(voiceStr);
                 }
@@ -1452,7 +1453,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 case BroadcastConstants.PLAY_TEXT_VOICE_SEARCH:
                     String s = intent.getStringExtra("text");
                  /*   Log.e("接收到的文字信息=========",""+s);*/
-                    SendTextRequest(s);
+                    sendTextRequest(s);
                     break;
                 case BroadcastConstants.PLAYERVOICE:
                     voiceStr = intent.getStringExtra("VoiceContent");
@@ -1741,10 +1742,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         });
     }
 
-    String sendTextContent = "";// 关键字
+    private String sendTextContent = "";// 关键字
 
     // 获取与文字相关的内容数据
-    private void SendTextRequest(String contentName) {
+    private void sendTextRequest(String contentName) {
         sendTextContent = contentName;
         final LanguageSearchInside fList = getDaoList(context);// 得到数据库里边的第一条数据
         sendType = 2;
@@ -1753,7 +1754,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             jsonObject.put("SearchStr", sendTextContent);
             jsonObject.put("PageType", "0");
             jsonObject.put("Page", TextPage);
-//            jsonObject.put("PageSize", "10");
+            jsonObject.put("PageSize", "10");
         } catch (JSONException e) {
             e.printStackTrace();
         }
