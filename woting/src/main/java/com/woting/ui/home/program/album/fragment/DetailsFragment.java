@@ -2,6 +2,7 @@ package com.woting.ui.home.program.album.fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
+import com.woting.ui.home.program.album.anchor.AnchorDetailsActivity;
 import com.woting.ui.home.program.album.model.ContentCatalogs;
 import com.woting.ui.home.program.album.model.ContentInfo;
 import com.woting.common.config.GlobalConfig;
@@ -78,7 +80,11 @@ public class DetailsFragment extends Fragment implements OnClickListener {
      */
     private void findView(View view) {
         imageHead = (RoundImageView) view.findViewById(R.id.round_image_head);    //圆形头像
+        imageHead.setOnClickListener(this);
+
         textAnchor = (TextView) view.findViewById(R.id.text_anchor_name);        //节目名
+        textAnchor.setOnClickListener(this);
+
         textContent = (TextView) view.findViewById(R.id.text_content);            //内容介绍
         textLabel = (TextView) view.findViewById(R.id.text_label);                //标签
         imageConcern = (ImageView) view.findViewById(R.id.image_concern);        //关注
@@ -102,6 +108,11 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                 }
                 isConcern = !isConcern;
                 break;
+            case R.id.round_image_head:// 主播详情
+            case R.id.text_anchor_name:
+                startActivity(new Intent(context, AnchorDetailsActivity.class));
+                break;
+
         }
     }
 

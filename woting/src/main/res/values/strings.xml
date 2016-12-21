@@ -207,7 +207,7 @@
     <string name="status_active_call">active</string>
     <string name="state_paused">paused</string>
     <string name="state_paused_by_remote">paused by remote</string>
-    <string name="state_streams_running" />
+    <string name="state_streams_running"/>
     <string name="state_incoming_received">incoming</string>
     <string name="state_outgoing_ringing">ringing</string>
     <string name="state_outgoing_progress">calling</string>

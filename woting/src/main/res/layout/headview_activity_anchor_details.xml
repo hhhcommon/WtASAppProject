@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/id_view"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:background="@color/dinglan_orange"/>
+
+    <com.woting.common.widgetui.RoundImageView
+        android:id="@+id/round_image_head"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:src="@mipmap/wt_image_default_head"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"/>
+
+    <View
+        android:id="@+id/linear_view"
+        android:layout_width="1dp"
+        android:layout_height="36sp"
+        android:layout_below="@id/round_image_head"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:background="@color/WHITE"/>
+
+    <TextView
+        android:id="@+id/text_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="关注 161220"
+        android:layout_toLeftOf="@id/linear_view"
+        android:layout_alignTop="@id/linear_view"
+        android:layout_alignBottom="@id/linear_view"
+        android:gravity="center"
+        android:layout_marginRight="25dp"
+        android:textColor="@color/WHITE"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/text_right"
+        android:layout_width="80dp"
+        android:layout_height="28dp"
+        android:text="关注"
+        android:layout_toRightOf="@id/linear_view"
+        android:layout_below="@id/round_image_head"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:layout_marginLeft="25dp"
+        android:textColor="@color/WHITE"
+        android:background="@drawable/wt_view_line_frame"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/id_introduce"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/id_view"
+        android:layout_margin="15dp"
+        android:text="个人简介"
+        android:textSize="14sp"
+        android:textColor="@color/gray"/>
+
+    <TextView
+        android:id="@+id/text_introduce"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="罗振宇的个人视频脱口秀。罗胖读书，讲给你听。我们在知识中寻找独立见识，您在把玩知识中寻找的思维的乐趣。我们的口号是：磕死自己，娱乐大家。"
+        android:layout_below="@id/id_introduce"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:textSize="14sp"
+        android:textColor="@color/b_gray"/>
+
+    <TextView
+        android:id="@+id/text_visible_all"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:text="收起"
+        android:gravity="center"
+        android:textColor="@color/gray"
+        android:textSize="12sp"
+        android:layout_below="@id/text_introduce"
+        android:layout_marginTop="15dp"
+        android:background="@color/app_bg"/>
+
+    <TextView
+        android:id="@+id/id_sequ"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:text="专辑(1)"
+        android:paddingLeft="15dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/gray"
+        android:layout_below="@id/text_visible_all"/>
+
+    <View
+        android:id="@+id/view_1"
+        android:layout_width="match_parent"
+        android:layout_below="@id/id_sequ"
+        android:layout_height="1dp"
+        android:background="@color/app_bg"/>
+
+    <ListView
+        android:id="@+id/list_sequ"
+        android:layout_width="match_parent"
+        android:layout_height="243dp"
+        android:layout_below="@id/view_1"
+        android:scrollbars="none"/>
+
+    <View
+        android:id="@+id/id_view_0"
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:background="@color/app_bg"
+        android:layout_below="@id/list_sequ"/>
+
+    <TextView
+        android:id="@+id/text_update"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/id_view_0"
+        android:text="最近更新"
+        android:textSize="12sp"
+        android:textColor="@color/gray"
+        android:paddingLeft="15dp"
+        android:gravity="center_vertical"/>
+
+    <View
+        android:id="@+id/view_last"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/text_update"
+        android:background="@color/app_bg"/>
+
+</RelativeLayout>
