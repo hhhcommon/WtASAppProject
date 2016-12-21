@@ -1,10 +1,7 @@
 package com.woting.ui.interphone.group.groupcontrol.personnews;
 
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -77,7 +74,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
     private boolean update;
     private boolean isCancelRequest;
     private UserInviteMeInside news;
-    private MessageReceivers Receiver;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,23 +87,10 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
         setData();
         setListener();
         dialogDelete();
-        if (Receiver == null) {
-            Receiver = new MessageReceivers();
-            IntentFilter filters = new IntentFilter();
-            filters.addAction(BroadcastConstants.GROUP_DETAIL_CHANGE);
-            context.registerReceiver(Receiver, filters);
-        }
+
     }
 
-    class MessageReceivers extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(BroadcastConstants.GROUP_DETAIL_CHANGE)) {
-                send();
-            }
-        }
-    }
+
 
     private void dialogDelete() {
         final View dialog = LayoutInflater.from(context).inflate(R.layout.dialog_exit_confirm, null);
@@ -323,7 +307,8 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
                         if (et_b_name.getText().toString() == null
                                 || et_b_name.getText().toString().trim().equals("")
                                 || et_b_name.getText().toString().trim().equals("暂无备注名")) {
-                            biename = " ";
+                           //biename = "";
+                            biename=et_groupSignature.getText().toString().trim();
                         } else {
                             biename = et_b_name.getText().toString();
                         }
@@ -356,6 +341,9 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
                     } else {
                         // 此时我不是我本人
                         et_b_name.setEnabled(true);
+                        et_groupSignature.setEnabled(true);
+                        et_groupSignature.setBackgroundColor(context.getResources().getColor(R.color.white));
+                        et_groupSignature.setTextColor(context.getResources().getColor(R.color.gray));
                         et_b_name.setBackgroundColor(context.getResources().getColor(R.color.white));
                         et_b_name.setTextColor(context.getResources().getColor(R.color.gray));
                     }
@@ -437,7 +425,8 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
                         } else if (ReturnType.equals("1004")) {
                             ToastUtils.show_always(context, "好友不存在");
                         } else if (ReturnType.equals("1005")) {
-                            ToastUtils.show_always(context, "好友为自己无法修改");
+                        /*    ToastUtils.show_always(context, "好友为自己无法修改");*/
+                            ToastUtils.show_always(context,"您没有对好友信息进行修改");
                         } else if (ReturnType.equals("1006")) {
                             ToastUtils.show_always(context, "没有可修改信息");
                         } else if (ReturnType.equals("1007")) {
@@ -542,10 +531,6 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (Receiver != null) {
-            context.unregisterReceiver(Receiver);
-            Receiver = null;
-        }
         isCancelRequest = VolleyRequest.cancelRequest(tag);
         if (bmp != null && !bmp.isRecycled()) {
             bmp.recycle();
