@@ -85,21 +85,14 @@ public class PlayHistoryAdapter extends BaseAdapter {
 		}
 		lists = list.get(position);
 
-        if(list.get(position).getPlayerMediaType() != null) {
-            if(list.get(position).getPlayerMediaType().equals("RADIO")) {
+        String mediaType = list.get(position).getPlayerMediaType();
+        if(mediaType != null) {
+            if(mediaType.equals("RADIO") || mediaType.equals("TTS")) {
                 holder.imageLast.setVisibility(View.GONE);
                 holder.textView_PlayIntroduce.setVisibility(View.GONE);
             } else {
                 holder.imageLast.setVisibility(View.VISIBLE);
                 holder.textView_PlayIntroduce.setVisibility(View.VISIBLE);
-            }
-
-            if(list.get(position).getPlayerMediaType().equals("TTS")) {
-                holder.imageNum.setVisibility(View.GONE);
-                holder.textNumber.setVisibility(View.GONE);
-            } else {
-                holder.imageNum.setVisibility(View.VISIBLE);
-                holder.textNumber.setVisibility(View.VISIBLE);
             }
         }
 
