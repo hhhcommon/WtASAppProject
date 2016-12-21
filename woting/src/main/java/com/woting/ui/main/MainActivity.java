@@ -329,7 +329,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         Intent intent = getIntent();
         if (intent != null) {
             Uri uri = intent.getData();
-            uri=Uri.parse("com.woting.htmlcallback://AUDIO?jsonStr={'ContentId':'8304432559e2475c8ce8ef993c2f264d'}");
+           /* uri=Uri.parse("com.woting.htmlcallback://AUDIO?jsonStr={'ContentId':'8304432559e2475c8ce8ef993c2f264d'}");*/
             //  Uri uri=Uri.parse("com.woting.htmlcallback://SEQU?jsonStr={'ContentName':'强强三人组','ContentId':'aa4064113e1b4ce8b69dc7d840c1878b','ContentImg':'http://www.wotingfm.com:908/CM/dataCenter/group03/bc12cf08e8b74d06a29b7a5082baa7e3.300_300.png','ContentDescn':'#####sequdescn#####'}");
             if (uri != null) {
                 String s = uri.toString();
