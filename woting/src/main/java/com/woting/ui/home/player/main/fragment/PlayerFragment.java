@@ -1451,7 +1451,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             switch (intent.getAction()) {
                 case BroadcastConstants.PLAY_TEXT_VOICE_SEARCH:
                     String s = intent.getStringExtra("text");
-                 /*   Log.e("接收到的文字信息=========",""+s);*/
+                    Log.e("接收到的文字信息=========",""+s);
                     SendTextRequest(s);
                     break;
                 case BroadcastConstants.PLAYERVOICE:
