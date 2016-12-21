@@ -31,7 +31,6 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.kingsoft.media.httpcache.OnCacheStatusListener;
 import com.squareup.picasso.Picasso;
@@ -1451,9 +1450,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()) {
                 case BroadcastConstants.PLAY_TEXT_VOICE_SEARCH:
-                    String s = intent.getStringExtra("text");
-                 /*   Log.e("接收到的文字信息=========",""+s);*/
-                    sendTextRequest(s);
+                    sendTextContent = intent.getStringExtra("text");
+                    sendTextRequest(sendTextContent);
                     break;
                 case BroadcastConstants.PLAYERVOICE:
                     voiceStr = intent.getStringExtra("VoiceContent");
@@ -1746,12 +1744,24 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
     // 获取与文字相关的内容数据
     private void sendTextRequest(String contentName) {
-        sendTextContent = contentName;
+        if(TextPage == 1) {
+            LanguageSearchInside fList = getDaoList(context);// 得到数据库里边的第一条数据
+            num = 0;
+            allList.clear();
+            if (fList != null) allList.add(fList);
+            GlobalConfig.playerObject = allList.get(num);
+            if (adapter == null) {
+                mListView.setAdapter(adapter = new PlayerListAdapter(context, allList));
+            } else {
+                adapter.notifyDataSetChanged();
+            }
+            itemPlay(0);
+        }
         final LanguageSearchInside fList = getDaoList(context);// 得到数据库里边的第一条数据
         sendType = 2;
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            jsonObject.put("SearchStr", sendTextContent);
+            jsonObject.put("SearchStr", contentName);
             jsonObject.put("PageType", "0");
             jsonObject.put("Page", TextPage);
             jsonObject.put("PageSize", "10");
@@ -1778,66 +1788,43 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     mListView.setPullLoadEnable(false);
                 }
 
-                if (ReturnType != null) {
-                    if (ReturnType.equals("1001")) {
-                        try {
-                            LanguageSearch lists = new Gson().fromJson(MainList, new TypeToken<LanguageSearch>() {}.getType());
-                            List<LanguageSearchInside> list = lists.getList();
-                            if (list != null && list.size() != 0) {
-                                for (int i = 0; i < list.size(); i++) {
-                                    if (list.get(i).getContentPlay() != null
-                                            && !list.get(i).getContentPlay().equals("null")
-                                            && !list.get(i).getContentPlay().equals("")
-                                            && list.get(i).getContentPlay().equals(fList.getContentPlay())) {
-                                        list.remove(i);
-                                    }
+                if (ReturnType != null && ReturnType.equals("1001")) {
+                    try {
+                        LanguageSearch lists = new Gson().fromJson(MainList, new TypeToken<LanguageSearch>() {}.getType());
+                        List<LanguageSearchInside> list = lists.getList();
+                        if (list != null && list.size() != 0) {
+                            for (int i = 0; i < list.size(); i++) {
+                                if (list.get(i).getContentPlay() != null && list.get(i).getContentPlay().equals(fList.getContentPlay())) {
+                                    list.remove(i);
                                 }
-                                if (TextPage == 1) {
-                                    num = 0;
-                                    allList.clear();
-                                    if (fList != null) {
-                                        allList.add(fList);
-                                    }
-                                    allList.addAll(list);
-                                    GlobalConfig.playerObject = allList.get(num);
-                                } else {
-                                    if(refreshType == 1) {// 刷新
-                                        if(allList.size() > 0) {
-                                            for(int i=0, size=allList.size(); i<size; i++) {
-                                                contentUrlList.add(allList.get(i).getContentURI());
-                                            }
-                                        }
-                                        if(list.size() > 0) {
-                                            for(int i=0, size=list.size(); i<size; i++) {
-                                                if(!contentUrlList.contains(list.get(i).getContentURI())) {
-                                                    allList.add(0, list.get(i));
-                                                }
-                                            }
-                                        }
-                                        contentUrlList.clear();
-                                    } else {// 加载更多
-                                        allList.addAll(list);
-                                    }
-                                }
-                                if (adapter == null) {
-                                    mListView.setAdapter(adapter = new PlayerListAdapter(context, allList));
-                                } else {
-                                    adapter.notifyDataSetChanged();
-                                }
-                                itemPlay(0);
-                                TextPage++;
-                                setPullAndLoad(false, true);
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            if (TextPage == 1 || refreshType == 2) {
+                                allList.addAll(list);
+                            } else if(refreshType == 1) {// 刷新
+                                for(int i=0, size=allList.size(); i<size; i++) {
+                                    contentUrlList.add(allList.get(i).getContentURI());
+                                }
+                                for(int i=0, size=list.size(); i<size; i++) {
+                                    if(!contentUrlList.contains(list.get(i).getContentURI())) {
+                                        allList.add(0, list.get(i));
+                                    }
+                                }
+                                contentUrlList.clear();
+                            }
+                            if (adapter == null) {
+                                mListView.setAdapter(adapter = new PlayerListAdapter(context, allList));
+                            } else {
+                                adapter.notifyDataSetChanged();
+                            }
+                            TextPage++;
+                            setPullAndLoad(true, true);
                         }
-                    } else {
-                        ToastUtils.show_always(context, "已经没有相关数据啦");
-                        setPullAndLoad(false, false);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 } else {
                     ToastUtils.show_always(context, "已经没有相关数据啦");
-                    setPullAndLoad(false, false);
+                    setPullAndLoad(true, false);
                 }
             }
 
@@ -1858,6 +1845,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             jsonObject.put("SearchStr", str);
             jsonObject.put("PageType", "0");
             jsonObject.put("Page", voicePage);
+            jsonObject.put("PageSize", "10");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -1868,40 +1856,44 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 try {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType.equals("1001")) {
-                        try {
-                            String MainList = result.getString("ResultList");
-                            LanguageSearch lists = new Gson().fromJson(MainList, new TypeToken<LanguageSearch>() {}.getType());
-                            List<LanguageSearchInside> list = lists.getList();
-                            list.get(0).getContentDescn();
-                            if (list.size() != 0) {
-                                if (voicePage == 1) {
-                                    num = 0;
-                                    allList.clear();
-                                }
+                        LanguageSearch lists = new Gson().fromJson(result.getString("ResultList"), new TypeToken<LanguageSearch>() {}.getType());
+                        List<LanguageSearchInside> list = lists.getList();
+                        if (list.size() != 0) {
+                            if (voicePage == 1) {
+                                num = 0;
+                                allList.clear();
                                 allList.addAll(list);
-                                if (adapter == null) {
-                                    mListView.setAdapter(adapter = new PlayerListAdapter(context, allList));
-                                } else {
-                                    adapter.notifyDataSetChanged();
-                                }
                                 GlobalConfig.playerObject = allList.get(0);
                                 itemPlay(0);
-                                voicePage++;
-                                setPullAndLoad(false, false);
+                            } else if(refreshType == 1) {
+                                for(int i=0, size=allList.size(); i<size; i++) {
+                                    contentUrlList.add(allList.get(i).getContentURI());
+                                }
+                                for(int i=0, size=list.size(); i<size; i++) {
+                                    if(!contentUrlList.contains(list.get(i).getContentURI())) {
+                                        allList.add(0, list.get(i));
+                                    }
+                                }
+                                contentUrlList.clear();
+                            } else if(refreshType == 2) {
+                                allList.addAll(list);
                             }
-                        } catch (JsonSyntaxException e) {
-                            e.printStackTrace();
-                            setPullAndLoad(false, false);
-                            ToastUtils.show_always(context, "已经没有相关数据啦");
+                            if (adapter == null) {
+                                mListView.setAdapter(adapter = new PlayerListAdapter(context, allList));
+                            } else {
+                                adapter.notifyDataSetChanged();
+                            }
+                            voicePage++;
+                            setPullAndLoad(true, true);
                         }
                     } else {
                         ToastUtils.show_always(context, "已经没有相关数据啦");
-                        setPullAndLoad(false, false);
+                        setPullAndLoad(true, false);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     ToastUtils.show_always(context, "已经没有相关数据啦");
-                    setPullAndLoad(false, false);
+                    setPullAndLoad(true, false);
                 }
 
                 new Handler().postDelayed(new Runnable() {
