@@ -33,9 +33,9 @@ public class GlobalConfig {
     public static int CURRENT_NETWORK_STATE_TYPE = NETWORK_STATE_IDLE;
     //volley请求超时 时间
     public static final int HTTP_CONNECTION_TIMEOUT = 0 * 1000;
-    public static List<GroupInfo> list_group;
-    public static List<UserInfo> list_person;
-    public static LanguageSearchInside playerobject;//播放器播放对象
+    public static List<GroupInfo> list_group;       // 通讯录中的对讲组
+    public static List<UserInfo> list_person;       // 通讯录中的好友
+    public static LanguageSearchInside playerObject;// 播放器播放对象
     //缓存路径
     public static String playCacheDir = Environment.getExternalStorageDirectory() + "/woting/playCache/";
     //缓存的城市列表
@@ -44,15 +44,15 @@ public class GlobalConfig {
     /**
      * 数据库版本号
      */
-    public static final int dbVersonCode = 38;
+    public static final int dbVersionCode = 38;
     /**
      * 是否活跃状态，有活跃状态才能播放声音，否则即使收到音频包也不播放
      */
-    public static boolean isactive = false;
+    public static boolean isActive = false;
     /**
      * 是否吐司
      */
-    public static boolean istusi = false;
+    public static boolean isToast = false;
     /**
      * PersonClientDevice(个人客户端设备) 终端类型1=app,2=设备，3=pc
      */
@@ -60,7 +60,7 @@ public class GlobalConfig {
     /**
      * socket请求端口
      */
-    public static final int socketport = 16789;
+    public static final int socketPort = 16789;
     /**
      * socket请求ip
      */

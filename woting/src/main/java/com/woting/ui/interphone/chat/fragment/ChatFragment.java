@@ -70,6 +70,7 @@ import com.woting.ui.interphone.group.groupcontrol.grouppersonnews.GroupPersonNe
 import com.woting.ui.interphone.group.groupcontrol.personnews.TalkPersonNewsActivity;
 import com.woting.ui.interphone.linkman.model.LinkMan;
 import com.woting.ui.interphone.main.DuiJiangActivity;
+import com.woting.ui.main.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -148,9 +149,9 @@ public class ChatFragment extends Fragment implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this.getActivity();
-
         initDao();      // 初始化数据库
         setReceiver();  // 注册广播接收socketService的数据
+
     }
 
     private void setOnResumeView() {
@@ -166,7 +167,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
                 lin_personhead.setVisibility(View.GONE);
                 lin_head.setVisibility(View.GONE);
                 lin_foot.setVisibility(View.GONE);
-                GlobalConfig.isactive = false;
+                GlobalConfig.isActive = false;
                 lin_second.setVisibility(View.GONE);
                 getTXL();
                 Editor et = shared.edit();
@@ -190,6 +191,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
             filter.addAction(BroadcastConstants.PUSH);
             filter.addAction(BroadcastConstants.PUSH_NOTIFY);
             filter.addAction(BroadcastConstants.UP_DATA_GROUP);
+            filter.addAction(BroadcastConstants.PUSH_ALLURL_CHANGE);
             filter.addAction(BroadcastConstants.PUSH_VOICE_IMAGE_REFRESH);
             context.registerReceiver(Receiver, filter);
 
@@ -207,6 +209,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
         rootView = inflater.inflate(R.layout.fragment_talkoldlist, container, false);
         setView();//设置界面
         setOnResumeView();
+
         return rootView;
     }
 
@@ -332,7 +335,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
             lin_personhead.setVisibility(View.GONE);
             lin_head.setVisibility(View.GONE);
             lin_foot.setVisibility(View.GONE);
-            GlobalConfig.isactive = false;
+            GlobalConfig.isActive = false;
             gridView_person.setVisibility(View.GONE);
             gridView_tv.setVisibility(View.GONE);
         } else {
@@ -360,7 +363,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
             lin_personhead.setVisibility(View.GONE);
             lin_head.setVisibility(View.GONE);
             lin_foot.setVisibility(View.GONE);
-            GlobalConfig.isactive = false;
+            GlobalConfig.isActive = false;
             gridView_person.setVisibility(View.GONE);
             gridView_tv.setVisibility(View.GONE);
         }
@@ -695,6 +698,20 @@ public class ChatFragment extends Fragment implements OnClickListener {
             }
             setListener();
         }
+        if (MainActivity.groupInfo != null && MainActivity.groupInfo.getGroupId() != null
+                && !MainActivity.groupInfo.getGroupId().equals("")) {
+            String id = MainActivity.groupInfo.getGroupId();
+            dbDao.deleteHistory(id);
+            addGroup(id);//加入到数据库
+            setDateGroup();
+            getGridViewPerson(id);
+            MainActivity.groupInfo = null;
+        }
+
+        if (MainActivity.talkdb != null) {
+            zhiDingPerson(MainActivity.talkdb);
+            MainActivity.talkdb = null;
+        }
     }
 
     @Override
@@ -728,7 +745,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
         lin_personhead.setVisibility(View.GONE);
         lin_head.setVisibility(View.VISIBLE);
         lin_foot.setVisibility(View.VISIBLE);
-        GlobalConfig.isactive = true;
+        GlobalConfig.isActive = true;
         lin_second.setVisibility(View.GONE);
         GroupInfo firstdate = allList.remove(0);
         interPhoneType = firstdate.getTyPe();//对讲类型，个人跟群组
@@ -777,11 +794,12 @@ public class ChatFragment extends Fragment implements OnClickListener {
         GroupInfo firstdate = allList.remove(0);
         interPhoneType = firstdate.getTyPe();//
         interPhoneId = firstdate.getId();//
+        Log.e("aaa=====callerid======",interPhoneId+"");
         lin_notalk.setVisibility(View.GONE);
         lin_personhead.setVisibility(View.VISIBLE);
         lin_head.setVisibility(View.GONE);
         lin_foot.setVisibility(View.VISIBLE);
-        GlobalConfig.isactive = true;
+        GlobalConfig.isActive = true;
         lin_second.setVisibility(View.GONE);
         tv_personname.setText(firstdate.getName());
         if (firstdate.getPortrait() == null || firstdate.getPortrait().equals("") || firstdate.getPortrait().trim().equals("")) {
@@ -942,7 +960,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
                     lin_personhead.setVisibility(View.GONE);
                     lin_head.setVisibility(View.GONE);
                     lin_foot.setVisibility(View.GONE);
-                    GlobalConfig.isactive = false;
+                    GlobalConfig.isActive = false;
                     call(phoneId);
                     confirmDialog.dismiss();
                 } else {
@@ -952,7 +970,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
                     lin_personhead.setVisibility(View.GONE);
                     lin_head.setVisibility(View.GONE);
                     lin_foot.setVisibility(View.GONE);
-                    GlobalConfig.isactive = false;
+                    GlobalConfig.isActive = false;
                     zhiDingGroupSS(groupId);
                     //对讲主页界面更新
                     DuiJiangActivity.update();
@@ -1339,7 +1357,9 @@ public class ChatFragment extends Fragment implements OnClickListener {
                 if (gridView_person != null) {
                     gridView_person.setVisibility(View.GONE);
                 }
-            } else if (action.equals(BroadcastConstants.PUSH_BACK)) {
+            }  else if (action.equals(BroadcastConstants.PUSH_ALLURL_CHANGE)) {
+                setOnResumeView();
+            }else if (action.equals(BroadcastConstants.PUSH_BACK)) {
                 //	MsgNormal message = (MsgNormal) intent.getSerializableExtra("outmessage");
                 byte[] bt = intent.getByteArrayExtra("outmessage");
                 Log.e("chatFragment的push_back", Arrays.toString(bt) + "");
@@ -1380,7 +1400,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
                                 lin_head.setVisibility(View.GONE);
                                 lin_foot.setVisibility(View.GONE);
                                 gridView_person.setVisibility(View.GONE);
-                                GlobalConfig.isactive = false;
+                                GlobalConfig.isActive = false;
                             }
                         }
                     }

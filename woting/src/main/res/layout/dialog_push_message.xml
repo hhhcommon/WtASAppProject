@@ -11,25 +11,18 @@
         android:background="@color/WHITE"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingLeft="10dp"
-            android:text="通知消息"
-            android:textColor="@color/wt_login_third"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:layout_marginTop="19dp"/>
 
         <TextView
+            android:id="@+id/tv_title"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left|center"
             android:lineSpacingExtra="3dp"
             android:text="消息内容"
             android:textColor="@color/wt_login_third"
-            android:textSize="14sp"
+            android:textSize="15sp"
+            android:textStyle="bold"
             android:layout_marginTop="30dp"
             android:layout_marginLeft="19dp"/>
         

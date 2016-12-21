@@ -15,7 +15,6 @@ public class Data {
 	public String TalkUserId;
 	public String GroupPhoneNum;
 	public List<ListInfo> InGroupUsers;
-	public CallerInfo CallerInfo;
 	public ListInfo UserInfo;
 	public String CallerId;//呼叫者Id
 	public String CallederId;//被叫者Id
@@ -37,10 +36,18 @@ public class Data {
 	public GroupInfo GroupInfo;
 	public ApplyUserInfo ApplyUserInfo;
 	public long ApplyTime;
-	
-	
-	
-	public ApplyUserInfo getApplyUserInfo() {
+    public CallerInfo CallerInfo;
+    public CallerInfo CallederInfo;
+
+    public com.woting.ui.interphone.commom.model.CallerInfo getCallederInfo() {
+        return CallederInfo;
+    }
+
+    public void setCallederInfo(com.woting.ui.interphone.commom.model.CallerInfo callederInfo) {
+        CallederInfo = callederInfo;
+    }
+
+    public ApplyUserInfo getApplyUserInfo() {
 		return ApplyUserInfo;
 	}
 	public void setApplyUserInfo(ApplyUserInfo applyUserInfo) {

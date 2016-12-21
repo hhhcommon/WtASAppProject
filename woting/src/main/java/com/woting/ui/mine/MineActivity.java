@@ -3,9 +3,11 @@ package com.woting.ui.mine;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
@@ -35,6 +37,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.http.MyHttp;
 import com.woting.common.manager.FileManager;
@@ -81,7 +84,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     private final int TO_GALLERY = 1;           // 标识 打开系统图库
     private final int TO_CAMERA = 2;            // 标识 打开系统照相机
     private final int PHOTO_REQUEST_CUT = 7;    // 标识 跳转到图片裁剪界面
-    private final int UPDATE_USER=3;            // 标识 跳转到修改个人信息界面
+    private final int UPDATE_USER = 3;            // 标识 跳转到修改个人信息界面
     private int imageNum;
 
     private String returnType;
@@ -120,6 +123,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     private boolean isCancelRequest;
     private boolean isFirst = true;             // 第一次加载界面
     private boolean isUpdate;                   // 个人资料有改动
+    private MessageReceiver Receiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -128,6 +132,32 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         imageDialog();
         setView();
         setType();
+        setReceiver();
+    }
+
+    /*
+      *设置广播接收器
+      */
+    private void setReceiver() {
+        if (Receiver == null) {
+            Receiver = new MessageReceiver();
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(BroadcastConstants.PUSH_ALLURL_CHANGE);
+            registerReceiver(Receiver, filter);
+        }
+    }
+
+    /*
+     * 接收到广播后更改界面
+     */
+    class MessageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(BroadcastConstants.PUSH_ALLURL_CHANGE)) {
+                initLoginStates();
+            }
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -295,11 +325,11 @@ public class MineActivity extends BaseActivity implements OnClickListener {
 
     // 初始化状态  登陆 OR 未登录
     private void initLoginStates() {
-        if(isFirst) {                   // 避免重复加载
+        if (isFirst) {                   // 避免重复加载
             isFirst = false;
-        } else if(isLogin.equals(sharedPreferences.getString(StringConstant.ISLOGIN, "false"))) {
+        } else if (isLogin.equals(sharedPreferences.getString(StringConstant.ISLOGIN, "false"))) {
             Log.v("Person", "登录状态没有发生变化 -- > > " + isLogin);
-            return ;
+            return;
         }
         isLogin = sharedPreferences.getString(StringConstant.ISLOGIN, "false"); // 获取用户的登陆状态
 
@@ -321,8 +351,8 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             textUserName.setText(userName);
             textUserAutograph.setText(userSign);
 
-            if(region.equals("")) {
-                if(GlobalConfig.CityName != null && !GlobalConfig.CityName.equals("null")
+            if (region.equals("")) {
+                if (GlobalConfig.CityName != null && !GlobalConfig.CityName.equals("null")
                         && GlobalConfig.District != null && !GlobalConfig.District.equals("null")) {
 
                     region = GlobalConfig.CityName + GlobalConfig.District;
@@ -331,7 +361,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                 }
             }
             textUserArea.setText(region);
-            if(userNum.equals("")) {
+            if (userNum.equals("")) {
                 circleView.setVisibility(View.GONE);
                 textUserId.setVisibility(View.GONE);
             } else {
@@ -432,7 +462,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                 }
                 break;
             case UPDATE_USER:// 修改个人资料界面返回
-                if(resultCode == 1){
+                if (resultCode == 1) {
                     Bundle bundle = data.getExtras();
                     pModel = (UpdatePerson) bundle.getSerializable("data");
                     regionId = bundle.getString("regionId");
@@ -443,12 +473,12 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                     sendUpdate(pModel);
                 }
             case 0x222:// 其它设置界面返回
-                if(resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     userNum = sharedPreferences.getString(StringConstant.USER_NUM, "");// 用户号
-                    if(!userNum.equals("")) {
+                    if (!userNum.equals("")) {
                         circleView.setVisibility(View.VISIBLE);
                         textUserId.setVisibility(View.VISIBLE);
-                        textUserId.setText( userNum);
+                        textUserId.setText(userNum);
                     }
                 }
                 break;
@@ -479,7 +509,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                         imageUrl = GlobalConfig.imageurl + miniUri;
                     }
                     et.putString(StringConstant.IMAGEURL, imageUrl);
-                    if(!et.commit()) {
+                    if (!et.commit()) {
                         Log.v("commit", "数据 commit 失败!");
                     }
                     // 正常切可用代码 已从服务器获得返回值，但是无法正常显示
@@ -523,8 +553,9 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                     Log.e("图片上传结果", Response);
                     Gson gson = new Gson();
                     Response = ImageUploadReturnUtil.getResPonse(Response);
-                    UserPortaitInside u = gson.fromJson(Response, new TypeToken<UserPortaitInside>() {}.getType());
-                    if(u != null) {
+                    UserPortaitInside u = gson.fromJson(Response, new TypeToken<UserPortaitInside>() {
+                    }.getType());
+                    if (u != null) {
                         try {
                             returnType = u.getReturnType();
                         } catch (Exception e1) {
@@ -729,8 +760,8 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             nickName = pM.getNickName();
-            if(!nickName.equals(sharedPreferences.getString(StringConstant.NICK_NAME, ""))) {
-                if(nickName.trim().equals("")) {
+            if (!nickName.equals(sharedPreferences.getString(StringConstant.NICK_NAME, ""))) {
+                if (nickName.trim().equals("")) {
                     jsonObject.put("NickName", " ");
                 } else {
                     jsonObject.put("NickName", nickName);
@@ -739,8 +770,8 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             }
 
             sign = pM.getUserSign();
-            if(!sign.equals(sharedPreferences.getString(StringConstant.USER_SIGN, ""))) {
-                if(sign.trim().equals("")) {
+            if (!sign.equals(sharedPreferences.getString(StringConstant.USER_SIGN, ""))) {
+                if (sign.trim().equals("")) {
                     jsonObject.put("UserSign", " ");
                 } else {
                     jsonObject.put("UserSign", sign);
@@ -750,27 +781,27 @@ public class MineActivity extends BaseActivity implements OnClickListener {
 
             gender = pM.getGender();
             Log.v("gender", "gender -- > > " + gender);
-            if(!gender.equals(sharedPreferences.getString(StringConstant.GENDERUSR, "xb001"))) {
+            if (!gender.equals(sharedPreferences.getString(StringConstant.GENDERUSR, "xb001"))) {
                 jsonObject.put("SexDictId", gender);
                 isUpdate = true;
             }
 
             birthday = pM.getBirthday();
-            if(!birthday.equals(sharedPreferences.getString(StringConstant.BIRTHDAY, " "))) {
-                jsonObject.put("Birthday",  Long.valueOf(birthday));
+            if (!birthday.equals(sharedPreferences.getString(StringConstant.BIRTHDAY, " "))) {
+                jsonObject.put("Birthday", Long.valueOf(birthday));
                 isUpdate = true;
             }
 
             starSign = pM.getStarSign();
-            if(!starSign.equals(sharedPreferences.getString(StringConstant.STAR_SIGN, " "))){
+            if (!starSign.equals(sharedPreferences.getString(StringConstant.STAR_SIGN, " "))) {
                 jsonObject.put("StarSign", starSign);
                 isUpdate = true;
             }
 
             email = pM.getEmail();
-            if(!email.equals(sharedPreferences.getString(StringConstant.EMAIL, " "))){
-                if(!email.trim().equals("")) {
-                    if(isEmail(email)) {
+            if (!email.equals(sharedPreferences.getString(StringConstant.EMAIL, " "))) {
+                if (!email.trim().equals("")) {
+                    if (isEmail(email)) {
                         jsonObject.put("MailAddr", email);
                         isUpdate = true;
                     } else {
@@ -783,7 +814,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             }
 
             area = pM.getRegion();
-            if(!area.equals(sharedPreferences.getString(StringConstant.REGION, " "))) {
+            if (!area.equals(sharedPreferences.getString(StringConstant.REGION, " "))) {
                 jsonObject.put("RegionDictId", regionId);
                 isUpdate = true;
             }
@@ -793,40 +824,40 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         }
 
         // 个人资料没有修改过则不需要将数据提交服务器
-        if(!isUpdate) {
-            return ;
+        if (!isUpdate) {
+            return;
         }
         isUpdate = false;
-        Log.v("数据改动", "数据有改动，将数据提交到服务器!" );
+        Log.v("数据改动", "数据有改动，将数据提交到服务器!");
         VolleyRequest.RequestPost(GlobalConfig.updateUserUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
-                if (isCancelRequest) return ;
+                if (isCancelRequest) return;
                 try {
                     String returnType = result.getString("ReturnType");
                     Log.v("returnType", "returnType -- > > " + returnType);
 
                     if (returnType != null && returnType.equals("1001")) {
                         SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
-                        if(!nickName.equals(sharedPreferences.getString(StringConstant.NICK_NAME, ""))) {
+                        if (!nickName.equals(sharedPreferences.getString(StringConstant.NICK_NAME, ""))) {
                             et.putString(StringConstant.NICK_NAME, nickName);
                         }
-                        if(!sign.equals(sharedPreferences.getString(StringConstant.USER_SIGN, ""))) {
+                        if (!sign.equals(sharedPreferences.getString(StringConstant.USER_SIGN, ""))) {
                             et.putString(StringConstant.USER_SIGN, sign);
                         }
-                        if(!gender.equals(sharedPreferences.getString(StringConstant.GENDERUSR, ""))) {
+                        if (!gender.equals(sharedPreferences.getString(StringConstant.GENDERUSR, ""))) {
                             et.putString(StringConstant.GENDERUSR, gender);
                         }
-                        if(!birthday.equals(sharedPreferences.getString(StringConstant.BIRTHDAY, ""))) {
+                        if (!birthday.equals(sharedPreferences.getString(StringConstant.BIRTHDAY, ""))) {
                             et.putString(StringConstant.BIRTHDAY, birthday);
                         }
-                        if(!starSign.equals(sharedPreferences.getString(StringConstant.STAR_SIGN, ""))) {
+                        if (!starSign.equals(sharedPreferences.getString(StringConstant.STAR_SIGN, ""))) {
                             et.putString(StringConstant.STAR_SIGN, starSign);
                         }
-                        if(!email.equals(sharedPreferences.getString(StringConstant.EMAIL, ""))) {
-                            if(!email.equals("")) {
-                                if(isEmail(email)) {
+                        if (!email.equals(sharedPreferences.getString(StringConstant.EMAIL, ""))) {
+                            if (!email.equals("")) {
+                                if (isEmail(email)) {
                                     et.putString(StringConstant.EMAIL, email);
                                 }
                             } else {
@@ -834,7 +865,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                             }
                         }
 
-                        if(!area.equals(sharedPreferences.getString(StringConstant.REGION, ""))) {
+                        if (!area.equals(sharedPreferences.getString(StringConstant.REGION, ""))) {
                             et.putString(StringConstant.REGION, pModel.getRegion());
                         }
 
@@ -842,15 +873,15 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                             Log.w("commit", " 数据 commit 失败!");
                         }
 
-                        if(!userSign.equals(pModel.getUserSign())) {// 签名
+                        if (!userSign.equals(pModel.getUserSign())) {// 签名
                             userSign = pModel.getUserSign();
                             textUserAutograph.setText(userSign);
                         }
 
-                        if(!region.equals(area)) {// 区域
+                        if (!region.equals(area)) {// 区域
                             region = area;
-                            if(region.equals("")) {
-                                if(GlobalConfig.CityName != null && !GlobalConfig.CityName.equals("null")
+                            if (region.equals("")) {
+                                if (GlobalConfig.CityName != null && !GlobalConfig.CityName.equals("null")
                                         && GlobalConfig.District != null && !GlobalConfig.District.equals("null")) {
 
                                     region = GlobalConfig.CityName + GlobalConfig.District;
@@ -886,6 +917,10 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (Receiver != null) {
+            unregisterReceiver(Receiver);
+            Receiver = null;
+        }
         isCancelRequest = VolleyRequest.cancelRequest(tag);
     }
 }

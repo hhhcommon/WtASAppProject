@@ -200,7 +200,7 @@ public class MsgNormal extends Message {
         else throw new Exception("消息目标异常！");
         if (!isAck()) {
             //八、用户类型
-            if (fromType == 0 || (fromType == 1 && bizType == 15) || (fromType == 1 && toType == 1 && bizType == 4)) {
+            if (fromType == 0 || (fromType == 1 && bizType == 15) || (fromType == 1 && toType == 1 && (bizType == 4 || bizType == 8))) {
                 f1 = binaryMsg[_offset++];
                 setPCDType(f1);
                 f1 = binaryMsg[_offset];

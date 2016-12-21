@@ -72,6 +72,7 @@ public class DownLoadUnCompleted extends Fragment {
             receiver = new MessageReceivers();
             IntentFilter filters = new IntentFilter();
             filters.addAction(BroadcastConstants.PUSH_DOWN_UNCOMPLETED);
+            filters.addAction(BroadcastConstants.PUSH_ALLURL_CHANGE);
             context.registerReceiver(receiver, filters);
         }
     }
@@ -301,6 +302,8 @@ public class DownLoadUnCompleted extends Fragment {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(BroadcastConstants.PUSH_DOWN_UNCOMPLETED)) {
                 setDownLoadSource();
+            }else if (intent.getAction().equals(BroadcastConstants.PUSH_ALLURL_CHANGE)) {
+                setDownLoadSource();
             }
         }
     }
@@ -313,6 +316,11 @@ public class DownLoadUnCompleted extends Fragment {
             context.unregisterReceiver(receiver);
             receiver = null;
         }
+        if (mReceiver != null) {
+            context.unregisterReceiver(mReceiver);
+            mReceiver = null;
+        }
+
         context = null;
     }
 }

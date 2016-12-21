@@ -119,6 +119,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 			IntentFilter filter = new IntentFilter();
 			filter.addAction(BroadcastConstants.PUSH_REFRESH_LINKMAN);
 			filter.addAction(BroadcastConstants.PUSH_NEWPERSON);
+			filter.addAction(BroadcastConstants.PUSH_ALLURL_CHANGE);
 			context.registerReceiver(Receiver, filter);
 		}
 		Dialog();
@@ -142,6 +143,10 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 	@Override
 	public void onResume() {
 		super.onResume();
+		setOnResumeView();
+	}
+
+	private void setOnResumeView() {
 		sharedPreferences = BSApplication.SharedPreferences;
 		isLogin = sharedPreferences.getString(StringConstant.ISLOGIN, "false");
 		if (isLogin.equals("true")) {
@@ -150,13 +155,14 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 			if (firstEntry) {
 				send();
 				firstEntry = false;
-			} 
+			}
 		} else {
 			firstEntry = false;
 			lin_second.setVisibility(View.VISIBLE);
 			relative.setVisibility(View.GONE);
 		}
 	}
+
 
 	/**
 	 * 初始化视图
@@ -286,6 +292,8 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 					message="新的朋友";
 				}
 				tv_newpersons.setText(message);
+			}else if(action.equals(BroadcastConstants.PUSH_ALLURL_CHANGE)){
+				setOnResumeView();
 			}
 		}
 	}
