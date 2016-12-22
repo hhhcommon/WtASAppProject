@@ -174,7 +174,7 @@ public class DownLoadUnCompleted extends Fragment {
                             @Override
                             public void run() {
                                 if (DownloadTask.downloadStatus == -1) {
-                                    ToastUtils.show_always(context, fileInfoList.get(num).getFileName() + "的下载出现问题");
+                            /*        ToastUtils.show_always(context, fileInfoList.get(num).getFileName() + "的下载出现问题");*/
                                     getFileInfo(fileInfoList.get(getNum()));
                                 }
                             }
@@ -196,11 +196,16 @@ public class DownLoadUnCompleted extends Fragment {
     }
 
     private int getNum() {
-        if (num < fileInfoList.size()) {
-            num++;
+     /*   if (num < fileInfoList.size()) {
+            if(fileInfoList.size()==1){
+                num=0;
+            }else{
+                num++;
+            }
         } else {
             num = 0;
-        }
+        }*/
+        num=0;
         return num;
     }
 
