@@ -576,7 +576,10 @@ public class ChatFragment extends Fragment implements OnClickListener {
                 } else {
                     String t = allList.get(position).getTyPe();
                     if (t != null && !t.equals("") && t.equals("user")) {
-                        call(allList.get(position).getId());
+                        String id=allList.get(position).getId();
+                        if (id != null && !id.equals("")) {
+                            call(id);
+                        }
                     } else {
                         zhiDingGroupSS(groupId);
                     }

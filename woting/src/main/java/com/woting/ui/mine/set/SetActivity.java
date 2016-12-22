@@ -260,7 +260,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 }
                 logOut.setVisibility(View.GONE);
                 lin_IsLogin.setVisibility(View.GONE);
-                sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));// 发送广播 更新已下载和未下载界面
+                sendBroadcast(new Intent(BroadcastConstants.PUSH_ALLURL_CHANGE));// 发送广播 更新已下载和未下载界面
                 Toast.makeText(context, "注销成功", Toast.LENGTH_SHORT).show();
             }
 

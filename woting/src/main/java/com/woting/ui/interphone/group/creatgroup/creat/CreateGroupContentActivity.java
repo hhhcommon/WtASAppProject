@@ -122,15 +122,19 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 		tv_camera.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				String savePath = FileManager.getImageSaveFilePath(context);
-				FileManager.createDirectory(savePath);
-				String fileName=System.currentTimeMillis()+".jpg";
-				File file = new File(savePath, fileName);
-				outputFileUri = Uri.fromFile(file);
-				outputFilePath=file.getAbsolutePath();
-				Intent s = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-				s.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-				startActivityForResult(s, TO_CAMERA);
+				try {
+					String savePath = FileManager.getImageSaveFilePath(context);
+					FileManager.createDirectory(savePath);
+					String fileName=System.currentTimeMillis()+".jpg";
+					File file = new File(savePath, fileName);
+					outputFileUri = Uri.fromFile(file);
+					outputFilePath=file.getAbsolutePath();
+					Intent s = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+					s.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+					startActivityForResult(s, TO_CAMERA);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				imageDialog.dismiss();
 			}
 		});
@@ -396,8 +400,13 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 		case TO_CAMERA:
 			if (resultCode == Activity.RESULT_OK) {
 				imagePath = outputFilePath;
+				Log.e("imagePath======",imagePath+"");
 				imageNum=1;
-				startPhotoZoom(Uri.parse(imagePath));
+				if(imagePath!=null&&!imagePath.trim().equals("")){
+					startPhotoZoom(Uri.parse(imagePath));
+				}else{
+					ToastUtils.show_always(context, "暂不支持拍照上传");
+				}
 			}
 			break;
 		case PHOTO_REQUEST_CUT:
