@@ -105,30 +105,49 @@ public class SocketService extends Service {
             this.healthWatch = new HealthWatch("Socket客户端长连接监控");
             this.healthWatch.start();
         } else {
-            this.workStop();
+            this.workStop(false);
             this.workStart();//循环了，可能死掉
         }
     }
 
     /**
      * 结束工作：包括关闭所有线程，但消息仍然存在
+     * true    // 一分钟后退出
+     * false   // 立即退出
      */
-    public static void workStop() {
+    public static void workStop(boolean b) {
         Log.e("结束工作", "关闭所有线程");
         toBeStop = true;
-        int i = 0, limitCount = 6000;//一分钟后退出
-        while ((healthWatch != null && healthWatch.isAlive()) ||
-                (reConn != null && reConn.isAlive()) ||
-                (sendBeat != null && sendBeat.isAlive()) ||
-                (sendMsg != null && sendMsg.isAlive()) ||
-                (receiveMsg != null && receiveMsg.isAlive())) {
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
+        if(b){
+            int i = 0, limitCount = 6000;//一分钟后退出
+            while ((healthWatch != null && healthWatch.isAlive()) ||
+                    (reConn != null && reConn.isAlive()) ||
+                    (sendBeat != null && sendBeat.isAlive()) ||
+                    (sendMsg != null && sendMsg.isAlive()) ||
+                    (receiveMsg != null && receiveMsg.isAlive())) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                }
+
+                if (i++ > limitCount) break;
             }
-            ;
-            if (i++ > limitCount) break;
+        }else{
+            int i = 0, limitCount = 0;//立即退出
+            while ((healthWatch != null && healthWatch.isAlive()) ||
+                    (reConn != null && reConn.isAlive()) ||
+                    (sendBeat != null && sendBeat.isAlive()) ||
+                    (sendMsg != null && sendMsg.isAlive()) ||
+                    (receiveMsg != null && receiveMsg.isAlive())) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                }
+
+                if (i++ > limitCount) break;
+            }
         }
+
 
         if (healthWatch != null && healthWatch.isAlive()) {
             healthWatch.interrupt();

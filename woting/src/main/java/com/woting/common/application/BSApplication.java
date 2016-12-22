@@ -11,6 +11,7 @@ import com.umeng.socialize.PlatformConfig;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.config.SocketClientConfig;
 import com.woting.common.constant.KeyConstant;
+import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.PhoneMessage;
 
 import java.util.ArrayList;
@@ -53,7 +54,8 @@ public class BSApplication extends Application {
         _l.add("GOTO::8");                   //之后，调到第9步处理
         scc = new SocketClientConfig();
         scc.setReConnectWays(_l);
-    }
+        CommonHelper.checkNetworkStatus(instance);                     //网络设置获取
+       }
 
     public static Context getAppContext() {
         return instance;

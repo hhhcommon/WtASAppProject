@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.TabActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -34,7 +35,6 @@ import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.helper.CommonHelper;
 import com.woting.common.manager.UpdateManager;
 import com.woting.common.receiver.NetWorkChangeReceiver;
 import com.woting.common.service.LocationService;
@@ -102,6 +102,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private static ImageView image5;
     private Dialog upDataDialog;
 
+    //    public static int dialogShowTypeQuitPerson, dialogShowTypePerson, dialogShowTypeGroup = 0;
     private int upDataType;//1,不需要强制升级2，需要强制升级
     private String upDataNews;
     private String contentId;
@@ -174,7 +175,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         startService(download);
         Notification = new Intent(this, NotificationService.class);
         startService(Notification);
-        CommonHelper.checkNetworkStatus(context);                     //网络设置获取
         this.registerNetWorkChangeReceiver(new NetWorkChangeReceiver(this));// 注册网络状态及返回键监听
     }
 
@@ -218,16 +218,20 @@ public class MainActivity extends TabActivity implements OnClickListener {
     }
 
     private void setType() {
-        String a = android.os.Build.VERSION.RELEASE;
-        Log.e("系统版本号", a + "");
-        Log.e("系统版本号截取", a.substring(0, a.indexOf(".")) + "");
-        boolean v = false;
-        if (Integer.parseInt(a.substring(0, a.indexOf("."))) >= 5) {
-            v = true;
-        }
-        if (v) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        //透明状态栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    //透明导航栏
+        try {
+            String a = android.os.Build.VERSION.RELEASE;
+            Log.e("系统版本号", a + "");
+            Log.e("系统版本号截取", a.substring(0, a.indexOf(".")) + "");
+            boolean v = false;
+            if (Integer.parseInt(a.substring(0, a.indexOf("."))) >= 5) {
+                v = true;
+            }
+            if (v) {
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        //透明状态栏
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    //透明导航栏
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
@@ -344,7 +348,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         Intent intent = getIntent();
         if (intent != null) {
             Uri uri = intent.getData();
-        /*    Uri uri=Uri.parse("com.woting.htmlcallback://AUDIO?jsonStr={'ContentId':'42ee92d85af2400392653af7842551e0'}");*/
+            // Uri uri=Uri.parse("com.woting.htmlcallback://AUDIO?jsonStr={'ContentId':'42ee92d85af2400392653af7842551e0'}");
             //  Uri uri=Uri.parse("com.woting.htmlcallback://SEQU?jsonStr={'ContentName':'强强三人组','ContentId':'aa4064113e1b4ce8b69dc7d840c1878b','ContentImg':'http://www.wotingfm.com:908/CM/dataCenter/group03/bc12cf08e8b74d06a29b7a5082baa7e3.300_300.png','ContentDescn':'#####sequdescn#####'}");
             if (uri != null) {
                 String s = uri.toString();
@@ -403,7 +407,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
             }
         }
     }
-
 
     private void sendContentInfo(final String ContentId, String MediaType) {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
@@ -518,16 +521,16 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                     e.printStackTrace();
                                     ContentFavorite = "";
                                 }
-                                //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
 
+                                //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                                 PlayerHistory history = new PlayerHistory(
                                         ContentName, ContentImg, ContentPlay, "", mediatype,
-                                        ContentTimes, "", ContentDescn, PlayCount,
-                                        ContentFavorite, ContentPub, "", "", CTime, CommonUtils.getUserId(context), ContentShareURL,
+                                        ContentTimes, "0", ContentDescn, PlayCount,
+                                        "0", ContentPub, "", "", CTime, CommonUtils.getUserId(context), ContentShareURL,
                                         ContentFavorite, contentid, "", "", "", "", "", ContentPlayType);
                                 dbDao.deleteHistory(ContentPlay);
                                 dbDao.addHistory(history);
-                                PlayerFragment.TextPage=1;
+                                PlayerFragment.TextPage = 1;
                                 Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                                 Bundle bundle1 = new Bundle();
                                 bundle1.putString("text", ContentName);
@@ -1074,10 +1077,12 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 ToastUtils.show_always(MainActivity.this, "再按一次退出");
                 touchTime = currentTime;
             } else {
+
                 MobclickAgent.onKillProcess(this);
                 finish();
             }
             return true;
+
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -1085,16 +1090,16 @@ public class MainActivity extends TabActivity implements OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         isCancelRequest = VolleyRequest.cancelRequest(tag);
         unRegisterNetWorkChangeReceiver(context.netWorkChangeReceiver);
-        stop();
         unregisterReceiver(endApplicationBroadcast);    // 取消注册广播
         Log.v("--- Main ---", "--- 杀死进程 ---");
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     //app退出时执行该操作
-    private void stop() {
+    public static void stop() {
         context.stopService(Socket);
         context.stopService(record);
         context.stopService(voicePlayer);
@@ -1140,21 +1145,31 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
         final Dialog pushDialog = new Dialog(this, R.style.MyDialog);
         pushDialog.setContentView(dialog);
+        pushDialog.setOnKeyListener(keyListener);
         pushDialog.setCanceledOnTouchOutside(false);
         pushDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
         pushDialog.show();
-
+//        if (type == 1) {
+//            dialogShowTypeQuitPerson = 1;
+//        } else if (type == 2) {
+//            dialogShowTypePerson = 1;
+//        } else if (type == 3) {
+//            dialogShowTypeGroup = 1;
+//        }
         // 取消
         tv_qx.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (type == 1) {
                     // 不需要处理
+//                    dialogShowTypeQuitPerson = 0;
                 } else if (type == 2) {
                     // 挂断电话
+//                    dialogShowTypePerson = 0;
                     InterPhoneControl.PersonTalkHangUp(context, callId);
                 } else if (type == 3) {
                     // 退出组
+//                    dialogShowTypeGroup = 0;
                     InterPhoneControl.Quit(context, groupInfo.getGroupId());//退出小组
                 }
                 pushDialog.dismiss();
@@ -1166,10 +1181,13 @@ public class MainActivity extends TabActivity implements OnClickListener {
             @Override
             public void onClick(View v) {
                 if (type == 1) {
+//                    dialogShowTypeQuitPerson = 0;
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 } else if (type == 2) {
+//                    dialogShowTypePerson = 0;
                     addUser();
                 } else if (type == 3) {
+//                    dialogShowTypeGroup = 0;
                     addGroup();
                 }
                 pushDialog.dismiss();
@@ -1177,6 +1195,16 @@ public class MainActivity extends TabActivity implements OnClickListener {
         });
 
     }
+
+    DialogInterface.OnKeyListener keyListener = new DialogInterface.OnKeyListener() {
+        public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
 
     /*
      * 把此时还在对讲状态的组对讲数据设置活跃状态
@@ -1191,13 +1219,13 @@ public class MainActivity extends TabActivity implements OnClickListener {
      * 把此时还在对讲状态的单对单数据设置活跃状态
      */
     private void addUser() {
-        InterPhoneControl.bdcallid=callId;
+        InterPhoneControl.bdcallid = callId;
         //获取最新激活状态的数据
         String addtime = Long.toString(System.currentTimeMillis());
         String bjuserid = CommonUtils.getUserId(context);
         //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
         talkDao.deleteHistory(callerId);
-        Log.e("=====callerid======",callerId+"");
+        Log.e("=====callerid======", callerId + "");
         DBTalkHistorary history = new DBTalkHistorary(bjuserid, "user", callerId, addtime);
         talkDao.addTalkHistory(history);
         talkdb = talkDao.queryHistory().get(0);//得到数据库里边数据

@@ -21,6 +21,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.constant.StringConstant;
+import com.woting.common.service.SocketService;
 import com.woting.common.util.ToastUtils;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.common.login.LoginActivity;
@@ -30,6 +31,7 @@ import com.woting.ui.interphone.find.main.FindActivity;
 import com.woting.ui.interphone.group.creatgroup.CreateGroupActivity;
 import com.woting.ui.interphone.linkman.fragment.LinkManFragment;
 import com.woting.ui.interphone.notify.activity.NotifyNewsActivity;
+import com.woting.ui.main.MainActivity;
 
 import java.util.ArrayList;
 
@@ -327,6 +329,8 @@ public class DuiJiangActivity extends FragmentActivity {
 				ToastUtils.show_always(DuiJiangActivity.this, "再按一次退出");
 				touchTime = currentTime;
 			} else {
+				SocketService.workStop(false);
+				MainActivity.stop();
 				MobclickAgent.onKillProcess(this);
 				finish();
 				android.os.Process.killProcess(android.os.Process.myPid());
