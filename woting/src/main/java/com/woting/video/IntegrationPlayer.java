@@ -1,9 +1,14 @@
 package com.woting.video;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechError;
+import com.iflytek.cloud.SpeechSynthesizer;
+import com.iflytek.cloud.SynthesizerListener;
 import com.kingsoft.media.httpcache.KSYProxyService;
 import com.kingsoft.media.httpcache.OnErrorListener;
 import com.woting.common.application.BSApplication;
@@ -24,6 +29,9 @@ public class IntegrationPlayer implements OnErrorListener {
 
     private VlcPlayer mVlcPlayer;// VLC 播放器
     private TtsPlayer mTtsPlayer;// TTS 播放器
+
+    private SpeechSynthesizer mTLKPlayer;// TTS 播放器  用于播放路况信息
+    private CompletedLKLis mCompletedLKLis;
 
     private boolean mIsVlcPlaying;// VLC 播放器正在播放
     private boolean mIsTtsPlaying;// TTS 播放器正在播放
@@ -255,5 +263,84 @@ public class IntegrationPlayer implements OnErrorListener {
     // 判断播放地址是否为空
     private boolean isEmpty(String url) {
         return url == null || url.trim().equals("") || url.equals("null");
+    }
+
+    // 播放路况
+    public void playLKTts(Context context, String ttsUrl, CompletedLKLis completedLKLis) {
+        if(initTtsLKPlayer(context) && ttsUrl != null && !ttsUrl.equals("")) {
+            this.mCompletedLKLis = completedLKLis;
+            mTLKPlayer.startSpeaking(ttsUrl, mTtsListener);
+        }
+    }
+
+    // 初始化播放路况 TTS 的播放器
+    private boolean initTtsLKPlayer(Context context) {
+        if(context == null) {
+            Log.w("TAG", "Init Error: Context is null.");
+            return false;
+        }
+        if(mTLKPlayer == null) {
+            mTLKPlayer = SpeechSynthesizer.createSynthesizer(context, null);
+            setParamTTS();
+            return true;
+        }
+        return false;
+    }
+
+    // TTS配置方法
+    private void setParamTTS() {
+        mTLKPlayer.setParameter(SpeechConstant.PARAMS, null);// 清空参数
+        mTLKPlayer.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD);// 根据合成引擎设置相应参数
+        mTLKPlayer.setParameter(SpeechConstant.VOICE_NAME, "vixf");// 设置在线合成发音人
+        mTLKPlayer.setParameter(SpeechConstant.VOLUME, "50");// 设置合成音量
+        mTLKPlayer.setParameter(SpeechConstant.STREAM_TYPE, "3");// 设置播放器音频流类型
+        mTLKPlayer.setParameter(SpeechConstant.KEY_REQUEST_FOCUS, "true"); // 设置播放合成音频打断音乐播放，默认为true
+        mTLKPlayer.setParameter(SpeechConstant.AUDIO_FORMAT, "pcm");
+    }
+
+    // 回收播放路况 TTS 播放器
+    public void recycleLKPlayer() {
+        if (mTLKPlayer != null) {
+            mTLKPlayer.stopSpeaking();
+            mTLKPlayer.destroy();
+            mTLKPlayer = null;
+        }
+    }
+
+    // 播放路况 TTS 监听
+    private SynthesizerListener mTtsListener = new SynthesizerListener() {
+        @Override
+        public void onCompleted(SpeechError arg0) {// 播放完成
+            mCompletedLKLis.onCompleted();
+            recycleLKPlayer();
+        }
+
+        @Override
+        public void onBufferProgress(int arg0, int arg1, int arg2, String arg3) {
+        }
+
+        @Override
+        public void onEvent(int arg0, int arg1, int arg2, Bundle arg3) {
+        }
+
+        @Override
+        public void onSpeakBegin() {
+        }
+
+        @Override
+        public void onSpeakPaused() {
+        }
+
+        @Override
+        public void onSpeakProgress(int arg0, int arg1, int arg2) {
+        }
+
+        @Override
+        public void onSpeakResumed() {
+        }
+    };
+
+    public interface CompletedLKLis {
+        void onCompleted();// 播放完成回调
     }
 }
