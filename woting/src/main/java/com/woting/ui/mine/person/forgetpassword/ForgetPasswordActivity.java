@@ -128,7 +128,7 @@ public class ForgetPasswordActivity extends AppBaseActivity implements OnClickLi
             ToastUtils.show_always(context, "请输入长度六位以上的确认密码!");
             return;
         }
-        if (password.equalsIgnoreCase(passwordqz)) {
+        if (!password.equalsIgnoreCase(passwordqz)) {
             ToastUtils.show_always(context, "您两次输入的密码不一样!");
             return;
         }

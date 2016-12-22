@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -135,12 +136,12 @@ public class AddLabelActivity extends AppBaseActivity implements
     // 将字符串转变成 TAG
     private void stringToTag(String stringLabel) {
         if(stringLabel.length() > 8) {
-            editText.setError("单个标签字数超过长度范围!");
+            editText.setError(Html.fromHtml("<font color=#FF0000>单个标签字数超过长度范围!</font>"));
 //            ToastUtils.show_always(context, "单个标签字数超过长度范围!");
             return ;
         }
         if(tagView.size() > 4) {
-            editText.setError("最多添加 5 个标签!");
+            editText.setError(Html.fromHtml("<font color=#FF0000>最多添加 5 个标签!</font>"));
 //            ToastUtils.show_always(context, "最多添加 5 个标签!");
             return ;
         }

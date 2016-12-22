@@ -20,14 +20,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.woting.R;
+import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.util.CommonUtils;
+import com.woting.common.util.ToastUtils;
 import com.woting.ui.download.adapter.DownloadAdapter;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.model.FileInfo;
 import com.woting.ui.download.service.DownloadService;
 import com.woting.ui.download.service.DownloadTask;
-import com.woting.common.constant.BroadcastConstants;
-import com.woting.common.util.CommonUtils;
-import com.woting.common.util.ToastUtils;
 
 import java.util.List;
 
@@ -169,17 +169,19 @@ public class DownLoadUnCompleted extends Fragment {
                         imageStart.setImageResource(R.mipmap.wt_download_pause);
                         textStart.setText("全部暂停");
                         // 如果点击了全部开始 就需要开始下一个下载对象
-                        getFileInfo(fileInfoList.get(getNum()));
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (DownloadTask.downloadStatus == -1) {
-                                    ToastUtils.show_always(context, fileInfoList.get(num).getFileName() + "的下载出现问题");
-                                    getFileInfo(fileInfoList.get(getNum()));
+                        if(fileInfoList.size() > 0) {
+                            getFileInfo(fileInfoList.get(getNum()));
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (DownloadTask.downloadStatus == -1) {
+                                        ToastUtils.show_always(context, fileInfoList.get(num).getFileName() + "的下载出现问题");
+                                        getFileInfo(fileInfoList.get(getNum()));
+                                    }
                                 }
-                            }
-                        }, 10000);
-                        dwType = true;
+                            }, 10000);
+                            dwType = true;
+                        }
                     }
                 }
             }
@@ -196,11 +198,7 @@ public class DownLoadUnCompleted extends Fragment {
     }
 
     private int getNum() {
-        if (num < fileInfoList.size()) {
-            num++;
-        } else {
-            num = 0;
-        }
+        num = 0;
         return num;
     }
 
