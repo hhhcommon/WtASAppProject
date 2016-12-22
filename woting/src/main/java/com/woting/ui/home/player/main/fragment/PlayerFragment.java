@@ -235,7 +235,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         mListView = (XListView) rootView.findViewById(R.id.listView);
         mViewMoreChose = rootView.findViewById(R.id.lin_chose);// 点击"更多"显示
 
-        mViewVoice = rootView.findViewById(R.id.rl_voice);// 语音搜索 点击右上角"语音"显示
+        mViewVoice = rootView.findViewById(R.id.id_voice_transparent);// 语音搜索 点击右上角"语音"显示
         mVoiceTextSpeakStatus = (TextView) rootView.findViewById(R.id.tv_speak_status);// 语音搜索状态
         mVoiceImageSpeak = (ImageView) rootView.findViewById(R.id.imageView_voice);
         // -----------------  RootView 相关控件初始化 END  ----------------
@@ -278,6 +278,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         rootView.findViewById(R.id.tv_ly_qx).setOnClickListener(this);// 取消 点击隐藏更多
 
         rootView.findViewById(R.id.tv_cancel).setOnClickListener(this);// 取消  点击关闭语音搜索
+        rootView.findViewById(R.id.view__voice_other).setOnClickListener(this);// 点击隐藏语音搜索
         mVoiceImageSpeak.setOnTouchListener(new MyVoiceSpeakTouchLis());
         mVoiceImageSpeak.setImageBitmap(bmp);
         // -----------------  RootView 相关控件设置监听 END  ----------------
@@ -791,17 +792,17 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     }
 
     // 关闭 linChose 界面
-    private void linChoseClose() {
+    private static void linChoseClose(View view) {
         Animation mAnimation = AnimationUtils.loadAnimation(context, R.anim.umeng_socialize_slide_out_from_bottom);
-        mViewMoreChose.setAnimation(mAnimation);
-        mViewMoreChose.setVisibility(View.GONE);
+        view.setAnimation(mAnimation);
+        view.setVisibility(View.GONE);
     }
 
     // 打开 linChose 界面
-    private void linChoseOpen() {
+    private void linChoseOpen(View view) {
         Animation mAnimation = AnimationUtils.loadAnimation(context, R.anim.umeng_socialize_slide_in_from_bottom);
-        mViewMoreChose.setAnimation(mAnimation);
-        mViewMoreChose.setVisibility(View.VISIBLE);
+        view.setAnimation(mAnimation);
+        view.setVisibility(View.VISIBLE);
     }
 
     protected void setData(LanguageSearchInside fList, ArrayList<LanguageSearchInside> list) {
@@ -1262,10 +1263,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 TTSPlay();// TTS 播放
                 break;
             case R.id.tv_cancel:// 取消 点击隐藏语音对话框
-                mViewVoice.setVisibility(View.GONE);
+                linChoseClose(mViewVoice);
                 break;
             case R.id.lin_voicesearch:// 语音搜索框
-                mViewVoice.setVisibility(View.VISIBLE);
+                linChoseOpen(mViewVoice);
+                break;
+            case R.id.view__voice_other:
+                linChoseClose(mViewVoice);
                 break;
             case R.id.tv_share:// 分享
                 shareDialog.show();
@@ -1301,23 +1305,23 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 break;
             case R.id.tv_more:// 更多
                 if (mViewMoreChose.getVisibility() == View.VISIBLE) {
-                    linChoseClose();
+                    linChoseClose(mViewMoreChose);
                 } else {
-                    linChoseOpen();
+                    linChoseOpen(mViewMoreChose);
                 }
                 break;
             case R.id.tv_ly_qx:// 取消 点击隐藏更多
-                linChoseClose();
+                linChoseClose(mViewMoreChose);
                 break;
             case R.id.lin_other:// 点击隐藏更多
-                linChoseClose();
+                linChoseClose(mViewMoreChose);
                 break;
             case R.id.lin_ly_timeover:// 定时关闭
-                linChoseClose();
+                linChoseClose(mViewMoreChose);
                 startActivity(new Intent(context, TimerPowerOffActivity.class));
                 break;
             case R.id.lin_ly_history:// 播放历史
-                linChoseClose();
+                linChoseClose(mViewMoreChose);
                 startActivity(new Intent(context, PlayHistoryActivity.class));
                 break;
             case R.id.tv_programme:// 节目单
@@ -1330,12 +1334,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 break;
             case R.id.lin_ly_ckzb:// 查看主播
                 if(!CommonHelper.checkNetwork(context)) return ;
-                linChoseClose();
+                linChoseClose(mViewMoreChose);
                 ToastUtils.show_always(context, "查看主播");
                 break;
             case R.id.lin_ly_ckzj:// 查看专辑
                 if(!CommonHelper.checkNetwork(context)) return ;
-                linChoseClose();
+                linChoseClose(mViewMoreChose);
                 if (GlobalConfig.playerObject.getSequId() != null) {
                     Intent intent = new Intent(context, AlbumActivity.class);
                     intent.putExtra("type", "player");
@@ -1400,7 +1404,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     mUIHandler.sendEmptyMessageDelayed(TIME_UI, 1000);
                     break;
                 case VOICE_UI:
-                    mViewVoice.setVisibility(View.GONE);
+                    linChoseClose(mViewVoice);
                     mVoiceTextSpeakStatus.setText("请按住讲话");
                     break;
                 case PLAY:// 播放
@@ -1463,7 +1467,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mViewVoice.setVisibility(View.GONE);// 2秒后隐藏界面
+                                    linChoseClose(mViewVoice);// 2秒后隐藏界面
                                 }
                             }, 2000);
                         }
@@ -1744,8 +1748,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
     // 获取与文字相关的内容数据
     private void sendTextRequest(String contentName) {
+        final LanguageSearchInside fList = getDaoList(context);// 得到数据库里边的第一条数据
         if(TextPage == 1) {
-            LanguageSearchInside fList = getDaoList(context);// 得到数据库里边的第一条数据
             num = 0;
             allList.clear();
             if (fList != null) allList.add(fList);
@@ -1757,7 +1761,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             }
             itemPlay(0);
         }
-        final LanguageSearchInside fList = getDaoList(context);// 得到数据库里边的第一条数据
         sendType = 2;
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
