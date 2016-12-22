@@ -1,137 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <com.woting.common.widgetui.TipView
+        android:id="@+id/tip_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/relative"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/lin_second"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/color_wt_circle_grays"
+            android:gravity="left|center">
 
             <ImageView
-                android:id="@+id/image_second"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:src="@mipmap/no_message_picture" />
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="13dp"
+                android:padding="2dp"
+                android:src="@mipmap/wt_img_search_gray"/>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="center">
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:background="@color/WHITE"
+                android:hint="搜索"
+                android:textColor="@color/gray"
+                android:textColorHint="@color/gray"
+                android:textCursorDrawable="@drawable/wt_edittext_cursor"
+                android:textSize="14dp"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="想使用享讲功能？快去 "
-                    android:textColor="@color/beijing"
-                    android:textSize="@dimen/text_size_medium" />
+            <ImageView
+                android:id="@+id/image_clear"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="8dp"
+                android:padding="2dp"
+                android:src="@mipmap/wt_img_clearnew"
+                android:visibility="invisible"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="登录"
-                    android:textColor="@color/dinglan_orange"
-                    android:textSize="@dimen/text_size_medium" />
-            </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/relative"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <LinearLayout
+            <ListView
+                android:id="@+id/country_lvcountry"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/color_wt_circle_grays"
-                android:gravity="left|center">
+                android:layout_height="match_parent"
+                android:divider="@null"
+                android:scrollbars="none"/>
 
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_marginLeft="13dp"
-                    android:padding="2dp"
-                    android:src="@mipmap/wt_img_search_gray" />
-
-                <EditText
-                    android:id="@+id/et_search"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:background="@color/WHITE"
-                    android:hint="搜索"
-                    android:textColor="@color/gray"
-                    android:textColorHint="@color/gray"
-                    android:textCursorDrawable="@drawable/wt_edittext_cursor"
-                    android:textSize="14dp"></EditText>
-
-                <ImageView
-                    android:id="@+id/image_clear"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:padding="2dp"
-                    android:layout_marginRight="8dp"
-                    android:src="@mipmap/wt_img_clearnew"
-                    android:visibility="invisible" />
-            </LinearLayout>
-
-            <FrameLayout
+            <TextView
+                android:id="@+id/title_layout_no_friends"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:gravity="center"
+                android:text="没有找到联系人"
+                android:textColor="@color/gray"
+                android:textSize="12sp"
+                android:visibility="gone"/>
 
-                <ListView
-                    android:id="@+id/country_lvcountry"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:divider="@null"
-                    android:scrollbars="none" />
+            <TextView
+                android:id="@+id/dialog"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:background="@drawable/linkman_bt"
+                android:gravity="center"
+                android:text="A"
+                android:textColor="@color/WHITE"
+                android:textSize="30sp"
+                android:visibility="invisible"/>
 
-                <TextView
-                    android:id="@+id/title_layout_no_friends"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="60dp"
-                    android:gravity="center"
-                    android:text="没有找到联系人"
-                    android:textColor="@color/gray"
-                    android:textSize="12sp"
-                    android:visibility="gone" />
+            <com.woting.ui.interphone.linkman.view.SideBar
+                android:id="@+id/sidrbar"
+                android:layout_width="20dp"
+                android:layout_height="fill_parent"
+                android:layout_gravity="right|center"
+                android:layout_marginTop="8dp"/>
 
-                <TextView
-                    android:id="@+id/dialog"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/linkman_bt"
-                    android:gravity="center"
-                    android:text="A"
-                    android:textColor="@color/WHITE"
-                    android:textSize="30sp"
-                    android:visibility="invisible" />
+        </FrameLayout>
 
-                <com.woting.ui.interphone.linkman.view.SideBar
-                    android:id="@+id/sidrbar"
-                    android:layout_width="20dp"
-                    android:layout_height="fill_parent"
-                    android:layout_gravity="right|center"
-                    android:layout_marginTop="8dp" />
-            </FrameLayout>
-        </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>
