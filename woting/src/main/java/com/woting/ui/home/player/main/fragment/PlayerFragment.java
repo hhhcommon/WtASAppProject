@@ -1149,7 +1149,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     // 内容的下载
     private void download() {
         LanguageSearchInside data = GlobalConfig.playerObject;
-        if(data == null || data.getMediaType().equals("AUDIO")) return ;
+        if(data == null || !data.getMediaType().equals("AUDIO")) return ;
         if (data.getLocalurl() != null) {
             ToastUtils.show_always(context, "此节目已经保存到本地，请到已下载界面查看");
             return;
