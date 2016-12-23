@@ -40,6 +40,7 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.HeightListView;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.interphone.alert.CallAlertActivity;
 import com.woting.ui.interphone.chat.fragment.ChatFragment;
@@ -72,7 +73,7 @@ import java.util.List;
  * @author 辛龙
  * 2016年5月12日
  */
-public class LinkManFragment extends Fragment implements SectionIndexer,OnClickListener {
+public class LinkManFragment extends Fragment implements SectionIndexer,OnClickListener, TipView.TipViewClick {
 	private SortGroupMemberAdapter adapter;
 	private TalkGroupAdapter adapter_group;
 	private CharacterParser characterParser;//汉字转换成拼音的类
@@ -106,7 +107,8 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 	private LinearLayout lin_grouplist;
 	private LinearLayout lin_news_message;
 	private LinearLayout relative;
-	private LinearLayout lin_second;
+
+    private TipView tipView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -150,7 +152,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 		sharedPreferences = BSApplication.SharedPreferences;
 		isLogin = sharedPreferences.getString(StringConstant.ISLOGIN, "false");
 		if (isLogin.equals("true")) {
-			lin_second.setVisibility(View.GONE);
+            tipView.setVisibility(View.GONE);
 			relative.setVisibility(View.VISIBLE);
 			if (firstEntry) {
 				send();
@@ -158,7 +160,8 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 			}
 		} else {
 			firstEntry = false;
-			lin_second.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_LOGIN);
+            tipView.setVisibility(View.VISIBLE);
 			relative.setVisibility(View.GONE);
 		}
 	}
@@ -169,7 +172,6 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 	 */
 	private void initViews() {
 		relative = (LinearLayout) rootView.findViewById(R.id.relative);
-		lin_second = (LinearLayout) rootView.findViewById(R.id.lin_second);
 		tvNofriends = (TextView) rootView.findViewById(R.id.title_layout_no_friends);
 		sideBar = (SideBar) rootView.findViewById(R.id.sidrbar);
 		tvDialog = (TextView) rootView.findViewById(R.id.dialog);
@@ -190,6 +192,9 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 				startActivity(intent);				
 			}
 		});
+
+        tipView = (TipView) rootView.findViewById(R.id.tip_view);
+        tipView.setTipClick(this);
 	}
 
 	/**
@@ -234,14 +239,13 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 
 	/**
 	 * 根据输入框中的值来过滤数据并更新ListView
-	 * @param filterStr
 	 */
 	private List<UserInfo> filterData(String filterStr) {
 		List<UserInfo> filterDateList = new ArrayList<>();
 		filterDateList.clear();
 		for (UserInfo sortModel : srclist_p) {
 			String name = sortModel.getName();
-			if (name.indexOf(filterStr.toString()) != -1|| characterParser.getSelling(name).startsWith(filterStr.toString())) {
+			if (name.contains(filterStr) || characterParser.getSelling(name).startsWith(filterStr)) {
 				filterDateList.add(sortModel);
 			}
 		}
@@ -276,7 +280,17 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 		return -1;
 	}
 
-	class MessageReceiver extends BroadcastReceiver{
+    @Override
+    public void onTipViewClick() {
+        if (isLogin.equals("true")) {
+            send();
+        } else {
+            Intent intent = new Intent(context, LoginActivity.class);
+            startActivityForResult(intent, 1);
+        }
+    }
+
+    class MessageReceiver extends BroadcastReceiver{
 		private String message;
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -343,14 +357,12 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 
 	/**
 	 * 对讲呼叫
-	 * @param id
 	 */
 	protected void call(String id) {
 		Intent it = new Intent(context,CallAlertActivity.class); 
 		Bundle bundle = new Bundle();
 		bundle.putString("id", id);
 		it.putExtras(bundle);
-		//		it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(it);
 	}
 
@@ -365,12 +377,8 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 			VolleyRequest.RequestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
 				@Override
 				protected void requestSuccess(JSONObject result) {
-					if (dialogs != null) {
-						dialogs.dismiss();
-					}
-					if(isCancelRequest){
-						return ;
-					}
+					if (dialogs != null) dialogs.dismiss();
+					if(isCancelRequest) return ;
 					try {
 						LinkMan list = new Gson().fromJson(result.toString(), new TypeToken<LinkMan>(){}.getType());
 						try {
@@ -383,7 +391,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
-						if (list == null || list.equals("")) {
+						if (list == null) {
 							relative.setVisibility(View.GONE);
 						} else {
 							relative.setVisibility(View.VISIBLE);
@@ -400,17 +408,8 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 								}
 								setGroupListViewListener();
 								lin_grouplist.setVisibility(View.VISIBLE);
-								//								if(headviewshow){
-								//								}else{
-								////									sortListView.addHeaderView(headview);// 添加头部view
-								//									headviewshow=true;
-								//								}
 							} else {
 								lin_grouplist.setVisibility(View.GONE);
-								//								if(headviewshow){
-								////									sortListView.removeHeaderView(headview);
-								//									headviewshow=false;
-								//								}
 							}
 							if (srclist_p == null || srclist_p.size() == 0) {
 								TalkPersonNoAdapter adapters = new TalkPersonNoAdapter(context);
@@ -444,15 +443,6 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.lin_second:
-			if (isLogin.equals("true")) {
-				send();
-			} else {
-				// 可以直接用startActivity方法，不需要返回处理，因为已经存在onresume
-				Intent intent = new Intent(context, LoginActivity.class);
-				startActivityForResult(intent, 1);
-			}		
-			break;
 		case R.id.image_clear:
 			image_clear.setVisibility(View.INVISIBLE);
 			et_search.setText("");
@@ -464,7 +454,6 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 	 * 根据输入框输入值的改变来过滤搜索
 	 */
 	private void setEditListener() {
-		lin_second.setOnClickListener(this);
 		image_clear.setOnClickListener(this);
 		et_search.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -801,7 +790,6 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 		headView = null;
 		listView_group = null;
 		relative = null;
-		lin_second = null;
 		list = null;
 		isLogin = null;
 		tag = null;

@@ -840,14 +840,15 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         allList.clear();
         allList.add(fList);
         for(int i=0, size=list.size(); i<size; i++) {
-            if(!list.get(i).getContentPlay().equals(fList.getContentPlay())) {
+            if(list.get(i).getContentPlay() != null &&
+                    fList.getContentPlay() != null && !list.get(i).getContentPlay().equals(fList.getContentPlay())) {
                 allList.add(list.get(i));
             }
         }
         allList.addAll(list);
         for (int i = 0; i < allList.size(); i++) {
             String s = allList.get(i).getContentPlay();
-            if (s != null && s.equals(GlobalConfig.playerObject.getContentPlay())) {
+            if (s != null && GlobalConfig.playerObject.getContentPlay() != null && s.equals(GlobalConfig.playerObject.getContentPlay())) {
                 allList.get(i).setType("0");
                 num = i;
             }
