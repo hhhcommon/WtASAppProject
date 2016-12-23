@@ -63,6 +63,17 @@ public class CallAlertActivity extends Activity implements OnClickListener {
         setContentView(R.layout.dialog_calling);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        //透明状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    //透明导航栏
+
+
+//        AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+//        audioManager.setMicrophoneMute(false);
+//        audioManager.setSpeakerphoneOn(true);//使用扬声器外放，即使已经插入耳机
+//        setVolumeControlStream(AudioManager.STREAM_MUSIC);//控制声音的大小
+//        audioManager.setMode(AudioManager.STREAM_MUSIC);
+
+
+
+
         instance = this;
         getSource();        // 获取展示数据
         setReceiver();      // 设置广播接收器
@@ -77,21 +88,33 @@ public class CallAlertActivity extends Activity implements OnClickListener {
     private void setDate() {
         InterPhoneControl.PersonTalkPress(instance, id);//拨号
         musicPlayer = MediaPlayer.create(instance, R.raw.ringback);
-        musicPlayer.start();
+        if (musicPlayer == null) {
+            musicPlayer = MediaPlayer.create(instance, R.raw.talkno);
+        }
+//        musicPlayer = MediaPlayer.create(instance, getSystemDefultRingtoneUri());
 
-        /**
-         * 监听音频播放完的代码，实现音频的自动循环播放
-         */
-        musicPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer arg0) {
-                if (musicPlayer != null) {
-                    musicPlayer.start();
-                    musicPlayer.setLooping(true);
+        if (musicPlayer != null) {
+            musicPlayer.start();
+            // 监听音频播放完的代码，实现音频的自动循环播放
+            musicPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer arg0) {
+                    if (musicPlayer != null) {
+                        musicPlayer.start();
+                        musicPlayer.setLooping(true);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            // 播放器初始化失败
+        }
     }
+
+//    //获取系统默认铃声的Uri
+//    private Uri getSystemDefultRingtoneUri() {
+//        return RingtoneManager.getActualDefaultRingtoneUri(this,
+//                RingtoneManager.TYPE_RINGTONE);
+//    }
 
     /*
      *设置界面，以及界面数据
@@ -178,29 +201,36 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                 isCall = true;
                 InterPhoneControl.PersonTalkPress(instance, id);        //拨号
                 musicPlayer = MediaPlayer.create(instance, R.raw.ringback);
-                musicPlayer.start();
-
-                // 监听音频播放完的代码，实现音频的自动循环播放
-                musicPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer arg0) {
-                        if (musicPlayer != null) {
-                            musicPlayer.start();
-                            musicPlayer.setLooping(true);
+                if (musicPlayer == null) {
+                    musicPlayer = MediaPlayer.create(instance, R.raw.talkno);
+                }
+//                musicPlayer = MediaPlayer.create(instance, getSystemDefultRingtoneUri());
+                if (musicPlayer != null) {
+                    musicPlayer.start();
+                    // 监听音频播放完的代码，实现音频的自动循环播放
+                    musicPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer arg0) {
+                            if (musicPlayer != null) {
+                                musicPlayer.start();
+                                musicPlayer.setLooping(true);
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+                    // 播放器初始化失败
+                }
                 break;
             case R.id.lin_guaduan:
                 tv_news.setText("重新呼叫");
                 lin_call.setVisibility(View.VISIBLE);
                 lin_guaduan.setVisibility(View.GONE);
                 isCall = false;
-                InterPhoneControl.PersonTalkHangUp(instance, InterPhoneControl.bdcallid);
                 if (musicPlayer != null) {
                     musicPlayer.stop();
                     musicPlayer = null;
                 }
+                InterPhoneControl.PersonTalkHangUp(instance, InterPhoneControl.bdcallid);
                 break;
         }
     }

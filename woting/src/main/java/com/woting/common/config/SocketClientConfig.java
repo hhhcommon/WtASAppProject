@@ -11,7 +11,7 @@ public class SocketClientConfig {
     private int[] checkGotoN;
 	public String ip=GlobalConfig.socketUrl;
 	public int port=GlobalConfig.socketPort;
-	public static long intervalBeat=5000; //心跳信号发送时间间隔
+	public static long intervalBeat=15000; //心跳信号发送时间间隔
 	public long intervalCheckSocket=10000; //检查Socket连接状况的时间间隔
 	public static long expireTime=180000; //过期时间，多长时间未收到服务器消息，就认为连接中断了，这个时间要大于心跳和检查时间
 	public List<String> reConnectWays; //重连策略
