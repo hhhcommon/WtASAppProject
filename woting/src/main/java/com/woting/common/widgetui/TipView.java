@@ -57,6 +57,7 @@ public class TipView extends RelativeLayout {
         array.recycle();
 
         viewBackground = new View(context);
+        viewBackground.setBackgroundColor(Color.parseColor("#efeeee"));
         viewLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         addView(viewBackground, viewLayoutParams);
 

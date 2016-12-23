@@ -1335,7 +1335,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 }
                 break;
             case R.id.tv_comment:// 评论
-                if(!CommonHelper.checkNetwork(context)) return ;
                 if (!TextUtils.isEmpty(GlobalConfig.playerObject.getContentId()) && !TextUtils.isEmpty(GlobalConfig.playerObject.getMediaType())) {
                     if (CommonUtils.getUserIdNoImei(context) != null && !CommonUtils.getUserIdNoImei(context).equals("")) {
                         Intent intent = new Intent(context, CommentActivity.class);
@@ -1522,9 +1521,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                             contentUrlList.clear();
                             if (GlobalConfig.playerObject != null && allList != null) {
                                 for (int i = 0; i < allList.size(); i++) {
-                                    if (allList.get(i).getContentPlay().equals(GlobalConfig.playerObject.getContentPlay())) {
-                                        allList.get(i).setType("0");
-                                        num = i;
+                                    if(allList.get(i).getContentPlay() != null && GlobalConfig.playerObject.getContentPlay() != null) {
+                                        if (allList.get(i).getContentPlay().equals(GlobalConfig.playerObject.getContentPlay())) {
+                                            allList.get(i).setType("0");
+                                            num = i;
+                                        }
                                     }
                                 }
                             }
@@ -1550,6 +1551,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     resetHeadView();
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    setPullAndLoad(true, false);
                     ToastUtils.show_always(context, "数据出错了，请您稍后再试!");
                 }
             }
@@ -1816,7 +1818,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                         List<LanguageSearchInside> list = lists.getList();
                         if (list != null && list.size() != 0 && fList != null) {
                             for (int i = 0; i < list.size(); i++) {
-                                if (list.get(i).getContentPlay() != null && list.get(i).getContentPlay().equals(fList.getContentPlay())) {
+                                if (list.get(i).getContentPlay() == null && list.get(i).getContentPlay().equals(fList.getContentPlay())) {
                                     list.remove(i);
                                 }
                             }
