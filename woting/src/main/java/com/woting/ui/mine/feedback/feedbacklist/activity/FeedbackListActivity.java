@@ -15,6 +15,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.mine.feedback.feedbacklist.adapter.FeedBackExpandAdapter;
 import com.woting.ui.mine.feedback.feedbacklist.model.OpinionMessage;
@@ -29,11 +30,23 @@ import java.util.List;
  * 作者：xinlong on 2016/8/1 21:18
  * 邮箱：645700751@qq.com
  */
-public class FeedbackListActivity extends AppBaseActivity implements OnClickListener, OnGroupClickListener {
+public class FeedbackListActivity extends AppBaseActivity implements OnClickListener, OnGroupClickListener, TipView.WhiteViewClick {
     protected Dialog dialog;
     private ExpandableListView mListView;
     private String tag = "FEEDBACKLIST_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
+
+    private TipView tipView;// 无网络、无数据提示
+
+    @Override
+    public void onWhiteViewClick() {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            send();
+        } else {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
+        }
+    }
 
     @Override
     public void onClick(View v) {
@@ -52,7 +65,8 @@ public class FeedbackListActivity extends AppBaseActivity implements OnClickList
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             send();
         } else {
-            ToastUtils.show_always(context, "网络连接失败，请稍后重试");
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
         }
     }
 
@@ -61,6 +75,9 @@ public class FeedbackListActivity extends AppBaseActivity implements OnClickList
         mListView = (ExpandableListView) findViewById(R.id.exlv_opinionlist);
         mListView.setGroupIndicator(null);
         mListView.setOnGroupClickListener(this);
+
+        tipView = (TipView) findViewById(R.id.tip_view);
+        tipView.setWhiteClick(this);
     }
 
     private void send() {
@@ -72,7 +89,6 @@ public class FeedbackListActivity extends AppBaseActivity implements OnClickList
         }
 
         VolleyRequest.RequestPost(GlobalConfig.FeedBackListUrl, tag, jsonObject, new VolleyCallback() {
-
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
@@ -80,31 +96,30 @@ public class FeedbackListActivity extends AppBaseActivity implements OnClickList
                 try {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {
-                        try {
-                            String list = result.getString("OpinionList");
-                            List<OpinionMessage> OM = new Gson().fromJson(list, new TypeToken<List<OpinionMessage>>() {
-                            }.getType());
-                            if (OM == null || OM.size() == 0) {
-                                return;
-                            }
-                            FeedBackExpandAdapter adapter = new FeedBackExpandAdapter(context, OM);
-                            mListView.setAdapter(adapter);
-                            for (int i = 0; i < adapter.getGroupCount(); i++) {
-                                mListView.expandGroup(i);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        List<OpinionMessage> OM = new Gson().fromJson(result.getString("OpinionList"), new TypeToken<List<OpinionMessage>>() {}.getType());
+                        if (OM == null || OM.size() == 0) {
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有对我们进行反馈哟\n留下您的宝贵意见和建议，我们将努力改进");
+                            return;
+                        }
+                        FeedBackExpandAdapter adapter = new FeedBackExpandAdapter(context, OM);
+                        mListView.setAdapter(adapter);
+                        for (int i = 0; i < adapter.getGroupCount(); i++) {
+                            mListView.expandGroup(i);
                         }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
                 }
             }
 
             @Override
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
-                ToastUtils.showVolleyError(context);
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.IS_ERROR);
             }
         });
     }

@@ -16,7 +16,6 @@ import com.woting.ui.interphone.group.creatgroup.creat.CreateGroupContentActivit
  * 2016年5月16日
  */
 public class CreateGroupActivity extends AppBaseActivity implements OnClickListener {
-	private LinearLayout head_left_btn;
 	private LinearLayout lin_groupmain_first;
 	private LinearLayout lin_groupmain_second;
 	private LinearLayout lin_groupmain_third;
@@ -30,14 +29,13 @@ public class CreateGroupActivity extends AppBaseActivity implements OnClickListe
 	}
 
 	private void setListener() {
+        findViewById(R.id.head_left_btn).setOnClickListener(this);
 		lin_groupmain_first.setOnClickListener(this);
 		lin_groupmain_second.setOnClickListener(this);
 		lin_groupmain_third.setOnClickListener(this);
-		head_left_btn.setOnClickListener(this);
 	}
 
 	private void setView() {
-		head_left_btn = (LinearLayout) findViewById(R.id.head_left_btn);
 		lin_groupmain_first = (LinearLayout) findViewById(R.id.lin_groupmain_first);
 		lin_groupmain_second = (LinearLayout) findViewById(R.id.lin_groupmain_second);
 		lin_groupmain_third = (LinearLayout) findViewById(R.id.lin_groupmain_third);
@@ -91,7 +89,6 @@ public class CreateGroupActivity extends AppBaseActivity implements OnClickListe
 	protected void onDestroy() {
 		super.onDestroy();
 		context = null;
-		head_left_btn = null;
 		lin_groupmain_first = null;
 		lin_groupmain_second = null;
 		lin_groupmain_third = null;

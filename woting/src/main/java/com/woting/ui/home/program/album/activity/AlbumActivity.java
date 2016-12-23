@@ -41,6 +41,7 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.HorizontalListView;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseFragmentActivity;
 import com.woting.ui.baseadapter.MyFragmentChildPagerAdapter;
 import com.woting.ui.home.player.main.adapter.ImageAdapter;
@@ -75,7 +76,6 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
     public static int returnResult = -1;        // =1说明信息获取正常，returntype=1001
     public static String ContentFavorite;        // 从网络获取的当前值，如果为空，表示页面并未获取到此值
     public static TextView tv_favorite;
-    private LinearLayout head_left;
     private LinearLayout lin_share;
     private LinearLayout lin_favorite;
     private LinearLayout lin_pinglun;
@@ -89,11 +89,11 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
     private TextView textDetails, textProgram;    // text_details text_program
     private ImageView imageCursor;                //cursor
     private int offset;                        // 图片移动的偏移量
-    private int screenWidth;
     private boolean isCancelRequest;
     public static ImageView imageFavorite;
     private String tag = "ALBUM_VOLLEY_REQUEST_CANCEL_TAG";
 
+    private TipView tipView;// 提示
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +112,6 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
         tv_album_name = (TextView) findViewById(R.id.head_name_tv);
         img_album = (ImageView) findViewById(R.id.img_album);
         imageFavorite = (ImageView) findViewById(R.id.img_favorite);
-        head_left = (LinearLayout) findViewById(R.id.head_left_btn);    // 返回按钮
         lin_share = (LinearLayout) findViewById(R.id.lin_share);        // 分享按钮
         lin_pinglun = (LinearLayout) findViewById(R.id.lin_pinglun);    // 评论
         lin_favorite = (LinearLayout) findViewById(R.id.lin_favorite);    // 喜欢按钮
@@ -121,10 +120,12 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
         textDetails.setOnClickListener(this);
         textProgram = (TextView) findViewById(R.id.text_program);        // 专辑列表
         textProgram.setOnClickListener(this);
+
+        tipView = (TipView) findViewById(R.id.tip_view);
     }
 
     private void setListener() {
-        head_left.setOnClickListener(this);
+        findViewById(R.id.head_left_btn).setOnClickListener(this);// 返回按钮
         lin_share.setOnClickListener(this);
         lin_favorite.setOnClickListener(this);
         lin_pinglun.setOnClickListener(this);
@@ -151,7 +152,7 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
     public void InitViewPager() {
         mPager = (ViewPager) findViewById(R.id.viewpager);
         mPager.setOffscreenPageLimit(1);
-        ArrayList<Fragment> fragmentList = new ArrayList<Fragment>();
+        ArrayList<Fragment> fragmentList = new ArrayList<>();
         DetailsFragment detailsFragment = new DetailsFragment();//专辑详情页
         ProgramFragment programFragment = new ProgramFragment();//专辑列表页
         fragmentList.add(detailsFragment);
@@ -199,7 +200,7 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
         Window window = shareDialog.getWindow();
         DisplayMetrics dm = new DisplayMetrics();
         context.getWindowManager().getDefaultDisplay().getMetrics(dm);
-        screenWidth = dm.widthPixels;
+        int screenWidth = dm.widthPixels;
         LayoutParams params = dialog.getLayoutParams();
         params.width = screenWidth;
         dialog.setLayoutParams(params);
@@ -287,9 +288,13 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
         }
     };
 
-
     private void handleIntent() {
-        String type = this.getIntent().getStringExtra("type");
+        Intent intent = getIntent();
+        if(intent == null) {
+            tipView.setTipView(TipView.TipStatus.IS_ERROR, "数据出错了\n请返回重试!");
+            return ;
+        }
+        String type = getIntent().getStringExtra("type");
         if (type != null && type.trim().equals("radiolistactivity")) {
             RankInfo list = (RankInfo) getIntent().getSerializableExtra("list");
             RadioName = list.getContentName();
@@ -377,9 +382,7 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
         }
     }
 
-    /**
-     * 发送网络请求  获取喜欢数据
-     */
+    // 发送网络请求  获取喜欢数据
     private void sendFavorite() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
@@ -396,61 +399,34 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
 
         VolleyRequest.RequestPost(GlobalConfig.clickFavoriteUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
-            private String Message;
 
             @Override
             protected void requestSuccess(JSONObject result) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-                if (isCancelRequest) {
-                    return;
-                }
+                if (dialog != null) dialog.dismiss();
+                if (isCancelRequest) return;
                 try {
                     ReturnType = result.getString("ReturnType");
-                    Message = result.getString("Message");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                // 根据返回值来对程序进行解析
-                if (ReturnType != null) {
-                    if (ReturnType.equals("1001")) {
-                        if (ContentFavorite.equals("0")) {
-                            ContentFavorite = "1";
-                            tv_favorite.setText("已喜欢");
-                            imageFavorite.setImageDrawable(getResources().getDrawable(R.mipmap.wt_img_liked));
-                        } else {
-                            ContentFavorite = "0";
-                            tv_favorite.setText("喜欢");
-                            imageFavorite.setImageDrawable(getResources().getDrawable(R.mipmap.wt_img_like));
-                        }
-                    } else if (ReturnType.equals("0000")) {
-                        ToastUtils.show_always(context, "无法获取相关的参数");
-                    } else if (ReturnType.equals("1002")) {
-                        ToastUtils.show_always(context, "无法获得内容类别");
-                    } else if (ReturnType.equals("1003")) {
-                        ToastUtils.show_always(context, "无法获得内容Id");
-                    } else if (ReturnType.equals("1004")) {
-                        ToastUtils.show_always(context, "所指定的节目不存在");
-                    } else if (ReturnType.equals("1005")) {
-                        ToastUtils.show_always(context, "已经喜欢了此内容");
-                    } else if (ReturnType.equals("1006")) {
-                        ToastUtils.show_always(context, "还未喜欢此内容");
-                    } else if (ReturnType.equals("T")) {
-                        ToastUtils.show_always(context, "获取列表异常");
+                if (ReturnType != null && ReturnType.equals("1001")) {
+                    if (ContentFavorite.equals("0")) {
+                        ContentFavorite = "1";
+                        tv_favorite.setText("已喜欢");
+                        imageFavorite.setImageDrawable(getResources().getDrawable(R.mipmap.wt_img_liked));
                     } else {
-                        ToastUtils.show_always(context, Message + "");
+                        ContentFavorite = "0";
+                        tv_favorite.setText("喜欢");
+                        imageFavorite.setImageDrawable(getResources().getDrawable(R.mipmap.wt_img_like));
                     }
                 } else {
-                    ToastUtils.show_always(context, "ReturnType==null");
+                    ToastUtils.show_always(context, "获取数据出错了，请重试!");
                 }
             }
 
             @Override
             protected void requestError(VolleyError error) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
+                if (dialog != null) dialog.dismiss();
             }
         });
     }
@@ -476,7 +452,6 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
         id = null;
         ContentFavorite = null;
         tv_favorite = null;
-        head_left = null;
         lin_share = null;
         lin_favorite = null;
         dialog = null;

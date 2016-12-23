@@ -8,6 +8,12 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
+    <com.woting.common.widgetui.TipView
+        android:id="@+id/tip_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
     <RelativeLayout
         android:id="@+id/relative_title"
         android:layout_width="match_parent"
@@ -21,6 +27,9 @@
             android:id="@+id/text_anchor_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:maxWidth="200dp"
             android:textSize="17sp"
             android:textColor="@color/WHITE"
             android:layout_centerInParent="true"/>

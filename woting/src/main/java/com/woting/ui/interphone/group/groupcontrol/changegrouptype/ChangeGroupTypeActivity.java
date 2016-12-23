@@ -28,7 +28,6 @@ import org.json.JSONObject;
  */
 public class ChangeGroupTypeActivity extends Activity implements OnClickListener {
 	private ChangeGroupTypeActivity context;
-//	private SharedPreferences sharedPreferences;
 	private LinearLayout head_left_btn;
 	private ImageView img1;
 	private ImageView img2;
@@ -50,7 +49,6 @@ public class ChangeGroupTypeActivity extends Activity implements OnClickListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_changegrouptype);
 		context = this;
-//		sharedPreferences = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
 		setView();
 		setListener();
 
@@ -124,13 +122,12 @@ public class ChangeGroupTypeActivity extends Activity implements OnClickListener
 	// 密码群时的edittext输入框验证方法
 	private void checkEdit() {
 		password = et_group_password.getText().toString().trim();
-		if (password == null || password.trim().equals("")) {
+		if (password.trim().equals("")) {
 			Toast.makeText(this, "密码不能为空", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		if (password.length() < 6) {
 			Toast.makeText(this, "请输入六位以上密码", Toast.LENGTH_SHORT).show();
-			// mEditTextPassWord.setError(Html.fromHtml("<font color=#ff0000>密码请输入六位以上</font>"));
 			return;
 		}
 
@@ -148,47 +145,21 @@ public class ChangeGroupTypeActivity extends Activity implements OnClickListener
 		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		
 		VolleyRequest.RequestPost(GlobalConfig.talkgroupcreatUrl, tag, jsonObject, new VolleyCallback() {
-//			private String SessionId;
 			private String ReturnType;
 			private String Message;
-//			private String GroupInfo;
-//			private GroupInformation groupinfo;
-//			private String CreateTime;
 
 			@Override
 			protected void requestSuccess(JSONObject result) {
-				if (dialog != null) {
-					dialog.dismiss();
-				}
-				if(isCancelRequest){
-					return ;
-				}
+				if (dialog != null) dialog.dismiss();
+				if(isCancelRequest) return ;
 				try {
-//					SessionId = result.getString("SessionId");
 					ReturnType = result.getString("ReturnType");
 					Message = result.getString("Message");
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 				if (ReturnType != null && ReturnType.equals("1001")) {
-					// TODO
-				}
-				if (ReturnType != null && ReturnType.equals("1002")) {
-					ToastUtils.show_always(context, "未登陆无法创建群组");
-				} else if (ReturnType != null && ReturnType.equals("1003")) {
-					ToastUtils.show_always(context, "无法得到用户分类" + Message);
-				} else if (ReturnType != null && ReturnType.equals("1004")) {
-					ToastUtils.show_always(context, "无法得到组密码" + Message);
-				} else if (ReturnType != null && ReturnType.equals("1005")) {
-					ToastUtils.show_always(context, "无法得到组员信息" + Message);
-				} else if (ReturnType != null && ReturnType.equals("1006")) {
-					ToastUtils.show_always(context, "给定的组员信息不存在" + Message);
-				} else if (ReturnType != null && ReturnType.equals("1007")) {
-					ToastUtils.show_always(context, "只有一个有效成员，无法构建用户组" + Message);
-				} else if (ReturnType != null && ReturnType.equals("1008")) {
-					ToastUtils.show_always(context, "您所创建的组已达50个，不能再创建了" + Message);
-				} else if (ReturnType != null && ReturnType.equals("1009")) {
-					ToastUtils.show_always(context, "20分钟内创建组不能超过5个" + Message);
+                    ToastUtils.show_always(context, "还没开发!");
 				} else {
 					if (Message != null && !Message.trim().equals("")) {
 						ToastUtils.show_always(context, Message + "");
@@ -198,9 +169,8 @@ public class ChangeGroupTypeActivity extends Activity implements OnClickListener
 			
 			@Override
 			protected void requestError(VolleyError error) {
-				if (dialog != null) {
-					dialog.dismiss();
-				}
+				if (dialog != null) dialog.dismiss();
+                ToastUtils.showNoNetwork(context);
 			}
 		});
 	}

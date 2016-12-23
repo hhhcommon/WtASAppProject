@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
@@ -55,7 +56,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 	private InactivityTimer inactivityTimer;
 	private BeepManager beepManager;
 	private SurfaceView scanPreview = null;
-	private RelativeLayout scanContainer;
+	private LinearLayout scanContainer;
 	private RelativeLayout scanCropView;
 	private ImageView scanLine;
 	private Rect mCropRect = null;
@@ -90,7 +91,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 		});
 		
 		scanPreview = (SurfaceView) findViewById(R.id.capture_preview);
-		scanContainer = (RelativeLayout) findViewById(R.id.capture_container);
+		scanContainer = (LinearLayout) findViewById(R.id.capture_container);
 		scanCropView = (RelativeLayout) findViewById(R.id.capture_crop_view);
 		scanLine = (ImageView) findViewById(R.id.capture_scan_line);
 		LayoutParams pr2=scanCropView.getLayoutParams();

@@ -62,7 +62,6 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 
 	private LinearLayout lin_status_first;
 	private LinearLayout lin_status_second;
-	private LinearLayout lin_head_left;
 
 	private TextView head_name_tv;
 	private TextView tv_group_entry;
@@ -212,7 +211,6 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 						dialog.dismiss();
 					}
 					if (ReturnType != null && ReturnType.equals("1002")) {
-						/* ToastUtil.show_short(context, "无创建者" + Message); */
 						ToastUtils.show_always(context, "未登陆无法创建群组");
 						head_name_tv.setText("创建失败");
 						tv_group_entry.setVisibility(View.INVISIBLE);
@@ -283,22 +281,20 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 	}
 
 	private void setListener() {
+        findViewById(R.id.head_left_btn).setOnClickListener(this);
 		ImageUrl.setOnClickListener(this);
-		lin_head_left.setOnClickListener(this);
 		tv_group_entry.setOnClickListener(this);
 	}
 
 	private void setView() {
 		lin_status_first = (LinearLayout) findViewById(R.id.lin_groupcreate_status_first);
 		lin_status_second = (LinearLayout) findViewById(R.id.lin_groupcreate_status_second);
-		lin_head_left = (LinearLayout) findViewById(R.id.head_left_btn);
 		head_name_tv = (TextView) findViewById(R.id.head_name_tv);
 		tv_group_entry = (TextView) findViewById(R.id.tv_group_entrygroup);
 		et_group_nick = (EditText) findViewById(R.id.et_group_nick);
 		et_group_sign = (EditText) findViewById(R.id.et_group_sign);
      	ImageUrl = (ImageView) findViewById(R.id.ImageUrl);
 		et_group_password = (EditText) findViewById(R.id.edittext_password);
-
 	}
 
 	@Override
@@ -686,7 +682,6 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 		GroupType = null;
 		lin_status_first = null;
 		lin_status_second = null;
-		lin_head_left = null;
 		dialog = null;
 		head_name_tv = null;
 		tv_group_entry = null;

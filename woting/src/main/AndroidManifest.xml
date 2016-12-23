@@ -204,12 +204,6 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan"/>
-        <!--  -->
-        <activity
-            android:name=".common.widgetui.wheelview.ui.TimeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
 
         <!--  -->
         <activity
@@ -218,13 +212,6 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
-
-        <!--  -->
-        <activity
-            android:name=".common.widgetui.wheelview.ui.CitiesActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
 
         <!--  -->
         <activity
@@ -528,13 +515,6 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
         <activity
             android:name=".ui.mine.set.updateusernum.updateUserNumActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
-
-        <!--  -->
-        <activity
-            android:name=".ui.mine.set.contactus.ContactUsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
