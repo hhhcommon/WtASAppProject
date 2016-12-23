@@ -7,70 +7,37 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/dinglan_orange"
-        android:gravity="center_vertical" >
+        android:layout_height="48dp" >
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical" >
+        <ImageView
+            android:id="@+id/head_left_btn"
+            style="@style/LeftImageStyle" />
 
-            <LinearLayout
-                android:id="@+id/head_left_btn"
-                android:layout_width="48dp"
-                android:layout_height="match_parent"
-                android:gravity="left|center" >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="搜索结果"
+            android:layout_centerInParent="true"
+            android:textColor="@color/WHITE_1"
+            android:textSize="@dimen/activity_head_center_s" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="6dp"
-                    android:background="@mipmap/back_images" />
-            </LinearLayout>
-        </LinearLayout>
+    </RelativeLayout>
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center" >
-
-            <TextView
-                android:id="@+id/head_name_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="搜索结果"
-                android:textColor="@color/WHITE_1"
-                android:textSize="@dimen/activity_head_center_s" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-    </LinearLayout>
-
-    <LinearLayout
+    <com.woting.common.widgetui.TipView
+        android:id="@+id/tip_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible" >
+        android:visibility="gone"/>
 
-        <com.woting.common.widgetui.xlistview.XListView
-            android:id="@+id/listview_querycontact"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@color/text_line_1"
-            android:dividerHeight="0.5dp"
-            android:background="@color/WHITE_1"
-            android:scrollbars="none" >
-        </com.woting.common.widgetui.xlistview.XListView>
-    </LinearLayout>
+    <com.woting.common.widgetui.xlistview.XListView
+        android:id="@+id/listview_querycontact"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/text_line_1"
+        android:dividerHeight="0.5dp"
+        android:background="@color/WHITE_1"
+        android:scrollbars="none" />
 
 </LinearLayout>

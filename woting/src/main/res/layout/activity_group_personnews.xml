@@ -7,61 +7,29 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical" >
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp" >
+
+        <ImageView
+            android:id="@+id/head_left_btn"
+            style="@style/LeftImageStyle" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="详细资料"
+            android:layout_centerInParent="true"
+            android:textColor="@color/WHITE"
+            android:textSize="@dimen/activity_head_center_s" />
+
+    </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical" >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@color/dinglan_orange"
-            android:gravity="center_vertical" >
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical" >
-
-                <LinearLayout
-                    android:id="@+id/head_left_btn"
-                    android:layout_width="48dp"
-                    android:layout_height="match_parent"
-                    android:gravity="left|center" >
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="6dp"
-                        android:background="@mipmap/back_images" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:text="详细资料"
-                    android:textColor="@color/WHITE"
-                    android:textSize="@dimen/activity_head_center_s" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
-
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

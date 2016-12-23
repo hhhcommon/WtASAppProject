@@ -12,7 +12,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
-import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
@@ -102,11 +101,15 @@ public class FeedbackListActivity extends AppBaseActivity implements OnClickList
                             tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有对我们进行反馈哟\n留下您的宝贵意见和建议，我们将努力改进");
                             return;
                         }
+                        tipView.setVisibility(View.GONE);
                         FeedBackExpandAdapter adapter = new FeedBackExpandAdapter(context, OM);
                         mListView.setAdapter(adapter);
                         for (int i = 0; i < adapter.getGroupCount(); i++) {
                             mListView.expandGroup(i);
                         }
+                    } else {
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有对我们进行反馈哟\n留下您的宝贵意见和建议，我们将努力改进");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
