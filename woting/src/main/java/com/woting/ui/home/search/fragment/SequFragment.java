@@ -36,7 +36,6 @@ import com.woting.ui.home.player.main.fragment.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
-import com.woting.ui.home.search.activity.SearchLikeActivity;
 import com.woting.ui.main.MainActivity;
 import com.woting.ui.mine.favorite.adapter.FavorListAdapter;
 
@@ -76,7 +75,7 @@ public class SequFragment extends Fragment {
         context = getActivity();
 
         IntentFilter mFilter = new IntentFilter();
-        mFilter.addAction(SearchLikeActivity.SEARCH_VIEW_UPDATE);
+        mFilter.addAction(BroadcastConstants.SEARCH_VIEW_UPDATE);
         context.registerReceiver(mBroadcastReceiver, mFilter);
         initDao();
     }
@@ -285,7 +284,7 @@ public class SequFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(SearchLikeActivity.SEARCH_VIEW_UPDATE)) {
+            if (action.equals(BroadcastConstants.SEARCH_VIEW_UPDATE)) {
                 searchStr = intent.getStringExtra("searchStr");
                 if (searchStr != null && !searchStr.equals("")) {
                     refreshType = 1;

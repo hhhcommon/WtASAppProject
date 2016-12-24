@@ -16,8 +16,12 @@ import com.woting.common.constant.BroadcastConstants;
  *2016年4月27日
  */
 public class PhoneStatReceiver extends BroadcastReceiver {
-	private boolean flag;
+	private Context Context;
+	public static final String intentFilter="android.intent.action.PHONE_STATE";
+	public PhoneStatReceiver(Context context ){
+		this.Context=context;
 
+	}
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		// 呼出电话
@@ -33,7 +37,7 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 			// 呼入电话
 			TelephonyManager tm = (TelephonyManager)context.getSystemService(Service.TELEPHONY_SERVICE);
 			switch (tm.getCallState()) {
-			case TelephonyManager.CALL_STATE_RINGING:
+			case TelephonyManager.CALL_STATE_RINGING:// 响铃
 				Log.e("PhoneStatReceiver", "来电话了");
 				// 当前是来电
 				Intent push=new Intent(BroadcastConstants.PUSH_MUSIC);
@@ -42,7 +46,7 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 				push.putExtras(bundle);
 				context. sendBroadcast(push);
 				break;
-			case TelephonyManager.CALL_STATE_OFFHOOK:
+			case TelephonyManager.CALL_STATE_OFFHOOK:// 接起电话
 //				Intent push3=new Intent("pushmusic");
 //				Bundle bundle3=new Bundle();
 //				bundle3.putString("outmessage","3");

@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.ResourceUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,7 +40,7 @@ public class UpdateManager  {
     private Dialog downloadDialog;
     /* 下载包安装路径 */
     //	sdcard/
-    private final String savePath = Environment.getExternalStorageDirectory() + "/WTFM/APP/";
+    private final String savePath = ResourceUtil.getLocalUrlForUpload();
     //    private static final String savePath = Environment.getExternalStorageDirectory().getAbsolutePath(); ;
     private final String saveFileName = savePath + "WoTing.apk";
     /* 进度条与通知ui刷新的handler和msg常量 */

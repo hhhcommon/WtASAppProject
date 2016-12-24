@@ -37,6 +37,7 @@ import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.manager.UpdateManager;
 import com.woting.common.receiver.NetWorkChangeReceiver;
+import com.woting.common.receiver.PhoneStatReceiver;
 import com.woting.common.service.LocationService;
 import com.woting.common.service.SocketService;
 import com.woting.common.service.SubclassService;
@@ -111,6 +112,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private boolean isCancelRequest;
     private List<CatalogName> list;
     private NetWorkChangeReceiver netWorkChangeReceiver = null;
+    private PhoneStatReceiver phoneStatReceiver = null;
 
     private CityInfoDao CID;
     private SearchPlayerHistoryDao dbDao;
@@ -175,7 +177,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
         startService(download);
         Notification = new Intent(this, NotificationService.class);
         startService(Notification);
-        this.registerNetWorkChangeReceiver(new NetWorkChangeReceiver(this));// 注册网络状态及返回键监听
+
+
     }
 
     public void getTXL() {
@@ -836,6 +839,16 @@ public class MainActivity extends TabActivity implements OnClickListener {
         m.addAction(BroadcastConstants.PUSH_NOTIFY);
         m.addAction(BroadcastConstants.PUSH);
         registerReceiver(endApplicationBroadcast, m);
+
+        IntentFilter p = new IntentFilter();
+        p.addAction(PhoneStatReceiver.intentFilter);
+        phoneStatReceiver = new PhoneStatReceiver(this);
+        registerReceiver(phoneStatReceiver, p);
+
+        IntentFilter n = new IntentFilter();
+        n.addAction(NetWorkChangeReceiver.intentFilter);
+        netWorkChangeReceiver = new NetWorkChangeReceiver(this);
+        registerReceiver(netWorkChangeReceiver, n);
     }
 
 
@@ -1092,7 +1105,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
         super.onDestroy();
 
         isCancelRequest = VolleyRequest.cancelRequest(tag);
-        unRegisterNetWorkChangeReceiver(context.netWorkChangeReceiver);
+        unregisterReceiver(netWorkChangeReceiver);
+        unregisterReceiver(phoneStatReceiver);
         unregisterReceiver(endApplicationBroadcast);    // 取消注册广播
         Log.v("--- Main ---", "--- 杀死进程 ---");
         android.os.Process.killProcess(android.os.Process.myPid());
@@ -1108,23 +1122,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         context.stopService(Location);
         context.stopService(Notification);
         Log.v("--- onStop ---", "--- 杀死进程 ---");
-    }
-
-    /***
-     * 注册网络监听者
-     */
-    private void registerNetWorkChangeReceiver(NetWorkChangeReceiver netWorkChangeReceiver) {
-        context.netWorkChangeReceiver = netWorkChangeReceiver;
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(NetWorkChangeReceiver.intentFilter);
-        this.registerReceiver(netWorkChangeReceiver, filter);
-    }
-
-    /**
-     * 取消网络变化监听者
-     */
-    private void unRegisterNetWorkChangeReceiver(NetWorkChangeReceiver netWorkChangeReceiver) {
-        this.unregisterReceiver(netWorkChangeReceiver);
     }
 
     //版本更新对话框

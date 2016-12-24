@@ -128,7 +128,6 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
     private AudioManager audioMgr;
     private int stepVolume;
     protected int curVolume;
-    public static final String SEARCH_VIEW_UPDATE = "SEARCH_VIEW_UPDATE";
     private String tag = "SEARCH_LIKE_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
     private VoiceRecognizer mVoiceRecognizer;
@@ -144,7 +143,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
 
         // 初始化广播
         mIntent = new Intent();
-        mIntent.setAction(SearchLikeActivity.SEARCH_VIEW_UPDATE);
+        mIntent.setAction(BroadcastConstants.SEARCH_VIEW_UPDATE);
         setView();// 初始化控件
         dialog();
         setListener();// 设置监听

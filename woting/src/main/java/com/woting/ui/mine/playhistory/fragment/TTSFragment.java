@@ -228,11 +228,11 @@ public class TTSFragment extends Fragment{
 		}
 		if(checkList.size() == playList.size()){		// 发送广播更新为全选状态
 			Intent intentAll = new Intent();
-			intentAll.setAction(PlayHistoryActivity.UPDATE_ACTION_ALL);
+			intentAll.setAction(BroadcastConstants.UPDATE_ACTION_ALL);
 			context.sendBroadcast(intentAll);
 		}else{											// 发送广播更新为非全选状态
 			Intent intentNoCheck = new Intent();
-			intentNoCheck.setAction(PlayHistoryActivity.UPDATE_ACTION_CHECK);
+			intentNoCheck.setAction(BroadcastConstants.UPDATE_ACTION_CHECK);
 			context.sendBroadcast(intentNoCheck);
 		}
 	}
