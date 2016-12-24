@@ -49,7 +49,6 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 	private String news;
 	private String psd = null;		// 密码
 	private String tag = "GROUP_ADD_VOLLEY_REQUEST_CANCEL_TAG";
-	private LinearLayout head_left_btn;
 	private LinearLayout lin_mm;
 	private LinearLayout lin_yzxx;
 	private LinearLayout lin_delete;
@@ -81,7 +80,6 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 		tv_name = (TextView) findViewById(R.id.tv_name);
 		tv_id = (TextView) findViewById(R.id.tv_id);
 		tv_sign = (TextView) findViewById(R.id.tv_sign);
-		head_left_btn = (LinearLayout) findViewById(R.id.head_left_btn);
 		tv_add = (TextView) findViewById(R.id.tv_add);
 		lin_mm = (LinearLayout) findViewById(R.id.lin_mm);
 		lin_yzxx = (LinearLayout) findViewById(R.id.lin_yzxx);
@@ -147,7 +145,7 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 	}
 
 	private void setListener() {
-		head_left_btn.setOnClickListener(this);
+        findViewById(R.id.head_left_btn).setOnClickListener(this);
 		tv_add.setOnClickListener(this);
 		lin_delete.setOnClickListener(new OnClickListener() {
 			@Override
@@ -360,7 +358,6 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 		tv_name = null;
 		tv_id = null;
 		tv_sign = null;
-		head_left_btn = null;
 		tv_add = null;
 		lin_mm = null;
 		lin_yzxx = null;

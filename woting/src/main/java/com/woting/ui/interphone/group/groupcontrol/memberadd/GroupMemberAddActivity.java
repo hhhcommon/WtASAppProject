@@ -21,6 +21,7 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.UserInfo;
 import com.woting.ui.interphone.group.groupcontrol.memberadd.adapter.CreateGroupMembersAddAdapter;
@@ -43,7 +44,7 @@ import java.util.List;
  * 2016年3月25日
  */
 public class GroupMemberAddActivity extends AppBaseActivity implements
-        OnClickListener, TextWatcher, OnTouchingLetterChangedListener {
+        OnClickListener, TextWatcher, OnTouchingLetterChangedListener, TipView.WhiteViewClick {
 
     private CharacterParser characterParser = CharacterParser.getInstance();// 实例化汉字转拼音类
     private PinyinComparator pinyinComparator = new PinyinComparator();
@@ -54,7 +55,6 @@ public class GroupMemberAddActivity extends AppBaseActivity implements
     private SideBar sideBar;
 
     private Dialog dialog;
-    private TextView textNoFriend;
     private TextView dialogs;
     private ListView listView;
     private EditText editSearchContent;
@@ -64,6 +64,26 @@ public class GroupMemberAddActivity extends AppBaseActivity implements
     private String groupId;
     private String tag = "GROUP_MEMBER_ADD_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
+
+    private TipView tipView;// 没有网络没有数据提示
+    private TipView tipSearchNull;// 搜索数据为空提示
+
+    @Override
+    public void onWhiteViewClick() {
+        groupId = getIntent().getStringExtra("GroupId");
+        if (groupId != null && !groupId.equals("")) {
+            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
+                send();
+            } else {
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_NET);
+            }
+        } else {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.IS_ERROR);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +97,10 @@ public class GroupMemberAddActivity extends AppBaseActivity implements
         findViewById(R.id.head_left_btn).setOnClickListener(this);
         findViewById(R.id.head_right_btn).setOnClickListener(this);
 
+        tipSearchNull = (TipView) findViewById(R.id.tip_search_null);
+        tipView = (TipView) findViewById(R.id.tip_view);
+        tipView.setWhiteClick(this);
+
         editSearchContent = (EditText) findViewById(R.id.et_search);// 搜索控件
         editSearchContent.addTextChangedListener(this);
 
@@ -89,15 +113,20 @@ public class GroupMemberAddActivity extends AppBaseActivity implements
         sideBar.setOnTouchingLetterChangedListener(this);
 
         listView = (ListView) findViewById(R.id.country_lvcountry);
-        textNoFriend = (TextView) findViewById(R.id.title_layout_no_friends);
         textHeadRight = (TextView) findViewById(R.id.tv_head);
 
         groupId = getIntent().getStringExtra("GroupId");// 获取传递给当前用户组的 GroupId
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
-            send();
+        if (groupId != null && !groupId.equals("")) {
+            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
+                send();
+            } else {
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_NET);
+            }
         } else {
-            ToastUtils.show_always(context, "网络失败，请检查网络");
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.IS_ERROR);
         }
     }
 
@@ -112,7 +141,6 @@ public class GroupMemberAddActivity extends AppBaseActivity implements
 
         VolleyRequest.RequestPost(GlobalConfig.getfriendlist, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
-            private String Message;
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -120,7 +148,6 @@ public class GroupMemberAddActivity extends AppBaseActivity implements
                 if (isCancelRequest) return;
                 try {
                     ReturnType = result.getString("ReturnType");
-                    Message = result.getString("Message");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -134,19 +161,15 @@ public class GroupMemberAddActivity extends AppBaseActivity implements
                         adapter = new CreateGroupMembersAddAdapter(context, userList2);
                         listView.setAdapter(adapter);
                         setInterface();
+                        tipView.setVisibility(View.GONE);
                     } catch (Exception e1) {
                         e1.printStackTrace();
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
                     }
-                } else if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_always(context, "无法获取组Id");
-                } else if (ReturnType != null && ReturnType.equals("T")) {
-                    ToastUtils.show_always(context, "异常返回值");
-                } else if (ReturnType != null && ReturnType.equals("1011")) {
-                    ToastUtils.show_always(context, "组中无成员");
                 } else {
-                    if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_always(context, Message + "");
-                    }
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.NO_DATA, "你还没有添加好友\n赶紧去添加好友邀请加入群组吧");
                 }
             }
 
@@ -154,6 +177,8 @@ public class GroupMemberAddActivity extends AppBaseActivity implements
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.IS_ERROR);
             }
         });
     }
@@ -176,7 +201,7 @@ public class GroupMemberAddActivity extends AppBaseActivity implements
         List<UserInfo> filterDateList = new ArrayList<>();
         if (TextUtils.isEmpty(search_name)) {
             filterDateList = userList2;
-            textNoFriend.setVisibility(View.GONE);
+            tipSearchNull.setVisibility(View.GONE);
         } else {
             filterDateList.clear();
             for (UserInfo sortModel : userList2) {
@@ -191,9 +216,11 @@ public class GroupMemberAddActivity extends AppBaseActivity implements
         userList2.clear();
         userList2.addAll(filterDateList);
         if (filterDateList.size() == 0) {
-            textNoFriend.setVisibility(View.VISIBLE);
+            tipSearchNull.setVisibility(View.VISIBLE);
+            tipSearchNull.setTipView(TipView.TipStatus.NO_DATA, "没有找到该好友哟\n换个好友再试一次吧");
         } else {
-            textNoFriend.setVisibility(View.GONE);
+            tipSearchNull.setVisibility(View.GONE);
+            tipSearchNull.setTipView(TipView.TipStatus.NO_DATA, "没有找到该好友哟\n换个好友再试一次吧");
         }
     }
 
@@ -249,7 +276,7 @@ public class GroupMemberAddActivity extends AppBaseActivity implements
             case R.id.image_clear:
                 imageClear.setVisibility(View.INVISIBLE);
                 editSearchContent.setText("");
-                textNoFriend.setVisibility(View.GONE);
+                tipSearchNull.setVisibility(View.GONE);
                 break;
         }
     }
@@ -322,7 +349,7 @@ public class GroupMemberAddActivity extends AppBaseActivity implements
         String search_name = s.toString();
         if (search_name.trim().equals("")) {
             imageClear.setVisibility(View.INVISIBLE);
-            textNoFriend.setVisibility(View.GONE);
+            tipSearchNull.setVisibility(View.GONE);
             if (userList == null || userList.size() == 0) {
                 listView.setVisibility(View.GONE);
             } else {
@@ -346,7 +373,6 @@ public class GroupMemberAddActivity extends AppBaseActivity implements
     protected void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
-        textNoFriend = null;
         sideBar = null;
         dialogs = null;
         listView = null;

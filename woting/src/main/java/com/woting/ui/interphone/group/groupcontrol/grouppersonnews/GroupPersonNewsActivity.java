@@ -34,8 +34,6 @@ import org.json.JSONObject;
  * @author 辛龙 2016年1月19日
  */
 public class GroupPersonNewsActivity extends AppBaseActivity {
-    private GroupPersonNewsActivity context;
-
     private String name;
     private String imageUrl;
     private String id;
@@ -46,7 +44,6 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
     private String username;
     private String tag = "GROUP_PERSON_NEWS_VOLLEY_REQUEST_CANCEL_TAG";
     private LinearLayout lin_delete;
-    private LinearLayout head_left_btn;
     private ImageView image_xiugai;
     private ImageView image_touxiang;
     private EditText et_groupSignature;
@@ -65,7 +62,6 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_personnews);
-        context = this;
         update = false;    // 此时修改的状态
         username = sharedPreferences.getString(StringConstant.USERNAME, "");            //当前登录账号的姓名
         setView();
@@ -83,17 +79,17 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
         et_b_name = (EditText) findViewById(R.id.et_b_name);
         et_groupSignature = (EditText) findViewById(R.id.et_groupSignature);
         tv_id = (TextView) findViewById(R.id.tv_id);
-        head_left_btn = (LinearLayout) findViewById(R.id.head_left_btn);
         image_xiugai = (ImageView) findViewById(R.id.image_xiugai);
     }
 
     private void handleIntent() {
-        String type = this.getIntent().getStringExtra("type");
-        groupId = this.getIntent().getStringExtra("id");
-        if (type == null || type.equals("")) {
+        String type = getIntent().getStringExtra("type");
+        groupId = getIntent().getStringExtra("id");
+        if(type == null) {
+            return ;
         }
         if (type.equals("talkoldlistfragment_p")) {
-            UserInfo data = (UserInfo) this.getIntent().getSerializableExtra("data");
+            UserInfo data = (UserInfo) getIntent().getSerializableExtra("data");
             name = data.getUserName();
             imageUrl = data.getPortraitBig();
             id = data.getUserId();
@@ -101,7 +97,7 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
             num = data.getUserNum();
             b_name = data.getUserAliasName();
         } else if (type.equals("TalkGroupNewsActivity_p")) {
-            GroupInfo data = (GroupInfo) this.getIntent().getSerializableExtra("data");
+            GroupInfo data = (GroupInfo) getIntent().getSerializableExtra("data");
             name = data.getUserName();
             imageUrl = data.getPortraitBig();
             id = data.getUserId();
@@ -109,7 +105,7 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
             num = data.getUserNum();
             b_name = data.getUserAliasName();
         } else if (type.equals("GroupMemers")) {
-            UserInfo data = (UserInfo) this.getIntent().getSerializableExtra("data");
+            UserInfo data = (UserInfo) getIntent().getSerializableExtra("data");
             name = data.getUserName();
             imageUrl = data.getPortraitBig();
             id = data.getUserId();
@@ -170,23 +166,20 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
                 if (update) {
                     // 此时是修改状态需要进行以下操作
                     if (id.equals(CommonUtils.getUserId(context))) {
-                        if (et_b_name.getText().toString() == null
-                                || et_b_name.getText().toString().trim().equals("")
+                        if (et_b_name.getText().toString().trim().equals("")
                                 || et_b_name.getText().toString().trim().equals("暂无备注名")) {
                             biename = " ";
                         } else {
                             biename = et_b_name.getText().toString();
                         }
-                        if (et_groupSignature.getText().toString() == null
-                                || et_groupSignature.getText().toString().trim().equals("")
+                        if (et_groupSignature.getText().toString().trim().equals("")
                                 || et_groupSignature.getText().toString().trim().equals("这家伙很懒，什么都没写")) {
                             groupSignature = " ";
                         } else {
                             groupSignature = et_groupSignature.getText().toString();
                         }
                     } else {
-                        if (et_b_name.getText().toString() == null
-                                || et_b_name.getText().toString().trim().equals("")
+                        if (et_b_name.getText().toString().trim().equals("")
                                 || et_b_name.getText().toString().trim().equals("暂无备注名")) {
                             biename = " ";
                         } else {
@@ -230,7 +223,7 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
             }
         });
 
-        head_left_btn.setOnClickListener(new OnClickListener() {
+        findViewById(R.id.head_left_btn).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -248,11 +241,10 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
             @Override
             public void onClick(View v) {
                 String news = et_news.getText().toString().trim();
-                if (news == null || news.equals("")) {
+                if (news.equals("")) {
                     ToastUtils.show_always(context, "请输入验证信息");
                 } else {
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        //发送验证请求
                         dialog = DialogUtils.Dialogph(context, "申请中");
                         send();
                     } else {
@@ -266,7 +258,6 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
     private void send() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            // 模块属性
             jsonObject.put("BeInvitedUserId", id);
             jsonObject.put("InviteMsg", et_news.getText().toString().trim());
         } catch (JSONException e) {
@@ -279,12 +270,8 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
 
             @Override
             protected void requestSuccess(JSONObject result) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-                if (isCancelRequest) {
-                    return;
-                }
+                if (dialog != null) dialog.dismiss();
+                if (isCancelRequest) return;
                 try {
                     ReturnType = result.getString("ReturnType");
                     Message = result.getString("Message");
@@ -322,9 +309,8 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
 
             @Override
             protected void requestError(VolleyError error) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
+                if (dialog != null) dialog.dismiss();
+                ToastUtils.showVolleyError(context);
             }
         });
     }
@@ -332,7 +318,6 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
     protected void update(final String b_name2, String groupSignature) {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            // 模块属性
             jsonObject.put("GroupId", groupId);
             jsonObject.put("UpdateUserId", id);
             jsonObject.put("UserAliasName", b_name2);
@@ -346,18 +331,13 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
 
             @Override
             protected void requestSuccess(JSONObject result) {
-                if (dialogs != null) {
-                    dialogs.dismiss();
-                }
-                if (isCancelRequest) {
-                    return;
-                }
+                if (dialogs != null) dialogs.dismiss();
+                if (isCancelRequest) return;
                 try {
                     ReturnType = result.getString("ReturnType");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                // 根据返回值来对程序进行解析
                 if (ReturnType != null) {
                     if (ReturnType.equals("1001") || ReturnType.equals("10011") || ReturnType.equals("10012")) {
                         et_b_name.setText(b_name2);
@@ -392,9 +372,8 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
 
             @Override
             protected void requestError(VolleyError error) {
-                if (dialogs != null) {
-                    dialogs.dismiss();
-                }
+                if (dialogs != null) dialogs.dismiss();
+                ToastUtils.showVolleyError(context);
             }
         });
     }
@@ -411,10 +390,8 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
         et_b_name = null;
         et_groupSignature = null;
         tv_id = null;
-        head_left_btn = null;
         image_xiugai = null;
         sharedPreferences = null;
-        context = null;
         setContentView(R.layout.activity_null);
     }
 }
