@@ -78,7 +78,7 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
         initDao();
 
         IntentFilter mFilter = new IntentFilter();
-        mFilter.addAction(SearchLikeActivity.SEARCH_VIEW_UPDATE);
+        mFilter.addAction(BroadcastConstants.SEARCH_VIEW_UPDATE);
         context.registerReceiver(mBroadcastReceiver, mFilter);
     }
 
@@ -325,7 +325,7 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(SearchLikeActivity.SEARCH_VIEW_UPDATE)) {
+            if (action.equals(BroadcastConstants.SEARCH_VIEW_UPDATE)) {
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                     searchStr = intent.getStringExtra("searchStr");
                     if (searchStr != null && !searchStr.equals("")) {

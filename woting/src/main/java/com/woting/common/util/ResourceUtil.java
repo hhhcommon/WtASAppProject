@@ -6,6 +6,10 @@ package com.woting.common.util;
  */
 
 import android.content.Context;
+import android.os.Environment;
+import android.util.Log;
+
+import com.woting.common.config.GlobalConfig;
 
 public class ResourceUtil {
     public ResourceUtil() {
@@ -42,4 +46,37 @@ public class ResourceUtil {
     public static int getStyleableId(Context paramContext, String paramString) {
         return paramContext.getResources().getIdentifier(paramString, "styleable", paramContext.getPackageName());
     }
+
+    /**
+     * 获取金山云播放器的缓存地址
+     * @return
+     */
+    public static String getLocalUrlForKsy() {
+        String fileUrl;
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            fileUrl = GlobalConfig.playCacheDirO+GlobalConfig.ksyPlayCache;
+        } else {
+            fileUrl = GlobalConfig.playCacheDirI+GlobalConfig.ksyPlayCache;
+        }
+        Log.e("获取金山云播放器的缓存地址",fileUrl+"");
+        return fileUrl;
+    }
+
+    /**
+     * 获取软件更新下载安装的地址
+     * @return
+     */
+    public static String getLocalUrlForUpload() {
+        String fileUrl;
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            fileUrl = GlobalConfig.playCacheDirO+GlobalConfig.upLoadCache;
+        } else {
+            fileUrl = GlobalConfig.playCacheDirI+GlobalConfig.upLoadCache;
+        }
+        Log.e("获取软件更新下载安装的地址",fileUrl+"");
+        return fileUrl;
+    }
+
+
+
 }

@@ -552,22 +552,37 @@ public class SocketService extends Service {
                                         else isAck = 0;
                                         if ((ba[i - 1] & 0xF0) == 0xF0) isRegist = 1;
                                     } else if (isAck == 1) {//是回复消息
-                                        if (isRegist == 1) { //是注册消息
-                                            if (i == 48 && endMsgFlag[2] == 0) _dataLen = 80;
-                                            else _dataLen = 91;
-                                            if (_dataLen >= 0 && i == _dataLen) break;
+//                                        if (isRegist == 1) { //是注册消息
+//                                            if (i == 48 && endMsgFlag[2] == 0) _dataLen = 80;
+//                                            else _dataLen = 91;
+//                                            if (_dataLen >= 0 && i == _dataLen) break;
+//                                        } else { //非注册消息
+//                                            if (_dataLen < 0) _dataLen = 45;
+//                                            if (_dataLen >= 0 && i == _dataLen) break;
+//                                        }
+                                        if (isRegist==1) { //是注册消息
+                                            if (_dataLen<0) _dataLen=91;
+                                            if (i==48&&endMsgFlag[2]==0) _dataLen=80;
                                         } else { //非注册消息
-                                            if (_dataLen < 0) _dataLen = 45;
-                                            if (_dataLen >= 0 && i == _dataLen) break;
+                                            if (_dataLen<0) _dataLen=45;
                                         }
+                                        if (_dataLen>=0&&i==_dataLen) break;
                                     } else if (isAck == 0) {//是一般消息
-                                        if (isRegist == 1) {//是注册消息
-                                            if (((ba[2] & 0x80) == 0x80) && ((ba[2] & 0x00) == 0x00)) {
-                                                if (i == 48 && endMsgFlag[2] == 0) _dataLen = 80;
-                                                else _dataLen = 91;
+//                                        if (isRegist == 1) {//是注册消息
+//                                            if (((ba[2] & 0x80) == 0x80) && ((ba[2] & 0x00) == 0x00)) {
+//                                                if (i == 48 && endMsgFlag[2] == 0) _dataLen = 80;
+//                                                else _dataLen = 91;
+//                                            } else {
+//                                                if (i == 47 && endMsgFlag[2] == 0) _dataLen = 79;
+//                                                else _dataLen = 90;
+//                                            }
+                                        if (isRegist==1) {//是注册消息
+                                            if (((ba[2]&0x80)==0x80)&&((ba[2]&0x00)==0x00)) {
+                                                if (_dataLen<0) _dataLen=91;
+                                                if (i==48&&endMsgFlag[2]==0) _dataLen=80;
                                             } else {
-                                                if (i == 47 && endMsgFlag[2] == 0) _dataLen = 79;
-                                                else _dataLen = 90;
+                                                if (_dataLen<0) _dataLen=90;
+                                                if (i==47&&endMsgFlag[2]==0) _dataLen=79;
                                             }
                                             if (_dataLen >= 0 && i == _dataLen) break;
                                         } else {//非注册消息

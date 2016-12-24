@@ -231,11 +231,11 @@ public class RadioFragment extends Fragment{
 		}
 		if(checkList.size() == playList.size()){
 			Intent intentAll = new Intent();
-			intentAll.setAction(PlayHistoryActivity.UPDATE_ACTION_ALL);
+			intentAll.setAction(BroadcastConstants.UPDATE_ACTION_ALL);
 			context.sendBroadcast(intentAll);
 		}else{
 			Intent intentNoCheck = new Intent();
-			intentNoCheck.setAction(PlayHistoryActivity.UPDATE_ACTION_CHECK);
+			intentNoCheck.setAction(BroadcastConstants.UPDATE_ACTION_CHECK);
 			context.sendBroadcast(intentNoCheck);
 		}
 	}

@@ -3,6 +3,7 @@ package com.woting.common.application;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -13,7 +14,9 @@ import com.woting.common.config.SocketClientConfig;
 import com.woting.common.constant.KeyConstant;
 import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.PhoneMessage;
+import com.woting.common.util.ResourceUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,20 +25,21 @@ import java.util.List;
  * 作者：xinlong on 2016/11/6 21:18
  * 邮箱：645700751@qq.com
  */
-public class BSApplication extends Application {
+public class BSApplication extends Application  {
 
     private static RequestQueue queues;
     private static Context instance;
     public static SocketClientConfig scc;
     public static SharedPreferences SharedPreferences;
     private ArrayList<String> staticFacesList;
-    private static KSYProxyService proxyService = null;
+    private static      KSYProxyService proxyService = null;
 
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
         SharedPreferences = this.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
+
         queues = Volley.newRequestQueue(this);
         InitThird();                        //第三方使用的相关方法
         PhoneMessage.getPhoneInfo(instance);//获取手机信息
@@ -55,20 +59,34 @@ public class BSApplication extends Application {
         scc = new SocketClientConfig();
         scc.setReConnectWays(_l);
         CommonHelper.checkNetworkStatus(instance);                     //网络设置获取
-       }
+    }
 
     public static Context getAppContext() {
         return instance;
     }
 
     public static KSYProxyService getKSYProxy() {
-        return proxyService == null ? (proxyService = newKSYProxy()) : proxyService;
+        if(proxyService == null){
+            return newKSYProxy();
+        }else{
+            return proxyService ;
+        }
     }
 
     private static KSYProxyService newKSYProxy() {
-        return new KSYProxyService(instance);
+        proxyService =new KSYProxyService(instance);
+        initCache();
+        return proxyService;
     }
 
+    // 初始化播放缓存
+    private static void initCache() {
+        File file = new File(ResourceUtil.getLocalUrlForKsy());// 设置缓存目录
+        if (!file.exists()) if (!file.mkdir()) Log.v("TAG", "KSYProxy MkDir Error");
+        proxyService.setCacheRoot(file);
+        proxyService.setMaxCacheSize(500 * 1024 * 1024);// 缓存大小 500MB
+        proxyService.startServer();
+    }
 
     private void initStaticFaces() {
         try {
@@ -89,6 +107,9 @@ public class BSApplication extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
+//        if (proxyService != null) {
+//            proxyService.shutDownServer();
+//        }
     }
 
     //第三方使用的相关方法

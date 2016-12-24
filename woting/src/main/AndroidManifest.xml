@@ -673,6 +673,28 @@
                 <category android:name="android.intent.category.HOME"/>
             </intent-filter>
         </receiver>
+        <!--  暂时不恢复
+        <receiver android:name="com.wotingfm.receiver.TickAlarmReceiver" >
+        </receiver>
+        <receiver android:name="com.wotingfm.receiver.PhoneStatReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.wotingfm.receiver.ConnectivityAlarmReceiver"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.wotingfm.receiver.BootAlarmReceiver"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>-->
 
         <service android:name=".common.service.SubclassService"/>
         <service android:name=".ui.interphone.commom.service.NotificationService"/>
