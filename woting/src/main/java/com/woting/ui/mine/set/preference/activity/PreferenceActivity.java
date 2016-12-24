@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.android.volley.VolleyError;
@@ -40,8 +39,6 @@ import java.util.List;
  * 邮箱：645700751@qq.com
  */
 public class PreferenceActivity extends AppBaseActivity implements View.OnClickListener {
-
-    private LinearLayout head_left_btn;
     private String tag = "PREFERENCE_SET_REQUEST_CANCEL_TAG"; // 取消网络请求标签
     private PreferenceActivity context;
     private Dialog dialog;
@@ -418,7 +415,7 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //保存偏好设置页查看状态
+        // 保存偏好设置页查看状态
         isCancelRequest = VolleyRequest.cancelRequest(tag);
         SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
         et.putString(StringConstant.PREFERENCE, "1");
