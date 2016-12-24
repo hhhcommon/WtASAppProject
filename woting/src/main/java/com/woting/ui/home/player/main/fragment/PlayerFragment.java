@@ -81,12 +81,9 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * 播放主界面
@@ -293,8 +290,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         refreshType = 0;// 是不是第一次请求数据
         bmpPress = BitmapUtils.readBitMap(context, R.mipmap.wt_duijiang_button_pressed);
         bmp = BitmapUtils.readBitMap(context, R.mipmap.talknormal);
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", Locale.CHINA);
-        format.setTimeZone(TimeZone.getTimeZone("GMT"));
+//        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", Locale.CHINA);
+//        format.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         UMShareAPI.get(context);// 初始化友盟
         setVoice();// 初始化音频控制器

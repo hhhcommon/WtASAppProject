@@ -23,18 +23,6 @@
             android:textColor="@color/WHITE"
             android:textSize="@dimen/activity_head_center" />
 
-        <TextView
-            android:id="@+id/open_edit"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="编辑"
-            android:textColor="@color/WHITE_1"
-            android:textSize="@dimen/wt_dinglan_text_right"
-            android:visibility="gone" />
-
     </RelativeLayout>
 
     <LinearLayout
@@ -174,9 +162,7 @@
 
         </RelativeLayout>
 
-
     </LinearLayout>
-
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
