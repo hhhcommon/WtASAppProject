@@ -7,11 +7,11 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.interphone.linkman.dao.NotifyHistoryDao;
 import com.woting.ui.interphone.linkman.model.DBNotifyHistory;
@@ -25,37 +25,37 @@ import java.util.List;
  * 邮箱：645700751@qq.com
  */
 public class NotifyNewsActivity extends AppBaseActivity implements OnClickListener {
-	private ListView mListView;
-	private LinearLayout lin_back;
-
-	private NotifyNewsAdapter adapter;
-
-	private NotifyHistoryDao dbDao;
-	private List<DBNotifyHistory> list;
-
-	private NotifyNewsActivity context;
-
+    private NotifyHistoryDao dbDao;
 	private MessageReceiver Receiver;
+
+    private List<DBNotifyHistory> list;
+    private NotifyNewsAdapter adapter;
+
+    private ListView mListView;
+    private TipView tipView;// 没有数据提示
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_notifynews);
-		context=this;
+
 		setView();                             // 设置界面
 		initDao();                             // 初始化数据库命令执行对象
 		getData();                             // 获取数据
-		if(Receiver == null) {		           // 注册广播
-			Receiver = new MessageReceiver();
-			IntentFilter filter = new IntentFilter();
-			filter.addAction(BroadcastConstants.PUSH_REFRESHNEWS);
-			registerReceiver(Receiver, filter);
-		}
 	}
 
-	/*
-	 * 广播接收  用于刷新界面
-	 */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(Receiver == null) {		           // 注册广播
+            Receiver = new MessageReceiver();
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(BroadcastConstants.PUSH_REFRESHNEWS);
+            registerReceiver(Receiver, filter);
+        }
+    }
+
+    // 广播接收  用于刷新界面
 	class MessageReceiver extends BroadcastReceiver{
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -66,26 +66,29 @@ public class NotifyNewsActivity extends AppBaseActivity implements OnClickListen
 		}
 	}
 
-	/*
-	 * 获取数据库的数据	
-	 */
+	// 获取数据库的数据
 	private void getData() {
 		list = dbDao.queryHistory();
-		adapter = new NotifyNewsAdapter(this, list);
-		mListView.setAdapter(adapter);
+        if(list == null || list.size() <= 0) {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有收到任何的通知消息");
+        } else {
+            tipView.setVisibility(View.GONE);
+            adapter = new NotifyNewsAdapter(context, list);
+            mListView.setAdapter(adapter);
+        }
 	}
 
-	/*
-	 * 初始化数据库命令执行对象
-	 */
+	// 初始化数据库命令执行对象
 	private void initDao() {
 		dbDao = new NotifyHistoryDao(context);
 	}
 
 	private void setView() {
 		mListView = (ListView) findViewById(R.id.listview_history);
-		lin_back = (LinearLayout) findViewById(R.id.head_left_btn);
-		lin_back.setOnClickListener(this);
+        findViewById(R.id.head_left_btn).setOnClickListener(this);
+
+        tipView = (TipView) findViewById(R.id.tip_view);
 	}
 
 	@Override
@@ -108,8 +111,6 @@ public class NotifyNewsActivity extends AppBaseActivity implements OnClickListen
 		list = null;
 		adapter = null;
 		mListView = null;
-		lin_back = null;
-		context = null;
 		setContentView(R.layout.activity_null);
 	}
 }

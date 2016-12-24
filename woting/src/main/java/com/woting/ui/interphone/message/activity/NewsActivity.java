@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +21,7 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.interphone.message.adapter.NewsAdapter;
@@ -42,29 +42,25 @@ import java.util.List;
  */
 
 public class NewsActivity extends AppBaseActivity implements OnClickListener {
-    private NewsActivity context;
-
     private NewsAdapter adapter;
 
-    private LinearLayout lin_back;
     private ListView mListView;
     private Dialog dialog;
-    private Dialog DelDialog;
+    private Dialog delDialog;
+    private TipView tipView;// 没有网路、没有数据提示
 
     private ArrayList<UserInviteMeInside> UserList;
     private ArrayList<GroupInfo> GroupList;
-    private ArrayList<MessageInFo> mes = new ArrayList<MessageInFo>();
+    private ArrayList<MessageInFo> mes = new ArrayList<>();
 
     private String tag = "MESSAGE_NEWS_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
     private int Position;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messagenews);
-        context = this;
         setView();// 设置界面
         Intent push = new Intent(BroadcastConstants.PUSH_NEWPERSON);
         Bundle bundle = new Bundle();
@@ -75,32 +71,33 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
             dialog = DialogUtils.Dialogph(context, "通讯中");
             sendPerson();
         } else {
-            ToastUtils.show_always(this, "网络连接失败，请稍后重试");
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
         }
-        DelDialog();
+        delDialog();
     }
 
-    private void DelDialog() {
+    private void delDialog() {
         final View dialog1 = LayoutInflater.from(this).inflate(R.layout.dialog_exit_confirm, null);
         TextView tv_cancel = (TextView) dialog1.findViewById(R.id.tv_cancle);
         TextView tv_title = (TextView) dialog1.findViewById(R.id.tv_title);
         TextView tv_confirm = (TextView) dialog1.findViewById(R.id.tv_confirm);
         tv_title.setText("确定拒绝?");
-        DelDialog = new Dialog(this, R.style.MyDialog);
-        DelDialog.setContentView(dialog1);
-        DelDialog.setCanceledOnTouchOutside(false);
-        DelDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
+        delDialog = new Dialog(context, R.style.MyDialog);
+        delDialog.setContentView(dialog1);
+        delDialog.setCanceledOnTouchOutside(false);
+        delDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
         tv_cancel.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                DelDialog.dismiss();
+                delDialog.dismiss();
             }
         });
 
         tv_confirm.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                DelDialog.dismiss();
+                delDialog.dismiss();
                 if (mes != null && mes.get(Position) != null && mes.get(Position).getMSType() != null && !mes.get(Position).getMSType().equals("")) {
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                         dialog = DialogUtils.Dialogph(context, "正在获取数据");
@@ -115,8 +112,9 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
 
     private void setView() {
         mListView = (ListView) findViewById(R.id.listview_history);
-        lin_back = (LinearLayout) findViewById(R.id.head_left_btn);
-        lin_back.setOnClickListener(this);
+        findViewById(R.id.head_left_btn).setOnClickListener(this);
+
+        tipView = (TipView) findViewById(R.id.tip_view);
     }
 
     @Override
@@ -133,9 +131,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
         VolleyRequest.RequestPost(GlobalConfig.getInvitedMeListUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
-                if (isCancelRequest) {
-                    return;
-                }
+                if (isCancelRequest) return;
                 String ContactMeString = null;
                 try {
                     String ReturnType = result.getString("ReturnType");
@@ -145,8 +141,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                         } catch (JSONException e1) {
                             e1.printStackTrace();
                         }
-                        UserList = new Gson().fromJson(ContactMeString, new TypeToken<List<UserInviteMeInside>>() {
-                        }.getType());
+                        UserList = new Gson().fromJson(ContactMeString, new TypeToken<List<UserInviteMeInside>>() {}.getType());
                         sendGroup();
                     } else if (ReturnType != null && ReturnType.equals("1002")) {
                         try {
@@ -191,9 +186,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
 
             @Override
             protected void requestSuccess(JSONObject result) {
-                if (isCancelRequest) {
-                    return;
-                }
+                if (isCancelRequest) return;
                 String ContactMeString = null;
                 try {
                     String ReturnType = result.getString("ReturnType");
@@ -203,9 +196,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                         } catch (JSONException e1) {
                             e1.printStackTrace();
                         }
-                        GroupList = new Gson().fromJson(ContactMeString, new TypeToken<List<GroupInfo>>() {
-                        }.getType());
-
+                        GroupList = new Gson().fromJson(ContactMeString, new TypeToken<List<GroupInfo>>() {}.getType());
                     } else if (ReturnType != null && ReturnType.equals("1002")) {
                         try {
                             String Message = result.getString("Message");
@@ -226,23 +217,19 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
+                if (dialog != null) dialog.dismiss();
                 setData();
             }
 
             @Override
             protected void requestError(VolleyError error) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
+                if (dialog != null) dialog.dismiss();
+                ToastUtils.showVolleyError(context);
             }
         });
     }
@@ -289,11 +276,13 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
             e.printStackTrace();
         }
         if (mes != null && mes.size() > 0) {
+            tipView.setVisibility(View.GONE);
             adapter = new NewsAdapter(context, mes);
             mListView.setAdapter(adapter);
             setAdapterListener();
         } else {
-            ToastUtils.show_always(context, "您没有未处理消息");
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_DATA, "您没有未处理的消息");
         }
     }
 
@@ -315,16 +304,12 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
             @Override
             public void jujue(int position) {
                 Position = position;
-                DelDialog.show();
+                delDialog.show();
             }
         });
     }
 
-    /**
-     * 处理接收或者拒绝请求的方法
-     *
-     * @param messageInFo
-     */
+    // 处理接收或者拒绝请求的方法
     private void sendRequest(final MessageInFo messageInFo, final int type) {
         String url = null;
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
@@ -361,12 +346,8 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
 
             @Override
             protected void requestSuccess(JSONObject result) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-                if (isCancelRequest) {
-                    return;
-                }
+                if (dialog != null) dialog.dismiss();
+                if (isCancelRequest) return;
                 try {
                     ReturnType = result.getString("ReturnType");
                     Message = result.getString("Message");
@@ -377,10 +358,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                     if (type == 1) {
                         if (ReturnType != null && ReturnType.equals("1001")) {
                             ToastUtils.show_always(context, "添加成功");
-                            /*
-                             * 此处删除该条数据
-							 */
-                            mes.remove(Position);
+                            mes.remove(Position);// 此处删除该条数据
                             adapter.notifyDataSetChanged();
                             context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                         } else if (ReturnType != null && ReturnType.equals("1002")) {
@@ -405,10 +383,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                     if (type == 1) {
                         if (ReturnType != null && ReturnType.equals("1001")) {
                             ToastUtils.show_always(context, "您已成功进入该组");
-                            /*
-                             * 此处删除该条数据
-							 */
-                            mes.remove(Position);
+                            mes.remove(Position);// 此处删除该条数据
                             adapter.notifyDataSetChanged();
                             context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                         } else if (ReturnType != null && ReturnType.equals("1002")) {
@@ -436,9 +411,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
 
             @Override
             protected void requestError(VolleyError error) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
+                if (dialog != null) dialog.dismiss();
             }
         });
     }
@@ -448,8 +421,6 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
         mListView = null;
-        lin_back = null;
-        context = null;
         setContentView(R.layout.activity_null);
     }
 }

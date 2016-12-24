@@ -26,6 +26,7 @@ import com.woting.ui.baseactivity.AppActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 /**
  * 变更手机号
  * 作者：xinlong on 2016/7/19 21:18
@@ -49,7 +50,6 @@ public class PhoneCheckActivity extends AppActivity implements OnClickListener {
     private boolean isCancelRequest;
     private boolean isGetCode;                      // 判断是否已经获取验证码
     private String phoneNumberNew;
-//  private int ViewType = 2;                       // == 1 为已经有手机号  == 2 为无手机号
     private TextView tv_Phone_Desc;
 
     @Override
@@ -81,7 +81,6 @@ public class PhoneCheckActivity extends AppActivity implements OnClickListener {
         if(!TextUtils.isEmpty(phoneType)){
            if(phoneType.equals("1")){
                phoneNumber = getIntent().getStringExtra("PhoneNumber");// 有手机号
-//               ViewType = 1;
                tv_Phone_Desc.setText("当前绑定的手机号码为："+phoneNumber.replaceAll("(\\d{3})\\d{6}(\\d{2})","$1******$2")
                        + "\n更换手机号后，下次登录可以使用新手机号码登录。");
                editPhoneNumber.setHint("请输入新的手机号码");
@@ -256,9 +255,7 @@ public class PhoneCheckActivity extends AppActivity implements OnClickListener {
                         ToastUtils.show_always(context, "手机号修改成功!");
                         SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
                         et.putString(StringConstant.PHONENUMBER, phoneNumber);
-                        if (!et.commit()) {
-                            Log.w("commit", " 数据 commit 失败!");
-                        }
+                        if (!et.commit()) Log.w("commit", " 数据 commit 失败!");
                         setResult(1);
                         finish();
                     } else {
@@ -292,13 +289,6 @@ public class PhoneCheckActivity extends AppActivity implements OnClickListener {
             }
         }.start();
     }
-
-    //    用正则验证手机号
-    //    private boolean isMobile(String str) {
-    //        Pattern pattern = Pattern.compile("^[1][3,4,5,7,8][0-9]{9}$");
-    //        Matcher matcher = pattern.matcher(str);
-    //        return matcher.matches();
-    //    }
 
     // 判断数据是否填写完整
     private boolean isComplete(int type) {
