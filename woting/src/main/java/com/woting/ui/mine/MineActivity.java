@@ -137,9 +137,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         setReceiver();
     }
 
-    /*
-      *设置广播接收器
-      */
+    // 设置广播接收器
     private void setReceiver() {
         if (Receiver == null) {
             Receiver = new MessageReceiver();
@@ -149,9 +147,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         }
     }
 
-    /*
-     * 接收到广播后更改界面
-     */
+    // 接收到广播后更改界面
     class MessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
