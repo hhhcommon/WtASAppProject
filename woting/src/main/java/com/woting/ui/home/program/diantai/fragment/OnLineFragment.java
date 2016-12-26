@@ -340,8 +340,6 @@ public class OnLineFragment extends Fragment {
                                 mainLists.clear();
                                 mainLists.addAll(tempList);
                             }
-
-
                             if (adapters == null) {
                                 adapters = new CityNewAdapter(context, mainLists);
                                 gridView.setAdapter(adapters);
