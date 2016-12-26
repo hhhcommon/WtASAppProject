@@ -340,17 +340,7 @@ public class OnLineFragment extends Fragment {
                                 mainLists.clear();
                                 mainLists.addAll(tempList);
                             }
-//                        if(mainLists.size()==1){
-//                            height=250;
-//                        }else if(mainLists.size()==2){
-//                            height=490;
-//                        }else if(mainLists.size()==3){
-//                            height=730;
-//                        }
-//                        //设置gridview的高
-//                        ViewGroup.LayoutParams params = gridView.getLayoutParams();
-//                        params.height = height;
-//                        gridView.setLayoutParams(params);
+
 
                             if (adapters == null) {
                                 adapters = new CityNewAdapter(context, mainLists);

@@ -476,7 +476,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                     PlayCount = "";
                                 }
                                 try {
-                                    CTime = arg1.getString("CTime");
+                                    CTime = Long.toString(System.currentTimeMillis());;
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     CTime = "";
@@ -519,6 +519,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                     ContentFavorite = "";
                                 }
                                 //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+
 
                                 PlayerHistory history = new PlayerHistory(
                                         ContentName, ContentImg, ContentPlay, "", mediatype,
@@ -568,6 +569,10 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
 
     }
+
+
+
+
 
 
     //更新数据交互
