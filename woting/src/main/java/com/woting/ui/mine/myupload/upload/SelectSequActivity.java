@@ -141,7 +141,7 @@ public class SelectSequActivity extends AppBaseActivity implements View.OnClickL
                         tipView.setVisibility(View.GONE);
                     } else {
                         tipView.setVisibility(View.VISIBLE);
-                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有自己的专辑哟\n快去电脑端上传自己的专辑吧");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -55,6 +55,7 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.MyGridView;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.common.photocut.PhotoCutActivity;
@@ -87,7 +88,7 @@ import java.util.List;
  * 群组详情页面
  * 辛龙 2016年1月21日
  */
-public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickListener, OnItemClickListener {
+public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickListener, OnItemClickListener, TipView.WhiteViewClick {
     private Bitmap bmp;
     private GroupInfo news;
     private GroupTalkAdapter adapter;
@@ -115,6 +116,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
     private TextView textGroupName;// 群名称
     private TextView textGroupId;// 群 ID
     private TextView textGroupNumber;// 群成员人数
+    private TipView tipView;// 数据加载出错提示
 
     private String groupId;// ID
     private String groupName;// NAME
@@ -144,6 +146,11 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
     }
 
     @Override
+    public void onWhiteViewClick() {
+        send();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_talk_groupnews);
@@ -155,8 +162,8 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
 
         initDao();
         initDialog();
-        getData();
         setView();
+        getData();
     }
 
     // 初始化对话框
@@ -182,10 +189,14 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
     // 获取上一个界面传递过来的数据
     private void getData() {
         if (getIntent() == null) {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.IS_ERROR);
             return;
         }
         String type = getIntent().getStringExtra("type");
         if (type == null || type.equals("")) {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.IS_ERROR);
             return;
         }
         switch (type) {
@@ -264,7 +275,11 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         }
         if (groupId == null || groupId.trim().equals("")) {
             groupId = "00";// 待定 此处为没有获取到 groupId
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.IS_ERROR);
         }
+
+        setData();
     }
 
     // 初始化视图
@@ -275,6 +290,9 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         findViewById(R.id.lin_allperson).setOnClickListener(this); // 查看所有群成员
         findViewById(R.id.lin_changetype).setOnClickListener(this);// 更改群类型
         findViewById(R.id.tv_delete).setOnClickListener(this);     // 退出群
+
+        tipView = (TipView) findViewById(R.id.tip_view);
+        tipView.setWhiteClick(this);
 
         imageHead = (ImageView) findViewById(R.id.image_touxiang); // 群头像
         imageHead.setOnClickListener(this);
@@ -306,8 +324,6 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
 
         textGroupName = (TextView) findViewById(R.id.tv_name);// 群名
         textIntroduce = (TextView) findViewById(R.id.et_jieshao);// 群介绍
-
-        setData();
     }
 
     // 数据初始化
@@ -325,10 +341,6 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
             textGroupId.setText(idString);
         }
 
-//        if (groupId != null && !groupId.equals("")) {// 群 ID
-//            String idString = "ID:" + groupId;
-//            textGroupId.setText(idString);
-//        }
         if (groupAlias == null || groupAlias.equals("")) {// 群别名
             groupAlias = groupName;
         }
@@ -387,7 +399,8 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
             dialog = DialogUtils.Dialogph(context, "通讯中");
             sendNet();
         } else {
-            ToastUtils.show_always(context, "网络失败，请检查网络");
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
         }
     }
 
@@ -418,8 +431,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                     ToastUtils.show_always(context, "对讲组内没有成员自动解散!");
                 } else {
                     try {
-                        list = new Gson().fromJson(result.getString("UserList"), new TypeToken<List<GroupInfo>>() {
-                        }.getType());
+                        list = new Gson().fromJson(result.getString("UserList"), new TypeToken<List<GroupInfo>>() {}.getType());
                         lists.clear();
                         String numString = "(" + list.size() + ")";
                         textGroupNumber.setText(numString);
@@ -448,8 +460,16 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                         } else {
                             adapter.notifyDataSetChanged();
                         }
+                        if(list.size() <= 0) {
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        } else {
+                            tipView.setVisibility(View.GONE);
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
                     }
                 }
             }
@@ -458,6 +478,8 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.IS_ERROR);
             }
         });
     }

@@ -20,9 +20,11 @@ import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ShareUtils;
 import com.woting.common.widgetui.HorizontalListView;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.player.main.adapter.ImageAdapter;
 import com.woting.ui.home.player.main.model.ShareModel;
@@ -32,10 +34,22 @@ import java.util.List;
 /**
  * 分享应用
  */
-public class ShapeAppActivity extends AppBaseActivity implements View.OnClickListener {
+public class ShapeAppActivity extends AppBaseActivity implements View.OnClickListener, TipView.WhiteViewClick {
     private WebView webView;
     private Dialog dialog;
     private Dialog shareDialog;
+
+    private TipView tipView;// 没有网络的提示
+
+    @Override
+    public void onWhiteViewClick() {
+        if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            setWeb();
+        } else {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,15 +62,24 @@ public class ShapeAppActivity extends AppBaseActivity implements View.OnClickLis
 
     // 初始化控件
     private void initView() {
+        tipView = (TipView) findViewById(R.id.tip_view);
+        tipView.setWhiteClick(this);
+
         findViewById(R.id.image_back).setOnClickListener(this);// 返回
         findViewById(R.id.text_shape).setOnClickListener(this);// 分享
         webView = (WebView) findViewById(R.id.web_view);
 
-        setWeb();
+        if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            setWeb();
+        } else {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
+        }
     }
 
     // 设置 WebView
     private void setWeb() {
+        tipView.setVisibility(View.GONE);
         dialog = DialogUtils.Dialogph(context, "正在加载");
         WebSettings setting = webView.getSettings();
         setting.setJavaScriptEnabled(true);                               // 支持js
