@@ -15,14 +15,11 @@ import com.woting.R;
 import java.io.IOException;
 import java.util.List;
 
-
 public class FaceGVAdapter extends BaseAdapter {
-	private static final String TAG = "FaceGVAdapter";
 	private List<String> list;
 	private Context mContext;
 
 	public FaceGVAdapter(List<String> list, Context mContext) {
-		super();
 		this.list = list;
 		this.mContext = mContext;
 	}
@@ -33,19 +30,16 @@ public class FaceGVAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
 		return list.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		// TODO Auto-generated method stub
 		return list.get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
-		// TODO Auto-generated method stub
 		return position;
 	}
 
@@ -54,7 +48,7 @@ public class FaceGVAdapter extends BaseAdapter {
 		ViewHolder holder;
 		if (convertView == null) {
 			holder = new ViewHolder();
-			convertView = LayoutInflater.from(mContext).inflate(R.layout.face_image, null);
+			convertView = LayoutInflater.from(mContext).inflate(R.layout.face_image, parent, false);
 			holder.iv = (ImageView) convertView.findViewById(R.id.face_img);
 			holder.tv = (TextView) convertView.findViewById(R.id.face_text);
 			convertView.setTag(holder);
@@ -68,7 +62,6 @@ public class FaceGVAdapter extends BaseAdapter {
 			e.printStackTrace();
 		}
 		holder.tv.setText("face/png/" + list.get(position));
-
 		return convertView;
 	}
 

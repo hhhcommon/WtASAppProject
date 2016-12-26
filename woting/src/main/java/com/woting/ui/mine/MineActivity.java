@@ -464,10 +464,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                     Bundle bundle = data.getExtras();
                     pModel = (UpdatePerson) bundle.getSerializable("data");
                     regionId = bundle.getString("regionId");
-                    if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
-                        ToastUtils.show_always(context, "网络失败，请检查网络");
-                        return;
-                    }
+                    if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) return;
                     sendUpdate(pModel);
                 }
             case 0x222:// 其它设置界面返回

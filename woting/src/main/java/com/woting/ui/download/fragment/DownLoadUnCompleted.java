@@ -23,6 +23,7 @@ import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.ToastUtils;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.download.adapter.DownloadAdapter;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.model.FileInfo;
@@ -33,7 +34,7 @@ import java.util.List;
 
 /**
  * 要注意删除事件和下载完毕事件后对数据库表的操作
- * PlayerFragment 里添加下载功能 将数据插入数据库 sequId 为空  修改DownloadCompleteFragment 内获取 list 的方法
+ * PlayerFragment 里添加下载功能 将数据插入数据库 sequId 为空  修改 DownloadCompleteFragment 内获取 list 的方法
  */
 public class DownLoadUnCompleted extends Fragment {
     private FragmentActivity context;
@@ -49,7 +50,7 @@ public class DownLoadUnCompleted extends Fragment {
     private LinearLayout linearStart;
     private LinearLayout linearClear;
     private LinearLayout linearStatusYes;
-    private LinearLayout linearStatusNo;
+    private TipView tipView;// 没有数据时的提示
 
     private String userId;
     private int num = -1;
@@ -88,24 +89,24 @@ public class DownLoadUnCompleted extends Fragment {
     }
 
     private void setView() {
+        tipView = (TipView) rootView.findViewById(R.id.tip_view);
+
         listView = (ListView) rootView.findViewById(R.id.listView);
         textStart = (TextView) rootView.findViewById(R.id.tv_start);
         imageStart = (ImageView) rootView.findViewById(R.id.img_start);
         linearStart = (LinearLayout) rootView.findViewById(R.id.lin_start);
         linearClear = (LinearLayout) rootView.findViewById(R.id.lin_clear);
         linearStatusYes = (LinearLayout) rootView.findViewById(R.id.lin_status_yes);// 有未下载时布局
-        linearStatusNo = (LinearLayout) rootView.findViewById(R.id.lin_status_no);// 无未下载时布局
     }
 
     private void setDownLoadSource() {
         userId = CommonUtils.getUserId(context);
         fileInfoList = FID.queryFileInfo("false", userId);// 查询表中未完成的任务
         if (fileInfoList.size() == 0) {
-            linearStatusYes.setVisibility(View.GONE);
-            linearStatusNo.setVisibility(View.VISIBLE);
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_DATA, "没有下载任务\n您没有未完成的下载任务哟");
         } else {
-            linearStatusNo.setVisibility(View.GONE);
-            linearStatusYes.setVisibility(View.VISIBLE);
+            tipView.setVisibility(View.GONE);
             if (DownloadTask.mContext != null && DownloadTask.isPause) {
                 imageStart.setImageResource(R.mipmap.wt_download_play);
                 dwType = false;
@@ -318,7 +319,6 @@ public class DownLoadUnCompleted extends Fragment {
             context.unregisterReceiver(mReceiver);
             mReceiver = null;
         }
-
         context = null;
     }
 }

@@ -1490,8 +1490,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     if (ReturnType.equals("1001")) {
                         page++;
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        ArrayList<LanguageSearchInside> list = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<LanguageSearchInside>>() {
-                        }.getType());
+                        ArrayList<LanguageSearchInside> list = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<LanguageSearchInside>>() {}.getType());
                         if (refreshType == 0) {
                             LanguageSearchInside fList = getDaoList(context);// 得到数据库里边的第一条数据
                             if (list != null && list.size() > 0 && fList != null) {// 有返回数据并且数据库中有数据
@@ -1820,10 +1819,14 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     e.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
+                    List<LanguageSearchInside> list = new ArrayList<>();
                     try {
-                        LanguageSearch lists = new Gson().fromJson(result.getString("ResultList"), new TypeToken<LanguageSearch>() {
-                        }.getType());
-                        List<LanguageSearchInside> list = lists.getList();
+                        LanguageSearch lists = new Gson().fromJson(result.getString("ResultList"), new TypeToken<LanguageSearch>() {}.getType());
+                        list = lists.getList();
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    try {
                         if (list != null && list.size() != 0 && fList != null) {
                             for (int i = 0; i < list.size(); i++) {
                                 if (list.get(i).getContentPlay() == null && list.get(i).getContentPlay().equals(fList.getContentPlay())) {
@@ -1834,10 +1837,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                                 allList.addAll(list);
                             } else if (refreshType == 1) {// 刷新
                                 for (int i = 0, size = allList.size(); i < size; i++) {
-                                    contentUrlList.add(allList.get(i).getContentURI());
+                                    contentUrlList.add(allList.get(i).getContentPlay());
                                 }
                                 for (int i = 0, size = list.size(); i < size; i++) {
-                                    if (!contentUrlList.contains(list.get(i).getContentURI())) {
+                                    if (!contentUrlList.contains(list.get(i).getContentPlay())) {
                                         allList.add(0, list.get(i));
                                     }
                                 }
