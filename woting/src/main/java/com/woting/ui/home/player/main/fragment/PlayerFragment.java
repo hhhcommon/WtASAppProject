@@ -81,12 +81,9 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * 播放主界面
@@ -293,8 +290,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         refreshType = 0;// 是不是第一次请求数据
         bmpPress = BitmapUtils.readBitMap(context, R.mipmap.wt_duijiang_button_pressed);
         bmp = BitmapUtils.readBitMap(context, R.mipmap.talknormal);
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", Locale.CHINA);
-        format.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         UMShareAPI.get(context);// 初始化友盟
         setVoice();// 初始化音频控制器
@@ -475,7 +470,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             mPlayer.recycleLKPlayer();
             isPlayLK = false;
         }
-//        s = "http://www.wotingfm.com:908/CM//dataCenter/group01/71413d1fccad4220bc2f474614a72f6e.mp3";
         if (local == null) {
             local = s;
             mUIHandler.sendEmptyMessage(PLAY);
@@ -621,6 +615,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
     // 按下按钮的操作
     private void pressDown() {
+        if(mCloseVoiceRunnable != null) {
+            mVoiceTextSpeakStatus.setText("请按住讲话");
+            mUIHandler.removeCallbacks(mCloseVoiceRunnable);
+        }
         curVolume = audioMgr.getStreamVolume(AudioManager.STREAM_MUSIC);// 获取此时的音量大小
         audioMgr.setStreamVolume(AudioManager.STREAM_MUSIC, stepVolume, AudioManager.FLAG_PLAY_SOUND);// 设置想要的音量大小
         voiceType = 1;
@@ -1451,12 +1449,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                             mVoiceTextSpeakStatus.setText("正在搜索: " + voiceStr);
                             voicePage = 1;
                             searchByVoice(voiceStr);
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    linChoseClose(mViewVoice);// 2秒后隐藏界面
-                                }
-                            }, 2000);
+                            mUIHandler.postDelayed(mCloseVoiceRunnable, 3000);
                         }
                     }
                     break;
@@ -1470,6 +1463,14 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             }
         }
     }
+
+    // 智能关闭语音搜索框
+    private Runnable mCloseVoiceRunnable = new Runnable() {
+        @Override
+        public void run() {
+            linChoseClose(mViewVoice);// 2秒后隐藏界面
+        }
+    };
 
     private static List<String> contentUrlList = new ArrayList<>();// 保存 ContentURI 用于去重  用完即 clear
 
@@ -1649,8 +1650,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     if (Message != null && Message.trim().length() > 0) {
                         mPlayAudioImageCover.setImageResource(R.mipmap.wt_icon_lktts);
                         playLuKuangTTS(Message);
-//                        playType = "TTS";
-//                        musicPlay(Message);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -1898,8 +1897,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 try {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType.equals("1001")) {
-                        LanguageSearch lists = new Gson().fromJson(result.getString("ResultList"), new TypeToken<LanguageSearch>() {
-                        }.getType());
+                        LanguageSearch lists = new Gson().fromJson(result.getString("ResultList"), new TypeToken<LanguageSearch>() {}.getType());
                         List<LanguageSearchInside> list = lists.getList();
                         if (list.size() != 0) {
                             if (voicePage == 1) {
@@ -1938,28 +1936,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     ToastUtils.show_always(context, "已经没有相关数据啦");
                     setPullAndLoad(true, false);
                 }
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (voiceType == 2) {
-                            mUIHandler.sendEmptyMessage(VOICE_UI);
-                        }
-                    }
-                }, 5000);
             }
 
             @Override
             protected void requestError(VolleyError error) {
                 setPullAndLoad(true, false);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (voiceType == 2) {
-                            mUIHandler.sendEmptyMessage(VOICE_UI);
-                        }
-                    }
-                }, 5000);
             }
         });
     }

@@ -59,15 +59,11 @@
         android:scrollbars="none"
         android:background="@color/app_bg"/>
 
-    <TextView
-        android:id="@+id/text_tip"
+    <com.woting.common.widgetui.TipView
+        android:id="@+id/tip_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/app_bg"
-        android:text="没有能上传的音频文件，赶紧去录制吧~~"
-        android:gravity="center"
-        android:textSize="14sp"
-        android:visibility="gone"
-        android:layout_below="@id/relative_title"/>
+        android:layout_below="@id/relative_title"
+        android:visibility="gone"/>
 
 </RelativeLayout>

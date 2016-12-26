@@ -13,9 +13,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.woting.R;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.mine.myupload.adapter.SelectFileListAdapter;
 import com.woting.ui.mine.myupload.model.MediaStoreInfo;
@@ -35,8 +35,8 @@ public class SelectLocalFileActivity extends AppBaseActivity implements
     private  List<MediaStoreInfo> list;
 
     private ListView listView;// 可选择列表
-    private TextView textTip;// 列表没有数据时的提示
     private Button btnNext;// 下一步
+    private TipView tipView;// 没有数据提示
 
     private int index;
 
@@ -56,10 +56,11 @@ public class SelectLocalFileActivity extends AppBaseActivity implements
         btnNext = (Button) findViewById(R.id.btn_next);// 下一步
         btnNext.setOnClickListener(this);
 
-        textTip = (TextView) findViewById(R.id.text_tip);
         listView = (ListView) findViewById(R.id.list_view);// 文件列表
         listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         listView.setOnItemClickListener(this);
+
+        tipView = (TipView) findViewById(R.id.tip_view);
     }
 
     @Override
@@ -67,10 +68,11 @@ public class SelectLocalFileActivity extends AppBaseActivity implements
         super.onResume();
         list = getLocalAudioFile();
         if(list == null || list.size() <= 0) {
-            textTip.setVisibility(View.VISIBLE);
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET, "您本地没有音频数据哟\n快去录制属于自己的音频吧");
             btnNext.setVisibility(View.GONE);
         } else {
-            textTip.setVisibility(View.GONE);
+            tipView.setVisibility(View.GONE);
             btnNext.setVisibility(View.VISIBLE);
             listView.setAdapter(adapter = new SelectFileListAdapter(context, list));
             adapter.setImagePlayListener(this);
@@ -123,9 +125,7 @@ public class SelectLocalFileActivity extends AppBaseActivity implements
         List<MediaStoreInfo> list = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
         Cursor cursor = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
-        if (cursor == null) {
-            return null;
-        }
+        if (cursor == null) return null;
         cursor.moveToFirst();
         int fileNum = cursor.getCount();
         Log.i("MainActivity", "--------- AUDIO START ---------");

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,6 +29,7 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.common.model.UserInfo;
@@ -53,9 +55,9 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
     private String b_name;
     private String groupId;
     private String tag = "TALK_PERSON_NEWS_VOLLEY_REQUEST_CANCEL_TAG";
-    private TalkPersonNewsActivity context;
+
+    private TipView tipView;// 数据加载出错提示
     private LinearLayout lin_ewm;
-    private LinearLayout head_left_btn;
     private LinearLayout lin_person_xiugai;
     private ImageView image_add;
     private ImageView image_xiugai;
@@ -68,29 +70,26 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
     private Dialog dialogs;
     private EditText et_groupSignature;
     private EditText et_b_name;
+
     private Bitmap bmp;
     private Bitmap bmpS;
-    private int viewType = -1;//=1时代表来自groupmembers
+
+    private int viewType = -1;// == 1 时代表来自 groupMembers
     private boolean update;
     private boolean isCancelRequest;
     private UserInviteMeInside news;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_talk_personnews);
-        context = this;
         update = false;    // 此时修改的状态
         setView();
         handleIntent();
         setData();
         setListener();
         dialogDelete();
-
     }
-
-
 
     private void dialogDelete() {
         final View dialog = LayoutInflater.from(context).inflate(R.layout.dialog_exit_confirm, null);
@@ -102,10 +101,6 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
         confirmDialog.setContentView(dialog);
         confirmDialog.setCanceledOnTouchOutside(true);
         confirmDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
-        /*
-         * LayoutParams pr2 = (LayoutParams)(confirmdialog.getLayoutParams());
-		 * pr2.width = PhoneMessage.ScreenWidth - 120;
-		 */
         tv_cancel.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,7 +114,6 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
                 if (id != null && !id.equals("")) {
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                         confirmDialog.dismiss();
-						/* ToastUtil.show_short(context, "我是send"); */
                         dialogs = DialogUtils.Dialogph(context, "正在获取数据");
                         send();
                     } else {
@@ -133,13 +127,14 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
     }
 
     private void setView() {
+        tipView = (TipView) findViewById(R.id.tip_view);
+
         image_touxiang = (ImageView) findViewById(R.id.image_touxiang);
         tv_name = (TextView) findViewById(R.id.tv_name);
         et_b_name = (EditText) findViewById(R.id.et_b_name);
         et_groupSignature = (EditText) findViewById(R.id.et_groupSignature);
         tv_id = (TextView) findViewById(R.id.tv_id);
         lin_ewm = (LinearLayout) findViewById(R.id.lin_ewm);
-        head_left_btn = (LinearLayout) findViewById(R.id.head_left_btn);
         imageView_ewm = (ImageView) findViewById(R.id.imageView_ewm);
         image_add = (ImageView) findViewById(R.id.image_add);
         image_xiugai = (ImageView) findViewById(R.id.image_xiugai);
@@ -150,8 +145,10 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
     }
 
     private void handleIntent() {
-        String type = this.getIntent().getStringExtra("type");
+        String type = getIntent().getStringExtra("type");
         if (type == null || type.equals("")) {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.IS_ERROR);
         } else if (type.equals("talkoldlistfragment")) {
             GroupInfo data = (GroupInfo) this.getIntent().getSerializableExtra("data");
             name = data.getName();
@@ -161,16 +158,15 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             num = data.getUserNum();
             b_name = data.getUserAliasName();
         } else if (type.equals("talkoldlistfragment_p")) {
-            UserInfo data = (UserInfo) this.getIntent().getSerializableExtra("data");
+            UserInfo data = (UserInfo) getIntent().getSerializableExtra("data");
             name = data.getUserName();
             imageUrl = data.getPortraitMini();
             id = data.getUserId();
             descN = data.getUserSign();
             num = data.getUserNum();
             b_name = data.getUserAliasName();
-
         } else if (type.equals("TalkGroupNewsActivity_p")) {
-            GroupInfo data = (GroupInfo) this.getIntent().getSerializableExtra("data");
+            GroupInfo data = (GroupInfo) getIntent().getSerializableExtra("data");
             groupId = this.getIntent().getStringExtra("id");
             name = data.getUserName();
             imageUrl = data.getPortraitBig();
@@ -181,7 +177,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             viewType = 1;
         } else if (type.equals("findActivity")) {
             // 处理组邀请时进入
-            UserInviteMeInside data = (UserInviteMeInside) this.getIntent().getSerializableExtra("data");
+            UserInviteMeInside data = (UserInviteMeInside) getIntent().getSerializableExtra("data");
             name = data.getUserName();
             imageUrl = data.getPortrait();
             id = data.getUserId();
@@ -191,7 +187,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             tv_delete.setVisibility(View.GONE);
             lin_person_xiugai.setVisibility(View.INVISIBLE);
         } else if (type.equals("GroupMemers")) {
-            UserInfo data = (UserInfo) this.getIntent().getSerializableExtra("data");
+            UserInfo data = (UserInfo) getIntent().getSerializableExtra("data");
             groupId = this.getIntent().getStringExtra("id");
             name = data.getUserName();
             imageUrl = data.getPortraitMini();
@@ -201,7 +197,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             num = data.getUserNum();
             viewType = 1;
         } else {
-            UserInfo data = (UserInfo) this.getIntent().getSerializableExtra("data");
+            UserInfo data = (UserInfo) getIntent().getSerializableExtra("data");
             name = data.getUserName();
             imageUrl = data.getPortraitMini();
             id = data.getUserId();
@@ -289,25 +285,21 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
                 if (update) {
                     // 此时是修改状态需要进行以下操作
                     if (id.equals(CommonUtils.getUserId(context))) {
-                        if (et_b_name.getText().toString() == null
-                                || et_b_name.getText().toString().trim().equals("")
+                        if (et_b_name.getText().toString().trim().equals("")
                                 || et_b_name.getText().toString().trim().equals("暂无备注名")) {
                             biename = " ";
                         } else {
                             biename = et_b_name.getText().toString();
                         }
-                        if (et_groupSignature.getText().toString() == null
-                                || et_groupSignature.getText().toString().trim().equals("")
+                        if (et_groupSignature.getText().toString().trim().equals("")
                                 || et_groupSignature.getText().toString().trim().equals("这家伙很懒，什么都没写")) {
                             groupSignature = " ";
                         } else {
                             groupSignature = et_groupSignature.getText().toString();
                         }
                     } else {
-                        if (et_b_name.getText().toString() == null
-                                || et_b_name.getText().toString().trim().equals("")
+                        if (et_b_name.getText().toString().trim().equals("")
                                 || et_b_name.getText().toString().trim().equals("暂无备注名")) {
-                           //biename = "";
                             biename=et_groupSignature.getText().toString().trim();
                         } else {
                             biename = et_b_name.getText().toString();
@@ -353,7 +345,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             }
         });
 
-        head_left_btn.setOnClickListener(new OnClickListener() {
+        findViewById(R.id.head_left_btn).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -365,7 +357,6 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             @Override
             public void onClick(View v) {
                 call(id);
-                // ToastUtil.show_short(TalkPersonNewsActivity.this, "添加好友到活跃状态");
             }
         });
 
@@ -398,18 +389,13 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
 
                 @Override
                 protected void requestSuccess(JSONObject result) {
-                    if (dialogs != null) {
-                        dialogs.dismiss();
-                    }
-                    if (isCancelRequest) {
-                        return;
-                    }
+                    if (dialogs != null) dialogs.dismiss();
+                    if (isCancelRequest) return;
                     try {
                         ReturnType = result.getString("ReturnType");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    // 根据返回值来对程序进行解析
                     if (ReturnType != null) {
                         if (ReturnType.equals("1001") || ReturnType.equals("10011")) {
                             et_b_name.setText(b_name2);
@@ -425,8 +411,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
                         } else if (ReturnType.equals("1004")) {
                             ToastUtils.show_always(context, "好友不存在");
                         } else if (ReturnType.equals("1005")) {
-                        /*    ToastUtils.show_always(context, "好友为自己无法修改");*/
-                            ToastUtils.show_always(context,"您没有对好友信息进行修改");
+                            Log.v("TAG", "没有对好友信息进行修改");
                         } else if (ReturnType.equals("1006")) {
                             ToastUtils.show_always(context, "没有可修改信息");
                         } else if (ReturnType.equals("1007")) {
@@ -445,9 +430,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
 
                 @Override
                 protected void requestError(VolleyError error) {
-                    if (dialogs != null) {
-                        dialogs.dismiss();
-                    }
+                    if (dialogs != null) dialogs.dismiss();
                 }
             });
         } catch (JSONException e) {
@@ -468,18 +451,13 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
 
             @Override
             protected void requestSuccess(JSONObject result) {
-                if (dialogs != null) {
-                    dialogs.dismiss();
-                }
-                if (isCancelRequest) {
-                    return;
-                }
+                if (dialogs != null) dialogs.dismiss();
+                if (isCancelRequest) return;
                 try {
                     ReturnType = result.getString("ReturnType");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                // 根据返回值来对程序进行解析
                 if (ReturnType != null) {
                     if (ReturnType.equals("1001")) {
                         context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
@@ -512,19 +490,16 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
 
             @Override
             protected void requestError(VolleyError error) {
-                if (dialogs != null) {
-                    dialogs.dismiss();
-                }
+                if (dialogs != null) dialogs.dismiss();
             }
         });
     }
 
     protected void call(String id) {
-        Intent it = new Intent(TalkPersonNewsActivity.this, CallAlertActivity.class);
+        Intent it = new Intent(context, CallAlertActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("id", id);
         it.putExtras(bundle);
-        // it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(it);
     }
 
@@ -546,7 +521,6 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
         name = null;
         imageUrl = null;
         id = null;
-        head_left_btn = null;
         image_add = null;
         tv_delete = null;
         image_xiugai = null;
