@@ -86,7 +86,7 @@ public class BroadcastConstants {
     // 我的上传界面全选
     public static final String UPDATE_MY_UPLOAD_CHECK_ALL = "UPDATE_MY_UPLOAD_CHECK_ALL";
 
-    //  pushmusic====电话操作，来电，去电(XX)
+    //  pushmusic====电话操作，来电，去电
     	public static final String PUSH_MUSIC = "PUSH_MUSIC";
 
     // 专辑列表界面发送广播到下载界面  用于更新下载界面

@@ -299,7 +299,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer,OnClickL
 				send();
 				ToastUtils.show_always(context, "重新获取了新数据");
 			}else if(action.equals(BroadcastConstants.PUSH_NEWPERSON)){
-				String messages = intent.getStringExtra("outmessage");
+				String messages = intent.getStringExtra("outMessage");
 				if(messages!=null&&!messages.equals("")){
 					message=messages;
 				}else{

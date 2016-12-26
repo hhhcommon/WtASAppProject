@@ -306,6 +306,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             mReceiver = new MessageReceiver();
             IntentFilter filter = new IntentFilter();
             filter.addAction(BroadcastConstants.PLAYERVOICE);
+            filter.addAction(BroadcastConstants.PUSH_MUSIC);
             filter.addAction(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
             context.registerReceiver(mReceiver, filter);
         }
@@ -1458,6 +1459,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                             }, 2000);
                         }
                     }
+                    break;
+                case BroadcastConstants.PUSH_MUSIC:
+                    // 监听到电话状态发生更改
+                    String phoneType = intent.getStringExtra("outMessage");
+                    Log.e("电话状态",phoneType+"");
+                    break;
+                default:
                     break;
             }
         }

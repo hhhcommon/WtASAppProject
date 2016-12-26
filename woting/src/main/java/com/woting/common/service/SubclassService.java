@@ -82,8 +82,8 @@ public class SubclassService extends Service {
                 if (ReceiveAlertActivity.instance == null) {
                 } else {
 //					abortBroadcast();//中断广播传递
-                    //					MsgNormal message = (MsgNormal) intent.getSerializableExtra("outmessage");
-                    byte[] bt = intent.getByteArrayExtra("outmessage");
+                    //					MsgNormal message = (MsgNormal) intent.getSerializableExtra("outMessage");
+                    byte[] bt = intent.getByteArrayExtra("outMessage");
                     Log.e("push_back接收器中数据", Arrays.toString(bt) + "");
                     try {
                         MsgNormal message = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
@@ -114,9 +114,9 @@ public class SubclassService extends Service {
                     }
                 }
             } else if (action.equals(BroadcastConstants.PUSH_SERVICE)) {///////////////////////////////////////////////////////////////////////
-                //				MsgNormal message = (MsgNormal) intent.getSerializableExtra("outmessage");
+                //				MsgNormal message = (MsgNormal) intent.getSerializableExtra("outMessage");
                 //				Log.i("弹出框服务push_service", "接收到的socket服务的信息"+message+"");
-                byte[] bt = intent.getByteArrayExtra("outmessage");
+                byte[] bt = intent.getByteArrayExtra("outMessage");
                 Log.e("push_service接收器中数据", Arrays.toString(bt) + "");
                 try {
                     MsgNormal message = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
