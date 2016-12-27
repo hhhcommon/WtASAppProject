@@ -1,19 +1,19 @@
 package com.woting.ui.interphone.commom.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.content.Context;
 
-import com.woting.ui.interphone.commom.message.Message;
-import com.woting.ui.interphone.commom.message.MsgMedia;
-import com.woting.ui.interphone.commom.message.MsgNormal;
-import com.woting.ui.interphone.commom.message.content.MapContent;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.service.SocketService;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.SequenceUUID;
+import com.woting.ui.interphone.commom.message.Message;
+import com.woting.ui.interphone.commom.message.MsgMedia;
+import com.woting.ui.interphone.commom.message.MsgNormal;
+import com.woting.ui.interphone.commom.message.content.MapContent;
+
+import java.util.HashMap;
+import java.util.Map;
 /**
  * 对讲机数据组装
  * @author 辛龙
@@ -599,7 +599,24 @@ public class InterPhoneControl   {
 				pullToSocket(msg);
 		}
 	}
-	
+
+	/**
+	 * 回执消息
+	 * @param context
+	 */
+	public  static void  sendReceiptMessage(Context context,String ReMsgId   ) {
+		MsgNormal msg = new MsgNormal();
+		//16进制编码：0000=0；1000=8
+		msg.setMsgType(1);
+		msg.setReMsgId(ReMsgId);
+		// 16进制编码：0000=0；1000=8
+		msg.setAffirm(0);
+		msg.setBizType(0);
+		msg.setCmdType(0);
+		msg.setSendTime(System.currentTimeMillis());
+		pullToSocket(msg);
+
+	}
 	
 	/**
 	 * 数据传输到socket

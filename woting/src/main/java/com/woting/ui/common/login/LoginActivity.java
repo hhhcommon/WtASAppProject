@@ -348,7 +348,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                                 Log.v("commit", "数据 commit 失败!");
                             }
                             context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
-                            context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));// 刷新下载界面
+                            context.sendBroadcast(new Intent(BroadcastConstants.PUSH_ALLURL_CHANGE));
                             String phoneName = editUserName.getText().toString().trim();
                             SharePreferenceManager.saveBatchSharedPreference(context, "USER_NAME", "USER_NAME", phoneName);
                             InterPhoneControl.sendEntryMessage(context);
@@ -555,7 +555,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                             Log.v("commit", "数据 commit 失败!");
                         }
                         context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
-                        context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));// 刷新下载界面
+                        context.sendBroadcast(new Intent(BroadcastConstants.PUSH_ALLURL_CHANGE));
                         InterPhoneControl.sendEntryMessage(context);
                         setResult(1);
                         finish();

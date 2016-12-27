@@ -2,7 +2,8 @@ package com.woting.common.util;
 
 import android.app.Activity;  
 import android.app.Service;  
-import android.os.Vibrator;  
+import android.os.Vibrator;
+import android.util.Log;
 
 /** 
  * 手机震动工具类 
@@ -19,16 +20,17 @@ public class VibratorUtils {
 	 */  
 
 	public static void Vibrate(final Activity activity, long milliseconds) {   
-		Vibrator vib = (Vibrator) activity.getSystemService(Service.VIBRATOR_SERVICE);   
+		Vibrator vib = (Vibrator) activity.getSystemService(Service.VIBRATOR_SERVICE);
 		vib.vibrate(milliseconds);   
 	}   
 	public static void Vibrate(final Activity activity, long[] pattern,boolean isRepeat) {   
 		Vibrator vib = (Vibrator) activity.getSystemService(Service.VIBRATOR_SERVICE);   
-		vib.vibrate(pattern, isRepeat ? 1 : -1);   
+		vib.vibrate(pattern, isRepeat ? 0: -1);
 	}
 	public static void cancel(final Activity activity) {
 		Vibrator vib = (Vibrator) activity.getSystemService(Service.VIBRATOR_SERVICE);
 		vib.cancel();
+		Log.e("停止震动","停止震动");
 	}
 
 }  

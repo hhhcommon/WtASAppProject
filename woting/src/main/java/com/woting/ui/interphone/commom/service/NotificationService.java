@@ -127,6 +127,8 @@ public class NotificationService extends Service {
                                         news = "有人申请添加您为好友,请查看";
                                     }
                                     setNewMessageNotification(context, news, "我听");
+                                    // 最新消息的回执-------测试版
+                                    InterPhoneControl.sendReceiptMessage(context,message.getMsgId());
                                     //已经添加在通讯录
                                     Intent p = new Intent(BroadcastConstants.PUSH_NEWPERSON);
                                     Bundle bundle = new Bundle();

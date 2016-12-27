@@ -3,6 +3,7 @@ package com.woting.ui.interphone.alert;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,6 +20,7 @@ import com.woting.common.service.SubclassService;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
+import com.woting.common.util.VibratorUtils;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
 import com.woting.ui.interphone.chat.fragment.ChatFragment;
 import com.woting.ui.interphone.chat.model.DBTalkHistorary;
@@ -38,12 +40,14 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
     private String image;
     private String name;
     private String id;
+    private long[] Vibrate = {400, 800, 400, 800};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_receivecall);
         instance = this;
+        VibratorUtils.Vibrate(instance,Vibrate,true);
         if (DuiJiangActivity.context == null) {
             //对讲主页界面更新
             MainActivity.changeTwo();
@@ -177,6 +181,8 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        VibratorUtils.cancel(instance);
+        Log.e("停止震动", "停止震动");
         instance = null;
         image = null;
         name = null;
