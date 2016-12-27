@@ -38,7 +38,8 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
     private TextView textCompleted;
     private TextView textUncompleted;
     private ViewPager viewDownload;
-    public static Boolean isVisible=false;
+
+    public static boolean isVisible = false;
 
     @Override
     public void onClick(View v) {
@@ -62,11 +63,10 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
         setType();
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
-        isVisible=true;
+        isVisible = true;
     }
 
     // 适配顶栏样式
@@ -80,7 +80,6 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
         }
         TextView tv_main = (TextView) findViewById(R.id.tv_main);
         if (v) {
-
             tv_main.setVisibility(View.VISIBLE);
         } else {
             tv_main.setVisibility(View.GONE);
@@ -160,7 +159,7 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
         return super.onKeyDown(keyCode, event);
     }
 
-    // 设置android app 的字体大小不受系统字体大小改变的影响
+    // 设置 android app 的字体大小不受系统字体大小改变的影响
     @Override
     public Resources getResources() {
         Resources res = super.getResources();
@@ -189,7 +188,7 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        isVisible=false;
+        isVisible = false;
         textCompleted = null;
         textUncompleted = null;
         viewDownload = null;

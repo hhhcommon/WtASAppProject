@@ -18,13 +18,14 @@ import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.DialogUtils;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.program.fenlei.adapter.CatalogListAdapter;
 import com.woting.ui.home.program.fenlei.model.FenLei;
-import com.woting.ui.home.program.fenlei.model.FenLeiName;
 import com.woting.ui.home.program.radiolist.rollviewpager.RollPagerView;
 import com.woting.ui.home.program.radiolist.rollviewpager.adapter.LoopPagerAdapter;
 import com.woting.ui.home.program.radiolist.rollviewpager.hintview.IconHintView;
@@ -33,27 +34,35 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 分类页面
- *
  * @author 辛龙
- *         2016年3月31日
+ * 2016年3月31日
  */
-public class FenLeiFragment extends Fragment {
+public class FenLeiFragment extends Fragment implements TipView.WhiteViewClick {
     private FragmentActivity context;
-    private View rootView;
-    private View headView;
-    private ListView EBL_Catalog;
     private CatalogListAdapter adapter;
+
     private Dialog dialog;
+    private View rootView;
+    private ListView listViewCatalog;
+    private TipView tipView;// 没有网络、没有数据提示
 
     private String tag = "CATALOG_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
 
-    List<FenLeiName> CatalogList = new ArrayList<>();
+    @Override
+    public void onWhiteViewClick() {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {// 发送网络请求
+            sendRequest();
+        } else {
+            dialog = DialogUtils.Dialogph(context, "数据加载中....");
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,31 +74,33 @@ public class FenLeiFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_fenlei_new, container, false);
-            EBL_Catalog = (ListView) rootView.findViewById(R.id.ebl_fenlei);
-
-            headView = LayoutInflater.from(context).inflate(R.layout.headview_fragment_fenlei, null);
+            View headView = LayoutInflater.from(context).inflate(R.layout.headview_fragment_fenlei, null);
             View footView = LayoutInflater.from(context).inflate(R.layout.footview_fragment_fenlei, null);
-            EBL_Catalog.addHeaderView(headView);
-            EBL_Catalog.setSelector(new ColorDrawable(Color.TRANSPARENT));
-            EBL_Catalog.addFooterView(footView);
+
+            tipView = (TipView) rootView.findViewById(R.id.tip_view);
+            tipView.setWhiteClick(this);
+
+            listViewCatalog = (ListView) rootView.findViewById(R.id.ebl_fenlei);
+            listViewCatalog.addHeaderView(headView);
+            listViewCatalog.setSelector(new ColorDrawable(Color.TRANSPARENT));
+            listViewCatalog.addFooterView(footView);
 
             // 轮播图
             RollPagerView mLoopViewPager = (RollPagerView) headView.findViewById(R.id.slideshowView);
             mLoopViewPager.setAdapter(new LoopAdapter(mLoopViewPager));
             mLoopViewPager.setHintView(new IconHintView(context, R.mipmap.indicators_now, R.mipmap.indicators_default));
 
-            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {        // 发送网络请求
+            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {// 发送网络请求
                 sendRequest();
             } else {
-                ToastUtils.show_short(context, "网络失败，请检查网络");
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_NET);
             }
         }
         return rootView;
     }
 
-    /**
-     * 发送网络请求
-     */
+    // 发送网络请求
     private void sendRequest() {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -100,81 +111,57 @@ public class FenLeiFragment extends Fragment {
             jsonObject.put("GPS-longitude", PhoneMessage.longitude);
             jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
             jsonObject.put("PCDType", GlobalConfig.PCDType);
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         VolleyRequest.RequestPost(GlobalConfig.getPreferenceUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
-            private String ResultList;
 
             @Override
             protected void requestSuccess(JSONObject result) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-                if (isCancelRequest) {
-                    return;
-                }
+                if(dialog != null) dialog.dismiss();
+                if (isCancelRequest) return;
                 try {
                     ReturnType = result.getString("ReturnType");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-                // 根据返回值来对程序进行解析
-                if (ReturnType != null) {
-                    if (ReturnType.equals("1001")) {
-                        try {
-
-                            JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("PrefTree")).nextValue();
-                            ResultList = arg1.getString("children");
-                            List<FenLei> c = new Gson().fromJson(ResultList, new TypeToken<List<FenLei>>() {
-                            }.getType());
-                            if (c != null) {
-                                if (c.size() == 0) {
-                                    ToastUtils.show_always(context, "获取分类列表为空");
-                                } else {
-                                    if (adapter == null) {
-                                        adapter = new CatalogListAdapter(context, c);
-                                        EBL_Catalog.setAdapter(adapter);
-                                    } else {
-                                        adapter.notifyDataSetChanged();
-                                    }
-                                }
+                if (ReturnType != null && ReturnType.equals("1001")) {
+                    try {
+                        JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("PrefTree")).nextValue();
+                        List<FenLei> childrenList = new Gson().fromJson(arg1.getString("children"), new TypeToken<List<FenLei>>() {}.getType());
+                        if (childrenList == null || childrenList.size() == 0) {
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.NO_DATA, "");
+                        } else {
+                            if (adapter == null) {
+                                listViewCatalog.setAdapter(adapter = new CatalogListAdapter(context, childrenList));
                             } else {
-                                ToastUtils.show_always(context, "获取分类列表为空");
+                                adapter.notifyDataSetChanged();
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            tipView.setVisibility(View.GONE);
                         }
-                    } else if (ReturnType.equals("1002")) {
-                        ToastUtils.show_always(context, "无此分类信息");
-                    } else if (ReturnType.equals("1003")) {
-                        ToastUtils.show_always(context, "分类不存在");
-                    } else if (ReturnType.equals("1011")) {
-                        ToastUtils.show_always(context, "当前暂无分类");
-                    } else if (ReturnType.equals("T")) {
-                        ToastUtils.show_always(context, "获取列表异常");
-                    } else {
-                        ToastUtils.show_always(context, "获取列表异常");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
                     }
-
                 } else {
-                    ToastUtils.show_always(context, "数据获取异常，请稍候重试");
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
                 }
             }
 
             @Override
             protected void requestError(VolleyError error) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
+                if(dialog != null) dialog.dismiss();
+                ToastUtils.showVolleyError(context);
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.IS_ERROR);
             }
         });
     }
-
 
     private class LoopAdapter extends LoopPagerAdapter {
         public LoopAdapter(RollPagerView viewPager) {
@@ -219,10 +206,8 @@ public class FenLeiFragment extends Fragment {
         isCancelRequest = VolleyRequest.cancelRequest(tag);
         context = null;
         rootView = null;
-        EBL_Catalog = null;
-        CatalogList = null;
+        listViewCatalog = null;
         adapter = null;
-        dialog = null;
         tag = null;
     }
 }

@@ -18,13 +18,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.CommonUtils;
-import com.woting.common.util.ToastUtils;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.download.adapter.DownLoadSequAdapter;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.downloadlist.activity.DownLoadListActivity;
@@ -45,12 +44,10 @@ public class DownLoadCompleted extends Fragment implements OnClickListener {
     private Dialog confirmDialog;
     private View rootView;
     private View headView;
-    private RelativeLayout relativeDownload;
-    private LinearLayout linearTop;
     private LinearLayout linearAllCheck;
-    private LinearLayout linearNoData;
     private ListView mListView;
     private ImageView imageAllCheck;
+    private TipView tipView;// 没有数据提示
 
     private List<FileInfo> fileSequList;// 专辑list
     private List<FileInfo> fileDellList;// 删除list
@@ -82,19 +79,15 @@ public class DownLoadCompleted extends Fragment implements OnClickListener {
     }
 
     private void setView() {
-        relativeDownload = (RelativeLayout) rootView.findViewById(R.id.wt_download_rv);
+        rootView.findViewById(R.id.lin_clear).setOnClickListener(this);
+        rootView.findViewById(R.id.lin_dinglan).setOnClickListener(this);
+        tipView = (TipView) rootView.findViewById(R.id.tip_view);
         mListView = (ListView) rootView.findViewById(R.id.listView);
-
-        linearTop = (LinearLayout) rootView.findViewById(R.id.lin_dinglan);
-        linearTop.setOnClickListener(this);
 
         linearAllCheck = (LinearLayout) rootView.findViewById(R.id.lin_quanxuan);
         linearAllCheck.setOnClickListener(this);
 
         imageAllCheck = (ImageView) rootView.findViewById(R.id.img_quanxuan);
-        linearNoData = (LinearLayout) rootView.findViewById(R.id.lin_status_no);
-
-        rootView.findViewById(R.id.lin_clear).setOnClickListener(this);
     }
 
     // 查询数据库当中已完成的数据，此数据传输到 adapter 中进行适配
@@ -106,7 +99,7 @@ public class DownLoadCompleted extends Fragment implements OnClickListener {
         allCheckFlag = false;
         List<FileInfo> f = FID.queryFileInfo("true", userId);
         if (f.size() > 0) {
-            linearNoData.setVisibility(View.GONE);
+            tipView.setVisibility(View.GONE);
             fileSequList = FID.GroupFileInfoAll(userId);
             Log.e("f", fileSequList.size() + "");
             if (fileSequList.size() > 0) {
@@ -121,19 +114,13 @@ public class DownLoadCompleted extends Fragment implements OnClickListener {
                         }
                     }
                 }
-                linearTop.setVisibility(View.VISIBLE);
-                mListView.setVisibility(View.VISIBLE);
-                relativeDownload.setVisibility(View.VISIBLE);
                 mListView.setAdapter(adapter = new DownLoadSequAdapter(context, fileSequList));
                 setItemListener();
                 setInterface();
             }
         } else {
-            linearTop.setVisibility(View.GONE);
-            mListView.setVisibility(View.GONE);
-            relativeDownload.setVisibility(View.GONE);
-            linearNoData.setVisibility(View.VISIBLE);
-            ToastUtils.show_short(context, "还没有下载完成的任务");
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_DATA, "没有下载的内容\n快去把想听的内容下载下来吧");
         }
     }
 

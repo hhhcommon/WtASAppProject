@@ -48,10 +48,10 @@ public class updateUserNumActivity extends AppActivity implements View.OnClickLi
     protected void init() {
         setTitle("用户号");
 
-        et_UsrNum=(EditText)findViewById(R.id.edit_usr_num);
+        et_UsrNum = (EditText) findViewById(R.id.edit_usr_num);
         et_UsrNum.addTextChangedListener(new MyEditListener());
 
-        btn_Confirm=(Button)findViewById(R.id.btn_confirm);
+        btn_Confirm = (Button) findViewById(R.id.btn_confirm);
         btn_Confirm.setOnClickListener(this);
 
         initDialog();
@@ -62,7 +62,7 @@ public class updateUserNumActivity extends AppActivity implements View.OnClickLi
         dialog1.findViewById(R.id.tv_cancel).setOnClickListener(this);
         dialog1.findViewById(R.id.tv_confirm).setOnClickListener(this);
 
-        tv_desc=(TextView)dialog1.findViewById(R.id.tv_desc);
+        tv_desc = (TextView) dialog1.findViewById(R.id.tv_desc);
         confirmDialog = new Dialog(context, R.style.MyDialog);
         confirmDialog.setContentView(dialog1);
         confirmDialog.setCanceledOnTouchOutside(true);
@@ -71,7 +71,7 @@ public class updateUserNumActivity extends AppActivity implements View.OnClickLi
 
     // 判断数据是否填写完整
     private boolean isComplete() {
-        userNum =et_UsrNum.getText().toString().trim();
+        userNum = et_UsrNum.getText().toString().trim();
         return !"".equalsIgnoreCase(userNum);
     }
 
@@ -80,16 +80,16 @@ public class updateUserNumActivity extends AppActivity implements View.OnClickLi
         switch (v.getId()) {
             case R.id.btn_confirm:      // 确定修改
                 if (isComplete()) {
-                    tv_desc.setText("用户号是账号的唯一凭证,只能修改一次.\n\n请再次确认,用户号:"+userNum);
+                    tv_desc.setText("用户号是账号的唯一凭证,只能修改一次.\n\n请再次确认,用户号:" + userNum);
                     confirmDialog.show();
                 }
                 break;
             case R.id.tv_cancel:
-               if(confirmDialog.isShowing()){
-                   confirmDialog.dismiss();
-               }
+                if (confirmDialog.isShowing()) {
+                    confirmDialog.dismiss();
+                }
                 break;
-            case R.id.tv_confirm :
+            case R.id.tv_confirm:
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                     dialog = DialogUtils.Dialogph(context, "正在获取数据");
                     send();
@@ -103,7 +103,7 @@ public class updateUserNumActivity extends AppActivity implements View.OnClickLi
     private void send() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            jsonObject.put("UserNum",userNum);
+            jsonObject.put("UserNum", userNum);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -119,9 +119,7 @@ public class updateUserNumActivity extends AppActivity implements View.OnClickLi
                         ToastUtils.show_always(context, "用户号修改成功!");
                         SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
                         et.putString(StringConstant.USER_NUM, userNum);
-                        if (!et.commit()) {
-                            Log.w("commit", " 数据 commit 失败!");
-                        }
+                        if (!et.commit()) Log.w("commit", " 数据 commit 失败!");
                         setResult(1);
                         finish();
                     } else {
@@ -129,6 +127,7 @@ public class updateUserNumActivity extends AppActivity implements View.OnClickLi
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    ToastUtils.show_always(context, "用户号修改失败!");
                 }
             }
 

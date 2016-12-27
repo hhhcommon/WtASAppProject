@@ -63,8 +63,10 @@ import java.util.List;
  * 作者：xinlong on 2016/4/1 17:40
  * 邮箱：645700751@qq.com
  */
-public class AlbumActivity extends AppBaseFragmentActivity implements OnClickListener {
-    private AlbumActivity context;
+public class AlbumActivity extends AppBaseFragmentActivity implements OnClickListener, TipView.WhiteViewClick {
+    private DetailsFragment detailsFragment;
+    private ProgramFragment programFragment;
+
     private String RadioName;
     public static TextView tv_album_name;
     public static ImageView img_album;
@@ -85,7 +87,6 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
     private Dialog dialog1;
     private UMImage image;
 
-    protected Fragment mFragmentContent;        // 上一个Fragment
     private TextView textDetails, textProgram;    // text_details text_program
     private ImageView imageCursor;                //cursor
     private int offset;                        // 图片移动的偏移量
@@ -96,10 +97,19 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
     private TipView tipView;// 提示
 
     @Override
+    public void onWhiteViewClick() {
+        if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            if(detailsFragment != null) detailsFragment.send();
+            if(programFragment != null) programFragment.send();
+        } else {
+            setTip(TipView.TipStatus.NO_NET);
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
-        context = this;
         setView();            // 设置界面
         setListener();
         InitImage();
@@ -122,6 +132,7 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
         textProgram.setOnClickListener(this);
 
         tipView = (TipView) findViewById(R.id.tip_view);
+        tipView.setWhiteClick(this);
     }
 
     private void setListener() {
@@ -153,8 +164,8 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
         mPager = (ViewPager) findViewById(R.id.viewpager);
         mPager.setOffscreenPageLimit(1);
         ArrayList<Fragment> fragmentList = new ArrayList<>();
-        DetailsFragment detailsFragment = new DetailsFragment();//专辑详情页
-        ProgramFragment programFragment = new ProgramFragment();//专辑列表页
+        detailsFragment = new DetailsFragment();// 专辑详情页
+        programFragment = new ProgramFragment();// 专辑列表页
         fragmentList.add(detailsFragment);
         fragmentList.add(programFragment);
         mPager.setAdapter(new MyFragmentChildPagerAdapter(getSupportFragmentManager(), fragmentList));
@@ -199,7 +210,7 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
         shareDialog.setContentView(dialog);
         Window window = shareDialog.getWindow();
         DisplayMetrics dm = new DisplayMetrics();
-        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
         int screenWidth = dm.widthPixels;
         LayoutParams params = dialog.getLayoutParams();
         params.width = screenWidth;
@@ -259,7 +270,7 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
             }
             dialog1 = DialogUtils.Dialogph(context, "分享中");
             Config.dialog = dialog1;
-            new ShareAction(context).setPlatform(Platform).setCallback(umShareListener).withMedia(image)
+            new ShareAction(AlbumActivity.this).setPlatform(Platform).setCallback(umShareListener).withMedia(image)
                     .withText(shareDesc).withTitle(shareName).withTargetUrl(shareUrl).share();
         } else {
             ToastUtils.show_always(context, "分享失败，请稍后再试！");
@@ -431,6 +442,17 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
         });
     }
 
+    // 设置提示
+    public void setTip(TipView.TipStatus tipStatus) {
+        tipView.setVisibility(View.VISIBLE);
+        tipView.setTipView(tipStatus);
+    }
+
+    // 隐藏提示
+    public void hideTip() {
+        tipView.setVisibility(View.GONE);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -441,7 +463,6 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
     protected void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
-        context = null;
         RadioName = null;
         tv_album_name = null;
         img_album = null;
@@ -458,10 +479,11 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
         shareDialog = null;
         dialog1 = null;
         image = null;
-        mFragmentContent = null;
         textDetails = null;
         textProgram = null;
         imageCursor = null;
+        detailsFragment = null;
+        programFragment = null;
         setContentView(R.layout.activity_null);
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,12 +7,6 @@
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
-
-    <com.woting.common.widgetui.TipView
-        android:id="@+id/tip_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
 
     <RelativeLayout
         android:id="@+id/relative_title"
@@ -36,6 +30,12 @@
 
     </RelativeLayout>
 
+    <com.woting.common.widgetui.TipView
+        android:id="@+id/tip_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"/>
+
     <com.woting.common.widgetui.xlistview.XListView
         android:id="@+id/list_anchor"
         android:layout_width="match_parent"
@@ -50,4 +50,4 @@
         android:layout_below="@id/relative_title"
         android:background="@color/dinglan_orange"/>
 
-</RelativeLayout>
+</LinearLayout>

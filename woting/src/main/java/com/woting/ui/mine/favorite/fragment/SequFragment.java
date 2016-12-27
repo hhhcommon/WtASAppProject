@@ -26,6 +26,7 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
@@ -44,7 +45,7 @@ import java.util.List;
 /**
  * 我喜欢的专辑界面
  */
-public class SequFragment extends Fragment {
+public class SequFragment extends Fragment implements TipView.WhiteViewClick {
 	private FragmentActivity context;
     private FavorListAdapter adapter;
     private List<RankInfo> subList;
@@ -55,6 +56,7 @@ public class SequFragment extends Fragment {
     private View rootView;
     private View linearNull;
 	private XListView mListView;
+    private TipView tipView;// 没有网络、没有数据提示
     
 	private String tag = "SEQU_VOLLEY_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
@@ -62,6 +64,11 @@ public class SequFragment extends Fragment {
     private int page = 1;
     private int refreshType = 1;// refreshType == 1 为下拉加载  == 2 为上拉加载更多
     private int pageSizeNum = -1;// 先求余 如果等于0 最后结果不加1 如果不等于0 结果加一
+
+    @Override
+    public void onWhiteViewClick() {
+        send();
+    }
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +86,10 @@ public class SequFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (rootView == null) {
 			rootView = inflater.inflate(R.layout.fragment_favorite_sound, container, false);
+
+            tipView = (TipView) rootView.findViewById(R.id.tip_view);
+            tipView.setWhiteClick(this);
+
 			linearNull = rootView.findViewById(R.id.linear_null);
 			mListView = (XListView) rootView.findViewById(R.id.listView);
 			mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
@@ -142,7 +153,7 @@ public class SequFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case 1:
-                if(resultCode==1){
+                if(resultCode == 1){
                     getActivity().finish();
                 }
                 break;
@@ -179,7 +190,10 @@ public class SequFragment extends Fragment {
 	private void send() {
         if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
             if(dialog != null) dialog.dismiss();
-            ToastUtils.show_always(context, "网络连接失败，请检查网络连接!");
+            if(refreshType == 1) {
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_NET);
+            }
             if(refreshType == 1) {
                 mListView.stopRefresh();
             } else {
@@ -187,7 +201,7 @@ public class SequFragment extends Fragment {
             }
             return ;
         }
-		JSONObject jsonObject =VolleyRequest.getJsonObject(context);
+		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
 			jsonObject.put("MediaType", "SEQU");
 			jsonObject.put("Page", String.valueOf(page));
@@ -204,7 +218,6 @@ public class SequFragment extends Fragment {
 				try {
                     String ReturnType = result.getString("ReturnType");
                     Log.w("ReturnType", "ReturnType -- > > " + ReturnType);
-
                     if (ReturnType != null && ReturnType.equals("1001")) {
                         if(isDel){
                             ToastUtils.show_always(context, "已删除");
@@ -212,7 +225,6 @@ public class SequFragment extends Fragment {
                         }
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         subList = new Gson().fromJson(arg1.getString("FavoriteList"), new TypeToken<List<RankInfo>>() {}.getType());
-
                         try {
                             String allCountString = arg1.getString("AllCount");
                             String pageSizeString = arg1.getString("PageSize");
@@ -234,10 +246,7 @@ public class SequFragment extends Fragment {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
-                        if (refreshType == 1) {
-                            newList.clear();
-                        }
+                        if (refreshType == 1) newList.clear();
                         newList.addAll(subList);
                         if (adapter == null) {
                             mListView.setAdapter(adapter = new FavorListAdapter(context, newList));
@@ -245,9 +254,19 @@ public class SequFragment extends Fragment {
                             adapter.notifyDataSetChanged();
                         }
                         setListener();
+                        tipView.setVisibility(View.GONE);
+                    } else {
+                        if(refreshType == 1) {
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有喜欢的节目\n快去收听喜欢的节目吧");
+                        }
                     }
 				} catch (JSONException e) {
 					e.printStackTrace();
+                    if(refreshType == 1) {
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                    }
 				}
 
                 // 无论何种返回值，都需要终止掉上拉刷新及下拉加载的滚动状态
@@ -262,6 +281,10 @@ public class SequFragment extends Fragment {
 			protected void requestError(VolleyError error) {
 				if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
+                if(refreshType == 1) {
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                }
 			}
 		});
 	}

@@ -31,6 +31,7 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.home.main.HomeActivity;
@@ -53,7 +54,7 @@ import java.util.List;
 /**
  * 我喜欢的 TTS 界面
  */
-public class TTSFragment extends Fragment {
+public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
     private FragmentActivity context;
     private FavorListAdapter adapter;
     private SearchPlayerHistoryDao dbDao;
@@ -65,6 +66,7 @@ public class TTSFragment extends Fragment {
     private View rootView;
     private View linearNull;
     private XListView mListView;
+    private TipView tipView;// 没有网络、没有数据、加载错误提示
 
     private int page = 1;
     private int refreshType = 1;// refreshType == 1 为下拉加载  == 2 为上拉加载更多
@@ -72,6 +74,11 @@ public class TTSFragment extends Fragment {
     private String tag = "TTS_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
     private boolean isDel;
+
+    @Override
+    public void onWhiteViewClick() {
+        send();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,6 +97,8 @@ public class TTSFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_favorite_sound, container, false);
+            tipView = (TipView) rootView.findViewById(R.id.tip_view);
+            tipView.setWhiteClick(this);
             linearNull = rootView.findViewById(R.id.linear_null);
             mListView = (XListView) rootView.findViewById(R.id.listView);
             mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
@@ -233,8 +242,9 @@ public class TTSFragment extends Fragment {
     private void send() {
         if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
             if(dialog != null) dialog.dismiss();
-            ToastUtils.show_always(context, "网络连接失败，请检查网络连接!");
             if(refreshType == 1) {
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_NET);
                 mListView.stopRefresh();
             } else {
                 mListView.stopLoadMore();
@@ -299,9 +309,19 @@ public class TTSFragment extends Fragment {
                             adapter.notifyDataSetChanged();
                         }
                         setListener();
+                        tipView.setVisibility(View.GONE);
+                    } else {
+                        if(refreshType == 1) {
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有喜欢的节目\n快去收听喜欢的节目吧");
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    if(refreshType == 1) {
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                    }
                 }
 
                 // 无论何种返回值，都需要终止掉上拉刷新及下拉加载的滚动状态
@@ -316,6 +336,10 @@ public class TTSFragment extends Fragment {
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
+                if(refreshType == 1) {
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                }
             }
         });
     }
