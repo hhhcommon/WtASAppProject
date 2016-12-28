@@ -19,6 +19,7 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.PagerSlidingTabStrip;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseFragmentActivity;
 import com.woting.ui.home.program.fenlei.model.FenLeiName;
 import com.woting.ui.home.program.radiolist.adapter.MyPagerAdapter;
@@ -38,7 +39,7 @@ import java.util.List;
  * @author 辛龙
  * 2016年4月5日
  */
-public class RadioListActivity extends AppBaseFragmentActivity implements OnClickListener {
+public class RadioListActivity extends AppBaseFragmentActivity implements OnClickListener, TipView.WhiteViewClick {
     private TextView mTextView_Head;
     public static String catalogName;
     public static String catalogType;
@@ -52,6 +53,14 @@ public class RadioListActivity extends AppBaseFragmentActivity implements OnClic
     public static final String tag = "RADIO_LIST_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
     private RecommendFragment recommend;
+
+    private TipView tipView;// 没有网络提示
+
+    @Override
+    public void onWhiteViewClick() {
+        dialog = DialogUtils.Dialogph(context, "正在获取数据");
+        sendRequest();
+    }
 
     public boolean isCancel() {
         return isCancelRequest;
@@ -70,8 +79,9 @@ public class RadioListActivity extends AppBaseFragmentActivity implements OnClic
             recommend = new RecommendFragment();
             fragments.add(recommend);
         }
-        sendRequest();
+
         dialog = DialogUtils.Dialogph(context, "正在获取数据");
+        sendRequest();
     }
 
     // 接收上一个页面传递过来的数据
@@ -98,6 +108,12 @@ public class RadioListActivity extends AppBaseFragmentActivity implements OnClic
      * 请求网络获取分类信息
      */
     private void sendRequest() {
+        if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
+            if(dialog != null) dialog.dismiss();
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
+            return ;
+        }
         VolleyRequest.RequestPost(GlobalConfig.getCatalogUrl, tag, setParam(), new VolleyCallback() {
             private String ReturnType;
             private List<SubCata> subDataList;
@@ -105,6 +121,7 @@ public class RadioListActivity extends AppBaseFragmentActivity implements OnClic
 
             @Override
             protected void requestSuccess(JSONObject result) {
+                tipView.setVisibility(View.GONE);
                 try {
                     ReturnType = result.getString("ReturnType");
                     CatalogData = result.getString("CatalogData");
@@ -132,6 +149,8 @@ public class RadioListActivity extends AppBaseFragmentActivity implements OnClic
             @Override
             protected void requestError(VolleyError error) {
                 closeDialog();
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.IS_ERROR);
             }
         });
     }
@@ -173,6 +192,9 @@ public class RadioListActivity extends AppBaseFragmentActivity implements OnClic
 
     // 初始化界面
     private void setView() {
+        tipView = (TipView) findViewById(R.id.tip_view);
+        tipView.setWhiteClick(this);
+
         findViewById(R.id.head_left_btn).setOnClickListener(this);
         mTextView_Head = (TextView) findViewById(R.id.head_name_tv);
         pageSlidingTab = (PagerSlidingTabStrip) findViewById(R.id.tabs_title);

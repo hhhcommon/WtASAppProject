@@ -49,7 +49,6 @@ import com.android.volley.VolleyError;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
-import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -58,6 +57,7 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.MyLinearLayout;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseFragmentActivity;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.home.search.adapter.SearchHistoryAdapter;
@@ -83,7 +83,7 @@ import java.util.List;
  * @author 辛龙
  * 2016年4月16日
  */
-public class SearchLikeActivity extends AppBaseFragmentActivity implements OnClickListener {
+public class SearchLikeActivity extends AppBaseFragmentActivity implements OnClickListener, TipView.WhiteViewClick {
     private LinearLayout lin_head_left;
     private LinearLayout lin_head_right;
     private GridView gv_TopSearch;
@@ -132,6 +132,19 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
     private boolean isCancelRequest;
     private VoiceRecognizer mVoiceRecognizer;
 
+    private TipView tipView;// 没有网络提示
+
+    @Override
+    public void onWhiteViewClick() {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            dialog = DialogUtils.Dialogph(context, "通讯中");
+            send();
+        } else {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,7 +174,8 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
             dialog = DialogUtils.Dialogph(context, "通讯中");
             send();
         } else {
-            ToastUtils.show_always(context, "网络失败，请检查网络");
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
         }
         IntentFilter myFilter = new IntentFilter();
         myFilter.addAction(BroadcastConstants.SEARCHVOICE);
@@ -266,6 +280,9 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
     }
 
     private void setView() {
+        tipView = (TipView) findViewById(R.id.tip_view);
+        tipView.setWhiteClick(this);
+
         mEtSearchContent = (EditText) findViewById(R.id.et_searchlike);
         lin_head_left = (LinearLayout) findViewById(R.id.head_left_btn);
         lin_head_right = (LinearLayout) findViewById(R.id.lin_head_right);
@@ -361,7 +378,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
                 if (!s.toString().trim().equals("")) {
                     img_edit_clear.setVisibility(View.VISIBLE);
                     img_edit_normal.setVisibility(View.GONE);
-                    if(CommonHelper.checkNetwork(context)) {
+                    if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                         sendKey(s.toString());// 发送搜索变更内容
                     }
                     lin_status_first.setVisibility(View.GONE);
@@ -429,7 +446,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
                 lin_status_third.setVisibility(View.GONE);
                 img_edit_clear.setVisibility(View.GONE);
 
-                if (historyDatabaseList.size() != 0) {
+                if (historyDatabaseList != null && historyDatabaseList.size() != 0) {
                     lin_history.setVisibility(View.VISIBLE);
                 } else {
                     lin_history.setVisibility(View.GONE);
@@ -577,6 +594,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
 
             @Override
             protected void requestSuccess(JSONObject result) {
+                tipView.setVisibility(View.GONE);
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 try {
@@ -608,8 +626,6 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
                     } else {
                         lin_history.setVisibility(View.GONE);
                     }
-                } else if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_short(getApplicationContext(), "提交失败，失败原因" + Message);
                 } else {
                     if (Message != null && !Message.trim().equals("")) {
                         ToastUtils.show_short(getApplicationContext(), Message + "请稍后重试");
@@ -621,6 +637,8 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.IS_ERROR);
             }
         });
     }

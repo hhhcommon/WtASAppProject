@@ -56,9 +56,9 @@ public class FenLeiFragment extends Fragment implements TipView.WhiteViewClick {
     @Override
     public void onWhiteViewClick() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {// 发送网络请求
+            dialog = DialogUtils.Dialogph(context, "数据加载中....");
             sendRequest();
         } else {
-            dialog = DialogUtils.Dialogph(context, "数据加载中....");
             tipView.setVisibility(View.VISIBLE);
             tipView.setTipView(TipView.TipStatus.NO_NET);
         }
@@ -133,7 +133,7 @@ public class FenLeiFragment extends Fragment implements TipView.WhiteViewClick {
                         List<FenLei> childrenList = new Gson().fromJson(arg1.getString("children"), new TypeToken<List<FenLei>>() {}.getType());
                         if (childrenList == null || childrenList.size() == 0) {
                             tipView.setVisibility(View.VISIBLE);
-                            tipView.setTipView(TipView.TipStatus.NO_DATA, "");
+                            tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
                         } else {
                             if (adapter == null) {
                                 listViewCatalog.setAdapter(adapter = new CatalogListAdapter(context, childrenList));

@@ -25,6 +25,7 @@ import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.mine.myupload.MyUploadActivity;
@@ -41,7 +42,7 @@ import java.util.List;
  * 上传的专辑列表
  * Created by Administrator on 2016/11/19.
  */
-public class MyUploadSequFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class MyUploadSequFragment extends Fragment implements AdapterView.OnItemClickListener, TipView.WhiteViewClick {
     private Context context;
     private MyUploadListAdapter adapter;
 //    private List<RankInfo> subList;
@@ -52,10 +53,17 @@ public class MyUploadSequFragment extends Fragment implements AdapterView.OnItem
     private View rootView;
     private Dialog dialog;
     private ListView mListView;
+    private TipView tipView;// 没有网络、没有数据提示
 
     private String tag = "UPLOAD_SEQU_FRAGMENT_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
     private boolean isAll;
+
+    @Override
+    public void onWhiteViewClick() {
+        dialog = DialogUtils.Dialogph(context, "获取数据中....");
+        sendRequest();
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,17 +76,20 @@ public class MyUploadSequFragment extends Fragment implements AdapterView.OnItem
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if(rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_upload, container, false);
-            initListView();
+            initView();
         }
         return rootView;
     }
 
     // 初始化控件
-    private void initListView() {
+    private void initView() {
+        tipView = (TipView) rootView.findViewById(R.id.tip_view);
+        tipView.setWhiteClick(this);
+
         mListView = (ListView) rootView.findViewById(R.id.list_view);
         mListView.setOnItemClickListener(this);
 
-        dialog = DialogUtils.Dialogph(context, "loading....");
+        dialog = DialogUtils.Dialogph(context, "数据加载中....");
         sendRequest();
     }
 
@@ -86,7 +97,8 @@ public class MyUploadSequFragment extends Fragment implements AdapterView.OnItem
     private void sendRequest() {
         if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
             if(dialog != null) dialog.dismiss();
-            ToastUtils.show_always(context, "网络连接失败，请检查网络连接!");
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
             return ;
         }
         JSONObject jsonObject = new JSONObject();
@@ -119,9 +131,14 @@ public class MyUploadSequFragment extends Fragment implements AdapterView.OnItem
                         } else {
                             adapter.setList(newList);
                         }
+                    } else {
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有自己的专辑哟\n快去上传自己的专辑吧");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
                 }
             }
 
@@ -129,6 +146,8 @@ public class MyUploadSequFragment extends Fragment implements AdapterView.OnItem
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.IS_ERROR);
             }
         });
     }
@@ -137,12 +156,9 @@ public class MyUploadSequFragment extends Fragment implements AdapterView.OnItem
     public boolean setCheckVisible(boolean isVisible) {
         if(newList != null && newList.size() > 0) {
             adapter.setVisible(isVisible);
-            if(!isVisible) {
-                checkList.clear();
-            }
+            if(!isVisible) checkList.clear();
             return true;
         } else {
-            ToastUtils.show_always(context, "当前页没有数据可编辑!");
             return false;
         }
     }

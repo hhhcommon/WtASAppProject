@@ -156,15 +156,21 @@ public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
             } else {
                 holder.textRankContent.setText(lists.getPlayerFrom());
             }
-            if (lists.getPlayerInTime() == null | lists.getPlayerInTime().equals("")) {
-                holder.textView_PlayIntroduce.setText("未知");
-            } else {
-                format = new SimpleDateFormat("mm:ss");
-                format.setTimeZone(TimeZone.getTimeZone("GMT"));
-                a = Integer.valueOf(lists.getPlayerInTime());
-                String s = format.format(a);
-                holder.textView_PlayIntroduce.setText("上次播放至" + s);
+
+            try {
+                if (lists.getPlayerInTime() == null | lists.getPlayerInTime().equals("")) {
+                    holder.textView_PlayIntroduce.setText("未知");
+                } else {
+                    format = new SimpleDateFormat("mm:ss");
+                    format.setTimeZone(TimeZone.getTimeZone("GMT"));
+                    a = Integer.valueOf(lists.getPlayerInTime());
+                    String s = format.format(a);
+                    holder.textView_PlayIntroduce.setText("上次播放至" + s);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
             if (lists.getPlayerImage() == null || lists.getPlayerImage().equals("")
                     || lists.getPlayerImage().equals("null") || lists.getPlayerImage().trim().equals("")) {
                 Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
@@ -195,15 +201,21 @@ public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
             } else {
                 holder.textRankContent.setText(lists.getPlayerFrom());
             }
-            if (lists.getPlayerInTime() == null | lists.getPlayerInTime().equals("")) {
-                holder.textView_PlayIntroduce.setText("未知");
-            } else {
-                format = new SimpleDateFormat("mm:ss");
-                format.setTimeZone(TimeZone.getTimeZone("GMT"));
-                a = Integer.valueOf(lists.getPlayerInTime());
-                String s = format.format(a);
-                holder.textView_PlayIntroduce.setText("上次播放至" + s);
+
+            try {
+                if (lists.getPlayerInTime() == null | lists.getPlayerInTime().equals("")) {
+                    holder.textView_PlayIntroduce.setText("未知");
+                } else {
+                    format = new SimpleDateFormat("mm:ss");
+                    format.setTimeZone(TimeZone.getTimeZone("GMT"));
+                    a = Integer.valueOf(lists.getPlayerInTime());
+                    String s = format.format(a);
+                    holder.textView_PlayIntroduce.setText("上次播放至" + s);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
             if (lists.getPlayerImage() == null || lists.getPlayerImage().equals("")
                     || lists.getPlayerImage().equals("null") || lists.getPlayerImage().trim().equals("")) {
                 Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);

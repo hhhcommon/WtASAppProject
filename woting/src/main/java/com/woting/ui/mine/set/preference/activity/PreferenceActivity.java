@@ -114,8 +114,6 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
                     } else {
                         ToastUtils.show_always(context, "网络失败，请检查网络");
                     }
-                } else {
-                    ToastUtils.show_always(context, "您还没有选择偏好");
                 }
                 break;
         }

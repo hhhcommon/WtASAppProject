@@ -1311,7 +1311,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 startActivity(new Intent(context, PlayHistoryActivity.class));
                 break;
             case R.id.tv_programme:// 节目单
-                if (!CommonHelper.checkNetwork(context)) return;
                 Intent p = new Intent(context, ProgrammeActivity.class);
                 Bundle b = new Bundle();
                 b.putString("BcId", GlobalConfig.playerObject.getContentId());

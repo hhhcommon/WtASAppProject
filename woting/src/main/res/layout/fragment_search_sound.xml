@@ -4,6 +4,12 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
+    <com.woting.common.widgetui.TipView
+        android:id="@+id/tip_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
     <com.woting.common.widgetui.xlistview.XListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
@@ -12,7 +18,6 @@
         android:divider="@color/app_bg"
         android:background="@color/app_bg"
         android:scrollbars="none"
-        android:scrollingCache="false" >
-    </com.woting.common.widgetui.xlistview.XListView>
+        android:scrollingCache="false"/>
 
 </LinearLayout>
