@@ -257,11 +257,11 @@ public class CallAlertActivity extends Activity implements OnClickListener {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(BroadcastConstants.PUSH_CALL)) {
-                byte[] bt = intent.getByteArrayExtra("outmessage");
+                byte[] bt = intent.getByteArrayExtra("outMessage");
                 Log.e("push_call接收器中数据", Arrays.toString(bt) + "");
                 try {
                     MsgNormal outMessage = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
-                    //				MsgNormal outMessage = (MsgNormal) intent.getSerializableExtra("outmessage");
+                    //				MsgNormal outMessage = (MsgNormal) intent.getSerializableExtra("outMessage");
                     //				Log.i("对讲页面====", "接收到的socket服务的信息" + outMessage+"");
                     if (outMessage != null) {
                         int cmdType = outMessage.getCmdType();

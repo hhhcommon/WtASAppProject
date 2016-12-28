@@ -13,11 +13,7 @@
 
         <ImageView
             android:id="@+id/head_left_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="6dp"
-            android:layout_centerVertical="true"
-            android:background="@mipmap/back_images" />
+            style="@style/LeftImageStyle" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -28,6 +24,12 @@
             android:textSize="@dimen/activity_head_center_s" />
 
     </RelativeLayout>
+
+    <com.woting.common.widgetui.TipView
+        android:id="@+id/tip_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -107,7 +109,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="ID:100001"
-                    android:layout_below="@id/et_b_name"
+                    android:layout_below="@+id/et_b_name"
                     android:layout_centerHorizontal="true"
                     android:textColor="@color/WHITE"
                     android:textSize="@dimen/wt_login_text_wjmm" />
@@ -181,7 +183,7 @@
                     android:id="@+id/tv_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/text_all_person"
+                    android:layout_toRightOf="@+id/text_all_person"
                     android:layout_centerVertical="true"
                     android:text="（0）"
                     android:textColor="@color/group_4b" />
@@ -236,7 +238,7 @@
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/text_group_name"
+                    android:layout_toRightOf="@+id/text_group_name"
                     android:text="我听科技"
                     android:textColor="@color/wt_login_third"
                     android:textSize="@dimen/wt_edittext_default_text" />
@@ -272,7 +274,7 @@
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:ellipsize="end"
-                    android:layout_toRightOf="@id/text_a"
+                    android:layout_toRightOf="@+id/text_a"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20dp"
                     android:text="本群还没有介绍~~"

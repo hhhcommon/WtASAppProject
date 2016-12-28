@@ -260,6 +260,7 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    ToastUtils.show_always(context, "上传失败!");
                 }
             }
 

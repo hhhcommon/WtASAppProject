@@ -341,12 +341,23 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             viewLine.setVisibility(View.GONE);
 
             userName = sharedPreferences.getString(StringConstant.USERNAME, "");// 用户名
+            String Name = sharedPreferences.getString(StringConstant.NICK_NAME, "");//昵称
+
             userId = sharedPreferences.getString(StringConstant.USERID, "");    // 用户 ID
             url = sharedPreferences.getString(StringConstant.IMAGEURL, "");     // 用户头像
             userNum = sharedPreferences.getString(StringConstant.USER_NUM, "");// 用户号
             userSign = sharedPreferences.getString(StringConstant.USER_SIGN, "");// 签名
             region = sharedPreferences.getString(StringConstant.REGION, "");// 区域
-            textUserName.setText(userName);
+            if(Name!=null&&!Name.trim().equals("")){
+                textUserName.setText(Name);
+            }else{
+                if(userName!=null&&!userName.trim().equals("")){
+                    textUserName.setText(userName);
+                }else{
+                    textUserName.setText("未知");
+                }
+            }
+
             textUserAutograph.setText(userSign);
 
             if (region.equals("")) {
@@ -464,10 +475,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                     Bundle bundle = data.getExtras();
                     pModel = (UpdatePerson) bundle.getSerializable("data");
                     regionId = bundle.getString("regionId");
-                    if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
-                        ToastUtils.show_always(context, "网络失败，请检查网络");
-                        return;
-                    }
+                    if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) return;
                     sendUpdate(pModel);
                 }
             case 0x222:// 其它设置界面返回

@@ -19,6 +19,7 @@ import com.woting.common.application.BSApplication;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.fragment.PlayerFragment;
@@ -48,6 +49,7 @@ public class TTSFragment extends Fragment{
     private View rootView;
 	private ListView listView;
     private LinearLayout linearNull;			// linear_null
+    private TipView tipView;                    // 没有数据提示
 	
 	public static boolean isData;				// 标记是否有数据
 	public static boolean isLoad;				// 标记是否已经加载过
@@ -62,7 +64,8 @@ public class TTSFragment extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if(rootView == null){
-			rootView = inflater.inflate(R.layout.fragment_playhistory_tts_layout, container, false);
+			rootView = inflater.inflate(R.layout.fragment_playhistory_sound_layout, container, false);
+            tipView = (TipView) rootView.findViewById(R.id.tip_view);
 			listView = (ListView) rootView.findViewById(R.id.list_view);
 			linearNull = (LinearLayout) rootView.findViewById(R.id.linear_null);
 			getData();
@@ -86,22 +89,25 @@ public class TTSFragment extends Fragment{
 			for (int i = 0; i < subList.size(); i++) {
 				if (subList.get(i).getPlayerMediaType() != null && !subList.get(i).getPlayerMediaType().equals("")) {
 					if (subList.get(i).getPlayerMediaType().equals("TTS")) {
-						if (playList == null) {
-							playList = new ArrayList<>();
-						}
+						if (playList == null) playList = new ArrayList<>();
 						playList.add(subList.get(i));
 						isData = true;
 					}
 				}
 			}
-			if(playList == null){
-				playList = new ArrayList<>();
-			}
-			adapter = new PlayHistoryAdapter(context, playList);
-			listView.setAdapter(adapter);
-			setInterface();
-			listView.setVisibility(View.VISIBLE);
-		}
+            if(playList != null && playList.size() > 0) {
+                listView.setAdapter(adapter = new PlayHistoryAdapter(context, playList));
+                setInterface();
+                listView.setVisibility(View.VISIBLE);
+                tipView.setVisibility(View.GONE);
+            } else {
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有收听节目\n快去收听喜欢的节目吧");
+            }
+		} else {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有收听节目\n快去收听喜欢的节目吧");
+        }
 	}
 	
 	@Override

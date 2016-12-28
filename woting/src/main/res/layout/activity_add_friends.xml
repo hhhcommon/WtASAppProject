@@ -69,15 +69,10 @@
                 android:divider="@null"
                 android:scrollbars="none"/>
 
-            <TextView
-                android:id="@+id/title_layout_no_friends"
+            <com.woting.common.widgetui.TipView
+                android:id="@+id/tip_search_null"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
-                android:gravity="center"
-                android:text="没有找到联系人"
-                android:textColor="@color/gray"
-                android:textSize="12sp"
+                android:layout_height="match_parent"
                 android:visibility="gone"/>
 
             <TextView

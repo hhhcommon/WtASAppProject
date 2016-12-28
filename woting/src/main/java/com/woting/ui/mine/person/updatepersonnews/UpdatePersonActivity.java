@@ -110,15 +110,10 @@ public class UpdatePersonActivity extends AppBaseActivity implements
         setContentView(R.layout.activity_updateperson);
         initView();
         setValueByPrefer();
-        if(GlobalConfig.CityCatalogList!=null&&GlobalConfig.CityCatalogList.size()>0){
+        if (GlobalConfig.CityCatalogList != null && GlobalConfig.CityCatalogList.size() > 0) {
             handleCityList(GlobalConfig.CityCatalogList);
-        }else
-        {
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+        } else if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             send();
-        } else {
-            ToastUtils.show_always(context, "网络失败，请检查网络");
-        }
         }
     }
 
@@ -207,10 +202,8 @@ public class UpdatePersonActivity extends AppBaseActivity implements
                     if (ReturnType != null && ReturnType.equals("1001")) {
                         Catalog subListAll = new Gson().fromJson(result.getString("CatalogData"), new TypeToken<Catalog>() {}.getType());
                         List<CatalogName> catalogNameList = subListAll.getSubCata();
-                        GlobalConfig.CityCatalogList=catalogNameList;
+                        GlobalConfig.CityCatalogList = catalogNameList;
                         handleCityList(catalogNameList);
-                    } else {
-                        ToastUtils.show_always(context, "数据获取异常，请稍候重试");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -224,9 +217,7 @@ public class UpdatePersonActivity extends AppBaseActivity implements
         });
     }
 
-
-    private void handleCityList(List<CatalogName> catalogNameList){
-
+    private void handleCityList(List<CatalogName> catalogNameList) {
         if (catalogNameList != null && catalogNameList.size() > 0) {
             tempMap = new HashMap<>();
             provinceList = new ArrayList<>();
@@ -343,9 +334,9 @@ public class UpdatePersonActivity extends AppBaseActivity implements
         LoopView pickMonth = (LoopView) dialog.findViewById(R.id.pick_month);
         pickDay = (LoopView) dialog.findViewById(R.id.pick_day);
 
-        yearList  = DateUtil.getYearList();
+        yearList = DateUtil.getYearList();
         monthList = DateUtil.getMonthList();
-        dateList  = DateUtil.getDayList31();
+        dateList = DateUtil.getDayList31();
 
         pickYear.setListener(new OnItemSelectedListener() {
             @Override

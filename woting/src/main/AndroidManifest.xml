@@ -7,10 +7,6 @@
         android:name="android.hardware.camera"
         android:required="false"/>
 
-    <!-- 读取联系人权限 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <!-- 读取联系人 -->
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <!-- 蓝牙管理 -->
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
@@ -33,6 +29,7 @@
     <!-- 录音 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <!-- 写入外部存储 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
     <!-- 开机自动允许 -->
@@ -72,11 +69,7 @@
     <permission
         android:name="com.wotingfm.permission.C2D_MESSAGE"
         android:protectionLevel="signature"/>
-
-    <uses-permission android:name="com.wotingfm.permission.C2D_MESSAGE"/>
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
-    <!-- Needed to use our own Contact editor -->
-    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
     <!-- 使用权限 -->
     <uses-permission android:name="android.permission.READ_PHONE_SINTERNETWIFI_STATE"/>
     <uses-permission android:name="android.permission.FLASHLIGHT"/>

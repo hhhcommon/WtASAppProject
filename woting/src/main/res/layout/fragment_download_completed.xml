@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/WHITE"
-    android:orientation="vertical" >
+    android:background="@color/app_bg"
+    android:orientation="vertical">
+
+    <com.woting.common.widgetui.TipView
+        android:id="@+id/tip_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/lin_dinglan"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@color/setting_bg_color"
-        android:orientation="horizontal"
-        android:visibility="visible" >
+        android:visibility="visible">
+
         <LinearLayout
             android:id="@+id/lin_quanxuan"
             android:layout_width="0dp"
@@ -19,81 +26,46 @@
             android:layout_marginLeft="15dp"
             android:layout_weight="1"
             android:gravity="center|left"
-            android:visibility="invisible" >
+            android:visibility="invisible">
 
             <ImageView
                 android:id="@+id/img_quanxuan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/wt_group_nochecked" />
+                android:src="@mipmap/wt_group_nochecked"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="全选" />
+                android:text="全选"/>
+
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/lin_clear"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:layout_marginRight="15dp"
-            android:gravity="center|right" >
+            android:layout_weight="1"
+            android:gravity="center|right">
 
             <ImageView
                 android:layout_width="17dp"
                 android:layout_height="17dp"
                 android:layout_marginRight="10dp"
-                android:src="@mipmap/wt_download_clear" />
+                android:src="@mipmap/wt_download_clear"/>
+
         </LinearLayout>
 
-
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/wt_download_rv"
+    <ListView
+        android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" >
-
-        <ListView
-            android:id="@+id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:dividerHeight="0.5dp"
-            android:divider="@color/text_line_1"
-            android:scrollbars="none"
-            android:visibility="gone" >
-        </ListView>
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/lin_status_no"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_marginTop="200dp"
-        android:orientation="vertical"
-        android:visibility="gone" >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:src="@mipmap/wt_download_nocontent" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center"
-            android:text="暂无下载声音哦~"
-            android:textColor="@color/beijing"
-            android:textSize="@dimen/wt_group_detail_16"
-            android:visibility="visible" />
-    </LinearLayout>
+        android:divider="@color/text_line_1"
+        android:dividerHeight="0.5dp"
+        android:scrollbars="none"/>
 
 </LinearLayout>

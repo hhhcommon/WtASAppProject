@@ -867,7 +867,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 }, 1000);
             } else if (intent.getAction().equals(BroadcastConstants.PUSH)) {
 
-                byte[] bt = intent.getByteArrayExtra("outmessage");
+                byte[] bt = intent.getByteArrayExtra("outMessage");
                 Log.e("mainActivity接收器中数据=原始数据", Arrays.toString(bt) + "");
                 try {
                     MsgNormal outMessage = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
@@ -987,7 +987,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                     e.printStackTrace();
                 }
             } else if (intent.getAction().equals(BroadcastConstants.PUSH_NOTIFY)) {
-                byte[] bt = intent.getByteArrayExtra("outmessage");
+                byte[] bt = intent.getByteArrayExtra("outMessage");
                 Log.e("mainActivity接收器中数据=原始数据", Arrays.toString(bt) + "");
                 try {
                     MsgNormal outMessage = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
@@ -1011,7 +1011,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 }
             } else if (intent.getAction().equals(BroadcastConstants.PUSH_REGISTER)) {
                 // 注册消息，biztype=15，returnType为0是没有登录，为1是登录状态
-                byte[] bt = intent.getByteArrayExtra("outmessage");
+                byte[] bt = intent.getByteArrayExtra("outMessage");
                 Log.e("mainActivity接收器中数据=原始数据", Arrays.toString(bt) + "");
                 try {
                     MsgNormal outMessage = (MsgNormal) MessageUtils.buildMsgByBytes(bt);

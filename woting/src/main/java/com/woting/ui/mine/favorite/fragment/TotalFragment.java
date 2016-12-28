@@ -34,6 +34,7 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.fragment.PlayerFragment;
@@ -55,7 +56,7 @@ import java.util.List;
 /**
  * 我喜欢的 全部界面
  */
-public class TotalFragment extends Fragment implements OnClickListener {
+public class TotalFragment extends Fragment implements OnClickListener, TipView.WhiteViewClick {
 	private FragmentActivity context;
     private SearchContentAdapter searchAdapter;
     private SearchPlayerHistoryDao dbDao;
@@ -72,10 +73,23 @@ public class TotalFragment extends Fragment implements OnClickListener {
     private Dialog delDialog;
     private Dialog dialog;
     private ExpandableListView expandListView;
+    private TipView tipView;// 没有网络、没有数据提示
+
 	private int delChildPosition = -1;
 	private int delGroupPosition = -1;
 	private String tag = "TOTAL_VOLLEY_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
+
+    @Override
+    public void onWhiteViewClick() {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            dialog = DialogUtils.Dialogph(context, "正在获取全部喜欢信息");
+            send();
+        } else {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
+        }
+    }
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -93,6 +107,8 @@ public class TotalFragment extends Fragment implements OnClickListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (rootView == null) {
 			rootView = inflater.inflate(R.layout.fragment_favorite_total, container, false);
+            tipView = (TipView) rootView.findViewById(R.id.tip_view);
+            tipView.setWhiteClick(this);
             expandListView = (ExpandableListView) rootView.findViewById(R.id.ex_listview);
             expandListView.setGroupIndicator(null);
 			setListener();
@@ -101,7 +117,8 @@ public class TotalFragment extends Fragment implements OnClickListener {
 				dialog = DialogUtils.Dialogph(context, "正在获取全部喜欢信息");
 				send();
 			} else {
-				ToastUtils.show_always(context, "网络失败，请检查网络");
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_NET);
 			}
 		}
 		return rootView;
@@ -244,6 +261,8 @@ public class TotalFragment extends Fragment implements OnClickListener {
 						subList = new Gson().fromJson(arg1.getString("FavoriteList"), new TypeToken<List<RankInfo>>() {}.getType());
 					} catch (Exception e) {
 						e.printStackTrace();
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
 					}
 					list.clear();
 					if(playList != null) playList.clear();
@@ -324,12 +343,15 @@ public class TotalFragment extends Fragment implements OnClickListener {
                                 expandListView.expandGroup(i);
 							}
                             setItemListener();
+                            tipView.setVisibility(View.GONE);
 						} else {
-							ToastUtils.show_always(context, "还没有喜欢的内容!");
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有喜欢的节目\n快去收听喜欢的节目吧");
 						}
 					}
 				} else {
-					ToastUtils.show_always(context, "还没有喜欢的内容!");
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有喜欢的节目\n快去收听喜欢的节目吧");
 				}
 			}
 			
@@ -337,6 +359,8 @@ public class TotalFragment extends Fragment implements OnClickListener {
 			protected void requestError(VolleyError error) {
 				if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.IS_ERROR);
 			}
 		});
 	}

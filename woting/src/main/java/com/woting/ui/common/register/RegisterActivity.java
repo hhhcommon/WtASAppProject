@@ -241,6 +241,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
                         Log.v("commit", "数据 commit 失败!");
                     }
                     context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
+                    context.sendBroadcast(new Intent(BroadcastConstants.PUSH_ALLURL_CHANGE));
                     InterPhoneControl.sendEntryMessage(context);
                     setResult(1);
                     finish();

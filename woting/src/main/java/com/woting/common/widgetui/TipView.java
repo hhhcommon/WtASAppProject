@@ -57,7 +57,7 @@ public class TipView extends RelativeLayout {
         array.recycle();
 
         viewBackground = new View(context);
-        viewBackground.setBackgroundColor(Color.parseColor("#efeeee"));
+        viewBackground.setBackgroundColor(Color.parseColor("#FFFFFF"));
         viewLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         addView(viewBackground, viewLayoutParams);
 
@@ -141,7 +141,7 @@ public class TipView extends RelativeLayout {
                 break;
             case IS_ERROR:// 加载错误
                 if(tipString != null) textTip.setText(tipString);
-                else textTip.setText("数据出错了\n点击界面重新获取数据哟");
+                else textTip.setText("数据出错了\n可以返回重新获取数据哟");
                 textTip.setGravity(Gravity.CENTER);
                 textTip.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.mipmap.wt_image_tip_error), null, null);
                 break;

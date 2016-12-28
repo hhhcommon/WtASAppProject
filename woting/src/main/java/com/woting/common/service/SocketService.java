@@ -719,7 +719,7 @@ public class SocketService extends Service {
 							 */
                                 Intent push = new Intent(BroadcastConstants.PUSH);
                                 Bundle bundle1 = new Bundle();
-                                bundle1.putByteArray("outmessage", msg.toBytes());
+                                bundle1.putByteArray("outMessage", msg.toBytes());
                                 //							Log.e("广播中数据", Arrays.toString(msg.toBytes())+"");
                                 push.putExtras(bundle1);
                                 context.sendBroadcast(push);
@@ -736,7 +736,7 @@ public class SocketService extends Service {
 									 */
                                             Intent push_call = new Intent(BroadcastConstants.PUSH_CALL);
                                             Bundle bundle211 = new Bundle();
-                                            bundle211.putByteArray("outmessage", msg.toBytes());
+                                            bundle211.putByteArray("outMessage", msg.toBytes());
                                             push_call.putExtras(bundle211);
                                             context.sendBroadcast(push_call);
                                         } else if (command == 0x30) {
@@ -745,7 +745,7 @@ public class SocketService extends Service {
 									 */
                                             Intent push_back = new Intent(BroadcastConstants.PUSH_BACK);
                                             Bundle bundle212 = new Bundle();
-                                            bundle212.putByteArray("outmessage", msg.toBytes());
+                                            bundle212.putByteArray("outMessage", msg.toBytes());
                                             push_back.putExtras(bundle212);
                                             //context. sendBroadcast(pushintent);
                                             context.sendOrderedBroadcast(push_back, null);
@@ -755,7 +755,7 @@ public class SocketService extends Service {
 									 */
                                             Intent push_service = new Intent(BroadcastConstants.PUSH_SERVICE);
                                             Bundle bundle213 = new Bundle();
-                                            bundle213.putByteArray("outmessage", msg.toBytes());
+                                            bundle213.putByteArray("outMessage", msg.toBytes());
                                             push_service.putExtras(bundle213);
                                             context.sendBroadcast(push_service);
                                         }
@@ -763,7 +763,7 @@ public class SocketService extends Service {
                                     case 2:
                                         Intent push2 = new Intent(BroadcastConstants.PUSH);
                                         Bundle bundle2 = new Bundle();
-                                        bundle2.putByteArray("outmessage", msg.toBytes());
+                                        bundle2.putByteArray("outMessage", msg.toBytes());
                                         //								Log.e("广播中数据", Arrays.toString(msg.toBytes())+"");
                                         push2.putExtras(bundle2);
                                         context.sendBroadcast(push2);
@@ -772,7 +772,7 @@ public class SocketService extends Service {
                                         // 上次单对单通话消息
                                         Intent push3 = new Intent(BroadcastConstants.PUSH);
                                         Bundle bundle3 = new Bundle();
-                                        bundle3.putByteArray("outmessage", msg.toBytes());
+                                        bundle3.putByteArray("outMessage", msg.toBytes());
                                         push3.putExtras(bundle3);
                                         context.sendBroadcast(push3);
                                         break;
@@ -783,14 +783,14 @@ public class SocketService extends Service {
                             case 4://通知消息
                                 Intent pushNotify = new Intent(BroadcastConstants.PUSH_NOTIFY);
                                 Bundle bundle4 = new Bundle();
-                                bundle4.putByteArray("outmessage", msg.toBytes());
+                                bundle4.putByteArray("outMessage", msg.toBytes());
                                 pushNotify.putExtras(bundle4);
                                 context.sendBroadcast(pushNotify);
                                 break;
                             case 0x0f://注册消息
                                 Intent pushRegister = new Intent(BroadcastConstants.PUSH_REGISTER);
                                 Bundle bundle15 = new Bundle();
-                                bundle15.putByteArray("outmessage", msg.toBytes());
+                                bundle15.putByteArray("outMessage", msg.toBytes());
                                 pushRegister.putExtras(bundle15);
                                 context.sendBroadcast(pushRegister);
                                 break;

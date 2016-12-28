@@ -26,5 +26,10 @@
         android:layout_above="@id/linear_null">
     </com.woting.common.widgetui.xlistview.XListView>
 
+    <com.woting.common.widgetui.TipView
+        android:id="@+id/tip_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
 </RelativeLayout>
