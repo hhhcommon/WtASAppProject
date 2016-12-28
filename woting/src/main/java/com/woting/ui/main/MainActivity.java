@@ -133,9 +133,10 @@ public class MainActivity extends TabActivity implements OnClickListener {
             @Override
             public void run() {
                 createService();
+                registerReceiver();        // 注册广播
             }
         }, 0);
-        registerReceiver();        // 注册广播
+
         tabHost = extracted();
 
         MobclickAgent.openActivityDurationTrack(false);

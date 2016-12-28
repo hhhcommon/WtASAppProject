@@ -299,9 +299,13 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                     beginCatalogId = "";
                     send();
                 } else {
-                    mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-                    tipView.setVisibility(View.VISIBLE);
-                    tipView.setTipView(TipView.TipStatus.NO_NET);
+                    if(mainLists!=null&&mainLists.size()>0){
+                        mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+                    }else{
+                        mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.NO_NET);
+                    }
                 }
             }
 

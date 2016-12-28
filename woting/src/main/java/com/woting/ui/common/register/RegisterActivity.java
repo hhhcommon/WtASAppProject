@@ -104,6 +104,10 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
                 checkValue();
                 break;
             case R.id.tv_getyzm:// 检查手机号是否为空，或者是否是一个正常手机号
+                if (mCountDownTimer != null) {
+                    mCountDownTimer.cancel();
+                    mCountDownTimer = null;
+                }
                 checkYzm();
                 break;
             case R.id.lin_agreement:        // 注册协议
@@ -285,7 +289,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
             dialog = DialogUtils.Dialogph(context, "正在验证手机号");
             getVerifyCode();
         } else {
-            ToastUtils.show_short(context, "网络失败，请检查网络");
+            ToastUtils.show_always(context, "网络失败，请检查网络");
         }
     }
 

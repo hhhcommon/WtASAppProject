@@ -57,7 +57,7 @@ public class GlobalConfig {
     /**
      * 是否吐司
      */
-    public static boolean isToast = false;
+    public static boolean isToast = true;
     /**
      * PersonClientDevice(个人客户端设备) 终端类型1=app,2=设备，3=pc
      */
