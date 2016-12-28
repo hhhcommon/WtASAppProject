@@ -64,7 +64,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
         setView();// 设置界面
         Intent push = new Intent(BroadcastConstants.PUSH_NEWPERSON);
         Bundle bundle = new Bundle();
-        bundle.putString("outmessage", "");
+        bundle.putString("outMessage", "");
         push.putExtras(bundle);
         context.sendBroadcast(push);
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {

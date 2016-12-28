@@ -27,10 +27,9 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 		// 呼出电话
 		if (intent.getAction().equals(Intent.ACTION_NEW_OUTGOING_CALL)) {  
 			Log.e("PhoneStatReceiver", "拨打电话");
-//			getplay();
 			Intent push=new Intent(BroadcastConstants.PUSH_MUSIC);
 			Bundle bundle=new Bundle();
-			bundle.putString("outmessage","1");
+			bundle.putString("outMessage","1");
 			push.putExtras(bundle);
 			context. sendBroadcast(push);
 		}else {
@@ -38,26 +37,26 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 			TelephonyManager tm = (TelephonyManager)context.getSystemService(Service.TELEPHONY_SERVICE);
 			switch (tm.getCallState()) {
 			case TelephonyManager.CALL_STATE_RINGING:// 响铃
-				Log.e("PhoneStatReceiver", "来电话了");
+				Log.e("PhoneStatReceiver", "2");
 				// 当前是来电
 				Intent push=new Intent(BroadcastConstants.PUSH_MUSIC);
 				Bundle bundle=new Bundle();
-				bundle.putString("outmessage","1");
+				bundle.putString("outMessage","2");
 				push.putExtras(bundle);
 				context. sendBroadcast(push);
 				break;
 			case TelephonyManager.CALL_STATE_OFFHOOK:// 接起电话
-//				Intent push3=new Intent("pushmusic");
-//				Bundle bundle3=new Bundle();
-//				bundle3.putString("outmessage","3");
-//				push3.putExtras(bundle3);
-//				context. sendBroadcast(push3);
+				Intent push3=new Intent(BroadcastConstants.PUSH_MUSIC);
+				Bundle bundle3=new Bundle();
+				bundle3.putString("outMessage","3");
+				push3.putExtras(bundle3);
+				context. sendBroadcast(push3);
 				break;
 			case TelephonyManager.CALL_STATE_IDLE: // 挂机  Device call state: No activity.
 				Log.e("PhoneStatReceiver", "挂机");
 				Intent push4=new Intent(BroadcastConstants.PUSH_MUSIC);
 				Bundle bundle4=new Bundle();
-				bundle4.putString("outmessage","2");
+				bundle4.putString("outMessage","4");
 				push4.putExtras(bundle4);
 				context. sendBroadcast(push4);
 				break;
@@ -65,13 +64,4 @@ public class PhoneStatReceiver extends BroadcastReceiver {
 		}
 	}
 
-//	private boolean getplay() {
-//		if(PlayerService.mMediaPlayer.isPlaying()){
-//			 flag = true;
-//		}
-//			if(VLCPlayerService.getisPlaying()){
-//				flag = true;
-//			}
-//			return flag;		
-//	}
 }

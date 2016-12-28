@@ -14,12 +14,11 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.ToastUtils;
-import com.woting.common.util.VibratorUtils;
 import com.woting.ui.interphone.alert.CallAlertActivity;
 import com.woting.ui.interphone.alert.ReceiveAlertActivity;
-import com.woting.ui.interphone.chat.fragment.ChatFragment;
 import com.woting.ui.interphone.commom.message.MessageUtils;
 import com.woting.ui.interphone.commom.message.MsgNormal;
 import com.woting.ui.interphone.commom.message.content.MapContent;
@@ -47,7 +46,7 @@ public class SubclassService extends Service {
     public static String callerinfo_username;
     public static String callerinfo_portrait;
     private Handler handler;
-    private long[] Vibrate = {400, 800, 400, 800};
+
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -82,8 +81,8 @@ public class SubclassService extends Service {
                 if (ReceiveAlertActivity.instance == null) {
                 } else {
 //					abortBroadcast();//中断广播传递
-                    //					MsgNormal message = (MsgNormal) intent.getSerializableExtra("outmessage");
-                    byte[] bt = intent.getByteArrayExtra("outmessage");
+                    //					MsgNormal message = (MsgNormal) intent.getSerializableExtra("outMessage");
+                    byte[] bt = intent.getByteArrayExtra("outMessage");
                     Log.e("push_back接收器中数据", Arrays.toString(bt) + "");
                     try {
                         MsgNormal message = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
@@ -97,7 +96,7 @@ public class SubclassService extends Service {
                                         handler.removeCallbacks(run);
                                         if (musicPlayer != null) {
                                             musicPlayer.stop();
-                                            VibratorUtils.cancel(ChatFragment.context);
+
                                             musicPlayer = null;
                                         }
                                         if (ReceiveAlertActivity.instance != null) {
@@ -114,9 +113,9 @@ public class SubclassService extends Service {
                     }
                 }
             } else if (action.equals(BroadcastConstants.PUSH_SERVICE)) {///////////////////////////////////////////////////////////////////////
-                //				MsgNormal message = (MsgNormal) intent.getSerializableExtra("outmessage");
+                //				MsgNormal message = (MsgNormal) intent.getSerializableExtra("outMessage");
                 //				Log.i("弹出框服务push_service", "接收到的socket服务的信息"+message+"");
-                byte[] bt = intent.getByteArrayExtra("outmessage");
+                byte[] bt = intent.getByteArrayExtra("outMessage");
                 Log.e("push_service接收器中数据", Arrays.toString(bt) + "");
                 try {
                     MsgNormal message = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
@@ -169,7 +168,6 @@ public class SubclassService extends Service {
                                                         InterPhoneControl.PersonTalkTimeOver(getApplicationContext(), callid, callerId);//拒绝应答
                                                         if (musicPlayer != null) {
                                                             musicPlayer.stop();
-                                                            VibratorUtils.cancel(ChatFragment.context);
                                                             musicPlayer = null;
                                                         }
                                                         if (ReceiveAlertActivity.instance != null) {
@@ -181,9 +179,12 @@ public class SubclassService extends Service {
                                             };
                                             handler.postDelayed(run, 60000);
                                             musicPlayer = MediaPlayer.create(context, getSystemDefultRingtoneUri());
+                                            if(musicPlayer==null){
+                                                musicPlayer = MediaPlayer.create(context, R.raw.toy_mono);
+                                            }
                                             if (musicPlayer != null) {
                                                 musicPlayer.start();
-                                                VibratorUtils.Vibrate(ChatFragment.context, Vibrate, true);
+
                                                 //监听音频播放完的代码，实现音频的自动循环播放
                                                 musicPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                                                     @Override

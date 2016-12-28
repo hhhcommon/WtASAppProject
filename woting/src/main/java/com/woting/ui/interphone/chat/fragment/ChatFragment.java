@@ -989,8 +989,8 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(BroadcastConstants.PUSH)) {
-                //	MsgNormal message = (MsgNormal) intent.getSerializableExtra("outmessage");
-                byte[] bt = intent.getByteArrayExtra("outmessage");
+                //	MsgNormal message = (MsgNormal) intent.getSerializableExtra("outMessage");
+                byte[] bt = intent.getByteArrayExtra("outMessage");
                 //	Log.e("接收器中数据", Arrays.toString(bt)+"");
                 try {
                     MsgNormal message = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
@@ -1363,8 +1363,8 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
             }  else if (action.equals(BroadcastConstants.PUSH_ALLURL_CHANGE)) {
                 setOnResumeView();
             }else if (action.equals(BroadcastConstants.PUSH_BACK)) {
-                //	MsgNormal message = (MsgNormal) intent.getSerializableExtra("outmessage");
-                byte[] bt = intent.getByteArrayExtra("outmessage");
+                //	MsgNormal message = (MsgNormal) intent.getSerializableExtra("outMessage");
+                byte[] bt = intent.getByteArrayExtra("outMessage");
                 Log.e("chatFragment的push_back", Arrays.toString(bt) + "");
                 try {
                     MsgNormal message = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
@@ -1434,7 +1434,7 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
                     }
                 }
             } else if (action.equals(BroadcastConstants.PUSH_NOTIFY)) {
-                byte[] bt = intent.getByteArrayExtra("outmessage");
+                byte[] bt = intent.getByteArrayExtra("outMessage");
                 Log.e("chat的PUSH_NOTIFY", Arrays.toString(bt) + "");
                 try {
                     Log.e("chat的PUSH_NOTIFY", JsonEncloseUtils.btToString(bt) + "");

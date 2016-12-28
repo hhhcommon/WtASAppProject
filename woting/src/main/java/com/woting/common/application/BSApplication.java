@@ -40,8 +40,7 @@ public class BSApplication extends Application  {
         instance = this;
         SharedPreferences = this.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
 
-        queues = Volley.newRequestQueue(this);
-        InitThird();                        //第三方使用的相关方法
+        queues = Volley.newRequestQueue(this);        InitThird();                        //第三方使用的相关方法
         PhoneMessage.getPhoneInfo(instance);//获取手机信息
         initStaticFaces();                  //读取assets里的图片资源
 

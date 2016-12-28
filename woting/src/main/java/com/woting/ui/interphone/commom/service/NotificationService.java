@@ -82,8 +82,8 @@ public class NotificationService extends Service {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(BroadcastConstants.PUSH_NOTIFY)) {
-                //				MsgNormal message = (MsgNormal) intent.getSerializableExtra("outmessage");
-                byte[] bt = intent.getByteArrayExtra("outmessage");
+                //				MsgNormal message = (MsgNormal) intent.getSerializableExtra("outMessage");
+                byte[] bt = intent.getByteArrayExtra("outMessage");
                 Log.e("Notification接收器中数据", Arrays.toString(bt) + "");
                 try {
                     Log.e("Notification接收器中数据", JsonEncloseUtils.btToString(bt) + "");
@@ -127,10 +127,12 @@ public class NotificationService extends Service {
                                         news = "有人申请添加您为好友,请查看";
                                     }
                                     setNewMessageNotification(context, news, "我听");
+                                    // 最新消息的回执-------测试版
+                                    InterPhoneControl.sendReceiptMessage(context,message.getMsgId());
                                     //已经添加在通讯录
                                     Intent p = new Intent(BroadcastConstants.PUSH_NEWPERSON);
                                     Bundle bundle = new Bundle();
-                                    bundle.putString("outmessage", news);
+                                    bundle.putString("outMessage", news);
                                     p.putExtras(bundle);
                                     context.sendBroadcast(p);
                                     //	add("Ub1", imageurl, news, "好友邀请信息", dealtime);
@@ -240,7 +242,7 @@ public class NotificationService extends Service {
                                         //已经添加在通讯录
                                         Intent pushintent = new Intent(BroadcastConstants.PUSH_NEWPERSON);
                                         Bundle bundle = new Bundle();
-                                        bundle.putString("outmessage", news);
+                                        bundle.putString("outMessage", news);
                                         pushintent.putExtras(bundle);
                                         context.sendBroadcast(pushintent);
                                         //add("Gb1", friendurl, news, "组邀请信息", dealtime);
