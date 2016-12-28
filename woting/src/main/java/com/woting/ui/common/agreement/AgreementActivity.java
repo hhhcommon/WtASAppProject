@@ -3,12 +3,10 @@ package com.woting.ui.common.agreement;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.ui.baseactivity.BaseActivity;
-
 
 /**
  * 注册协议
@@ -17,24 +15,17 @@ import com.woting.ui.baseactivity.BaseActivity;
  */
 public class AgreementActivity extends BaseActivity implements OnClickListener {
 
-    private LinearLayout mlin_head_left;
-    private TextView tv_news;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agreement);
-        setView();      // 设置界面
-        setListener();  // 设置监听
-    }
-
-    private void setListener() {
-        mlin_head_left.setOnClickListener(this);
+        setView();// 设置界面
     }
 
     private void setView() {
-        mlin_head_left = (LinearLayout) findViewById(R.id.head_left_btn);
-        tv_news = (TextView) findViewById(R.id.tv_news);
-        tv_news.setText("我听科技网服务使用协议\n" +
+        findViewById(R.id.head_left_btn).setOnClickListener(this);// 返回
+        TextView textNews = (TextView) findViewById(R.id.tv_news);
+        String agreementString = "我听科技网服务使用协议\n" +
                 "\n" +
                 " \n" +
                 "\n" +
@@ -234,7 +225,9 @@ public class AgreementActivity extends BaseActivity implements OnClickListener {
                 "\n" +
                 " \n" +
                 "\n" +
-                "请您再次确认您已全部阅读并充分理解上述协议。");
+                "请您再次确认您已全部阅读并充分理解上述协议。";
+
+        textNews.setText(agreementString);
     }
 
     @Override
@@ -249,7 +242,6 @@ public class AgreementActivity extends BaseActivity implements OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mlin_head_left = null;
         setContentView(R.layout.activity_null);
     }
 }

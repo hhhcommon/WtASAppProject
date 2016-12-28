@@ -105,30 +105,49 @@ public class SocketService extends Service {
             this.healthWatch = new HealthWatch("Socket客户端长连接监控");
             this.healthWatch.start();
         } else {
-            this.workStop();
+            this.workStop(false);
             this.workStart();//循环了，可能死掉
         }
     }
 
     /**
      * 结束工作：包括关闭所有线程，但消息仍然存在
+     * true    // 一分钟后退出
+     * false   // 立即退出
      */
-    public static void workStop() {
+    public static void workStop(boolean b) {
         Log.e("结束工作", "关闭所有线程");
         toBeStop = true;
-        int i = 0, limitCount = 6000;//一分钟后退出
-        while ((healthWatch != null && healthWatch.isAlive()) ||
-                (reConn != null && reConn.isAlive()) ||
-                (sendBeat != null && sendBeat.isAlive()) ||
-                (sendMsg != null && sendMsg.isAlive()) ||
-                (receiveMsg != null && receiveMsg.isAlive())) {
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
+        if(b){
+            int i = 0, limitCount = 6000;//一分钟后退出
+            while ((healthWatch != null && healthWatch.isAlive()) ||
+                    (reConn != null && reConn.isAlive()) ||
+                    (sendBeat != null && sendBeat.isAlive()) ||
+                    (sendMsg != null && sendMsg.isAlive()) ||
+                    (receiveMsg != null && receiveMsg.isAlive())) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                }
+
+                if (i++ > limitCount) break;
             }
-            ;
-            if (i++ > limitCount) break;
+        }else{
+            int i = 0, limitCount = 0;//立即退出
+            while ((healthWatch != null && healthWatch.isAlive()) ||
+                    (reConn != null && reConn.isAlive()) ||
+                    (sendBeat != null && sendBeat.isAlive()) ||
+                    (sendMsg != null && sendMsg.isAlive()) ||
+                    (receiveMsg != null && receiveMsg.isAlive())) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                }
+
+                if (i++ > limitCount) break;
+            }
         }
+
 
         if (healthWatch != null && healthWatch.isAlive()) {
             healthWatch.interrupt();
@@ -533,22 +552,37 @@ public class SocketService extends Service {
                                         else isAck = 0;
                                         if ((ba[i - 1] & 0xF0) == 0xF0) isRegist = 1;
                                     } else if (isAck == 1) {//是回复消息
-                                        if (isRegist == 1) { //是注册消息
-                                            if (i == 48 && endMsgFlag[2] == 0) _dataLen = 80;
-                                            else _dataLen = 91;
-                                            if (_dataLen >= 0 && i == _dataLen) break;
+//                                        if (isRegist == 1) { //是注册消息
+//                                            if (i == 48 && endMsgFlag[2] == 0) _dataLen = 80;
+//                                            else _dataLen = 91;
+//                                            if (_dataLen >= 0 && i == _dataLen) break;
+//                                        } else { //非注册消息
+//                                            if (_dataLen < 0) _dataLen = 45;
+//                                            if (_dataLen >= 0 && i == _dataLen) break;
+//                                        }
+                                        if (isRegist==1) { //是注册消息
+                                            if (_dataLen<0) _dataLen=91;
+                                            if (i==48&&endMsgFlag[2]==0) _dataLen=80;
                                         } else { //非注册消息
-                                            if (_dataLen < 0) _dataLen = 45;
-                                            if (_dataLen >= 0 && i == _dataLen) break;
+                                            if (_dataLen<0) _dataLen=45;
                                         }
+                                        if (_dataLen>=0&&i==_dataLen) break;
                                     } else if (isAck == 0) {//是一般消息
-                                        if (isRegist == 1) {//是注册消息
-                                            if (((ba[2] & 0x80) == 0x80) && ((ba[2] & 0x00) == 0x00)) {
-                                                if (i == 48 && endMsgFlag[2] == 0) _dataLen = 80;
-                                                else _dataLen = 91;
+//                                        if (isRegist == 1) {//是注册消息
+//                                            if (((ba[2] & 0x80) == 0x80) && ((ba[2] & 0x00) == 0x00)) {
+//                                                if (i == 48 && endMsgFlag[2] == 0) _dataLen = 80;
+//                                                else _dataLen = 91;
+//                                            } else {
+//                                                if (i == 47 && endMsgFlag[2] == 0) _dataLen = 79;
+//                                                else _dataLen = 90;
+//                                            }
+                                        if (isRegist==1) {//是注册消息
+                                            if (((ba[2]&0x80)==0x80)&&((ba[2]&0x00)==0x00)) {
+                                                if (_dataLen<0) _dataLen=91;
+                                                if (i==48&&endMsgFlag[2]==0) _dataLen=80;
                                             } else {
-                                                if (i == 47 && endMsgFlag[2] == 0) _dataLen = 79;
-                                                else _dataLen = 90;
+                                                if (_dataLen<0) _dataLen=90;
+                                                if (i==47&&endMsgFlag[2]==0) _dataLen=79;
                                             }
                                             if (_dataLen >= 0 && i == _dataLen) break;
                                         } else {//非注册消息

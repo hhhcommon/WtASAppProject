@@ -13,11 +13,7 @@
 
         <ImageView
             android:id="@+id/head_left_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="6dp"
-            android:layout_centerVertical="true"
-            android:background="@mipmap/back_images" />
+            style="@style/LeftImageStyle" />
 
         <TextView
             android:id="@+id/head_name_tv"
@@ -50,6 +46,12 @@
 
     </RelativeLayout>
 
+    <com.woting.common.widgetui.TipView
+        android:id="@+id/tip_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:id="@+id/relative"
         android:layout_width="match_parent"
@@ -68,9 +70,9 @@
             android:gravity="left|center" >
 
             <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginLeft="10dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="6dp"
                 android:src="@mipmap/abc_ic_search_api_holo_light" />
 
             <EditText
@@ -78,7 +80,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="3dp"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="3dp"
                 android:layout_weight="1"
                 android:background="@color/WHITE"
@@ -109,19 +111,13 @@
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
                 android:divider="@null"
-                android:scrollbars="none" >
-            </ListView>
+                android:scrollbars="none" />
 
-            <TextView
-                android:id="@+id/title_layout_no_friends"
+            <com.woting.common.widgetui.TipView
+                android:id="@+id/tip_search_null"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
-                android:gravity="center"
-                android:text="没有找到联系人"
-                android:textColor="@color/gray"
-                android:textSize="12sp"
-                android:visibility="gone" />
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/dialog"

@@ -41,6 +41,7 @@ import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.http.MyHttp;
 import com.woting.common.manager.FileManager;
+import com.woting.common.service.SocketService;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
@@ -55,6 +56,7 @@ import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.photocut.PhotoCutActivity;
 import com.woting.ui.common.qrcodes.EWMShowActivity;
 import com.woting.ui.interphone.model.UserInviteMeInside;
+import com.woting.ui.main.MainActivity;
 import com.woting.ui.mine.favorite.activity.FavoriteActivity;
 import com.woting.ui.mine.hardware.HardwareIntroduceActivity;
 import com.woting.ui.mine.model.UserPortaitInside;
@@ -135,9 +137,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         setReceiver();
     }
 
-    /*
-      *设置广播接收器
-      */
+    // 设置广播接收器
     private void setReceiver() {
         if (Receiver == null) {
             Receiver = new MessageReceiver();
@@ -147,9 +147,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         }
     }
 
-    /*
-     * 接收到广播后更改界面
-     */
+    // 接收到广播后更改界面
     class MessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -738,6 +736,8 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                 ToastUtils.show_always(context, "再按一次退出");
                 touchTime = currentTime;
             } else {
+                SocketService.workStop(false);
+                MainActivity.stop();
                 MobclickAgent.onKillProcess(this);
                 finish();
                 android.os.Process.killProcess(android.os.Process.myPid());

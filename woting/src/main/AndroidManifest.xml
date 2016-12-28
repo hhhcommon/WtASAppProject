@@ -204,12 +204,6 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan"/>
-        <!--  -->
-        <activity
-            android:name=".common.widgetui.wheelview.ui.TimeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
 
         <!--  -->
         <activity
@@ -218,13 +212,6 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
-
-        <!--  -->
-        <activity
-            android:name=".common.widgetui.wheelview.ui.CitiesActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
 
         <!--  -->
         <activity
@@ -534,18 +521,16 @@
 
         <!--  -->
         <activity
-            android:name=".ui.mine.set.contactus.ContactUsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
-
-        <!--  -->
-        <activity
             android:name=".ui.mine.favorite.activity.FavoriteActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
+        <activity
+            android:name=".ui.home.program.album.anchor.activity.AnchorListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
         <!--  -->
         <!-- <activity -->
         <!-- android:name=".ui.home.program.tuijian.activity.RecommendLikeListActivity" -->
@@ -693,6 +678,28 @@
                 <category android:name="android.intent.category.HOME"/>
             </intent-filter>
         </receiver>
+        <!--  暂时不恢复
+        <receiver android:name="com.wotingfm.receiver.TickAlarmReceiver" >
+        </receiver>
+        <receiver android:name="com.wotingfm.receiver.PhoneStatReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.wotingfm.receiver.ConnectivityAlarmReceiver"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.wotingfm.receiver.BootAlarmReceiver"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>-->
 
         <service android:name=".common.service.SubclassService"/>
         <service android:name=".ui.interphone.commom.service.NotificationService"/>

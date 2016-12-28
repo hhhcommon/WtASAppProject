@@ -9,16 +9,11 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/wt_dinglan_high"
-        android:background="@color/dinglan_orange">
+        android:layout_height="@dimen/wt_dinglan_high">
 
         <ImageView
             android:id="@+id/head_left_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="6dp"
-            android:background="@mipmap/back_images" />
+            style="@style/LeftImageStyle" />
 
         <TextView
             android:layout_width="wrap_content"

@@ -38,9 +38,9 @@ import java.util.Arrays;
 
 /**
  * 呼叫弹出框
- *
- * @author 辛龙
- *         2016年3月7日
+ * author：辛龙 (xinLong)
+ * 2016/12/21 18:10
+ * 邮箱：645700751@qq.com
  */
 public class CallAlertActivity extends Activity implements OnClickListener {
     public static CallAlertActivity instance;
@@ -63,6 +63,17 @@ public class CallAlertActivity extends Activity implements OnClickListener {
         setContentView(R.layout.dialog_calling);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        //透明状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    //透明导航栏
+
+
+//        AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+//        audioManager.setMicrophoneMute(false);
+//        audioManager.setSpeakerphoneOn(true);//使用扬声器外放，即使已经插入耳机
+//        setVolumeControlStream(AudioManager.STREAM_MUSIC);//控制声音的大小
+//        audioManager.setMode(AudioManager.STREAM_MUSIC);
+
+
+
+
         instance = this;
         getSource();        // 获取展示数据
         setReceiver();      // 设置广播接收器
@@ -77,21 +88,33 @@ public class CallAlertActivity extends Activity implements OnClickListener {
     private void setDate() {
         InterPhoneControl.PersonTalkPress(instance, id);//拨号
         musicPlayer = MediaPlayer.create(instance, R.raw.ringback);
-        musicPlayer.start();
+        if (musicPlayer == null) {
+            musicPlayer = MediaPlayer.create(instance, R.raw.talkno);
+        }
+//        musicPlayer = MediaPlayer.create(instance, getSystemDefultRingtoneUri());
 
-        /**
-         * 监听音频播放完的代码，实现音频的自动循环播放
-         */
-        musicPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer arg0) {
-                if (musicPlayer != null) {
-                    musicPlayer.start();
-                    musicPlayer.setLooping(true);
+        if (musicPlayer != null) {
+            musicPlayer.start();
+            // 监听音频播放完的代码，实现音频的自动循环播放
+            musicPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer arg0) {
+                    if (musicPlayer != null) {
+                        musicPlayer.start();
+                        musicPlayer.setLooping(true);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            // 播放器初始化失败
+        }
     }
+
+//    //获取系统默认铃声的Uri
+//    private Uri getSystemDefultRingtoneUri() {
+//        return RingtoneManager.getActualDefaultRingtoneUri(this,
+//                RingtoneManager.TYPE_RINGTONE);
+//    }
 
     /*
      *设置界面，以及界面数据
@@ -178,29 +201,36 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                 isCall = true;
                 InterPhoneControl.PersonTalkPress(instance, id);        //拨号
                 musicPlayer = MediaPlayer.create(instance, R.raw.ringback);
-                musicPlayer.start();
-
-                // 监听音频播放完的代码，实现音频的自动循环播放
-                musicPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer arg0) {
-                        if (musicPlayer != null) {
-                            musicPlayer.start();
-                            musicPlayer.setLooping(true);
+                if (musicPlayer == null) {
+                    musicPlayer = MediaPlayer.create(instance, R.raw.talkno);
+                }
+//                musicPlayer = MediaPlayer.create(instance, getSystemDefultRingtoneUri());
+                if (musicPlayer != null) {
+                    musicPlayer.start();
+                    // 监听音频播放完的代码，实现音频的自动循环播放
+                    musicPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer arg0) {
+                            if (musicPlayer != null) {
+                                musicPlayer.start();
+                                musicPlayer.setLooping(true);
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+                    // 播放器初始化失败
+                }
                 break;
             case R.id.lin_guaduan:
                 tv_news.setText("重新呼叫");
                 lin_call.setVisibility(View.VISIBLE);
                 lin_guaduan.setVisibility(View.GONE);
                 isCall = false;
-                InterPhoneControl.PersonTalkHangUp(instance, InterPhoneControl.bdcallid);
                 if (musicPlayer != null) {
                     musicPlayer.stop();
                     musicPlayer = null;
                 }
+                InterPhoneControl.PersonTalkHangUp(instance, InterPhoneControl.bdcallid);
                 break;
         }
     }
@@ -252,7 +282,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             tv_news.setText("呼叫失败");
                                             lin_guaduan.setVisibility(View.GONE);
                                             lin_call.setVisibility(View.VISIBLE);
-                                            isCall=false;
+                                            isCall = false;
                                             Log.e("服务端拨号状态", "呼叫用户不在线");
                                             break;
                                         case 3:
@@ -263,7 +293,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             tv_news.setText("呼叫失败，用户不在线");
                                             lin_guaduan.setVisibility(View.GONE);
                                             lin_call.setVisibility(View.VISIBLE);
-                                            isCall=false;
+                                            isCall = false;
                                             Log.e("服务端拨号状态", "被叫用户不在线");
                                             break;
                                         case 4:
@@ -274,7 +304,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             tv_news.setText("呼叫失败");
                                             lin_guaduan.setVisibility(View.GONE);
                                             lin_call.setVisibility(View.VISIBLE);
-                                            isCall=false;
+                                            isCall = false;
                                             Log.e("服务端拨号状态", "呼叫用户占线（在通电话）");
                                             break;
                                         case 5:
@@ -285,7 +315,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             tv_news.setText("呼叫失败");
                                             lin_guaduan.setVisibility(View.GONE);
                                             lin_call.setVisibility(View.VISIBLE);
-                                            isCall=false;
+                                            isCall = false;
                                             Log.e("服务端拨号状态", "呼叫用户占线（在对讲）");
                                             break;
                                         case 6:
@@ -296,7 +326,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             tv_news.setText("呼叫失败");
                                             lin_guaduan.setVisibility(View.GONE);
                                             lin_call.setVisibility(View.VISIBLE);
-                                            isCall=false;
+                                            isCall = false;
                                             Log.e("服务端拨号状态", "呼叫用户占线（自己呼叫自己）");
                                             break;
                                         case 0x81:
@@ -307,7 +337,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             tv_news.setText("呼叫失败");
                                             lin_guaduan.setVisibility(View.GONE);
                                             lin_call.setVisibility(View.VISIBLE);
-                                            isCall=false;
+                                            isCall = false;
                                             Log.e("服务端拨号状态", "此通话已被占用");
                                             break;
                                         case 0x82:
@@ -318,7 +348,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             tv_news.setText("呼叫失败");
                                             lin_guaduan.setVisibility(View.GONE);
                                             lin_call.setVisibility(View.VISIBLE);
-                                            isCall=false;
+                                            isCall = false;
                                             //此通话对象状态错误（status应该为0，这个消息若没有特殊情况，是永远不会返回的）
                                             Log.e("服务端拨号状态", "此通话对象状态错误");
                                             break;
@@ -330,7 +360,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             tv_news.setText("呼叫失败");
                                             lin_guaduan.setVisibility(View.GONE);
                                             lin_call.setVisibility(View.VISIBLE);
-                                            isCall=false;
+                                            isCall = false;
                                             Log.e("服务端拨号状态", "异常返回值");
                                             break;
                                         default:
@@ -351,7 +381,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                         tv_news.setText("对方不在线");
                                         lin_guaduan.setVisibility(View.GONE);
                                         lin_call.setVisibility(View.VISIBLE);
-                                        isCall=false;
+                                        isCall = false;
                                     }
                                     break;
                                 case 0x20:
@@ -363,7 +393,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             musicPlayer.stop();
                                             musicPlayer = null;
                                         }
-                                        if(isCall) addUser();
+                                        if (isCall) addUser();
                                     } else if (ACKType != null && !ACKType.equals("") && ACKType.equals("2")) {
                                         //拒绝通话，挂断电话
                                         if (musicPlayer != null) {
@@ -373,7 +403,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                         tv_news.setText("呼叫失败");
                                         lin_guaduan.setVisibility(View.GONE);
                                         lin_call.setVisibility(View.VISIBLE);
-                                        isCall=false;
+                                        isCall = false;
                                     } else if (ACKType != null && !ACKType.equals("") && ACKType.equals("31")) {
                                         //被叫客户端超时应答，挂断电话
                                         if (musicPlayer != null) {
@@ -383,7 +413,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                         tv_news.setText("呼叫失败");
                                         lin_guaduan.setVisibility(View.GONE);
                                         lin_call.setVisibility(View.VISIBLE);
-                                        isCall=false;
+                                        isCall = false;
                                     } else if (ACKType != null && !ACKType.equals("") && ACKType.equals("32")) {
                                         //长时间不接听，服务器超时，挂断电话
                                         if (musicPlayer != null) {
@@ -393,7 +423,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                         tv_news.setText("呼叫失败");
                                         lin_guaduan.setVisibility(View.GONE);
                                         lin_call.setVisibility(View.VISIBLE);
-                                        isCall=false;
+                                        isCall = false;
                                     } else {
                                         if (musicPlayer != null) {
                                             musicPlayer.stop();
@@ -402,7 +432,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                         tv_news.setText("呼叫失败");
                                         lin_guaduan.setVisibility(View.GONE);
                                         lin_call.setVisibility(View.VISIBLE);
-                                        isCall=false;
+                                        isCall = false;
                                     }
                                     break;
                                 default:

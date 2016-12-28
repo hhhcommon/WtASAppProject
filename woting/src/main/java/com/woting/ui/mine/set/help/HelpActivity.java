@@ -13,6 +13,7 @@ import android.webkit.WebViewClient;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.DialogUtils;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 
 /**
@@ -20,9 +21,21 @@ import com.woting.ui.baseactivity.AppBaseActivity;
  * 作者：xinlong on 2016/8/1 21:18
  * 邮箱：645700751@qq.com
  */
-public class HelpActivity extends AppBaseActivity implements OnClickListener {
+public class HelpActivity extends AppBaseActivity implements OnClickListener, TipView.WhiteViewClick {
     private WebView webview;
     private Dialog dialog;
+
+    private TipView tipView;
+
+    @Override
+    public void onWhiteViewClick() {
+        if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            setWeb();
+        } else {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,15 +45,23 @@ public class HelpActivity extends AppBaseActivity implements OnClickListener {
     }
 
     private void initView() {
-        dialog = DialogUtils.Dialogph(context, "正在加载");
+        tipView = (TipView) findViewById(R.id.tip_view);
+        tipView.setWhiteClick(this);
 
         findViewById(R.id.head_left_btn).setOnClickListener(this);
         webview = (WebView) findViewById(R.id.webView);
-        webview.setOnClickListener(this);
-        setWeb();
+
+        if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            setWeb();
+        } else {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
+        }
     }
 
     private void setWeb() {
+        tipView.setVisibility(View.GONE);
+        dialog = DialogUtils.Dialogph(context, "正在加载");
         String url = GlobalConfig.wthelpUrl;
         WebSettings setting = webview.getSettings();
         setting.setJavaScriptEnabled(true);                               // 支持js
@@ -80,15 +101,6 @@ public class HelpActivity extends AppBaseActivity implements OnClickListener {
         }
         return super.dispatchKeyEvent(event);
     }
-
-//    final class MyWebChromeClient extends WebChromeClient {
-//        @Override
-//        public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
-//            // message就是wave函数里alert的字符串，这样你就可以在android客户端里对这个数据进行处理
-//            result.confirm();
-//            return true;
-//        }
-//    }
 
     @Override
     protected void onDestroy() {

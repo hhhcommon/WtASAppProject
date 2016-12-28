@@ -7,7 +7,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ExpandableListView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -21,6 +20,7 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
@@ -38,10 +38,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class RadioNationalActivity extends AppBaseActivity implements View.OnClickListener {
-
-    private LinearLayout head_left_btn;
+public class RadioNationalActivity extends AppBaseActivity implements View.OnClickListener, TipView.WhiteViewClick {
     private TextView mTextView_Head;
     private Dialog dialog;
 
@@ -53,36 +50,32 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
     private ExpandableListView mListView;
     private RadioNationAdapter adapter;
 
+    private TipView tipView;// 没有网络、没有数据提示
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_radio_nation);
-        context = this;
         setView();
-        setListener();
         initDao();
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             dialog = DialogUtils.Dialogph(context, "正在获取数据");
             sendRequest();
         } else {
-            ToastUtils.show_always(this, "网络连接失败，请稍后重试");
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
         }
     }
 
     private void sendRequest() {
         VolleyRequest.RequestPost(GlobalConfig.getContentUrl, tag, setParam(), new VolleyCallback() {
-            private String ResultList;
             private String StringSubList;
             private String ReturnType;
 
             @Override
             protected void requestSuccess(JSONObject result) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-                if (isCancelRequest) {
-                    return;
-                }
+                if (dialog != null) dialog.dismiss();
+                if (isCancelRequest) return;
                 try {
                     ReturnType = result.getString("ReturnType");
                 } catch (JSONException e) {
@@ -90,9 +83,7 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     try {
-                        ResultList = result.getString("ResultList");
-                        JSONTokener jsonParser = new JSONTokener(ResultList);
-                        JSONObject arg1 = (JSONObject) jsonParser.nextValue();
+                        JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         try {
                             StringSubList = arg1.getString("List");
                         } catch (Exception e) {
@@ -100,37 +91,38 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
                         }
                         try {
                             SubList = new Gson().fromJson(StringSubList, new TypeToken<List<RadioPlay>>() {}.getType());
-                            String s=SubList.get(0).getCatalogName();
-                            String s1=SubList.get(0).getList().get(0).getContentName();
                             if (adapter == null) {
                                 adapter = new RadioNationAdapter(context, SubList);
                                 mListView.setAdapter(adapter);
                             } else {
                                 adapter.notifyDataSetChanged();
                             }
-
                             for (int i = 0; i < SubList.size(); i++) {
                                 mListView.expandGroup(i);
                             }
-
+                            tipView.setVisibility(View.GONE);
                         } catch (Exception e) {
                             e.printStackTrace();
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.IS_ERROR);
                         }
                         setListView();
                     } catch (Exception e) {
                         e.printStackTrace();
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
                     }
                 } else {
-
-                    ToastUtils.show_always(context,"已经没有相关数据啦");
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
                 }
             }
 
             @Override
             protected void requestError(VolleyError error) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
+                if (dialog != null) dialog.dismiss();
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.IS_ERROR);
             }
         });
     }
@@ -139,7 +131,7 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("MediaType", "RADIO");
-            jsonObject.put("CatalogId","dtfl2001");
+            jsonObject.put("CatalogId", "dtfl2001");
             jsonObject.put("CatalogType", "9");
             jsonObject.put("PerSize", "20");
             jsonObject.put("ResultType", "1");
@@ -160,51 +152,51 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
         mListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                if ( SubList != null &&  SubList.get(groupPosition).getList().get(childPosition) != null
-                        &&  SubList.get(groupPosition).getList().get(childPosition).getMediaType() != null) {
-                    String MediaType =  SubList.get(groupPosition).getList().get(childPosition).getMediaType();
+                if (SubList != null && SubList.get(groupPosition).getList().get(childPosition) != null
+                        && SubList.get(groupPosition).getList().get(childPosition).getMediaType() != null) {
+                    String MediaType = SubList.get(groupPosition).getList().get(childPosition).getMediaType();
                     if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
-                        String playName =  SubList.get(groupPosition).getList().get(childPosition).getContentName();
-                        String playImage =  SubList.get(groupPosition).getList().get(childPosition).getContentImg();
-                        String playUrl =  SubList.get(groupPosition).getList().get(childPosition).getContentPlay();
-                        String playUri =  SubList.get(groupPosition).getList().get(childPosition).getContentURI();
-                        String playMediaType =  SubList.get(groupPosition).getList().get(childPosition).getMediaType();
-                        String playContentShareUrl =  SubList.get(groupPosition).getList().get(childPosition).getContentShareURL();
+                        String playName = SubList.get(groupPosition).getList().get(childPosition).getContentName();
+                        String playImage = SubList.get(groupPosition).getList().get(childPosition).getContentImg();
+                        String playUrl = SubList.get(groupPosition).getList().get(childPosition).getContentPlay();
+                        String playUri = SubList.get(groupPosition).getList().get(childPosition).getContentURI();
+                        String playMediaType = SubList.get(groupPosition).getList().get(childPosition).getMediaType();
+                        String playContentShareUrl = SubList.get(groupPosition).getList().get(childPosition).getContentShareURL();
                         String playAllTime = SubList.get(groupPosition).getList().get(childPosition).getContentTimes();
                         String playInTime = "0";
                         String playContentDesc = SubList.get(groupPosition).getList().get(childPosition).getContentDescn();
-                        String playerNum =  SubList.get(groupPosition).getList().get(childPosition).getPlayCount();
+                        String playerNum = SubList.get(groupPosition).getList().get(childPosition).getPlayCount();
                         String playZanType = "0";
-                        String playFrom =  SubList.get(groupPosition).getList().get(childPosition).getContentPub();
+                        String playFrom = SubList.get(groupPosition).getList().get(childPosition).getContentPub();
                         String playFromId = "";
                         String playFromUrl = "";
                         String playAddTime = Long.toString(System.currentTimeMillis());
                         String bjUserId = CommonUtils.getUserId(context);
-                        String ContentFavorite =  SubList.get(groupPosition).getList().get(childPosition).getContentFavorite();
+                        String ContentFavorite = SubList.get(groupPosition).getList().get(childPosition).getContentFavorite();
                         String ContentId = SubList.get(groupPosition).getList().get(childPosition).getContentId();
-                        String localUrl =  SubList.get(groupPosition).getList().get(childPosition).getLocalurl();
+                        String localUrl = SubList.get(groupPosition).getList().get(childPosition).getLocalurl();
 
                         String sequName = SubList.get(groupPosition).getList().get(childPosition).getSequName();
-                        String sequId =  SubList.get(groupPosition).getList().get(childPosition).getSequId();
+                        String sequId = SubList.get(groupPosition).getList().get(childPosition).getSequId();
                         String sequDesc = SubList.get(groupPosition).getList().get(childPosition).getSequDesc();
-                        String sequImg =  SubList.get(groupPosition).getList().get(childPosition).getSequImg();
+                        String sequImg = SubList.get(groupPosition).getList().get(childPosition).getSequImg();
 
-                        String ContentPlayType= SubList.get(groupPosition).getList().get(childPosition).getContentPlayType();
+                        String ContentPlayType = SubList.get(groupPosition).getList().get(childPosition).getContentPlayType();
 
-                        //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+                        // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playName, playImage, playUrl, playUri, playMediaType,
                                 playAllTime, playInTime, playContentDesc, playerNum,
                                 playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg,ContentPlayType);
+                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType);
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
                         HomeActivity.UpdateViewPager();
                         finish();
-                        PlayerFragment.TextPage=1;
-                        Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
-                        Bundle bundle1=new Bundle();
-                        bundle1.putString("text",SubList.get(groupPosition).getList().get(childPosition).getContentName());
+                        PlayerFragment.TextPage = 1;
+                        Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                        Bundle bundle1 = new Bundle();
+                        bundle1.putString("text", SubList.get(groupPosition).getList().get(childPosition).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
                     } else if (MediaType.equals("SEQU")) {
@@ -224,10 +216,13 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
     }
 
 
-
     private void setView() {
+        tipView = (TipView) findViewById(R.id.tip_view);
+        tipView.setWhiteClick(this);
+
+        findViewById(R.id.head_left_btn).setOnClickListener(this);
+
         mListView = (ExpandableListView) findViewById(R.id.listview_fm);
-        head_left_btn = (LinearLayout) findViewById(R.id.head_left_btn);
         mTextView_Head = (TextView) findViewById(R.id.head_name_tv);
         mTextView_Head.setText("国家台");
         mListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
@@ -241,10 +236,6 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
         mListView.setGroupIndicator(null);
     }
 
-    private void setListener() {
-        head_left_btn.setOnClickListener(this);
-    }
-
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_left_btn:
@@ -254,10 +245,20 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
     }
 
     @Override
+    public void onWhiteViewClick() {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            dialog = DialogUtils.Dialogph(context, "正在获取数据");
+            sendRequest();
+        } else {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
-        head_left_btn = null;
         mListView = null;
         dialog = null;
         mTextView_Head = null;
@@ -272,7 +273,6 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
             SubList = null;
         }
         adapter = null;
-        context = null;
         setContentView(R.layout.activity_null);
     }
 }

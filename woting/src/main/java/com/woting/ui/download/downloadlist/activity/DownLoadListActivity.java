@@ -233,41 +233,39 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
                             String sequId = mFileInfo.getSequid();
                             String sequImg = mFileInfo.getSequimgurl();
                             String sequDesc = mFileInfo.getSequdesc();
-                            String ContentPlayType=mFileInfo.getContentPlayType();
+                            String ContentPlayType = mFileInfo.getContentPlayType();
 
                             // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                             PlayerHistory history = new PlayerHistory(
                                     playername, playerimage, playerurl, playerurI, playermediatype,
                                     plaplayeralltime, playerintime, playercontentdesc, playernum,
                                     playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playercontentshareurl, ContentFavorite,
-                                    ContentId, playlocalrurl, sequName, sequId, sequDesc, sequImg,ContentPlayType);
+                                    ContentId, playlocalrurl, sequName, sequId, sequDesc, sequImg, ContentPlayType);
                             dbDao.deleteHistory(playerurl);
                             dbDao.addHistory(history);
                             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                            if (PlayerFragment.context != null) {
-                                MainActivity.change();
-                                HomeActivity.UpdateViewPager();
-                                PlayerFragment.TextPage=1;
-                                Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
-                                Bundle bundle1=new Bundle();
-                                bundle1.putString("text", mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4));
-                                push.putExtras(bundle1);
-                                context.sendBroadcast(push);
-                            } else {
-                                SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
-                                et.putString(StringConstant.PLAYHISTORYENTER, "true");
-                                et.putString(StringConstant.PLAYHISTORYENTERNEWS, mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4));
-                                if (!et.commit()) {
-                                    Log.v("commit", "数据 commit 失败!");
+                                if (PlayerFragment.context != null) {
+                                    MainActivity.change();
+                                    HomeActivity.UpdateViewPager();
+                                    PlayerFragment.TextPage = 1;
+                                    Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                                    Bundle bundle1 = new Bundle();
+                                    bundle1.putString("text", mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4));
+                                    push.putExtras(bundle1);
+                                    context.sendBroadcast(push);
+                                } else {
+                                    SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
+                                    et.putString(StringConstant.PLAYHISTORYENTER, "true");
+                                    et.putString(StringConstant.PLAYHISTORYENTERNEWS, mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4));
+                                    if (!et.commit()) Log.v("commit", "数据 commit 失败!");
+                                    MainActivity.change();
+                                    HomeActivity.UpdateViewPager();
                                 }
+                            } else {
+                                // 没网的状态下
                                 MainActivity.change();
                                 HomeActivity.UpdateViewPager();
-                            }
-                            }else{
-                                //没网的状态下
-                                MainActivity.change();
-                                HomeActivity.UpdateViewPager();
-                                PlayerFragment.TextPage=1;
+                                PlayerFragment.TextPage = 1;
                                 PlayerFragment.playNoNet();
                             }
                             setResult(1);

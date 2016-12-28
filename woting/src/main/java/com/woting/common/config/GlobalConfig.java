@@ -37,7 +37,11 @@ public class GlobalConfig {
     public static List<UserInfo> list_person;       // 通讯录中的好友
     public static LanguageSearchInside playerObject;// 播放器播放对象
     //缓存路径
-    public static String playCacheDir = Environment.getExternalStorageDirectory() + "/woting/playCache/";
+    public static String playCacheDirI = Environment.getRootDirectory() + ""; //获取手机根目录
+    public static String playCacheDirO = Environment.getExternalStorageDirectory() + ""; //获取SD卡根目录
+    public static String ksyPlayCache = "/WTFM/playCache/";// 金山云缓存地址
+    public static String upLoadCache = "/WTFM/APP/";// app更新下载地址
+
     //缓存的城市列表
     public static List<CatalogName> CityCatalogList;
 
@@ -65,7 +69,7 @@ public class GlobalConfig {
      * socket请求ip
      */
 //	public static final String socketUrl = "182.92.175.134";//生产服务器地址
-  public static final String socketUrl = "123.56.254.75";//测试服务器地址
+    public static final String socketUrl = "123.56.254.75";//测试服务器地址
 //	public static final String socketUrl = "192.168.5.17";//
     /**
      * http请求总url
@@ -282,4 +286,9 @@ public class GlobalConfig {
     public static final String uploadFileUrl = uploadBaseUrl + "common/uploadCM.do";
     // 新增节目
     public static final String addMediaInfo = uploadBaseUrl + "content/media/addMediaInfo.do";
+    // 获取主播信息
+    public static final String getPersonInfo = baseUrl + "wt/person/getPersonInfo.do";
+    // 新增主播内容
+    public static final String getPersonContents =baseUrl + "wt/person/getPersonContents.do";
+
 }

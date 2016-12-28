@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -50,8 +51,10 @@ public class DetailsFragment extends Fragment implements OnClickListener {
     private Dialog dialog;
     private String contentDesc;
     private String tag = "DETAILS_VOLLEY_REQUEST_CANCEL_TAG";
+    private String PersonId;
     private boolean isCancelRequest;
     private boolean isConcern;
+    private String ContentPub;
 
 
     @Override
@@ -109,8 +112,20 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                 isConcern = !isConcern;
                 break;
             case R.id.round_image_head:// 主播详情
+
             case R.id.text_anchor_name:
-                startActivity(new Intent(context, AnchorDetailsActivity.class));
+                //接口少ContentId和personid的对应关系，先写个假数据
+                PersonId="46ef848fa9cd4b5e9c20493b01f3a157";
+                if(!TextUtils.isEmpty(PersonId)){
+                 Intent intent=new Intent(context,AnchorDetailsActivity.class);
+                 intent.putExtra("PersonId",PersonId);
+                    if(!TextUtils.isEmpty(ContentPub)){
+                        intent.putExtra("ContentPub",ContentPub);
+                    }
+                 startActivity(intent);
+                }else{
+                 ToastUtils.show_always(context,"该主播还没有详细的个人信息~");
+                }
                 break;
 
         }
@@ -174,6 +189,12 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                                 }
                                 try {
                                     AlbumActivity.ContentFavorite = arg1.getString("ContentFavorite");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                                try {
+                                    ContentPub = arg1.getString("ContentPub");
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }

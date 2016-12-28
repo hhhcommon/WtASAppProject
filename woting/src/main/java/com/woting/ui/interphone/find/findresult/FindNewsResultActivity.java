@@ -7,18 +7,19 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.LinearLayout;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.baseactivity.AppBaseActivity;
@@ -38,14 +39,12 @@ import java.util.List;
 
 /**
  * 搜索结果页面
- *
  * @author 辛龙
- *         2016年1月20日
+ * 2016年1月20日
  */
-public class FindNewsResultActivity extends AppBaseActivity implements OnClickListener {
-    private LinearLayout lin_left;
+public class FindNewsResultActivity extends AppBaseActivity implements OnClickListener, TipView.WhiteViewClick {
     private XListView mxlistview;
-    private int RefreshType;        // 1，下拉刷新 2，加载更多
+    private int RefreshType;// 1，下拉刷新 2，加载更多
     private Dialog dialog;
     private String searchstr;
     private ArrayList<UserInviteMeInside> UserList;
@@ -57,108 +56,114 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
     private String tag = "FINDNEWS_RESULT_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
 
+    private TipView tipView;// 搜索没有数据提示
+
+    @Override
+    public void onWhiteViewClick() {
+        searchFriendOrGroup();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_findnews_result);
         setView();
         setListener();
-        searchstr = this.getIntent().getStringExtra("searchstr");
-        type = this.getIntent().getStringExtra("type");
-        if (type.trim() != null && !type.trim().equals("")) {
-            if (type.equals("friend")) {
-                // 搜索好友
-                if (searchstr.trim() != null && !searchstr.trim().equals("")) {
-                    if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(FindNewsResultActivity.this, "正在获取数据");
-                        PageNum = 1;
-                        RefreshType = 1;
-                        getFriend();
-                    } else {
-                        ToastUtils.show_always(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
-                    }
-                } else {
-                    // 如果当前界面没有接收到数据就给以友好提示
-                    ToastUtils.show_always(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
-                }
-            } else if (type.equals("group")) {
-                // 搜索群组
-                if (searchstr.trim() != null && !searchstr.trim().equals("")) {
-                    if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(FindNewsResultActivity.this, "正在获取数据");
-                        PageNum = 1;
-                        RefreshType = 1;
-                        getGroup();
-                    } else {
-                        ToastUtils.show_always(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
-                    }
-                } else {
-                    // 如果当前界面没有接收到数据就给以友好提示
-                    ToastUtils.show_always(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
-                }
-            }
+        searchstr = getIntent().getStringExtra("searchstr");
+        type = getIntent().getStringExtra("type");
+        if (!type.trim().equals("")) {
+            searchFriendOrGroup();
         } else {
-            // 如果当前界面没有接收到搜索类型数据就给以友好提示
-            ToastUtils.show_always(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.IS_ERROR);
         }
     }
 
+    // 初始化 View
     private void setView() {
-        lin_left = (LinearLayout) findViewById(R.id.head_left_btn);
         mxlistview = (XListView) findViewById(R.id.listview_querycontact);
+        tipView = (TipView) findViewById(R.id.tip_view);
+        tipView.setWhiteClick(this);
     }
 
-    private void setListener() {// 设置对应的点击事件
-        lin_left.setOnClickListener(this);
+    // 搜索好友或群组
+    private void searchFriendOrGroup() {
+        if (type.equals("friend")) {// 搜索好友
+            if (!searchstr.trim().equals("")) {
+                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                    dialog = DialogUtils.Dialogph(context, "正在获取数据");
+                    PageNum = 1;
+                    RefreshType = 1;
+                    getFriend();
+                } else {
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.NO_NET);
+                }
+            } else {
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.IS_ERROR);
+            }
+        } else if (type.equals("group")) {// 搜索群组
+            if (!searchstr.trim().equals("")) {
+                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                    dialog = DialogUtils.Dialogph(context, "正在获取数据");
+                    PageNum = 1;
+                    RefreshType = 1;
+                    getGroup();
+                } else {
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.NO_NET);
+                }
+            } else {
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.IS_ERROR);
+            }
+        }
+    }
+
+    // 设置对应的点击事件
+    private void setListener() {
+        findViewById(R.id.head_left_btn).setOnClickListener(this);
         mxlistview.setPullRefreshEnable(false);
         mxlistview.setPullLoadEnable(false);
         mxlistview.setXListViewListener(new IXListViewListener() {
             @Override
             public void onRefresh() {
-                // 数据请求
-                if (type.trim() != null && !type.trim().equals("")) {
-                    if (type.equals("friend")) {
-                        // 获取刷新好友数据
-                        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                            RefreshType = 1;
-                            PageNum = 1;
-                            getFriend();
-                        } else {
-                            ToastUtils.show_always(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
-                        }
-                    } else if (type.equals("group")) {
-                        // 获取刷新群组数据
-                        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                            RefreshType = 1;
-                            PageNum = 1;
-                            getGroup();
-                        } else {
-                            ToastUtils.show_always(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
-                        }
+                if (type.equals("friend")) {// 获取刷新好友数据
+                    if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                        RefreshType = 1;
+                        PageNum = 1;
+                        getFriend();
+                    } else {
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.NO_NET);
+                    }
+                } else if (type.equals("group")) {// 获取刷新群组数据
+                    if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                        RefreshType = 1;
+                        PageNum = 1;
+                        getGroup();
+                    } else {
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.NO_NET);
                     }
                 }
             }
 
             @Override
             public void onLoadMore() {
-                if (type.trim() != null && !type.trim().equals("")) {
-                    if (type.equals("friend")) {
-                        // 获取加载更多好友数据
-                        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                if (!type.trim().equals("")) {
+                    if (type.equals("friend")) {// 获取加载更多好友数据
+                        if(CommonHelper.checkNetwork(context)) {
                             RefreshType = 2;
                             PageNum = PageNum + 1;
                             getFriend();
-                        } else {
-                            ToastUtils.show_always(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
                         }
-                    } else if (type.equals("group")) {
-                        // 获取加载更多群组数据
-                        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                    } else if (type.equals("group")) {// 获取加载更多群组数据
+                        if(CommonHelper.checkNetwork(context)) {
                             RefreshType = 2;
                             PageNum = PageNum + 1;
                             getGroup();
-                        } else {
-                            ToastUtils.show_always(FindNewsResultActivity.this, "网络连接失败，请稍后重试");
                         }
                     }
                 }
@@ -170,7 +175,7 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
         mxlistview.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                if (type.trim() != null && !type.trim().equals("")) {
+                if (!type.trim().equals("")) {
                     if (type.equals("friend")) {
                         if (position > 0) {
                             if (UserList != null && UserList.size() > 0) {
@@ -180,28 +185,28 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                                 intent.putExtras(bundle);
                                 startActivity(intent);
                             } else {
-                                ToastUtils.show_always(FindNewsResultActivity.this, "获取数据异常");
+                                ToastUtils.show_always(context, "获取数据异常");
                             }
                         }
                     } else if (type.equals("group")) {
                         if (position > 0) {
                             if (GroupList != null && GroupList.size() > 0) {
                                 if (GroupList.get(position - 1).getGroupCreator().equals(CommonUtils.getUserId(context))) {
-                                    Intent intent = new Intent(FindNewsResultActivity.this, TalkGroupNewsActivity.class);
+                                    Intent intent = new Intent(context, TalkGroupNewsActivity.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putSerializable("data", GroupList.get(position - 1));
                                     bundle.putString("type", "groupaddactivity");
                                     intent.putExtras(bundle);
                                     startActivity(intent);
                                 } else {
-                                    Intent intent = new Intent(FindNewsResultActivity.this, GroupAddActivity.class);
+                                    Intent intent = new Intent(context, GroupAddActivity.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putSerializable("contact", GroupList.get(position - 1));
                                     intent.putExtras(bundle);
                                     startActivity(intent);
                                 }
                             } else {
-                                ToastUtils.show_always(FindNewsResultActivity.this, "获取数据异常");
+                                ToastUtils.show_always(context, "获取数据异常");
                             }
                         }
                     }
@@ -219,9 +224,7 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
         }
     }
 
-    /*
-     * 获取好友数据
-     */
+    // 获取好友数据
     protected void getFriend() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
@@ -233,20 +236,14 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
 
         VolleyRequest.RequestPost(GlobalConfig.searchStrangerUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
-            private String Message;
             private String ContactMeString;
 
             @Override
             protected void requestSuccess(JSONObject result) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-                if (isCancelRequest) {
-                    return;
-                }
+                if (dialog != null) dialog.dismiss();
+                if (isCancelRequest) return;
                 try {
                     ReturnType = result.getString("ReturnType");
-                    Message = result.getString("Message");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -256,63 +253,52 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                     e1.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
-                    UserList = new Gson().fromJson(ContactMeString, new TypeToken<List<UserInviteMeInside>>() {
-                    }.getType());
+                    UserList = new Gson().fromJson(ContactMeString, new TypeToken<List<UserInviteMeInside>>() {}.getType());
                     if (UserList != null && UserList.size() > 0) {
+                        tipView.setVisibility(View.GONE);
                         if (RefreshType == 1) {
-                            adapter = new FindFriendResultAdapter(FindNewsResultActivity.this, UserList);
-                            mxlistview.setAdapter(adapter);
+                            mxlistview.setAdapter(adapter = new FindFriendResultAdapter(context, UserList));
                             mxlistview.stopRefresh();
                         } else {
                             adapter.ChangeData(UserList);
                             mxlistview.stopLoadMore();
                         }
-                        setItemListener();    // 设置item的点击事件
+                        setItemListener();    // 设置 item 的点击事件
                     } else {
-                        ToastUtils.show_always(FindNewsResultActivity.this, "数据获取失败，请稍候再试");    // json解析失败
-                    }
-                } else if (ReturnType != null && ReturnType.equals("1002")) {
-                    if (RefreshType == 1) {
-                        mxlistview.stopRefresh();
-                    } else {
-                        mxlistview.stopLoadMore();
-                    }
-                    // 获取数据失败
-                    if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_always(FindNewsResultActivity.this, Message);
-                    } else {
-                        ToastUtils.show_always(FindNewsResultActivity.this, "数据获取失败，请稍候再试");
+                        if(RefreshType == 1) {
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到该好友哟\n换个好友再试一次吧");
+                        }
                     }
                 } else {
-                    if (RefreshType == 1) {
-                        mxlistview.stopRefresh();
-                    } else {
-                        mxlistview.stopLoadMore();
+                    if(RefreshType == 1) {
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到该好友哟\n换个好友再试一次吧");
                     }
-                    if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_always(FindNewsResultActivity.this, Message);
-                    } else {
-                        ToastUtils.show_always(FindNewsResultActivity.this, "数据获取失败，请稍候再试");
-                    }
+                }
+                if (RefreshType == 1) {
+                    mxlistview.stopRefresh();
+                } else {
+                    mxlistview.stopLoadMore();
                 }
             }
 
             @Override
             protected void requestError(VolleyError error) {
-                if (dialog != null) {
-                    dialog.dismiss();
+                if (dialog != null) dialog.dismiss();
+                ToastUtils.showVolleyError(context);
+                if(RefreshType == 1) {
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
                 }
             }
         });
     }
 
-    /*
-     * 获取群组数据
-     */
+    // 获取群组数据
     protected void getGroup() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            // 模块属性
             jsonObject.put("Page", PageNum);
             jsonObject.put("SearchStr", searchstr);
         } catch (JSONException e) {
@@ -321,20 +307,14 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
 
         VolleyRequest.RequestPost(GlobalConfig.searchStrangerGroupUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
-            private String Message;
             private String GroupMeString;
 
             @Override
             protected void requestSuccess(JSONObject result) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-                if (isCancelRequest) {
-                    return;
-                }
+                if (dialog != null) dialog.dismiss();
+                if (isCancelRequest) return;
                 try {
                     ReturnType = result.getString("ReturnType");
-                    Message = result.getString("Message");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -344,52 +324,38 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                     e1.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
-                    GroupList = new Gson().fromJson(GroupMeString, new TypeToken<List<GroupInfo>>() {
-                    }.getType());
+                    GroupList = new Gson().fromJson(GroupMeString, new TypeToken<List<GroupInfo>>() {}.getType());
                     if (GroupList != null && GroupList.size() > 0) {
+                        tipView.setVisibility(View.GONE);
                         if (RefreshType == 1) {
-                            adapters = new FindGroupResultAdapter(FindNewsResultActivity.this, GroupList);
-                            mxlistview.setAdapter(adapters);
+                            mxlistview.setAdapter(adapters = new FindGroupResultAdapter(context, GroupList));
                             mxlistview.stopRefresh();
                         } else {
                             adapters.ChangeData(GroupList);
                             mxlistview.stopLoadMore();
                         }
-                        setItemListener();    // 设置item的点击事件
+                        setItemListener();    // 设置 item 的点击事件
                     } else {
-                        ToastUtils.show_always(FindNewsResultActivity.this, "数据获取失败，请稍候再试");    // json解析失败
-                    }
-                } else if (ReturnType != null && ReturnType.equals("1002")) {
-                    if (RefreshType == 1) {
-                        mxlistview.stopRefresh();
-                    } else {
-                        mxlistview.stopLoadMore();
-                    }
-                    // 获取数据失败
-                    if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_always(FindNewsResultActivity.this, Message);
-                    } else {
-                        ToastUtils.show_always(FindNewsResultActivity.this, "数据获取失败，请稍候再试");
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到该群组哟\n换个群组再试一次吧");
                     }
                 } else {
-                    if (RefreshType == 1) {
-                        mxlistview.stopRefresh();
-                    } else {
-                        mxlistview.stopLoadMore();
-                    }
-                    if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_always(FindNewsResultActivity.this, Message);
-                    } else {
-                        ToastUtils.show_always(FindNewsResultActivity.this, "数据获取失败，请稍候再试");
-                    }
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到该群组哟\n换个群组再试一次吧");
+                }
+                if (RefreshType == 1) {
+                    mxlistview.stopRefresh();
+                } else {
+                    mxlistview.stopLoadMore();
                 }
             }
 
             @Override
             protected void requestError(VolleyError error) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
+                if (dialog != null) dialog.dismiss();
+                ToastUtils.showVolleyError(context);
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.IS_ERROR);
             }
         });
     }
@@ -400,7 +366,6 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
         isCancelRequest = VolleyRequest.cancelRequest(tag);
         UserList = null;
         GroupList = null;
-        lin_left = null;
         mxlistview = null;
         adapter = null;
         adapters = null;

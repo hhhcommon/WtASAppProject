@@ -45,4 +45,13 @@
         <attr name="rollviewpager_hint_alpha" format="integer" />
     </declare-styleable>
 
+    <!--提示View-->
+    <declare-styleable name="TipView">
+        <attr name="tipText" format="string"/>
+        <attr name="tipTextSize" format="dimension"/>
+        <attr name="tipColor" format="color"/>
+        <attr name="drawableTop" format="reference"/>
+        <attr name="drawablePadding" format="dimension"/>
+    </declare-styleable>
+
 </resources>

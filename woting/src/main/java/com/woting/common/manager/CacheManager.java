@@ -3,7 +3,7 @@ package com.woting.common.manager;
 import android.content.Context;
 import android.os.Environment;
 
-import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.ResourceUtil;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -208,7 +208,7 @@ public class CacheManager {
 	public static  String getCacheSize(File file)  {
 	try{
 		cache=getFolderSize(file);
-		cache+=getFolderSize(new File(GlobalConfig.playCacheDir));
+		cache+=getFolderSize(new File(ResourceUtil.getLocalUrlForKsy()));
 	}catch (Exception e){
 		e.printStackTrace();
 	}

@@ -50,6 +50,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.MyGridView;
 import com.woting.common.widgetui.MyLinearLayout;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.common.model.UserInfo;
@@ -87,7 +88,7 @@ import java.util.Map;
  * @author 辛龙
  *         2016年1月18日
  */
-public class ChatFragment extends Fragment implements OnClickListener {
+public class ChatFragment extends Fragment implements OnClickListener, TipView.TipViewClick {
     public static FragmentActivity context;
     private static ChatListAdapter adapter;
     private MessageReceiver Receiver;
@@ -120,9 +121,9 @@ public class ChatFragment extends Fragment implements OnClickListener {
     private RelativeLayout Relative_listview;
     public static MyLinearLayout lin_foot;
     public static LinearLayout lin_head;
-    public static LinearLayout lin_second;
     public static LinearLayout lin_notalk;
     public static LinearLayout lin_personhead;
+    public static TipView tipView;
 
     private AnimationDrawable draw;
     private AnimationDrawable draw_group;
@@ -138,12 +139,17 @@ public class ChatFragment extends Fragment implements OnClickListener {
     public static boolean isCalling = false;//是否是在通话状态;
     private boolean isCancelRequest;
     private boolean isTalking = false;
-    private static List<UserInfo> groupPersonList = new ArrayList<UserInfo>();//组成员
-    private static ArrayList<UserInfo> groupPersonListS = new ArrayList<UserInfo>();
-    private static ArrayList<GroupInfo> allList = new ArrayList<GroupInfo>();//所有数据库数据
+    private static List<UserInfo> groupPersonList = new ArrayList<>();//组成员
+    private static ArrayList<UserInfo> groupPersonListS = new ArrayList<>();
+    private static ArrayList<GroupInfo> allList = new ArrayList<>();//所有数据库数据
     private static List<DBTalkHistorary> historyDataBaseList;//list里边的数据
     private static List<ListInfo> listInfo;
 
+    @Override
+    public void onTipViewClick() {
+        Intent intent = new Intent(context, LoginActivity.class);
+        startActivity(intent);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -151,7 +157,6 @@ public class ChatFragment extends Fragment implements OnClickListener {
         context = this.getActivity();
         initDao();      // 初始化数据库
         setReceiver();  // 注册广播接收socketService的数据
-
     }
 
     private void setOnResumeView() {
@@ -168,7 +173,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
                 lin_head.setVisibility(View.GONE);
                 lin_foot.setVisibility(View.GONE);
                 GlobalConfig.isActive = false;
-                lin_second.setVisibility(View.GONE);
+                tipView.setVisibility(View.GONE);
                 getTXL();
                 Editor et = shared.edit();
                 et.putString(StringConstant.PERSONREFRESHB, "false");
@@ -177,7 +182,8 @@ public class ChatFragment extends Fragment implements OnClickListener {
         } else {
             //显示未登录
             Relative_listview.setVisibility(View.GONE);
-            lin_second.setVisibility(View.VISIBLE);
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_LOGIN);
         }
     }
 
@@ -255,7 +261,8 @@ public class ChatFragment extends Fragment implements OnClickListener {
         imageView_answer = (ImageView) rootView.findViewById(R.id.imageView_answer);            //
         image_button = (Button) rootView.findViewById(R.id.image_button);                       //
         Relative_listview = (RelativeLayout) rootView.findViewById(R.id.Relative_listview);     //
-        lin_second = (LinearLayout) rootView.findViewById(R.id.lin_second);                     //
+        tipView = (TipView) rootView.findViewById(R.id.tip_view);
+        tipView.setTipClick(this);
 
         image_personvoice.setBackgroundResource(R.drawable.talk_show);
         draw = (AnimationDrawable) image_personvoice.getBackground();
@@ -269,7 +276,6 @@ public class ChatFragment extends Fragment implements OnClickListener {
     }
 
     private void listener() {
-        lin_second.setOnClickListener(this);
         image_grouptx.setOnClickListener(this);
         imageView_answer.setOnClickListener(this);
         image_button.setOnTouchListener(new OnTouchListener() {
@@ -294,10 +300,6 @@ public class ChatFragment extends Fragment implements OnClickListener {
             case R.id.image_grouptx:
                 //查看群成员
                 checkGroup();
-                break;
-            case R.id.lin_second:
-                Intent intent = new Intent(context, LoginActivity.class);
-                startActivity(intent);
                 break;
             case R.id.imageView_answer:
                 //挂断
@@ -493,8 +495,6 @@ public class ChatFragment extends Fragment implements OnClickListener {
 
     /**
      * 设置对讲组为激活状态
-     *
-     * @param groupIdS
      */
     public static void zhiDingGroupSS(String groupIdS) {
         Intent intent = new Intent();
@@ -576,7 +576,10 @@ public class ChatFragment extends Fragment implements OnClickListener {
                 } else {
                     String t = allList.get(position).getTyPe();
                     if (t != null && !t.equals("") && t.equals("user")) {
-                        call(allList.get(position).getId());
+                        String id=allList.get(position).getId();
+                        if (id != null && !id.equals("")) {
+                            call(id);
+                        }
                     } else {
                         zhiDingGroupSS(groupId);
                     }
@@ -746,7 +749,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
         lin_head.setVisibility(View.VISIBLE);
         lin_foot.setVisibility(View.VISIBLE);
         GlobalConfig.isActive = true;
-        lin_second.setVisibility(View.GONE);
+        tipView.setVisibility(View.GONE);
         GroupInfo firstdate = allList.remove(0);
         interPhoneType = firstdate.getTyPe();//对讲类型，个人跟群组
         interPhoneId = firstdate.getId();//对讲组：groupid
@@ -800,7 +803,7 @@ public class ChatFragment extends Fragment implements OnClickListener {
         lin_head.setVisibility(View.GONE);
         lin_foot.setVisibility(View.VISIBLE);
         GlobalConfig.isActive = true;
-        lin_second.setVisibility(View.GONE);
+        tipView.setVisibility(View.GONE);
         tv_personname.setText(firstdate.getName());
         if (firstdate.getPortrait() == null || firstdate.getPortrait().equals("") || firstdate.getPortrait().trim().equals("")) {
             image_persontx.setImageResource(R.mipmap.wt_image_tx_qz);

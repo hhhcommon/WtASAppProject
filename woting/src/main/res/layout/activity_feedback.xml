@@ -9,9 +9,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/dinglan_orange"
-        android:gravity="center_vertical" >
+        android:layout_height="48dp" >
 
         <ImageView
             android:id="@+id/head_left_btn"
@@ -40,7 +38,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/WHITE"
+        android:background="@color/app_bg"
         android:orientation="vertical" >
 
         <EditText

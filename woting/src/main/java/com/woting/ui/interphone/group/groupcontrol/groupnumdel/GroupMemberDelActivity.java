@@ -22,6 +22,7 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.UserInfo;
 import com.woting.ui.interphone.group.groupcontrol.groupnumdel.adapter.CreateGroupMembersDelAdapter;
@@ -42,7 +43,7 @@ import java.util.List;
  * @author 辛龙
  * 2016年3月25日
  */
-public class GroupMemberDelActivity extends AppBaseActivity implements OnClickListener, TextWatcher {
+public class GroupMemberDelActivity extends AppBaseActivity implements OnClickListener, TextWatcher, TipView.WhiteViewClick {
     private CharacterParser characterParser = CharacterParser.getInstance();// 实例化汉字转拼音类
     private PinyinComparator pinyinComparator = new PinyinComparator();
     private CreateGroupMembersDelAdapter adapter;
@@ -55,7 +56,6 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
     private ListView listView;
     private EditText editSearchContent;
     private TextView textHeadName;
-    private TextView textNoFriend;
     private TextView textHeadRight;
     private TextView dialogs;
     private ImageView imageClear;
@@ -63,6 +63,26 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
     private String groupId;
     private String tag = "GROUP_MEMBER_DEL_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
+
+    private TipView tipView;// 没有网络没有数据提示
+    private TipView tipSearchNull;// 搜索数据为空提示
+
+    @Override
+    public void onWhiteViewClick() {
+        groupId = getIntent().getStringExtra("GroupId");
+        if (groupId != null && !groupId.equals("")) {
+            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
+                send();
+            } else {
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_NET);
+            }
+        } else {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.IS_ERROR);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +96,10 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
         findViewById(R.id.head_left_btn).setOnClickListener(this);
         findViewById(R.id.head_right_btn).setOnClickListener(this);// 添加按钮
 
+        tipSearchNull = (TipView) findViewById(R.id.tip_search_null);
+        tipView = (TipView) findViewById(R.id.tip_view);
+        tipView.setWhiteClick(this);
+
         editSearchContent = (EditText) findViewById(R.id.et_search);// 搜索控件
         editSearchContent.addTextChangedListener(this);
 
@@ -87,7 +111,6 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
         sideBar.setTextView(dialogs);
 
         listView = (ListView) findViewById(R.id.country_lvcountry);
-        textNoFriend = (TextView) findViewById(R.id.title_layout_no_friends);
         textHeadRight = (TextView) findViewById(R.id.tv_head);
         textHeadName = (TextView) findViewById(R.id.head_name_tv);
         textHeadName.setText("删除群成员");
@@ -98,10 +121,12 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
                 dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
                 send();
             } else {
-                ToastUtils.show_always(context, "网络失败，请检查网络");
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_NET);
             }
         } else {
-            ToastUtils.show_always(context, "获取数据异常请返回重试!");
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.IS_ERROR);
         }
     }
 
@@ -115,7 +140,6 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
 
         VolleyRequest.RequestPost(GlobalConfig.grouptalkUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
-            private String Message;
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -123,7 +147,6 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
                 if (isCancelRequest) return;
                 try {
                     ReturnType = result.getString("ReturnType");
-                    Message = result.getString("Message");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -131,7 +154,8 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
                     try {
                         userList = new Gson().fromJson(result.getString("UserList"), new TypeToken<List<UserInfo>>() {}.getType());
                         if(userList == null || userList.size() == 0) {
-                            ToastUtils.show_always(context, "当前组内已经没有其他联系人了");
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.NO_DATA, "群内没有其他成员了\n赶紧去邀请好友加入群组吧");
                             return ;
                         }
                         String userId = CommonUtils.getUserId(context);// 从返回的 list 当中去掉用户自己
@@ -148,18 +172,12 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
                         setInterface();
                     } catch (Exception e1) {
                         e1.printStackTrace();
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
                     }
-                }
-                if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_always(context, "无法获取组Id");
-                } else if (ReturnType != null && ReturnType.equals("T")) {
-                    ToastUtils.show_always(context, "异常返回值");
-                } else if (ReturnType != null && ReturnType.equals("1011")) {
-                    ToastUtils.show_always(context, "组中无成员");
                 } else {
-                    if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_always(context, Message + "");
-                    }
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.NO_DATA, "群内没有其他成员了\n赶紧去邀请好友加入群组吧");
                 }
             }
 
@@ -167,6 +185,8 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.IS_ERROR);
             }
         });
     }
@@ -209,7 +229,7 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
         List<UserInfo> filterDateList = new ArrayList<>();
         if (TextUtils.isEmpty(search_name)) {
             filterDateList = userList2;
-            textNoFriend.setVisibility(View.GONE);
+            tipSearchNull.setVisibility(View.GONE);
         } else {
             filterDateList.clear();
             for (UserInfo sortModel : userList2) {
@@ -224,9 +244,10 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
         userList2.clear();
         userList2.addAll(filterDateList);
         if (filterDateList.size() == 0) {
-            textNoFriend.setVisibility(View.VISIBLE);
+            tipSearchNull.setVisibility(View.VISIBLE);
+            tipSearchNull.setTipView(TipView.TipStatus.NO_DATA, "没有找到该好友哟\n换个好友再试一次吧");
         } else {
-            textNoFriend.setVisibility(View.GONE);
+            tipSearchNull.setVisibility(View.GONE);
         }
     }
 
@@ -258,7 +279,7 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
             case R.id.image_clear:
                 imageClear.setVisibility(View.INVISIBLE);
                 editSearchContent.setText("");
-                textNoFriend.setVisibility(View.GONE);
+                tipSearchNull.setVisibility(View.GONE);
                 break;
         }
     }
@@ -311,7 +332,7 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
         String search_name = s.toString();
         if (search_name.trim().equals("")) {
             imageClear.setVisibility(View.INVISIBLE);
-            textNoFriend.setVisibility(View.GONE);
+            tipSearchNull.setVisibility(View.GONE);
             if (userList == null || userList.size() == 0) {
                 listView.setVisibility(View.GONE);
             } else {
@@ -335,7 +356,6 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
     protected void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
-        textNoFriend = null;
         sideBar = null;
         dialogs = null;
         listView = null;

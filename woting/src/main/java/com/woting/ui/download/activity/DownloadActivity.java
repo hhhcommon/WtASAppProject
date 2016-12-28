@@ -16,13 +16,14 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 import com.woting.R;
-import com.woting.common.application.BSApplication;
+import com.woting.common.service.SocketService;
 import com.woting.common.util.ToastUtils;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.download.fragment.DownLoadCompleted;
 import com.woting.ui.download.fragment.DownLoadUnCompleted;
 import com.woting.ui.home.search.activity.SearchLikeActivity;
 import com.woting.ui.interphone.notify.activity.NotifyNewsActivity;
+import com.woting.ui.main.MainActivity;
 
 import java.util.ArrayList;
 
@@ -148,6 +149,8 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
                 ToastUtils.show_always(context, "再按一次退出");
                 touchTime = currentTime;
             } else {
+                SocketService.workStop(false);
+                MainActivity.stop();
                 MobclickAgent.onKillProcess(context);
                 finish();
                 android.os.Process.killProcess(android.os.Process.myPid());

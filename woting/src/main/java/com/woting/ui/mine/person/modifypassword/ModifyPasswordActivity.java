@@ -6,11 +6,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
@@ -34,8 +34,6 @@ public class ModifyPasswordActivity extends AppBaseActivity implements OnClickLi
     private String oldPassword;// 旧密码
     private String newPassword;// 新密码
     private String passwordConfirm;// 确定新密码
-    //    private String userId;// 用户 ID
-//    private String phoneNum;// 用户手机号
     private String tag = "MODIFY_PASSWORD_VOLLEY_REQUEST_CANCEL_TAG";
 
     private boolean isCancelRequest;
@@ -47,16 +45,8 @@ public class ModifyPasswordActivity extends AppBaseActivity implements OnClickLi
                 finish();
                 break;
             case R.id.btn_modifypassword:// 确定修改密码
-                if (checkData()) {
-                    if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-//                        if (viewType != 0) {
-                        send();
-//                        } else {
-//                            sendModifyPassword();
-//                        }
-                    } else {
-                        ToastUtils.show_always(context, "网络连接失败，请稍后重试");
-                    }
+                if (CommonHelper.checkNetwork(context) && checkData()) {
+                    send();
                 }
                 break;
         }
@@ -78,76 +68,27 @@ public class ModifyPasswordActivity extends AppBaseActivity implements OnClickLi
         editOldPassword = (EditText) findViewById(R.id.edit_oldpassword);// 输入 旧密码
         editNewPassword = (EditText) findViewById(R.id.edit_newpassword);// 输入 新密码
         editNewPasswordConfirm = (EditText) findViewById(R.id.edit_confirmpassword);// 输入 确定新密码
-
-
     }
 
-    // 发送修改密码请求
-//    protected void sendModifyPassword() {
-//        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-//        try {
-//            jsonObject.put("RetrieveUserId", userId);
-//            jsonObject.put("newPassword", newPassword);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//        VolleyRequest.RequestPost(GlobalConfig.updatePwd_AfterCheckPhoneOKUrl, tag, jsonObject, new VolleyCallback() {
-//            private String ReturnType;
-//            private String Message;
-//
-//            @Override
-//            protected void requestSuccess(JSONObject result) {
-//                if (dialog != null) dialog.dismiss();
-//                if (isCancelRequest) return;
-//                try {
-//                    ReturnType = result.getString("ReturnType");
-//                    Message = result.getString("Message");
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//                if (ReturnType != null && ReturnType.equals("1001")) {
-//                    ToastUtils.show_always(context, "密码修改成功");
-//                    Intent intent = new Intent(context, LoginActivity.class);
-//                    intent.putExtra("phonenum", phoneNum);
-//                    startActivity(intent);
-//                    finish();
-//                }
-//                if (ReturnType != null && ReturnType.equals("1002")) {
-//                    ToastUtils.show_always(context, "" + Message);
-//                } else {
-//                    if (Message != null && !Message.trim().equals("")) {
-//                        ToastUtils.show_always(context, Message + "");
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            protected void requestError(VolleyError error) {
-//                if (dialog != null) dialog.dismiss();
-//                ToastUtils.showVolleyError(context);
-//            }
-//        });
-//    }
-
+    // 检查数据的正确性
     protected boolean checkData() {
         oldPassword = editOldPassword.getText().toString().trim();
         newPassword = editNewPassword.getText().toString().trim();
         passwordConfirm = editNewPasswordConfirm.getText().toString().trim();
         if ("".equalsIgnoreCase(oldPassword)) {
-            Toast.makeText(context, "请输入您的旧密码", Toast.LENGTH_LONG).show();
+            ToastUtils.show_always(context, "请输入您的旧密码");
             return false;
         }
         if ("".equalsIgnoreCase(newPassword)) {
-            Toast.makeText(context, "请输入您的新密码", Toast.LENGTH_LONG).show();
+            ToastUtils.show_always(context, "请输入您的新密码");
             return false;
         }
         if (newPassword.length() < 6) {
-            Toast.makeText(context, "密码请输入六位以上", Toast.LENGTH_LONG).show();
+            ToastUtils.show_always(context, "密码请输入六位以上");
             return false;
         }
         if ("".equalsIgnoreCase(newPassword)) {
-            Toast.makeText(context, "请再次输入密码", Toast.LENGTH_LONG).show();
+            ToastUtils.show_always(context, "请再次输入密码");
             return false;
         }
         if (!newPassword.equals(passwordConfirm)) {
@@ -155,7 +96,7 @@ public class ModifyPasswordActivity extends AppBaseActivity implements OnClickLi
             return false;
         }
         if (passwordConfirm.length() < 6) {
-            Toast.makeText(context, "密码请输入六位以上", Toast.LENGTH_LONG).show();
+            ToastUtils.show_always(context, "密码请输入六位以上");
             return false;
         }
         return true;
@@ -188,9 +129,6 @@ public class ModifyPasswordActivity extends AppBaseActivity implements OnClickLi
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     ToastUtils.show_always(context, "密码修改成功");
                     finish();
-                }
-                if (ReturnType != null && ReturnType.equals("1002")) {
-                    ToastUtils.show_always(context, "" + Message);
                 } else {
                     if (Message != null && !Message.trim().equals("")) {
                         ToastUtils.show_always(context, Message + "");

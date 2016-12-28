@@ -32,16 +32,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.woting.R;
+import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.util.BitmapUtils;
+import com.woting.common.util.PhoneMessage;
+import com.woting.common.util.ToastUtils;
+import com.woting.common.widgetui.MyViewPager;
 import com.woting.ui.baseactivity.AppBaseFragmentActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.mine.playhistory.fragment.RadioFragment;
 import com.woting.ui.mine.playhistory.fragment.SoundFragment;
 import com.woting.ui.mine.playhistory.fragment.TTSFragment;
 import com.woting.ui.mine.playhistory.fragment.TotalFragment;
-import com.woting.common.util.BitmapUtils;
-import com.woting.common.util.PhoneMessage;
-import com.woting.common.util.ToastUtils;
-import com.woting.common.widgetui.MyViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,9 +71,7 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
     private int bmpW;// 横线图片宽度
     private int offset;// 图片移动的偏移量
     private int dialogFlag = 0;// 编辑全选状态的变量 0为未选中，1为选中
-    
-    public static final String UPDATE_ACTION_ALL = "PLAY_HISTORY_UPDATE_ACTION_ALL";
-    public static final String UPDATE_ACTION_CHECK = "com.woting.playhistory.check";
+
     private boolean isDelete = false;
     public static boolean isEdit = true;// 是否为编辑状态
     
@@ -85,8 +84,8 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
 
         // 注册广播
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(PlayHistoryActivity.UPDATE_ACTION_ALL);
-        intentFilter.addAction(PlayHistoryActivity.UPDATE_ACTION_CHECK);
+        intentFilter.addAction(BroadcastConstants.UPDATE_ACTION_ALL);
+        intentFilter.addAction(BroadcastConstants.UPDATE_ACTION_CHECK);
         registerReceiver(myBroadcast, intentFilter);
         dbDao = new SearchPlayerHistoryDao(context);// 初始化数据库
 
@@ -390,11 +389,11 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(PlayHistoryActivity.UPDATE_ACTION_ALL)) {
+            if (action.equals(BroadcastConstants.UPDATE_ACTION_ALL)) {
                 Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_group_checked);
                 imgAllCheck.setImageBitmap(bmp);
                 dialogFlag = 1;
-            } else if (action.equals(PlayHistoryActivity.UPDATE_ACTION_CHECK)) {
+            } else if (action.equals(BroadcastConstants.UPDATE_ACTION_CHECK)) {
                 Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_group_nochecked);
                 imgAllCheck.setImageBitmap(bmp);
                 dialogFlag = 0;

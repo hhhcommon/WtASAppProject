@@ -19,6 +19,7 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.UserInfo;
 import com.woting.ui.interphone.group.groupcontrol.handlegroupapply.adapter.HandleGroupApplyAdapter;
@@ -35,7 +36,7 @@ import java.util.List;
  * @author 辛龙
  * 2016年4月13日
  */
-public class HandleGroupApplyActivity extends AppBaseActivity implements OnClickListener, Callback, OnItemLongClickListener {
+public class HandleGroupApplyActivity extends AppBaseActivity implements OnClickListener, Callback, OnItemLongClickListener, TipView.WhiteViewClick {
     private HandleGroupApplyAdapter adapter;
     private List<UserInfo> userList = new ArrayList<>();// 存储服务器返回值的 list
 
@@ -51,6 +52,19 @@ public class HandleGroupApplyActivity extends AppBaseActivity implements OnClick
 	private String tag = "HANDLE_GROUP_APPLY_VOLLEY_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
 
+    private TipView tipView;// 没有网络、没有数据提示
+
+    @Override
+    public void onWhiteViewClick() {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
+            send();
+        } else {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
+        }
+    }
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -64,6 +78,9 @@ public class HandleGroupApplyActivity extends AppBaseActivity implements OnClick
         groupId = getIntent().getStringExtra("GroupId");
         findViewById(R.id.head_left_btn).setOnClickListener(this);
 
+        tipView = (TipView) findViewById(R.id.tip_view);
+        tipView.setWhiteClick(this);
+
         listGroupMember = (ListView) findViewById(R.id.lv_groupmembers);
         listGroupMember.setOnItemLongClickListener(this);
 
@@ -71,7 +88,8 @@ public class HandleGroupApplyActivity extends AppBaseActivity implements OnClick
             dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
             send();
         } else {
-            ToastUtils.show_always(context, "网络失败，请检查网络");
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
         }
     }
 
@@ -117,7 +135,6 @@ public class HandleGroupApplyActivity extends AppBaseActivity implements OnClick
 
 		VolleyRequest.RequestPost(GlobalConfig.JoinGroupListUrl, tag, jsonObject, new VolleyCallback() {
 			private String ReturnType;
-			private String Message;
 
 			@Override
 			protected void requestSuccess(JSONObject result) {
@@ -125,7 +142,6 @@ public class HandleGroupApplyActivity extends AppBaseActivity implements OnClick
 				if(isCancelRequest) return ;
 				try {
 					ReturnType = result.getString("ReturnType");
-					Message = result.getString("Message");
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -134,19 +150,15 @@ public class HandleGroupApplyActivity extends AppBaseActivity implements OnClick
                         userList = new Gson().fromJson(result.getString("UserList"), new TypeToken<List<UserInfo>>() {}.getType());
                         adapter = new HandleGroupApplyAdapter(context, userList, HandleGroupApplyActivity.this);
                         listGroupMember.setAdapter(adapter);
+                        tipView.setVisibility(View.GONE);
 					} catch (Exception e1) {
 						e1.printStackTrace();
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
 					}
-				}else if (ReturnType != null && ReturnType.equals("1002")) {
-					ToastUtils.show_always(context, "无法获取用户Id");
-				} else if (ReturnType != null && ReturnType.equals("T")) {
-					ToastUtils.show_always(context, "异常返回值");
-				} else if (ReturnType != null && ReturnType.equals("1011")) {
-					ToastUtils.show_always(context, "没有待您审核的消息");
 				} else {
-					if (Message != null && !Message.trim().equals("")) {
-						ToastUtils.show_always(context, Message + "");
-					}
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.NO_DATA, "没有需要你处理的消息哦~~");
 				}
 			}
 
@@ -154,6 +166,8 @@ public class HandleGroupApplyActivity extends AppBaseActivity implements OnClick
 			protected void requestError(VolleyError error) {
 				if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.IS_ERROR);
 			}
 		});
 	}
@@ -236,7 +250,6 @@ public class HandleGroupApplyActivity extends AppBaseActivity implements OnClick
 	@Override
 	public void click(View v) {
         onClickIndex = (int) v.getTag();
-//        dialog = DialogUtils.Dialogph(context, "正在获取数据", dialog);
         sendRequest();
 	}
 
