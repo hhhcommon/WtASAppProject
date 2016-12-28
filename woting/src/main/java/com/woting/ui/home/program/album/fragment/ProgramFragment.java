@@ -310,12 +310,12 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                         } catch (Exception e) {
                             e.printStackTrace();
                             tipView.setVisibility(View.VISIBLE);
-                            tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                            tipView.setTipView(TipView.TipStatus.NO_DATA, "专辑中没有节目\n换个专辑看看吧");
                         }
                     } else  {
                         lv_album.stopLoadMore();
                         tipView.setVisibility(View.VISIBLE);
-                        tipView.setTipView(TipView.TipStatus.NO_DATA, "此专辑中没有节目\n换个专辑看看吧");
+                        tipView.setTipView(TipView.TipStatus.NO_DATA, "专辑中没有节目\n换个专辑看看吧");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

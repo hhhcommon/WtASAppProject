@@ -3,12 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.woting.common.widgetui.TipView
-        android:id="@+id/tip_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
-    
     <LinearLayout
         android:id="@+id/lin_ewm"
         android:layout_width="match_parent"
@@ -211,4 +205,11 @@
 	        </LinearLayout>
 	    </LinearLayout>
     </LinearLayout>
+
+    <com.woting.common.widgetui.TipView
+        android:id="@+id/tip_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
 </RelativeLayout>
