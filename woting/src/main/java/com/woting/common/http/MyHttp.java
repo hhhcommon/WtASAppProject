@@ -1,18 +1,6 @@
 package com.woting.common.http;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.List;
+import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -45,10 +33,25 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 
-import android.util.Log;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.List;
+
 /**
  * http数据请求交互 单例方式
- * @author 辛龙
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
+ * 邮箱：645700751@qq.com
  */
 public class MyHttp {
 	private static String TAG="MyHttp";

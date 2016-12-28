@@ -1,5 +1,10 @@
 package com.rectsoft.ppsip;
-
+/**
+ * G729压缩方法
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
+ * 邮箱：645700751@qq.com
+ */
 public class G729ACodec {
 	private static G729ACodec INSTANCE;
 	/*

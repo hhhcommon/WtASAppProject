@@ -18,7 +18,8 @@ import java.util.List;
 
 /**
  * LocationService
- * 作者：xinlong on 2016/11/6 21:18
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
  * 邮箱：645700751@qq.com
  */
 public class LocationService extends Service implements GDLocation.Location {
@@ -37,14 +38,14 @@ public class LocationService extends Service implements GDLocation.Location {
     public void locationSuccess(AMapLocation amapLocation) {
         String City = amapLocation.getCity();
         String Address = amapLocation.getAddress();
-        String District=amapLocation.getDistrict();
+        String District = amapLocation.getDistrict();
         String AdCode = amapLocation.getAdCode();//地区编码
         String Latitude = String.valueOf(amapLocation.getLatitude());
         String Longitude = String.valueOf(amapLocation.getLongitude());
-        if(GlobalConfig.District == null) {
+        if (GlobalConfig.District == null) {
             GlobalConfig.District = District;
         } else {
-            if(!GlobalConfig.District.equals(District)) {
+            if (!GlobalConfig.District.equals(District)) {
                 GlobalConfig.District = District;
             }
         }

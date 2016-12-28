@@ -25,7 +25,12 @@ import com.woting.common.util.PhoneMessage;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * 测试服务
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
+ * 邮箱：645700751@qq.com
+ */
 public class FloatingWindowService extends Service {
 	
 	public static final String OPERATION = "operation";

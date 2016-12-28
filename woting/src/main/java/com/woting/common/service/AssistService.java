@@ -8,7 +8,9 @@ import android.util.Log;
 
 /**
  * 空服务  用于取消播放器启动的服务在通知栏显示
- * Created by Administrator on 2016/12/14.
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
+ * 邮箱：645700751@qq.com
  */
 public class AssistService extends Service {
 

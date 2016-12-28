@@ -24,10 +24,10 @@ import org.json.JSONObject;
 
 /**
  * 启动页面，第一个activity
- * 作者：xinlong on 2016/2/19 12:29
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
  * 邮箱：645700751@qq.com
  */
-
 public class SplashActivity extends Activity {
     private SharedPreferences sharedPreferences = BSApplication.SharedPreferences;
     private String first;
@@ -68,7 +68,8 @@ public class SplashActivity extends Activity {
                         Editor et = sharedPreferences.edit();
                         String UserInfo = result.getString("UserInfo");
                         if (UserInfo != null && !UserInfo.trim().equals("")) {
-                            UserInfo list = new Gson().fromJson(UserInfo, new TypeToken<UserInfo>() {}.getType());
+                            UserInfo list = new Gson().fromJson(UserInfo, new TypeToken<UserInfo>() {
+                            }.getType());
                             String userId = list.getUserId();// ID
                             String userName = list.getUserName();// 用户名
                             String userNum = list.getUserNum();// 用户号
@@ -81,7 +82,7 @@ public class SplashActivity extends Activity {
                             String starSign = list.getStarSign();// 星座
                             String email = list.getEmail();// 邮箱
                             String userSign = list.getUserSign();// 签名
-                            String nickName=list.getNickName();
+                            String nickName = list.getNickName();
 
                             if (userId != null && !userId.equals("")) {
                                 et.putString(StringConstant.USERID, userId);
@@ -99,9 +100,9 @@ public class SplashActivity extends Activity {
                                 et.putString(StringConstant.USER_NUM, userNum);
                             }
                             if (gender != null && !gender.equals("")) {
-                                if(gender.equals("男")) {
+                                if (gender.equals("男")) {
                                     et.putString(StringConstant.GENDERUSR, "xb001");
-                                } else if(gender.equals("女")) {
+                                } else if (gender.equals("女")) {
                                     et.putString(StringConstant.GENDERUSR, "xb002");
                                 }
                             }
@@ -114,9 +115,9 @@ public class SplashActivity extends Activity {
                              */
                             if (region != null && !region.equals("")) {
                                 String[] subRegion = region.split("/");
-                                if(subRegion.length > 3) {
+                                if (subRegion.length > 3) {
                                     region = subRegion[1] + " " + subRegion[3];
-                                } else if(subRegion.length == 3) {
+                                } else if (subRegion.length == 3) {
                                     region = subRegion[1] + " " + subRegion[2];
                                 } else {
                                     region = subRegion[1].substring(0, 2);
@@ -133,21 +134,21 @@ public class SplashActivity extends Activity {
                                 et.putString(StringConstant.STAR_SIGN, starSign);
                             }
                             if (email != null && !email.equals("")) {
-                                if(email.equals("&null")) {
+                                if (email.equals("&null")) {
                                     et.putString(StringConstant.EMAIL, "");
                                 } else {
                                     et.putString(StringConstant.EMAIL, email);
                                 }
                             }
                             if (userSign != null && !userSign.equals("")) {
-                                if(userSign.equals("&null")) {
+                                if (userSign.equals("&null")) {
                                     et.putString(StringConstant.USER_SIGN, "");
                                 } else {
                                     et.putString(StringConstant.USER_SIGN, userSign);
                                 }
                             }
                             if (nickName != null && !nickName.equals("")) {
-                                if(nickName.equals("&null")) {
+                                if (nickName.equals("&null")) {
                                     et.putString(StringConstant.NICK_NAME, "");
                                 } else {
                                     et.putString(StringConstant.NICK_NAME, nickName);
@@ -157,7 +158,7 @@ public class SplashActivity extends Activity {
                                 Log.v("commit", "数据 commit 失败!");
                             }
                         }
-                    }else{
+                    } else {
                         unRegisterLogin();
                     }
                 } catch (Exception e) {

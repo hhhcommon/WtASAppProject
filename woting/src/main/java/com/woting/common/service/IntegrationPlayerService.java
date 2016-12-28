@@ -15,7 +15,9 @@ import android.util.Log;
 
 /**
  * 集成播放器服务
- * Created by Administrator on 2016/12/14.
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
+ * 邮箱：645700751@qq.com
  */
 public class IntegrationPlayerService extends Service {
 

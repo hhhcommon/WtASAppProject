@@ -1,18 +1,18 @@
 package com.woting.common.volley;
 
-import org.json.JSONObject;
+import android.util.Log;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
-
-import android.util.Log;
-
 import com.android.volley.VolleyError;
+
+import org.json.JSONObject;
 
 /**
  * 请求成功或失败的执行操作抽象类
- * 
- * @author woting11
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
+ * 邮箱：645700751@qq.com
  */
 public abstract class VolleyCallback {
 

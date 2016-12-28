@@ -1,7 +1,12 @@
 package com.woting.common.constant;
-
+/**
+ * 广播参数
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
+ * 邮箱：645700751@qq.com
+ */
 public class BroadcastConstants {
-    public static final String SEARCHVOICE = "SEARCHVOICE";//search
+    public static final String SEARCHVOICE = "SEARCHVOICE";//搜索内容的广播
     public static final String PLAYERVOICE = "PLAYERVOICE";//播放主页
     public static final String FINDVOICE = "FINDVOICE";//查找好友
     //定时
@@ -10,8 +15,6 @@ public class BroadcastConstants {
     public static final String TIMER_UPDATE = "TIMER_UPDATE";
     public static final String TIMER_END = "TIMER_END";
     //下载
-    public static final String ACTION_START = "ACTION_START";
-    public static final String ACTION_STOP = "ACTION_STOP";
     public static final String ACTION_UPDATE = "ACTION_UPDATE";
     public static final String ACTION_FINISHED = "ACTION_FINISHED";
     public static final String ACTION_FINISHED_NO_DOWNLOADVIEW = "ACTION_FINISHED_NO_DOWNLOADVIEW";

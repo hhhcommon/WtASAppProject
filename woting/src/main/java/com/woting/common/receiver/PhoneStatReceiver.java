@@ -11,9 +11,11 @@ import android.util.Log;
 import com.woting.common.constant.BroadcastConstants;
 
 /**
- * service内部类，监听电话呼入呼出，如果有电话呼入，则暂停播放，通话结束，继续播放
- * @author 辛龙
- *2016年4月27日
+ * service内部类
+ * 说明：监听电话呼入呼出，如果有电话呼入，则暂停播放，通话结束，继续播放
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
+ * 邮箱：645700751@qq.com
  */
 public class PhoneStatReceiver extends BroadcastReceiver {
 	private Context Context;

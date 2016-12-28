@@ -33,9 +33,9 @@ import java.util.Map;
 
 /**
  * 单对单接听控制
- *
- * @author 辛龙
- *         2016年2月18日
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
+ * 邮箱：645700751@qq.com
  */
 public class SubclassService extends Service {
     private MessageReceiver Receiver;

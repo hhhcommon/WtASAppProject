@@ -88,7 +88,8 @@ import java.util.Map;
 
 /**
  * 主页
- * 作者：xinlong on 2016/11/6 21:18
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
  * 邮箱：645700751@qq.com
  */
 public class MainActivity extends TabActivity implements OnClickListener {
@@ -128,8 +129,12 @@ public class MainActivity extends TabActivity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wt_main);
         context = this;
-
-        createService();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                createService();
+            }
+        }, 0);
         registerReceiver();        // 注册广播
         tabHost = extracted();
 

@@ -10,10 +10,12 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.interphone.model.UserInviteMeInside;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 import org.json.JSONTokener;
+
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -23,8 +25,9 @@ import java.util.Map.Entry;
 
 /**
  * 生成二维码
- * @author 辛龙
- * 2016年4月28日
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
+ * 邮箱：645700751@qq.com
  */
 public class CreateQRImageHelper {
 

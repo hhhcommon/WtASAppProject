@@ -8,10 +8,14 @@ import android.util.Log;
 
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.helper.CommonHelper;
+
 /**
  * 网络变化监听者
- * @author 辛龙
- *2016年7月13日
+ * 说明：在socket服务中监听网络状态
+ * 注意：在MainActivity中需要先启动socket服务，然后注册该监听，否则会先监听到网络变化而此时服务没有起来，此时socket不会建立连接
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
+ * 邮箱：645700751@qq.com
  */
 public class NetWorkChangeReceiver extends BroadcastReceiver {
 		public static final String intentFilter="android.net.conn.CONNECTIVITY_CHANGE";

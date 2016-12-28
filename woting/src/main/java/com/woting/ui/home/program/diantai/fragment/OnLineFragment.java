@@ -106,8 +106,9 @@ public class OnLineFragment extends Fragment {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_radio, container, false);
             listView_Main = (ExpandableListView) rootView.findViewById(R.id.listView_main);
-            headView = LayoutInflater.from(context).inflate(R.layout.head_online, null);
+            mPullToRefreshLayout = (PullToRefreshLayout) rootView.findViewById(R.id.refresh_view);
 
+            headView = LayoutInflater.from(context).inflate(R.layout.head_online, null);
             lin_country = (LinearLayout) headView.findViewById(R.id.lin_country);
             lin_local = (LinearLayout) headView.findViewById(R.id.lin_local);
             lin_net = (LinearLayout) headView.findViewById(R.id.lin_net);
@@ -119,7 +120,6 @@ public class OnLineFragment extends Fragment {
 //			gridView.setSelector(new ColorDrawable(Color.TRANSPARENT));			// 取消默认selector
             gridView = (ListView) headView.findViewById(R.id.gridView);
 
-            mPullToRefreshLayout = (PullToRefreshLayout) rootView.findViewById(R.id.refresh_view);
             setView();
             listView_Main.addHeaderView(headView);
             if (Receiver == null) {
@@ -132,8 +132,8 @@ public class OnLineFragment extends Fragment {
         return rootView;
     }
 
+    // 监听到地理位置发生改变，进行数据刷新
     class MessageReceiver extends BroadcastReceiver {
-
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();

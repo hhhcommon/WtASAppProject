@@ -541,10 +541,15 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
     /**
      * 设置个人为激活状态/设置第一条为激活状态
      */
-    public static void zhiDingPerson(DBTalkHistorary talkdb) {
-        historyDataBaseList = dbDao.queryHistory();//得到数据库里边数据
-        getList();
-        setDatePerson();
+    public static void zhiDingPerson() {
+        try {
+            historyDataBaseList = dbDao.queryHistory();//得到数据库里边数据
+            getList();
+            setDatePerson();
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastUtils.show_always(context,"数据出错了，请您稍后再试");
+        }
     }
 
     private static void setListener() {
@@ -576,7 +581,7 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
                 } else {
                     String t = allList.get(position).getTyPe();
                     if (t != null && !t.equals("") && t.equals("user")) {
-                        String id=allList.get(position).getId();
+                        String id = allList.get(position).getId();
                         if (id != null && !id.equals("")) {
                             call(id);
                         }
@@ -712,7 +717,7 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
         }
 
         if (MainActivity.talkdb != null) {
-            zhiDingPerson(MainActivity.talkdb);
+            zhiDingPerson();
             MainActivity.talkdb = null;
         }
     }
@@ -797,7 +802,7 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
         GroupInfo firstdate = allList.remove(0);
         interPhoneType = firstdate.getTyPe();//
         interPhoneId = firstdate.getId();//
-        Log.e("aaa=====callerid======",interPhoneId+"");
+        Log.e("aaa=====callerid======", interPhoneId + "");
         lin_notalk.setVisibility(View.GONE);
         lin_personhead.setVisibility(View.VISIBLE);
         lin_head.setVisibility(View.GONE);
@@ -1360,9 +1365,9 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
                 if (gridView_person != null) {
                     gridView_person.setVisibility(View.GONE);
                 }
-            }  else if (action.equals(BroadcastConstants.PUSH_ALLURL_CHANGE)) {
+            } else if (action.equals(BroadcastConstants.PUSH_ALLURL_CHANGE)) {
                 setOnResumeView();
-            }else if (action.equals(BroadcastConstants.PUSH_BACK)) {
+            } else if (action.equals(BroadcastConstants.PUSH_BACK)) {
                 //	MsgNormal message = (MsgNormal) intent.getSerializableExtra("outMessage");
                 byte[] bt = intent.getByteArrayExtra("outMessage");
                 Log.e("chatFragment的push_back", Arrays.toString(bt) + "");
@@ -1528,7 +1533,7 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
                 }, 300);
             } else {//此处处理个人对讲的逻辑
                 VoiceStreamRecordService.stop();
-                InterPhoneControl.PersonTalkPressStop(context, interPhoneId);//发送取消说话控制
+                InterPhoneControl.PersonTalkPressStop(context);//发送取消说话控制
                 image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
                 if (draw.isRunning()) {
                     draw.stop();
@@ -1547,7 +1552,7 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
             VoiceStreamRecordService.start(context, interPhoneId, "group");
         } else {
             //此处处理个人对讲的逻辑
-            InterPhoneControl.PersonTalkPressStart(context, interPhoneId);
+            InterPhoneControl.PersonTalkPressStart(context);
             VoiceStreamRecordService.stop();
             VoiceStreamRecordService.start(context, interPhoneId, "person");
         }
