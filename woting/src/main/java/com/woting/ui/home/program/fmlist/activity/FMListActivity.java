@@ -233,9 +233,9 @@ public class FMListActivity extends AppBaseActivity implements OnClickListener, 
                         String playerurI = newList.get(position - 1).getContentURI();
                         String playcontentshareurl = newList.get(position - 1).getContentShareURL();
                         String playermediatype = newList.get(position - 1).getMediaType();
-                        String plaplayeralltime = "0";
+                        String plaplayeralltime =newList.get(position - 1).getContentTimes();
                         String playerintime = "0";
-                        String playercontentdesc = newList.get(position - 1).getCurrentContent();
+                        String playercontentdesc = newList.get(position - 1).getContentDescn();
                         String playernum = newList.get(position - 1).getPlayCount();
                         String playerzantype = "0";
                         String playerfrom = newList.get(position - 1).getContentPub();

@@ -1,97 +1,438 @@
 package com.woting.ui.home.program.album.anchor;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.DialogUtils;
+import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.common.widgetui.TipView;
+import com.woting.common.widgetui.HeightListView;
+import com.woting.common.widgetui.RoundImageView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.home.program.album.activity.AlbumActivity;
+import com.woting.ui.home.program.album.anchor.activity.AnchorListActivity;
+import com.woting.ui.home.program.album.anchor.adapter.AnchorMainAdapter;
+import com.woting.ui.home.program.album.anchor.adapter.AnchorSequAdapter;
+import com.woting.ui.home.program.album.anchor.model.PersonInfo;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 主播详情界面
  */
-public class AnchorDetailsActivity extends AppBaseActivity implements View.OnClickListener, TipView.WhiteViewClick {
-    private Dialog dialog;
+public class AnchorDetailsActivity extends AppBaseActivity implements View.OnClickListener {
     private XListView listAnchor;
-    private TipView tipView;// 没有网路、加载错误提示
+    private Dialog dialog;
+    private String tag = "ANCHOR_VOLLEY_REQUEST_CANCEL_TAG";
+    private boolean isCancelRequest;
+    private String PersonId;
+    private String PersonName;
+    private String PersonDescn;
+    private String PersonImg;
+    private RoundImageView img_head;
+    private TextView id_sequ;
+    private TextView tv_descn;
+    private ListView lv_sequ;
+    private TextView tv_visible_all;
+    private TextView tv_more;
+    private TextView textAnchorName;
+    public AnchorSequAdapter adapterSequ;
+    private AnchorMainAdapter adapterMain;
+    private int page=1;
+    private String ContentPub;
+    private List<PersonInfo> MediaInfoList;
+    private List<PersonInfo> personInfoList;
 
-    private String personId;// 主播 ID
-    private String tag = "ANCHOR_DETAILS_VOLLEY_REQUEST_CANCEL_TAG";// 取消网络请求 TAG
-    private boolean isRequestCancel;// 判断是否已经取消网络请求
-
-    @Override
-    public void onWhiteViewClick() {
-        if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "加载数据中...");
-            getPersonInfoRequest();
-        } else {
-            tipView.setVisibility(View.VISIBLE);
-            tipView.setTipView(TipView.TipStatus.NO_NET);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_anchor_details);
-
         initView();
-        initData();
+        handleIntent();
     }
 
+    private void handleIntent() {
+         PersonId=this.getIntent().getStringExtra("PersonId");
+        ContentPub=this.getIntent().getStringExtra("ContentPub");
+        if(!TextUtils.isEmpty(PersonId)){
+            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                 dialog = DialogUtils.Dialogph(context, "正在获取数据");
+                 send();
+            } else {
+                 ToastUtils.show_short(context, "网络失败，请检查网络");
+            }
+        }else{
+            ToastUtils.show_always(context,"获取的信息有误，请返回上一界面重试");
+        }
+    }
+
+    private void send() {
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("PersonId", PersonId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        VolleyRequest.RequestPost(GlobalConfig.getPersonInfo,tag, jsonObject, new VolleyCallback() {
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+                if (isCancelRequest) {
+                    return;
+                }
+                try {
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null) {// 根据返回值来对程序进行解析
+                        if (ReturnType.equals("1001")) {
+                            try {
+                                // 获取列表
+                                try {
+                                    PersonName= result.getString("PersonName");
+                                    if(!TextUtils.isEmpty(PersonName)&&!PersonName.equals("null")){
+                                        textAnchorName.setText(PersonName);
+                                    }else{
+                                        textAnchorName.setText("未知");
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    PersonDescn= result.getString("PersonDescn");
+                                    if(!TextUtils.isEmpty(PersonDescn)&&!PersonDescn.equals("null")){
+                                        tv_descn.setText(PersonDescn);
+                                    }else{
+                                        tv_descn.setText("暂无简介");
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    PersonImg= result.getString("PersonImg");
+                                    if(TextUtils.isEmpty(PersonImg)){
+                                        img_head.setImageResource(R.mipmap.wt_image_playertx);
+                                    }else{
+                                        String url;
+                                        if (PersonImg.startsWith("http")) {
+                                            url = PersonImg;
+                                        } else {
+                                            url = GlobalConfig.imageurl + PersonImg;
+                                        }
+                                        url= AssembleImageUrlUtils.assembleImageUrl180(url);
+                                        Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(img_head);
+                                    }
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                Gson gson = new Gson();
+                               try {
+                                   String SeqList=result.getString("SeqMediaList");
+                                   personInfoList = gson.fromJson(SeqList, new TypeToken<List<PersonInfo>>() {}.getType());
+                                   if(personInfoList!=null&&personInfoList.size()>0){
+                                       //此处要对lv_sequ的高度进行适配
+                                       adapterSequ=new AnchorSequAdapter(context,personInfoList);
+                                       lv_sequ.setAdapter(adapterSequ);
+                                       id_sequ.setText("专辑("+personInfoList.size()+")");
+                                       new HeightListView(context).setListViewHeightBasedOnChildren(lv_sequ);
+                                   }else{
+                                       lv_sequ.setVisibility(View.GONE);
+                                   }
+                               }catch (Exception e){
+                                   e.printStackTrace();
+                               }
+                                try {
+                                    String MediaList=result.getString("MediaAssetList");
+                                    MediaInfoList = gson.fromJson(MediaList, new TypeToken<List<PersonInfo>>() {}.getType());
+                                    if(MediaInfoList!=null&& MediaInfoList.size()>0){
+                                      //listAnchor
+                                        adapterMain=new AnchorMainAdapter(context,MediaInfoList);
+                                        listAnchor.setAdapter(adapterMain);
+                                        if(MediaInfoList.size()<10){
+                                            listAnchor.setPullLoadEnable(false);
+                                            listAnchor.setPullRefreshEnable(true);
+                                        }else{
+                                            listAnchor.setPullLoadEnable(true);
+                                            listAnchor.setPullRefreshEnable(true);
+                                        }
+
+                                    }else{
+                                        listAnchor.setPullLoadEnable(false);
+                                        listAnchor.setPullRefreshEnable(true);
+                                    }
+                                    setItemListener();
+                                }catch (Exception e){
+                                   e.printStackTrace();
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        } else {
+                            if (ReturnType.equals("0000")) {
+                                ToastUtils.show_always(context, "出错了，请您稍后再试");
+                            } else if (ReturnType.equals("1002")) {
+                                ToastUtils.show_always(context, "出错了，请您稍后再试");
+                            } else if (ReturnType.equals("1003")) {
+                                ToastUtils.show_always(context, "出错了，请您稍后再试");
+                            } else if (ReturnType.equals("1011")) {
+                                ToastUtils.show_always(context, "出错了，请您稍后再试");
+                            } else if (ReturnType.equals("T")) {
+                                ToastUtils.show_always(context, "出错了，请您稍后再试");
+                            }
+                            listAnchor.stopRefresh();
+                            listAnchor.setPullLoadEnable(false);
+                            listAnchor.setPullRefreshEnable(true);
+                        }
+                    } else {
+                        ToastUtils.show_always(context, "出错了，请您稍后再试");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+    }
+
+    private void setItemListener() {
+        //跳到专辑
+        lv_sequ.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+             //   ToastUtils.show_always(context,personInfoList.get(position).getContentName());
+                Intent intent1 = new Intent(context, AlbumActivity.class);
+                intent1.putExtra("type", "main");
+                intent1.putExtra("id", personInfoList.get(position).getContentId());
+                startActivity(intent1);
+            }
+        });
+        //跳到单体
+        listAnchor.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ToastUtils.show_always(context,MediaInfoList.get(position-2).getContentName());
+             /*   String playername = MediaInfoList.get(position - 2).getContentName();
+                String playerimage = MediaInfoList.get(position - 2).getContentImg();
+                String playerurl = MediaInfoList.get(position - 2).getContentPlay();
+                String playerurI = MediaInfoList.get(position - 2).getContentURI();
+                String playermediatype = MediaInfoList.get(position - 2).getMediaType();
+                String playerContentShareUrl = MediaInfoList.get(position - 2).getContentShareURL();
+                String plaplayeralltime =MediaInfoList.get(position - 2).getContentTimes();
+                String playerintime = "0";
+                String playercontentdesc = newList.get(position - 2).getContentDescn();
+                String playernum = newList.get(position - 2).getPlayCount();
+                String playerzantype = "0";
+                String playerfrom = newList.get(position - 2).getContentPub();
+                String playerfromid = "";
+                String playerfromurl = "";
+                String playeraddtime = Long.toString(System.currentTimeMillis());
+                String bjuserid = CommonUtils.getUserId(context);
+                String ContentFavorite = newList.get(position - 2).getContentFavorite();
+                String ContentId = newList.get(position - 2).getContentId();
+                String localurl = newList.get(position - 2).getLocalurl();
+
+                String sequName = newList.get(position - 2).getSequName();
+                String sequId = newList.get(position - 2).getSequId();
+                String sequDesc = newList.get(position - 2).getSequDesc();
+                String sequImg = newList.get(position - 2).getSequImg();
+                String ContentPlayType= newList.get(position-2).getContentPlayType();
+
+                //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+                PlayerHistory history = new PlayerHistory(
+                        playername, playerimage, playerurl, playerurI, playermediatype,
+                        plaplayeralltime, playerintime, playercontentdesc, playernum,
+                        playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playerContentShareUrl,
+                        ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg,ContentPlayType);
+                dbDao.deleteHistory(playerurl);
+                dbDao.addHistory(history);
+                HomeActivity.UpdateViewPager();
+                PlayerFragment.TextPage=1;
+                Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                Bundle bundle1=new Bundle();
+                bundle1.putString("text",newList.get(position - 2).getContentName());
+                push.putExtras(bundle1);
+                context.sendBroadcast(push);*/
+            }
+        });
+
+    }
+
+    private void getMediaContents(){
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("PersonId", PersonId);
+            jsonObject.put("Page", String.valueOf(page));
+            jsonObject.put("MediaType","AUDIO");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        VolleyRequest.RequestPost(GlobalConfig.getPersonContents,tag, jsonObject, new VolleyCallback() {
+
+
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+                if (isCancelRequest) {
+                    return;
+                }
+                try {
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null) {// 根据返回值来对程序进行解析
+                        if (ReturnType.equals("1001")) {
+                            try {
+                                Gson gson = new Gson();
+                                try {
+                                    String MediaList=result.getString("ResultList");
+                                    List<PersonInfo> ResultList = gson.fromJson(MediaList, new TypeToken<List<PersonInfo>>() {}.getType());
+                                    if(ResultList!=null&& ResultList.size()>0){
+                                        MediaInfoList.addAll(ResultList);
+                                        if(ResultList.size()<10){
+                                            listAnchor.stopLoadMore();
+                                            listAnchor.setPullLoadEnable(false);
+                                            listAnchor.setPullRefreshEnable(true);
+                                        }
+                                        if(adapterMain==null){
+                                            adapterMain=new AnchorMainAdapter(context,MediaInfoList);
+                                        }else{
+                                            adapterMain.notifyDataSetChanged();
+                                        }
+                                    }else{
+                                        listAnchor.stopLoadMore();
+                                        listAnchor.setPullLoadEnable(false);
+                                        listAnchor.setPullRefreshEnable(true);
+                                        ToastUtils.show_always(context,"已经没有更多数据了");
+                                    }
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        } else {
+                            if (ReturnType.equals("0000")) {
+                                ToastUtils.show_always(context, "出错了，请您稍后再试");
+                            } else if (ReturnType.equals("1002")) {
+                                ToastUtils.show_always(context, "出错了，请您稍后再试");
+                            } else if (ReturnType.equals("1003")) {
+                                ToastUtils.show_always(context, "出错了，请您稍后再试");
+                            } else if (ReturnType.equals("1011")) {
+                                ToastUtils.show_always(context, "出错了，请您稍后再试");
+                            } else if (ReturnType.equals("T")) {
+                                ToastUtils.show_always(context, "出错了，请您稍后再试");
+                            }
+                            listAnchor.stopLoadMore();
+                            listAnchor.setPullLoadEnable(false);
+                            listAnchor.setPullRefreshEnable(true);
+                        }
+                    } else {
+                        ToastUtils.show_always(context, "出错了，请您稍后再试");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                    listAnchor.stopLoadMore();
+                    listAnchor.setPullLoadEnable(false);
+                    listAnchor.setPullRefreshEnable(true);
+                }
+            }
+        });
+
+    }
     // 初始化视图
     private void initView() {
-        tipView = (TipView) findViewById(R.id.tip_view);
-        tipView.setWhiteClick(this);
-
         View headView = LayoutInflater.from(context).inflate(R.layout.headview_activity_anchor_details, null);
 
-        TextView textAnchorName = (TextView) findViewById(R.id.text_anchor_name);// 标题  即主播 Name
-        textAnchorName.setText("罗振宇");
+        img_head=(RoundImageView)headView.findViewById(R.id.round_image_head);   //  头像
+        id_sequ=(TextView)headView.findViewById(R.id.id_sequ);                   //  专辑数
+        tv_descn=(TextView)headView.findViewById(R.id.text_introduce);           //  介绍
+        lv_sequ=(ListView)headView.findViewById(R.id.list_sequ);                 //  专辑列表
+        tv_visible_all=(TextView)headView.findViewById(R.id.text_visible_all);
+        tv_more=(TextView)headView.findViewById(R.id.tv_more);                   //  更多
 
-        listAnchor = (XListView) findViewById(R.id.list_anchor);// 主播的节目列表
+        textAnchorName = (TextView) findViewById(R.id.text_anchor_name);// 标题  即主播 Name
+
+        listAnchor = (XListView) findViewById(R.id.list_anchor);                 // 主播的节目列表
         listAnchor.setSelector(new ColorDrawable(Color.TRANSPARENT));
         listAnchor.setHeaderDividersEnabled(false);
-        listAnchor.setPullRefreshEnable(false);
-        listAnchor.setPullLoadEnable(false);
         listAnchor.addHeaderView(headView);
+        listAnchor.setXListViewListener(new XListView.IXListViewListener() {
+            @Override
+            public void onRefresh() {
 
+                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                    dialog = DialogUtils.Dialogph(context, "正在获取数据");
+                    listAnchor.stopRefresh();
+                    page=1;
+                    send();
+                } else {
+                    ToastUtils.show_short(context, "网络失败，请检查网络");
+                }
+            }
+
+            @Override
+            public void onLoadMore() {
+                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                    dialog = DialogUtils.Dialogph(context, "正在获取数据");
+                    listAnchor.stopLoadMore();
+                    page++;
+                    getMediaContents();
+                } else {
+                    ToastUtils.show_short(context, "网络失败，请检查网络");
+                }
+
+            }
+        });
+
+        tv_more.setOnClickListener(this);
         initEvent();
     }
+
 
     // 初始化点击事件
     private void initEvent() {
         findViewById(R.id.head_left_btn).setOnClickListener(this);// 返回
-    }
-
-    // 初始化数据
-    private void initData() {
-        List<String> list = getAnchorList();
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, list);
-        listAnchor.setAdapter(adapter);
-
-        if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "加载数据中...");
-            getPersonInfoRequest();
-        } else {
-            tipView.setVisibility(View.VISIBLE);
-            tipView.setTipView(TipView.TipStatus.NO_NET);
-        }
     }
 
     @Override
@@ -100,34 +441,25 @@ public class AnchorDetailsActivity extends AppBaseActivity implements View.OnCli
             case R.id.head_left_btn:// 返回
                 finish();
                 break;
-        }
-    }
-
-    // 获取主播信息
-    private void getPersonInfoRequest() {
-        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        try {
-            jsonObject.put("PersonId", personId);
-            jsonObject.put("", "");
-            jsonObject.put("", "");
-        } catch (Exception e) {
-            e.printStackTrace();
+            case R.id.tv_more:
+                if(!TextUtils.isEmpty(PersonId)){
+                    Intent intent=new Intent(context,AnchorListActivity.class);
+                    intent.putExtra("PersonId",PersonId);
+                    if(!TextUtils.isEmpty(PersonName)){
+                        intent.putExtra("PersonName",PersonName);
+                    }
+                    startActivity(intent);
+                }else{
+                    ToastUtils.show_always(context,"该主播还没有详细的个人信息~");
+                }
+                break;
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        isRequestCancel = VolleyRequest.cancelRequest(tag);
+        isCancelRequest = VolleyRequest.cancelRequest(tag);
     }
 
-    private List<String> getAnchorList() {
-        List<String> list = new ArrayList<>();
-
-        for(int i=0; i<10; i++) {
-            list.add("主播的节目_" + i);
-        }
-
-        return list;
-    }
 }

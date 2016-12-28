@@ -270,10 +270,6 @@ public class GlobalConfig {
     public static final String getPreferenceUrl = baseUrl + "wt/getPreferenceCatalog.do";
     // 设置偏好列表
     public static final String setPreferenceUrl = baseUrl + "wt/setPreference.do";
-    // 获取主播信息
-    public static final String getPersonInfo = baseUrl + "wt/person/getPersonInfo.do";
-    // 获取主播内容
-    public static final String getPersonContents = baseUrl + "wt/person/getPersonContents.do";
 
     /**
      * 此处用到的接口是CM的接口
@@ -294,4 +290,9 @@ public class GlobalConfig {
     public static final String uploadFileUrl = uploadBaseUrl + "common/uploadCM.do";
     // 新增节目
     public static final String addMediaInfo = uploadBaseUrl + "content/media/addMediaInfo.do";
+    // 获取主播信息
+    public static final String getPersonInfo = baseUrl + "wt/person/getPersonInfo.do";
+    // 新增主播内容
+    public static final String getPersonContents =baseUrl + "wt/person/getPersonContents.do";
+
 }

@@ -92,7 +92,7 @@ public class DownloadTask{
 				intent.setAction(BroadcastConstants.ACTION_UPDATE);
 				mFinished += mThreadInfo.getFinished();
 				// 开始下载
-				if (connection.getResponseCode() == HttpStatus.SC_PARTIAL_CONTENT){
+				if (connection.getResponseCode() == HttpStatus.SC_PARTIAL_CONTENT||connection.getResponseCode()==HttpStatus.SC_OK){
 					// 读取数据
 					inputStream = connection.getInputStream();
 					

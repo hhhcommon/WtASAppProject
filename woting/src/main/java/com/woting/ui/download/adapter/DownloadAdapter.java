@@ -15,9 +15,9 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.util.AssembleImageUrlUtils;
-import com.woting.ui.download.model.FileInfo;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.widgetui.CircleProgress;
+import com.woting.ui.download.model.FileInfo;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -63,6 +63,8 @@ public class DownloadAdapter extends BaseAdapter {
 			holder.tv_author = (TextView)convertView.findViewById(R.id.tv_author);
 			holder.lin_board=(LinearLayout)convertView.findViewById(R.id.lin_downloadboard);
 			holder.rv_download=(RelativeLayout)convertView.findViewById(R.id.rv_download);
+			holder.tv_count=(TextView)convertView.findViewById(R.id.tv_count);                 //  人数
+			holder.tv_sum=(TextView)convertView.findViewById(R.id.tv_sum);                     //  大小
 			holder.img_liu = (ImageView)convertView.findViewById(R.id.img_liu);
 			Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
 			holder.img_liu.setImageBitmap(bmp);
@@ -77,6 +79,22 @@ public class DownloadAdapter extends BaseAdapter {
 		} else {
 			holder.textview_ranktitle.setText(lists.getFileName());
 		}
+		if (lists.getPlayCount() == null || lists.getPlayCount().equals("")) {
+			holder.tv_count.setText("未知");
+		} else {
+			holder.tv_count.setText(lists.getPlayCount());
+		}
+		try {
+			if (lists.getLength()!=-1){
+				holder.tv_sum.setVisibility(View.GONE);
+				holder.tv_sum.setText(df.format(lists.getSum() / 1000.0 / 1000.0) + "MB");
+			}else{
+				holder.tv_sum.setVisibility(View.GONE);
+			}
+		}catch (Exception e){
+			holder.tv_sum.setVisibility(View.GONE);
+		}
+
 		if (lists.getImageurl() == null || lists.getImageurl().equals("")
 				|| lists.getImageurl().equals("null") || lists.getImageurl().trim().equals("")) {
 			Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
@@ -86,10 +104,10 @@ public class DownloadAdapter extends BaseAdapter {
 			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 		}
 
-		if (lists.getAuthor() == null || lists.getAuthor().equals("")|| lists.getAuthor().equals("null")|| lists.getAuthor().trim().equals("")|| lists.getAuthor().trim().equals("author")) {
+		if (lists.getPlayFrom() == null || lists.getPlayFrom().equals("")|| lists.getPlayFrom().equals("null")|| lists.getPlayFrom().trim().equals("")|| lists.getPlayFrom().trim().equals("author")) {
 			holder.tv_author.setText("by 我听科技");
 		} else {
-			holder.tv_author.setText("by " + lists.getAuthor());
+			holder.tv_author.setText(""+ lists.getPlayFrom());
 		}
 		
 		if (lists.getDownloadtype() == 0) {		// 未下载
@@ -167,5 +185,7 @@ public class DownloadAdapter extends BaseAdapter {
 		private LinearLayout lin_board;
 		private RelativeLayout rv_download;
 		public ImageView img_liu;
+		public TextView tv_count;
+		public TextView tv_sum;
 	}
 }
