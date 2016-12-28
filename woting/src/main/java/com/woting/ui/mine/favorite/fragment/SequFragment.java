@@ -58,12 +58,13 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
 	private XListView mListView;
     private TipView tipView;// 没有网络、没有数据提示
     
-	private String tag = "SEQU_VOLLEY_REQUEST_CANCEL_TAG";
-	private boolean isCancelRequest;
-	private boolean isDel;
     private int page = 1;
     private int refreshType = 1;// refreshType == 1 为下拉加载  == 2 为上拉加载更多
     private int pageSizeNum = -1;// 先求余 如果等于0 最后结果不加1 如果不等于0 结果加一
+    private String tag = "SEQU_VOLLEY_REQUEST_CANCEL_TAG";
+    private boolean isCancelRequest;
+    private boolean isDel;
+    public static boolean isData;// 是否有数据
 
     @Override
     public void onWhiteViewClick() {
@@ -191,11 +192,10 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
         if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
             if(dialog != null) dialog.dismiss();
             if(refreshType == 1) {
+                mListView.stopRefresh();
                 tipView.setVisibility(View.VISIBLE);
                 tipView.setTipView(TipView.TipStatus.NO_NET);
-            }
-            if(refreshType == 1) {
-                mListView.stopRefresh();
+                isData = false;
             } else {
                 mListView.stopLoadMore();
             }
@@ -255,10 +255,12 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
                         }
                         setListener();
                         tipView.setVisibility(View.GONE);
+                        isData = true;
                     } else {
                         if(refreshType == 1) {
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有喜欢的节目\n快去收听喜欢的节目吧");
+                            isData = false;
                         }
                     }
 				} catch (JSONException e) {
@@ -266,6 +268,7 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
                     if(refreshType == 1) {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        isData = false;
                     }
 				}
 
@@ -284,6 +287,7 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
                 if(refreshType == 1) {
                     tipView.setVisibility(View.VISIBLE);
                     tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                    isData = false;
                 }
 			}
 		});
@@ -453,6 +457,7 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
 		adapter = null;
         delList = null;
 		linearNull = null;
+        isData = false;
 		tag = null;
 	}
 }

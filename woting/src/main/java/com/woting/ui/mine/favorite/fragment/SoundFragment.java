@@ -74,6 +74,7 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
 	private String tag = "SOUND_VOLLEY_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
 	private boolean isDel;
+    public static boolean isData;// 是否有数据
 
     @Override
     public void onWhiteViewClick() {
@@ -245,11 +246,10 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
         if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
             if(dialog != null) dialog.dismiss();
             if(refreshType == 1) {
+                mListView.stopRefresh();
                 tipView.setVisibility(View.VISIBLE);
                 tipView.setTipView(TipView.TipStatus.NO_NET);
-            }
-            if(refreshType == 1) {
-                mListView.stopRefresh();
+                isData = false;
             } else {
                 mListView.stopLoadMore();
             }
@@ -314,10 +314,12 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
                         }
                         setListener();
                         tipView.setVisibility(View.GONE);
+                        isData = true;
                     } else {
                         if(refreshType == 1) {
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有喜欢的节目\n快去收听喜欢的节目吧");
+                            isData = false;
                         }
                     }
 				} catch (JSONException e) {
@@ -325,6 +327,7 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
                     if(refreshType == 1) {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        isData = false;
                     }
 				}
 
@@ -343,6 +346,7 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
                 if(refreshType == 1) {
                     tipView.setVisibility(View.VISIBLE);
                     tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                    isData = false;
                 }
 			}
 		});
@@ -516,6 +520,7 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
         delList = null;
 		linearNull = null;
 		tag = null;
+        isData = false;
 		if(dbDao != null){
             dbDao.closedb();
             dbDao = null;

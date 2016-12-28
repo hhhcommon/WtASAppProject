@@ -219,7 +219,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                 } else {
                     if (refreshType == 1) {
                         tipView.setVisibility(View.VISIBLE);
-                        tipView.setTipView(TipView.TipStatus.NO_DATA);
+                        tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
                     }
                 }
 

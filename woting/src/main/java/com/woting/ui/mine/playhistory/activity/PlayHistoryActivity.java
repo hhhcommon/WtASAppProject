@@ -35,7 +35,6 @@ import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.PhoneMessage;
-import com.woting.common.util.ToastUtils;
 import com.woting.common.widgetui.MyViewPager;
 import com.woting.ui.baseactivity.AppBaseFragmentActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
@@ -134,9 +133,7 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
         int i = currIndex + 1;
         switch (i) {
             case 2: // 声音
-                if (!SoundFragment.isData) {
-                    Toast.makeText(getApplicationContext(), "没有历史播放数据", Toast.LENGTH_SHORT).show();
-                } else {
+                if (SoundFragment.isData) {
                     delDialog();
                     openEdit.setText("取消");
                     PlayHistoryActivity.isEdit = false;
@@ -146,9 +143,7 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
                 }
                 break;
             case 3: // 电台
-                if (!RadioFragment.isData) {
-                    Toast.makeText(getApplicationContext(), "没有历史播放数据", Toast.LENGTH_SHORT).show();
-                } else {
+                if (RadioFragment.isData) {
                     delDialog();
                     openEdit.setText("取消");
                     PlayHistoryActivity.isEdit = false;
@@ -158,9 +153,7 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
                 }
                 break;
             case 4: // TTS
-                if (!TTSFragment.isData) {
-                    Toast.makeText(getApplicationContext(), "没有历史播放数据", Toast.LENGTH_SHORT).show();
-                } else {
+                if (TTSFragment.isData) {
                     delDialog();
                     openEdit.setText("取消");
                     PlayHistoryActivity.isEdit = false;
@@ -226,8 +219,6 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
                 if (TotalFragment.isData) {
                     confirmDialog();
                     confirmDialog.show();
-                } else {
-                    ToastUtils.show_always(this, "没有历史播放记录");
                 }
                 break;
             case R.id.open_edit:        // 编辑
@@ -457,7 +448,11 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
                 soundText.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 radioText.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 ttsText.setTextColor(context.getResources().getColor(R.color.group_item_text2));
-                clearEmpty.setVisibility(View.VISIBLE);
+                if(TotalFragment.isData) {
+                    clearEmpty.setVisibility(View.VISIBLE);
+                } else {
+                    clearEmpty.setVisibility(View.GONE);
+                }
                 openEdit.setVisibility(View.GONE);
 
             } else if (i == 2) { // 声音
@@ -467,7 +462,11 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
                 radioText.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 ttsText.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 clearEmpty.setVisibility(View.GONE);
-                openEdit.setVisibility(View.VISIBLE);
+                if(SoundFragment.isData) {
+                    openEdit.setVisibility(View.VISIBLE);
+                } else {
+                    openEdit.setVisibility(View.GONE);
+                }
             } else if (i == 3) { // 电台
                 radioText.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
                 allText.setTextColor(context.getResources().getColor(R.color.group_item_text2));
@@ -475,7 +474,11 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
                 soundText.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 ttsText.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 clearEmpty.setVisibility(View.GONE);
-                openEdit.setVisibility(View.VISIBLE);
+                if(RadioFragment.isData) {
+                    openEdit.setVisibility(View.VISIBLE);
+                } else {
+                    openEdit.setVisibility(View.GONE);
+                }
             } else if (i == 4) { // TTS
                 ttsText.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
                 allText.setTextColor(context.getResources().getColor(R.color.group_item_text2));
@@ -483,10 +486,20 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
                 soundText.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 radioText.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 clearEmpty.setVisibility(View.GONE);
-                openEdit.setVisibility(View.VISIBLE);
+                if(TTSFragment.isData) {
+                    openEdit.setVisibility(View.VISIBLE);
+                } else {
+                    openEdit.setVisibility(View.GONE);
+                }
             }
             setCancel();
         }
+    }
+
+    // 设置没有数据时隐藏 View
+    public void setNodataHideView() {
+        clearEmpty.setVisibility(View.GONE);
+        openEdit.setVisibility(View.GONE);
     }
 
     // 返回键功能

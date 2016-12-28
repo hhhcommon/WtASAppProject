@@ -37,6 +37,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="清空"
+                android:visibility="gone"
                 android:textColor="@color/WHITE_1"
                 android:textSize="@dimen/wt_dinglan_text_right" />
 

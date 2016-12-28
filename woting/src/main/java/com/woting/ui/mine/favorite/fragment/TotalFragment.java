@@ -79,6 +79,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
 	private int delGroupPosition = -1;
 	private String tag = "TOTAL_VOLLEY_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
+    public static boolean isData;// 是否有数据
 
     @Override
     public void onWhiteViewClick() {
@@ -88,6 +89,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
         } else {
             tipView.setVisibility(View.VISIBLE);
             tipView.setTipView(TipView.TipStatus.NO_NET);
+            ((FavoriteActivity) context).setQkVisibleOrHide(false);
         }
     }
 
@@ -119,6 +121,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
 			} else {
                 tipView.setVisibility(View.VISIBLE);
                 tipView.setTipView(TipView.TipStatus.NO_NET);
+                ((FavoriteActivity) context).setQkVisibleOrHide(false);
 			}
 		}
 		return rootView;
@@ -261,8 +264,6 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
 						subList = new Gson().fromJson(arg1.getString("FavoriteList"), new TypeToken<List<RankInfo>>() {}.getType());
 					} catch (Exception e) {
 						e.printStackTrace();
-                        tipView.setVisibility(View.VISIBLE);
-                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
 					}
 					list.clear();
 					if(playList != null) playList.clear();
@@ -344,23 +345,31 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
 							}
                             setItemListener();
                             tipView.setVisibility(View.GONE);
+                            isData = true;
+                            ((FavoriteActivity) context).setQkVisibleOrHide(true);
 						} else {
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有喜欢的节目\n快去收听喜欢的节目吧");
+                            isData = false;
+                            ((FavoriteActivity) context).setQkVisibleOrHide(false);
 						}
 					}
 				} else {
                     tipView.setVisibility(View.VISIBLE);
                     tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有喜欢的节目\n快去收听喜欢的节目吧");
+                    isData = false;
+                    ((FavoriteActivity) context).setQkVisibleOrHide(false);
 				}
 			}
 			
 			@Override
 			protected void requestError(VolleyError error) {
 				if (dialog != null) dialog.dismiss();
+                isData = false;
                 ToastUtils.showVolleyError(context);
                 tipView.setVisibility(View.VISIBLE);
                 tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                ((FavoriteActivity) context).setQkVisibleOrHide(false);
 			}
 		});
 	}
@@ -538,6 +547,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
         searchAdapter = null;
 		dialog = null;
 		tag = null;
+        isData = false;
 		if(dbDao != null){
             dbDao.closedb();
             dbDao = null;

@@ -158,7 +158,7 @@ public class HandleGroupApplyActivity extends AppBaseActivity implements OnClick
 					}
 				} else {
                     tipView.setVisibility(View.VISIBLE);
-                    tipView.setTipView(TipView.TipStatus.NO_DATA, "没有需要你处理的消息哦~~");
+                    tipView.setTipView(TipView.TipStatus.NO_DATA, "没有需要处理的消息哦~~");
 				}
 			}
 

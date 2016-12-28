@@ -73,6 +73,7 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
 	private int pageSizeNum = -1;	// 先求余 如果等于 0 最后结果不加 1  如果不等于 0 结果加 1
 	private String tag = "RADIO_VOLLEY_REQUEST_CANCEL_TAG";
 	private boolean isCancelRequest;
+    public static boolean isData;// 是否有数据
 
     @Override
     public void onWhiteViewClick() {
@@ -245,11 +246,10 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
         if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
             if(dialog != null) dialog.dismiss();
             if(refreshType == 1) {
+                mListView.stopRefresh();
                 tipView.setVisibility(View.VISIBLE);
                 tipView.setTipView(TipView.TipStatus.NO_NET);
-            }
-            if(refreshType == 1) {
-                mListView.stopRefresh();
+                isData = false;
             } else {
                 mListView.stopLoadMore();
             }
@@ -315,10 +315,12 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
                         }
                         setListener();
                         tipView.setVisibility(View.GONE);
+                        isData = true;
                     } else {
                         if(refreshType == 1) {
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有喜欢的节目\n快去收听喜欢的节目吧");
+                            isData = false;
                         }
                     }
 				} catch (JSONException e) {
@@ -326,6 +328,7 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
                     if(refreshType == 1) {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        isData = false;
                     }
 				}
 
@@ -344,6 +347,7 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
                 if(refreshType == 1) {
                     tipView.setVisibility(View.VISIBLE);
                     tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                    isData = false;
                 }
 			}
 		});
@@ -516,6 +520,7 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
         delList = null;
 		linearNull = null;
 		tag = null;
+        isData = false;
 		if(dbDao != null){
             dbDao.closedb();
             dbDao = null;

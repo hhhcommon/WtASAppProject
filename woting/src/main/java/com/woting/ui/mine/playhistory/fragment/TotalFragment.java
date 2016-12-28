@@ -137,6 +137,7 @@ public class TotalFragment extends Fragment {
         if (!isData) {
             tipView.setVisibility(View.VISIBLE);
             tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有收听节目\n快去收听喜欢的节目吧");
+            ((PlayHistoryActivity) context).setNodataHideView();
         }
     }
 

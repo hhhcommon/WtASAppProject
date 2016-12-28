@@ -293,7 +293,6 @@
                 android:layout_toEndOf="@+id/textView"
                 android:layout_toRightOf="@+id/textView"
                 android:singleLine="true"
-                android:text="我听科技"
                 android:textColor="@color/black"
                 android:textSize="12sp"/>
 
@@ -317,7 +316,6 @@
                 android:layout_alignStart="@+id/tv_zhu_bo"
                 android:layout_alignTop="@+id/textView2"
                 android:singleLine="true"
-                android:text="白茶小馆"
                 android:textColor="@color/black"
                 android:textSize="12sp"/>
 
@@ -342,7 +340,6 @@
                 android:layout_alignLeft="@+id/tv_sequ"
                 android:layout_alignStart="@+id/tv_sequ"
                 android:singleLine="true"
-                android:text="我听科技"
                 android:textColor="@color/black"
                 android:textSize="12sp"/>
 
@@ -406,7 +403,6 @@
                 android:layout_below="@+id/linearLayout"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="10dp"
-                android:text="内容简介"
                 android:textColor="@color/black"
                 android:textSize="12sp"/>
 
