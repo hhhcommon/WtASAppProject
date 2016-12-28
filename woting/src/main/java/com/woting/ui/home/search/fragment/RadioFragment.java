@@ -28,6 +28,7 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
@@ -48,9 +49,9 @@ import java.util.List;
 /**
  * 搜索电台界面
  */
-public class RadioFragment extends Fragment {
+public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
     private FragmentActivity context;
-    protected FavorListAdapter adapter;
+    private FavorListAdapter adapter;
     private SearchPlayerHistoryDao dbDao;
     private List<RankInfo> SubList;
     private ArrayList<RankInfo> newList = new ArrayList<>();
@@ -58,8 +59,9 @@ public class RadioFragment extends Fragment {
     private Dialog dialog;
     private View rootView;
     private XListView mListView;
+    private TipView tipView;// 没有网络、没有数据提示
 
-    protected String searchStr;
+    private String searchStr;
     private String tag = "RADIO_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
     private int refreshType = 1;
@@ -69,6 +71,12 @@ public class RadioFragment extends Fragment {
     // 初始化数据库对象
     private void initDao() {
         dbDao = new SearchPlayerHistoryDao(context);
+    }
+
+    @Override
+    public void onWhiteViewClick() {
+        dialog = DialogUtils.Dialogph(context, "通讯中");
+        sendRequest();
     }
 
     @Override
@@ -86,6 +94,8 @@ public class RadioFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_search_sound, container, false);
+            tipView = (TipView) rootView.findViewById(R.id.tip_view);
+            tipView.setWhiteClick(this);
             mListView = (XListView) rootView.findViewById(R.id.listView);
             mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
             setLoadListener();
@@ -192,9 +202,11 @@ public class RadioFragment extends Fragment {
 
     private void sendRequest() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
-            ToastUtils.show_always(context, "连接网络失败，请检查网络设置!");
+            if(dialog != null) dialog.dismiss();
             if (refreshType == 1) {
                 mListView.stopRefresh();
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_NET);
             } else {
                 mListView.stopLoadMore();
             }
@@ -218,10 +230,9 @@ public class RadioFragment extends Fragment {
                     try {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         SubList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
-
                         try {
                             String allCountString = arg1.getString("AllCount");
-                            String pageSizeString = arg1.getString("pageSize");
+                            String pageSizeString = arg1.getString("PageSize");
                             if (allCountString != null && !allCountString.equals("") && pageSizeString != null && !pageSizeString.equals("")) {
                                 int allCountInt = Integer.valueOf(allCountString);
                                 int pageSizeInt = Integer.valueOf(allCountString);
@@ -240,21 +251,31 @@ public class RadioFragment extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-                        if (refreshType == 1) {
-                            newList.clear();
-                        }
-
+                        if (refreshType == 1) newList.clear();
                         for(int i=0; i<SubList.size(); i++) {
                             if(SubList.get(i).getMediaType().equals("RADIO")) {
                                 newList.add(SubList.get(i));
                             }
                         }
-//                        newList.addAll(SubList);
-                        adapter.notifyDataSetChanged();
-                        setListener();
+                        if(newList.size() > 0) {
+                            adapter.notifyDataSetChanged();
+                            setListener();
+                            tipView.setVisibility(View.GONE);
+                        } else {
+                            if(refreshType == 1) {
+                                tipView.setVisibility(View.VISIBLE);
+                                tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关结果\n试试其他词，不要太逆天哟");
+                            }
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                    }
+                } else {
+                    if(refreshType == 1) {
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关结果\n试试其他词，不要太逆天哟");
                     }
                 }
 
@@ -269,6 +290,8 @@ public class RadioFragment extends Fragment {
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.IS_ERROR);
             }
         });
     }

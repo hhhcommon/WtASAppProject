@@ -1,5 +1,6 @@
 package com.woting.ui.home.program.diantai.fragment;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,6 +24,7 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -33,10 +36,12 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
+import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.HeightListView;
+import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout;
 import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout.OnRefreshListener;
 import com.woting.ui.home.main.HomeActivity;
@@ -62,66 +67,89 @@ import java.util.List;
 
 /**
  * 电台主页
- *
  * @author 辛龙 2016年2月26日
  */
-public class OnLineFragment extends Fragment {
+public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
     private FragmentActivity context;
-    private View rootView;
-    private String ReturnType;
-    private OnLinesAdapter adapter;
-    private List<RadioPlay> mainList;
-    private ExpandableListView listView_Main;
-    private int RefreshType;// refreshType 1为下拉加载 2为上拉加载更多
-    private int page = 1;// 数的问题
-    private ArrayList<RadioPlay> newList = new ArrayList<>();
-    private String BeginCatalogId;
-    private View headView;
-    private LinearLayout lin_address, lin_local, lin_country, lin_net;
-    private TextView tv_Name;
-    private LinearLayout lin_head_more;
-    //	private MyGridView gridView;
-    private ListView gridView;
-    private List<RankInfo> mainLists;
     private SharedPreferences shared = BSApplication.SharedPreferences;
     private SearchPlayerHistoryDao dbDao;
+    private MessageReceiver Receiver;
+    private OnLinesAdapter adapter;
+    private List<RadioPlay> mainList;
+    private List<RankInfo> mainLists;
+    private List<RadioPlay> newList = new ArrayList<>();
+
+    private Dialog dialog;
+    private View rootView;
+    private PullToRefreshLayout mPullToRefreshLayout;
+    private LinearLayout linAddress, linLocal, linCountry, linNet;
+    private View viewHeadMore;
+    private ExpandableListView expandableListMain;
+    private ListView gridView;
+    private TextView textName;
+    private TipView tipView;// 没有网络、没有数据提示
+    private RelativeLayout relativeLayout;
+
+    private int RefreshType;// refreshType 1 为下拉加载 2 为上拉加载更多
+    private int page = 1;// 数的问题
+
+    private String cityName;
+    private String returnType;
+    private String beginCatalogId;
     private String cityId;
     private String tag = "ONLINE_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
-    private PullToRefreshLayout mPullToRefreshLayout;
-    private MessageReceiver Receiver;
-    private String cityName;
-    private int height;
+
+    @Override
+    public void onWhiteViewClick() {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            dialog = DialogUtils.Dialogph(context, "数据加载中...");
+            RefreshType = 1;
+            beginCatalogId = "";
+            String cityName = shared.getString(StringConstant.CITYNAME, "北京");
+            textName.setText(cityName);
+            getCity();
+            send();
+        } else {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = this.getActivity();
+        context = getActivity();
         initDao();// 初始化数据库命令执行对象
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
+            relativeLayout = new RelativeLayout(context);
             rootView = inflater.inflate(R.layout.fragment_radio, container, false);
-            listView_Main = (ExpandableListView) rootView.findViewById(R.id.listView_main);
-            mPullToRefreshLayout = (PullToRefreshLayout) rootView.findViewById(R.id.refresh_view);
+            tipView = new TipView(context);
+            tipView.setWhiteClick(this);
+            tipView.setVisibility(View.GONE);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            relativeLayout.addView(rootView);
+            relativeLayout.addView(tipView, layoutParams);
 
-            headView = LayoutInflater.from(context).inflate(R.layout.head_online, null);
-            lin_country = (LinearLayout) headView.findViewById(R.id.lin_country);
-            lin_local = (LinearLayout) headView.findViewById(R.id.lin_local);
-            lin_net = (LinearLayout) headView.findViewById(R.id.lin_net);
+            View headView = LayoutInflater.from(context).inflate(R.layout.head_online, null);
+            expandableListMain = (ExpandableListView) rootView.findViewById(R.id.listView_main);
 
-            lin_address = (LinearLayout) headView.findViewById(R.id.lin_address);
-            tv_Name = (TextView) headView.findViewById(R.id.tv_name);
-            lin_head_more = (LinearLayout) headView.findViewById(R.id.lin_head_more);
-//			gridView = (MyGridView) headView.findViewById(R.id.gridView);
-//			gridView.setSelector(new ColorDrawable(Color.TRANSPARENT));			// 取消默认selector
+            linCountry = (LinearLayout) headView.findViewById(R.id.lin_country);
+            linLocal = (LinearLayout) headView.findViewById(R.id.lin_local);
+            linNet = (LinearLayout) headView.findViewById(R.id.lin_net);
+
+            linAddress = (LinearLayout) headView.findViewById(R.id.lin_address);
+            textName = (TextView) headView.findViewById(R.id.tv_name);
+            viewHeadMore = headView.findViewById(R.id.lin_head_more);
             gridView = (ListView) headView.findViewById(R.id.gridView);
 
+            mPullToRefreshLayout = (PullToRefreshLayout) rootView.findViewById(R.id.refresh_view);
             setView();
-            listView_Main.addHeaderView(headView);
+            expandableListMain.addHeaderView(headView);
             if (Receiver == null) {
                 Receiver = new MessageReceiver();
                 IntentFilter filter = new IntentFilter();
@@ -129,31 +157,29 @@ public class OnLineFragment extends Fragment {
                 context.registerReceiver(Receiver, filter);
             }
         }
-        return rootView;
+        return relativeLayout;
     }
 
-    // 监听到地理位置发生改变，进行数据刷新
     class MessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(BroadcastConstants.CITY_CHANGE)) {
-                if (GlobalConfig.CityName != null) {
-                    cityName = GlobalConfig.CityName;
-                }
-                tv_Name.setText(cityName);
+                if (GlobalConfig.CityName != null) cityName = GlobalConfig.CityName;
+                textName.setText(cityName);
                 page = 1;
-                BeginCatalogId = "";
+                beginCatalogId = "";
                 RefreshType = 1;
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                     send();
                     getCity();
                 } else {
-                    ToastUtils.show_always(context, "网络异常");
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.NO_NET);
                 }
                 Editor et = shared.edit();
                 et.putString(StringConstant.CITYTYPE, "false");
-                et.commit();
+                if(!et.commit()) Log.w("TAG", "数据 commit 失败!");
             }
         }
 
@@ -162,17 +188,16 @@ public class OnLineFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // 发送网络请求
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             RefreshType = 1;
-            BeginCatalogId = "";
+            beginCatalogId = "";
             String cityName = shared.getString(StringConstant.CITYNAME, "北京");
-            tv_Name.setText(cityName);
+            textName.setText(cityName);
             getCity();
             send();
         } else {
-        /*	mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.FAIL);*/
-            ToastUtils.show_short(context, "网络失败，请检查网络");
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
         }
     }
 
@@ -192,7 +217,7 @@ public class OnLineFragment extends Fragment {
     }
 
     private void setView() {
-        lin_address.setOnClickListener(new OnClickListener() {
+        linAddress.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -203,7 +228,7 @@ public class OnLineFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        lin_local.setOnClickListener(new OnClickListener() {
+        linLocal.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -214,7 +239,7 @@ public class OnLineFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        lin_country.setOnClickListener(new OnClickListener() {
+        linCountry.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -222,13 +247,13 @@ public class OnLineFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        lin_net.setOnClickListener(new OnClickListener() {
+        linNet.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, FMListActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("fromtype", "net"); //界面判断标签
+                bundle.putString("fromtype", "net"); // 界面判断标签
                 bundle.putString("name", "网络台");
                 bundle.putString("type", "9");
                 bundle.putString("id", "dtfl2002");
@@ -236,7 +261,7 @@ public class OnLineFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        lin_head_more.setOnClickListener(new OnClickListener() {
+        viewHeadMore.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -255,7 +280,7 @@ public class OnLineFragment extends Fragment {
             }
         });
 
-        listView_Main.setOnGroupClickListener(new OnGroupClickListener() {
+        expandableListMain.setOnGroupClickListener(new OnGroupClickListener() {
 
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
@@ -263,7 +288,7 @@ public class OnLineFragment extends Fragment {
             }
         });
 
-        listView_Main.setGroupIndicator(null);
+        expandableListMain.setGroupIndicator(null);
         mPullToRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
 
             @Override
@@ -271,10 +296,12 @@ public class OnLineFragment extends Fragment {
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                     RefreshType = 1;
                     page = 1;
-                    BeginCatalogId = "";
+                    beginCatalogId = "";
                     send();
                 } else {
-                    ToastUtils.show_short(context, "网络失败，请检查网络");
+                    mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.NO_NET);
                 }
             }
 
@@ -283,19 +310,16 @@ public class OnLineFragment extends Fragment {
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                     RefreshType = 2;
                     send();
-                    ToastUtils.show_short(context, "正在请求" + page + "页信息");
                 } else {
-                    ToastUtils.show_short(context, "网络失败，请检查网络");
+                    mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.FAIL);
                 }
             }
-
         });
-
-        listView_Main.setSelector(new ColorDrawable(Color.TRANSPARENT));
+        expandableListMain.setSelector(new ColorDrawable(Color.TRANSPARENT));
     }
 
     private void getCity() {
-        // 此处在splashActivity中refreshB设置成true
+        // 此处在 splashActivity 中 refreshB 设置成 true
         cityId = shared.getString(StringConstant.CITYID, "110000");
         if (GlobalConfig.AdCode != null && !GlobalConfig.AdCode.equals("")) {
             cityId = GlobalConfig.AdCode;
@@ -318,19 +342,13 @@ public class OnLineFragment extends Fragment {
 
             @Override
             protected void requestSuccess(JSONObject result) {
-                if (isCancelRequest) {
-                    return;
-                }
+                if (isCancelRequest) return;
                 try {
-                    ReturnType = result.getString("ReturnType");
-                    if (ReturnType != null && ReturnType.equals("1001")) {
-                        // 获取列表
-                        String ResultList = result.getString("ResultList");
-                        JSONTokener jsonParser = new JSONTokener(ResultList);
-                        JSONObject arg1 = (JSONObject) jsonParser.nextValue();
+                    returnType = result.getString("ReturnType");
+                    if (returnType != null && returnType.equals("1001")) {
+                        JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         String MainList = arg1.getString("List");
-                        mainLists = new Gson().fromJson(MainList, new TypeToken<List<RankInfo>>() {
-                        }.getType());
+                        mainLists = new Gson().fromJson(MainList, new TypeToken<List<RankInfo>>() {}.getType());
                         if (mainLists != null && mainLists.size() != 0) {
                             if (mainLists.size() > 3) {
                                 List tempList = new ArrayList();
@@ -340,21 +358,8 @@ public class OnLineFragment extends Fragment {
                                 mainLists.clear();
                                 mainLists.addAll(tempList);
                             }
-//                        if(mainLists.size()==1){
-//                            height=250;
-//                        }else if(mainLists.size()==2){
-//                            height=490;
-//                        }else if(mainLists.size()==3){
-//                            height=730;
-//                        }
-//                        //设置gridview的高
-//                        ViewGroup.LayoutParams params = gridView.getLayoutParams();
-//                        params.height = height;
-//                        gridView.setLayoutParams(params);
-
                             if (adapters == null) {
-                                adapters = new CityNewAdapter(context, mainLists);
-                                gridView.setAdapter(adapters);
+                                gridView.setAdapter(adapters = new CityNewAdapter(context, mainLists));
                             } else {
                                 adapters.notifyDataSetChanged();
                             }
@@ -362,7 +367,6 @@ public class OnLineFragment extends Fragment {
                             new HeightListView(context).setListViewHeightBasedOnChildren(gridView);
                         } else {
                             gridView.setVisibility(View.GONE);
-
                         }
                     }
                 } catch (JSONException e) {
@@ -410,7 +414,7 @@ public class OnLineFragment extends Fragment {
                         String sequImg = mainLists.get(position).getSequImg();
                         String ContentPlayType = mainLists.get(position).getContentPlayType();
 
-                        //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+                        // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playName, playImage, playUrl, playUri, playMediaType,
                                 playAllTime, playInTime, playContentDesc, playerNum,
@@ -440,7 +444,7 @@ public class OnLineFragment extends Fragment {
             js.put("CatalogType", "2");
             js.put("CatalogId", cityId);
             jsonObject.put("FilterData", js);
-            jsonObject.put("BeginCatalogId", BeginCatalogId);
+            jsonObject.put("BeginCatalogId", beginCatalogId);
             jsonObject.put("Page", String.valueOf(page));
             jsonObject.put("PerSize", "3");
             jsonObject.put("ResultType", "1");
@@ -450,68 +454,58 @@ public class OnLineFragment extends Fragment {
         }
 
         VolleyRequest.RequestPost(GlobalConfig.getContentUrl, tag, jsonObject, new VolleyCallback() {
-            private String MainList;
-
             @Override
             protected void requestSuccess(JSONObject result) {
-                if (isCancelRequest) {
-                    return;
-                }
+                if(dialog != null) dialog.dismiss();
+                if (isCancelRequest) return;
                 page++;
                 try {
-                    ReturnType = result.getString("ReturnType");
-                    if (ReturnType != null) {
-                        if (ReturnType.equals("1001")) {
-                            // 获取列表
-                            String ResultList = result.getString("ResultList");
-                            JSONTokener jsonParser = new JSONTokener(ResultList);
-                            JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                            MainList = arg1.getString("List");
-                            BeginCatalogId = arg1.getString("BeginCatalogId");
-                            mainList = new Gson().fromJson(MainList, new TypeToken<List<RadioPlay>>() {
-                            }.getType());
-                            if (RefreshType == 1) {
-                                mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-                                newList.clear();
-                                newList.addAll(mainList);
-                                if (adapter == null) {
-                                    adapter = new OnLinesAdapter(context, newList);
-                                    listView_Main.setAdapter(adapter);
-                                } else {
-                                    adapter.notifyDataSetChanged();
-                                }
-                            }
-                            if (RefreshType == 2) {
-                                mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
-                                newList.addAll(mainList);
-                                adapter.notifyDataSetChanged();
-                            }
-                            for (int i = 0; i < newList.size(); i++) {
-                                listView_Main.expandGroup(i);
-                            }
-                            setItemListener();
-                        } else {
-                            ToastUtils.show_always(context, "暂无数据");
+                    returnType = result.getString("ReturnType");
+                    if (returnType != null && returnType.equals("1001")) {
+                        JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
+                        beginCatalogId = arg1.getString("BeginCatalogId");
+                        mainList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RadioPlay>>() {}.getType());
+                        if (RefreshType == 1) {
+                            mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+                            newList.clear();
+                        } else if (RefreshType == 2) {
+                            mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
                         }
+                        newList.addAll(mainList);
+                        if (adapter == null) {
+                            expandableListMain.setAdapter(adapter = new OnLinesAdapter(context, newList));
+                        } else {
+                            adapter.notifyDataSetChanged();
+                        }
+                        for (int i = 0; i < newList.size(); i++) {
+                            expandableListMain.expandGroup(i);
+                        }
+                        setItemListener();
+                        tipView.setVisibility(View.GONE);
                     } else {
-
-                        ToastUtils.show_always(context, "暂无数据");
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
                 }
             }
 
             @Override
             protected void requestError(VolleyError error) {
+                if(dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.IS_ERROR);
             }
         });
     }
 
-    // 初始一号位置为0,0
+    // 初始一号位置为 0,0
     protected void setItemListener() {
-        listView_Main.setOnChildClickListener(new OnChildClickListener() {
+        expandableListMain.setOnChildClickListener(new OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 if (newList != null && newList.get(groupPosition).getList().get(childPosition) != null
@@ -545,7 +539,7 @@ public class OnLineFragment extends Fragment {
 
                         String ContentPlayType = newList.get(groupPosition).getList().get(childPosition).getContentPlayType();
 
-                        //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+                        // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playName, playImage, playUrl, playUri, playMediaType,
                                 playAllTime, playInTime, playContentDesc, playerNum,
@@ -561,7 +555,6 @@ public class OnLineFragment extends Fragment {
                         bundle1.putString("text", newList.get(groupPosition).getList().get(childPosition).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
-
                     } else if (MediaType.equals("SEQU")) {
                         Intent intent = new Intent(context, AlbumActivity.class);
                         Bundle bundle = new Bundle();
@@ -584,19 +577,17 @@ public class OnLineFragment extends Fragment {
         String cityType = shared.getString(StringConstant.CITYTYPE, "false");
         cityName = shared.getString(StringConstant.CITYNAME, "北京");
         cityId = shared.getString(StringConstant.CITYID, "110000");
-        if (GlobalConfig.CityName != null) {
-            cityName = GlobalConfig.CityName;
-        }
+        if (GlobalConfig.CityName != null) cityName = GlobalConfig.CityName;
         if (cityType.equals("true")) {
-            tv_Name.setText(cityName);
+            textName.setText(cityName);
             page = 1;
-            BeginCatalogId = "";
+            beginCatalogId = "";
             RefreshType = 1;
             getCity();
             send();
             Editor et = shared.edit();
             et.putString(StringConstant.CITYTYPE, "false");
-            et.commit();
+            if(!et.commit()) Log.w("TAG", "数据 commit 失败!");
         }
     }
 

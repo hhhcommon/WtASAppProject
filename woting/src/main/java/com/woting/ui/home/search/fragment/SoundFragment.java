@@ -27,6 +27,7 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
@@ -46,7 +47,7 @@ import java.util.List;
 /**
  * 搜索声音界面
  */
-public class SoundFragment extends Fragment {
+public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
     private FragmentActivity context;
     protected FavorListAdapter adapter;
     private SearchPlayerHistoryDao dbDao;
@@ -56,6 +57,7 @@ public class SoundFragment extends Fragment {
     private Dialog dialog;
     private View rootView;
     private XListView mListView;
+    private TipView tipView;// 没有网络、没有数据提示
 
     protected String searchStr;
     private String tag = "SOUND_VOLLEY_REQUEST_CANCEL_TAG";
@@ -70,6 +72,12 @@ public class SoundFragment extends Fragment {
     }
 
     @Override
+    public void onWhiteViewClick() {
+        dialog = DialogUtils.Dialogph(context, "通讯中");
+        sendRequest();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
@@ -81,9 +89,11 @@ public class SoundFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        if(rootView == null){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_search_sound, container, false);
+            tipView = (TipView) rootView.findViewById(R.id.tip_view);
+            tipView.setWhiteClick(this);
             mListView = (XListView) rootView.findViewById(R.id.listView);
             mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
             setLoadListener();
@@ -132,8 +142,8 @@ public class SoundFragment extends Fragment {
 
         mListView.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-                if(newList != null && newList.get(position - 1) != null && newList.get(position - 1).getMediaType() != null){
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (newList != null && newList.get(position - 1) != null && newList.get(position - 1).getMediaType() != null) {
                     String MediaType = newList.get(position - 1).getMediaType();
                     if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
                         String playername = newList.get(position - 1).getContentName();
@@ -147,39 +157,39 @@ public class SoundFragment extends Fragment {
                         String playercontentdesc = newList.get(position - 1).getCurrentContent();
                         String playernum = newList.get(position - 1).getWatchPlayerNum();
                         String playerzantype = "0";
-                        String playerfrom =newList.get(position - 1).getContentPub();
+                        String playerfrom = newList.get(position - 1).getContentPub();
                         String playerfromid = "";
                         String playerfromurl = "";
                         String playeraddtime = Long.toString(System.currentTimeMillis());
-                        String bjuserid =CommonUtils.getUserId(context);
-                        String ContentFavorite=newList.get(position - 1).getContentFavorite();
-                        String ContentId= newList.get(position-1).getContentId();
-                        String localurl=newList.get(position-1).getLocalurl();
+                        String bjuserid = CommonUtils.getUserId(context);
+                        String ContentFavorite = newList.get(position - 1).getContentFavorite();
+                        String ContentId = newList.get(position - 1).getContentId();
+                        String localurl = newList.get(position - 1).getLocalurl();
 
-                        String sequName=newList.get(position-1).getSequName();
-                        String sequId=newList.get(position-1).getSequId();
-                        String sequDesc=newList.get(position-1).getSequDesc();
-                        String sequImg=newList.get(position-1).getSequImg();
-                        String ContentPlayType= newList.get(position-1).getContentPlayType();
+                        String sequName = newList.get(position - 1).getSequName();
+                        String sequId = newList.get(position - 1).getSequId();
+                        String sequDesc = newList.get(position - 1).getSequDesc();
+                        String sequImg = newList.get(position - 1).getSequImg();
+                        String ContentPlayType = newList.get(position - 1).getContentPlayType();
 
                         // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
-                                playername,  playerimage, playerurl, playerurI,playermediatype,
+                                playername, playerimage, playerurl, playerurI, playermediatype,
                                 plaplayeralltime, playerintime, playercontentdesc, playernum,
-                                playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
-                                ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg,ContentPlayType);
+                                playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playcontentshareurl,
+                                ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg, ContentPlayType);
                         dbDao.deleteHistory(playerurl);
                         dbDao.addHistory(history);
                         MainActivity.change();
                         HomeActivity.UpdateViewPager();
-                        PlayerFragment.TextPage=1;
-                        Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
-                        Bundle bundle1=new Bundle();
-                        bundle1.putString("text",newList.get(position - 1).getContentName());
+                        PlayerFragment.TextPage = 1;
+                        Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                        Bundle bundle1 = new Bundle();
+                        bundle1.putString("text", newList.get(position - 1).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
                         context.finish();
-                    }  else {
+                    } else {
                         ToastUtils.show_short(context, "暂不支持的Type类型");
                     }
                 }
@@ -187,15 +197,17 @@ public class SoundFragment extends Fragment {
         });
     }
 
-    private void sendRequest(){
-        if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
-            ToastUtils.show_always(context, "连接网络失败，请检查网络设置!");
-            if(refreshType == 1) {
+    private void sendRequest() {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
+            if(dialog != null) dialog.dismiss();
+            if (refreshType == 1) {
                 mListView.stopRefresh();
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_NET);
             } else {
                 mListView.stopLoadMore();
             }
-            return ;
+            return;
         }
 
         VolleyRequest.RequestPost(GlobalConfig.getSearchByText, tag, setParam(), new VolleyCallback() {
@@ -204,7 +216,7 @@ public class SoundFragment extends Fragment {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
-                if(isCancelRequest) return ;
+                if (isCancelRequest) return;
                 try {
                     ReturnType = result.getString("ReturnType");
                 } catch (JSONException e) {
@@ -215,7 +227,6 @@ public class SoundFragment extends Fragment {
                     try {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         SubList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
-
                         try {
                             String allCountString = arg1.getString("AllCount");
                             String pageSizeString = arg1.getString("pageSize");
@@ -237,25 +248,32 @@ public class SoundFragment extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-                        if (refreshType == 1) {
-                            newList.clear();
+                        if (refreshType == 1) newList.clear();
+                        for (int i = 0; i < SubList.size(); i++) {
+                            if (SubList.get(i).getMediaType().equals("AUDIO")) newList.add(SubList.get(i));
                         }
-
-                        for(int i=0; i<SubList.size(); i++) {
-                            if(SubList.get(i).getMediaType().equals("AUDIO")) {
-                                newList.add(SubList.get(i));
+                        if(newList.size() > 0) {
+                            adapter.notifyDataSetChanged();
+                            setListener();
+                            tipView.setVisibility(View.GONE);
+                        } else {
+                            if(refreshType == 1) {
+                                tipView.setVisibility(View.VISIBLE);
+                                tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关结果\n试试其他词，不要太逆天哟");
                             }
                         }
-//                        newList.addAll(SubList);
-                        adapter.notifyDataSetChanged();
-                        setListener();
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                    }
+                } else {
+                    if(refreshType == 1) {
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关结果\n试试其他词，不要太逆天哟");
                     }
                 }
-
-                if(refreshType == 1) {
+                if (refreshType == 1) {
                     mListView.stopRefresh();
                 } else {
                     mListView.stopLoadMore();
@@ -266,15 +284,17 @@ public class SoundFragment extends Fragment {
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.IS_ERROR);
             }
         });
     }
 
-    private JSONObject setParam(){
+    private JSONObject setParam() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("MediaType", "AUDIO");
-            if(searchStr != null && !searchStr.equals("")){
+            if (searchStr != null && !searchStr.equals("")) {
                 jsonObject.put("SearchStr", searchStr);
                 jsonObject.put("Page", String.valueOf(page));
                 jsonObject.put("PageSize", "10");
@@ -291,8 +311,8 @@ public class SoundFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(BroadcastConstants.SEARCH_VIEW_UPDATE)) {
-                searchStr=intent.getStringExtra("searchStr");
-                if(searchStr!=null&&!searchStr.equals("")){
+                searchStr = intent.getStringExtra("searchStr");
+                if (searchStr != null && !searchStr.equals("")) {
                     refreshType = 1;
                     page = 1;
                     mListView.setPullLoadEnable(false);
@@ -312,7 +332,7 @@ public class SoundFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        super .onDestroyView();
+        super.onDestroyView();
         if (null != rootView) {
             ((ViewGroup) rootView.getParent()).removeView(rootView);
         }
@@ -333,7 +353,7 @@ public class SoundFragment extends Fragment {
         adapter = null;
         searchStr = null;
         tag = null;
-        if(dbDao != null){
+        if (dbDao != null) {
             dbDao.closedb();
             dbDao = null;
         }

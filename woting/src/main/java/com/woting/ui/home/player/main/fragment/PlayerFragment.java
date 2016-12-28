@@ -151,7 +151,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private int stepVolume;
     private int curVolume;// 当前音量
     private int refreshType;// 是不是第一次请求数据
-    private int voiceType = 2;// 是否按下语音按钮 == 1 按下  == 2 松手
+//    private int voiceType = 2;// 是否按下语音按钮 == 1 按下  == 2 松手
 
     private Bitmap bmpPress;// 语音搜索按钮按下的状态图片
     private Bitmap bmp;// 语音搜索按钮未按下的状态图片
@@ -350,6 +350,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         super.onResume();
         // 用来判读是否是第一次进入
         if (first) {
+            first = false;
+
             // 从播放历史界面或者我喜欢的界面跳转到该界面
             String enter = sp.getString(StringConstant.PLAYHISTORYENTER, "false");
             String news = sp.getString(StringConstant.PLAYHISTORYENTERNEWS, "");
@@ -360,15 +362,15 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 et.putString(StringConstant.PLAYHISTORYENTER, "false");
                 if (et.commit()) Log.v("TAG", "数据 commit 失败!");
             } else {
-                if (CommonHelper.checkNetwork(context)) {
+                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                     dialog = DialogUtils.Dialogph(context, "通讯中");
                     firstSend();
                 } else {
+                    first = true;
                     mListView.setAdapter(adapter = new PlayerListAdapter(context, allList));
                     setPullAndLoad(true, false);
                 }
             }
-            first = false;
         }
     }
 
@@ -569,6 +571,16 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             mPlayer.recycleLKPlayer();
             if (!playStatus) {
                 mPlayImageStatus.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_play_stop));
+                String url = GlobalConfig.playerObject.getContentImg();
+                if (url != null) {// 有封面图片
+                    if (!url.startsWith("http")) {
+                        url = GlobalConfig.imageurl + url;
+                    }
+                    url = AssembleImageUrlUtils.assembleImageUrl180(url);
+                    Picasso.with(context).load(url.replace("\\/", "/")).into(mPlayAudioImageCover);
+                } else {// 没有封面图片设置默认图片
+                    mPlayAudioImageCover.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx));
+                }
                 return;
             }
         }
@@ -621,7 +633,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         }
         curVolume = audioMgr.getStreamVolume(AudioManager.STREAM_MUSIC);// 获取此时的音量大小
         audioMgr.setStreamVolume(AudioManager.STREAM_MUSIC, stepVolume, AudioManager.FLAG_PLAY_SOUND);// 设置想要的音量大小
-        voiceType = 1;
+//        voiceType = 1;
         mVoiceRecognizer = VoiceRecognizer.getInstance(context, BroadcastConstants.PLAYERVOICE);// 讯飞开始
         mVoiceRecognizer.startListen();
         mVoiceTextSpeakStatus.setText("开始语音转换");
@@ -631,7 +643,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     // 抬起手后的操作
     private void putUp() {
         audioMgr.setStreamVolume(AudioManager.STREAM_MUSIC, curVolume, AudioManager.FLAG_PLAY_SOUND);// 还原原先音量大小
-        voiceType = 2;
+//        voiceType = 2;
         mVoiceRecognizer.stopListen();// 讯飞停止
         mVoiceImageSpeak.setImageBitmap(bmp);
         mVoiceTextSpeakStatus.setText("请按住讲话");
@@ -954,6 +966,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             if (dialog != null) dialog.dismiss();
             setPullAndLoad(true, false);
             return;
+        }
+        if(first) {// 第一次进入没有网络或加载数据有问题刷新数据时重新加载
+            refreshType = 0;
+            firstSend();
+            first = false;
+            return ;
         }
         mHandler.postDelayed(new Runnable() {
             @Override
@@ -1312,7 +1330,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 startActivity(new Intent(context, PlayHistoryActivity.class));
                 break;
             case R.id.tv_programme:// 节目单
-                if (!CommonHelper.checkNetwork(context)) return;
                 Intent p = new Intent(context, ProgrammeActivity.class);
                 Bundle b = new Bundle();
                 b.putString("BcId", GlobalConfig.playerObject.getContentId());
@@ -1458,8 +1475,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     String phoneType = intent.getStringExtra("outMessage");
                     Log.e("电话状态",phoneType+"");
                     break;
-                default:
-                    break;
             }
         }
     }
@@ -1504,6 +1519,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                             if (list != null && list.size() > 0 && fList != null) {// 有返回数据并且数据库中有数据
                                 num = -1;
                                 setData(fList, list);
+                                setPullAndLoad(true, true);
                             } else if (list != null && list.size() > 0 && fList == null) {// 有返回数据但数据库中没有数据
                                 if (list.get(0) != null) {
                                     num = 0;
@@ -1511,10 +1527,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                                 } else {
                                     num = -2;
                                 }
+                                setPullAndLoad(true, true);
                             } else if (list != null && list.size() == 0 && fList != null) {// 没有返回数据但数据库中有数据
                                 list.add(fList);
                                 num = -1;
                                 setData(fList, list);
+                                setPullAndLoad(true, false);
                             } else {// 没有任何数据
                                 num = -2;
                                 setPullAndLoad(true, false);

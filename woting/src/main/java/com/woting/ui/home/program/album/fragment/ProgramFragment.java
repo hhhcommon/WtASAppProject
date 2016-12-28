@@ -26,11 +26,13 @@ import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
+import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.model.FileInfo;
@@ -58,7 +60,7 @@ import java.util.List;
  * 作者：xinlong on 2016/11/16 17:40
  * 邮箱：645700751@qq.com
  */
-public class ProgramFragment extends Fragment implements OnClickListener {
+public class ProgramFragment extends Fragment implements OnClickListener, TipView.WhiteViewClick {
     private Context context;
     private FileInfoDao FID;
     private SearchPlayerHistoryDao dbDao;
@@ -75,6 +77,7 @@ public class ProgramFragment extends Fragment implements OnClickListener {
     private LinearLayout lin_quanxuan, lin_status2;
     private XListView lv_album;// 节目列表
     private ListView lv_download;// 下载列表
+    private TipView tipView;// 没有数据、没有网络提示
 
     private TextView tv_quxiao, tv_download, tv_sum, textTotal;
     private ImageView img_download, img_quanxuan;// 下载 全选
@@ -93,6 +96,17 @@ public class ProgramFragment extends Fragment implements OnClickListener {
     private String sequDesc;
 
     @Override
+    public void onWhiteViewClick() {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            dialog = DialogUtils.Dialogph(context, "正在获取数据");
+            send();
+        } else {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
@@ -109,7 +123,8 @@ public class ProgramFragment extends Fragment implements OnClickListener {
                 dialog = DialogUtils.Dialogph(context, "正在获取数据");
                 send();
             } else {
-                ToastUtils.show_short(context, "网络失败，请检查网络");
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_NET);
             }
         }
         return rootView;
@@ -117,6 +132,9 @@ public class ProgramFragment extends Fragment implements OnClickListener {
 
     // 初始化控件
     private void initView(View view) {
+        tipView = (TipView) view.findViewById(R.id.tip_view);
+        tipView.setWhiteClick(this);
+
         lv_album = (XListView) view.findViewById(R.id.lv_album);            // 专辑显示界面
         img_download = (ImageView) view.findViewById(R.id.img_download);
         img_download.setOnClickListener(this);
@@ -143,16 +161,12 @@ public class ProgramFragment extends Fragment implements OnClickListener {
         lv_album.setXListViewListener(new XListView.IXListViewListener() {
             @Override
             public void onRefresh() {
-
             }
 
             @Override
             public void onLoadMore() {
-                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                    dialog = DialogUtils.Dialogph(context, "正在获取数据");
+                if (CommonHelper.checkNetwork(context)) {
                     send();
-                } else {
-                    ToastUtils.show_short(context, "网络失败，请检查网络");
                 }
             }
         });
@@ -292,16 +306,22 @@ public class ProgramFragment extends Fragment implements OnClickListener {
                                 e.printStackTrace();
                             }
                             lv_album.stopLoadMore();
+                            tipView.setVisibility(View.GONE);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            lv_album.stopLoadMore();
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.NO_DATA, "专辑中没有节目\n换个专辑看看吧");
                         }
                     } else  {
                         lv_album.stopLoadMore();
-                        lv_album.setPullLoadEnable(false);
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.NO_DATA, "专辑中没有节目\n换个专辑看看吧");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    lv_album.stopLoadMore();
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
                 }
             }
 
@@ -309,6 +329,8 @@ public class ProgramFragment extends Fragment implements OnClickListener {
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
                 lv_album.stopLoadMore();
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.IS_ERROR);
             }
         });
     }

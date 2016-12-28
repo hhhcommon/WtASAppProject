@@ -117,7 +117,8 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
 				dialog = DialogUtils.Dialogph(context, "正在获取全部喜欢信息");
 				send();
 			} else {
-				ToastUtils.show_always(context, "网络失败，请检查网络");
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_NET);
 			}
 		}
 		return rootView;

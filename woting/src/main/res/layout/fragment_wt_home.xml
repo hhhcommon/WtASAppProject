@@ -1,23 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dinglan_orange"
-    android:orientation="vertical" >
-	<TextView
-		android:id="@+id/tv_main"
-		android:layout_width="match_parent"
-		android:visibility="gone"
-		android:layout_height="24dp" />
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_main"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:visibility="gone"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp" >
+        android:layout_height="48dp">
 
         <LinearLayout
             android:id="@+id/lin_news"
-			android:layout_marginLeft="5dp"
             android:layout_width="45dp"
             android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
             android:gravity="center">
 
             <ImageView
@@ -26,68 +29,72 @@
                 android:src="@mipmap/news"/>
 
         </LinearLayout>
-        
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true">
 
-	        <LinearLayout
-	            android:layout_width="81dp"
-	            android:layout_height="28dp"
-	            android:layout_marginRight="8dp"
-	            android:gravity="center" >
-	
-	            <TextView
-	                android:id="@+id/tv_guid1"
-	                android:layout_width="match_parent"
-	                android:layout_height="match_parent"
-	                android:gravity="center"
-	                android:background="@drawable/color_wt_circle_home_white"
-	                android:text="播 放"
-	                android:textColor="@color/dinglan_orange"
-	                android:textSize="15sp" />
-	        </LinearLayout>
-	
-	        <LinearLayout
-	            android:layout_width="81dp"
-	            android:layout_height="28dp"
-	            android:layout_marginLeft="8dp"
-	            android:gravity="center" >
-	
-	            <TextView
-	                android:id="@+id/tv_guid2"
-	                android:layout_width="match_parent"
-	                android:layout_height="match_parent"
-	                android:gravity="center"
-	                 android:background="@drawable/color_wt_circle_orange"
-	                android:text="节 目"
-	                android:textColor="@color/WHITE"
-	                android:textSize="15sp" />
-	        </LinearLayout>
-	        
+            <LinearLayout
+                android:layout_width="81dp"
+                android:layout_height="28dp"
+                android:layout_marginRight="8dp"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_guid1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/color_wt_circle_home_white"
+                    android:gravity="center"
+                    android:text="播 放"
+                    android:textColor="@color/dinglan_orange"
+                    android:textSize="15sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="81dp"
+                android:layout_height="28dp"
+                android:layout_marginLeft="8dp"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_guid2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/color_wt_circle_orange"
+                    android:gravity="center"
+                    android:text="节 目"
+                    android:textColor="@color/WHITE"
+                    android:textSize="15sp"/>
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/lin_find"
             android:layout_width="45dp"
             android:layout_height="match_parent"
-			android:layout_alignParentRight="true"
-			android:layout_marginRight="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
             android:gravity="center">
 
             <ImageView
                 android:layout_width="19dp"
                 android:layout_height="19dp"
                 android:src="@mipmap/wt_find"/>
+
         </LinearLayout>
-        
+
     </RelativeLayout>
 
-	<android.support.v4.view.ViewPager  
-        android:id="@+id/viewpager"  
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/WHITE"
         android:persistentDrawingCache="animation"/>
+
 </LinearLayout>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/WHITE"
@@ -23,13 +24,14 @@
             <ImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@mipmap/national_fm_normal" />
+                android:background="@mipmap/national_fm_normal"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="国家台" />
+                android:text="国家台"/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -43,13 +45,14 @@
             <ImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@mipmap/local_fm_normal" />
+                android:background="@mipmap/local_fm_normal"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="地方台" />
+                android:text="地方台"/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -63,19 +66,23 @@
             <ImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@mipmap/net_fm_normal" />
+                android:background="@mipmap/net_fm_normal"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="网络台" />
+                android:text="网络台"/>
+
         </LinearLayout>
+
     </LinearLayout>
+
     <TextView
         android:layout_width="match_parent"
-        android:background="@color/text_line_1"
-        android:layout_height="0.5dp" />
+        android:layout_height="0.5dp"
+        android:background="@color/text_line_1"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="34dp"
@@ -97,13 +104,13 @@
                 android:layout_marginLeft="15dp"
                 android:text="北京"
                 android:textColor="@color/wt_login_third"
-                android:textSize="14sp" />
+                android:textSize="14sp"/>
 
             <ImageView
                 android:layout_width="10dp"
                 android:layout_height="14dp"
                 android:layout_marginLeft="7dp"
-                android:src="@mipmap/image_fixed_position" />
+                android:src="@mipmap/image_fixed_position"/>
 
         </LinearLayout>
 
@@ -119,36 +126,30 @@
                 android:layout_height="wrap_content"
                 android:text="更多"
                 android:textColor="@color/wt_login_third"
-                android:textSize="12sp" />
+                android:textSize="12sp"/>
 
             <ImageView
                 android:layout_width="22dp"
                 android:layout_height="16dp"
                 android:layout_marginRight="13dp"
-                android:src="@mipmap/live_more" />
+                android:src="@mipmap/live_more"/>
+
         </LinearLayout>
 
     </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
-        android:background="@color/text_line_1"
-        android:layout_height="0.5dp" />
-
-   <!-- <com.woting.common.widgetui.MyGridView
-        android:id="@+id/gridView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/WHITE"
-        android:numColumns="1"
-        android:scrollbars="none" />-->
+        android:layout_height="0.5dp"
+        android:background="@color/text_line_1"/>
 
     <ListView
         android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/WHITE"
         android:divider="@color/text_line_1"
         android:dividerHeight="0.5dp"
-        android:background="@color/WHITE"
         android:scrollbars="none"/>
+
 </LinearLayout>

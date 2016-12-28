@@ -282,7 +282,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
             setAdapterListener();
         } else {
             tipView.setVisibility(View.VISIBLE);
-            tipView.setTipView(TipView.TipStatus.NO_DATA, "您没有未处理的消息");
+            tipView.setTipView(TipView.TipStatus.NO_DATA, "您没有新的好友消息");
         }
     }
 

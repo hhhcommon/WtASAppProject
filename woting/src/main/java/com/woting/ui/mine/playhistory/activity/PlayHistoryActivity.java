@@ -74,7 +74,6 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
 
     private boolean isDelete = false;
     public static boolean isEdit = true;// 是否为编辑状态
-    
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
@@ -201,7 +200,7 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
         dialogFlag = 0;
     }
 
-    // 设置cursor的宽
+    // 设置 cursor 的宽
     public void initImage() {
         image = (ImageView) findViewById(R.id.cursor);
         LayoutParams lp = image.getLayoutParams();
@@ -220,10 +219,10 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.head_left_btn:    //左上角返回键
+            case R.id.head_left_btn:    // 左上角返回键
                 finish();
                 break;
-            case R.id.clear_empty:        //清空数据
+            case R.id.clear_empty:        // 清空数据
                 if (TotalFragment.isData) {
                     confirmDialog();
                     confirmDialog.show();
@@ -231,7 +230,7 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
                     ToastUtils.show_always(this, "没有历史播放记录");
                 }
                 break;
-            case R.id.open_edit:        //编辑
+            case R.id.open_edit:        // 编辑
                 if (isEdit) {
                     setEdit();
                 } else {
