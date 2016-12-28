@@ -55,6 +55,8 @@ public class DetailsFragment extends Fragment implements OnClickListener {
     private String tag = "DETAILS_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
     private boolean isConcern;
+    private String PersonId;
+    private String ContentPub;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -110,7 +112,11 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                 break;
             case R.id.round_image_head:// 主播详情
             case R.id.text_anchor_name:
-                startActivity(new Intent(context, AnchorDetailsActivity.class));
+                PersonId="46ef848fa9cd4b5e9c20493b01f3a157";
+                Intent intent=new Intent(context, AnchorDetailsActivity.class);
+                intent.putExtra("PersonId",PersonId);
+                intent.putExtra("ContentPub",ContentPub);
+                startActivity(intent);
                 break;
 
         }
@@ -165,6 +171,12 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        try {
+                            ContentPub = arg1.getString("ContentPub");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
                         AlbumActivity.returnResult = 1;
                         if (AlbumActivity.ContentFavorite != null && !AlbumActivity.ContentFavorite.equals("")) {
                             if (AlbumActivity.ContentFavorite.equals("0")) {

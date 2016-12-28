@@ -2,6 +2,9 @@ package com.woting.ui.home.program.album.anchor.activity;
 
 
 import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,12 +22,14 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.album.anchor.adapter.AnchorSequAdapter;
 import com.woting.ui.home.program.album.anchor.model.PersonInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AnchorListActivity extends AppBaseActivity implements View.OnClickListener {
@@ -36,7 +41,7 @@ public class AnchorListActivity extends AppBaseActivity implements View.OnClickL
     private XListView listAnchor;
     private int page=1;
     private boolean isCancelRequest;
-    private List<PersonInfo> MediaInfoList;
+    private List<PersonInfo> MediaInfoList=new ArrayList<>();
     private AnchorSequAdapter adapterMain;
     private int RefreshType=1;
     private String PersonName;
@@ -53,6 +58,8 @@ public class AnchorListActivity extends AppBaseActivity implements View.OnClickL
           findViewById(R.id.head_left_btn).setOnClickListener(this); // 返回
           tv_name=(TextView)findViewById(R.id.head_name_tv);         // 专辑名称
           listAnchor=(XListView)findViewById(R.id.listview_fm);
+          listAnchor.setSelector(new ColorDrawable(Color.TRANSPARENT));
+          listAnchor.setHeaderDividersEnabled(false);
           listAnchor.setXListViewListener(new XListView.IXListViewListener() {
             @Override
             public void onRefresh() {
@@ -112,7 +119,7 @@ public class AnchorListActivity extends AppBaseActivity implements View.OnClickL
         try {
             jsonObject.put("PersonId", PersonId);
             jsonObject.put("Page", String.valueOf(page));
-            jsonObject.put("MediaType","AUDIO");
+            jsonObject.put("MediaType","SEQU");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -137,11 +144,15 @@ public class AnchorListActivity extends AppBaseActivity implements View.OnClickL
                                     String MediaList=result.getString("ResultList");
                                     List<PersonInfo> ResultList = gson.fromJson(MediaList, new TypeToken<List<PersonInfo>>() {}.getType());
                                    if(RefreshType==1){
-                                       if(MediaList!=null){
+                                       if(MediaInfoList!=null){
                                             MediaInfoList.clear();
                                          }
                                        MediaInfoList.addAll(ResultList);
                                        listAnchor.stopRefresh();
+                                       if(MediaInfoList.size()<10){
+                                           listAnchor.setPullLoadEnable(false);
+                                           listAnchor.setPullRefreshEnable(true);
+                                       }
                                    }else{
                                     if(ResultList!=null&& ResultList.size()>0){
                                         MediaInfoList.addAll(ResultList);
@@ -150,7 +161,6 @@ public class AnchorListActivity extends AppBaseActivity implements View.OnClickL
                                             listAnchor.setPullLoadEnable(false);
                                             listAnchor.setPullRefreshEnable(true);
                                         }
-
                                     }else{
                                         listAnchor.stopLoadMore();
                                         listAnchor.setPullLoadEnable(false);
@@ -160,6 +170,7 @@ public class AnchorListActivity extends AppBaseActivity implements View.OnClickL
                                    }
                                     if(adapterMain==null){
                                         adapterMain=new AnchorSequAdapter(context,MediaInfoList);
+                                        listAnchor.setAdapter(adapterMain);
                                     }else{
                                         adapterMain.notifyDataSetChanged();
                                     }
@@ -214,7 +225,11 @@ public class AnchorListActivity extends AppBaseActivity implements View.OnClickL
         listAnchor.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ToastUtils.show_always(context,MediaInfoList.get(position).getContentName());
+             //   ToastUtils.show_always(context,MediaInfoList.get(position-1).getContentName());
+                Intent intent1 = new Intent(context, AlbumActivity.class);
+                intent1.putExtra("type", "main");
+                intent1.putExtra("id",MediaInfoList.get(position-1).getContentId());
+                startActivity(intent1);
             }
         });
     }

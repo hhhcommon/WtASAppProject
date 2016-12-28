@@ -27,6 +27,7 @@ import com.woting.common.widgetui.HeightListView;
 import com.woting.common.widgetui.RoundImageView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.album.anchor.activity.AnchorListActivity;
 import com.woting.ui.home.program.album.anchor.adapter.AnchorMainAdapter;
 import com.woting.ui.home.program.album.anchor.adapter.AnchorSequAdapter;
@@ -74,7 +75,7 @@ public class AnchorDetailsActivity extends AppBaseActivity implements View.OnCli
 
     private void handleIntent() {
          PersonId=this.getIntent().getStringExtra("PersonId");
-         ContentPub=this.getIntent().getStringExtra("ContentPub");
+        ContentPub=this.getIntent().getStringExtra("ContentPub");
         if(!TextUtils.isEmpty(PersonId)){
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                  dialog = DialogUtils.Dialogph(context, "正在获取数据");
@@ -168,7 +169,7 @@ public class AnchorDetailsActivity extends AppBaseActivity implements View.OnCli
                                     MediaInfoList = gson.fromJson(MediaList, new TypeToken<List<PersonInfo>>() {}.getType());
                                     if(MediaInfoList!=null&& MediaInfoList.size()>0){
                                       //listAnchor
-                                       adapterMain=new AnchorMainAdapter(context,MediaInfoList);
+                                        adapterMain=new AnchorMainAdapter(context,MediaInfoList);
                                         listAnchor.setAdapter(adapterMain);
                                         if(MediaInfoList.size()<10){
                                             listAnchor.setPullLoadEnable(false);
@@ -230,7 +231,11 @@ public class AnchorDetailsActivity extends AppBaseActivity implements View.OnCli
         lv_sequ.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ToastUtils.show_always(context,personInfoList.get(position).getContentName());
+             //   ToastUtils.show_always(context,personInfoList.get(position).getContentName());
+                Intent intent1 = new Intent(context, AlbumActivity.class);
+                intent1.putExtra("type", "main");
+                intent1.putExtra("id", personInfoList.get(position).getContentId());
+                startActivity(intent1);
             }
         });
         //跳到单体
@@ -238,6 +243,47 @@ public class AnchorDetailsActivity extends AppBaseActivity implements View.OnCli
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ToastUtils.show_always(context,MediaInfoList.get(position-2).getContentName());
+             /*   String playername = MediaInfoList.get(position - 2).getContentName();
+                String playerimage = MediaInfoList.get(position - 2).getContentImg();
+                String playerurl = MediaInfoList.get(position - 2).getContentPlay();
+                String playerurI = MediaInfoList.get(position - 2).getContentURI();
+                String playermediatype = MediaInfoList.get(position - 2).getMediaType();
+                String playerContentShareUrl = MediaInfoList.get(position - 2).getContentShareURL();
+                String plaplayeralltime =MediaInfoList.get(position - 2).getContentTimes();
+                String playerintime = "0";
+                String playercontentdesc = newList.get(position - 2).getContentDescn();
+                String playernum = newList.get(position - 2).getPlayCount();
+                String playerzantype = "0";
+                String playerfrom = newList.get(position - 2).getContentPub();
+                String playerfromid = "";
+                String playerfromurl = "";
+                String playeraddtime = Long.toString(System.currentTimeMillis());
+                String bjuserid = CommonUtils.getUserId(context);
+                String ContentFavorite = newList.get(position - 2).getContentFavorite();
+                String ContentId = newList.get(position - 2).getContentId();
+                String localurl = newList.get(position - 2).getLocalurl();
+
+                String sequName = newList.get(position - 2).getSequName();
+                String sequId = newList.get(position - 2).getSequId();
+                String sequDesc = newList.get(position - 2).getSequDesc();
+                String sequImg = newList.get(position - 2).getSequImg();
+                String ContentPlayType= newList.get(position-2).getContentPlayType();
+
+                //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+                PlayerHistory history = new PlayerHistory(
+                        playername, playerimage, playerurl, playerurI, playermediatype,
+                        plaplayeralltime, playerintime, playercontentdesc, playernum,
+                        playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playerContentShareUrl,
+                        ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg,ContentPlayType);
+                dbDao.deleteHistory(playerurl);
+                dbDao.addHistory(history);
+                HomeActivity.UpdateViewPager();
+                PlayerFragment.TextPage=1;
+                Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                Bundle bundle1=new Bundle();
+                bundle1.putString("text",newList.get(position - 2).getContentName());
+                push.putExtras(bundle1);
+                context.sendBroadcast(push);*/
             }
         });
 
@@ -354,10 +400,11 @@ public class AnchorDetailsActivity extends AppBaseActivity implements View.OnCli
         listAnchor.setXListViewListener(new XListView.IXListViewListener() {
             @Override
             public void onRefresh() {
-                page=1;
+
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                     dialog = DialogUtils.Dialogph(context, "正在获取数据");
                     listAnchor.stopRefresh();
+                    page=1;
                     send();
                 } else {
                     ToastUtils.show_short(context, "网络失败，请检查网络");
@@ -366,10 +413,10 @@ public class AnchorDetailsActivity extends AppBaseActivity implements View.OnCli
 
             @Override
             public void onLoadMore() {
-                page++;
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                     dialog = DialogUtils.Dialogph(context, "正在获取数据");
                     listAnchor.stopLoadMore();
+                    page++;
                     getMediaContents();
                 } else {
                     ToastUtils.show_short(context, "网络失败，请检查网络");
