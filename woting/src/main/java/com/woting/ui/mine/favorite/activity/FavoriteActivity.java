@@ -394,7 +394,11 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
             tv_radio.setTextColor(context.getResources().getColor(R.color.group_item_text2));
             tv_tts.setTextColor(context.getResources().getColor(R.color.group_item_text2));
             tv_bianji.setVisibility(View.GONE);
-            tv_qingkong.setVisibility(View.VISIBLE);
+            if(TotalFragment.isData) {
+                tv_qingkong.setVisibility(View.VISIBLE);
+            } else {
+                tv_qingkong.setVisibility(View.GONE);
+            }
         } else if (index == 1) {
             tv_total.setTextColor(context.getResources().getColor(R.color.group_item_text2));
             tv_sequ.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
@@ -402,7 +406,11 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
             tv_radio.setTextColor(context.getResources().getColor(R.color.group_item_text2));
             tv_tts.setTextColor(context.getResources().getColor(R.color.group_item_text2));
             tv_qingkong.setVisibility(View.GONE);
-            tv_bianji.setVisibility(View.VISIBLE);
+            if(SequFragment.isData) {
+                tv_bianji.setVisibility(View.VISIBLE);
+            } else{
+                tv_bianji.setVisibility(View.GONE);
+            }
         } else if (index == 2) {
             tv_total.setTextColor(context.getResources().getColor(R.color.group_item_text2));
             tv_sequ.setTextColor(context.getResources().getColor(R.color.group_item_text2));
@@ -410,7 +418,11 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
             tv_radio.setTextColor(context.getResources().getColor(R.color.group_item_text2));
             tv_tts.setTextColor(context.getResources().getColor(R.color.group_item_text2));
             tv_qingkong.setVisibility(View.GONE);
-            tv_bianji.setVisibility(View.VISIBLE);
+            if(SoundFragment.isData) {
+                tv_bianji.setVisibility(View.VISIBLE);
+            } else{
+                tv_bianji.setVisibility(View.GONE);
+            }
         } else if (index == 3) {
             tv_total.setTextColor(context.getResources().getColor(R.color.group_item_text2));
             tv_sequ.setTextColor(context.getResources().getColor(R.color.group_item_text2));
@@ -418,7 +430,11 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
             tv_radio.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
             tv_tts.setTextColor(context.getResources().getColor(R.color.group_item_text2));
             tv_qingkong.setVisibility(View.GONE);
-            tv_bianji.setVisibility(View.VISIBLE);
+            if(RadioFragment.isData) {
+                tv_bianji.setVisibility(View.VISIBLE);
+            } else {
+                tv_bianji.setVisibility(View.GONE);
+            }
         } else if (index == 4) {
             tv_total.setTextColor(context.getResources().getColor(R.color.group_item_text2));
             tv_sequ.setTextColor(context.getResources().getColor(R.color.group_item_text2));
@@ -426,7 +442,25 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
             tv_radio.setTextColor(context.getResources().getColor(R.color.group_item_text2));
             tv_tts.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
             tv_qingkong.setVisibility(View.GONE);
+//            tv_bianji.setVisibility(View.VISIBLE);
+        }
+    }
+
+    // 设置清空可见或隐藏
+    public void setQkVisibleOrHide(boolean visible) {
+        if(visible) {
+            tv_qingkong.setVisibility(View.VISIBLE);
+        } else {
+            tv_qingkong.setVisibility(View.GONE);
+        }
+    }
+
+    // 设置编辑可见或隐藏
+    public void setBjVisibleOrHide(boolean visible) {
+        if(visible) {
             tv_bianji.setVisibility(View.VISIBLE);
+        } else {
+            tv_bianji.setVisibility(View.GONE);
         }
     }
 

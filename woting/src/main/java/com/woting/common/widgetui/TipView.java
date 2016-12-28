@@ -135,7 +135,7 @@ public class TipView extends RelativeLayout {
                 break;
             case NO_LOGIN:// 没有登录
                 if(tipString != null) textTip.setText(tipString);
-                else textTip.setText("想使用享讲功能，快去登录呦");
+                else textTip.setText("想使用享讲功能，快去登录呦\n");
                 textTip.setGravity(Gravity.CENTER);
                 textTip.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(R.mipmap.wt_image_tip_no_login), null, null);
                 break;

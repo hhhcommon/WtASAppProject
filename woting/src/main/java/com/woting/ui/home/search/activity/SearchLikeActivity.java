@@ -277,6 +277,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
         mPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager(), fragmentList));
         mPager.setOnPageChangeListener(new MyOnPageChangeListener());// 页面变化时的监听器
         mPager.setCurrentItem(0);// 设置当前显示标签页为第
+        mPager.setOffscreenPageLimit(5);
     }
 
     private void setView() {
