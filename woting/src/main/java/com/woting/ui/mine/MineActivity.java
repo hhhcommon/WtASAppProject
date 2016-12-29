@@ -86,14 +86,14 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     private final int TO_GALLERY = 1;           // 标识 打开系统图库
     private final int TO_CAMERA = 2;            // 标识 打开系统照相机
     private final int PHOTO_REQUEST_CUT = 7;    // 标识 跳转到图片裁剪界面
-    private final int UPDATE_USER = 3;            // 标识 跳转到修改个人信息界面
+    private final int UPDATE_USER = 3;          // 标识 跳转到修改个人信息界面
     private int imageNum;
 
     private String returnType;
     private String miniUri;
     private String isLogin;                     // 是否登录
     private String userName;                    // 用户名
-    private String userId;                      // 用户Id
+    private String userId;                      // 用户 Id
     private String outputFilePath;
     private String filePath;
     private String url;                         // 完整用户头像地址
@@ -257,9 +257,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                     imageToggle.setImageBitmap(bitmap);
                     et.putString(StringConstant.WIFISET, "true");
                 }
-                if (et.commit()) {
-                    Log.v("commit", "数据 commit 失败!");
-                }
+                if (et.commit()) Log.v("commit", "数据 commit 失败!");
                 break;
             case R.id.lin_xiugai:           // 修改个人资料
                 startActivityForResult(new Intent(context, UpdatePersonActivity.class), UPDATE_USER);
@@ -341,19 +339,19 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             viewLine.setVisibility(View.GONE);
 
             userName = sharedPreferences.getString(StringConstant.USERNAME, "");// 用户名
-            String Name = sharedPreferences.getString(StringConstant.NICK_NAME, "");//昵称
+            String name = sharedPreferences.getString(StringConstant.NICK_NAME, "");// 昵称
 
             userId = sharedPreferences.getString(StringConstant.USERID, "");    // 用户 ID
             url = sharedPreferences.getString(StringConstant.IMAGEURL, "");     // 用户头像
             userNum = sharedPreferences.getString(StringConstant.USER_NUM, "");// 用户号
             userSign = sharedPreferences.getString(StringConstant.USER_SIGN, "");// 签名
             region = sharedPreferences.getString(StringConstant.REGION, "");// 区域
-            if(Name!=null&&!Name.trim().equals("")){
-                textUserName.setText(Name);
-            }else{
-                if(userName!=null&&!userName.trim().equals("")){
+            if (!name.trim().equals("")) {
+                textUserName.setText(name);
+            } else {
+                if (userName != null && !userName.trim().equals("")) {
                     textUserName.setText(userName);
-                }else{
+                } else {
                     textUserName.setText("未知");
                 }
             }

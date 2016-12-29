@@ -2,6 +2,7 @@ package com.woting.common.manager;
 
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
@@ -56,9 +58,13 @@ public class UpdateManager  {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case DOWN_UPDATE:
-                    mProgress.setProgress(progress);
+//                    mProgress.setProgress(progress);
+                    textProgress.setText("正在更新版本 " + progress + "%");
+                    progressBar.setProgress(progress);
                     break;
                 case DOWN_OVER:
+//                    installApk();
+                    pd.dismiss();
                     installApk();
                     break;
             }
@@ -111,24 +117,30 @@ public class UpdateManager  {
         noticeDialog.show();
     }
 
-    private void showDownloadDialog() {
-        Builder builder = new Builder(mContext);
-        builder.setTitle("正在更新版本");
-        final LayoutInflater inflater = LayoutInflater.from(mContext);
-        View v = inflater.inflate(R.layout.upgrade_progress, null);
-        mProgress = (ProgressBar) v.findViewById(R.id.progress);
-        builder.setView(v);
-        builder.setCancelable(false);
-//		builder.setNegativeButton("取消", new OnClickListener() {
-//			@Override
-//			public void onClick(DialogInterface dialog, int which) {
-//				dialog.dismiss();
-//				interceptFlag = true;
-//			}
-//		});
+    private ProgressDialog pd;
+    private TextView textProgress;
+    private ProgressBar progressBar;
 
-        downloadDialog = builder.create();
-        downloadDialog.show();
+    private void showDownloadDialog() {
+//        Builder builder = new Builder(mContext);
+//        builder.setTitle("正在更新版本");
+//        final LayoutInflater inflater = LayoutInflater.from(mContext);
+//        View v = inflater.inflate(R.layout.upgrade_progress, null);
+//        mProgress = (ProgressBar) v.findViewById(R.id.progress);
+//        builder.setView(v);
+//        builder.setCancelable(false);
+//        downloadDialog = builder.create();
+//        downloadDialog.show();
+//        downloadApk();
+
+        View progressView = LayoutInflater.from(mContext).inflate(R.layout.progress_dialog_view, null);
+        textProgress = (TextView) progressView.findViewById(R.id.text_progress);
+        progressBar = (ProgressBar) progressView.findViewById(R.id.pb_progressbar);
+        pd = new ProgressDialog(mContext);
+        pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        pd.setCancelable(false);
+        pd.show();
+        pd.setContentView(progressView);
         downloadApk();
     }
 
