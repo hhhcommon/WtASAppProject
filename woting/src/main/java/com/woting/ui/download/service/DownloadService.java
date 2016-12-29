@@ -165,7 +165,7 @@ public class DownloadService extends Service {
 
 			if (BroadcastConstants.ACTION_FINISHED_NO_DOWNLOADVIEW.equals(intent.getAction())) {
 				FileInfo fileInfo = (FileInfo) intent.getSerializableExtra("fileInfo");
-				FID.updataFileInfo(fileInfo.getFileName());
+				//FID.updataFileInfo(fileInfo.getFileName());
 				fileInfoList=FID.queryFileInfo("false", CommonUtils.getUserId(context));
 				if (fileInfoList != null && fileInfoList.size() > 0) {
 					fileInfoList.get(0).setDownloadtype(1);

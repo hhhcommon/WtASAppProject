@@ -29,6 +29,7 @@ import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.downloadlist.activity.DownLoadListActivity;
 import com.woting.ui.download.model.FileInfo;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +56,7 @@ public class DownLoadCompleted extends Fragment implements OnClickListener {
     private String userId;
     private boolean flag;// 删除按钮的处理框
     private boolean allCheckFlag;// 全选flag
+    private List<FileInfo> f;
 
     private void initDao() {
         FID = new FileInfoDao(context);
@@ -97,7 +99,7 @@ public class DownLoadCompleted extends Fragment implements OnClickListener {
         linearAllCheck.setVisibility(View.INVISIBLE);
         imageAllCheck.setImageResource(R.mipmap.wt_group_nochecked);
         allCheckFlag = false;
-        List<FileInfo> f = FID.queryFileInfo("true", userId);
+        f = FID.queryFileInfo("true", userId);
         if (f.size() > 0) {
             tipView.setVisibility(View.GONE);
             fileSequList = FID.GroupFileInfoAll(userId);
@@ -215,9 +217,12 @@ public class DownLoadCompleted extends Fragment implements OnClickListener {
                 context.startActivity(intent);
                 break;
             case R.id.tv_confirm:
+                List<String> sequIdList=new ArrayList<>();
                 for (int i = 0; i < fileDellList.size(); i++) {
                     FID.deleteSequ(fileDellList.get(i).getSequname(), userId);
+                    sequIdList.add(fileDellList.get(i).getSequid());
                 }
+                deleteLocal(sequIdList);
                 setDownLoadSource();// 重新适配界面操作
                 allCheckFlag = false;// 全选flag
                 flag = false;
@@ -227,6 +232,30 @@ public class DownLoadCompleted extends Fragment implements OnClickListener {
                 break;
         }
     }
+
+    private void deleteLocal(List<String> sequIdList) {
+        try{
+            for(int i=0;i<sequIdList.size();i++){
+                String Name=sequIdList.get(i);
+                for(int j=0;j<f.size();j++){
+                 if(f.get(j).getSequid()!=null&&f.get(j).getSequid().equals(sequIdList.get(i))){
+                     String adada=f.get(j).getSequid();
+                     if(f.get(j).getLocalurl()!=null){
+                         File file=new File(f.get(j).getLocalurl());
+                         if(file.exists()){
+                            file.delete();
+                         }
+                     }
+                 }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+
+        }
+
+    }
+
 
     // 删除对话框
     private void deleteConfirmDialog() {
