@@ -305,6 +305,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             IntentFilter filter = new IntentFilter();
             filter.addAction(BroadcastConstants.PLAYERVOICE);
             filter.addAction(BroadcastConstants.PUSH_MUSIC);
+            filter.addAction(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
 
             // 下载完成更新 LocalUrl
             filter.addAction(BroadcastConstants.ACTION_FINISHED);
@@ -850,7 +851,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         }
     }
 
-    protected void setData(LanguageSearchInside fList, ArrayList<LanguageSearchInside> list) {
+    protected void setData(LanguageSearchInside fList, List<LanguageSearchInside> list) {
         // 如果数据库里边的数据不是空的，在 headView 设置该数据
         GlobalConfig.playerObject = fList;
         resetHeadView();
@@ -886,7 +887,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         mListView.setAdapter(adapter = new PlayerListAdapter(context, allList));
     }
 
-    protected void setDataForNoList(ArrayList<LanguageSearchInside> list) {
+    protected void setDataForNoList(List<LanguageSearchInside> list) {
         GlobalConfig.playerObject = list.get(0);
         resetHeadView();
         mSeekBarStartTime.setText("00:00:00");
@@ -1295,12 +1296,20 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 break;
             case R.id.tv_cancel:// 取消 点击隐藏语音对话框
                 linChoseClose(mViewVoice);
+                if(mCloseVoiceRunnable != null) {
+                    mUIHandler.removeCallbacks(mCloseVoiceRunnable);
+                    mVoiceTextSpeakStatus.setText("请按住讲话");
+                }
                 break;
             case R.id.lin_voicesearch:// 语音搜索框
                 linChoseOpen(mViewVoice);
                 break;
             case R.id.view__voice_other:
                 linChoseClose(mViewVoice);
+                if(mCloseVoiceRunnable != null) {
+                    mUIHandler.removeCallbacks(mCloseVoiceRunnable);
+                    mVoiceTextSpeakStatus.setText("请按住讲话");
+                }
                 break;
             case R.id.tv_share:// 分享
                 shareDialog.show();
@@ -1420,7 +1429,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                         timerService = (int) (duration - currPosition);
                         if (mPlayer.isPlaying()) mSeekBar.setProgress((int) currPosition);
 
-                        mSearchHistoryDao.updatePlayerInTime(GlobalConfig.playerObject.getContentPlay(), currPosition, duration);
+                        if((duration - currPosition) / 1000 > 5) {
+                            mSearchHistoryDao.updatePlayerInTime(GlobalConfig.playerObject.getContentPlay(), currPosition, duration);
+                        } else {
+                            mSearchHistoryDao.updatePlayerInTime(GlobalConfig.playerObject.getContentPlay(), 0, duration);
+                        }
                     } else {
                         int _currPosition = TimeUtils.getTime(System.currentTimeMillis());
                         int _duration = 24 * 60 * 60;
@@ -1516,6 +1529,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         @Override
         public void run() {
             linChoseClose(mViewVoice);// 2秒后隐藏界面
+            mVoiceTextSpeakStatus.setText("请按住讲话");
         }
     };
 
@@ -1545,15 +1559,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     if (ReturnType.equals("1001")) {
                         page++;
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        ArrayList<LanguageSearchInside> list = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<LanguageSearchInside>>() {}.getType());
-                        int index = 0;
-                        while (index < list.size()) {
-                            if(list.get(index).getContentPlay() == null || list.get(index).getContentPlay().trim().equals("")) {
-                                list.remove(index);
-                            } else {
-                                index++;
-                            }
-                        }
+                        List<LanguageSearchInside> list = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<LanguageSearchInside>>() {}.getType());
+                        list = clearContentPlayNull(list);
                         if (refreshType == 0) {
                             LanguageSearchInside fList = getDaoList(context);// 得到数据库里边的第一条数据
                             if (list.size() > 0 && fList != null) {// 有返回数据并且数据库中有数据
@@ -1581,12 +1588,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                         } else if (refreshType == 1) {// 下拉刷新
                             if (allList.size() > 0) {
                                 for (int i = 0, size = allList.size(); i < size; i++) {
-                                    contentUrlList.add(allList.get(i).getContentPlay());
+                                    contentUrlList.add(allList.get(i).getContentId());
                                 }
                             }
                             if (list.size() > 0) {
                                 for (int i = 0, size = list.size(); i < size; i++) {
-                                    if (!contentUrlList.contains(list.get(i).getContentPlay())) {
+                                    if (!contentUrlList.contains(list.get(i).getContentId())) {
                                         allList.add(0, list.get(i));
                                     }
                                 }
@@ -1811,8 +1818,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     try {
-                        LanguageSearchInside lists = new Gson().fromJson(MainList, new TypeToken<LanguageSearchInside>() {
-                        }.getType());
+                        LanguageSearchInside lists = new Gson().fromJson(MainList, new TypeToken<LanguageSearchInside>() {}.getType());
                         String ContentURI = lists.getContentURI();
                         Log.e("ContentURI", ContentURI + "");
                         if (ContentURI != null && ContentURI.trim().length() > 0) {
@@ -1901,14 +1907,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     try {
                         LanguageSearch lists = new Gson().fromJson(result.getString("ResultList"), new TypeToken<LanguageSearch>() {}.getType());
                         list = lists.getList();
-                        int index = 0;
-                        while (index < list.size()) {
-                            if(list.get(index).getContentPlay() == null || list.get(index).getContentPlay().trim().equals("")) {
-                                list.remove(index);
-                            } else {
-                                index++;
-                            }
-                        }
+                        list = clearContentPlayNull(list);
                     }catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1923,10 +1922,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                                 allList.addAll(list);
                             } else if (refreshType == 1) {// 刷新
                                 for (int i = 0, size = allList.size(); i < size; i++) {
-                                    contentUrlList.add(allList.get(i).getContentPlay());
+                                    contentUrlList.add(allList.get(i).getContentId());
                                 }
                                 for (int i = 0, size = list.size(); i < size; i++) {
-                                    if (!contentUrlList.contains(list.get(i).getContentPlay())) {
+                                    if (!contentUrlList.contains(list.get(i).getContentId())) {
                                         allList.add(0, list.get(i));
                                     }
                                 }
@@ -1980,14 +1979,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     if (ReturnType.equals("1001")) {
                         LanguageSearch lists = new Gson().fromJson(result.getString("ResultList"), new TypeToken<LanguageSearch>() {}.getType());
                         List<LanguageSearchInside> list = lists.getList();
-                        int index = 0;
-                        while (index < list.size()) {
-                            if(list.get(index).getContentPlay() == null || list.get(index).getContentPlay().trim().equals("")) {
-                                list.remove(index);
-                            } else {
-                                index++;
-                            }
-                        }
+                        list = clearContentPlayNull(list);
                         if (list.size() != 0) {
                             if (voicePage == 1) {
                                 num = 0;
@@ -1997,10 +1989,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                                 itemPlay(0);
                             } else if (refreshType == 1) {
                                 for (int i = 0, size = allList.size(); i < size; i++) {
-                                    contentUrlList.add(allList.get(i).getContentURI());
+                                    contentUrlList.add(allList.get(i).getContentId());
                                 }
                                 for (int i = 0, size = list.size(); i < size; i++) {
-                                    if (!contentUrlList.contains(list.get(i).getContentURI())) {
+                                    if (!contentUrlList.contains(list.get(i).getContentId())) {
                                         allList.add(0, list.get(i));
                                     }
                                 }
@@ -2065,5 +2057,23 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         HashMap<String, File> cacheMap = BSApplication.getKSYProxy().getCachedFileList();
         File cacheFile = cacheMap.get(url);
         return cacheFile != null && cacheFile.length() > 0;
+    }
+
+    // 去除 ContentPlay == null 的数据
+    private List<LanguageSearchInside> clearContentPlayNull(List<LanguageSearchInside> list) {
+        int index = 0;
+        while (index < list.size()) {
+            if(list.get(index).getMediaType().equals("TTS")) {
+                index++;
+            } else {
+                if(list.get(index).getContentPlay() == null || list.get(index).getContentPlay().trim().equals("")
+                        || list.get(index).getContentPlay().trim().toUpperCase().equals("NULL")) {
+                    list.remove(index);
+                } else {
+                    index++;
+                }
+            }
+        }
+        return list;
     }
 }
