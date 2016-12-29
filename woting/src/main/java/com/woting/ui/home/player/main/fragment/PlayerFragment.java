@@ -562,12 +562,17 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     // 播放下一首
     public static void playNext() {
         if (allList != null && allList.size() > 0) {
-            if (num + 1 < allList.size()) {
-                num = num + 1;
-            } else {
-                num = 0;
+            if(allList.size() == 1) {// 列表只有一条数据 循环播放
+                mPlayer.startPlay(playType, GlobalConfig.playerObject.getContentPlay(), GlobalConfig.playerObject.getLocalurl());
+                mUIHandler.sendEmptyMessage(PLAY);
+            } else {// 如果不止一条数据则往下播放
+                if (num + 1 < allList.size()) {
+                    num = num + 1;
+                } else {
+                    num = 0;
+                }
+                itemPlay(num);
             }
-            itemPlay(num);
         }
     }
 
