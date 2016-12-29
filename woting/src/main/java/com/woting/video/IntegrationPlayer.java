@@ -142,6 +142,7 @@ public class IntegrationPlayer   {
             mVlcPlayer.play(httpUrl);
         } else {
             mVlcPlayer.play(localUrl);
+            Log.i("TAG", "vlcPlay: localUrl -- > > " + localUrl);
         }
         // 从上次停止处开始播放
         if (GlobalConfig.playerObject != null && GlobalConfig.playerObject.getMediaType().equals("AUDIO")) {
