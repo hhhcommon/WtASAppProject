@@ -133,6 +133,7 @@ public class DownloadTask{
 					Log.i("DownloadTask", "下载完毕");
 	                //向fragment发送完成消息
 					intent.putExtra("fileInfo",mFileInfo);
+					FID.updataFileInfo(mFileInfo.getFileName());
 					if (DownloadActivity.isVisible==true){
 						intent.setAction(BroadcastConstants.ACTION_FINISHED);
 						mContext.sendBroadcast(intent);

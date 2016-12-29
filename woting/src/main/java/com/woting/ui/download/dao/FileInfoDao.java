@@ -60,6 +60,7 @@ public class FileInfoDao {
 				String contentDescn=cursor.getString(cursor.getColumnIndex("contentdescn"));
 				String playcount=cursor.getString(cursor.getColumnIndex("playcount"));
 				String contentplaytype=cursor.getString(cursor.getColumnIndex("contentplaytype"));
+				String LocalUrl=cursor.getString(cursor.getColumnIndex("localurl"));
 				// 把每个对象都放到history对象里
 				FileInfo h = new FileInfo(url, filename,id,seqimageurl);
 				/*	h.setId(id);*/
@@ -79,6 +80,7 @@ public class FileInfoDao {
 				h.setContentDescn(contentDescn);
 				h.setPlayCount(playcount);
 				h.setContentPlayType(contentplaytype);
+				h.setLocalurl(LocalUrl);
 				/*	h.setFinished(finished);*/
 				// 往m里储存每个history对象
 				m.add(h);
@@ -126,6 +128,7 @@ public class FileInfoDao {
 				String contentDescn=cursor.getString(cursor.getColumnIndex("contentdescn"));
 				String playcount=cursor.getString(cursor.getColumnIndex("playcount"));
 				String contentplaytype=cursor.getString(cursor.getColumnIndex("contentplaytype"));
+				String LocalUrl=cursor.getString(cursor.getColumnIndex("localurl"));
 				// 把每个对象都放到history对象里
 				FileInfo h = new FileInfo();
 				h.setLocalurl(localurl);
@@ -142,6 +145,7 @@ public class FileInfoDao {
 				h.setContentDescn(contentDescn);
 				h.setPlayCount(playcount);
 				h.setContentPlayType(contentplaytype);
+				h.setLocalurl(LocalUrl);
 				// 往m里储存每个history对象
 				m.add(h);
 			}

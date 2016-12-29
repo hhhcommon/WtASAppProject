@@ -159,11 +159,22 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
             public void onClick(View v) {
                 confirmDialog1.dismiss();
                 FID.deleteFileInfo(fileInfoList.get(position).getLocalurl(), CommonUtils.getUserId(context));
+                try {
+                    File file = new File(fileInfoList.get(position).getLocalurl());
+                    if(file.exists()){
+                        file.delete();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Log.e("本地文件删除失败---",""+fileInfoList.get(position).getLocalurl()+"失败");
+                }
                 setListValue();
                 sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));
             }
         });
     }
+
+
 
     private void setListValue() {
         int sum = 0;

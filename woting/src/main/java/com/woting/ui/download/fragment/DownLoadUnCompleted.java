@@ -281,7 +281,7 @@ public class DownLoadUnCompleted extends Fragment {
                 // 下载结束
                 FileInfo fileInfo = (FileInfo) intent.getSerializableExtra("fileInfo");
                 ToastUtils.show_short(contexts, fileInfo.getFileName() + "已经下载完毕");
-                FID.updataFileInfo(fileInfo.getFileName());
+                //FID.updataFileInfo(fileInfo.getFileName());
                 context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));// 发送更新界面数据广播
                 if (dwType) {
                     fileInfoList = FID.queryFileInfo("false", userId);// 查询表中未完成的任务
