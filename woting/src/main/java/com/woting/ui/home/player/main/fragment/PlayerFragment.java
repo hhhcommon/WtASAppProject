@@ -1896,6 +1896,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     try {
                         LanguageSearch lists = new Gson().fromJson(result.getString("ResultList"), new TypeToken<LanguageSearch>() {}.getType());
                         list = lists.getList();
+                        for(int i=0; i<list.size(); i++) {
+                            if(list.get(i).getContentPlay() == null) list.remove(i);
+                        }
                     }catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1967,6 +1970,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     if (ReturnType.equals("1001")) {
                         LanguageSearch lists = new Gson().fromJson(result.getString("ResultList"), new TypeToken<LanguageSearch>() {}.getType());
                         List<LanguageSearchInside> list = lists.getList();
+                        for(int i=0; i<list.size(); i++) {
+                            if(list.get(i).getContentPlay() == null) list.remove(i);
+                        }
                         if (list.size() != 0) {
                             if (voicePage == 1) {
                                 num = 0;
