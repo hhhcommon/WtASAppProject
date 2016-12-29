@@ -8,6 +8,8 @@ import android.util.Log;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.kingsoft.media.httpcache.KSYProxyService;
+import com.kingsoft.media.httpcache.OnErrorListener;
+import com.kingsoft.media.httpcache.stats.OnLogEventListener;
 import com.umeng.socialize.PlatformConfig;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.config.SocketClientConfig;
@@ -26,7 +28,7 @@ import java.util.List;
  * 2016/12/28 11:21
  * 邮箱：645700751@qq.com
  */
-public class BSApplication extends Application  {
+public class BSApplication extends Application implements OnErrorListener,OnLogEventListener {
 
     private static RequestQueue queues;
     private static Context instance;
@@ -81,9 +83,12 @@ public class BSApplication extends Application  {
 
     // 初始化播放缓存
     private static void initCache() {
+        proxyService.registerErrorListener((OnErrorListener) instance);
+        proxyService.registerLogEventListener((OnLogEventListener) instance);
         File file = new File(ResourceUtil.getLocalUrlForKsy());// 设置缓存目录
         if (!file.exists()) if (!file.mkdir()) Log.v("TAG", "KSYProxy MkDir Error");
         proxyService.setCacheRoot(file);
+//        proxyService.setMaxFilesCount(500);
         proxyService.setMaxCacheSize(500 * 1024 * 1024);// 缓存大小 500MB
         proxyService.startServer();
     }
@@ -107,9 +112,10 @@ public class BSApplication extends Application  {
     @Override
     public void onTerminate() {
         super.onTerminate();
-//        if (proxyService != null) {
-//            proxyService.shutDownServer();
-//        }
+        if (proxyService != null) {
+            proxyService.unregisterErrorListener(this);
+            proxyService.shutDownServer();
+        }
     }
 
     //第三方使用的相关方法
@@ -124,4 +130,13 @@ public class BSApplication extends Application  {
         return queues;
     }
 
+    @Override
+    public void OnError(int i) {
+        Log.e("缓存播放路径333","======"+i);
+    }
+
+    @Override
+    public void onLogEvent(String log) {
+        Log.e("缓存播放路径444","======"+log);
+    }
 }

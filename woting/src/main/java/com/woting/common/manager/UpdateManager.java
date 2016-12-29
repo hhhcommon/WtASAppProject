@@ -141,7 +141,7 @@ public class UpdateManager  {
                 conn.connect();
                 int length = conn.getContentLength();
                 InputStream is = conn.getInputStream();
-                //////////////
+                // 以下为测试代码
                 String state = Environment.getExternalStorageState();
                 if (!state.equals(Environment.MEDIA_MOUNTED)) {
                     Log.i("update1", "SD Card is not mounted,It is  " + state + ".");
@@ -150,7 +150,7 @@ public class UpdateManager  {
                 if (!directory.exists() && !directory.mkdirs()) {
                     Log.i("update2", "Path to file could not be created");
                 }
-                ///////
+                // 以上为测试代码
                 File file = new File(savePath);
                 if (!file.exists()) {
                     file.mkdir();

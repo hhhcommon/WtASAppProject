@@ -9,6 +9,8 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.cloud.SynthesizerListener;
+import com.kingsoft.media.httpcache.OnErrorListener;
+import com.kingsoft.media.httpcache.stats.OnLogEventListener;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 
@@ -17,7 +19,7 @@ import com.woting.common.config.GlobalConfig;
  * 作者：xinlong on 2016/11/29 15:54
  * 邮箱：645700751@qq.com
  */
-public class IntegrationPlayer  {
+public class IntegrationPlayer   {
     private Context mContext;
 
     private static IntegrationPlayer mPlayer;
@@ -83,8 +85,6 @@ public class IntegrationPlayer  {
         if (mTtsPlayer == null) mTtsPlayer = TtsPlayer.getInstance(context);
     }
 
-
-
     /**
      * 播放
      */
@@ -135,6 +135,7 @@ public class IntegrationPlayer  {
             if (GlobalConfig.playerObject != null && GlobalConfig.playerObject.getMediaType() != null) {
                 if (GlobalConfig.playerObject.getMediaType().equals("AUDIO")) {
                     httpUrl = BSApplication.getKSYProxy().getProxyUrl(httpUrl);
+                    Log.e("缓存播放路径","路径：=="+ httpUrl);
                 }
             }
             if (mVlcPlayer.isPlaying()) mVlcPlayer.stop();
@@ -322,4 +323,6 @@ public class IntegrationPlayer  {
     public interface CompletedLKLis {
         void onCompleted();// 播放完成回调
     }
+
+
 }

@@ -85,9 +85,10 @@ public class GlobalConfig {
     public static final String imageurl = baseUrl + "wt/";// 服务器
 
     /**
+     * "http://www.wotingfm.com/download/WoTing.apk"
      * apk下载默认路径
      */
-    public static String apkUrl = "http://182.92.175.134/download/WoTing.apk";
+    public static String apkUrl = "http://www.wotingfm.com/download/WoTing.apk";
     /**
      * 公共部分
      */
@@ -293,6 +294,6 @@ public class GlobalConfig {
     // 获取主播信息
     public static final String getPersonInfo = baseUrl + "wt/person/getPersonInfo.do";
     // 新增主播内容
-    public static final String getPersonContents =baseUrl + "wt/person/getPersonContents.do";
+    public static final String getPersonContents = baseUrl + "wt/person/getPersonContents.do";
 
 }
