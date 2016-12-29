@@ -753,7 +753,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             if (type != null && type.equals("AUDIO")) {// 可以下载
                 if(fileInfoList != null && fileInfoList.size() > 0) {
                     for(int i=0, size=fileInfoList.size(); i<size; i++) {
-                        if(GlobalConfig.playerObject.getContentPlay().equals(fileInfoList.get(i).getUrl())) {
+                        if(GlobalConfig.playerObject.getContentPlay() != null && GlobalConfig.playerObject.getContentPlay().equals(fileInfoList.get(i).getUrl())) {
                             GlobalConfig.playerObject.setLocalurl(fileInfoList.get(i).getLocalurl());
                             Log.v("TAG", "fileInfoList: Localurl  -- > " + fileInfoList.get(i).getLocalurl());
                         }
@@ -1546,8 +1546,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                         page++;
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         ArrayList<LanguageSearchInside> list = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<LanguageSearchInside>>() {}.getType());
-                        for(int i=0; i<list.size(); i++) {
-                            if(list.get(i).getContentPlay() == null) list.remove(i);
+                        int index = 0;
+                        while (index < list.size()) {
+                            if(list.get(index).getContentPlay() == null || list.get(index).getContentPlay().trim().equals("")) {
+                                list.remove(index);
+                            } else {
+                                index++;
+                            }
                         }
                         if (refreshType == 0) {
                             LanguageSearchInside fList = getDaoList(context);// 得到数据库里边的第一条数据
@@ -1896,8 +1901,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     try {
                         LanguageSearch lists = new Gson().fromJson(result.getString("ResultList"), new TypeToken<LanguageSearch>() {}.getType());
                         list = lists.getList();
-                        for(int i=0; i<list.size(); i++) {
-                            if(list.get(i).getContentPlay() == null) list.remove(i);
+                        int index = 0;
+                        while (index < list.size()) {
+                            if(list.get(index).getContentPlay() == null || list.get(index).getContentPlay().trim().equals("")) {
+                                list.remove(index);
+                            } else {
+                                index++;
+                            }
                         }
                     }catch (Exception e) {
                         e.printStackTrace();
@@ -1970,8 +1980,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     if (ReturnType.equals("1001")) {
                         LanguageSearch lists = new Gson().fromJson(result.getString("ResultList"), new TypeToken<LanguageSearch>() {}.getType());
                         List<LanguageSearchInside> list = lists.getList();
-                        for(int i=0; i<list.size(); i++) {
-                            if(list.get(i).getContentPlay() == null) list.remove(i);
+                        int index = 0;
+                        while (index < list.size()) {
+                            if(list.get(index).getContentPlay() == null || list.get(index).getContentPlay().trim().equals("")) {
+                                list.remove(index);
+                            } else {
+                                index++;
+                            }
                         }
                         if (list.size() != 0) {
                             if (voicePage == 1) {
