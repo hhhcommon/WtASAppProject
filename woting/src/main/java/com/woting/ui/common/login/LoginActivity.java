@@ -198,8 +198,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         }
 
         VolleyRequest.RequestPost(GlobalConfig.loginUrl, tag, jsonObject, new VolleyCallback() {
-            private String ReturnType;
-            private String Message;
             private String UserNum;
             private String phoneNumber;
             private String gender;// 性别
@@ -215,15 +213,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 try {
-                    ReturnType = result.getString("ReturnType");
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-                try {
-                    Message = result.getString("Message");
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                }
+                    String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {
                         Editor et = BSApplication.SharedPreferences.edit();
                         et.putString(StringConstant.ISLOGIN, "true");
@@ -289,9 +279,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                                  */
                                 if (region != null && !region.equals("")) {
                                     String[] subRegion = region.split("/");
-                                    if(subRegion.length > 3) {
+                                    if (subRegion.length > 3) {
                                         region = subRegion[1] + " " + subRegion[3];
-                                    } else if(subRegion.length == 3) {
+                                    } else if (subRegion.length == 3) {
                                         region = subRegion[1] + " " + subRegion[2];
                                     } else {
                                         region = subRegion[1].substring(0, 2);
@@ -315,7 +305,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                             }
                             try {
                                 email = ui.getString("Email");
-                                if(email.equals("&null")) {
+                                if (email.equals("&null")) {
                                     et.putString(StringConstant.EMAIL, "");
                                 } else {
                                     et.putString(StringConstant.EMAIL, email);
@@ -325,7 +315,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                             }
                             try {
                                 userSign = ui.getString("UserSign");
-                                if(userSign.equals("&null")) {
+                                if (userSign.equals("&null")) {
                                     et.putString(StringConstant.USER_SIGN, "");
                                 } else {
                                     et.putString(StringConstant.USER_SIGN, userSign);
@@ -335,7 +325,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                             }
                             try {
                                 nickName = ui.getString("NickName");
-                                if(nickName.equals("&null")) {
+                                if (nickName.equals("&null")) {
                                     et.putString(StringConstant.NICK_NAME, "");
                                 } else {
                                     et.putString(StringConstant.NICK_NAME, nickName);
@@ -367,11 +357,19 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                     } else if (ReturnType != null && ReturnType.equals("T")) {
                         ToastUtils.show_always(context, "发生未知错误，请稍后重试!");
                     } else {
-                        if (Message != null && !Message.trim().equals("")) {
-                            ToastUtils.show_always(context, Message + "");
+                        try {
+                            String Message = result.getString("Message");
+                            if (Message != null && !Message.trim().equals("")) {
+                                ToastUtils.show_always(context, Message + "");
+                            }
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
                         }
                     }
+                } catch (Exception e1) {
+                    e1.printStackTrace();
                 }
+            }
 
             @Override
             protected void requestError(VolleyError error) {
@@ -473,9 +471,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         }
                         try {
                             gender = ui.getString("Sex");
-                            if(gender.equals("男")) {
+                            if (gender.equals("男")) {
                                 et.putString(StringConstant.GENDERUSR, "xb001");
-                            } else if(gender.equals("女")) {
+                            } else if (gender.equals("女")) {
                                 et.putString(StringConstant.GENDERUSR, "xb002");
                             }
                         } catch (Exception e) {
@@ -491,9 +489,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                              */
                             if (region != null && !region.equals("")) {
                                 String[] subRegion = region.split("/");
-                                if(subRegion.length > 3) {
+                                if (subRegion.length > 3) {
                                     region = subRegion[1] + " " + subRegion[3];
-                                } else if(subRegion.length == 3) {
+                                } else if (subRegion.length == 3) {
                                     region = subRegion[1] + " " + subRegion[2];
                                 } else {
                                     region = subRegion[1].substring(0, 2);
@@ -523,7 +521,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         }
                         try {
                             email = ui.getString("Email");
-                            if(email.equals("&null")) {
+                            if (email.equals("&null")) {
                                 et.putString(StringConstant.EMAIL, "");
                             } else {
                                 et.putString(StringConstant.EMAIL, email);
@@ -533,7 +531,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         }
                         try {
                             userSign = ui.getString("UserSign");
-                            if(userSign.equals("&null")) {
+                            if (userSign.equals("&null")) {
                                 et.putString(StringConstant.USER_SIGN, "");
                             } else {
                                 et.putString(StringConstant.USER_SIGN, userSign);
@@ -543,7 +541,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         }
                         try {
                             nickName = ui.getString("NickName");
-                            if(nickName.equals("&null")) {
+                            if (nickName.equals("&null")) {
                                 et.putString(StringConstant.NICK_NAME, "");
                             } else {
                                 et.putString(StringConstant.NICK_NAME, nickName);

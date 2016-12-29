@@ -153,11 +153,11 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
         dbDao.deleteHistory(id);
         DBTalkHistorary history = new DBTalkHistorary(bjuserid, "user", id, addtime);
         dbDao.addTalkHistory(history);
-        DBTalkHistorary talkdb = dbDao.queryHistory().get(0);//得到数据库里边数据
+//        DBTalkHistorary talkdb = dbDao.queryHistory().get(0);//得到数据库里边数据
         //对讲主页界面更新
         MainActivity.changeTwo();
         DuiJiangActivity.update();
-        ChatFragment.zhiDingPerson(talkdb);
+        ChatFragment.zhiDingPerson();
         MyActivityManager mam = MyActivityManager.getInstance();
         mam.finishAllActivity();
         finish();

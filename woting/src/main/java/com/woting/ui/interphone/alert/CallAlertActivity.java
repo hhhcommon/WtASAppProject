@@ -241,8 +241,8 @@ public class CallAlertActivity extends Activity implements OnClickListener {
         dbdao.deleteHistory(id);                                       // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
         DBTalkHistorary history = new DBTalkHistorary(bjuserid, "user", id, addtime);
         dbdao.addTalkHistory(history);
-        DBTalkHistorary talkdb = dbdao.queryHistory().get(0);          // 得到数据库里边数据
-        ChatFragment.zhiDingPerson(talkdb);
+//        DBTalkHistorary talkdb = dbdao.queryHistory().get(0);          // 得到数据库里边数据
+        ChatFragment.zhiDingPerson();
         DuiJiangActivity.update();                                     // 对讲主页界面更新
         MyActivityManager mam = MyActivityManager.getInstance();
         mam.finishAllActivity();

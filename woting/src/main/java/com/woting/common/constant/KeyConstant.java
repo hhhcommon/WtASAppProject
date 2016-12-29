@@ -1,10 +1,10 @@
 package com.woting.common.constant;
 
 /**
- * 百度的key值
- *
- * @author 辛龙
- *         2016年8月5日
+ * 三方key值
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
+ * 邮箱：645700751@qq.com
  */
 public class KeyConstant {
 

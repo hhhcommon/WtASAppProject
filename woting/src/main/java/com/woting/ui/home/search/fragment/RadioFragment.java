@@ -93,6 +93,7 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
+            Log.e("search_radio","RadioFragment创建成功");
             rootView = inflater.inflate(R.layout.fragment_search_sound, container, false);
             tipView = (TipView) rootView.findViewById(R.id.tip_view);
             tipView.setWhiteClick(this);
@@ -318,6 +319,7 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
             String action = intent.getAction();
             if (action.equals(BroadcastConstants.SEARCH_VIEW_UPDATE)) {
                 searchStr = intent.getStringExtra("searchStr");
+                Log.e("search_radio","SEARCH_VIEW_UPDATE"+searchStr);
                 if (searchStr != null && !searchStr.equals("")) {
                     refreshType = 1;
                     page = 1;

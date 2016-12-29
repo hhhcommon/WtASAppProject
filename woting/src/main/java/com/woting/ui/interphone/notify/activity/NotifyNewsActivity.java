@@ -13,7 +13,7 @@ import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.interphone.linkman.dao.NotifyHistoryDao;
+import com.woting.ui.interphone.notify.dao.NotifyHistoryDao;
 import com.woting.ui.interphone.linkman.model.DBNotifyHistory;
 import com.woting.ui.interphone.notify.adapter.NotifyNewsAdapter;
 

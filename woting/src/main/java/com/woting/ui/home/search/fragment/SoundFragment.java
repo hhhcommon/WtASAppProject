@@ -229,7 +229,7 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
                         SubList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
                         try {
                             String allCountString = arg1.getString("AllCount");
-                            String pageSizeString = arg1.getString("pageSize");
+                                            String pageSizeString = arg1.getString("pageSize");
                             if (allCountString != null && !allCountString.equals("") && pageSizeString != null && !pageSizeString.equals("")) {
                                 int allCountInt = Integer.valueOf(allCountString);
                                 int pageSizeInt = Integer.valueOf(allCountString);

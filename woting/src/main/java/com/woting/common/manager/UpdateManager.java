@@ -28,8 +28,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- *软件更新下载安装
- * 作者：xinlong on 2016/8/1 21:18
+ * 软件更新下载安装
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
  * 邮箱：645700751@qq.com
  */
 public class UpdateManager  {
@@ -39,7 +40,6 @@ public class UpdateManager  {
     private Dialog noticeDialog;
     private Dialog downloadDialog;
     /* 下载包安装路径 */
-    //	sdcard/
     private final String savePath = ResourceUtil.getLocalUrlForUpload();
     //    private static final String savePath = Environment.getExternalStorageDirectory().getAbsolutePath(); ;
     private final String saveFileName = savePath + "WoTing.apk";

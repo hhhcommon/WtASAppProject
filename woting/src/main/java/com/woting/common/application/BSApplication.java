@@ -22,7 +22,8 @@ import java.util.List;
 
 /**
  * BSApplication
- * 作者：xinlong on 2016/11/6 21:18
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
  * 邮箱：645700751@qq.com
  */
 public class BSApplication extends Application  {

@@ -31,9 +31,9 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * 长链接service
- *
- * @author 辛龙
- *         2016年7月13日
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
+ * 邮箱：645700751@qq.com
  */
 public class SocketService extends Service {
     private static SocketClientConfig scc = BSApplication.scc; //客户端配置

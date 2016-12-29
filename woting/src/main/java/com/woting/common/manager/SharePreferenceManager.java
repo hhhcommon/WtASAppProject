@@ -1,6 +1,11 @@
 package com.woting.common.manager;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.Environment;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -8,15 +13,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.os.Environment;
-
 /**
  * 快速保存数据
- * @author 辛龙
- *2016年8月5日
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
+ * 邮箱：645700751@qq.com
  */
 public class SharePreferenceManager{
 
@@ -65,8 +66,6 @@ public class SharePreferenceManager{
 			}
 		}
 		editor.commit();
-		editor = null;
-		sharedPreferences = null;
 	}
 
 	public synchronized static Object getSharePreferenceValue(Context context,String filename,Object name,Object defValue){

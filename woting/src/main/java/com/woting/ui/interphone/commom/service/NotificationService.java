@@ -25,7 +25,7 @@ import com.woting.ui.interphone.commom.model.BeInvitedUserInfo;
 import com.woting.ui.interphone.commom.model.GroupInfo;
 import com.woting.ui.interphone.commom.model.InviteUserInfo;
 import com.woting.ui.interphone.commom.model.UserInfo;
-import com.woting.ui.interphone.linkman.dao.NotifyHistoryDao;
+import com.woting.ui.interphone.notify.dao.NotifyHistoryDao;
 import com.woting.ui.interphone.linkman.model.DBNotifyHistory;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.CommonUtils;
@@ -47,7 +47,7 @@ import java.util.Map;
 public class NotificationService extends Service {
     private MessageReceiver Receiver;
     private NotificationService context;
-    private NotifyHistoryDao dbdao;
+    private NotifyHistoryDao dbDao;
 
     @Override
     public void onCreate() {
@@ -63,15 +63,16 @@ public class NotificationService extends Service {
     }
 
     private void initDao() {// 初始化数据库命令执行对象
-        dbdao = new NotifyHistoryDao(context);
+        dbDao = new NotifyHistoryDao(context);
     }
 
-    public void add(String type, String imageurl, String content, String title, String dealtime) {
-        String addtime = Long.toString(System.currentTimeMillis());
-        String bjuserid = CommonUtils.getUserId(context);
-        DBNotifyHistory history = new DBNotifyHistory(bjuserid, type, imageurl, content,
-                title, dealtime, addtime);
-        dbdao.addNotifyHistory(history);
+    public void add(String type, String imageUrl, String content, String title, String dealTime,
+                    String showType,int bizType,int cmdType,int command,String taskId) {
+        String addTime = Long.toString(System.currentTimeMillis());
+        String bjUserId = CommonUtils.getUserId(context);
+        DBNotifyHistory history = new DBNotifyHistory(bjUserId, type, imageUrl, content,
+                title, dealTime, addTime, showType, bizType, cmdType, command, taskId);
+        dbDao.addNotifyHistory(history);
     }
 
     /*
@@ -82,10 +83,9 @@ public class NotificationService extends Service {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(BroadcastConstants.PUSH_NOTIFY)) {
-                //				MsgNormal message = (MsgNormal) intent.getSerializableExtra("outMessage");
                 byte[] bt = intent.getByteArrayExtra("outMessage");
-                Log.e("Notification接收器中数据", Arrays.toString(bt) + "");
                 try {
+                    Log.e("Notification接收器中数据", Arrays.toString(bt) + "");
                     Log.e("Notification接收器中数据", JsonEncloseUtils.btToString(bt) + "");
                 } catch (Exception e2) {
                     e2.printStackTrace();
@@ -93,7 +93,6 @@ public class NotificationService extends Service {
 
                 try {
                     MsgNormal message = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
-
                     if (message != null) {
                         int cmdType = message.getCmdType();
                         switch (cmdType) {
@@ -128,14 +127,14 @@ public class NotificationService extends Service {
                                     }
                                     setNewMessageNotification(context, news, "我听");
                                     // 最新消息的回执-------测试版
-                                    InterPhoneControl.sendReceiptMessage(context,message.getMsgId());
+                                    InterPhoneControl.sendControlReceiptMessage(message.getMsgId(),0);
                                     //已经添加在通讯录
                                     Intent p = new Intent(BroadcastConstants.PUSH_NEWPERSON);
                                     Bundle bundle = new Bundle();
                                     bundle.putString("outMessage", news);
                                     p.putExtras(bundle);
                                     context.sendBroadcast(p);
-                                    //	add("Ub1", imageurl, news, "好友邀请信息", dealtime);
+                                    add("Ub1", imageurl, news, "好友邀请信息", dealtime,"false",0,0,0,"");
                                 } else if (command == 3) {
                                     //好友邀请被接受或拒绝(Server->App)
                                     String news;
@@ -180,12 +179,12 @@ public class NotificationService extends Service {
                                     }
                                     if (dealtype != null && dealtype.equals("1")) {
                                         setNewMessageNotification(context, news, "我听");
-                                        add("Ub3", imageurl, news, "好友邀请信息", dealtime);
+                                        add("Ub3", imageurl, news, "好友邀请信息", dealtime,"true",0,0,0,"");
                                         context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
 
                                     } else {
                                         setNewMessageNotification(context, news, "我听");
-                                        add("Ub3", imageurl, news, "好友邀请信息", dealtime);
+                                        add("Ub3", imageurl, news, "好友邀请信息", dealtime,"true",0,0,0,"");
                                     }
                                 } else if (command == 5) {
                                     //A与B原为好友，A把B从自己的好友中删除后，向B发送A已删除自己为好友的信息。
@@ -245,7 +244,7 @@ public class NotificationService extends Service {
                                         bundle.putString("outMessage", news);
                                         pushintent.putExtras(bundle);
                                         context.sendBroadcast(pushintent);
-                                        //add("Gb1", friendurl, news, "组邀请信息", dealtime);
+                                        add("Gb1", friendurl, news, "组邀请信息", dealtime,"false",0,0,0,"");
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中Gb1的异常", e.toString());
                                     }
@@ -291,7 +290,7 @@ public class NotificationService extends Service {
 
                                         setNewMessageNotification(context, news, "我听");
                                         //组信息管理
-                                        //add("Gb2", imageurl, news, "组邀请信息", dealtime);
+                                        add("Gb2", imageurl, news, "组邀请信息", dealtime,"false",0,0,0,"");
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中Gb2的异常", e.toString());
                                     }
@@ -332,7 +331,7 @@ public class NotificationService extends Service {
                                                 }
                                             }
                                             setNewMessageNotification(context, news, "我听");
-                                            add("Gb3", "", news, "组邀请信息", dealtime);
+                                            add("Gb3", "", news, "组邀请信息", dealtime,"true",0,0,0,"");
                                         }
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中Gb3的异常", e.toString());
@@ -380,7 +379,7 @@ public class NotificationService extends Service {
                                             }
                                         }
                                         setNewMessageNotification(context, news, "我听");
-                                        add("Gb4", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()));
+                                        add("Gb4", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()),"true",0,0,0,"");
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中Gb4的异常", e.toString());
                                     }
@@ -455,7 +454,7 @@ public class NotificationService extends Service {
                                         }
 
                                         setNewMessageNotification(context, news, "我听");
-                                        add("Gb5", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()));
+                                        add("Gb5", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()),"true",0,0,0,"");
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中Gb5的异常", e.toString());
                                     }
@@ -483,10 +482,9 @@ public class NotificationService extends Service {
                                     }
                                     //加入数据库
                                     setNewMessageNotification(context, news, "我听");
-                                    add("Gb6", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()));
+                                    add("Gb6", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()),"true",0,0,0,"");
                                     //刷新通讯录
-                                    Intent pushintent = new Intent("push_refreshlinkman");
-                                    context.sendBroadcast(pushintent);
+                                    context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                                 } else if (command2 == 7) {
                                     //当管理员把某组的权限移交给另一个人时，向组内所有成员发送新管理员Id。
                                     String news = null;
@@ -534,13 +532,12 @@ public class NotificationService extends Service {
                                         }
                                         //加入数据库
                                         setNewMessageNotification(context, news, "我听");
-                                        add("Gb7", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()));
+                                        add("Gb7", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()),"true",0,0,0,"");
 
                                         //如果管理员权限移交给自己，则需要刷新通讯录
                                         if (userid != null && !userid.equals("") && CommonUtils.getUserId(context) != null &&
                                                 CommonUtils.getUserId(context).equals(userid)) {
-                                            Intent pushintent = new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN);
-                                            context.sendBroadcast(pushintent);
+                                            context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                                         }
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中Gb7的异常", e.toString());
@@ -595,7 +592,7 @@ public class NotificationService extends Service {
                                         }
                                         //加入数据库
                                         setNewMessageNotification(context, news, "我听");
-                                        add("Gb8", groupurl, news, "组信息", dealtime);
+                                        add("Gb8", groupurl, news, "组信息", dealtime,"true",0,0,0,"");
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中Gb8的异常", e.toString());
                                     }
@@ -633,10 +630,9 @@ public class NotificationService extends Service {
                                         }
                                         //加入数据库
                                         setNewMessageNotification(context, news, "我听");
-                                        add("Gb9", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()));
+                                        add("Gb9", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()),"true",0,0,0,"");
                                         //刷新通讯录
-                                        Intent pushintent = new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN);
-                                        context.sendBroadcast(pushintent);
+                                        context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中Gb9的异常", e.toString());
                                     }

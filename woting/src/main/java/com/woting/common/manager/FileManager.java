@@ -1,14 +1,11 @@
 package com.woting.common.manager;
 
+
 /**
- * 作者：xinlong on 2016/10/21 12:35
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
  * 邮箱：645700751@qq.com
  */
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;

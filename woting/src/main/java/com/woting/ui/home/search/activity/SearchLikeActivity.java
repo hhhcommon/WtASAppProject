@@ -29,7 +29,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
@@ -274,6 +273,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
         fragmentList.add(new SoundFragment());
         fragmentList.add(new RadioFragment());
         fragmentList.add(new TTSFragment());
+//        mPager.setOffscreenPageLimit(4);
         mPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager(), fragmentList));
         mPager.setOnPageChangeListener(new MyOnPageChangeListener());// 页面变化时的监听器
         mPager.setCurrentItem(0);// 设置当前显示标签页为第
@@ -327,22 +327,22 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
         tv_sound.setOnClickListener(new txListener(2));
         tv_radio.setOnClickListener(new txListener(3));
         tv_tts.setOnClickListener(new txListener(4));
-        mEtSearchContent.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (yuyinDialog != null) {
-                                yuyinDialog.dismiss();
-                            }
-                        }
-                    }, 2000);
-                }
-            }
-        });
+//        mEtSearchContent.setOnFocusChangeListener(new OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (hasFocus) {
+//                    Handler handler = new Handler();
+//                    handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if (yuyinDialog != null) {
+//                                yuyinDialog.dismiss();
+//                            }
+//                        }
+//                    }, 2000);
+//                }
+//            }
+//        });
     }
 
     private void initDao() {
@@ -517,19 +517,11 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
         }
 
         VolleyRequest.RequestPost(GlobalConfig.searchHotKeysUrl, tag, jsonObject, new VolleyCallback() {
-            private String ReturnType;
-            private String Message;
 
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
-                try {
-                    ReturnType = result.getString("ReturnType");
-                    Message = result.getString("Message");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
                 topSearchList.clear();
                 try {
                     String s = result.getString("SysKeyList");
@@ -547,27 +539,38 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
                     e1.printStackTrace();
                     lv_mListView.setVisibility(View.GONE);
                 }
-                if (ReturnType != null && ReturnType.equals("1001")) {
-                    if (topSearchList != null && topSearchList.size() > 0) {
-                        if (searchHotAdapter == null) {
-                            searchHotAdapter = new SearchHotAdapter(context, topSearchList);
-                            lv_mListView.setAdapter(searchHotAdapter);
+                try {
+                    String  ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        if (topSearchList != null && topSearchList.size() > 0) {
+                            if (searchHotAdapter == null) {
+                                searchHotAdapter = new SearchHotAdapter(context, topSearchList);
+                                lv_mListView.setAdapter(searchHotAdapter);
+                            } else {
+                                searchHotAdapter.notifyDataSetChanged();
+                            }
+                            setItemListener();
                         } else {
-                            searchHotAdapter.notifyDataSetChanged();
+                            lv_mListView.setVisibility(View.GONE);
+                            ToastUtils.show_always(context, "数据异常");
                         }
-                        setItemListener();
+                    } else if (ReturnType != null && ReturnType.equals("1002")) {
+                        lv_mListView.setVisibility(View.GONE);
+                        ToastUtils.show_always(getApplicationContext(), "没有查询到内容");
                     } else {
                         lv_mListView.setVisibility(View.GONE);
-                        ToastUtils.show_always(context, "数据异常");
+                        try {
+                            String Message = result.getString("Message");
+                            if (Message != null && !Message.trim().equals("")) {
+                                ToastUtils.show_always(getApplicationContext(), Message + "请稍后重试");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                     }
-                } else if (ReturnType != null && ReturnType.equals("1002")) {
-                    lv_mListView.setVisibility(View.GONE);
-                    ToastUtils.show_always(getApplicationContext(), "没有查询到内容" + Message);
-                } else {
-                    lv_mListView.setVisibility(View.GONE);
-                    if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_always(getApplicationContext(), Message + "请稍后重试");
-                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -590,21 +593,12 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
             e.printStackTrace();
         }
         VolleyRequest.RequestPost(GlobalConfig.getHotSearch, tag, jsonObject, new VolleyCallback() {
-            private String ReturnType;
-            private String Message;
-
             @Override
             protected void requestSuccess(JSONObject result) {
                 tipView.setVisibility(View.GONE);
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
-                try {
-                    topSearchList1.clear();
-                    ReturnType = result.getString("ReturnType");
-                    Message = result.getString("Message");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                topSearchList1.clear();
                 try {
                     String s = result.getString("SysKeyList");
                     String[] s1 = s.split(",");
@@ -614,24 +608,37 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
                 } catch (JSONException e1) {
                     e1.printStackTrace();
                 }
-                if (ReturnType != null && ReturnType.equals("1001")) {
-                    lin_status_first.setVisibility(View.VISIBLE);
-                    adapter = new SearchLikeAdapter(context, topSearchList1);
-                    gv_TopSearch.setAdapter(adapter);
-                    history = new History(CommonUtils.getUserId(context), "");
-                    historyDatabaseList = shd.queryHistory(history);
-                    if (historyDatabaseList.size() != 0) {
-                        lin_history.setVisibility(View.VISIBLE);
-                        adapterHistory = new SearchHistoryAdapter(context, historyDatabaseList);
-                        gv_history.setAdapter(adapterHistory);
+
+                try {
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        lin_status_first.setVisibility(View.VISIBLE);
+                        adapter = new SearchLikeAdapter(context, topSearchList1);
+                        gv_TopSearch.setAdapter(adapter);
+                        history = new History(CommonUtils.getUserId(context), "");
+                        historyDatabaseList = shd.queryHistory(history);
+                        if (historyDatabaseList.size() != 0) {
+                            lin_history.setVisibility(View.VISIBLE);
+                            adapterHistory = new SearchHistoryAdapter(context, historyDatabaseList);
+                            gv_history.setAdapter(adapterHistory);
+                        } else {
+                            lin_history.setVisibility(View.GONE);
+                        }
                     } else {
-                        lin_history.setVisibility(View.GONE);
+                        try {
+                            String Message = result.getString("Message");
+                            if (Message != null && !Message.trim().equals("")) {
+                                ToastUtils.show_short(getApplicationContext(), Message + "请稍后重试");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                     }
-                } else {
-                    if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_short(getApplicationContext(), Message + "请稍后重试");
-                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+
             }
 
             @Override

@@ -49,8 +49,9 @@ import java.util.List;
 
 /**
  * 节目页----推荐页
+ *
  * @author 辛龙
- * 2016年3月30日
+ *         2016年3月30日
  */
 public class RecommendFragment extends Fragment implements TipView.WhiteViewClick {
     private SearchPlayerHistoryDao dbDao;
@@ -141,14 +142,21 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
     private void sendRequest() {
         // 以下操作需要网络支持 所以没有网络则直接提示用户设置网络
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
-            if(dialog != null) dialog.dismiss();
-            mListView.stopRefresh();
-            mListView.stopLoadMore();
-            if(refreshType == 1) {
-                tipView.setVisibility(View.VISIBLE);
-                tipView.setTipView(TipView.TipStatus.NO_NET);
+            if (newList != null && newList.size() > 0) {
+                if (dialog != null) dialog.dismiss();
+                mListView.stopRefresh();
+                mListView.stopLoadMore();
+                return;
+            } else {
+                if (dialog != null) dialog.dismiss();
+                mListView.stopRefresh();
+                mListView.stopLoadMore();
+                if (refreshType == 1) {
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.NO_NET);
+                }
+                return;
             }
-            return;
         }
 
         VolleyRequest.RequestPost(GlobalConfig.getContentUrl, tag, setParam(), new VolleyCallback() {
@@ -156,7 +164,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
 
             @Override
             protected void requestSuccess(JSONObject result) {
-                if(dialog != null) dialog.dismiss();
+                if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 page++;
                 try {
@@ -168,7 +176,8 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                 if (returnType != null && returnType.equals("1001")) {
                     try {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
+                        subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {
+                        }.getType());
 
                         try {
                             String pageSizeString = arg1.getString("PageSize");
@@ -208,7 +217,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                         tipView.setTipView(TipView.TipStatus.IS_ERROR);
                     }
                 } else {
-                    if(refreshType == 1) {
+                    if (refreshType == 1) {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
                     }
@@ -224,7 +233,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
 
             @Override
             protected void requestError(VolleyError error) {
-                if(dialog != null) dialog.dismiss();
+                if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
                 tipView.setVisibility(View.VISIBLE);
                 tipView.setTipView(TipView.TipStatus.IS_ERROR);

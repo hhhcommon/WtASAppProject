@@ -12,7 +12,8 @@ import java.util.List;
 
 /**
  * GlobalConfig
- * 作者：xinlong on 2016/11/6 21:18
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
  * 邮箱：645700751@qq.com
  */
 public class GlobalConfig {
@@ -48,7 +49,7 @@ public class GlobalConfig {
     /**
      * 数据库版本号
      */
-    public static final int dbVersionCode = 38;
+    public static final int dbVersionCode = 39;
     /**
      * 是否活跃状态，有活跃状态才能播放声音，否则即使收到音频包也不播放
      */
@@ -56,7 +57,7 @@ public class GlobalConfig {
     /**
      * 是否吐司
      */
-    public static boolean isToast = false;
+    public static boolean isToast = true;
     /**
      * PersonClientDevice(个人客户端设备) 终端类型1=app,2=设备，3=pc
      */
@@ -270,6 +271,9 @@ public class GlobalConfig {
     // 设置偏好列表
     public static final String setPreferenceUrl = baseUrl + "wt/setPreference.do";
 
+    /**
+     * 此处用到的接口是CM的接口
+     */
     // "我的上传" 相关接口
     private static final String uploadBaseUrl = "http://123.56.254.75:908/CM/";
     // 获取专辑列表

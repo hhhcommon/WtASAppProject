@@ -3,9 +3,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.woting.common.config.GlobalConfig;
+
 /**
  * 创建数据库表
- * 作者：xinlong on 2016/8/29 11:29
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
  * 邮箱：645700751@qq.com
  */
 public class SQLiteHelper extends SQLiteOpenHelper {
@@ -25,7 +27,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		//notifyhistory消息通知表
 		db.execSQL("CREATE TABLE IF NOT EXISTS notifyhistory(_id Integer primary key autoincrement, "
 				+ "bjuserid varchar(50),type varchar(50),imageurl varchar(100),content varchar(100),"
-				+ "title varchar(50),dealtime varchar(50),addtime varchar(50))");
+				+ "title varchar(50),dealtime varchar(50),addtime varchar(50)," +
+				"showtype varchar(10),biztype varchar(10),cmdtype varchar(10),command varchar(10),taskid varchar(50))");
 		// player播放历史,暂时缺本机userid
 		//		PlayerName播放显示名称PlayerImage播放显示图片PlayerUrl播放路径PlayerMediaType播放类型，radio，audio，seq,PlayerAllTime播放文件总时长
 		//		PlayerInTime此时播放时长PlayerContentDesc播放文件介绍PlayerNum播放次数PlayerZanTypeString类型的true,false
