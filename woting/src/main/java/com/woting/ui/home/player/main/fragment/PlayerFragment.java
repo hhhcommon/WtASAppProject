@@ -177,6 +177,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         setReceiver();// 注册广播接收器
         initData();// 初始化数据
         initDao();// 初始化数据库命令执行对象
+
+        fileInfoList = getDownList();// 获取已经下载的列表
+        Log.i("TAG", "onCreate: fileInfoList.size  -- > " + fileInfoList.size());
     }
 
     @Override
@@ -302,7 +305,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             IntentFilter filter = new IntentFilter();
             filter.addAction(BroadcastConstants.PLAYERVOICE);
             filter.addAction(BroadcastConstants.PUSH_MUSIC);
-            filter.addAction(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+
+            // 下载完成更新 LocalUrl
+            filter.addAction(BroadcastConstants.ACTION_FINISHED);
+            filter.addAction(BroadcastConstants.ACTION_FINISHED_NO_DOWNLOADVIEW);
             context.registerReceiver(mReceiver, filter);
         }
     }
@@ -432,22 +438,22 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 if (allList.get(number).getContentPlay() != null) {
                     mPlayImageStatus.setImageResource(R.mipmap.wt_play_play);
                     resetView();
+                    GlobalConfig.playerObject = allList.get(number);
+                    resetHeadView();
                     if (allList.get(number).getLocalurl() != null) {
                         musicPlay("file:///" + allList.get(number).getLocalurl());
                     } else {
                         musicPlay(allList.get(number).getContentPlay());
                     }
-                    GlobalConfig.playerObject = allList.get(number);
-                    resetHeadView();
                     num = number;
                 }
             } else if (playType.equals("TTS")) {
                 if (allList.get(number).getContentURI() != null && allList.get(number).getContentURI().trim().length() > 0) {
                     mPlayImageStatus.setImageResource(R.mipmap.wt_play_play);
                     resetView();
-                    musicPlay(allList.get(number).getContentURI());
                     GlobalConfig.playerObject = allList.get(number);
                     resetHeadView();
+                    musicPlay(allList.get(number).getContentURI());
                     num = number;
                 } else {
                     getContentNews(allList.get(number).getContentId(), number);// 当 contentUri 为空时 获取内容
@@ -589,20 +595,20 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             if (playType.equals("AUDIO") || playType.equals("RADIO")) {
                 if (GlobalConfig.playerObject.getContentPlay() != null) {
                     resetView();
+                    resetHeadView();
                     if (GlobalConfig.playerObject.getLocalurl() != null) {
                         musicPlay("file:///" + GlobalConfig.playerObject.getLocalurl());
                     } else {
                         musicPlay(GlobalConfig.playerObject.getContentPlay());
                     }
-                    resetHeadView();
                 } else {
                     ToastUtils.show_short(context, "暂不支持播放");
                 }
             } else if (playType.equals("TTS")) {
                 if (GlobalConfig.playerObject.getContentURI() != null && GlobalConfig.playerObject.getContentURI().trim().length() > 0) {
                     resetView();
-                    musicPlay(GlobalConfig.playerObject.getContentURI());
                     resetHeadView();
+                    musicPlay(GlobalConfig.playerObject.getContentURI());
                 } else {
                     getContentNews(GlobalConfig.playerObject.getContentId(), 0);// 当 contentUri 为空时 获取内容
                 }
@@ -745,6 +751,16 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
             // 下载状态
             if (type != null && type.equals("AUDIO")) {// 可以下载
+                if(fileInfoList != null && fileInfoList.size() > 0) {
+                    for(int i=0, size=fileInfoList.size(); i<size; i++) {
+                        if(GlobalConfig.playerObject.getContentPlay().equals(fileInfoList.get(i).getUrl())) {
+                            GlobalConfig.playerObject.setLocalurl(fileInfoList.get(i).getLocalurl());
+                            Log.v("TAG", "fileInfoList: Localurl  -- > " + fileInfoList.get(i).getLocalurl());
+                        }
+                        Log.v("TAG", "fileInfoList: Url  -- > " + fileInfoList.get(i).getUrl());
+                    }
+                    Log.v("TAG", "playerObject: ContentPlay  -- > " + GlobalConfig.playerObject.getContentPlay());
+                }
                 mPlayAudioTextDownLoad.setVisibility(View.VISIBLE);
                 if (!TextUtils.isEmpty(GlobalConfig.playerObject.getLocalurl())) {// 已下载
                     mPlayAudioTextDownLoad.setClickable(false);
@@ -860,7 +876,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 allList.add(list.get(i));
             }
         }
-        allList.addAll(list);
         for (int i = 0; i < allList.size(); i++) {
             String s = allList.get(i).getContentPlay();
             if (s != null && GlobalConfig.playerObject.getContentPlay() != null && s.equals(GlobalConfig.playerObject.getContentPlay())) {
@@ -877,7 +892,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         mSeekBarStartTime.setText("00:00:00");
         mSeekBarEndTime.setText("00:00:00");
         allList.clear();
-        allList.addAll(list);
+        for (int i = 0, size = list.size(); i < size; i++) {
+            if (list.get(i).getContentPlay() != null) {
+                allList.add(list.get(i));
+            }
+        }
         allList.get(0).setType("0");
         num = 0;
         mListView.setAdapter(adapter = new PlayerListAdapter(context, allList));
@@ -1258,6 +1277,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         }
     }
 
+    private static List<FileInfo> fileInfoList;// 保存已经下载得数据
+
+    // 获取已经下载过的列表
+    private List<FileInfo> getDownList() {
+        return mFileDao.queryFileInfo("true", CommonUtils.getUserId(context));
+    }
+
     /////////////////////////////////////////////////////////////
     // 以下是系统方法
     /////////////////////////////////////////////////////////////
@@ -1475,6 +1501,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     String phoneType = intent.getStringExtra("outMessage");
                     Log.e("电话状态",phoneType+"");
                     break;
+                case BroadcastConstants.ACTION_FINISHED:
+                case BroadcastConstants.ACTION_FINISHED_NO_DOWNLOADVIEW:
+                    if (mFileDao != null) {
+                        fileInfoList = mFileDao.queryFileInfo("true", CommonUtils.getUserId(context));
+                    }
+                    break;
             }
         }
     }
@@ -1514,13 +1546,16 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                         page++;
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         ArrayList<LanguageSearchInside> list = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<LanguageSearchInside>>() {}.getType());
+                        for(int i=0; i<list.size(); i++) {
+                            if(list.get(i).getContentPlay() == null) list.remove(i);
+                        }
                         if (refreshType == 0) {
                             LanguageSearchInside fList = getDaoList(context);// 得到数据库里边的第一条数据
-                            if (list != null && list.size() > 0 && fList != null) {// 有返回数据并且数据库中有数据
+                            if (list.size() > 0 && fList != null) {// 有返回数据并且数据库中有数据
                                 num = -1;
                                 setData(fList, list);
                                 setPullAndLoad(true, true);
-                            } else if (list != null && list.size() > 0 && fList == null) {// 有返回数据但数据库中没有数据
+                            } else if (list.size() > 0 && fList == null) {// 有返回数据但数据库中没有数据
                                 if (list.get(0) != null) {
                                     num = 0;
                                     setDataForNoList(list);
@@ -1528,7 +1563,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                                     num = -2;
                                 }
                                 setPullAndLoad(true, true);
-                            } else if (list != null && list.size() == 0 && fList != null) {// 没有返回数据但数据库中有数据
+                            } else if (list.size() == 0 && fList != null) {// 没有返回数据但数据库中有数据
                                 list.add(fList);
                                 num = -1;
                                 setData(fList, list);
@@ -1541,12 +1576,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                         } else if (refreshType == 1) {// 下拉刷新
                             if (allList.size() > 0) {
                                 for (int i = 0, size = allList.size(); i < size; i++) {
-                                    contentUrlList.add(allList.get(i).getContentURI());
+                                    contentUrlList.add(allList.get(i).getContentPlay());
                                 }
                             }
                             if (list.size() > 0) {
                                 for (int i = 0, size = list.size(); i < size; i++) {
-                                    if (!contentUrlList.contains(list.get(i).getContentURI())) {
+                                    if (!contentUrlList.contains(list.get(i).getContentPlay())) {
                                         allList.add(0, list.get(i));
                                     }
                                 }
@@ -1570,7 +1605,19 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                             setPullAndLoad(true, true);
                         } else {// 加载更多
                             mListView.stopLoadMore();
-                            allList.addAll(list);
+                            if (allList.size() > 0) {
+                                for (int i = 0, size = allList.size(); i < size; i++) {
+                                    contentUrlList.add(allList.get(i).getContentPlay());
+                                }
+                            }
+                            if (list.size() > 0) {
+                                for (int i = 0, size = list.size(); i < size; i++) {
+                                    if (!contentUrlList.contains(list.get(i).getContentPlay())) {
+                                        allList.add(list.get(i));
+                                    }
+                                }
+                            }
+                            contentUrlList.clear();
                             adapter.notifyDataSetChanged();
                         }
                     } else {
