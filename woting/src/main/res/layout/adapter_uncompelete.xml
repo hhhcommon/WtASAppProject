@@ -98,13 +98,16 @@
                     android:layout_height="12dp"
                     android:layout_marginLeft="14dp"
                     android:layout_marginRight="6dp"
-                    android:src="@mipmap/image_program_size" />
+                    android:src="@mipmap/image_program_size"
+                    android:visibility="gone"
+                    />
 
                 <TextView
                     android:id="@+id/tv_sum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="MB"
+                    android:visibility="gone"
                     android:textColor="@color/beijing"
                     android:textSize="9sp" />
             </LinearLayout>

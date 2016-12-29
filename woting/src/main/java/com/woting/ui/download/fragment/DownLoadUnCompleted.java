@@ -54,7 +54,8 @@ public class DownLoadUnCompleted extends Fragment {
 
     private String userId;
     private int num = -1;
-    private boolean dwType;
+    private boolean dwType=false;
+    private Boolean FirstFlag=true; //标记第一次进入时的事件
 
     // 初始化数据库对象
     private void initDao() {
@@ -107,14 +108,31 @@ public class DownLoadUnCompleted extends Fragment {
             tipView.setTipView(TipView.TipStatus.NO_DATA, "没有下载任务\n您没有未完成的下载任务哟");
         } else {
             tipView.setVisibility(View.GONE);
-            if (DownloadTask.mContext != null && DownloadTask.isPause) {
+          /*  if(DownloadTask.mContext==null){
+                imageStart.setImageResource(R.mipmap.wt_download_play);
+                dwType = false;
+                textStart.setText("全部开始");
+                imageStart.setImageResource(R.mipmap.wt_download_play);
+            }else{
+                if(DownloadTask.isPause==true){
+                    dwType = false;
+                    textStart.setText("全部开始");
+                    imageStart.setImageResource(R.mipmap.wt_download_play);
+                }else{
+                    dwType = true;
+                    imageStart.setImageResource(R.mipmap.wt_download_pause);
+                    textStart.setText("全部暂停");
+                }
+
+            }*/
+            if (DownloadTask.mContext==null||DownloadTask.isPause) {
                 imageStart.setImageResource(R.mipmap.wt_download_play);
                 dwType = false;
                 textStart.setText("全部开始");
             } else {
                 dwType = true;
-                imageStart.setImageResource(R.mipmap.wt_download_play);
-                textStart.setText("全部开始");
+                imageStart.setImageResource(R.mipmap.wt_download_pause);
+                textStart.setText("全部暂停");
             }
             adapter = new DownloadAdapter(context, fileInfoList);
             listView.setAdapter(adapter);
