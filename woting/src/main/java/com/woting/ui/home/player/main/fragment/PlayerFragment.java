@@ -1439,7 +1439,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     if (playType.equals("AUDIO")) {
                         if (GlobalConfig.playerObject.getLocalurl() != null) {
                             mPlayer.startPlay("AUDIO", null, local);
-                            mSeekBar.setSecondaryProgress((int) mPlayer.getTotalTime());
+                            mSeekBar.setSecondaryProgress(mSeekBar.getMax());
                         } else {
                             mPlayer.startPlay("AUDIO", local, null);
                             if (!isCacheFinish(local)) {// 判断是否已经缓存过  没有则开始缓存
