@@ -528,7 +528,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     }
 
     public static void playNoNet() {
-        PlayerFragment.TextPage = 1;
         LanguageSearchInside mContent = getDaoList(context);
         if (mContent == null) return;
         GlobalConfig.playerObject = mContent;
