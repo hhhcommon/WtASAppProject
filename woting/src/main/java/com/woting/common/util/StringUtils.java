@@ -1,15 +1,17 @@
 package com.woting.common.util;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 字符串工具类
@@ -158,5 +160,22 @@ public class StringUtils {
 			}  
 		}  
 		return convert.toUpperCase();  
-	}  
+	}
+
+
+	/**
+	 * 判断传入的字符是否是协议地址
+	 * @param str 要判断的字符
+	 * @return true/false
+	 */
+	public static boolean isPlayUrl(String str) {
+
+
+
+
+		Pattern pattern = Pattern.compile(" ?://? ");
+		Matcher m = pattern.matcher(str);
+		return m.matches();
+	}
+
 }

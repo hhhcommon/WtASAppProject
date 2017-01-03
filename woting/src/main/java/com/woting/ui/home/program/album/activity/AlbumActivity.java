@@ -51,6 +51,7 @@ import com.woting.ui.home.program.album.fragment.DetailsFragment;
 import com.woting.ui.home.program.album.fragment.ProgramFragment;
 import com.woting.ui.home.program.comment.CommentActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
+import com.woting.ui.home.program.radiolist.mode.ListInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -307,7 +308,7 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
         }
         String type = getIntent().getStringExtra("type");
         if (type != null && type.trim().equals("radiolistactivity")) {
-            RankInfo list = (RankInfo) getIntent().getSerializableExtra("list");
+            ListInfo list = (ListInfo) getIntent().getSerializableExtra("list");
             RadioName = list.getContentName();
             ContentDesc = list.getContentDescn();
             id = list.getContentId();

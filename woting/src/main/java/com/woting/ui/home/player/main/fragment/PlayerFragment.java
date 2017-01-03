@@ -304,6 +304,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             mReceiver = new MessageReceiver();
             IntentFilter filter = new IntentFilter();
             filter.addAction(BroadcastConstants.PLAYERVOICE);
+            filter.addAction(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
             filter.addAction(BroadcastConstants.PUSH_MUSIC);
 
             // 下载完成更新 LocalUrl
