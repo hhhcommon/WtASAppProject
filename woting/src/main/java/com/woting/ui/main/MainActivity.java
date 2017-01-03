@@ -56,7 +56,6 @@ import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.model.Catalog;
 import com.woting.ui.home.model.CatalogName;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
@@ -539,7 +538,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                         ContentFavorite, contentid, "", "", "", "", "", ContentPlayType);
                                 dbDao.deleteHistory(ContentPlay);
                                 dbDao.addHistory(history);
-                                PlayerFragment.TextPage = 1;
                                 Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                                 Bundle bundle1 = new Bundle();
                                 bundle1.putString("text", ContentName);

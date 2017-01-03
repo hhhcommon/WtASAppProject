@@ -196,7 +196,6 @@ public class TTSFragment extends Fragment{
 							MainActivity.change();
 							HomeActivity.UpdateViewPager();
 							String s = playList.get(position).getPlayerName();
-							PlayerFragment.TextPage=1;
 							Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
 							Bundle bundle1=new Bundle();
 							bundle1.putString("text",s);

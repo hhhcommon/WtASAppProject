@@ -143,7 +143,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private static XListView mListView;// 播放列表
 
     public static int timerService;// 当前节目播放剩余时间长度
-    public static int TextPage = 1;// 文本搜索 page
+    public static int TextPage = 0;// 文本搜索 page
     private static int sendType;// 第一次获取数据是有分页加载的
     private static int page = 1;// mainPage
     private static int voicePage = 1;// 语音搜索 page
@@ -365,7 +365,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             String enter = sp.getString(StringConstant.PLAYHISTORYENTER, "false");
             String news = sp.getString(StringConstant.PLAYHISTORYENTERNEWS, "");
             if (enter.equals("true")) {
-                TextPage = 1;
+                TextPage = 0;
                 sendTextRequest(news);
                 SharedPreferences.Editor et = sp.edit();
                 et.putString(StringConstant.PLAYHISTORYENTER, "false");
@@ -528,6 +528,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     }
 
     public static void playNoNet() {
+        PlayerFragment.TextPage = 1;
         LanguageSearchInside mContent = getDaoList(context);
         if (mContent == null) return;
         GlobalConfig.playerObject = mContent;
@@ -1555,6 +1556,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()) {
                 case BroadcastConstants.PLAY_TEXT_VOICE_SEARCH:
+                    PlayerFragment.TextPage = 0;
                     sendTextContent = intent.getStringExtra("text");
                     sendTextRequest(sendTextContent);
                     break;
@@ -1879,7 +1881,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     // 获取与文字相关的内容数据
     private void sendTextRequest(String contentName) {
         final LanguageSearchInside fList = getDaoList(context);// 得到数据库里边的第一条数据
-        if (TextPage == 1) {
+        if (TextPage == 0) {
             num = 0;
             allList.clear();
             if (fList != null) allList.add(fList);
@@ -1890,6 +1892,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 adapter.notifyDataSetChanged();
             }
             itemPlay(0);
+            TextPage++;
         }
         sendType = 2;
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
