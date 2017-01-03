@@ -55,6 +55,7 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.HorizontalListView;
+import com.woting.common.widgetui.MarqueeTextView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.model.FileInfo;
@@ -112,7 +113,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private Dialog shareDialog;// 分享对话框
     private View rootView;
 
-    public static TextView mPlayAudioTitleName;// 正在播放的节目的标题
+    public static MarqueeTextView mPlayAudioTitleName;// 正在播放的节目的标题
     private static View mViewVoice;// 语音搜索 点击右上角"语音"显示
     public static TextView mVoiceTextSpeakStatus;// 语音搜索状态
     private ImageView mVoiceImageSpeak;// 按下说话 抬起开始搜索
@@ -197,7 +198,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         ImageView mPlayAudioImageCoverMask = (ImageView) view.findViewById(R.id.image_liu);// 封面图片的六边形遮罩
         mPlayAudioImageCoverMask.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_bd));
 
-        mPlayAudioTitleName = (TextView) view.findViewById(R.id.tv_name);// 正在播放的节目的标题
+        mPlayAudioTitleName = (MarqueeTextView) view.findViewById(R.id.tv_name);// 正在播放的节目的标题
         mPlayAudioImageCover = (ImageView) view.findViewById(R.id.img_news);// 播放节目的封面
 
         mPlayImageStatus = (ImageView) view.findViewById(R.id.img_play);// 播放状态图片  播放 OR 暂停
@@ -1382,7 +1383,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 ToastUtils.show_always(context, "查看主播");
                 break;
             case R.id.lin_ly_ckzj:// 查看专辑
-                if (!CommonHelper.checkNetwork(context)) return;
+                if (!CommonHelper.checkNetwork(context)) return ;
+                if (GlobalConfig.playerObject == null) return ;
                 linChoseClose(mViewMoreChose);
                 if (GlobalConfig.playerObject.getSequId() != null) {
                     Intent intent = new Intent(context, AlbumActivity.class);
@@ -1396,6 +1398,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 }
                 break;
             case R.id.tv_comment:// 评论
+                if (GlobalConfig.playerObject == null) return ;
                 if (!TextUtils.isEmpty(GlobalConfig.playerObject.getContentId()) && !TextUtils.isEmpty(GlobalConfig.playerObject.getMediaType())) {
                     if (CommonUtils.getUserIdNoImei(context) != null && !CommonUtils.getUserIdNoImei(context).equals("")) {
                         Intent intent = new Intent(context, CommentActivity.class);
@@ -1919,7 +1922,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     try {
                         if (list != null && list.size() != 0 && fList != null) {
                             for (int i = 0; i < list.size(); i++) {
-                                if (list.get(i).getContentPlay() == null && list.get(i).getContentPlay().equals(fList.getContentPlay())) {
+                                if (list.get(i).getContentPlay() != null && list.get(i).getContentPlay().equals(fList.getContentPlay())) {
                                     list.remove(i);
                                 }
                             }

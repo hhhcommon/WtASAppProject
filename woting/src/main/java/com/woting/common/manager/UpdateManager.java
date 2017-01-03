@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -23,10 +22,8 @@ import com.woting.common.util.ResourceUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -38,19 +35,17 @@ import java.net.URL;
 public class UpdateManager  {
     private Context mContext;
     private String updateMsg = "我听FM有最新版本，亲快下载吧~"; // 提示语
-    private String apkUrl = GlobalConfig.apkUrl;                // 返回的安装包url
+    private String apkUrl = GlobalConfig.apkUrl;                // 返回的安装包 url
     private Dialog noticeDialog;
-    private Dialog downloadDialog;
-    /* 下载包安装路径 */
-    private final String savePath = ResourceUtil.getLocalUrlForUpload();
-    //    private static final String savePath = Environment.getExternalStorageDirectory().getAbsolutePath(); ;
+
+    // 下载包安装路径
+    private  String savePath = ResourceUtil.getLocalUrlForUpload();
     private final String saveFileName = savePath + "WoTing.apk";
-    /* 进度条与通知ui刷新的handler和msg常量 */
-    private ProgressBar mProgress;
+
+    // 进度条与通知 ui 刷新的 handler 和 msg 常量
     private final int DOWN_UPDATE = 1;
     private final int DOWN_OVER = 2;
     private int progress;
-    private Thread downLoadThread;
     private boolean interceptFlag = false;
 
     private Handler mHandler = new Handler() {
@@ -58,12 +53,10 @@ public class UpdateManager  {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case DOWN_UPDATE:
-//                    mProgress.setProgress(progress);
                     textProgress.setText("正在更新版本 " + progress + "%");
                     progressBar.setProgress(progress);
                     break;
                 case DOWN_OVER:
-//                    installApk();
                     pd.dismiss();
                     installApk();
                     break;
@@ -122,17 +115,6 @@ public class UpdateManager  {
     private ProgressBar progressBar;
 
     private void showDownloadDialog() {
-//        Builder builder = new Builder(mContext);
-//        builder.setTitle("正在更新版本");
-//        final LayoutInflater inflater = LayoutInflater.from(mContext);
-//        View v = inflater.inflate(R.layout.upgrade_progress, null);
-//        mProgress = (ProgressBar) v.findViewById(R.id.progress);
-//        builder.setView(v);
-//        builder.setCancelable(false);
-//        downloadDialog = builder.create();
-//        downloadDialog.show();
-//        downloadApk();
-
         View progressView = LayoutInflater.from(mContext).inflate(R.layout.progress_dialog_view, null);
         textProgress = (TextView) progressView.findViewById(R.id.text_progress);
         progressBar = (ProgressBar) progressView.findViewById(R.id.pb_progressbar);
@@ -144,7 +126,7 @@ public class UpdateManager  {
         downloadApk();
     }
 
-    private Runnable mdownApkRunnable = new Runnable() {
+    private Runnable mDownApkRunnable = new Runnable() {
         @Override
         public void run() {
             try {
@@ -154,19 +136,17 @@ public class UpdateManager  {
                 int length = conn.getContentLength();
                 InputStream is = conn.getInputStream();
                 //////////////
-                String state = Environment.getExternalStorageState();
-                if (!state.equals(Environment.MEDIA_MOUNTED)) {
-                    Log.i("update1", "SD Card is not mounted,It is  " + state + ".");
-                }
-                File directory = new File(savePath).getParentFile();
-                if (!directory.exists() && !directory.mkdirs()) {
-                    Log.i("update2", "Path to file could not be created");
-                }
+//                String state = Environment.getExternalStorageState();
+//                if (!state.equals(Environment.MEDIA_MOUNTED)) {
+//                    Log.i("update1", "SD Card is not mounted,It is  " + state + ".");
+//                }
+//                File directory = new File(savePath).getParentFile();
+//                if (!directory.exists() && !directory.mkdirs()) {
+//                    Log.i("update2", "Path to file could not be created");
+//                }
                 ///////
                 File file = new File(savePath);
-                if (!file.exists()) {
-                    file.mkdir();
-                }
+                if (!file.exists()) if (!file.mkdirs()) Log.v("TAG", "mk fail");
                 String apkFile = saveFileName;
                 File ApkFile = new File(apkFile);
                 FileOutputStream fos = new FileOutputStream(ApkFile);
@@ -185,31 +165,26 @@ public class UpdateManager  {
                 } while (!interceptFlag);// 点击取消就停止下载.
                 fos.close();
                 is.close();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     };
 
-    // 下载apk
+    // 下载 apk
     private void downloadApk() {
-        downLoadThread = new Thread(mdownApkRunnable);
+        Thread downLoadThread = new Thread(mDownApkRunnable);
         downLoadThread.start();
     }
 
-    // 安装apk
+    // 安装 apk
     private void installApk() {
-        if (downloadDialog != null) {
-            downloadDialog.dismiss();
-        }
-        File apkfile = new File(saveFileName);
-        if (!apkfile.exists()) {
+        File apkFile = new File(saveFileName);
+        if (!apkFile.exists()) {
             return;
         }
         Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setDataAndType(Uri.parse("file://" + apkfile.toString()), "application/vnd.android.package-archive");
+        i.setDataAndType(Uri.parse("file://" + apkFile.toString()), "application/vnd.android.package-archive");
         mContext.startActivity(i);
     }
 }
