@@ -20,7 +20,7 @@ public class ListInfo implements Serializable{
 	private String MediaType;
 	private String ContentId;
 	private String ContentShareURL;
-	private String ContentDesc;
+	private String ContentDescn;
 	private String ContentImg;
 	private String ContentFavorite;
 
@@ -41,6 +41,14 @@ public class ListInfo implements Serializable{
 
 	private String playTag;         // 标签<预留>
 	private String ContentPlayType; // 内容后缀
+
+	public String getContentDescn() {
+		return ContentDescn;
+	}
+
+	public void setContentDescn(String contentDescn) {
+		ContentDescn = contentDescn;
+	}
 
 	public String getContentPlayType() {
 		return ContentPlayType;
@@ -183,12 +191,6 @@ public class ListInfo implements Serializable{
 	}
 	public void setContentShareURL(String contentShareURL) {
 		ContentShareURL = contentShareURL;
-	}
-	public String getContentDesc() {
-		return ContentDesc;
-	}
-	public void setContentDesc(String contentDesc) {
-		ContentDesc = contentDesc;
 	}
 	public String getContentImg() {
 		return ContentImg;

@@ -103,9 +103,11 @@ public class VlcPlayer implements WtAudioPlay {
             if (msg == null || msg.getData() == null)
                 return;
             switch (msg.getData().getInt("event")) {
-                case EventHandler.MediaPlayerEncounteredError:// 播放出现错误播下一首
+                case EventHandler.MediaPlayerEncounteredError:// 播放出现错误重新播放
                     Log.e("TAG", "play error -- > " + Url);
-                    PlayerFragment.playNext();
+                    Log.e("缓存播放路径111","======播放出现错误重新播放");
+                    audioPlay.playMRL(Url);
+//                    PlayerFragment.playRepeat();
                     break;
                 case EventHandler.MediaPlayerOpening:
                     Log.e("url", "MediaPlayerOpenning()" + Url);
@@ -121,6 +123,7 @@ public class VlcPlayer implements WtAudioPlay {
                     break;
                 case EventHandler.MediaPlayerEndReached:// 播放完成播下一首
                     Log.e("TAG", "========= MediaPlayerEndReached =========");
+                    Log.e("缓存播放路径222","======播放完成播下一首");
                     PlayerFragment.playNext();
                 case EventHandler.MediaPlayerBuffering:
                     break;

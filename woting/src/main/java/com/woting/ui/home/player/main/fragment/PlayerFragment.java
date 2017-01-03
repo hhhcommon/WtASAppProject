@@ -305,6 +305,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             mReceiver = new MessageReceiver();
             IntentFilter filter = new IntentFilter();
             filter.addAction(BroadcastConstants.PLAYERVOICE);
+            filter.addAction(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
             filter.addAction(BroadcastConstants.PUSH_MUSIC);
             filter.addAction(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
 
@@ -1419,6 +1420,57 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         }
     }
 
+    private static boolean playStatus;// 保存当前播放状态
+
+    // 播放路况 TTS
+    private void playLuKuangTTS(String ttsUrl) {
+        playStatus = mPlayer.isPlaying();
+        if (playStatus) {
+            switch (playType) {
+                case "TTS":
+                    mPlayer.stopPlay();
+                    break;
+                case "RADIO":
+                    mPlayer.pausePlay();
+                    break;
+                case "AUDIO":
+                    mUIHandler.removeMessages(TIME_UI);
+                    mPlayer.pausePlay();
+                    break;
+            }
+        } else {
+            mPlayImageStatus.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_play_play));
+        }
+        mPlayer.playLKTts(context, ttsUrl, new IntegrationPlayer.CompletedLKLis() {
+            @Override
+            public void onCompleted() {
+                resetPlayStatue();
+            }
+        });
+        isPlayLK = true;
+    }
+
+    // 恢复播放路况之前的播放状态
+    private void resetPlayStatue() {
+        isPlayLK = false;
+        if (playStatus) {
+            switch (playType) {
+                case "TTS":
+                    playNext();
+                    break;
+                case "RADIO":
+                    mPlayer.continuePlay();
+                    break;
+                case "AUDIO":
+                    mUIHandler.sendEmptyMessage(TIME_UI);
+                    mPlayer.continuePlay();
+                    break;
+            }
+        } else {
+            mPlayImageStatus.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_play_stop));
+        }
+    }
+
     static Handler mUIHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -1747,56 +1799,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         });
     }
 
-    private static boolean playStatus;// 保存当前播放状态
 
-    // 播放路况 TTS
-    private void playLuKuangTTS(String ttsUrl) {
-        playStatus = mPlayer.isPlaying();
-        if (playStatus) {
-            switch (playType) {
-                case "TTS":
-                    mPlayer.stopPlay();
-                    break;
-                case "RADIO":
-                    mPlayer.pausePlay();
-                    break;
-                case "AUDIO":
-                    mUIHandler.removeMessages(TIME_UI);
-                    mPlayer.pausePlay();
-                    break;
-            }
-        } else {
-            mPlayImageStatus.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_play_play));
-        }
-        mPlayer.playLKTts(context, ttsUrl, new IntegrationPlayer.CompletedLKLis() {
-            @Override
-            public void onCompleted() {
-                resetPlayStatue();
-            }
-        });
-        isPlayLK = true;
-    }
-
-    // 恢复播放路况之前的播放状态
-    private void resetPlayStatue() {
-        isPlayLK = false;
-        if (playStatus) {
-            switch (playType) {
-                case "TTS":
-                    playNext();
-                    break;
-                case "RADIO":
-                    mPlayer.continuePlay();
-                    break;
-                case "AUDIO":
-                    mUIHandler.sendEmptyMessage(TIME_UI);
-                    mPlayer.continuePlay();
-                    break;
-            }
-        } else {
-            mPlayImageStatus.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_play_stop));
-        }
-    }
 
     // 获取 TTS 的播放内容
     private static void getContentNews(String id, final int number) {

@@ -250,7 +250,7 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                         String playMediaType = newList.get(position - 2).getMediaType();
                         String playAllTime = "0";
                         String playInTime = "0";
-                        String playContentDesc = newList.get(position - 2).getContentDesc();
+                        String playContentDesc = newList.get(position - 2).getContentDescn();
                         String playNum = newList.get(position - 2).getPlayCount();
                         String playZanType = "0";
                         String playFrom = newList.get(position - 2).getContentPub();
