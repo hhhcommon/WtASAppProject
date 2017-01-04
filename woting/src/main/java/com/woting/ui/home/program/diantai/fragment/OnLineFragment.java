@@ -424,10 +424,11 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                                 playAllTime, playInTime, playContentDesc, playerNum,
                                 playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
                                 ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType);
+                       /* history.set*/
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
                         PlayerFragment.TextPage = 1;
-                        Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                        Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);;
                         Bundle bundle1 = new Bundle();
                         bundle1.putString("text", mainLists.get(position).getContentName());
                         push.putExtras(bundle1);
