@@ -29,7 +29,6 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
@@ -260,7 +259,6 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                     dbDao.addHistory(history);
                     MainActivity.change();
                     HomeActivity.UpdateViewPager();
-                    PlayerFragment.TextPage=1;
                     Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                     Bundle bundle1=new Bundle();
                     bundle1.putString("text",list.get(groupPosition).getList().get(childPosition).getContentName());

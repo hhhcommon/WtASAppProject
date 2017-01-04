@@ -46,7 +46,6 @@ import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout;
 import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout.OnRefreshListener;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.citylist.activity.CityListActivity;
@@ -424,11 +423,9 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                                 playAllTime, playInTime, playContentDesc, playerNum,
                                 playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
                                 ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType);
-                       /* history.set*/
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
-                        PlayerFragment.TextPage = 1;
-                        Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);;
+                        Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
                         bundle1.putString("text", mainLists.get(position).getContentName());
                         push.putExtras(bundle1);
@@ -554,7 +551,6 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
                         HomeActivity.UpdateViewPager();
-                        PlayerFragment.TextPage = 1;
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
                         bundle1.putString("text", newList.get(groupPosition).getList().get(childPosition).getContentName());

@@ -31,7 +31,6 @@ import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
@@ -300,7 +299,6 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                         dbDao.deleteHistory(playerurl);
                         dbDao.addHistory(history);
                         HomeActivity.UpdateViewPager();
-                        PlayerFragment.TextPage = 1;
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
                         bundle1.putString("text", newList.get(position - 2).getContentName());

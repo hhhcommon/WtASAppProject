@@ -62,10 +62,6 @@ public class XListView extends ListView implements OnScrollListener {
 														// load more.
 	private final static float OFFSET_RADIO = 1.8f; // support iOS like pull
 													// feature.
-
-	/**
-	 * @param context
-	 */
 	public XListView(Context context) {
 		super(context);
 		initWithContext(context);
@@ -86,6 +82,8 @@ public class XListView extends ListView implements OnScrollListener {
 		// XListView need the scroll event, and it will dispatch the event to
 		// user's listener (as a proxy).
 		super.setOnScrollListener(this);
+
+        setFooterDividersEnabled(false);
 
 		// init header view
 		mHeaderView = new XListViewHeader(context);
@@ -118,8 +116,6 @@ public class XListView extends ListView implements OnScrollListener {
 
 	/**
 	 * enable or disable pull down refresh feature.
-	 * 
-	 * @param enable
 	 */
 	public void setPullRefreshEnable(boolean enable) {
 		mEnablePullRefresh = enable;
@@ -132,8 +128,6 @@ public class XListView extends ListView implements OnScrollListener {
 
 	/**
 	 * enable or disable pull up load more feature.
-	 * 
-	 * @param enable
 	 */
 	public void setPullLoadEnable(boolean enable) {
 		mEnablePullLoad = enable;
@@ -176,8 +170,6 @@ public class XListView extends ListView implements OnScrollListener {
 
 	/**
 	 * set last refresh time
-	 * 
-	 * @param time
 	 */
 	public void setRefreshTime(String time) {
 		mHeaderTimeView.setText(time);
@@ -339,8 +331,7 @@ public class XListView extends ListView implements OnScrollListener {
 		// send to user's listener
 		mTotalItemCount = totalItemCount;
 		if (mScrollListener != null) {
-			mScrollListener.onScroll(view, firstVisibleItem, visibleItemCount,
-					totalItemCount);
+			mScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
 		}
 	}
 
@@ -353,15 +344,15 @@ public class XListView extends ListView implements OnScrollListener {
 	 * onXScrolling when header/footer scroll back.
 	 */
 	public interface OnXScrollListener extends OnScrollListener {
-		public void onXScrolling(View view);
+        void onXScrolling(View view);
 	}
 
 	/**
 	 * implements this interface to get refresh/load more event.
 	 */
 	public interface IXListViewListener {
-		public void onRefresh();
+        void onRefresh();
 
-		public void onLoadMore();
+        void onLoadMore();
 	}
 }

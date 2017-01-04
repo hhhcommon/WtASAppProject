@@ -26,7 +26,7 @@
                 android:paddingRight="9dp"
                 android:src="@mipmap/wt_icon_lktts"/>
 
-            <TextView
+            <com.woting.common.widgetui.MarqueeTextView
                 android:id="@+id/tv_name"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -34,9 +34,12 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="18dp"
                 android:layout_weight="1"
-                android:ellipsize="end"
-                android:gravity="center"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:marqueeRepeatLimit="marquee_forever"
                 android:singleLine="true"
+                android:gravity="center"
                 android:textColor="@color/wt_login_third"
                 android:textSize="15sp"/>
 
@@ -133,7 +136,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:focusable="true"
                 android:maxHeight="3dp"
                 android:minHeight="3dp"
                 android:paddingLeft="5dp"
