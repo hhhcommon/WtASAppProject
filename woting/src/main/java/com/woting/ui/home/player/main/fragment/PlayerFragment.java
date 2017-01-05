@@ -55,6 +55,7 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.HorizontalListView;
+import com.woting.common.widgetui.MarqueeTextView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.model.FileInfo;
@@ -112,7 +113,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private Dialog shareDialog;// 分享对话框
     private View rootView;
 
-    public static TextView mPlayAudioTitleName;// 正在播放的节目的标题
+    public static MarqueeTextView mPlayAudioTitleName;// 正在播放的节目的标题
     private static View mViewVoice;// 语音搜索 点击右上角"语音"显示
     public static TextView mVoiceTextSpeakStatus;// 语音搜索状态
     private ImageView mVoiceImageSpeak;// 按下说话 抬起开始搜索
@@ -142,7 +143,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private static XListView mListView;// 播放列表
 
     public static int timerService;// 当前节目播放剩余时间长度
-    public static int TextPage = 1;// 文本搜索 page
+    public static int TextPage = 0;// 文本搜索 page
     private static int sendType;// 第一次获取数据是有分页加载的
     private static int page = 1;// mainPage
     private static int voicePage = 1;// 语音搜索 page
@@ -197,7 +198,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         ImageView mPlayAudioImageCoverMask = (ImageView) view.findViewById(R.id.image_liu);// 封面图片的六边形遮罩
         mPlayAudioImageCoverMask.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_bd));
 
-        mPlayAudioTitleName = (TextView) view.findViewById(R.id.tv_name);// 正在播放的节目的标题
+        mPlayAudioTitleName = (MarqueeTextView) view.findViewById(R.id.tv_name);// 正在播放的节目的标题
         mPlayAudioImageCover = (ImageView) view.findViewById(R.id.img_news);// 播放节目的封面
 
         mPlayImageStatus = (ImageView) view.findViewById(R.id.img_play);// 播放状态图片  播放 OR 暂停
@@ -364,7 +365,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             String enter = sp.getString(StringConstant.PLAYHISTORYENTER, "false");
             String news = sp.getString(StringConstant.PLAYHISTORYENTERNEWS, "");
             if (enter.equals("true")) {
-                TextPage = 1;
+                TextPage = 0;
                 sendTextRequest(news);
                 SharedPreferences.Editor et = sp.edit();
                 et.putString(StringConstant.PLAYHISTORYENTER, "false");
@@ -1383,7 +1384,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 ToastUtils.show_always(context, "查看主播");
                 break;
             case R.id.lin_ly_ckzj:// 查看专辑
-                if (!CommonHelper.checkNetwork(context)) return;
+                if (!CommonHelper.checkNetwork(context)) return ;
+                if (GlobalConfig.playerObject == null) return ;
                 linChoseClose(mViewMoreChose);
                 if (GlobalConfig.playerObject.getSequId() != null) {
                     Intent intent = new Intent(context, AlbumActivity.class);
@@ -1397,6 +1399,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 }
                 break;
             case R.id.tv_comment:// 评论
+                if (GlobalConfig.playerObject == null) return ;
                 if (!TextUtils.isEmpty(GlobalConfig.playerObject.getContentId()) && !TextUtils.isEmpty(GlobalConfig.playerObject.getMediaType())) {
                     if (CommonUtils.getUserIdNoImei(context) != null && !CommonUtils.getUserIdNoImei(context).equals("")) {
                         Intent intent = new Intent(context, CommentActivity.class);
@@ -1552,6 +1555,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()) {
                 case BroadcastConstants.PLAY_TEXT_VOICE_SEARCH:
+                    PlayerFragment.TextPage = 0;
                     sendTextContent = intent.getStringExtra("text");
                     sendTextRequest(sendTextContent);
                     break;
@@ -1877,7 +1881,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     // 获取与文字相关的内容数据
     private void sendTextRequest(String contentName) {
         final LanguageSearchInside fList = getDaoList(context);// 得到数据库里边的第一条数据
-        if (TextPage == 1) {
+        if (TextPage == 0) {
             num = 0;
             allList.clear();
             if (fList != null) allList.add(fList);
@@ -1888,6 +1892,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 adapter.notifyDataSetChanged();
             }
             itemPlay(0);
+            TextPage++;
         }
         sendType = 2;
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);

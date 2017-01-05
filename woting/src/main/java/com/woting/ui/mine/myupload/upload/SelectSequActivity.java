@@ -121,7 +121,8 @@ public class SelectSequActivity extends AppBaseActivity implements View.OnClickL
             jsonObject.put("PCDType", GlobalConfig.PCDType);
             jsonObject.put("MobileClass", PhoneMessage.model + "::" + PhoneMessage.productor);
             jsonObject.put("UserId", CommonUtils.getUserId(context));
-            jsonObject.put("FlagFlow", "2");
+            jsonObject.put("ShortSerach", "true");
+            jsonObject.put("FlagFlow", "0");
             jsonObject.put("ChannelId", "0");
         } catch (JSONException e) {
             e.printStackTrace();

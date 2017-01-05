@@ -229,7 +229,6 @@ public class MyUploadSoundFragment extends Fragment implements AdapterView.OnIte
                 if (PlayerFragment.context != null) {
                     MainActivity.change();
                     HomeActivity.UpdateViewPager();
-                    PlayerFragment.TextPage = 1;
                     Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                     Bundle bundle1 = new Bundle();
                     bundle1.putString("text", newList.get(position).getContentName());

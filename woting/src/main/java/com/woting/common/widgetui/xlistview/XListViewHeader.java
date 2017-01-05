@@ -46,10 +46,6 @@ public class XListViewHeader extends LinearLayout {
 		initView(context);
 	}
 
-	/**
-	 * @param context
-	 * @param attrs
-	 */
 	public XListViewHeader(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		initView(context);

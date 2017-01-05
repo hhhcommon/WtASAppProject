@@ -38,8 +38,8 @@ public class GlobalConfig {
     public static List<UserInfo> list_person;       // 通讯录中的好友
     public static LanguageSearchInside playerObject;// 播放器播放对象
     //缓存路径
-    public static String playCacheDirI = Environment.getRootDirectory() + ""; //获取手机根目录
-    public static String playCacheDirO = Environment.getExternalStorageDirectory() + ""; //获取SD卡根目录
+    public static String playCacheDirI = Environment.getRootDirectory().getAbsolutePath(); // 获取手机根目录
+    public static String playCacheDirO = Environment.getExternalStorageDirectory().getAbsolutePath(); // 获取 SD 卡根目录
     public static String ksyPlayCache = "/WTFM/playCache/";// 金山云缓存地址
     public static String upLoadCache = "/WTFM/APP/";// app更新下载地址
 
@@ -76,7 +76,7 @@ public class GlobalConfig {
      * http请求总url
      */
 	public static final String baseUrl = "http://182.92.175.134:808/";//生产服务器地址
-//    public static final String baseUrl = "http://123.56.254.75:808/";//测试服务器地址
+    // public static final String baseUrl = "http://123.56.254.75:808/";//测试服务器地址
 //    public static final String baseUrl = "http://192.168.5.17:808/";
 
     /**

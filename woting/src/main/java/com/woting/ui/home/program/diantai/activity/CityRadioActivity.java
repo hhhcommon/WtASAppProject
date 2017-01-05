@@ -27,7 +27,6 @@ import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.diantai.activity.adapter.OnLinesRadioAdapter;
@@ -210,7 +209,6 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                         dbDao.addHistory(history);
                         HomeActivity.UpdateViewPager();
                         finish();
-                        PlayerFragment.TextPage = 1;
 
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
@@ -360,7 +358,6 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                         dbDao.addHistory(history);
                         HomeActivity.UpdateViewPager();
 
-                        PlayerFragment.TextPage = 1;
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
                         bundle1.putString("text", SubListList.get(position).getContentName());

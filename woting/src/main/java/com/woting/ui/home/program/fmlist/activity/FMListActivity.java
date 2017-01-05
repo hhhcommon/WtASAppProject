@@ -32,7 +32,6 @@ import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.diantai.model.RadioPlay;
 import com.woting.ui.home.program.fmlist.adapter.RankInfoAdapter;
@@ -262,7 +261,6 @@ public class FMListActivity extends AppBaseActivity implements OnClickListener, 
                         dbDao.addHistory(history);
                         HomeActivity.UpdateViewPager();
                         if (ViewType == 3) finish();
-                        PlayerFragment.TextPage = 1;
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
                         bundle1.putString("text", newList.get(position - 1).getContentName());
