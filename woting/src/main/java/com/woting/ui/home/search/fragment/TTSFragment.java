@@ -154,10 +154,10 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
                         String playUri = newList.get(position - 1).getContentURI();
                         String playMediaType = newList.get(position - 1).getMediaType();
                         String playContentShareUrl = newList.get(position - 1).getContentShareURL();
-                        String playAllTime = "0";
+                        String playAllTime =newList.get(position - 1).getContentTimes() ;
                         String playInTime = "0";
-                        String playContentDesc = newList.get(position - 1).getCurrentContent();
-                        String playerNum = newList.get(position - 1).getWatchPlayerNum();
+                        String playContentDesc = newList.get(position - 1).getContentDescn();
+                        String playerNum = newList.get(position - 1).getPlayCount();
                         String playZanType = "0";
                         String playFrom = newList.get(position - 1).getContentPub();
                         String playFromId = "";
@@ -172,13 +172,14 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
                         String sequDesc = newList.get(position - 1).getSequDesc();
                         String sequImg = newList.get(position - 1).getSequImg();
                         String ContentPlayType= newList.get(position - 1).getContentPlayType();
+                        String IsPlaying=newList.get(position-1).getIsPlaying();
 
                         // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playName, playImage, playUrl, playUri, playMediaType,
                                 playAllTime, playInTime, playContentDesc, playerNum,
                                 playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc,sequImg,ContentPlayType);
+                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc,sequImg,ContentPlayType,IsPlaying);
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
                         MainActivity.change();

@@ -94,7 +94,7 @@ public class PlayerListAdapter extends BaseAdapter {
         }
 
         // 来源
-        String contentPub = searchList.getContentPub();
+        String contentPub = searchList.getIsPlaying();
         if(contentType!= null && contentType.equals("RADIO")) {
             if (contentPub != null && !contentPub.equals("")) {
                 contentPub = "正在直播: " + contentPub;

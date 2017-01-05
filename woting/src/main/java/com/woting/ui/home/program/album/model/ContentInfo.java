@@ -41,6 +41,15 @@ public class ContentInfo implements Serializable {
 	private String CataName;
 	private String CataTitle;
 	private String CataMId;
+	private String IsPlaying;
+
+	public String getIsPlaying() {
+		return IsPlaying;
+	}
+
+	public void setIsPlaying(String isPlaying) {
+		IsPlaying = isPlaying;
+	}
 
 	public String getCataDid() {
 		return CataDid;

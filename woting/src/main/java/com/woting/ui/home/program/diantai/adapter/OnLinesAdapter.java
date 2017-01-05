@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -153,7 +154,12 @@ public class OnLinesAdapter extends BaseExpandableListAdapter  {
 //					} else {
 //						holder.textview_rankplaying.setText(lists.getContentPub());
 //					}
-					holder.textview_rankplaying.setText("测试-无节目单数据");
+					if(!TextUtils.isEmpty(lists.getIsPlaying())){
+						holder.textview_rankplaying.setText(lists.getIsPlaying());
+					}else{
+						holder.textview_rankplaying.setText("测试-无节目单数据");
+					}
+
 					if (lists.getContentImg() == null
 							|| lists.getContentImg().equals("")
 							|| lists.getContentImg().equals("null")

@@ -49,7 +49,7 @@ public class GlobalConfig {
     /**
      * 数据库版本号
      */
-    public static final int dbVersionCode = 39;
+    public static final int dbVersionCode = 40;
     /**
      * 是否活跃状态，有活跃状态才能播放声音，否则即使收到音频包也不播放
      */
@@ -69,15 +69,15 @@ public class GlobalConfig {
     /**
      * socket请求ip
      */
-	public static final String socketUrl = "182.92.175.134";//生产服务器地址
-//    public static final String socketUrl = "123.56.254.75";//测试服务器地址
+//	public static final String socketUrl = "182.92.175.134";//生产服务器地址
+    public static final String socketUrl = "123.56.254.75";//测试服务器地址
 //	public static final String socketUrl = "192.168.5.17";//
     /**
      * http请求总url
      */
-	public static final String baseUrl = "http://182.92.175.134:808/";//生产服务器地址
-    // public static final String baseUrl = "http://123.56.254.75:808/";//测试服务器地址
-//    public static final String baseUrl = "http://192.168.5.17:808/";
+//	public static final String baseUrl = "http://182.92.175.134:808/";//生产服务器地址
+    public static final String baseUrl = "http://123.56.254.75:808/";//测试服务器地址
+//  public static final String baseUrl = "http://192.168.5.17:808/";
 
     /**
      * image请求路径前缀

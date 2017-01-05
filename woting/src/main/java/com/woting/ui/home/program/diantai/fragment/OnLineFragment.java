@@ -416,13 +416,13 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                         String sequDesc = mainLists.get(position).getSequDesc();
                         String sequImg = mainLists.get(position).getSequImg();
                         String ContentPlayType = mainLists.get(position).getContentPlayType();
-
+                        String IsPlaying=mainLists.get(position).getIsPlaying();
                         // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playName, playImage, playUrl, playUri, playMediaType,
                                 playAllTime, playInTime, playContentDesc, playerNum,
                                 playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType);
+                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
@@ -520,9 +520,9 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                         String playUri = newList.get(groupPosition).getList().get(childPosition).getContentURI();
                         String playMediaType = newList.get(groupPosition).getList().get(childPosition).getMediaType();
                         String playContentShareUrl = newList.get(groupPosition).getList().get(childPosition).getContentShareURL();
-                        String playAllTime = "0";
+                        String playAllTime = newList.get(groupPosition).getList().get(childPosition).getContentTimes();
                         String playInTime = "0";
-                        String playContentDesc = newList.get(groupPosition).getList().get(childPosition).getCurrentContent();
+                        String playContentDesc = newList.get(groupPosition).getList().get(childPosition).getContentDescn();
                         String playerNum = newList.get(groupPosition).getList().get(childPosition).getPlayCount();
                         String playZanType = "0";
                         String playFrom = newList.get(groupPosition).getList().get(childPosition).getContentPub();
@@ -540,13 +540,14 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                         String sequImg = newList.get(groupPosition).getList().get(childPosition).getSequImg();
 
                         String ContentPlayType = newList.get(groupPosition).getList().get(childPosition).getContentPlayType();
+                        String IsPlaying=newList.get(groupPosition).getList().get(childPosition).getIsPlaying();
 
                         // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playName, playImage, playUrl, playUri, playMediaType,
                                 playAllTime, playInTime, playContentDesc, playerNum,
                                 playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType);
+                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
 
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);

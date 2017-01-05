@@ -38,9 +38,17 @@ public class ListInfo implements Serializable{
 	private String sequImg;//专辑图片
 	private String sequDesc;//专辑描述
 	private String sequName;//专辑名称
-
+	private String IsPlaying;
 	private String playTag;         // 标签<预留>
 	private String ContentPlayType; // 内容后缀
+
+	public String getIsPlaying() {
+		return IsPlaying;
+	}
+
+	public void setIsPlaying(String isPlaying) {
+		IsPlaying = isPlaying;
+	}
 
 	public String getContentDescn() {
 		return ContentDescn;

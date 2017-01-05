@@ -415,14 +415,14 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
 					String sequDesc=list.get(groupPosition).getList().get(childPosition).getSequDesc();
 					String sequImg=list.get(groupPosition).getList().get(childPosition).getSequImg();
 					String ContentPlayType= list.get(groupPosition).getList().get(childPosition).getContentPlayType();
-
+					String IsPlaying=list.get(groupPosition).getList().get(childPosition).getIsPlaying();
 
 					// 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
 					PlayerHistory history = new PlayerHistory(
 							playername,  playerimage, playerurl, playerurI,playermediatype,
 							plaplayeralltime, playerintime, playercontentdesc, playernum,
 							playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
-							ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg,ContentPlayType);
+							ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg,ContentPlayType,IsPlaying);
                     if(mediaType.equals("TTS")){
                         dbDao.deleteHistoryById(ContentId);
                     }else {

@@ -46,6 +46,7 @@ public class RankInfo implements Serializable {
 	private String playTag;         // 标签<预留>
 	private String ContentPlayType; // 内容后缀
 
+
 	public String getContentPlayType() {
 		return ContentPlayType;
 	}

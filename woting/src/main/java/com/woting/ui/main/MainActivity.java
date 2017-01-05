@@ -443,7 +443,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                 JSONObject arg1 = (JSONObject) jsonParser.nextValue();
                                 // 此处后期需要用typeToken将字符串StringSubList 转化成为一个list集合
                                 String ContentPlayType, contentid, mediatype, ContentImg, ContentName, CTime, ContentTimes,
-                                        ContentKeyWord, ContentFavorite, ContentShareURL, ContentPlay, ContentPub, ContentDescn, PlayCount;
+                                        ContentKeyWord, ContentFavorite, ContentShareURL, ContentPlay, ContentPub, ContentDescn, PlayCount,IsPlaying;
                                 try {
                                     ContentPlayType = arg1.getString("ContentPlayType");
                                 } catch (Exception e) {
@@ -529,13 +529,19 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                     e.printStackTrace();
                                     ContentFavorite = "";
                                 }
+                                try {
+                                    IsPlaying = arg1.getString("IsPlaying");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    IsPlaying  = "";
+                                }
 
                                 //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                                 PlayerHistory history = new PlayerHistory(
                                         ContentName, ContentImg, ContentPlay, "", mediatype,
                                         ContentTimes, "0", ContentDescn, PlayCount,
                                         "0", ContentPub, "", "", CTime, CommonUtils.getUserId(context), ContentShareURL,
-                                        ContentFavorite, contentid, "", "", "", "", "", ContentPlayType);
+                                        ContentFavorite, contentid, "", "", "", "", "", ContentPlayType,IsPlaying);
                                 dbDao.deleteHistory(ContentPlay);
                                 dbDao.addHistory(history);
                                 Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);

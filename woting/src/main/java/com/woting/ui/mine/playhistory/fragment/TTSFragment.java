@@ -184,12 +184,13 @@ public class TTSFragment extends Fragment{
 						String sequImg=playList.get(position).getSequImg();
 
 						String ContentPlayType= playList.get(position).getContentPlayType();
+						String IsPlaying=playList.get(position).getIsPlaying();
 
 						PlayerHistory history = new PlayerHistory(
 								playername,  playerimage, playerurl, playerurI,playermediatype,
 								plaplayeralltime, playerintime, playercontentdesc, playernum,
 								playerzantype,  playerfrom, playerfromid,playerfromurl, playeraddtime,bjuserid,playcontentshareurl,
-								ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg,ContentPlayType);
+								ContentFavorite,ContentId,localurl,sequName,sequId,sequDesc,sequImg,ContentPlayType,IsPlaying);
 						dbDao.deleteHistory(playerurl);
 						dbDao.addHistory(history);
 						if(PlayerFragment.context!=null){

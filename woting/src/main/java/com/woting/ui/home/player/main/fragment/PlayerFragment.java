@@ -1087,6 +1087,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             historyNews.setContentDescn(historyNew.getPlayerContentDescn());
             historyNews.setPlayCount(historyNew.getPlayerNum());
             historyNews.setContentImg(historyNew.getPlayerImage());
+            historyNews.setIsPlaying(historyNew.getIsPlaying());
             try {
                 if (historyNew.getPlayerAllTime() != null && historyNew.getPlayerAllTime().equals("")) {
                     historyNews.setPlayerAllTime("0");
@@ -1154,12 +1155,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         String sequDesc = languageSearchInside.getSequDesc();
         String sequImg = languageSearchInside.getSequImg();
         String ContentPlayType = languageSearchInside.getContentPlayType();
+        String IsPlaying =languageSearchInside.getIsPlaying();
 
         PlayerHistory history = new PlayerHistory(playerName, playerImage,
                 playerUrl, playerUrI, playerMediaType, playerAllTime,
                 playerInTime, playerContentDesc, playerNum, playerZanType,
                 playerFrom, playerFromId, playerFromUrl, playerAddTime,
-                bjUserId, playContentShareUrl, ContentFavorite, ContentID, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType);
+                bjUserId, playContentShareUrl, ContentFavorite, ContentID, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
 
         if (mSearchHistoryDao == null)
             mSearchHistoryDao = new SearchPlayerHistoryDao(context);// 如果数据库没有初始化，则初始化 db
