@@ -26,11 +26,11 @@ public class MessageForMainGroup implements Serializable {
         GroupId = groupId;
     }
 
-    public com.woting.ui.common.model.GroupInfo getGroupInfo() {
+    public GroupInfo getGroupInfo() {
         return GroupInfo;
     }
 
-    public void setGroupInfo(com.woting.ui.common.model.GroupInfo groupInfo) {
+    public void setGroupInfo(GroupInfo groupInfo) {
         GroupInfo = groupInfo;
     }
 

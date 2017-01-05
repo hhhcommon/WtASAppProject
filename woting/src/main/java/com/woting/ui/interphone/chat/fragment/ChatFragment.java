@@ -1021,8 +1021,7 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
                                             VoiceStreamRecordService.stop();
                                             ToastUtils.show_always(context, "没有有效登录用户");
                                             break;
-                                        case 0x02:
-                                            //无法获取用户组
+                                        case 0x02:                                            //无法获取用户组
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
                                             VoiceStreamRecordService.stop();
                                             ToastUtils.show_always(context, "无法获取用户组");

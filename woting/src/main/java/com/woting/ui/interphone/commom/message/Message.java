@@ -73,7 +73,7 @@ public abstract class Message implements Comparable<Message>, Serializable {
     public boolean isBizAffirm() {
         return affirm==2||affirm==3;
     }
-
+    
     /**
      * 用于消息排序
      */
@@ -87,7 +87,7 @@ public abstract class Message implements Comparable<Message>, Serializable {
 
     /**
      * 从字节数组中获得消息
-     * @throws Exception
+     * @throws Exception 
      */
     public abstract void fromBytes(byte[] binaryMsg) throws Exception;
 

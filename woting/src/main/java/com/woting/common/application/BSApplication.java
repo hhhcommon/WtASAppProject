@@ -3,6 +3,7 @@ package com.woting.common.application;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.util.Log;
 
 import com.android.volley.RequestQueue;
@@ -28,14 +29,14 @@ import java.util.List;
  * 2016/12/28 11:21
  * 邮箱：645700751@qq.com
  */
-public class BSApplication extends Application implements OnErrorListener,OnLogEventListener {
+public class BSApplication extends Application implements OnErrorListener, OnLogEventListener {
 
     private static RequestQueue queues;
     private static Context instance;
     public static SocketClientConfig scc;
     public static SharedPreferences SharedPreferences;
     private ArrayList<String> staticFacesList;
-    private static      KSYProxyService proxyService = null;
+    private static KSYProxyService proxyService = null;
 
     @Override
     public void onCreate() {
@@ -43,9 +44,9 @@ public class BSApplication extends Application implements OnErrorListener,OnLogE
         instance = this;
         SharedPreferences = this.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
 
-        queues = Volley.newRequestQueue(this);        InitThird();                        //第三方使用的相关方法
+        queues = Volley.newRequestQueue(this);
+        InitThird();                        //第三方使用的相关方法
         PhoneMessage.getPhoneInfo(instance);//获取手机信息
-        initStaticFaces();                  //读取assets里的图片资源
 
         List<String> _l = new ArrayList<String>();//其中每个间隔要是0.5秒的倍数
         _l.add("INTE::500");                 //第1次检测到未连接成功，隔0.5秒重连
@@ -60,7 +61,13 @@ public class BSApplication extends Application implements OnErrorListener,OnLogE
         _l.add("GOTO::8");                   //之后，调到第9步处理
         scc = new SocketClientConfig();
         scc.setReConnectWays(_l);
-        CommonHelper.checkNetworkStatus(instance);                     //网络设置获取
+        CommonHelper.checkNetworkStatus(instance); // 网络设置获取
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                initStaticFaces();                 // 读取assets里的图片资源
+            }
+        }, 0);
     }
 
     public static Context getAppContext() {
@@ -68,15 +75,15 @@ public class BSApplication extends Application implements OnErrorListener,OnLogE
     }
 
     public static KSYProxyService getKSYProxy() {
-        if(proxyService == null){
+        if (proxyService == null) {
             return newKSYProxy();
-        }else{
-            return proxyService ;
+        } else {
+            return proxyService;
         }
     }
 
     private static KSYProxyService newKSYProxy() {
-        proxyService =new KSYProxyService(instance);
+        proxyService = new KSYProxyService(instance);
         initCache();
         return proxyService;
     }
@@ -132,11 +139,11 @@ public class BSApplication extends Application implements OnErrorListener,OnLogE
 
     @Override
     public void OnError(int i) {
-        Log.e("缓存播放路径333","======"+i);
+        Log.e("缓存播放路径333", "======" + i);
     }
 
     @Override
     public void onLogEvent(String log) {
-        Log.e("缓存播放路径444","======"+log);
+        Log.e("缓存播放路径444", "======" + log);
     }
 }

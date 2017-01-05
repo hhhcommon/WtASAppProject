@@ -952,7 +952,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                                             try {
 //                                                                String callerInfo = arg1.getString("CallerInfo");
 //                                                                CallerInfo caller = new Gson().fromJson(callerInfo, new TypeToken<CallerInfo>() {
-//                                                                }.getType());
+//                                                                 }.getType());
 
 
                                                                 CallerInfo caller = userInfo.getCallerInfo();
@@ -1130,7 +1130,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         Log.v("--- onStop ---", "--- 杀死进程 ---");
     }
 
-    //版本更新对话框
+    //服务对话框
     private void pushDialog(String title, String message, final int type) {
         //type 0=默认值,1=被顶替,2=展示个人,3=展示群组
 
@@ -1235,7 +1235,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         //对讲主页界面更新
         MainActivity.changeTwo();
         DuiJiangActivity.update();
-
     }
 
 //    private void test(){

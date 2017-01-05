@@ -26,7 +26,7 @@ public class BroadcastConstants {
     public static final String ACTIVITY_CHANGE = "ACTIVITY_CHANGE";
 
     //SOCKET_PUSH-----push
-    public static final String SOCKET_PUSH = "SOCKET_PUSH";
+//    public static final String SOCKET_PUSH = "SOCKET_PUSH";
 
     //PUSH_VOICE_IMAGE_REFRESH-----push_voiceimagerefresh
     public static final String PUSH_VOICE_IMAGE_REFRESH = "PUSH_VOICE_IMAGE_REFRESH";

@@ -563,7 +563,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     // 播放下一首
     public static void playNext() {
         if (allList != null && allList.size() > 0) {
-            if(allList.size() == 1) {// 列表只有一条数据 循环播放
+            if (allList.size() == 1) {// 列表只有一条数据 循环播放
                 mPlayer.startPlay(playType, GlobalConfig.playerObject.getContentPlay(), GlobalConfig.playerObject.getLocalurl());
                 mUIHandler.sendEmptyMessage(PLAY);
             } else {// 如果不止一条数据则往下播放
@@ -640,7 +640,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
     // 按下按钮的操作
     private void pressDown() {
-        if(mCloseVoiceRunnable != null) {
+        if (mCloseVoiceRunnable != null) {
             mVoiceTextSpeakStatus.setText("请按住讲话");
             mUIHandler.removeCallbacks(mCloseVoiceRunnable);
         }
@@ -758,9 +758,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
             // 下载状态
             if (type != null && type.equals("AUDIO")) {// 可以下载
-                if(fileInfoList != null && fileInfoList.size() > 0) {
-                    for(int i=0, size=fileInfoList.size(); i<size; i++) {
-                        if(GlobalConfig.playerObject.getContentPlay() != null && GlobalConfig.playerObject.getContentPlay().equals(fileInfoList.get(i).getUrl())) {
+                if (fileInfoList != null && fileInfoList.size() > 0) {
+                    for (int i = 0, size = fileInfoList.size(); i < size; i++) {
+                        if (GlobalConfig.playerObject.getContentPlay() != null && GlobalConfig.playerObject.getContentPlay().equals(fileInfoList.get(i).getUrl())) {
                             GlobalConfig.playerObject.setLocalurl(fileInfoList.get(i).getLocalurl());
                             Log.v("TAG", "fileInfoList: Localurl  -- > " + fileInfoList.get(i).getLocalurl());
                         }
@@ -993,25 +993,25 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             setPullAndLoad(true, false);
             return;
         }
-        if(first) {// 第一次进入没有网络或加载数据有问题刷新数据时重新加载
+        if (first) {// 第一次进入没有网络或加载数据有问题刷新数据时重新加载
             refreshType = 0;
             firstSend();
             first = false;
-            return ;
+            return;
         }
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                refreshType = 1;
-                if (sendType == 1) {
-                    firstSend();
-                } else if (sendType == 2) {
-                    sendTextRequest(sendTextContent);
-                } else if (sendType == 3) {
-                    searchByVoice(voiceStr);
-                }
+                    refreshType = 1;
+                    if (sendType == 1) {
+                        firstSend();
+                    } else if (sendType == 2) {
+                        sendTextRequest(sendTextContent);
+                    } else if (sendType == 3) {
+                        searchByVoice(voiceStr);
+                    }
             }
-        }, 1000);
+        },1000);
     }
 
     // 加载更多
@@ -1302,7 +1302,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 break;
             case R.id.tv_cancel:// 取消 点击隐藏语音对话框
                 linChoseClose(mViewVoice);
-                if(mCloseVoiceRunnable != null) {
+                if (mCloseVoiceRunnable != null) {
                     mUIHandler.removeCallbacks(mCloseVoiceRunnable);
                     mVoiceTextSpeakStatus.setText("请按住讲话");
                 }
@@ -1312,7 +1312,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 break;
             case R.id.view__voice_other:
                 linChoseClose(mViewVoice);
-                if(mCloseVoiceRunnable != null) {
+                if (mCloseVoiceRunnable != null) {
                     mUIHandler.removeCallbacks(mCloseVoiceRunnable);
                     mVoiceTextSpeakStatus.setText("请按住讲话");
                 }
@@ -1486,7 +1486,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                         timerService = (int) (duration - currPosition);
                         if (mPlayer.isPlaying()) mSeekBar.setProgress((int) currPosition);
 
-                        if((duration - currPosition) / 1000 > 5) {
+                        if ((duration - currPosition) / 1000 > 5) {
                             mSearchHistoryDao.updatePlayerInTime(GlobalConfig.playerObject.getContentPlay(), currPosition, duration);
                         } else {
                             mSearchHistoryDao.updatePlayerInTime(GlobalConfig.playerObject.getContentPlay(), 0, duration);
@@ -1569,7 +1569,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 case BroadcastConstants.PUSH_MUSIC:
                     // 监听到电话状态发生更改
                     String phoneType = intent.getStringExtra("outMessage");
-                    Log.e("电话状态",phoneType+"");
+                    Log.e("电话状态", phoneType + "");
                     break;
                 case BroadcastConstants.ACTION_FINISHED:
                 case BroadcastConstants.ACTION_FINISHED_NO_DOWNLOADVIEW:
@@ -1616,7 +1616,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     if (ReturnType.equals("1001")) {
                         page++;
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        List<LanguageSearchInside> list = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<LanguageSearchInside>>() {}.getType());
+                        List<LanguageSearchInside> list = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<LanguageSearchInside>>() {
+                        }.getType());
                         list = clearContentPlayNull(list);
                         if (refreshType == 0) {
                             LanguageSearchInside fList = getDaoList(context);// 得到数据库里边的第一条数据
@@ -1797,7 +1798,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     }
 
 
-
     // 获取 TTS 的播放内容
     private static void getContentNews(String id, final int number) {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
@@ -1826,7 +1826,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     try {
-                        LanguageSearchInside lists = new Gson().fromJson(MainList, new TypeToken<LanguageSearchInside>() {}.getType());
+                        LanguageSearchInside lists = new Gson().fromJson(MainList, new TypeToken<LanguageSearchInside>() {
+                        }.getType());
                         String ContentURI = lists.getContentURI();
                         Log.e("ContentURI", ContentURI + "");
                         if (ContentURI != null && ContentURI.trim().length() > 0) {
@@ -1913,16 +1914,17 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     List<LanguageSearchInside> list = new ArrayList<>();
                     try {
-                        LanguageSearch lists = new Gson().fromJson(result.getString("ResultList"), new TypeToken<LanguageSearch>() {}.getType());
+                        LanguageSearch lists = new Gson().fromJson(result.getString("ResultList"), new TypeToken<LanguageSearch>() {
+                        }.getType());
                         list = lists.getList();
                         list = clearContentPlayNull(list);
-                    }catch (Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     try {
                         if (list != null && list.size() != 0 && fList != null) {
                             for (int i = 0; i < list.size(); i++) {
-                                if (list.get(i).getContentPlay() == null && list.get(i).getContentPlay().equals(fList.getContentPlay())) {
+                                if (list.get(i).getContentPlay() != null && list.get(i).getContentPlay().equals(fList.getContentPlay())) {
                                     list.remove(i);
                                 }
                             }
@@ -1985,7 +1987,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 try {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType.equals("1001")) {
-                        LanguageSearch lists = new Gson().fromJson(result.getString("ResultList"), new TypeToken<LanguageSearch>() {}.getType());
+                        LanguageSearch lists = new Gson().fromJson(result.getString("ResultList"), new TypeToken<LanguageSearch>() {
+                        }.getType());
                         List<LanguageSearchInside> list = lists.getList();
                         list = clearContentPlayNull(list);
                         if (list.size() != 0) {
@@ -2042,6 +2045,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         mListView.stopLoadMore();
     }
 
+    // 获取下拉刷新按钮是否显示
+    private boolean getHeadViewShow() {
+        return mListView.getPullRefreshShow();
+    }
+
     // 语音搜索按钮的按下抬起操作监听
     class MyVoiceSpeakTouchLis implements View.OnTouchListener {
 
@@ -2071,10 +2079,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private List<LanguageSearchInside> clearContentPlayNull(List<LanguageSearchInside> list) {
         int index = 0;
         while (index < list.size()) {
-            if(list.get(index).getMediaType().equals("TTS")) {
+            if (list.get(index).getMediaType().equals("TTS")) {
                 index++;
             } else {
-                if(list.get(index).getContentPlay() == null || list.get(index).getContentPlay().trim().equals("")
+                if (list.get(index).getContentPlay() == null || list.get(index).getContentPlay().trim().equals("")
                         || list.get(index).getContentPlay().trim().toUpperCase().equals("NULL")) {
                     list.remove(index);
                 } else {

@@ -36,25 +36,26 @@ import java.util.concurrent.ArrayBlockingQueue;
  * 邮箱：645700751@qq.com
  */
 public class SocketService extends Service {
-    private static SocketClientConfig scc = BSApplication.scc; //客户端配置
-    private Context context; //android 上下文，这个要自己恢复
-    private int nextReConnIndex = 0; //重连策略下一个执行序列;
+    private static SocketClientConfig scc = BSApplication.scc;        // 客户端配置
+    private Context context;                                          // android 上下文，这个要自己恢复
+    private int nextReConnIndex = 0;                                  // 重连策略下一个执行序列;
     private static volatile Socket socket = null;
     private static volatile boolean toBeStop = false;
     private static volatile boolean isRunning = false;
-    private volatile long lastReceiveTime; //最后收到服务器消息时间
-    private volatile Object socketSendLock = new Object();//发送锁
-    private volatile Object socketRecvLock = new Object();//接收锁
-    private static HealthWatch healthWatch; //健康检查线程
-    private static ReConn reConn; //重新连接线程
-    private static SendBeat sendBeat; //发送心跳线程
-    private static SendMsg sendMsg; //发送消息线程
-    private static ReceiveMsg receiveMsg; //结束消息线程
-    private static ArrayBlockingQueue<Message> audioMsgQueue = new ArrayBlockingQueue<Message>(128); //接收到的音频消息队列
-    private static ArrayBlockingQueue<Message> newsMsgQueue = new ArrayBlockingQueue<Message>(128); //接收到的数据消息队列
-    private static ArrayBlockingQueue<Message> MsgQueue = new ArrayBlockingQueue<Message>(128); //需要处理的已经组装好的消息队列
-    protected ArrayBlockingQueue<Byte> receiveByteQueue = new ArrayBlockingQueue<Byte>(10240);//接收到的原始数据
-    protected static ArrayBlockingQueue<byte[]> sendMsgQueue = new ArrayBlockingQueue<byte[]>(512);//要发送的消息队列
+    private volatile long lastReceiveTime;                            // 最后收到服务器消息时间
+    private volatile Object socketSendLock = new Object();            // 发送锁
+    private volatile Object socketRecvLock = new Object();            // 接收锁
+    private static HealthWatch healthWatch;                           // 健康检查线程
+    private static ReConn reConn;                                     // 重新连接线程
+    private static SendBeat sendBeat;                                 // 发送心跳线程
+    private static SendMsg sendMsg;                                   // 发送消息线程
+    private static ReceiveMsg receiveMsg;                             // 结束消息线程
+    private static ArrayBlockingQueue<Message> audioMsgQueue = new ArrayBlockingQueue<Message>(128);                // 接收到的音频消息队列
+    private static ArrayBlockingQueue<Message> newsMsgQueue = new ArrayBlockingQueue<Message>(128);                 // 接收到的数据消息队列
+    private static ArrayBlockingQueue<Message> MsgQueue = new ArrayBlockingQueue<Message>(128);               // 需要处理的已经组装好的消息队列
+    private static ArrayBlockingQueue<Message> ControlReceiptMsgQueue = new ArrayBlockingQueue<Message>(128); // 控制回执消息,4.3-(2-4-7)
+    protected ArrayBlockingQueue<Byte> receiveByteQueue = new ArrayBlockingQueue<Byte>(10240);                   // 接收到的原始数据
+    protected static ArrayBlockingQueue<byte[]> sendMsgQueue = new ArrayBlockingQueue<byte[]>(512);           // 要发送的消息队列
 
     private static BufferedInputStream in = null;
     private static BufferedOutputStream out = null;
@@ -64,10 +65,10 @@ public class SocketService extends Service {
     public void onCreate() {
         super.onCreate();
         context = this;
-        //广播接收器
+        // 广播接收器
         if (Receiver == null) {
             Receiver = new MessageReceiver();
-            //接收网络状态
+            // 接收网络状态
             IntentFilter filter = new IntentFilter();
             filter.addAction(BroadcastConstants.PUSH_NetWorkPush);
             getApplicationContext().registerReceiver(Receiver, filter);
@@ -77,16 +78,19 @@ public class SocketService extends Service {
 //			tpm=new TalkPlayManage(1,context); //只允许有一个播放
 //			tpm.start();
 //		}
-        //组装原始消息的线程
+        // 组装原始消息的线程
         AssembleReceive assemble = new AssembleReceive();
         assemble.start();
-        //处理接收到的数据的线程
+        // 处理接收到的数据的线程
         DealReceive dr = new DealReceive();
         dr.start();
-        //对接收到的数据进行分发线程(音频数据)
+        // 控制回执消息,4.3-(2-4-7)
+        sendControlReceipt cr = new sendControlReceipt();
+        cr.start();
+        // 对接收到的数据进行分发线程(音频数据)
         AudioDistributed audiodistributed = new AudioDistributed();
         audiodistributed.start();
-        //对接收到的数据进行分发线程（消息数据）
+        // 对接收到的数据进行分发线程（消息数据）
         MessageDistributed msgdistributed = new MessageDistributed();
         msgdistributed.start();
 
@@ -637,6 +641,7 @@ public class SocketService extends Service {
                     Message ms = MessageUtils.buildMsgByBytes(mba);
                     if (ms != null) {
                         Log.e("数据包", "Socket[" + socket.hashCode() + "]【接收数据】:" + JsonEncloseUtils.btToString(mba) + "");
+                        ControlReceiptMsgQueue.add(ms);
                         MsgQueue.add(ms);
                     }
 
@@ -669,6 +674,34 @@ public class SocketService extends Service {
         }
     }
 
+    // 控制回执消息,4.3-(2-4-7)
+    private class sendControlReceipt extends Thread {
+        public void run() {
+            while (true) {
+                try {
+                    Message msg = ControlReceiptMsgQueue.take();
+                    if (msg != null) {
+                        if (msg instanceof MsgNormal) {
+                            MsgNormal nMsg = (MsgNormal) msg;
+                            if( nMsg.isCtlAffirm()){
+                                InterPhoneControl.sendControlReceiptMessage(nMsg.getReMsgId(),0);
+                                Log.i("控制回执消息", "控制回执消息已处理");
+                            }
+                        }
+//                        else if (msg instanceof MsgMedia) {
+//                            MsgMedia nMsg = (MsgMedia) msg;
+//                            if( nMsg.isCtlAffirm()){
+//                                InterPhoneControl.sendControlReceiptMessage(nMsg.getReMsgId(),0);
+//                                Log.i("控制回执消息", "控制回执消息已处理");
+//                            }
+//                        }
+                    }
+                } catch (Exception e) {
+                    Log.e("sendControlReceipt线程:::", e.toString());
+                }
+            }
+        }
+    }
 
     //处理接收到的音频数据的线程(分组到两个)
     private class AudioDistributed extends Thread {

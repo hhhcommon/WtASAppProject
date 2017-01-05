@@ -663,6 +663,8 @@ public class InterPhoneControl {
         msg.setReMsgId(ReMsgId);
         // 16进制编码：0000=0；1000=8
         msg.setAffirm(Affirm);
+        msg.setFromType(0);
+        msg.setToType(1);
         msg.setBizType(0);
         msg.setCmdType(0);
         msg.setSendTime(System.currentTimeMillis());
@@ -684,6 +686,8 @@ public class InterPhoneControl {
         msg.setMsgType(0);
         // 16进制编码：0000=0；1000=8
         msg.setAffirm(0);
+        msg.setFromType(0);
+        msg.setToType(1);
         msg.setBizType(4);
         msg.setCmdType(cmdType);
         msg.setCommand(command);
