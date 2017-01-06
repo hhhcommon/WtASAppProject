@@ -151,10 +151,10 @@ public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
             } else {
                 holder.textNumber.setText(lists.getPlayerNum());
             }
-            if (lists.getPlayerFrom() == null || lists.getPlayerFrom().equals("")) {
-                holder.textRankContent.setText("未知");
+            if (lists.getIsPlaying() == null || lists.getIsPlaying().equals("")) {
+                holder.textRankContent.setText("暂无信息");
             } else {
-                holder.textRankContent.setText(lists.getPlayerFrom());
+                holder.textRankContent.setText("上次收听的节目:  "+lists.getIsPlaying());
             }
 
             try {
