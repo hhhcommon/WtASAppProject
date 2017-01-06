@@ -24,6 +24,8 @@ public class GlobalConfig {
     public static String District;
     public static String AdCode;
 
+    public static String oldBCCallId;// 上次存在的对讲ID
+
     public static ArrayList<String> staticFacesList;   //从Asset中取出的表情list
     // 网络情况 1为成功WiFi已连接，2为cmnet，3为cmwap，4为ctwap， -1为网络未连接
     public static final int NETWORK_STATE_IDLE = -1;
@@ -69,14 +71,14 @@ public class GlobalConfig {
     /**
      * socket请求ip
      */
-	public static final String socketUrl = "182.92.175.134";//生产服务器地址
-//    public static final String socketUrl = "123.56.254.75";//测试服务器地址
+//	public static final String socketUrl = "182.92.175.134";//生产服务器地址
+    public static final String socketUrl = "123.56.254.75";//测试服务器地址
 //	public static final String socketUrl = "192.168.5.17";//
     /**
      * http请求总url
      */
-	public static final String baseUrl = "http://182.92.175.134:808/";//生产服务器地址
-    // public static final String baseUrl = "http://123.56.254.75:808/";//测试服务器地址
+//	public static final String baseUrl = "http://182.92.175.134:808/";//生产服务器地址
+     public static final String baseUrl = "http://123.56.254.75:808/";//测试服务器地址
 //    public static final String baseUrl = "http://192.168.5.17:808/";
 
     /**

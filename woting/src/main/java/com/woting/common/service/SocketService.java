@@ -100,7 +100,7 @@ public class SocketService extends Service {
      * 开始工作：
      * 包括创建检测线程，并启动Socet连接
      */
-    public void workStart() {
+    public void  workStart() {
         if (!isRunning) {
             this.toBeStop = false;
             this.isRunning = true;

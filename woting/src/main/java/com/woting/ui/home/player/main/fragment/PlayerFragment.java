@@ -2050,11 +2050,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         mListView.stopLoadMore();
     }
 
-    // 获取下拉刷新按钮是否显示
-    private boolean getHeadViewShow() {
-        return mListView.getPullRefreshShow();
-    }
-
     // 语音搜索按钮的按下抬起操作监听
     class MyVoiceSpeakTouchLis implements View.OnTouchListener {
 

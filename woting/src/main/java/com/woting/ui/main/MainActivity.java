@@ -1171,7 +1171,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 } else if (type == 3) {
                     // 退出组
 //                    dialogShowTypeGroup = 0;
-                    InterPhoneControl.Quit(context, groupInfo.getGroupId());//退出小组
+                    if(groupInfo!=null)InterPhoneControl.Quit(context, groupInfo.getGroupId());//退出小组
                 }
                 pushDialog.dismiss();
             }
