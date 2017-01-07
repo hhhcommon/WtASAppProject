@@ -36,12 +36,13 @@ public class SearchPlayerHistoryDao {
 		String s=playerhistory.getPlayerNum();
 		String s1=playerhistory.getPlayerName();
 		String s2=playerhistory.getPlayerUrl();
+		String s3=playerhistory.getIsPlaying();
 		Log.e("加库地址======",""+s2);
 
 		db.execSQL("insert into playerhistory(playername,playerimage,playerurl,playerurI,playermediatype,playeralltime"
 						+ ",playerintime,playercontentdesc,playernum,playerzantype,playerfrom,playerfromid,"
 				+ "playeraddtime,bjuserid,playshareurl,playfavorite,"
-				+ "contentid,localurl,sequname,sequimg,sequdesc,sequid,playtag,contentplaytype) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+				+ "contentid,localurl,sequname,sequimg,sequdesc,sequid,playtag,contentplaytype,IsPlaying) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
 				new Object[] { playerhistory.getPlayerName(), playerhistory.getPlayerImage()
 						, playerhistory.getPlayerUrl(),playerhistory.getPlayerUrI()
 						,playerhistory.getPlayerMediaType()
@@ -51,7 +52,7 @@ public class SearchPlayerHistoryDao {
 						, playerhistory.getBJUserid(),playerhistory.getPlayContentShareUrl()
 						,playerhistory.getContentFavorite(),playerhistory.getContentID(),playerhistory.getLocalurl()
 						, playerhistory.getSequName(),playerhistory.getSequImg(),playerhistory.getSequDesc()
-						,playerhistory.getSequId(),playerhistory.getPlayTag(),playerhistory.getContentPlayType()});//sql语句
+						,playerhistory.getSequId(),playerhistory.getPlayTag(),playerhistory.getContentPlayType(),playerhistory.getIsPlaying()});//sql语句
 		db.close();//关闭数据库对象
 	}
 
@@ -95,11 +96,12 @@ public class SearchPlayerHistoryDao {
 				String sequimg=cursor.getString(cursor.getColumnIndex("sequimg"));
 				//String playtag=cursor.getString(cursor.getColumnIndex("playtag"));
 				String contentplaytype=cursor.getString(cursor.getColumnIndex("contentplaytype"));
-
+				//IsPlaying
+				String IsPlaying=cursor.getString(cursor.getColumnIndex("IsPlaying"));
 
 				PlayerHistory h = new PlayerHistory(playername, playerimage, playerurl,playerurI, playermediatype, playeralltime,
 						playerintime, playercontentdesc, playernum, playerzantype, playerfrom, playerfromid,playerfromurl,playeraddtime,bjuserid,playcontentshareurl,ContentFavorite,ContentID
-						,localurl,sequname,sequid,sequdesc,sequimg,contentplaytype);
+						,localurl,sequname,sequid,sequdesc,sequimg,contentplaytype,IsPlaying);
 
 
 				myList.add(h);
@@ -152,10 +154,11 @@ public class SearchPlayerHistoryDao {
 				String sequdesc=cursor.getString(cursor.getColumnIndex("sequdesc"));
 				String sequimg=cursor.getString(cursor.getColumnIndex("sequimg"));
 				String contentplaytype=cursor.getString(cursor.getColumnIndex("contentplaytype"));
+				String IsPlaying=cursor.getString(cursor.getColumnIndex("IsPlaying"));
 
 				PlayerHistory h = new PlayerHistory(playername, playerimage, playerurl,playerurI, playermediatype, playeralltime,
 						playerintime, playercontentdesc, playernum, playerzantype, playerfrom, playerfromid,playerfromurl,playeraddtime,bjuserid,playcontentshareurl,ContentFavorite,ContentID
-						,localurl,sequname,sequid,sequdesc,sequimg,contentplaytype);
+						,localurl,sequname,sequid,sequdesc,sequimg,contentplaytype,IsPlaying);
 				mylist.add(h);
 			}
 		} catch (Exception e) {
@@ -207,10 +210,11 @@ public class SearchPlayerHistoryDao {
 				String sequdesc=cursor.getString(cursor.getColumnIndex("sequdesc"));
 				String sequimg=cursor.getString(cursor.getColumnIndex("sequimg"));
 				String contentplaytype=cursor.getString(cursor.getColumnIndex("contentplaytype"));
+				String IsPlaying=cursor.getString(cursor.getColumnIndex("IsPlaying"));
 
 				PlayerHistory h = new PlayerHistory(playername, playerimage, playerurl,playerurI, playermediatype, playeralltime,
 						playerintime, playercontentdesc, playernum, playerzantype, playerfrom, playerfromid,playerfromurl,playeraddtime,bjuserid,playcontentshareurl,ContentFavorite,ContentID
-						,localurl,sequname,sequid,sequdesc,sequimg,contentplaytype);
+						,localurl,sequname,sequid,sequdesc,sequimg,contentplaytype,IsPlaying);
 				mylist.add(h);
 			}
 		} catch (Exception e) {

@@ -156,9 +156,9 @@ public class TotalFragment extends Fragment {
                     String plaplayeralltime = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerAllTime();
                     String playerintime = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerInTime();
                     String playercontentdesc = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerContentDescn();
-                    String playernum = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerNum();
+                    String playernum = list.get(groupPosition).getHistoryList().get(childPosition).getPlayCount();
                     String playerzantype = "0";
-                    String playerfrom = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerFrom();
+                    String playerfrom = list.get(groupPosition).getHistoryList().get(childPosition).getContentPub();
                     String playerfromid = "";
                     String playerfromurl = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerFromUrl();
                     String playeraddtime = Long.toString(System.currentTimeMillis());
@@ -175,11 +175,12 @@ public class TotalFragment extends Fragment {
 
                     String ContentPlayType = list.get(groupPosition).getHistoryList().get(childPosition).getContentPlayType();
 
+                    String IsPlaying=list.get(groupPosition).getHistoryList().get(childPosition).getIsPlaying();
                     PlayerHistory history = new PlayerHistory(
                             playername, playerimage, playerurl, playerurI, playermediatype,
                             plaplayeralltime, playerintime, playercontentdesc, playernum,
                             playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playcontentshareurl,
-                            ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg, ContentPlayType);
+                            ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
 
                     // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                     if (playermediatype != null && playermediatype.equals("TTS")) dbDao.deleteHistoryById(ContentId);

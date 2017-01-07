@@ -120,7 +120,7 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                     intent.putExtra("ContentPub",ContentPub);
                     startActivity(intent);
                 }else{
-                    ToastUtils.show_always(context,"此专辑没有所属的专辑");
+                    ToastUtils.show_always(context,"此专辑还没有主播哦");
                 }
                 break;
 

@@ -228,10 +228,10 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                     String playUri = list.get(groupPosition).getList().get(childPosition).getContentURI();
                     String playMediaType = list.get(groupPosition).getList().get(childPosition).getMediaType();
                     String playContentShareUrl = list.get(groupPosition).getList().get(childPosition).getContentShareURL();
-                    String playAllTime = "0";
+                    String playAllTime =list.get(groupPosition).getList().get(childPosition).getContentTimes();
                     String playInTime = "0";
-                    String playContentDesc = list.get(groupPosition).getList().get(childPosition).getCurrentContent();
-                    String playerNum = list.get(groupPosition).getList().get(childPosition).getWatchPlayerNum();
+                    String playContentDesc = list.get(groupPosition).getList().get(childPosition).getContentDescn();
+                    String playerNum = list.get(groupPosition).getList().get(childPosition).getPlayCount();
                     String playZanType = "0";
                     String playFrom = list.get(groupPosition).getList().get(childPosition).getContentPub();
                     String playFromId = "";
@@ -248,13 +248,14 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                     String sequImg = list.get(groupPosition).getList().get(childPosition).getSequImg();
 
                     String ContentPlayType= list.get(groupPosition).getList().get(childPosition).getContentPlayType();
-
+                    String IsPlaying=list.get(groupPosition).getList().get(childPosition).getIsPlaying();
                     // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                     PlayerHistory history = new PlayerHistory(
                             playName, playImage, playUrl, playUri, playMediaType,
                             playAllTime, playInTime, playContentDesc, playerNum,
                             playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                            ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg,ContentPlayType);
+                            ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg,ContentPlayType,IsPlaying);
+
                     dbDao.deleteHistory(playUrl);
                     dbDao.addHistory(history);
                     MainActivity.change();

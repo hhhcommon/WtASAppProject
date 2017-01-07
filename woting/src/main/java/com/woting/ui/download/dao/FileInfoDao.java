@@ -61,9 +61,12 @@ public class FileInfoDao {
 				String playcount=cursor.getString(cursor.getColumnIndex("playcount"));
 				String contentplaytype=cursor.getString(cursor.getColumnIndex("contentplaytype"));
                 String localUrl=cursor.getString(cursor.getColumnIndex("localurl"));
+				//IsPlaying
+				String IsPlaying=cursor.getString(cursor.getColumnIndex("IsPlaying"));
 				// 把每个对象都放到history对象里
 				FileInfo h = new FileInfo(url, filename,id,seqimageurl);
 				/*	h.setId(id);*/
+
 				h.setAuthor(author);
 				//h.setContentPub(author);
 				h.setStart(start);
