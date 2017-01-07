@@ -64,15 +64,11 @@ public class CallAlertActivity extends Activity implements OnClickListener {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        //透明状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    //透明导航栏
 
-
 //        AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
 //        audioManager.setMicrophoneMute(false);
 //        audioManager.setSpeakerphoneOn(true);//使用扬声器外放，即使已经插入耳机
 //        setVolumeControlStream(AudioManager.STREAM_MUSIC);//控制声音的大小
 //        audioManager.setMode(AudioManager.STREAM_MUSIC);
-
-
-
 
         instance = this;
         getSource();        // 获取展示数据

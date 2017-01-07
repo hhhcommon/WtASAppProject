@@ -155,6 +155,7 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
         dbDao.addTalkHistory(history);
 //        DBTalkHistorary talkdb = dbDao.queryHistory().get(0);//得到数据库里边数据
         //对讲主页界面更新
+        InterPhoneControl.bdcallid = SubclassService.callid;
         MainActivity.changeTwo();
         DuiJiangActivity.update();
         ChatFragment.zhiDingPerson();

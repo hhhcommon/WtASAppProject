@@ -35,6 +35,24 @@ public class PlayerHistory implements Serializable{
 	private String sequName;        // 专辑名称
 	private String playTag;         // 标签<预留>
 	private String ContentPlayType; // 内容后缀
+	private String IsPlaying;       // 正在播放的内容
+	private String PlayCount;
+
+	public void setPlayCount(String playCount) {
+		PlayCount = playCount;
+	}
+
+	public String getPlayCount() {
+		return PlayCount;
+	}
+
+	public void setIsPlaying(String isPlaying) {
+		IsPlaying = isPlaying;
+	}
+
+	public String getIsPlaying() {
+		return IsPlaying;
+	}
 
 	public String getContentPlayType() {
 		return ContentPlayType;
@@ -180,7 +198,7 @@ public class PlayerHistory implements Serializable{
 						 String playerzantype,String  playerfrom,String playerfromid,String Playerfromurl,
 						 String playeraddtime,String bjuserid,String playcontentshareurl,String ContentFavorite,
 						 String ContentID,String localurl,String sequName,
-						 String sequId,String sequDesc,String sequImg,String contentPlayType) {
+						 String sequId,String sequDesc,String sequImg,String contentPlayType,String IsPlaying) {
 		super();
 		PlayerName = playername;
 		PlayerImage = playerimage;
@@ -199,6 +217,7 @@ public class PlayerHistory implements Serializable{
 		BJUserid=bjuserid;
 		PlayContentShareUrl=playcontentshareurl;
 		ContentPlayType=contentPlayType;
+		this.IsPlaying=IsPlaying;
 		this.sequName=sequName;
 		this.sequDesc=sequDesc;
 		this.sequId=sequId;

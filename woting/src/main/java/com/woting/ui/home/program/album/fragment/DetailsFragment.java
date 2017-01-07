@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,18 +19,18 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.AssembleImageUrlUtils;
+import com.woting.common.util.DialogUtils;
+import com.woting.common.util.ToastUtils;
+import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.RoundImageView;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.album.anchor.AnchorDetailsActivity;
 import com.woting.ui.home.program.album.model.ContentCatalogs;
-import com.woting.ui.home.program.album.model.ContentInfo;
-import com.woting.common.config.GlobalConfig;
-import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyRequest;
-import com.woting.common.util.DialogUtils;
-import com.woting.common.util.ToastUtils;
-import com.woting.common.widgetui.RoundImageView;
+import com.woting.ui.home.program.album.model.PersonInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -112,11 +113,15 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                 break;
             case R.id.round_image_head:// 主播详情
             case R.id.text_anchor_name:
-                PersonId="46ef848fa9cd4b5e9c20493b01f3a157";
-                Intent intent=new Intent(context, AnchorDetailsActivity.class);
-                intent.putExtra("PersonId",PersonId);
-                intent.putExtra("ContentPub",ContentPub);
-                startActivity(intent);
+
+                if(!TextUtils.isEmpty(PersonId)){
+                    Intent intent=new Intent(context, AnchorDetailsActivity.class);
+                    intent.putExtra("PersonId",PersonId);
+                    intent.putExtra("ContentPub",ContentPub);
+                    startActivity(intent);
+                }else{
+                    ToastUtils.show_always(context,"此专辑还没有主播哦");
+                }
                 break;
 
         }
@@ -144,8 +149,14 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                     if (ReturnType != null && ReturnType.equals("1001")) {
                         String ResultList = result.getString("ResultInfo");
                         JSONObject arg1 = (JSONObject) new JSONTokener(ResultList).nextValue();
-                        ContentInfo contentInfo = new Gson().fromJson(ResultList, new TypeToken<ContentInfo>() {}.getType());
-                        contentCatalogsList = contentInfo.getContentCatalogs();
+
+                        try {
+                            String s = arg1.getString("ContentCatalogs");
+                            contentCatalogsList = new Gson().fromJson(s, new TypeToken<List<ContentCatalogs>>() {
+                            }.getType());
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                         try {
                             contentDesc = arg1.getString("ContentDescn");
                         } catch (Exception e) {
@@ -176,6 +187,27 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+
+                        try{
+                            String ContentPersons=arg1.getString("ContentPersons");
+                            List<PersonInfo> mPersonInfoList= new Gson().fromJson(ContentPersons, new TypeToken<List<com.woting.ui.home.program.album.model.PersonInfo>>() {
+                            }.getType());
+                            if(mPersonInfoList!=null&&mPersonInfoList.size()>0){
+
+                                if(mPersonInfoList.get(0).getPerId()!=null){
+                                    PersonId=mPersonInfoList.get(0).getPerId();
+                                }else{
+                                    PersonId="";
+                                }
+
+                            }else{
+                                PersonId="";
+                            }
+
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+
 
                         AlbumActivity.returnResult = 1;
                         if (AlbumActivity.ContentFavorite != null && !AlbumActivity.ContentFavorite.equals("")) {
@@ -217,6 +249,7 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                         if (contentCatalogsList != null && contentCatalogsList.size() > 0) {
                             StringBuilder builder = new StringBuilder();
                             for (int i = 0; i < contentCatalogsList.size(); i++) {
+
                                 String str = contentCatalogsList.get(i).getCataTitle();
                                 builder.append(str);
                                 if (i != contentCatalogsList.size() - 1) builder.append("  ");

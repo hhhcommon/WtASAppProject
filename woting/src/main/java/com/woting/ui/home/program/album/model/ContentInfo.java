@@ -1,7 +1,6 @@
 package com.woting.ui.home.program.album.model;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class ContentInfo implements Serializable {
 	private static final long serialVersionUID = 1231243519566434965L;
@@ -38,6 +37,51 @@ public class ContentInfo implements Serializable {
 	private String localurl;
 	private String playTag;         // 标签<预留>
 	private String ContentPlayType; // 内容后缀
+	private String CataDid;
+	private String CataName;
+	private String CataTitle;
+	private String CataMId;
+	private String IsPlaying;
+
+	public String getIsPlaying() {
+		return IsPlaying;
+	}
+
+	public void setIsPlaying(String isPlaying) {
+		IsPlaying = isPlaying;
+	}
+
+	public String getCataDid() {
+		return CataDid;
+	}
+
+	public void setCataDid(String cataDid) {
+		CataDid = cataDid;
+	}
+
+	public String getCataTitle() {
+		return CataTitle;
+	}
+
+	public void setCataTitle(String cataTitle) {
+		CataTitle = cataTitle;
+	}
+
+	public String getCataName() {
+		return CataName;
+	}
+
+	public void setCataName(String cataName) {
+		CataName = cataName;
+	}
+
+	public String getCataMId() {
+		return CataMId;
+	}
+
+	public void setCataMId(String cataMId) {
+		CataMId = cataMId;
+	}
 
 	public String getContentPlayType() {
 		return ContentPlayType;
@@ -63,15 +107,7 @@ public class ContentInfo implements Serializable {
 		this.localurl = localurl;
 	}
 
-	private List<ContentCatalogs> ContentCatalogs;
 
-	public List<ContentCatalogs> getContentCatalogs() {
-		return ContentCatalogs;
-	}
-
-	public void setContentCatalogs(List<ContentCatalogs> contentCatalogs) {
-		ContentCatalogs = contentCatalogs;
-	}
 
 	public String getContentFavorite() {
 		return ContentFavorite;

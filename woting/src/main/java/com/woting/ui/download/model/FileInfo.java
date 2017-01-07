@@ -41,6 +41,15 @@ public class FileInfo implements Serializable {
 	private String ContentDescn;
 	private String playTag;         // 标签<预留>
 	private String ContentPlayType; // 内容后缀
+	private String IsPlaying;       // 正在播放
+
+	public String getIsPlaying() {
+		return IsPlaying;
+	}
+
+	public void setIsPlaying(String isPlaying) {
+		IsPlaying = isPlaying;
+	}
 
 	public String getContentPlayType() {
 		return ContentPlayType;

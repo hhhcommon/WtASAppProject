@@ -88,7 +88,7 @@ import java.util.Map;
  * @author 辛龙
  *         2016年1月18日
  */
-public class ChatFragment extends Fragment implements OnClickListener, TipView.TipViewClick {
+public class ChatFragment extends Fragment implements TipView.TipViewClick {
     public static FragmentActivity context;
     private static ChatListAdapter adapter;
     private MessageReceiver Receiver;
@@ -97,20 +97,11 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
     private SharedPreferences shared = BSApplication.SharedPreferences;
 
     private static ListView mListView;
-    private static ImageView image_persontx;
-    private static ImageView image_grouptx;
-    public static ImageView imageView_answer;
-    private static TextView tv_groupname;
-    private static TextView tv_num;
-    private static TextView tv_grouptype;
-    private static TextView tv_allnum;
-    private static TextView tv_personname;
-    private TextView talkingName;
-    private TextView talking_news;
-    private TextView gridView_tv;
-    private ImageView image_personvoice;
-    private ImageView image_group_persontx;
-    private ImageView image_voice;
+    private static ImageView image_persontx, image_grouptx, imageView_answer;
+
+    private static TextView tv_groupname, tv_num, tv_grouptype, tv_allnum, tv_personname;
+    private TextView talkingName, talking_news, gridView_tv;
+    private ImageView image_personvoice, image_group_persontx, image_voice;
 
     private Button image_button;
     private View rootView;
@@ -120,16 +111,13 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
 
     private RelativeLayout Relative_listview;
     public static MyLinearLayout lin_foot;
-    public static LinearLayout lin_head;
-    public static LinearLayout lin_notalk;
-    public static LinearLayout lin_personhead;
+    public static LinearLayout lin_head, lin_notalk, lin_personhead;
     public static TipView tipView;
 
-    private AnimationDrawable draw;
-    private AnimationDrawable draw_group;
+    private AnimationDrawable draw, draw_group;
     private String UserName;
     private static String groupId;
-    public static String interPhoneType;
+    public static String interPhoneType = "";
     public static String interPhoneId;
     private static String phoneId;
     private String tag = "TALKOLDLIST_VOLLEY_REQUEST_CANCEL_TAG";
@@ -146,12 +134,6 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
     private static List<ListInfo> listInfo;
 
     @Override
-    public void onTipViewClick() {
-        Intent intent = new Intent(context, LoginActivity.class);
-        startActivity(intent);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this.getActivity();
@@ -159,37 +141,57 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
         setReceiver();  // 注册广播接收socketService的数据
     }
 
-    private void setOnResumeView() {
-        //此处在splashActivity中refreshB设置成true
-        UserName = shared.getString(StringConstant.USERNAME, "");
-        String p = shared.getString(StringConstant.PERSONREFRESHB, "false");
-        String l = shared.getString(StringConstant.ISLOGIN, "false");
-        if (l.equals("true")) {
-            if (p.equals("true")) {
-                Relative_listview.setVisibility(View.VISIBLE);
-                //显示此时没有人通话界面
-                lin_notalk.setVisibility(View.VISIBLE);
-                lin_personhead.setVisibility(View.GONE);
-                lin_head.setVisibility(View.GONE);
-                lin_foot.setVisibility(View.GONE);
-                GlobalConfig.isActive = false;
-                tipView.setVisibility(View.GONE);
-                getTXL();
-                Editor et = shared.edit();
-                et.putString(StringConstant.PERSONREFRESHB, "false");
-                et.commit();
-            }
-        } else {
-            //显示未登录
-            Relative_listview.setVisibility(View.GONE);
-            tipView.setVisibility(View.VISIBLE);
-            tipView.setTipView(TipView.TipStatus.NO_LOGIN);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_talkoldlist, container, false);
+        setView();//设置界面
+        setOnResumeView();
+        return rootView;
+    }
+
+    @Override
+    public void onTipViewClick() {
+        // 没有数据时候的操作监听
+        Intent intent = new Intent(context, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        listener();
+        Dialog();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setOnResumeView();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 1:
+                if (resultCode == 1) {
+                    getGridViewPerson(interPhoneId);//获取群成员
+                }
+                break;
         }
     }
 
-    /*
-     *注册广播接收socketservice的数据
-     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        isCancelRequest = VolleyRequest.cancelRequest(tag);
+        if (Receiver != null) {
+            context.unregisterReceiver(Receiver);
+            Receiver = null;
+        }
+    }
+
+    // 注册广播接收socketService的数据
     private void setReceiver() {
         if (Receiver == null) {
             Receiver = new MessageReceiver();
@@ -210,27 +212,6 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_talkoldlist, container, false);
-        setView();//设置界面
-        setOnResumeView();
-
-        return rootView;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        listener();
-        Dialog();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        setOnResumeView();
-    }
 
     // 初始化数据库命令执行对象
     private void initDao() {
@@ -276,8 +257,21 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
     }
 
     private void listener() {
-        image_grouptx.setOnClickListener(this);
-        imageView_answer.setOnClickListener(this);
+        image_grouptx.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //查看群成员
+                checkGroup();
+            }
+        });
+        imageView_answer.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //挂断
+                hangUp();
+            }
+        });
+
         image_button.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -294,207 +288,8 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
         });
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.image_grouptx:
-                //查看群成员
-                checkGroup();
-                break;
-            case R.id.imageView_answer:
-                //挂断
-                hangUp();
-                break;
-        }
-    }
-
-    private void hangUp() {
-        //挂断
-        if (interPhoneType.equals("user")) {
-            //挂断电话
-            isCalling = false;
-            InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
-            historyDataBaseList = dbDao.queryHistory();//得到数据库里边数据
-            getList();
-            if (allList.size() == 0) {
-                if (adapter == null) {
-                    adapter = new ChatListAdapter(context, allList, "0");
-                    mListView.setAdapter(adapter);
-                } else {
-                    adapter.ChangeDate(allList, "0");
-                }
-            } else {
-                if (adapter == null) {
-                    adapter = new ChatListAdapter(context, allList, allList.get(allList.size() - 1).getId());
-                    mListView.setAdapter(adapter);
-                } else {
-                    adapter.ChangeDate(allList, allList.get(allList.size() - 1).getId());
-                }
-            }
-            setListener();
-            setImageView(2, "", "");
-            lin_notalk.setVisibility(View.VISIBLE);
-            lin_personhead.setVisibility(View.GONE);
-            lin_head.setVisibility(View.GONE);
-            lin_foot.setVisibility(View.GONE);
-            GlobalConfig.isActive = false;
-            gridView_person.setVisibility(View.GONE);
-            gridView_tv.setVisibility(View.GONE);
-        } else {
-            InterPhoneControl.Quit(context, interPhoneId);//退出小组
-            historyDataBaseList = dbDao.queryHistory();//得到数据库里边数据
-            getList();
-            if (allList.size() == 0) {
-                if (adapter == null) {
-                    adapter = new ChatListAdapter(context, allList, "0");
-                    mListView.setAdapter(adapter);
-                } else {
-                    adapter.ChangeDate(allList, "0");
-                }
-            } else {
-                if (adapter == null) {
-                    adapter = new ChatListAdapter(context, allList, allList.get(allList.size() - 1).getId());
-                    mListView.setAdapter(adapter);
-                } else {
-                    adapter.ChangeDate(allList, allList.get(allList.size() - 1).getId());
-                }
-            }
-            setListener();
-            setImageView(2, "", "");
-            lin_notalk.setVisibility(View.VISIBLE);
-            lin_personhead.setVisibility(View.GONE);
-            lin_head.setVisibility(View.GONE);
-            lin_foot.setVisibility(View.GONE);
-            GlobalConfig.isActive = false;
-            gridView_person.setVisibility(View.GONE);
-            gridView_tv.setVisibility(View.GONE);
-        }
-    }
-
-    private void checkGroup() {
-        //查看群成员
-        if (groupPersonList != null && groupPersonList.size() != 0) {
-            groupPersonListS.clear();
-            if (listInfo != null && listInfo.size() > 0) {
-                for (int j = 0; j < listInfo.size(); j++) {
-                    String id = listInfo.get(j).getUserId().trim();
-                    if (id != null && !id.equals("")) {
-                        for (int i = 0; i < groupPersonList.size(); i++) {
-                            String ids = groupPersonList.get(i).getUserId();
-                            if (id.equals(ids)) {
-                                Log.e("ids", ids + "=======" + i);
-                                groupPersonList.get(i).setOnLine(2);
-                                groupPersonListS.add(groupPersonList.get(i));
-                            }
-                        }
-                    }
-                }
-            } else {
-                String id = CommonUtils.getUserId(context);
-                if (id != null && !id.equals("")) {
-                    for (int i = 0; i < groupPersonList.size(); i++) {
-                        String ids = groupPersonList.get(i).getUserId();
-                        if (id.equals(ids)) {
-                            Log.e("ids", ids + "=======" + i);
-                            groupPersonList.get(i).setOnLine(2);
-                            groupPersonListS.add(groupPersonList.get(i));
-                        }
-                    }
-                }
-            }
-            for (int h = 0; h < groupPersonList.size(); h++) {
-                if (groupPersonList.get(h).getOnLine() != 2) {
-                    groupPersonListS.add(groupPersonList.get(h));
-                }
-            }
-            GroupPersonAdapter adapter = new GroupPersonAdapter(context, groupPersonListS);
-            gridView_person.setAdapter(adapter);
-            gridView_person.setOnItemClickListener(new OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    boolean isFriend = false;
-                    if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() != 0) {
-                        for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
-                            if (groupPersonListS.get(position).getUserId().equals(GlobalConfig.list_person.get(i).getUserId())) {
-                                isFriend = true;
-                                break;
-                            }
-                        }
-                    } else {
-                        //不是我的好友
-                        isFriend = false;
-                    }
-                    if (isFriend) {
-                        Intent intent = new Intent(context, TalkPersonNewsActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("type", "talkoldlistfragment_p");
-                        bundle.putSerializable("data", groupPersonListS.get(position));
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    } else {
-                        Intent intent = new Intent(context, GroupPersonNewsActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("type", "talkoldlistfragment_p");
-                        bundle.putString("id", interPhoneId);
-                        bundle.putSerializable("data", groupPersonListS.get(position));
-                        intent.putExtras(bundle);
-                        startActivityForResult(intent, 1);
-                    }
-                }
-            });
-
-            if (gridView_person.getVisibility() == View.VISIBLE) {
-                gridView_person.setVisibility(View.GONE);
-                gridView_tv.setVisibility(View.GONE);
-            } else {
-                gridView_person.setVisibility(View.VISIBLE);
-                gridView_tv.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
-    public void setImageView(int i, String userName, String url) {
-        //设置有人说话时候界面友好交互
-        //发送消息线程
-        if (i == 1) {
-            Log.e("userName===============", userName + "");
-            talkingName.setVisibility(View.VISIBLE);
-            if (userName.equals(UserName)) {
-                talkingName.setText("我");
-            } else {
-                talkingName.setText(userName);
-            }
-            talking_news.setText("正在通话");
-            image_voice.setVisibility(View.VISIBLE);
-            if (url == null || url.equals("") || url.equals("null") || url.trim().equals("")) {
-                image_group_persontx.setImageResource(R.mipmap.wt_image_tx_hy);
-            } else {
-                String urls;
-                if (url.startsWith("http")) {
-                    urls = url;
-                } else {
-                    urls = GlobalConfig.imageurl + url;
-                }
-                urls = AssembleImageUrlUtils.assembleImageUrl150(urls);
-                Picasso.with(context).load(urls.replace("\\/", "/")).into(image_group_persontx);
-            }
-            if (draw_group.isRunning()) {
-            } else {
-                draw_group.start();
-            }
-        } else {
-            talkingName.setVisibility(View.INVISIBLE);
-            talking_news.setText("无人通话");
-            if (draw_group.isRunning()) {
-                draw_group.stop();
-            }
-            image_group_persontx.setImageResource(R.mipmap.wt_image_tx_hy);
-            image_voice.setVisibility(View.INVISIBLE);
-        }
-    }
-
     /**
-     * 设置对讲组为激活状态
+     * 设置对讲组为激活状态,此时没有组在对讲状态
      */
     public static void zhiDingGroupSS(String groupIdS) {
         Intent intent = new Intent();
@@ -509,7 +304,7 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
     }
 
     /**
-     * 设置对讲组为激活状态
+     * 设置对讲组为激活状态,此时没有组在对讲状态
      */
     public static void zhiDingGroup(GroupInfo talkGroupInside) {
         Intent intent = new Intent();
@@ -524,7 +319,7 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
     }
 
     /**
-     * 设置对讲组2为激活状态
+     * 设置对讲组2为激活状态,此时存在组在对讲状态
      */
     public static void zhiDingGroupS(GroupInfo talkGroupInside) {
         Intent intent = new Intent();
@@ -542,16 +337,448 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
      * 设置个人为激活状态/设置第一条为激活状态
      */
     public static void zhiDingPerson() {
+        if (isCalling && interPhoneType != null) {
+            //此时有对讲状态
+            if (interPhoneType.equals("user")) {
+//                Log.e("上次通话ID", InterPhoneControl.bdcallid + "");
+//                Log.e("上次通话ID222", GlobalConfig.oldBCCallId + "");
+//                Log.e("新的来电ID", SubclassService.callid + "");
+                InterPhoneControl.PersonTalkHangUp(context, GlobalConfig.oldBCCallId);
+            } else {
+                InterPhoneControl.Quit(context, interPhoneId);//退出小组
+            }
+        }
+
         try {
             historyDataBaseList = dbDao.queryHistory();//得到数据库里边数据
             getList();
             setDatePerson();
         } catch (Exception e) {
             e.printStackTrace();
-            ToastUtils.show_always(context,"数据出错了，请您稍后再试");
+            ToastUtils.show_always(context, "数据出错了，请您稍后再试");
         }
     }
 
+    public static void setDatePerson() {
+        //设置个人为激活状态
+        isCalling = true;
+        GroupInfo firstdate = allList.remove(0);
+        interPhoneType = firstdate.getTyPe();//
+        interPhoneId = firstdate.getId();//
+        Log.e("aaa=====callerid======", interPhoneId + "");
+        lin_notalk.setVisibility(View.GONE);
+        lin_personhead.setVisibility(View.VISIBLE);
+        lin_head.setVisibility(View.GONE);
+        lin_foot.setVisibility(View.VISIBLE);
+        GlobalConfig.isActive = true;
+        tipView.setVisibility(View.GONE);
+        tv_personname.setText(firstdate.getName());
+        if (firstdate.getPortrait() == null || firstdate.getPortrait().equals("") || firstdate.getPortrait().trim().equals("")) {
+            image_persontx.setImageResource(R.mipmap.wt_image_tx_qz);
+        } else {
+            String url;
+            if (firstdate.getPortrait().startsWith("http")) {
+                url = firstdate.getPortrait();
+            } else {
+                url = GlobalConfig.imageurl + firstdate.getPortrait();
+            }
+            url = AssembleImageUrlUtils.assembleImageUrl150(url);
+            Picasso.with(context).load(url.replace("\\/", "/")).into(image_grouptx);
+        }
+        if (allList.size() == 0) {
+            if (adapter == null) {
+                adapter = new ChatListAdapter(context, allList, "0");
+                mListView.setAdapter(adapter);
+            } else {
+                adapter.ChangeDate(allList, "0");
+            }
+        } else {
+            if (adapter == null) {
+                adapter = new ChatListAdapter(context, allList, allList.get(allList.size() - 1).getId());
+                mListView.setAdapter(adapter);
+            } else {
+                adapter.ChangeDate(allList, allList.get(allList.size() - 1).getId());
+            }
+        }
+        setListener();
+    }
+
+    protected static void call(String id) {
+        Intent it = new Intent(context, CallAlertActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("id", id);
+        it.putExtras(bundle);
+        context.startActivity(it);
+    }
+
+    public void getTXL() {
+        //第一次获取群成员跟组
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            dialog = DialogUtils.Dialogph(context, "正在获取数据");
+            JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+            VolleyRequest.RequestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
+                @Override
+                protected void requestSuccess(JSONObject result) {
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+                    if (isCancelRequest) {
+                        return;
+                    }
+                    try {
+                        LinkMan list = new Gson().fromJson(result.toString(), new TypeToken<LinkMan>() {
+                        }.getType());
+                        try {
+                            GlobalConfig.list_group = list.getGroupList().getGroups();
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+                        try {
+                            GlobalConfig.list_person = list.getFriendList().getFriends();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    //获取到群成员后
+                    update(context);//第一次进入该界面
+                }
+
+                @Override
+                protected void requestError(VolleyError error) {
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+                    //获取到群成员后
+                    update(context);//第一次进入该界面
+                }
+            });
+        } else {
+            ToastUtils.show_always(context, "网络失败，请检查网络");
+        }
+    }
+
+    /*
+     * 第一次进入该界面
+     */
+    private void update(Context context) {
+        //得到数据库里边数据
+        historyDataBaseList = dbDao.queryHistory();
+        //得到真实的数据
+        getList();
+        if (allList == null || allList.size() == 0) {
+            //此时数据库里边没有数据，界面不变
+            isCalling = false;
+        } else {
+            // 此处数据需要处理，第一条数据为激活状态组
+            //第一条数据的状态
+            //			String type = alllist.get(0).getTyPe();//对讲类型，个人跟群组
+            //			String id = alllist.get(0).getId();//对讲组：groupid
+            //			if(type!=null&&!type.equals("")&&type.equals("user")){
+            //若上次退出前的通话状态是单对单通话则不处理
+            isCalling = false;
+            if (adapter == null) {
+                adapter = new ChatListAdapter(context, allList, allList.get(allList.size() - 1).getId());
+                mListView.setAdapter(adapter);
+            } else {
+                adapter.ChangeDate(allList, allList.get(allList.size() - 1).getId());
+            }
+            setListener();
+        }
+        if (MainActivity.groupInfo != null && MainActivity.groupInfo.getGroupId() != null
+                && !MainActivity.groupInfo.getGroupId().equals("")) {
+            String id = MainActivity.groupInfo.getGroupId();
+            dbDao.deleteHistory(id);
+            addGroup(id);//加入到数据库
+            setDateGroup();
+            getGridViewPerson(id);
+            MainActivity.groupInfo = null;
+        }
+
+        if (MainActivity.talkdb != null) {
+            zhiDingPerson();
+            MainActivity.talkdb = null;
+        }
+    }
+
+    public void addGroup(String id) {
+        //获取最新激活状态的数据
+        String groupid = id;
+        String type = "group";
+        String addtime = Long.toString(System.currentTimeMillis());
+        String bjuserid = CommonUtils.getUserId(context);
+        //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+        DBTalkHistorary history = new DBTalkHistorary(bjuserid, type, groupid, addtime);
+        dbDao.addTalkHistory(history);
+        historyDataBaseList = dbDao.queryHistory();//得到数据库里边数据
+        getList();
+    }
+
+    public void setDateGroup() {
+        //设置组为激活状态
+        lin_notalk.setVisibility(View.GONE);
+        lin_personhead.setVisibility(View.GONE);
+        lin_head.setVisibility(View.VISIBLE);
+        lin_foot.setVisibility(View.VISIBLE);
+        GlobalConfig.isActive = true;
+        tipView.setVisibility(View.GONE);
+        GroupInfo firstdate = allList.remove(0);
+        interPhoneType = firstdate.getTyPe();//对讲类型，个人跟群组
+        interPhoneId = firstdate.getId();//对讲组：groupid
+        tv_groupname.setText(firstdate.getName());
+        if (firstdate.getGroupType() == null || firstdate.getGroupType().equals("") || firstdate.getGroupType().equals("1")) {
+            tv_grouptype.setText("公开群");
+        } else if (firstdate.getGroupType().equals("0")) {
+            tv_grouptype.setText("审核群");
+        } else if (firstdate.getGroupType().equals("2")) {
+            tv_grouptype.setText("密码群");
+        }
+        if (firstdate.getPortrait() == null || firstdate.getPortrait().equals("") || firstdate.getPortrait().trim().equals("")) {
+            image_grouptx.setImageResource(R.mipmap.wt_image_tx_qz);
+        } else {
+            String url;
+            if (firstdate.getPortrait().startsWith("http")) {
+                url = firstdate.getPortrait();
+            } else {
+                url = GlobalConfig.imageurl + firstdate.getPortrait();
+            }
+            url = AssembleImageUrlUtils.assembleImageUrl150(url);
+            Picasso.with(context).load(url.replace("\\/", "/")).into(image_grouptx);
+        }
+        if (allList.size() == 0) {
+            if (adapter == null) {
+                adapter = new ChatListAdapter(context, allList, "0");
+                mListView.setAdapter(adapter);
+            } else {
+                adapter.ChangeDate(allList, "0");
+            }
+        } else {
+            if (adapter == null) {
+                adapter = new ChatListAdapter(context, allList, allList.get(allList.size() - 1).getId());
+                mListView.setAdapter(adapter);
+            } else {
+                adapter.ChangeDate(allList, allList.get(allList.size() - 1).getId());
+            }
+        }
+        setListener();
+    }
+
+
+    // 获取群成员
+    private static void getGridViewPerson(String id) {
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("GroupId", id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        VolleyRequest.RequestPost(GlobalConfig.grouptalkUrl, jsonObject, new VolleyCallback() {
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                String UserList = null;
+                try {
+                    UserList = result.getString("UserList");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (groupPersonList != null) {
+                    groupPersonList.clear();
+                } else {
+                    groupPersonList = new ArrayList<UserInfo>();
+                }
+                try {
+                    groupPersonList = gson.fromJson(UserList, new TypeToken<List<UserInfo>>() {
+                    }.getType());
+                } catch (JsonSyntaxException e) {
+                    e.printStackTrace();
+                }
+                if (groupPersonList != null && groupPersonList.size() > 0) {
+                    tv_allnum.setText("/" + groupPersonList.size());
+                } else {
+                    tv_allnum.setText("/1");
+                }
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+            }
+        });
+    }
+
+    // 接听新的来电弹出框-----提示是否挂断上次通话而开始一段新的通话
+    private void Dialog() {
+        final View dialog1 = LayoutInflater.from(context).inflate(R.layout.dialog_talk_person_del, null);
+        TextView tv_cancel = (TextView) dialog1.findViewById(R.id.tv_cancle);
+        TextView tv_confirm = (TextView) dialog1.findViewById(R.id.tv_confirm);
+        confirmDialog = new Dialog(context, R.style.MyDialog);
+        confirmDialog.setContentView(dialog1);
+        confirmDialog.setCanceledOnTouchOutside(true);
+        confirmDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
+        tv_cancel.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmDialog.dismiss();
+            }
+        });
+        tv_confirm.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
+                if (dialogType == 1) {
+                    InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
+                    isCalling = false;
+                    lin_notalk.setVisibility(View.VISIBLE);
+                    lin_personhead.setVisibility(View.GONE);
+                    lin_head.setVisibility(View.GONE);
+                    lin_foot.setVisibility(View.GONE);
+                    GlobalConfig.isActive = false;
+                    call(phoneId);
+                    confirmDialog.dismiss();
+                } else {
+                    InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
+                    isCalling = false;
+                    lin_notalk.setVisibility(View.VISIBLE);
+                    lin_personhead.setVisibility(View.GONE);
+                    lin_head.setVisibility(View.GONE);
+                    lin_foot.setVisibility(View.GONE);
+                    GlobalConfig.isActive = false;
+                    zhiDingGroupSS(groupId);
+                    //对讲主页界面更新
+                    DuiJiangActivity.update();
+                    confirmDialog.dismiss();
+                }
+            }
+        });
+    }
+
+    // 重置界面
+    private void setOnResumeView() {
+        //此处在splashActivity中refreshB设置成true
+        UserName = shared.getString(StringConstant.USERNAME, "");
+        String p = shared.getString(StringConstant.PERSONREFRESHB, "false");
+        String l = shared.getString(StringConstant.ISLOGIN, "false");
+        if (l.equals("true")) {
+            if (p.equals("true")) {
+                Relative_listview.setVisibility(View.VISIBLE);
+                //显示此时没有人通话界面
+                lin_notalk.setVisibility(View.VISIBLE);
+                lin_personhead.setVisibility(View.GONE);
+                lin_head.setVisibility(View.GONE);
+                lin_foot.setVisibility(View.GONE);
+                GlobalConfig.isActive = false;
+                tipView.setVisibility(View.GONE);
+                getTXL();
+                Editor et = shared.edit();
+                et.putString(StringConstant.PERSONREFRESHB, "false");
+                et.commit();
+            }
+        } else {
+            //显示未登录
+            Relative_listview.setVisibility(View.GONE);
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_LOGIN);
+        }
+    }
+
+    // 挂断电话
+    private void hangUp() {
+        if (interPhoneType.equals("user")) {
+            isCalling = false;
+            InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
+            historyDataBaseList = dbDao.queryHistory();//得到数据库里边数据
+        } else {
+            isCalling = false;
+            InterPhoneControl.Quit(context, interPhoneId);//退出小组
+            historyDataBaseList = dbDao.queryHistory();//得到数据库里边数据
+        }
+        getList();
+        if (allList.size() == 0) {
+            if (adapter == null) {
+                adapter = new ChatListAdapter(context, allList, "0");
+                mListView.setAdapter(adapter);
+            } else {
+                adapter.ChangeDate(allList, "0");
+            }
+        } else {
+            if (adapter == null) {
+                adapter = new ChatListAdapter(context, allList, allList.get(allList.size() - 1).getId());
+                mListView.setAdapter(adapter);
+            } else {
+                adapter.ChangeDate(allList, allList.get(allList.size() - 1).getId());
+            }
+        }
+        setListener();
+        setImageView(2, "", "");
+        lin_notalk.setVisibility(View.VISIBLE);
+        lin_personhead.setVisibility(View.GONE);
+        lin_head.setVisibility(View.GONE);
+        lin_foot.setVisibility(View.GONE);
+        GlobalConfig.isActive = false;
+        gridView_person.setVisibility(View.GONE);
+        gridView_tv.setVisibility(View.GONE);
+    }
+
+    // 组装需要展示的list
+    private static void getList() {
+        allList.clear();
+        try {
+            if (historyDataBaseList != null && historyDataBaseList.size() > 0) {
+                for (int i = 0; i < historyDataBaseList.size(); i++) {
+                    if (historyDataBaseList.get(i).getTyPe().equals("user")) {
+                        if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() != 0) {
+                            for (int j = 0; j < GlobalConfig.list_person.size(); j++) {
+                                String id = historyDataBaseList.get(i).getID();
+                                if (id != null && !id.equals("") && id.equals(GlobalConfig.list_person.get(j).getUserId())) {
+                                    GroupInfo ListGP = new GroupInfo();
+                                    ListGP.setTruename(GlobalConfig.list_person.get(j).getTruename());
+                                    ListGP.setId(GlobalConfig.list_person.get(j).getUserId());
+                                    ListGP.setName(GlobalConfig.list_person.get(j).getUserName());
+                                    ListGP.setUserAliasName(GlobalConfig.list_person.get(j).getUserAliasName());
+                                    ListGP.setPortrait(GlobalConfig.list_person.get(j).getPortraitBig());
+                                    ListGP.setAddTime(historyDataBaseList.get(i).getAddTime());
+                                    ListGP.setTyPe(historyDataBaseList.get(i).getTyPe());
+                                    ListGP.setDescn(GlobalConfig.list_person.get(j).getDescn());
+                                    ListGP.setUserNum(GlobalConfig.list_person.get(j).getUserNum());
+                                    allList.add(ListGP);
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+                        if (GlobalConfig.list_group != null && GlobalConfig.list_group.size() != 0) {
+                            for (int j = 0; j < GlobalConfig.list_group.size(); j++) {
+                                String id = historyDataBaseList.get(i).getID();
+                                if (id != null && !id.equals("") && id.equals(GlobalConfig.list_group.get(j).getGroupId())) {
+                                    GroupInfo ListGP = new GroupInfo();
+                                    ListGP.setCreateTime(GlobalConfig.list_group.get(j).getCreateTime());
+                                    ListGP.setGroupCount(GlobalConfig.list_group.get(j).getGroupCount());
+                                    ListGP.setGroupCreator(GlobalConfig.list_group.get(j).getGroupCreator());
+                                    ListGP.setGroupDescn(GlobalConfig.list_group.get(j).getGroupDescn());
+                                    ListGP.setId(GlobalConfig.list_group.get(j).getGroupId());
+                                    ListGP.setPortrait(GlobalConfig.list_group.get(j).getGroupImg());
+                                    ListGP.setGroupManager(GlobalConfig.list_group.get(j).getGroupManager());
+                                    ListGP.setGroupMyAlias(GlobalConfig.list_group.get(j).getGroupMyAlias());
+                                    ListGP.setName(GlobalConfig.list_group.get(j).getGroupName());
+                                    ListGP.setGroupNum(GlobalConfig.list_group.get(j).getGroupNum());
+                                    ListGP.setGroupSignature(GlobalConfig.list_group.get(j).getGroupSignature());
+                                    ListGP.setGroupType(GlobalConfig.list_group.get(j).getGroupType());
+                                    ListGP.setAddTime(historyDataBaseList.get(i).getAddTime());
+                                    ListGP.setTyPe(historyDataBaseList.get(i).getTyPe());
+                                    allList.add(ListGP);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.e("getlist异常", e.toString());
+        }
+    }
+
+    // 设置listView的监听已经adapter上按钮的监听
     private static void setListener() {
         adapter.setOnListener(new OnListener() {
             @Override
@@ -619,373 +846,176 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
         });
     }
 
-    protected static void call(String id) {
-        Intent it = new Intent(context, CallAlertActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("id", id);
-        it.putExtras(bundle);
-        context.startActivity(it);
-    }
-
-    public void getTXL() {
-        //第一次获取群成员跟组
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在获取数据");
-            JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-            VolleyRequest.RequestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
-
-                @Override
-                protected void requestSuccess(JSONObject result) {
-                    if (dialog != null) {
-                        dialog.dismiss();
-                    }
-                    if (isCancelRequest) {
-                        return;
-                    }
-                    try {
-                        LinkMan list;
-                        list = new Gson().fromJson(result.toString(), new TypeToken<LinkMan>() {
-                        }.getType());
-                        try {
-                            GlobalConfig.list_group = list.getGroupList().getGroups();
-                        } catch (Exception e1) {
-                            e1.printStackTrace();
-                        }
-                        try {
-                            GlobalConfig.list_person = list.getFriendList().getFriends();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    //获取到群成员后
-                    update(context);//第一次进入该界面
+    //设置有人说话时候界面友好交互
+    private void setImageView(int i, String userName, String url) {
+        if (i == 1) {
+            Log.e("userName===============", userName + "");
+            talkingName.setVisibility(View.VISIBLE);
+            if (userName.equals(UserName)) {
+                talkingName.setText("我");
+            } else {
+                talkingName.setText(userName);
+            }
+            talking_news.setText("正在通话");
+            image_voice.setVisibility(View.VISIBLE);
+            if (url == null || url.equals("") || url.equals("null") || url.trim().equals("")) {
+                image_group_persontx.setImageResource(R.mipmap.wt_image_tx_hy);
+            } else {
+                String urls;
+                if (url.startsWith("http")) {
+                    urls = url;
+                } else {
+                    urls = GlobalConfig.imageurl + url;
                 }
-
-                @Override
-                protected void requestError(VolleyError error) {
-                    if (dialog != null) {
-                        dialog.dismiss();
-                    }
-                    //获取到群成员后
-                    update(context);//第一次进入该界面
-                }
-            });
+                urls = AssembleImageUrlUtils.assembleImageUrl150(urls);
+                Picasso.with(context).load(urls.replace("\\/", "/")).into(image_group_persontx);
+            }
+            if (draw_group.isRunning()) {
+            } else {
+                draw_group.start();
+            }
         } else {
-            ToastUtils.show_always(context, "网络失败，请检查网络");
+            talkingName.setVisibility(View.INVISIBLE);
+            talking_news.setText("无人通话");
+            if (draw_group.isRunning()) {
+                draw_group.stop();
+            }
+            image_group_persontx.setImageResource(R.mipmap.wt_image_tx_hy);
+            image_voice.setVisibility(View.INVISIBLE);
         }
     }
 
-    /*
-     * 第一次进入该界面
-     */
-    private void update(Context context) {
-        //得到数据库里边数据
-        historyDataBaseList = dbDao.queryHistory();
-        //得到真实的数据
-        getList();
-        if (allList == null || allList.size() == 0) {
-            //此时数据库里边没有数据，界面不变
-            isCalling = false;
-        } else {
-            // 此处数据需要处理，第一条数据为激活状态组
-            //第一条数据的状态
-            //			String type = alllist.get(0).getTyPe();//对讲类型，个人跟群组
-            //			String id = alllist.get(0).getId();//对讲组：groupid
-            //			if(type!=null&&!type.equals("")&&type.equals("user")){
-            //若上次退出前的通话状态是单对单通话则不处理
-            isCalling = false;
-            if (adapter == null) {
-                adapter = new ChatListAdapter(context, allList, allList.get(allList.size() - 1).getId());
-                mListView.setAdapter(adapter);
-                Log.e("适配========", "1");
-            } else {
-                adapter.ChangeDate(allList, allList.get(allList.size() - 1).getId());
-                Log.e("适配========", "2");
-            }
-            setListener();
-        }
-        if (MainActivity.groupInfo != null && MainActivity.groupInfo.getGroupId() != null
-                && !MainActivity.groupInfo.getGroupId().equals("")) {
-            String id = MainActivity.groupInfo.getGroupId();
-            dbDao.deleteHistory(id);
-            addGroup(id);//加入到数据库
-            setDateGroup();
-            getGridViewPerson(id);
-            MainActivity.groupInfo = null;
-        }
-
-        if (MainActivity.talkdb != null) {
-            zhiDingPerson();
-            MainActivity.talkdb = null;
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case 1:
-                if (resultCode == 1) {
-                    getGridViewPerson(interPhoneId);//获取群成员
-                }
-                break;
-        }
-    }
-
-    public void addGroup(String id) {
-        //获取最新激活状态的数据
-        String groupid = id;
-        String type = "group";
-        String addtime = Long.toString(System.currentTimeMillis());
-        String bjuserid = CommonUtils.getUserId(context);
-        //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-        DBTalkHistorary history = new DBTalkHistorary(bjuserid, type, groupid, addtime);
-        dbDao.addTalkHistory(history);
-        historyDataBaseList = dbDao.queryHistory();//得到数据库里边数据
-        getList();
-    }
-
-    public void setDateGroup() {
-        //设置组为激活状态
-        lin_notalk.setVisibility(View.GONE);
-        lin_personhead.setVisibility(View.GONE);
-        lin_head.setVisibility(View.VISIBLE);
-        lin_foot.setVisibility(View.VISIBLE);
-        GlobalConfig.isActive = true;
-        tipView.setVisibility(View.GONE);
-        GroupInfo firstdate = allList.remove(0);
-        interPhoneType = firstdate.getTyPe();//对讲类型，个人跟群组
-        interPhoneId = firstdate.getId();//对讲组：groupid
-        tv_groupname.setText(firstdate.getName());
-        if (firstdate.getGroupType() == null || firstdate.getGroupType().equals("") || firstdate.getGroupType().equals("1")) {
-            tv_grouptype.setText("公开群");
-        } else if (firstdate.getGroupType().equals("0")) {
-            tv_grouptype.setText("审核群");
-        } else if (firstdate.getGroupType().equals("2")) {
-            tv_grouptype.setText("密码群");
-        }
-        if (firstdate.getPortrait() == null || firstdate.getPortrait().equals("") || firstdate.getPortrait().trim().equals("")) {
-            image_grouptx.setImageResource(R.mipmap.wt_image_tx_qz);
-        } else {
-            String url;
-            if (firstdate.getPortrait().startsWith("http")) {
-                url = firstdate.getPortrait();
-            } else {
-                url = GlobalConfig.imageurl + firstdate.getPortrait();
-            }
-            url = AssembleImageUrlUtils.assembleImageUrl150(url);
-            Picasso.with(context).load(url.replace("\\/", "/")).into(image_grouptx);
-        }
-        if (allList.size() == 0) {
-            if (adapter == null) {
-                adapter = new ChatListAdapter(context, allList, "0");
-                mListView.setAdapter(adapter);
-            } else {
-                adapter.ChangeDate(allList, "0");
-            }
-        } else {
-            if (adapter == null) {
-                adapter = new ChatListAdapter(context, allList, allList.get(allList.size() - 1).getId());
-                mListView.setAdapter(adapter);
-            } else {
-                adapter.ChangeDate(allList, allList.get(allList.size() - 1).getId());
-            }
-        }
-        setListener();
-    }
-
-    public static void setDatePerson() {
-        //设置个人为激活状态
-        isCalling = true;
-        GroupInfo firstdate = allList.remove(0);
-        interPhoneType = firstdate.getTyPe();//
-        interPhoneId = firstdate.getId();//
-        Log.e("aaa=====callerid======", interPhoneId + "");
-        lin_notalk.setVisibility(View.GONE);
-        lin_personhead.setVisibility(View.VISIBLE);
-        lin_head.setVisibility(View.GONE);
-        lin_foot.setVisibility(View.VISIBLE);
-        GlobalConfig.isActive = true;
-        tipView.setVisibility(View.GONE);
-        tv_personname.setText(firstdate.getName());
-        if (firstdate.getPortrait() == null || firstdate.getPortrait().equals("") || firstdate.getPortrait().trim().equals("")) {
-            image_persontx.setImageResource(R.mipmap.wt_image_tx_qz);
-        } else {
-            String url;
-            if (firstdate.getPortrait().startsWith("http")) {
-                url = firstdate.getPortrait();
-            } else {
-                url = GlobalConfig.imageurl + firstdate.getPortrait();
-            }
-            url = AssembleImageUrlUtils.assembleImageUrl150(url);
-            Picasso.with(context).load(url.replace("\\/", "/")).into(image_grouptx);
-        }
-        if (allList.size() == 0) {
-            if (adapter == null) {
-                adapter = new ChatListAdapter(context, allList, "0");
-                mListView.setAdapter(adapter);
-            } else {
-                adapter.ChangeDate(allList, "0");
-            }
-        } else {
-            if (adapter == null) {
-                adapter = new ChatListAdapter(context, allList, allList.get(allList.size() - 1).getId());
-                mListView.setAdapter(adapter);
-            } else {
-                adapter.ChangeDate(allList, allList.get(allList.size() - 1).getId());
-            }
-        }
-        setListener();
-    }
-
-    private static void getList() {
-        allList.clear();
-        try {
-            if (historyDataBaseList != null && historyDataBaseList.size() > 0) {
-                for (int i = 0; i < historyDataBaseList.size(); i++) {
-                    if (historyDataBaseList.get(i).getTyPe().equals("user")) {
-                        if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() != 0) {
-                            for (int j = 0; j < GlobalConfig.list_person.size(); j++) {
-                                String id = historyDataBaseList.get(i).getID();
-                                if (id != null && !id.equals("") && id.equals(GlobalConfig.list_person.get(j).getUserId())) {
-                                    GroupInfo ListGP = new GroupInfo();
-                                    ListGP.setTruename(GlobalConfig.list_person.get(j).getTruename());
-                                    ListGP.setId(GlobalConfig.list_person.get(j).getUserId());
-                                    ListGP.setName(GlobalConfig.list_person.get(j).getUserName());
-                                    ListGP.setUserAliasName(GlobalConfig.list_person.get(j).getUserAliasName());
-                                    ListGP.setPortrait(GlobalConfig.list_person.get(j).getPortraitBig());
-                                    ListGP.setAddTime(historyDataBaseList.get(i).getAddTime());
-                                    ListGP.setTyPe(historyDataBaseList.get(i).getTyPe());
-                                    ListGP.setDescn(GlobalConfig.list_person.get(j).getDescn());
-                                    ListGP.setUserNum(GlobalConfig.list_person.get(j).getUserNum());
-                                    allList.add(ListGP);
-                                    break;
-                                }
-                            }
-                        }
-                    } else {
-                        if (GlobalConfig.list_group != null && GlobalConfig.list_group.size() != 0) {
-                            for (int j = 0; j < GlobalConfig.list_group.size(); j++) {
-                                String id = historyDataBaseList.get(i).getID();
-                                if (id != null && !id.equals("") && id.equals(GlobalConfig.list_group.get(j).getGroupId())) {
-                                    GroupInfo ListGP = new GroupInfo();
-                                    ListGP.setCreateTime(GlobalConfig.list_group.get(j).getCreateTime());
-                                    ListGP.setGroupCount(GlobalConfig.list_group.get(j).getGroupCount());
-                                    ListGP.setGroupCreator(GlobalConfig.list_group.get(j).getGroupCreator());
-                                    ListGP.setGroupDescn(GlobalConfig.list_group.get(j).getGroupDescn());
-                                    ListGP.setId(GlobalConfig.list_group.get(j).getGroupId());
-                                    ListGP.setPortrait(GlobalConfig.list_group.get(j).getGroupImg());
-                                    ListGP.setGroupManager(GlobalConfig.list_group.get(j).getGroupManager());
-                                    ListGP.setGroupMyAlias(GlobalConfig.list_group.get(j).getGroupMyAlias());
-                                    ListGP.setName(GlobalConfig.list_group.get(j).getGroupName());
-                                    ListGP.setGroupNum(GlobalConfig.list_group.get(j).getGroupNum());
-                                    ListGP.setGroupSignature(GlobalConfig.list_group.get(j).getGroupSignature());
-                                    ListGP.setGroupType(GlobalConfig.list_group.get(j).getGroupType());
-                                    ListGP.setAddTime(historyDataBaseList.get(i).getAddTime());
-                                    ListGP.setTyPe(historyDataBaseList.get(i).getTyPe());
-                                    allList.add(ListGP);
-                                    break;
-                                }
+    // 查看群成员
+    private void checkGroup() {
+        if (groupPersonList != null && groupPersonList.size() != 0) {
+            groupPersonListS.clear();
+            if (listInfo != null && listInfo.size() > 0) {
+                for (int j = 0; j < listInfo.size(); j++) {
+                    String id = listInfo.get(j).getUserId().trim();
+                    if (id != null && !id.equals("")) {
+                        for (int i = 0; i < groupPersonList.size(); i++) {
+                            String ids = groupPersonList.get(i).getUserId();
+                            if (id.equals(ids)) {
+                                Log.e("ids", ids + "=======" + i);
+                                groupPersonList.get(i).setOnLine(2);
+                                groupPersonListS.add(groupPersonList.get(i));
                             }
                         }
                     }
                 }
+            } else {
+                String id = CommonUtils.getUserId(context);
+                if (id != null && !id.equals("")) {
+                    for (int i = 0; i < groupPersonList.size(); i++) {
+                        String ids = groupPersonList.get(i).getUserId();
+                        if (id.equals(ids)) {
+                            Log.e("ids", ids + "=======" + i);
+                            groupPersonList.get(i).setOnLine(2);
+                            groupPersonListS.add(groupPersonList.get(i));
+                        }
+                    }
+                }
             }
-        } catch (Exception e) {
-            Log.e("getlist异常", e.toString());
+            for (int h = 0; h < groupPersonList.size(); h++) {
+                if (groupPersonList.get(h).getOnLine() != 2) {
+                    groupPersonListS.add(groupPersonList.get(h));
+                }
+            }
+            GroupPersonAdapter adapter = new GroupPersonAdapter(context, groupPersonListS);
+            gridView_person.setAdapter(adapter);
+            checkGroupListener();// adapter的适配器监听
+            if (gridView_person.getVisibility() == View.VISIBLE) {
+                gridView_person.setVisibility(View.GONE);
+                gridView_tv.setVisibility(View.GONE);
+            } else {
+                gridView_person.setVisibility(View.VISIBLE);
+                gridView_tv.setVisibility(View.VISIBLE);
+            }
         }
     }
 
-    private static void getGridViewPerson(String id) {
-        Log.e("fasfasfa", "0");
-        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        try {
-            jsonObject.put("GroupId", id);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        VolleyRequest.RequestPost(GlobalConfig.grouptalkUrl, jsonObject, new VolleyCallback() {
-
+    // 查看群成员适配器的监听
+    private void checkGroupListener() {
+        gridView_person.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            protected void requestSuccess(JSONObject result) {
-                Log.e("fasfasfa", "1");
-                String UserList = null;
-                try {
-                    UserList = result.getString("UserList");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if (groupPersonList != null) {
-                    groupPersonList.clear();
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                boolean isFriend = false;
+                if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() != 0) {
+                    for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
+                        if (groupPersonListS.get(position).getUserId().equals(GlobalConfig.list_person.get(i).getUserId())) {
+                            isFriend = true;
+                            break;
+                        }
+                    }
                 } else {
-                    groupPersonList = new ArrayList<UserInfo>();
+                    //不是我的好友
+                    isFriend = false;
                 }
-                try {
-                    groupPersonList = gson.fromJson(UserList, new TypeToken<List<UserInfo>>() {
-                    }.getType());
-                } catch (JsonSyntaxException e) {
-                    e.printStackTrace();
-                }
-                if (groupPersonList != null && groupPersonList.size() > 0) {
-                    tv_allnum.setText("/" + groupPersonList.size());
+                if (isFriend) {
+                    Intent intent = new Intent(context, TalkPersonNewsActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("type", "talkoldlistfragment_p");
+                    bundle.putSerializable("data", groupPersonListS.get(position));
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                 } else {
-                    tv_allnum.setText("/1");
+                    Intent intent = new Intent(context, GroupPersonNewsActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("type", "talkoldlistfragment_p");
+                    bundle.putString("id", interPhoneId);
+                    bundle.putSerializable("data", groupPersonListS.get(position));
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, 1);
                 }
-            }
-
-            @Override
-            protected void requestError(VolleyError error) {
-                Log.e("fasfasfa", "2");
             }
         });
     }
 
-    private void Dialog() {
-        final View dialog1 = LayoutInflater.from(context).inflate(R.layout.dialog_talk_person_del, null);
-        TextView tv_cancel = (TextView) dialog1.findViewById(R.id.tv_cancle);
-        TextView tv_confirm = (TextView) dialog1.findViewById(R.id.tv_confirm);
-        confirmDialog = new Dialog(context, R.style.MyDialog);
-        confirmDialog.setContentView(dialog1);
-        confirmDialog.setCanceledOnTouchOutside(true);
-        confirmDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
-        tv_cancel.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                confirmDialog.dismiss();
-            }
-        });
-        tv_confirm.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
-                if (dialogType == 1) {
-                    InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
-                    isCalling = false;
-                    lin_notalk.setVisibility(View.VISIBLE);
-                    lin_personhead.setVisibility(View.GONE);
-                    lin_head.setVisibility(View.GONE);
-                    lin_foot.setVisibility(View.GONE);
-                    GlobalConfig.isActive = false;
-                    call(phoneId);
-                    confirmDialog.dismiss();
-                } else {
-                    InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
-                    isCalling = false;
-                    lin_notalk.setVisibility(View.VISIBLE);
-                    lin_personhead.setVisibility(View.GONE);
-                    lin_head.setVisibility(View.GONE);
-                    lin_foot.setVisibility(View.GONE);
-                    GlobalConfig.isActive = false;
-                    zhiDingGroupSS(groupId);
-                    //对讲主页界面更新
-                    DuiJiangActivity.update();
-                    confirmDialog.dismiss();
+    // 抬手后的操作
+    protected void jack() {
+        if (isTalking) {
+            if (interPhoneType.equals("group")) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        VoiceStreamRecordService.stop();
+                        InterPhoneControl.Loosen(context, interPhoneId);//发送取消说话控制
+                        image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
+                        if (draw_group.isRunning()) {
+                            draw_group.stop();
+                        }
+                        Log.e("对讲页面====", "录音机停止+发送取消说话控制+延时0.30秒");
+                    }
+                }, 300);
+            } else {//此处处理个人对讲的逻辑
+                VoiceStreamRecordService.stop();
+                InterPhoneControl.PersonTalkPressStop(context);//发送取消说话控制
+                image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
+                if (image_personvoice.getVisibility() == View.VISIBLE) {
+                    image_personvoice.setVisibility(View.INVISIBLE);
+                    if (draw.isRunning()) {
+                        draw.stop();
+                    }
                 }
             }
-        });
+        } else {
+            VoiceStreamRecordService.stop();
+        }
+    }
+
+    // 按下说话按钮的动作
+    protected void press() {
+        if (interPhoneType.equals("group")) {
+            // 此处处理组对讲的逻辑
+            InterPhoneControl.Press(context, interPhoneId);                 // 发送说话请求
+            VoiceStreamRecordService.stop();                                // 停止可能存在的录音服务
+            VoiceStreamRecordService.start(context, interPhoneId, "group"); // 开始录音
+        } else {
+            //此处处理个人对讲的逻辑
+            InterPhoneControl.PersonTalkPressStart(context);                 // 发送说话请求
+            VoiceStreamRecordService.stop();                                 // 停止可能存在的录音服务
+            VoiceStreamRecordService.start(context, interPhoneId, "person"); // 开始录音
+        }
     }
 
     // 接收socket的数据进行处理
@@ -994,9 +1024,12 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(BroadcastConstants.PUSH)) {
-                //	MsgNormal message = (MsgNormal) intent.getSerializableExtra("outMessage");
                 byte[] bt = intent.getByteArrayExtra("outMessage");
-                //	Log.e("接收器中数据", Arrays.toString(bt)+"");
+                try {
+                    Log.e("chat的的push", JsonEncloseUtils.btToString(bt) + "");
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
                 try {
                     MsgNormal message = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
 
@@ -1021,8 +1054,7 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
                                             VoiceStreamRecordService.stop();
                                             ToastUtils.show_always(context, "没有有效登录用户");
                                             break;
-                                        case 0x02:
-                                            //无法获取用户组
+                                        case 0x02:                                            //无法获取用户组
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
                                             VoiceStreamRecordService.stop();
                                             ToastUtils.show_always(context, "无法获取用户组");
@@ -1305,6 +1337,12 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
                                     }
                                 } else if (command == 0x0a) {
                                     int returnType = message.getReturnType();
+                                    if (image_personvoice.getVisibility() == View.VISIBLE) {
+                                        image_personvoice.setVisibility(View.INVISIBLE);
+                                        if (draw.isRunning()) {
+                                            draw.stop();
+                                        }
+                                    }
                                     switch (returnType) {
                                         case 0xff://TT
                                             //结束对讲出异常
@@ -1368,47 +1406,67 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
             } else if (action.equals(BroadcastConstants.PUSH_ALLURL_CHANGE)) {
                 setOnResumeView();
             } else if (action.equals(BroadcastConstants.PUSH_BACK)) {
-                //	MsgNormal message = (MsgNormal) intent.getSerializableExtra("outMessage");
                 byte[] bt = intent.getByteArrayExtra("outMessage");
-                Log.e("chatFragment的push_back", Arrays.toString(bt) + "");
+                Log.e("chat的的push_back", Arrays.toString(bt) + "");
+                try {
+                    Log.e("chat的的push_back", JsonEncloseUtils.btToString(bt) + "");
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
                 try {
                     MsgNormal message = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
-
                     if (message != null) {
                         int cmdType = message.getCmdType();
                         if (cmdType == 1) {
                             int command = message.getCommand();
                             if (command == 0x30) {
-                                //挂断电话的数据处理
-                                isCalling = false;
-                                historyDataBaseList = dbDao.queryHistory();//得到数据库里边数据
-                                getList();
-                                if (allList.size() == 0) {
-                                    if (adapter == null) {
-                                        adapter = new ChatListAdapter(context, allList, "0");
-                                        mListView.setAdapter(adapter);
-                                    } else {
-                                        adapter.ChangeDate(allList, "0");
+
+                                try {
+                                    MapContent data = (MapContent) message.getMsgContent();
+                                    Map<String, Object> map = data.getContentMap();
+                                    String callId = String.valueOf(map.get("CallId"));
+                                    Log.e("chat的的CallId", callId+"");
+                                    if (isCalling) {
+                                        //此时有对讲状态
+                                        if (interPhoneType.equals("user")&&InterPhoneControl.bdcallid.equals(callId)) {
+                                            //挂断电话的数据处理
+                                            isCalling = false;
+                                            historyDataBaseList = dbDao.queryHistory();//得到数据库里边数据
+                                            getList();
+                                            if (allList.size() == 0) {
+                                                if (adapter == null) {
+                                                    adapter = new ChatListAdapter(context, allList, "0");
+                                                    mListView.setAdapter(adapter);
+                                                } else {
+                                                    adapter.ChangeDate(allList, "0");
+                                                }
+                                            } else {
+                                                if (adapter == null) {
+                                                    adapter = new ChatListAdapter(context, allList, allList.get(allList.size() - 1).getId());
+                                                    mListView.setAdapter(adapter);
+                                                } else {
+                                                    adapter.ChangeDate(allList, allList.get(allList.size() - 1).getId());
+                                                }
+                                            }
+                                            setListener();
+                                            if (draw.isRunning()) {
+                                                draw.stop();
+                                            }
+                                            image_personvoice.setVisibility(View.INVISIBLE);
+                                            lin_notalk.setVisibility(View.VISIBLE);
+                                            lin_personhead.setVisibility(View.GONE);
+                                            lin_head.setVisibility(View.GONE);
+                                            lin_foot.setVisibility(View.GONE);
+                                            gridView_person.setVisibility(View.GONE);
+                                            GlobalConfig.isActive = false;
+                                        }
                                     }
-                                } else {
-                                    if (adapter == null) {
-                                        adapter = new ChatListAdapter(context, allList, allList.get(allList.size() - 1).getId());
-                                        mListView.setAdapter(adapter);
-                                    } else {
-                                        adapter.ChangeDate(allList, allList.get(allList.size() - 1).getId());
-                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                                setListener();
-                                if (draw.isRunning()) {
-                                    draw.stop();
-                                }
-                                image_personvoice.setVisibility(View.INVISIBLE);
-                                lin_notalk.setVisibility(View.VISIBLE);
-                                lin_personhead.setVisibility(View.GONE);
-                                lin_head.setVisibility(View.GONE);
-                                lin_foot.setVisibility(View.GONE);
-                                gridView_person.setVisibility(View.GONE);
-                                GlobalConfig.isActive = false;
+
+
+
                             }
                         }
                     }
@@ -1428,7 +1486,7 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
                                 draw.stop();
                             }
                         }
-                    } else {
+                    } else if (1 < seqNum && seqNum < 5) {
                         if (image_personvoice.getVisibility() == View.INVISIBLE) {
                             image_personvoice.setVisibility(View.VISIBLE);
                             if (draw.isRunning()) {
@@ -1515,56 +1573,5 @@ public class ChatFragment extends Fragment implements OnClickListener, TipView.T
         }
     }
 
-    protected void jack() {
-        //抬手后的操作
-        if (isTalking) {
-            if (interPhoneType.equals("group")) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        VoiceStreamRecordService.stop();
-                        image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
-                        InterPhoneControl.Loosen(context, interPhoneId);//发送取消说话控制
-                        if (draw_group.isRunning()) {
-                            draw_group.stop();
-                        }
-                        Log.e("对讲页面====", "录音机停止+发送取消说话控制+延时0.30秒");
-                    }
-                }, 300);
-            } else {//此处处理个人对讲的逻辑
-                VoiceStreamRecordService.stop();
-                InterPhoneControl.PersonTalkPressStop(context);//发送取消说话控制
-                image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
-                if (draw.isRunning()) {
-                    draw.stop();
-                }
-            }
-        } else {
-            VoiceStreamRecordService.stop();
-        }
-    }
 
-    protected void press() {
-        // 按下的动作
-        if (interPhoneType.equals("group")) {
-            InterPhoneControl.Press(context, interPhoneId);
-            VoiceStreamRecordService.stop();
-            VoiceStreamRecordService.start(context, interPhoneId, "group");
-        } else {
-            //此处处理个人对讲的逻辑
-            InterPhoneControl.PersonTalkPressStart(context);
-            VoiceStreamRecordService.stop();
-            VoiceStreamRecordService.start(context, interPhoneId, "person");
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        isCancelRequest = VolleyRequest.cancelRequest(tag);
-        if (Receiver != null) {
-            context.unregisterReceiver(Receiver);
-            Receiver = null;
-        }
-    }
 }

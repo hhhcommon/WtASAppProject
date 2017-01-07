@@ -38,7 +38,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 				+ "playeralltime varchar(50),playerintime varchar(50),playercontentdesc varchar(1500),playernum varchar(50),"
 				+ "playerzantype varchar(50),playerfrom varchar(50),playerfromid varchar(50),playerfromurl varchar(50)," +
 				"playeraddtime varchar(50),bjuserid varchar(50),playshareurl varchar(100),playfavorite varchar(100),contentid varchar(50),localurl varchar(100)," +
-				"sequname varchar(50),sequimg varchar(200),sequdesc varchar(150),sequid varchar(50),playtag varchar(100),contentplaytype varchar(20))");
+				"sequname varchar(50),sequimg varchar(200),sequdesc varchar(150),sequid varchar(50),playtag varchar(100),contentplaytype varchar(20),IsPlaying varchar(50))");
 		//playtag,contentplaytype
 		// 线程表
 		db.execSQL("create table IF NOT EXISTS thread_info(_id integer primary key autoincrement,"
@@ -49,7 +49,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 				+ "author varchar(50),playcontent varchar(50),filename varchar(50),localurl varchar(100),"
 				+ "sequname varchar(50),sequimgurl varchar(200),sequdesc varchar(150),sequid varchar(50)," +
 				"userid varchar(50),downloadtype varchar(10),playshareurl varchar(100),playfavorite varchar(100),contentid varchar(50)," +
-				"playeralltime varchar(50),playerfrom varchar(50),playcount varchar(50),contentdescn varchar(100),playtag varchar(100),contentplaytype varchar(20))");
+				"playeralltime varchar(50),playerfrom varchar(50),playcount varchar(50),contentdescn varchar(100),playtag varchar(100),contentplaytype varchar(20),IsPlaying varchar(50))");
 
 		// 城市表
 		db.execSQL("create table IF NOT EXISTS cityinfo(_id integer primary key autoincrement,"

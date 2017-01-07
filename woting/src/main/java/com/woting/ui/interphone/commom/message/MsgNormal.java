@@ -6,6 +6,7 @@ import com.woting.ui.interphone.commom.message.content.MapContent;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
+
 /**
  * 一般消息：既控制类消息
  * @author wanghui
@@ -24,7 +25,7 @@ public class MsgNormal extends Message {
     private String userId; //设备：当前登录用户
     private String IMEI; //设备：设备串号
 
-    private MessageContent msgContent; //消息内容
+    private MessageContent msgContent; //消息内容    
 
     public MsgNormal(byte[] msgBytes) throws Exception {
         super();
@@ -114,7 +115,7 @@ public class MsgNormal extends Message {
         //二、类型
         byte f1=binaryMsg[_offset++];
         setMsgType(((f1&0x80)==0x80)?1:0);
-        setAffirm(((f1&0x08)==0x08)?1:0);
+        setAffirm(((f1&0x08)==0x08)?1:((f1&0x0A)==0x0A)?3:((f1&0x02)==0x02)?2:0);
         //三、时间
         byte[] _tempBytes=Arrays.copyOfRange(binaryMsg, _offset, _offset+8);
         setSendTime(ByteConvert.bytes2long(_tempBytes));
@@ -188,7 +189,7 @@ public class MsgNormal extends Message {
         else throw new Exception("消息目标异常！");
         if (!isAck()) {
             //八、用户类型
-            if (fromType==0||(fromType==1&&bizType==15)||(fromType==1&&bizType==4)) {
+            if (fromType==0||(fromType==1&&bizType==15)||(fromType==1&&toType==1&&(bizType==4||bizType==8))) {
                 f1=binaryMsg[_offset++];
                 setPCDType(f1);
                 f1=binaryMsg[_offset];
@@ -275,6 +276,8 @@ public class MsgNormal extends Message {
         //二、类型
         if (msgType==1) zeroByte|=0x80;
         if (affirm==1) zeroByte|=0x08;
+        else if (affirm==2) zeroByte|=0x02;
+        else if (affirm==3) zeroByte|=0x0A;
         ret[_offset++]=zeroByte;
         //三、时间
         byte[] _tempBytes=ByteConvert.long2bytes(sendTime);
@@ -283,7 +286,7 @@ public class MsgNormal extends Message {
         //四、命令
         zeroByte=0;
         zeroByte|=(((byte)bizType)<<4);
-        if (bizType!=0&&bizType!=15) zeroByte|=((((byte)cmdType)<<4)>>4);
+        zeroByte|=((((byte)cmdType)<<4)>>4);
         ret[_offset++]=zeroByte;
         if (bizType!=0&&bizType!=15) ret[_offset++]=(byte)command;
         //五、回复

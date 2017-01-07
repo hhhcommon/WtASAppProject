@@ -15,6 +15,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.ToastUtils;
 import com.woting.ui.interphone.alert.CallAlertActivity;
@@ -80,8 +81,8 @@ public class SubclassService extends Service {
             if (action.equals(BroadcastConstants.PUSH_BACK)) {////////////////////////////////////////////////////////////////////////////////
                 if (ReceiveAlertActivity.instance == null) {
                 } else {
-//					abortBroadcast();//中断广播传递
-                    //					MsgNormal message = (MsgNormal) intent.getSerializableExtra("outMessage");
+                    //  abortBroadcast();//中断广播传递
+                    //	MsgNormal message = (MsgNormal) intent.getSerializableExtra("outMessage");
                     byte[] bt = intent.getByteArrayExtra("outMessage");
                     Log.e("push_back接收器中数据", Arrays.toString(bt) + "");
                     try {
@@ -92,6 +93,11 @@ public class SubclassService extends Service {
                                 case 1:
                                     int command = message.getCommand();
                                     if (command == 0x30) {
+
+                                        MapContent data = (MapContent) message.getMsgContent();
+                                        Map<String, Object> map = data.getContentMap();
+                                        Log.e("push_back接收器中数据的CallId", map.get("CallId")+"");
+
                                         isallow = true;
                                         handler.removeCallbacks(run);
                                         if (musicPlayer != null) {
@@ -131,7 +137,7 @@ public class SubclassService extends Service {
                                         //应答消息：若Data.DialType=1必须要发送回执信息，否则不需要回执
                                         //	callid=data.getCallId();
                                         callid = data.get("CallId") + "";
-                                        InterPhoneControl.bdcallid = callid;
+                                        GlobalConfig.oldBCCallId=InterPhoneControl.bdcallid;
                                         //	callerId=data.getCallerId();
                                         callerId = data.get("CallerId") + "";
 
