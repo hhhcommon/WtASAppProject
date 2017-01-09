@@ -127,7 +127,7 @@ public class SelectSequActivity extends AppBaseActivity implements View.OnClickL
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        VolleyRequest.RequestPost(GlobalConfig.getSequMediaList, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.RequestPostForUpload(GlobalConfig.getSequMediaList, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if(dialog != null) dialog.dismiss();

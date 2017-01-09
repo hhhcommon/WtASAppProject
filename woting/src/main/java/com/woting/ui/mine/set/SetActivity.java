@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.manager.CacheManager;
+import com.woting.common.manager.UpdateManager;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
@@ -33,10 +35,10 @@ import com.woting.ui.mine.feedback.activity.FeedbackActivity;
 import com.woting.ui.mine.person.modifypassword.ModifyPasswordActivity;
 import com.woting.ui.mine.person.phonecheck.PhoneCheckActivity;
 import com.woting.ui.mine.set.about.AboutActivity;
+import com.woting.ui.mine.set.collocation.CollocationActivity;
 import com.woting.ui.mine.set.downloadposition.DownloadPositionActivity;
 import com.woting.ui.mine.set.help.HelpActivity;
 import com.woting.ui.mine.set.preference.activity.PreferenceActivity;
-import com.woting.common.manager.UpdateManager;
 import com.woting.ui.mine.set.updateusernum.updateUserNumActivity;
 
 import org.json.JSONException;
@@ -66,6 +68,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
     private String tag = "SET_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
     private KSYProxyService proxy;
+    private RelativeLayout lin_collocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +91,9 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         findViewById(R.id.lin_feedback).setOnClickListener(this);           // 意见反馈
         findViewById(R.id.lin_downloadposition).setOnClickListener(this);   // 下载位置
         findViewById(R.id.lin_preference).setOnClickListener(this);         // 偏好设置
+        lin_collocation=(RelativeLayout)findViewById(R.id.lin_p_set);
+        lin_collocation.setOnClickListener(this);                           // 配置设置
+
         findViewById(R.id.lin_id_name).setOnClickListener(this);            // ID号
 
         lin_IsLogin= findViewById(R.id.lin_IsLogin);                        // 未登录时需要隐藏的绑定手机号和重置密码布局
@@ -113,6 +119,10 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         super.onResume();
         if(!BSApplication.SharedPreferences.getString(StringConstant.USER_NUM, "").equals("")) {
             linearIdName.setVisibility(View.GONE);
+        }
+        // 配置设置按钮是否显示
+        if(GlobalConfig.isCollocation){
+            lin_collocation.setVisibility(View.VISIBLE);
         }
     }
 
@@ -191,6 +201,9 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 break;
             case R.id.lin_id_name:// ID
                 startActivityForResult(new Intent(context, updateUserNumActivity.class), 0x111);
+                break;
+            case R.id.lin_p_set:
+                startActivityForResult(new Intent(context, CollocationActivity.class), 0x111);
                 break;
         }
     }

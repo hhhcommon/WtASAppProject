@@ -37,13 +37,13 @@ public class VolleyRequest {
      * @param callback   返回值
      */
     public static void RequestGet(String url, JSONObject jsonObject, VolleyCallback callback) {
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, jsonObject, callback.loadingListener(), callback.errorListener());
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(GlobalConfig.baseUrl+url, jsonObject, callback.loadingListener(), callback.errorListener());
         jsonObjectRequest.setTag(TAG);// 设置标签
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(GlobalConfig.HTTP_CONNECTION_TIMEOUT, 1, 1.0f));
         BSApplication.getHttpQueues().add(jsonObjectRequest);// 加入队列
         //		BSApplication.getHttpQueues().start();// 启动
 
-        Log.i("请求服务器地址", "--- > > >  " + url);
+        Log.i("请求服务器地址", "--- > > >  " + GlobalConfig.baseUrl+url);
     }
 
     /**
@@ -55,13 +55,13 @@ public class VolleyRequest {
      * @param callback   返回值
      */
     public static void RequestGet(String url, JSONObject jsonObject, String tag, VolleyCallback callback) {
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, jsonObject, callback.loadingListener(), callback.errorListener());
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(GlobalConfig.baseUrl+url, jsonObject, callback.loadingListener(), callback.errorListener());
         jsonObjectRequest.setTag(tag);// 设置标签
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(GlobalConfig.HTTP_CONNECTION_TIMEOUT, 1, 1.0f));
         BSApplication.getHttpQueues().add(jsonObjectRequest);// 加入队列
         //		BSApplication.getHttpQueues().start();// 启动
 
-        Log.i("请求服务器地址", "--- > > >  " + url);
+        Log.i("请求服务器地址", "--- > > >  " + GlobalConfig.baseUrl+url);
     }
 
     /**
@@ -74,14 +74,14 @@ public class VolleyRequest {
      */
     public static void RequestPost(String url, JSONObject jsonObject, VolleyCallback callback) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Method.POST, url, jsonObject, callback.loadingListener(), callback.errorListener());
+                Method.POST, GlobalConfig.baseUrl+url, jsonObject, callback.loadingListener(), callback.errorListener());
 
         jsonObjectRequest.setTag(TAG);// 设置标签
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(GlobalConfig.HTTP_CONNECTION_TIMEOUT, 1, 1.0f));
         BSApplication.getHttpQueues().add(jsonObjectRequest);// 加入队列
         //		BSApplication.getHttpQueues().start();// 启动
 
-        Log.i("请求服务器地址", "--- > > >  " + url);
+        Log.i("请求服务器地址", "--- > > >  " + GlobalConfig.baseUrl+url);
         Log.v("请求服务器提交的参数", "--- > > >  " + jsonObject.toString());
     }
 
@@ -95,14 +95,35 @@ public class VolleyRequest {
      */
     public static void RequestPost(String url, String tag, JSONObject jsonObject, VolleyCallback callback) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Method.POST, url, jsonObject, callback.loadingListener(), callback.errorListener());
+                Method.POST, GlobalConfig.baseUrl+url, jsonObject, callback.loadingListener(), callback.errorListener());
 
         jsonObjectRequest.setTag(tag);// 设置标签
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(GlobalConfig.HTTP_CONNECTION_TIMEOUT, 1, 1.0f));
         BSApplication.getHttpQueues().add(jsonObjectRequest);// 加入队列
         //		BSApplication.getHttpQueues().start();// 启动
 
-        Log.i("请求服务器地址", "--- > > >  " + url);
+        Log.i("请求服务器地址", "--- > > >  " + GlobalConfig.baseUrl+url);
+        Log.v("请求服务器提交的参数", "--- > > >  " + jsonObject.toString());
+    }
+
+    /**
+     * post网络请求  自定义标签  用于取消网络请求
+     *
+     * @param tag        标签
+     * @param url        网络请求地址
+     * @param jsonObject 请求参数
+     * @param callback   返回值
+     */
+    public static void RequestPostForUpload(String url, String tag, JSONObject jsonObject, VolleyCallback callback) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Method.POST, GlobalConfig.uploadBaseUrl+url, jsonObject, callback.loadingListener(), callback.errorListener());
+
+        jsonObjectRequest.setTag(tag);// 设置标签
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(GlobalConfig.HTTP_CONNECTION_TIMEOUT, 1, 1.0f));
+        BSApplication.getHttpQueues().add(jsonObjectRequest);// 加入队列
+        //		BSApplication.getHttpQueues().start();// 启动
+
+        Log.i("请求服务器地址", "--- > > >  " + GlobalConfig.uploadBaseUrl+url);
         Log.v("请求服务器提交的参数", "--- > > >  " + jsonObject.toString());
     }
 
@@ -116,7 +137,7 @@ public class VolleyRequest {
      */
     public static void RequestTextVoicePost(String url, String tag, JSONObject jsonObject, VolleyCallback callback) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Method.POST, url, jsonObject, callback.loadingListener(), callback.errorListener()) {
+                Method.POST, GlobalConfig.baseUrl+url, jsonObject, callback.loadingListener(), callback.errorListener()) {
 
             @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
@@ -140,7 +161,7 @@ public class VolleyRequest {
         BSApplication.getHttpQueues().add(jsonObjectRequest);// 加入队列
         //		BSApplication.getHttpQueues().start();// 启动
 
-        Log.i("请求服务器地址", "--- > > >  " + url);
+        Log.i("请求服务器地址", "--- > > >  " + GlobalConfig.baseUrl+url);
         Log.v("请求服务器提交的参数", "--- > > >  " + jsonObject.toString());
     }
 
@@ -153,7 +174,7 @@ public class VolleyRequest {
      */
     public static void RequestTextVoicePost(String url, JSONObject jsonObject, VolleyCallback callback) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Method.POST, url, jsonObject, callback.loadingListener(), callback.errorListener()) {
+                Method.POST, GlobalConfig.baseUrl+url, jsonObject, callback.loadingListener(), callback.errorListener()) {
 
             @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
@@ -177,7 +198,7 @@ public class VolleyRequest {
         BSApplication.getHttpQueues().add(jsonObjectRequest);// 加入队列
         //		BSApplication.getHttpQueues().start();// 启动
 
-        Log.i("请求服务器地址", "--- > > >  " + url);
+        Log.i("请求服务器地址", "--- > > >  " + GlobalConfig.baseUrl+url);
         Log.v("请求服务器提交的参数", "--- > > >  " + jsonObject.toString());
     }
 
