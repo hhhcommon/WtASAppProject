@@ -68,7 +68,7 @@ public class HttpMultipartPost extends AsyncTask<String, Integer, String> {
         String serverResponse = null;
         HttpClient httpClient = new DefaultHttpClient();
         HttpContext httpContext = new BasicHttpContext();
-        HttpPost httpPost = new HttpPost(GlobalConfig.uploadFileUrl);
+        HttpPost httpPost = new HttpPost(GlobalConfig.uploadBaseUrl+GlobalConfig.uploadFileUrl);
 
         try {
             CustomMultipartEntity multipartContent = new CustomMultipartEntity(new CustomMultipartEntity.ProgressListener() {

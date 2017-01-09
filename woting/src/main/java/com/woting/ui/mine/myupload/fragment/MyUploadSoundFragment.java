@@ -123,7 +123,7 @@ public class MyUploadSoundFragment extends Fragment implements AdapterView.OnIte
         }
 
         // 获取用户上传的声音列表  目前没有接口  测试获取的是我喜欢的声音
-        VolleyRequest.RequestPost(GlobalConfig.getMediaList, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.RequestPostForUpload(GlobalConfig.getMediaList, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
@@ -319,7 +319,7 @@ public class MyUploadSoundFragment extends Fragment implements AdapterView.OnIte
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.removeMedia, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.RequestPostForUpload(GlobalConfig.removeMedia, tag, jsonObject, new VolleyCallback() {
             private String returnType;
 
             @Override

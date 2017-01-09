@@ -236,7 +236,7 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.addMediaInfo, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.RequestPostForUpload(GlobalConfig.addMediaInfo, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 Log.e("TAG", "Upload File Result -- > > " + result);

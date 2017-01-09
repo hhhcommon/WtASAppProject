@@ -272,7 +272,29 @@
                     android:layout_alignParentBottom="true"/>
 
             </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/lin_p_set"
+                android:visibility="gone"
+                style="@style/PersonAndSetRelativeStyle" >
+                <View style="@style/LineStyle"/>
 
+                <ImageView
+                    android:id="@+id/image_p_set"
+                    style="@style/PersonAndSetLeftStyle"
+                    android:src="@mipmap/wt_person_aboutus" />
+
+                <TextView
+                    style="@style/PersonAndSetTextStyle"
+                    android:text="配置设置"
+                    android:layout_toRightOf="@id/image_p_set" />
+
+                <ImageView style="@style/PersonAndSetRightStyle"/>
+
+                <View
+                    style="@style/ViewStyle"
+                    android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
             <Button
                 android:id="@+id/lin_zhuxiao"
                 android:layout_width="match_parent"
