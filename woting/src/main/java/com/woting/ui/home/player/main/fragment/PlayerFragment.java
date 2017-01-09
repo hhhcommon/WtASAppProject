@@ -50,6 +50,7 @@ import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ShareUtils;
+import com.woting.common.util.StringUtils;
 import com.woting.common.util.TimeUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
@@ -85,6 +86,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -104,6 +106,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     public static FragmentActivity context;
     public static IntegrationPlayer mPlayer;// 播放器
     private static SearchPlayerHistoryDao mSearchHistoryDao;// 搜索历史数据库
+    private static HashMap<String,String> mMap;
+    private static String mRadioContentId;
     private FileInfoDao mFileDao;// 文件相关数据库
     private AudioManager audioMgr;// 声音管理
     private VoiceRecognizer mVoiceRecognizer;// 讯飞
@@ -718,14 +722,14 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 if(GlobalConfig.playerObject!=null&&
                         GlobalConfig.playerObject.getMediaType()!=null&&GlobalConfig.playerObject.getMediaType().equals("RADIO")){
                  /*   Log.e("播放节目为","电台");*/
-                    sendContentInfo(GlobalConfig.playerObject.getContentId(),"RADIO");
+                       sendContentInfo(GlobalConfig.playerObject.getContentId(),"RADIO");
 
                 }
             }
         };
             mTimer=new Timer();
-        mTimer.schedule(mTask,0,1000*60*5);
-
+         /*   mTimer.schedule(mTask,0,1000*60*5);*/
+            mTimer.schedule(mTask,0,1000);
     }
 
     // 设置 headView 的界面
@@ -1579,10 +1583,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     mPlayer.continuePlay();
                     break;
                 case RefreshProgram:
-                    if(!TextUtils.isEmpty(IsPlaying)){
+                    if(!TextUtils.isEmpty(IsPlaying)&&!TextUtils.isEmpty(mRadioContentId)){
+                        String s=IsPlaying;
+                        String s1=mRadioContentId;
+
                         for(int i=0;i<allList.size();i++){
-                            if(allList.get(i).getContentId()!=null&&GlobalConfig.playerObject.getContentId()!=null&&
-                                    allList.get(i).getContentId().equals(GlobalConfig.playerObject.getContentId())){
+                            if(allList.get(i).getContentId()!=null&&mRadioContentId!=null&&
+                                    allList.get(i).getContentId().equals(mRadioContentId)){
                                 if(allList.get(i).getIsPlaying()!=null&&!allList.get(i).getIsPlaying().equals(IsPlaying)){
                                     allList.get(i).setIsPlaying(IsPlaying);
                                 }
@@ -1591,7 +1598,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                         }
 
                     }
-
                     break;
             }
         }
@@ -2153,64 +2159,40 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private static void sendContentInfo(final String ContentId, String MediaType) {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            jsonObject.put("MediaType", MediaType);
-            jsonObject.put("ContentId", ContentId);
+/*            jsonObject.put("MediaType", MediaType);*/
+            jsonObject.put("BcIds", ContentId);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        VolleyRequest.RequestPost(GlobalConfig.getContentById, jsonObject, new VolleyCallback() {
+        VolleyRequest.RequestPost(GlobalConfig.getIsPlayIngUrl, jsonObject, new VolleyCallback() {
 
             @Override
             protected void requestSuccess(JSONObject result) {
-                try {
+               try {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null) { // 根据返回值来对程序进行解析
                         if (ReturnType.equals("1001")) {
-
                             try {
-                                String ResultList = result.getString("ResultInfo"); // 获取列表
-                                JSONTokener jsonParser = new JSONTokener(ResultList);
-                                JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                                // 此处后期需要用typeToken将字符串StringSubList 转化成为一个list集合
-                                String contentid;
+                                String ResultList = result.getString("ResultList"); // 获取列表
+                                Map<String, String> map = StringUtils.parseData(ResultList);
 
                                 try {
-                                    contentid = arg1.getString("ContentId");
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    contentid = "";
-                                }
-                                try {
-                                    IsPlaying = arg1.getString("IsPlaying");
+                                    mRadioContentId= ContentId;
+                                    IsPlaying = map.get(ContentId);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     IsPlaying  = "";
                                 }
-                                if(contentid!=null&&GlobalConfig.playerObject!=null&&GlobalConfig.playerObject.getContentId()!=null&&
-                                        contentid.equals(GlobalConfig.playerObject.getContentId())){
 
+                                if(!TextUtils.isEmpty(IsPlaying)){
                                     mUIHandler.sendEmptyMessage(RefreshProgram);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         } else {
-                            if (ReturnType.equals("0000")) {
-//							ToastUtils.show_always(context, "无法获取相关的参数");
-                            //    ToastUtils.show_always(context, "数据出错了，请稍后再试！");
-                            } else if (ReturnType.equals("1002")) {
-//							ToastUtils.show_always(context, "无此分类信息");
-                               // ToastUtils.show_always(context, "数据出错了，请稍后再试！");
-                            } else if (ReturnType.equals("1003")) {
-//							ToastUtils.show_always(context, "无法获得列表");
-                                //ToastUtils.show_always(context, "数据出错了，请稍后再试！");
-                            } else if (ReturnType.equals("1011")) {
-//							ToastUtils.show_always(context, "列表为空（列表为空[size==0]");
-                                //ToastUtils.show_always(context, "数据出错了，请稍后再试！");
-                            } else if (ReturnType.equals("T")) {
-//							ToastUtils.show_always(context, "获取列表异常");
-                                //ToastUtils.show_always(context, "数据出错了，请稍后再试！");
-                            }
+                          ToastUtils.show_short(context,"当前无节目单数据");
                         }
                     }
                 } catch (JSONException e) {
