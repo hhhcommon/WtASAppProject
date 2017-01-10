@@ -58,7 +58,9 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.HorizontalListView;
 import com.woting.common.widgetui.MarqueeTextView;
 import com.woting.common.widgetui.xlistview.XListView;
+import com.woting.ui.download.activity.DownloadActivity;
 import com.woting.ui.download.dao.FileInfoDao;
+import com.woting.ui.download.fragment.DownLoadUnCompleted;
 import com.woting.ui.download.model.FileInfo;
 import com.woting.ui.download.service.DownloadService;
 import com.woting.ui.home.player.main.adapter.ImageAdapter;
@@ -723,7 +725,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                         GlobalConfig.playerObject.getMediaType()!=null&&GlobalConfig.playerObject.getMediaType().equals("RADIO")){
                  /*   Log.e("播放节目为","电台");*/
                        sendContentInfo(GlobalConfig.playerObject.getContentId(),"RADIO");
-
                 }
             }
         };
@@ -1323,6 +1324,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     FileInfo file = fileUnDownloadList.get(k);
                     mFileDao.updataDownloadStatus(m.getContentPlay(), "1");
                     DownloadService.workStart(file);
+                    if(DownloadActivity.isVisible==true){
+                      /*  if(DownLoadUnCompleted.dwType!){
+
+                        }*/
+                        DownLoadUnCompleted.dwType=true;
+                    }
                     Intent p_intent = new Intent(BroadcastConstants.PUSH_DOWN_UNCOMPLETED);
                     context.sendBroadcast(p_intent);
                     break;
