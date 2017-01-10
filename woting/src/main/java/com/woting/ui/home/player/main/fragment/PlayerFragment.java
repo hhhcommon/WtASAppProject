@@ -728,8 +728,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             }
         };
             mTimer=new Timer();
-         /*   mTimer.schedule(mTask,0,1000*60*5);*/
-            mTimer.schedule(mTask,0,1000);
+            mTimer.schedule(mTask,0,1000*60*5);
+           /* mTimer.schedule(mTask,0,1000);*/
     }
 
     // 设置 headView 的界面
