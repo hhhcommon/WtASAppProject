@@ -113,7 +113,6 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                 break;
             case R.id.round_image_head:// 主播详情
             case R.id.text_anchor_name:
-
                 if(!TextUtils.isEmpty(PersonId)){
                     Intent intent=new Intent(context, AnchorDetailsActivity.class);
                     intent.putExtra("PersonId",PersonId);
