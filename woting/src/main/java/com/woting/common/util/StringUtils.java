@@ -1,5 +1,9 @@
 package com.woting.common.util;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
@@ -10,6 +14,7 @@ import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombi
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -169,13 +174,24 @@ public class StringUtils {
 	 * @return true/false
 	 */
 	public static boolean isPlayUrl(String str) {
-
-
-
-
 		Pattern pattern = Pattern.compile(" ?://? ");
 		Matcher m = pattern.matcher(str);
 		return m.matches();
 	}
+
+	/**
+	 *
+	 * 函数名称: parseData
+	 * 函数描述: 将json字符串转换为map
+	 * @param data
+	 * @return
+	 */
+	public static Map<String, String> parseData(String data){
+		GsonBuilder gb = new GsonBuilder();
+		Gson g = gb.create();
+		Map<String, String> map = g.fromJson(data, new TypeToken<Map<String, String>>() {}.getType());
+		return map;
+	}
+
 
 }
