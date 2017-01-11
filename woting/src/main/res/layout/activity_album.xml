@@ -129,6 +129,35 @@
                         android:background="@color/WHITE_1" />
 
                     <LinearLayout
+                        android:id="@+id/lin_subscriber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="订阅"
+                            android:textColor="@color/WHITE"
+                            android:textSize="@dimen/activity_normal_textone" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginTop="3dp"
+                            android:src="@mipmap/wt_img_subscriber" />
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="3dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="25dp"
+                        android:layout_marginTop="3dp"
+                        android:background="@color/WHITE_1" />
+
+                    <LinearLayout
                         android:id="@+id/lin_share"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -148,16 +177,15 @@
                             android:layout_marginTop="3dp"
                             android:src="@mipmap/wt_img_share" />
                     </LinearLayout>
-
                     <TextView
-                        android:id="@+id/view_line"
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginBottom="3dp"
-                        android:layout_marginLeft="25dp"
-                        android:layout_marginRight="25dp"
-                        android:layout_marginTop="3dp"
-                        android:background="@color/WHITE_1" />
+                    android:id="@+id/view_line"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_marginTop="3dp"
+                    android:background="@color/WHITE_1" />
 
                     <LinearLayout
                         android:id="@+id/lin_pinglun"
@@ -180,6 +208,7 @@
                             android:layout_marginTop="3dp"
                             android:src="@mipmap/wt_img_pinglun_white" />
                     </LinearLayout>
+
                 </LinearLayout>
             </LinearLayout>
 

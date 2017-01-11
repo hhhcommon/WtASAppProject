@@ -200,13 +200,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         VolleyRequest.RequestPost(GlobalConfig.loginUrl, tag, jsonObject, new VolleyCallback() {
             private String UserNum;
             private String phoneNumber;
-            private String gender;// 性别
-            private String region;// 区域
-            private String birthday;// 生日
-            private String age;// 年龄
-            private String starSign;// 星座
-            private String email;// 邮箱
-            private String userSign;// 签名
+            private String gender;   // 性别
+            private String region;   // 区域
+            private String birthday; // 生日
+            private String age;      // 年龄
+            private String starSign; // 星座
+            private String email;    // 邮箱
+            private String userSign; // 签名
 
             @Override
             protected void requestSuccess(JSONObject result) {

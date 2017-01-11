@@ -282,6 +282,9 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                     case MotionEvent.ACTION_UP:
                         jack();//抬起手后的操作
                         break;
+                    case MotionEvent.ACTION_CANCEL:
+                        jack();//抬起手后的操作
+                        break;
                 }
                 return false;
             }
@@ -632,6 +635,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                     lin_personhead.setVisibility(View.GONE);
                     lin_head.setVisibility(View.GONE);
                     lin_foot.setVisibility(View.GONE);
+                    image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
                     GlobalConfig.isActive = false;
                     call(phoneId);
                     confirmDialog.dismiss();
@@ -642,6 +646,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                     lin_personhead.setVisibility(View.GONE);
                     lin_head.setVisibility(View.GONE);
                     lin_foot.setVisibility(View.GONE);
+                    image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
                     GlobalConfig.isActive = false;
                     zhiDingGroupSS(groupId);
                     //对讲主页界面更新
@@ -666,6 +671,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                 lin_personhead.setVisibility(View.GONE);
                 lin_head.setVisibility(View.GONE);
                 lin_foot.setVisibility(View.GONE);
+                image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
                 GlobalConfig.isActive = false;
                 tipView.setVisibility(View.GONE);
                 getTXL();
@@ -714,6 +720,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         lin_personhead.setVisibility(View.GONE);
         lin_head.setVisibility(View.GONE);
         lin_foot.setVisibility(View.GONE);
+        image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
         GlobalConfig.isActive = false;
         gridView_person.setVisibility(View.GONE);
         gridView_tv.setVisibility(View.GONE);
@@ -1425,10 +1432,10 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                     MapContent data = (MapContent) message.getMsgContent();
                                     Map<String, Object> map = data.getContentMap();
                                     String callId = String.valueOf(map.get("CallId"));
-                                    Log.e("chat的的CallId", callId+"");
+                                    Log.e("chat的的CallId", callId + "");
                                     if (isCalling) {
                                         //此时有对讲状态
-                                        if (interPhoneType.equals("user")&&InterPhoneControl.bdcallid.equals(callId)) {
+                                        if (interPhoneType.equals("user") && InterPhoneControl.bdcallid.equals(callId)) {
                                             //挂断电话的数据处理
                                             isCalling = false;
                                             historyDataBaseList = dbDao.queryHistory();//得到数据库里边数据
@@ -1457,6 +1464,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                             lin_personhead.setVisibility(View.GONE);
                                             lin_head.setVisibility(View.GONE);
                                             lin_foot.setVisibility(View.GONE);
+                                            image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
                                             gridView_person.setVisibility(View.GONE);
                                             GlobalConfig.isActive = false;
                                         }
@@ -1464,7 +1472,6 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-
 
 
                             }

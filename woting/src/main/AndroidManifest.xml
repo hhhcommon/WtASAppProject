@@ -609,6 +609,12 @@
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
+        <!--主播详情介绍界面-->
+        <activity
+            android:name="com.woting.ui.mine.subscriber.activity.SubscriberListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
         <!--配置文件界面-->
         <activity

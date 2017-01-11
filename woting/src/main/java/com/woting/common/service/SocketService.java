@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
@@ -23,6 +24,8 @@ import com.woting.ui.interphone.commom.service.VoiceStreamPlayerService;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Arrays;
@@ -42,6 +45,8 @@ public class SocketService extends Service {
     private static volatile Socket socket = null;
     private static volatile boolean toBeStop = false;
     private static volatile boolean isRunning = false;
+    private boolean isPrintLog = false;                                 // 是否写日志文件
+
     private volatile long lastReceiveTime;                            // 最后收到服务器消息时间
     private volatile Object socketSendLock = new Object();            // 发送锁
     private volatile Object socketRecvLock = new Object();            // 接收锁
@@ -56,6 +61,10 @@ public class SocketService extends Service {
     private static ArrayBlockingQueue<Message> ControlReceiptMsgQueue = new ArrayBlockingQueue<Message>(128); // 控制回执消息,4.3-(2-4-7)
     protected ArrayBlockingQueue<Byte> receiveByteQueue = new ArrayBlockingQueue<Byte>(10240);                   // 接收到的原始数据
     protected static ArrayBlockingQueue<byte[]> sendMsgQueue = new ArrayBlockingQueue<byte[]>(512);           // 要发送的消息队列
+
+    private static ArrayBlockingQueue<Message>    recVoiceMsgQueue = new ArrayBlockingQueue<Message>(128);
+    private static ArrayBlockingQueue<String>   allRecMsgQueue = new ArrayBlockingQueue<String>(1024); //打印日志的数据消息队列
+    private static ArrayBlockingQueue<String>  overSendMsgQueue = new ArrayBlockingQueue<String>(1024); //已经发送的消息队列
 
     private static BufferedInputStream in = null;
     private static BufferedOutputStream out = null;
@@ -94,6 +103,15 @@ public class SocketService extends Service {
         MessageDistributed msgdistributed = new MessageDistributed();
         msgdistributed.start();
 
+        //写日志的线程
+        if(isPrintLog) {
+            WriteReceive wr = new WriteReceive();
+            wr.start();
+            DealSend ovs = new DealSend();
+            ovs.start();
+            DealRecVoice dv = new DealRecVoice();
+            dv.start();
+        }
     }
 
     /**
@@ -460,6 +478,10 @@ public class SocketService extends Service {
                             out.write(mBytes);
                             try {
                                 out.flush();
+                                if(isPrintLog){
+                                    long sendTime = System.currentTimeMillis();
+                                    overSendMsgQueue.add(sendTime+mBytes.toString());
+                                }
                                 Log.i("前端已经发送的消息", JsonEncloseUtils.btToString(mBytes));
                                 Log.i("发送数据队列", "【等待】发送==数据个数=【" + sendMsgQueue.size() + "】");
                             } catch (Exception e) {
@@ -665,6 +687,9 @@ public class SocketService extends Service {
                         } else if (msg instanceof MsgMedia) {
                             audioMsgQueue.add(msg);
                             Log.i("数据放进音频数据队列", "音频数据已处理");
+                            if(isPrintLog){
+                                recVoiceMsgQueue.add(msg);
+                            }
                         }
                     }
                 } catch (Exception e) {
@@ -709,6 +734,7 @@ public class SocketService extends Service {
             while (true) {
                 try {
                     MsgMedia msg = (MsgMedia) audioMsgQueue.take();
+
                     if (msg != null) {
                         int SeqNum = msg.getSeqNo();
                         String id = msg.getTalkId();
@@ -948,5 +974,120 @@ public class SocketService extends Service {
         }
         ;
         Log.e("socket销毁", "已经全部销毁");
+    }
+
+
+
+    //写接收所有数据日志的线程
+    private class WriteReceive extends Thread {
+        public void run() {
+            while (true) {
+                try {
+                    String msg=allRecMsgQueue.take();
+                    if(msg!=null&&msg.trim().length()>0){
+                        //写全部接收数据
+                        try{
+                            String filePath= Environment.getExternalStorageDirectory() + "/woting/receivealllog/";
+                            File dir=new File(filePath);
+                            if (!dir.isDirectory()) dir.mkdirs();
+                            filePath+="receiveallmessage";
+                            File f=new File(filePath);
+                            if (!f.exists()) f.createNewFile();
+                            String _sn=msg;
+                            FileWriter fw = null;
+                            try {
+                                fw = new FileWriter(f, true);
+                                fw.write(_sn+"\n");
+                                fw.flush();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }finally{
+                                try {
+                                    fw.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        } catch(Exception e) {
+                        }
+                    }
+                } catch(Exception e) {
+                    Log.e("日志打印错误:::", e.toString());
+                }
+            }
+        }
+    }
+
+    //写所有发送数据的线程
+    private class DealSend extends Thread {
+        public void run() {
+            while (true) {
+                try {
+                    String msg=overSendMsgQueue.take();
+                    if(msg!=null&&msg.trim().length()>0){
+                        String filePath= Environment.getExternalStorageDirectory() + "/woting/oversendeceivelog/";
+                        File dir=new File(filePath);
+                        if (!dir.isDirectory()) dir.mkdirs();
+                        filePath+="oversend";
+                        File f=new File(filePath);
+                        if (!f.exists()) f.createNewFile();
+                        String _sn=msg;
+                        FileWriter fw = null;
+                        try {
+                            fw = new FileWriter(f, true);
+                            fw.write(_sn+"\n");
+                            fw.flush();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }finally{
+                            try {
+                                fw.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                } catch(Exception e) {
+                    Log.e("DealReceive处理线程:::", e.toString());
+                }
+            }
+        }
+    }
+
+    //写接收到的所有的音频数据包
+    private class DealRecVoice extends Thread {
+        public void run() {
+            while (true) {
+                try {
+                    Message msg = recVoiceMsgQueue.take();
+                    if(msg!=null){
+                        String filePath= Environment.getExternalStorageDirectory() + "/woting/recvoicelog/";
+                        File dir=new File(filePath);
+                        if (!dir.isDirectory()) dir.mkdirs();
+                        MsgMedia msgs = (MsgMedia)msg;
+
+                        filePath+=msgs.getTalkId();
+                        File f=new File(filePath);
+                        if (!f.exists()) f.createNewFile();
+                        String _sn=msgs.getSeqNo()+"::"+msgs.toString();
+                        FileWriter fw = null;
+                        try {
+                            fw = new FileWriter(f, true);
+                            fw.write(_sn+"\n");
+                            fw.flush();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }finally{
+                            try {
+                                fw.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                } catch(Exception e) {
+                }
+            }
+        }
     }
 }

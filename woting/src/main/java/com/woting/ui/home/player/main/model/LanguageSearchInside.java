@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class LanguageSearchInside implements Serializable{
 	private String Type="1";
 	private String ContentURI;
-	private String ContentPersons;
+//	private String ContentPersons;
 	private String ContentKeyWord;
 	private String cTime;
 	private String ContentSubjectWord;
@@ -131,12 +131,12 @@ public class LanguageSearchInside implements Serializable{
 	public void setPlayerAllTime(String playerAllTime) {
 		PlayerAllTime = playerAllTime;
 	}
-	public String getContentPersons() {
-		return ContentPersons;
-	}
-	public void setContentPersons(String contentPersons) {
-		ContentPersons = contentPersons;
-	}
+//	public String getContentPersons() {
+//		return ContentPersons;
+//	}
+//	public void setContentPersons(String contentPersons) {
+//		ContentPersons = contentPersons;
+//	}
 	public String getContentPlay() {
 		return ContentPlay;
 	}
