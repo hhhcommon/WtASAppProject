@@ -179,6 +179,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private static ArrayList<LanguageSearchInside> allList = new ArrayList<>();
     private static Timer mTimer;
     private static String IsPlaying; //获取的当前的播放内容
+    private List<LanguageSearchInside> list;
 
     /////////////////////////////////////////////////////////////
     // 以下是生命周期方法
@@ -746,6 +747,25 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 mPlayAudioTitleName.setText("未知");
             }
 
+            //主播信息
+            if(GlobalConfig.playerObject.getContentPersons()!=null&&GlobalConfig.playerObject.getContentPersons().size()>0){
+                try{
+                if(TextUtils.isEmpty(GlobalConfig.playerObject.getContentPersons().get(0).getPerName())){
+                    mProgramTextAnchor.setText(GlobalConfig.playerObject.getContentPersons().get(0).getPerName());
+
+                }else{
+                    mProgramTextAnchor.setText("未知");
+
+                }
+                }catch (Exception e){
+                    e.printStackTrace();
+                    mProgramTextAnchor.setText("未知");
+                }
+            }else{
+                // 节目详情 主播  暂没有主播
+                mProgramTextAnchor.setText("未知");
+            }
+
             // 播放的节目封面图片
             String url = GlobalConfig.playerObject.getContentImg();
             if (url != null) {// 有封面图片
@@ -852,8 +872,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                         null, context.getResources().getDrawable(R.mipmap.wt_comment_image), null, null);
             }
 
-            // 节目详情 主播  暂没有主播
-            mProgramTextAnchor.setText("未知");
+
 
             // 节目详情 专辑
             String sequName = GlobalConfig.playerObject.getSequName();
@@ -1118,7 +1137,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             LanguageSearchInside historyNews = new LanguageSearchInside();
             historyNews.setType("1");
             historyNews.setContentURI(historyNew.getPlayerUrI());
-            historyNews.setContentPersons(historyNew.getPlayerNum());
+            //historyNews.setContentPersons(historyNew.getPlayerNum());
             historyNews.setContentKeyWord("");
             historyNews.setcTime(historyNew.getPlayerInTime());
             historyNews.setContentSubjectWord("");
@@ -1253,7 +1272,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         // 对数据进行转换
         List<ContentInfo> dataList = new ArrayList<>();
         ContentInfo m = new ContentInfo();
-        m.setAuthor(data.getContentPersons());
+      //m.setAuthor(data.getContentPersons());
         m.setContentPlay(data.getContentPlay());
         m.setContentImg(data.getContentImg());
         m.setContentName(data.getContentName());
@@ -1326,7 +1345,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     DownloadService.workStart(file);
                     if(DownloadActivity.isVisible==true){
                       /*  if(DownLoadUnCompleted.dwType!){
-
                         }*/
                         DownLoadUnCompleted.dwType=true;
                     }
@@ -1593,7 +1611,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     if(!TextUtils.isEmpty(IsPlaying)&&!TextUtils.isEmpty(mRadioContentId)){
                         String s=IsPlaying;
                         String s1=mRadioContentId;
-
                         for(int i=0;i<allList.size();i++){
                             if(allList.get(i).getContentId()!=null&&mRadioContentId!=null&&
                                     allList.get(i).getContentId().equals(mRadioContentId)){
@@ -1690,8 +1707,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     if (ReturnType.equals("1001")) {
                         page++;
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        List<LanguageSearchInside> list = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<LanguageSearchInside>>() {
-                        }.getType());
+                        try {
+                            String List = arg1.getString("List");
+                            list = new Gson().fromJson(List, new TypeToken<List<LanguageSearchInside>>() {}.getType());
+                        }catch (Exception e){
+                           e.printStackTrace();
+                        }
                         list = clearContentPlayNull(list);
                         if (refreshType == 0) {
                             LanguageSearchInside fList = getDaoList(context);// 得到数据库里边的第一条数据

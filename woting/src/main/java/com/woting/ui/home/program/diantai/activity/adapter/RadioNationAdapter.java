@@ -2,6 +2,7 @@ package com.woting.ui.home.program.diantai.activity.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -128,7 +129,11 @@ public class RadioNationAdapter extends BaseExpandableListAdapter  {
 					} else {
 						holder.textview_ranktitle.setText(lists.getContentName());
 					}
-					holder.textview_rankplaying.setText("测试-无节目单数据");
+					if(!TextUtils.isEmpty(lists.getIsPlaying())){
+						holder.textview_rankplaying.setText(lists.getIsPlaying());
+					}else{
+						holder.textview_rankplaying.setText("测试-无节目单数据");
+					}
 					if (lists.getContentImg() == null
 							|| lists.getContentImg().equals("")
 							|| lists.getContentImg().equals("null")
