@@ -207,6 +207,7 @@ public class FMListActivity extends AppBaseActivity implements OnClickListener, 
                 js.put("CatalogType", "2");
                 js.put("CatalogId", cityId);
                 jsonObject.put("FilterData", js);
+                jsonObject.put("Page", String.valueOf(page));
             }
         } catch (JSONException e) {
             e.printStackTrace();

@@ -288,6 +288,7 @@ public class GlobalConfig {
     public static final String getIsPlayIngUrl= "wt/content/getIsPlayingBCProgramme.do";
 
 
+
     /**
      * 此处用到的接口是CM的接口
      */

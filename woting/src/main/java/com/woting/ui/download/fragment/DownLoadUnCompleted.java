@@ -54,7 +54,7 @@ public class DownLoadUnCompleted extends Fragment {
 
     private String userId;
     private int num = -1;
-    private boolean dwType=false;
+    public static  boolean dwType=false; //true 全部开始 false 全部暂停
     private Boolean FirstFlag=true; //标记第一次进入时的事件
 
     // 初始化数据库对象
@@ -85,7 +85,6 @@ public class DownLoadUnCompleted extends Fragment {
         setView();
         initDao();// 初始化数据库对象
         setListener();// 给控件设置监听
-        setDownLoadSource();// 设置界面数据
         return rootView;
     }
 
@@ -100,37 +99,26 @@ public class DownLoadUnCompleted extends Fragment {
         linearStatusYes = (LinearLayout) rootView.findViewById(R.id.lin_status_yes);// 有未下载时布局
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        setDownLoadSource();// 设置界面数据
+    }
+
     private void setDownLoadSource() {
         userId = CommonUtils.getUserId(context);
         fileInfoList = FID.queryFileInfo("false", userId);// 查询表中未完成的任务
         if (fileInfoList.size() == 0) {
             tipView.setVisibility(View.VISIBLE);
             tipView.setTipView(TipView.TipStatus.NO_DATA, "没有下载任务\n您没有未完成的下载任务哟");
+            dwType = false;
+            textStart.setText("全部开始");
         } else {
             tipView.setVisibility(View.GONE);
-          /*  if(DownloadTask.mContext==null){
+            if (dwType==false) {
                 imageStart.setImageResource(R.mipmap.wt_download_play);
-                dwType = false;
-                textStart.setText("全部开始");
-                imageStart.setImageResource(R.mipmap.wt_download_play);
-            }else{
-                if(DownloadTask.isPause==true){
-                    dwType = false;
-                    textStart.setText("全部开始");
-                    imageStart.setImageResource(R.mipmap.wt_download_play);
-                }else{
-                    dwType = true;
-                    imageStart.setImageResource(R.mipmap.wt_download_pause);
-                    textStart.setText("全部暂停");
-                }
-
-            }*/
-            if (DownloadTask.mContext==null||DownloadTask.isPause) {
-                imageStart.setImageResource(R.mipmap.wt_download_play);
-                dwType = false;
                 textStart.setText("全部开始");
             } else {
-                dwType = true;
                 imageStart.setImageResource(R.mipmap.wt_download_pause);
                 textStart.setText("全部暂停");
             }
@@ -294,8 +282,6 @@ public class DownLoadUnCompleted extends Fragment {
                         setOnItemListener();
                         setDownLoadSource();
                     } else {
-                        imageStart.setImageResource(R.mipmap.wt_download_play);
-                        textStart.setText("全部开始");
                         adapter = new DownloadAdapter(context, fileInfoList);
                         listView.setAdapter(adapter);
                         setOnItemListener();

@@ -1,11 +1,15 @@
 package com.woting.ui.home.player.main.model;
 
+
+import com.woting.ui.home.program.album.model.PersonInfo;
+
 import java.io.Serializable;
+import java.util.List;
 
 public class LanguageSearchInside implements Serializable{
 	private String Type="1";
 	private String ContentURI;
-//	private String ContentPersons;
+	private List<PersonInfo> ContentPersons;
 	private String ContentKeyWord;
 	private String cTime;
 	private String ContentSubjectWord;
@@ -32,6 +36,14 @@ public class LanguageSearchInside implements Serializable{
 	private String playTag;         // 标签<预留>
 	private String ContentPlayType; // 内容后缀
 	private String IsPlaying;
+
+	public void setContentPersons(List<PersonInfo> contentPersons) {
+		ContentPersons = contentPersons;
+	}
+
+	public List<PersonInfo> getContentPersons() {
+		return ContentPersons;
+	}
 
 	public String getIsPlaying() {
 		return IsPlaying;
@@ -131,12 +143,12 @@ public class LanguageSearchInside implements Serializable{
 	public void setPlayerAllTime(String playerAllTime) {
 		PlayerAllTime = playerAllTime;
 	}
-//	public String getContentPersons() {
-//		return ContentPersons;
-//	}
-//	public void setContentPersons(String contentPersons) {
-//		ContentPersons = contentPersons;
-//	}
+	/*public String getContentPersons() {
+		return ContentPersons;
+	}
+	public void setContentPersons(String contentPersons) {
+		ContentPersons = contentPersons;
+	}*/
 	public String getContentPlay() {
 		return ContentPlay;
 	}

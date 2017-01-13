@@ -20,6 +20,7 @@ public class PullableExpandableListView extends ExpandableListView implements Pu
 
     @Override
     public boolean canPullDown() {
+        try {
         if (getCount() == 0) {
             // 没有 item 的时候也可以下拉刷新
             return true;
@@ -28,6 +29,9 @@ public class PullableExpandableListView extends ExpandableListView implements Pu
             return true;
         } else
             return false;
+        }catch (Exception e){
+            return  true;
+        }
     }
 
     @Override

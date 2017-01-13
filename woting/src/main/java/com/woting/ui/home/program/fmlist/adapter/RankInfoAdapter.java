@@ -2,6 +2,7 @@ package com.woting.ui.home.program.fmlist.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,8 +86,11 @@ public class RankInfoAdapter extends BaseAdapter   {
 //			holder.textview_rankplaying.setText(lists.getContentPub());
 //		}
 
-		holder.textview_rankplaying.setText("测试-暂无节目单");
-
+		if(!TextUtils.isEmpty(lists.getIsPlaying())){
+			holder.textview_rankplaying.setText("正在播放"+""+lists.getIsPlaying());
+		}else {
+			holder.textview_rankplaying.setText("测试-暂无节目单");
+		}
 		if (lists.getContentImg() == null || lists.getContentImg().equals("")
 				|| lists.getContentImg().equals("null") || lists.getContentImg().trim().equals("")) {
 			Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx_d);
