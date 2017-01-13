@@ -69,7 +69,7 @@
                     android:id="@+id/text_playing"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="正在直播: "
+                    android:text=""
                     android:textColor="@color/beijing"
                     android:textSize="@dimen/text_size_13" />
 

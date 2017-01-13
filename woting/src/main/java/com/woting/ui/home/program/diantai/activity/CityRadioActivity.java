@@ -67,6 +67,7 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
     private int RefreshType=1;
     private int page=1;
     private String BeginCatalogId="";
+    private int ViewType=-1; //=-1时 正常处理 等于end时可以加载土司
 
 
     @Override
@@ -134,6 +135,7 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        if(ViewType==-1){
                         try {
                             if (SubTempList== null ||SubTempList.size() == 0) {
                                 mListView.setVisibility(View.GONE);
@@ -152,8 +154,12 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                                     SubList.addAll(SubTempList);
                                 }
 
-                                adapter = new OnLinesRadioAdapter(context, SubList);
-                                mListView.setAdapter(adapter);
+                                if(adapter==null) {
+                                    adapter = new OnLinesRadioAdapter(context, SubList);
+                                    mListView.setAdapter(adapter);
+                                }else{
+                                    adapter.notifyDataSetChanged();
+                                }
 
                                 for (int i = 0; i < SubList.size(); i++) {
                                     mListView.expandGroup(i);
@@ -161,12 +167,18 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                             }
                             setListViewExpand();
                             tipView.setVisibility(View.GONE);
+                            if(!TextUtils.isEmpty(BeginCatalogId)&&BeginCatalogId.equals("ENDEND")){
+                                ViewType=1;
+                            }
                         } catch (Exception e) {
-
                             e.printStackTrace();
                             mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        }
+                        }else{
+                            mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+                            ToastUtils.show_always(context,"已经没有更多数据了");
                         }
                     } catch (Exception e) {
                         mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
@@ -287,26 +299,36 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                         try {
                             SubListList = new Gson().fromJson(StringSubList, new TypeToken<List<RankInfo>>() {}.getType());
                             if (RefreshType == 1) {
+                                mlistView_main.stopRefresh();
                                 if(newList.size()>0){
                                     newList.clear();
                                 }
                                 if(SubListList!=null&&SubListList.size()>0){
                                     newList.addAll(SubListList);
+                                    if(adapterList==null){
                                     adapterList = new RankInfoAdapter(context,newList);
                                     mlistView_main.setAdapter(adapterList);
+                                    }else{
+                                        adapterList.notifyDataSetChanged();
+                                    }
                                     setListView();
-                                    mlistView_main.stopRefresh();
+
                                 }else{
                                     mlistView_main.stopRefresh();
                                 }
 
                             } else if (RefreshType == 2) {
                                 if(SubListList!=null&&SubListList.size()>0){
-                                    newList.addAll(SubListList);
-                                    adapterList = new RankInfoAdapter(context,newList);
-                                    mlistView_main.setAdapter(adapterList);
-                                    setListView();
                                     mlistView_main.stopLoadMore();
+                                    newList.addAll(SubListList);
+                                    if(adapterList==null){
+                                        adapterList = new RankInfoAdapter(context,newList);
+                                        mlistView_main.setAdapter(adapterList);
+                                    }else{
+                                        adapterList.notifyDataSetChanged();
+                                    }
+                                    setListView();
+
                                 }else{
                                     mlistView_main.stopLoadMore();
                                     mlistView_main.setPullLoadEnable(false);
@@ -316,18 +338,27 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                            mlistView_main.stopRefresh();
-                            mlistView_main.stopLoadMore();
+                            if(RefreshType==1) {
+                                mlistView_main.stopRefresh();
+                            }else {
+                                mlistView_main.stopLoadMore();
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        mlistView_main.stopRefresh();
-                        mlistView_main.stopLoadMore();
+                        if(RefreshType==1) {
+                            mlistView_main.stopRefresh();
+                        }else {
+                            mlistView_main.stopLoadMore();
+                        }
                     }
                 } else {
                     ToastUtils.show_always(context, "已经没有相关数据啦");
-                    mlistView_main.stopRefresh();
-                    mlistView_main.stopLoadMore();
+                    if(RefreshType==1) {
+                        mlistView_main.stopRefresh();
+                    }else {
+                        mlistView_main.stopLoadMore();
+                    }
                 }
             }
 
@@ -335,8 +366,11 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
-                mlistView_main.stopRefresh();
-                mlistView_main.stopLoadMore();
+                if(RefreshType==1) {
+                    mlistView_main.stopRefresh();
+                }else {
+                    mlistView_main.stopLoadMore();
+                }
             }
         });
 
@@ -364,7 +398,6 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
             jsonObject.put("MediaType", "RADIO");
             jsonObject.put("CatalogId", CatalogId);
             jsonObject.put("CatalogType", "2");
-            jsonObject.put("PerSize", "3");
             jsonObject.put("ResultType", "1");
             jsonObject.put("PageSize", "10");
             jsonObject.put("Page",String.valueOf(page));
@@ -464,6 +497,7 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
             public void onRefresh() {
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                     RefreshType=1;
+                    ViewType=-1;
                     page=1;
                     sendTwice();
                 }else{
@@ -491,6 +525,7 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                         page=1;
                         RefreshType=1;
+                        BeginCatalogId="";
                     if (CatalogId.equals("810000") || CatalogId.equals("710000") || CatalogId.equals("820000")) {
                         sendTwice();
                         mListView.setVisibility(View.GONE);
