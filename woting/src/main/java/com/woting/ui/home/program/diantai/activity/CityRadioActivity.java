@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -24,6 +23,8 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
+import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout;
+import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
@@ -47,13 +48,14 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
     private RankInfoAdapter adapterList;
     private OnLinesRadioAdapter adapter;
 
-    private ArrayList<RadioPlay> newList = new ArrayList<>();
+    private ArrayList<RankInfo> newList = new ArrayList<>();
     private ArrayList<RankInfo> SubListList;
-    protected List<RadioPlay> SubList;
 
+    protected List<RadioPlay> SubList =new ArrayList<>();
+    private  List<RadioPlay> SubTempList;
     private Dialog dialog;
     private ExpandableListView mListView;
-    private ListView mlistView_main;
+    private XListView mlistView_main;
     private TextView mTextView_Head;
     private TipView tipView;// 没有网络、没有数据提示
 
@@ -61,11 +63,16 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
     private String CatalogId;
     private String tag = "RADIO_CITY_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
+    private PullToRefreshLayout mPullToRefreshLayout;
+    private int RefreshType=1;
+    private int page=1;
+    private String BeginCatalogId="";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_radio_nation);
+        setContentView(R.layout.activity_radio_city);
         setView();
         handleIntent();
         initDao();
@@ -87,6 +94,7 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                 // 处理那几个特殊的崩溃省市
                 sendTwice();
                 mListView.setVisibility(View.GONE);
+                mPullToRefreshLayout.setVisibility(View.GONE);
                 mlistView_main.setVisibility(View.VISIBLE);
             } else {
                 send();
@@ -112,26 +120,41 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                     e.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
+
                     try {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
+                        try{
+                            BeginCatalogId= arg1.getString("BeginCatalogId");
+                        }catch (Exception e){
+                            BeginCatalogId="";
+                        }
                         try {
                             StringSubList = arg1.getString("List");
+                            SubTempList = new Gson().fromJson(StringSubList, new TypeToken<List<RadioPlay>>() {}.getType());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                         try {
-                            SubList = new Gson().fromJson(StringSubList, new TypeToken<List<RadioPlay>>() {}.getType());
-                            if (SubList == null || SubList.size() == 0) {
+                            if (SubTempList== null ||SubTempList.size() == 0) {
                                 mListView.setVisibility(View.GONE);
+                                mPullToRefreshLayout.setVisibility(View.GONE);
                                 mlistView_main.setVisibility(View.VISIBLE);
                                 sendTwice();
                             } else {
-                                if (adapter == null) {
-                                    adapter = new OnLinesRadioAdapter(context, SubList);
-                                    mListView.setAdapter(adapter);
-                                } else {
-                                    adapter.notifyDataSetChanged();
+                                if(RefreshType==1) {
+                                    mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+                                    if(SubList.size()>0){
+                                        SubList.clear();
+                                    }
+                                    SubList.addAll(SubTempList);
+                                }else{
+                                    mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+                                    SubList.addAll(SubTempList);
                                 }
+
+                                adapter = new OnLinesRadioAdapter(context, SubList);
+                                mListView.setAdapter(adapter);
+
                                 for (int i = 0; i < SubList.size(); i++) {
                                     mListView.expandGroup(i);
                                 }
@@ -139,16 +162,20 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                             setListViewExpand();
                             tipView.setVisibility(View.GONE);
                         } catch (Exception e) {
+
                             e.printStackTrace();
+                            mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.IS_ERROR);
                         }
                     } catch (Exception e) {
+                        mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
                         e.printStackTrace();
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.IS_ERROR);
                     }
                 } else {
+                    mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
                     tipView.setVisibility(View.VISIBLE);
                     tipView.setTipView(TipView.TipStatus.IS_ERROR);
                 }
@@ -159,6 +186,7 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                 if (dialog != null) dialog.dismiss();
                 tipView.setVisibility(View.VISIBLE);
                 tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
             }
         });
     }
@@ -227,6 +255,7 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                         ToastUtils.show_short(context, "暂不支持的Type类型");
                     }
                 }
+               // ToastUtils.show_always(context,SubList.get(groupPosition).getList().get(childPosition).getContentName());
                 return false;
             }
         });
@@ -248,6 +277,7 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     try {
+
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         try {
                             StringSubList = arg1.getString("List");
@@ -256,21 +286,48 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
                         }
                         try {
                             SubListList = new Gson().fromJson(StringSubList, new TypeToken<List<RankInfo>>() {}.getType());
-                            if (adapterList == null) {
-                                adapterList = new RankInfoAdapter(context, SubListList);
-                                mlistView_main.setAdapter(adapterList);
-                            } else {
-                                adapter.notifyDataSetChanged();
+                            if (RefreshType == 1) {
+                                if(newList.size()>0){
+                                    newList.clear();
+                                }
+                                if(SubListList!=null&&SubListList.size()>0){
+                                    newList.addAll(SubListList);
+                                    adapterList = new RankInfoAdapter(context,newList);
+                                    mlistView_main.setAdapter(adapterList);
+                                    setListView();
+                                    mlistView_main.stopRefresh();
+                                }else{
+                                    mlistView_main.stopRefresh();
+                                }
+
+                            } else if (RefreshType == 2) {
+                                if(SubListList!=null&&SubListList.size()>0){
+                                    newList.addAll(SubListList);
+                                    adapterList = new RankInfoAdapter(context,newList);
+                                    mlistView_main.setAdapter(adapterList);
+                                    setListView();
+                                    mlistView_main.stopLoadMore();
+                                }else{
+                                    mlistView_main.stopLoadMore();
+                                    mlistView_main.setPullLoadEnable(false);
+                                    ToastUtils.show_always(context,"已经没有更多数据了");
+                                }
                             }
-                            setListView();
+
                         } catch (Exception e) {
                             e.printStackTrace();
+                            mlistView_main.stopRefresh();
+                            mlistView_main.stopLoadMore();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        mlistView_main.stopRefresh();
+                        mlistView_main.stopLoadMore();
                     }
                 } else {
                     ToastUtils.show_always(context, "已经没有相关数据啦");
+                    mlistView_main.stopRefresh();
+                    mlistView_main.stopLoadMore();
                 }
             }
 
@@ -278,6 +335,8 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
+                mlistView_main.stopRefresh();
+                mlistView_main.stopLoadMore();
             }
         });
 
@@ -290,7 +349,9 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
             jsonObject.put("CatalogId", CatalogId);
             jsonObject.put("CatalogType", "2");
             jsonObject.put("ResultType", "3");
-            jsonObject.put("PageSize", "20");
+            jsonObject.put("PageSize", "10");
+            jsonObject.put("Page",String.valueOf(page));
+            jsonObject.put("BeginCatalogId",BeginCatalogId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -305,7 +366,9 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
             jsonObject.put("CatalogType", "2");
             jsonObject.put("PerSize", "3");
             jsonObject.put("ResultType", "1");
-            jsonObject.put("PageSize", "50");
+            jsonObject.put("PageSize", "10");
+            jsonObject.put("Page",String.valueOf(page));
+            jsonObject.put("BeginCatalogId",BeginCatalogId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -321,34 +384,34 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
         mlistView_main.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (SubListList != null && SubListList.get(position) != null && SubListList.get(position).getMediaType() != null) {
-                    String MediaType = SubListList.get(position).getMediaType();
+                if (newList != null && newList.get(position-1) != null && newList.get(position-1).getMediaType() != null) {
+                    String MediaType = newList.get(position-1).getMediaType();
                     if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
-                        String playername = SubListList.get(position).getContentName();
-                        String playerimage = SubListList.get(position).getContentImg();
-                        String playerurl = SubListList.get(position).getContentPlay();
-                        String playerurI = SubListList.get(position).getContentURI();
-                        String playcontentshareurl = SubListList.get(position).getContentShareURL();
-                        String playermediatype = SubListList.get(position).getMediaType();
-                        String plaplayeralltime = SubListList.get(position).getContentTimes();
+                        String playername = newList.get(position-1).getContentName();
+                        String playerimage = newList.get(position-1).getContentImg();
+                        String playerurl = newList.get(position-1).getContentPlay();
+                        String playerurI = newList.get(position-1).getContentURI();
+                        String playcontentshareurl = newList.get(position-1).getContentShareURL();
+                        String playermediatype = newList.get(position-1).getMediaType();
+                        String plaplayeralltime =newList.get(position-1).getContentTimes();
                         String playerintime = "0";
-                        String playercontentdesc = SubListList.get(position).getContentDescn();
-                        String playernum = SubListList.get(position).getPlayCount();
+                        String playercontentdesc =newList.get(position-1).getContentDescn();
+                        String playernum = newList.get(position-1).getPlayCount();
                         String playerzantype = "0";
-                        String playerfrom = SubListList.get(position).getContentPub();
+                        String playerfrom = newList.get(position-1).getContentPub();
                         String playerfromid = "";
                         String playerfromurl = "";
                         String playeraddtime = Long.toString(System.currentTimeMillis());
                         String bjuserid = CommonUtils.getUserId(context);
-                        String ContentFavorite = SubListList.get(position).getContentFavorite();
-                        String ContentId = SubListList.get(position).getContentId();
-                        String localurl = SubListList.get(position).getLocalurl();
-                        String sequName = SubListList.get(position).getSequName();
-                        String sequId = SubListList.get(position).getSequId();
-                        String sequDesc = SubListList.get(position).getSequDesc();
-                        String sequImg = SubListList.get(position).getSequImg();
-                        String ContentPlayType = SubListList.get(position).getContentPlayType();
-                        String IsPlaying= SubListList.get(position).getIsPlaying();
+                        String ContentFavorite = newList.get(position-1).getContentFavorite();
+                        String ContentId = newList.get(position-1).getContentId();
+                        String localurl = newList.get(position-1).getLocalurl();
+                        String sequName = newList.get(position-1).getSequName();
+                        String sequId = newList.get(position-1).getSequId();
+                        String sequDesc = newList.get(position-1).getSequDesc();
+                        String sequImg = newList.get(position-1).getSequImg();
+                        String ContentPlayType = newList.get(position-1).getContentPlayType();
+                        String IsPlaying= newList.get(position-1).getIsPlaying();
 
                         // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
@@ -362,12 +425,13 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
 
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
-                        bundle1.putString("text", SubListList.get(position).getContentName());
+                        bundle1.putString("text", newList.get(position-1).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
                         finish();
                     }
                 }
+/*                ToastUtils.show_always(context,newList.get(position).getContentName());*/
             }
         });
     }
@@ -378,8 +442,8 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
 
         findViewById(R.id.head_left_btn).setOnClickListener(this);
 
-        mListView = (ExpandableListView) findViewById(R.id.listview_fm);
-        mlistView_main = (ListView) findViewById(R.id.listview_lv);
+        mListView = (ExpandableListView) findViewById(R.id.listview_fm);       //ExpandableListView
+        mlistView_main = (XListView) findViewById(R.id.listview_lv);            //ListView
         mTextView_Head = (TextView) findViewById(R.id.head_name_tv);
         mListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
 
@@ -389,7 +453,73 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
             }
         });
         mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+        mlistView_main.setSelector(new ColorDrawable(Color.TRANSPARENT));
         mListView.setGroupIndicator(null);
+
+        mlistView_main.setPullLoadEnable(true);
+        mlistView_main.setPullRefreshEnable(true);
+
+        mlistView_main.setXListViewListener(new XListView.IXListViewListener() {
+            @Override
+            public void onRefresh() {
+                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                    RefreshType=1;
+                    page=1;
+                    sendTwice();
+                }else{
+                    ToastUtils.show_always(context,"请检查您的网络");
+                }
+            }
+
+            @Override
+            public void onLoadMore() {
+                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                RefreshType=2;
+                page++;
+                sendTwice();
+                }else{
+                    ToastUtils.show_always(context,"请检查您的网络");
+                }
+            }
+        });
+
+        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.refresh_view);
+        mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
+
+            @Override
+            public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
+                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                        page=1;
+                        RefreshType=1;
+                    if (CatalogId.equals("810000") || CatalogId.equals("710000") || CatalogId.equals("820000")) {
+                        sendTwice();
+                        mListView.setVisibility(View.GONE);
+                        mPullToRefreshLayout.setVisibility(View.GONE);
+                        mlistView_main.setVisibility(View.VISIBLE);
+                    } else {
+                        send();
+                    }
+                } else {
+                        mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.NO_NET);
+                }
+            }
+
+            @Override
+            public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+                    page++;
+                    RefreshType=2;
+                if (CatalogId.equals("810000") || CatalogId.equals("710000") || CatalogId.equals("820000")) {
+                    sendTwice();
+                    mListView.setVisibility(View.GONE);
+                    mPullToRefreshLayout.setVisibility(View.GONE);
+                    mlistView_main.setVisibility(View.VISIBLE);
+                } else {
+                    send();
+                }
+            }
+        });
     }
 
     public void onClick(View v) {
@@ -404,9 +534,11 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
     public void onWhiteViewClick() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1 && CatalogId != null) {
             dialog = DialogUtils.Dialogph(context, "正在获取数据");
+            page=1;
             if (CatalogId.equals("810000") || CatalogId.equals("710000") || CatalogId.equals("820000")) {
                 sendTwice();
                 mListView.setVisibility(View.GONE);
+                mPullToRefreshLayout.setVisibility(View.GONE);
                 mlistView_main.setVisibility(View.VISIBLE);
             } else {
                 send();
@@ -428,8 +560,6 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
             dbDao.closedb();
             dbDao = null;
         }
-        newList.clear();
-        newList = null;
         if (SubList != null) {
             SubList.clear();
             SubList = null;
