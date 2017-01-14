@@ -124,7 +124,9 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
     private long Vibrate = 100;
     private static int enterGroupType;
     private static int dialogType;
-    public static boolean isCalling = false;//是否是在通话状态;
+    public static boolean isCallingForGroup = false;//是否是在通话状态;
+    public static boolean isCallingForUser = false;//是否是在通话状态;
+
     private boolean isCancelRequest;
     private boolean isTalking = false;
     private static List<UserInfo> groupPersonList = new ArrayList<>();//组成员
@@ -297,77 +299,97 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
     /**
      * 设置对讲组为激活状态,此时没有组在对讲状态
      */
-    public static void zhiDingGroupSS(String groupIdS) {
-        Intent intent = new Intent();
-        intent.setAction(BroadcastConstants.UP_DATA_GROUP);
-        context.sendBroadcast(intent);
-        enterGroupType = 1;
-        groupId = groupIdS;
-        tv_num.setText("1");
-        listInfo = null;
-        InterPhoneControl.Enter(context, groupId);//发送进入组的数据，socket
-        getGridViewPerson(groupId);//获取群成员
+    public static void zhiDingGroupSS(final String groupIdS) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent();
+                intent.setAction(BroadcastConstants.UP_DATA_GROUP);
+                context.sendBroadcast(intent);
+                enterGroupType = 1;
+                groupId = groupIdS;
+                tv_num.setText("1");
+                listInfo = null;
+                InterPhoneControl.Enter(context, groupId);//发送进入组的数据，socket
+                getGridViewPerson(groupId);//获取群成员
+            }
+        },300);
+
     }
 
     /**
      * 设置对讲组为激活状态,此时没有组在对讲状态
      */
-    public static void zhiDingGroup(GroupInfo talkGroupInside) {
-        Intent intent = new Intent();
-        intent.setAction(BroadcastConstants.UP_DATA_GROUP);
-        context.sendBroadcast(intent);
-        enterGroupType = 1;
-        groupId = talkGroupInside.getGroupId();
-        tv_num.setText("1");
-        listInfo = null;
-        InterPhoneControl.Enter(context, talkGroupInside.getGroupId());//发送进入组的数据，socket
-        getGridViewPerson(talkGroupInside.getGroupId());//获取群成员
+    public static void zhiDingGroup(final GroupInfo talkGroupInside) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent();
+                intent.setAction(BroadcastConstants.UP_DATA_GROUP);
+                context.sendBroadcast(intent);
+                enterGroupType = 1;
+                groupId = talkGroupInside.getGroupId();
+                tv_num.setText("1");
+                listInfo = null;
+                InterPhoneControl.Enter(context, talkGroupInside.getGroupId());//发送进入组的数据，socket
+                getGridViewPerson(talkGroupInside.getGroupId());//获取群成员
+            }
+        },300);
     }
 
     /**
      * 设置对讲组2为激活状态,此时存在组在对讲状态
      */
-    public static void zhiDingGroupS(GroupInfo talkGroupInside) {
-        Intent intent = new Intent();
-        intent.setAction(BroadcastConstants.UP_DATA_GROUP);
-        context.sendBroadcast(intent);
-        enterGroupType = 2;
-        groupId = talkGroupInside.getGroupId();
-        tv_num.setText("1");
-        listInfo = null;
-        InterPhoneControl.Enter(context, talkGroupInside.getGroupId());//发送进入组的数据，socket
-        getGridViewPerson(talkGroupInside.getGroupId());//获取群成员
+    public static void zhiDingGroupS(final GroupInfo talkGroupInside) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent();
+                intent.setAction(BroadcastConstants.UP_DATA_GROUP);
+                context.sendBroadcast(intent);
+                enterGroupType = 2;
+                groupId = talkGroupInside.getGroupId();
+                tv_num.setText("1");
+                listInfo = null;
+                InterPhoneControl.Enter(context, talkGroupInside.getGroupId());//发送进入组的数据，socket
+                getGridViewPerson(talkGroupInside.getGroupId());//获取群成员
+            }
+        },300);
     }
 
     /**
      * 设置个人为激活状态/设置第一条为激活状态
      */
     public static void zhiDingPerson() {
-        if (isCalling && interPhoneType != null) {
-            //此时有对讲状态
-            if (interPhoneType.equals("user")) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if ((isCallingForUser||isCallingForGroup) && interPhoneType != null) {
+                    //此时有对讲状态
+                    if (interPhoneType.equals("user")) {
 //                Log.e("上次通话ID", InterPhoneControl.bdcallid + "");
 //                Log.e("上次通话ID222", GlobalConfig.oldBCCallId + "");
 //                Log.e("新的来电ID", SubclassService.callid + "");
-                InterPhoneControl.PersonTalkHangUp(context, GlobalConfig.oldBCCallId);
-            } else {
-                InterPhoneControl.Quit(context, interPhoneId);//退出小组
+                        InterPhoneControl.PersonTalkHangUp(context, GlobalConfig.oldBCCallId);
+                    } else {
+                        InterPhoneControl.Quit(context, interPhoneId);//退出小组
+                    }
+                }
+                try {
+                    historyDataBaseList = dbDao.queryHistory();//得到数据库里边数据
+                    getList();
+                    setDatePerson();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.show_always(context, "数据出错了，请您稍后再试");
+                }
             }
-        }
-
-        try {
-            historyDataBaseList = dbDao.queryHistory();//得到数据库里边数据
-            getList();
-            setDatePerson();
-        } catch (Exception e) {
-            e.printStackTrace();
-            ToastUtils.show_always(context, "数据出错了，请您稍后再试");
-        }
+        },300);
     }
 
     public static void setDatePerson() {
         //设置个人为激活状态
-        isCalling = true;
+        isCallingForUser = true;
         GroupInfo firstdate = allList.remove(0);
         interPhoneType = firstdate.getTyPe();//
         interPhoneId = firstdate.getId();//
@@ -406,6 +428,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                 adapter.ChangeDate(allList, allList.get(allList.size() - 1).getId());
             }
         }
+
         setListener();
     }
 
@@ -475,7 +498,8 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         getList();
         if (allList == null || allList.size() == 0) {
             //此时数据库里边没有数据，界面不变
-            isCalling = false;
+            isCallingForUser=false;
+            isCallingForGroup = false;
         } else {
             // 此处数据需要处理，第一条数据为激活状态组
             //第一条数据的状态
@@ -483,7 +507,8 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
             //			String id = alllist.get(0).getId();//对讲组：groupid
             //			if(type!=null&&!type.equals("")&&type.equals("user")){
             //若上次退出前的通话状态是单对单通话则不处理
-            isCalling = false;
+            isCallingForUser=false;
+            isCallingForGroup = false;
             if (adapter == null) {
                 adapter = new ChatListAdapter(context, allList, allList.get(allList.size() - 1).getId());
                 mListView.setAdapter(adapter);
@@ -633,7 +658,8 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                 InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
                 if (dialogType == 1) {
                     InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
-                    isCalling = false;
+                    isCallingForUser = false;
+                    isCallingForGroup=false;
                     lin_notalk.setVisibility(View.VISIBLE);
                     lin_personhead.setVisibility(View.GONE);
                     lin_head.setVisibility(View.GONE);
@@ -644,7 +670,8 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                     confirmDialog.dismiss();
                 } else {
                     InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
-                    isCalling = false;
+                    isCallingForUser = false;
+                    isCallingForGroup=false;
                     lin_notalk.setVisibility(View.VISIBLE);
                     lin_personhead.setVisibility(View.GONE);
                     lin_head.setVisibility(View.GONE);
@@ -693,11 +720,13 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
     // 挂断电话
     private void hangUp() {
         if (interPhoneType.equals("user")) {
-            isCalling = false;
+            isCallingForUser=false;
+            isCallingForGroup = false;
             InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
             historyDataBaseList = dbDao.queryHistory();//得到数据库里边数据
         } else {
-            isCalling = false;
+            isCallingForUser=false;
+            isCallingForGroup = false;
             InterPhoneControl.Quit(context, interPhoneId);//退出小组
             historyDataBaseList = dbDao.queryHistory();//得到数据库里边数据
         }
@@ -794,7 +823,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
             @Override
             public void zhiding(int position) {
                 groupId = allList.get(position).getId();
-                if (isCalling) {
+                if (isCallingForGroup||isCallingForUser) {
                     //此时有对讲状态
                     if (interPhoneType.equals("user")) {
                         //对讲状态为个人时，弹出框展示
@@ -807,7 +836,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                         }
                         confirmDialog.show();
                     } else {
-                        InterPhoneControl.Quit(context, interPhoneId);//退出小组
+//                        InterPhoneControl.Quit(context, interPhoneId);//退出小组
                         String t = allList.get(position).getTyPe();
                         if (t != null && !t.equals("") && t.equals("user")) {
                             call(allList.get(position).getId());
@@ -1175,17 +1204,17 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                     switch (returnType) {
                                         case 0xff://TT
                                             //进入组出异常
-                                            isCalling = false;
+                                            isCallingForGroup = false;
                                             ToastUtils.show_short(context, "进入组—出异常");
                                             break;
                                         case 0x00:
                                             //没有有效登录用户
-                                            isCalling = false;
+                                            isCallingForGroup = false;
                                             ToastUtils.show_always(context, "数据出错，请注销后重新登录账户");
                                             break;
                                         case 0x01:
                                             //进入组成功
-                                            isCalling = true;
+                                            isCallingForGroup = true;
                                             ToastUtils.show_short(context, "进入组—成功");
                                             if (enterGroupType == 2) {
                                                 InterPhoneControl.Quit(context, interPhoneId);//退出小组
@@ -1202,17 +1231,17 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                             break;
                                         case 0x02:
                                             //无法获取用户组
-                                            isCalling = false;
+                                            isCallingForGroup = false;
                                             ToastUtils.show_short(context, "无法获取用户组");
                                             break;
                                         case 0x04:
                                             //用户不在该组
-                                            isCalling = false;
+                                            isCallingForGroup = false;
                                             ToastUtils.show_short(context, "进入组—用户不在该组");
                                             break;
                                         case 0x08:
                                             //用户已在组
-                                            isCalling = true;
+                                            isCallingForGroup = true;
                                             if (enterGroupType == 2) {
                                                 InterPhoneControl.Quit(context, interPhoneId);//退出小组
                                                 String id = groupId;//对讲组：groupid
@@ -1237,42 +1266,42 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                             //退出租出异常
                                             jack();
                                             ToastUtils.show_short(context, "退出租—出异常");
-                                            isCalling = false;
+                                            isCallingForGroup = false;
                                             break;
                                         case 0x00:
                                             //没有有效登录用户
                                             jack();
-                                            isCalling = false;
+                                            isCallingForGroup = false;
                                             ToastUtils.show_always(context, "数据出错，请注销后重新登录账户");
                                             break;
                                         case 0x01:
                                             //退出租成功
                                             jack();
                                             ToastUtils.show_short(context, "退出组—成功");
-                                            isCalling = false;
+                                            isCallingForGroup = false;
                                             break;
                                         case 0x02:
                                             //退出租成功
                                             jack();
-                                            isCalling = false;
+                                            isCallingForGroup = false;
                                             ToastUtils.show_short(context, "无法获取用户组");
                                             break;
                                         case 0x04:
                                             //用户不在该组
                                             jack();
                                             ToastUtils.show_short(context, "退出租—用户不在该组");
-                                            isCalling = false;
+                                            isCallingForGroup = false;
                                             break;
                                         case 0x08:
                                             //用户已退出组
                                             jack();
                                             ToastUtils.show_short(context, "退出租—用户已退出组");
-                                            isCalling = false;
+                                            isCallingForGroup = false;
                                             break;
                                         default:
                                             jack();
                                             ToastUtils.show_short(context, "退出租—用户已退出组");
-                                            isCalling = false;
+                                            isCallingForGroup = false;
                                             break;
                                     }
 
@@ -1436,11 +1465,12 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                     Map<String, Object> map = data.getContentMap();
                                     String callId = String.valueOf(map.get("CallId"));
                                     Log.e("chat的的CallId", callId + "");
-                                    if (isCalling) {
+                                    if (isCallingForGroup||isCallingForUser) {
                                         //此时有对讲状态
                                         if (interPhoneType.equals("user") && InterPhoneControl.bdcallid.equals(callId)) {
                                             //挂断电话的数据处理
-                                            isCalling = false;
+                                            isCallingForUser = false;
+                                            isCallingForGroup = false;
                                             historyDataBaseList = dbDao.queryHistory();//得到数据库里边数据
                                             getList();
                                             if (allList.size() == 0) {

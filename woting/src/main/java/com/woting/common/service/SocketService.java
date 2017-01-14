@@ -443,7 +443,7 @@ public class SocketService extends Service {
                     } catch (Exception e) {
                         Log.e("心跳内线程异常", e.toString() + "");
 //                        if (e instanceof SocketException) {
-//                            try {
+//                                try {
 //                                closeSocketAll();
 //                            } catch (IOException e1) {
 //                                break;
