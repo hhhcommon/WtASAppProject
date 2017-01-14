@@ -87,7 +87,7 @@ public class GlobalConfig {
     /**
      * image请求路径前缀
      */
-    public static String imageurl = baseUrl + "wt/";// 服务器
+    public static String imageurl;// 服务器
 
     /**
      * "http://www.wotingfm.com/download/WoTing.apk"
@@ -260,6 +260,10 @@ public class GlobalConfig {
     public static final String afterThirdAuthUrl = "wt/passport/user/afterThirdAuth.do";
     //喜欢content/clickFavorite.do
     public static final String clickFavoriteUrl = "wt/content/clickFavorite.do";
+    //发送订阅信息（订阅/取消订阅）
+    public static final String clickSubscribe = "";
+    //获取订阅信息
+    public static final String getSubscribeList = "";
     //获取路况数据
     public static final String getLKTTS = "wt/lkTTS.do";
     //获取favorite列表
@@ -280,6 +284,9 @@ public class GlobalConfig {
     public static final String getPersonInfo = "wt/person/getPersonInfo.do";
     // 新增主播内容
     public static final String getPersonContents = "wt/person/getPersonContents.do";
+    // 获取当前的电台直播内容
+    public static final String getIsPlayIngUrl= "wt/content/getIsPlayingBCProgramme.do";
+
 
 
     /**

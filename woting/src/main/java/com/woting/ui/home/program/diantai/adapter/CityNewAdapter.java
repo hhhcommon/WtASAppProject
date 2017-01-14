@@ -87,7 +87,7 @@ public class CityNewAdapter extends BaseAdapter {
 				if(!TextUtils.isEmpty(lists.getIsPlaying())){
 					holder.textview_rankplaying.setText(lists.getIsPlaying());
 				}else{
-					holder.textview_rankplaying.setText("测试-无节目单数据");
+					holder.textview_rankplaying.setText("暂无节目单");
 				}
 
 				if (lists.getContentImg() == null

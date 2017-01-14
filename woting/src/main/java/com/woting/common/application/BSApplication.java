@@ -15,8 +15,9 @@ import com.umeng.socialize.PlatformConfig;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.config.SocketClientConfig;
 import com.woting.common.constant.KeyConstant;
+import com.woting.common.helper.CollocationHelper;
 import com.woting.common.helper.CommonHelper;
-import com.woting.common.util.CollocationUtils;
+import com.woting.common.helper.CrashHandler;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ResourceUtil;
 
@@ -43,8 +44,12 @@ public class BSApplication extends Application implements OnErrorListener, OnLog
     public void onCreate() {
         super.onCreate();
         instance = this;
+
+        CrashHandler handler = CrashHandler.getInstance();
+        handler.init(getApplicationContext());
+
         SharedPreferences = this.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
-        CollocationUtils.setCollocation();  //设置配置文件
+        CollocationHelper.setCollocation();  //设置配置文件
         queues = Volley.newRequestQueue(this);
         InitThird();                        //第三方使用的相关方法
         PhoneMessage.getPhoneInfo(instance);//获取手机信息

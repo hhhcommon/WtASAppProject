@@ -6,7 +6,7 @@ public class ContentInfo implements Serializable {
 	private static final long serialVersionUID = 1231243519566434965L;
 	
 	private String ContentURI;
-	private String ContentPersons;
+//	private String ContentPersons;
 	private String CTime;
 	private String ContentKeyWord;
 	private String ContentSubjectWord;
@@ -208,13 +208,13 @@ public class ContentInfo implements Serializable {
 		ContentURI = contentURI;
 	}
 
-	public String getContentPersons() {
-		return ContentPersons;
-	}
-
-	public void setContentPersons(String contentPersons) {
-		ContentPersons = contentPersons;
-	}
+//	public String getContentPersons() {
+//		return ContentPersons;
+//	}
+//
+//	public void setContentPersons(String contentPersons) {
+//		ContentPersons = contentPersons;
+//	}
 
 	//	public String getContentCatalogs() {
 	//		return ContentCatalogs;

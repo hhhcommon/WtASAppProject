@@ -1,8 +1,7 @@
-package com.woting.ui.home.program.fmlist.adapter;
+package com.woting.ui.mine.subscriber.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +18,19 @@ import com.woting.ui.home.program.fmlist.model.RankInfo;
 
 import java.util.List;
 
-//这个代码写完了 然后要求对应着代码加载看看
-public class RankInfoAdapter extends BaseAdapter   {
+/**
+ * 订阅列表适配器
+ * author：辛龙 (xinLong)
+ * 2017/1/10 12:24
+ * 邮箱：645700751@qq.com
+ */
+public class SubscriberAdapter extends BaseAdapter   {
 	private List<RankInfo> list;
 	private Context context;
 //	private RankInfo rank;
 //	private String url;
 
-	public RankInfoAdapter(Context context, List<RankInfo> list) {
+	public SubscriberAdapter(Context context, List<RankInfo> list) {
 		super();
 		this.list = list;
 		this.context = context;
@@ -86,11 +90,8 @@ public class RankInfoAdapter extends BaseAdapter   {
 //			holder.textview_rankplaying.setText(lists.getContentPub());
 //		}
 
-		if(!TextUtils.isEmpty(lists.getIsPlaying())){
-			holder.textview_rankplaying.setText("正在播放"+""+lists.getIsPlaying());
-		}else {
-			holder.textview_rankplaying.setText("暂无节目单");
-		}
+		holder.textview_rankplaying.setText("测试-暂无节目单");
+
 		if (lists.getContentImg() == null || lists.getContentImg().equals("")
 				|| lists.getContentImg().equals("null") || lists.getContentImg().trim().equals("")) {
 			Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx_d);

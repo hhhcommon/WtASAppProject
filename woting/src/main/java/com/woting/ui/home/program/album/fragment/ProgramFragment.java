@@ -34,7 +34,9 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
+import com.woting.ui.download.activity.DownloadActivity;
 import com.woting.ui.download.dao.FileInfoDao;
+import com.woting.ui.download.fragment.DownLoadUnCompleted;
 import com.woting.ui.download.model.FileInfo;
 import com.woting.ui.download.service.DownloadService;
 import com.woting.ui.home.main.HomeActivity;
@@ -94,6 +96,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
     private String sequName;
     private String sequImg;
     private String sequDesc;
+
 
     @Override
     public void onWhiteViewClick() {
@@ -205,13 +208,13 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                         String sequDesc1 = sequDesc;
                         String sequImg1 = sequImg;
                         String ContentPlayType = SubListAll.get(position - 1).getContentPlayType();
-                        String IsPlaying=SubListAll.get(position - 1).getIsPlaying();
+                        String IsPlaying = SubListAll.get(position - 1).getIsPlaying();
 
                         PlayerHistory history = new PlayerHistory(
                                 playerName, playerImage, playUrl, playUrI, playMediaType,
                                 playAllTime, playInTime, playContentDesc, playNum,
                                 playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName1, sequId1, sequDesc1, sequImg1, ContentPlayType,IsPlaying);
+                                ContentFavorite, ContentId, localUrl, sequName1, sequId1, sequDesc1, sequImg1, ContentPlayType, IsPlaying);
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
                         if (PlayerFragment.context != null) {
@@ -253,7 +256,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
         }
 
         VolleyRequest.RequestPost(GlobalConfig.getContentById, tag, jsonObject, new VolleyCallback() {
-
+            private String subList;
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
@@ -270,21 +273,31 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-
-                            SubList = new Gson().fromJson(arg1.getString("SubList"), new TypeToken<List<ContentInfo>>() {}.getType());
-                            if (SubList != null && SubList.size() > 0) {
-                                SubListAll.addAll(SubList);
-                                mainAdapter = new AlbumMainAdapter(context, SubListAll);
-                                lv_album.setAdapter(mainAdapter);
-                                setListener();
-                                getData();
-                                adapter = new AlbumAdapter(context, SubListAll);
-                                lv_download.setAdapter(adapter);
-                                setInterface();
-                                if (SubList.size() != 20) {
-                                    lv_album.setPullLoadEnable(false);
-                                }
+                            try {
+                                subList = arg1.getString("SubList");
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
+                            try {
+                                SubList = new Gson().fromJson(subList, new TypeToken<List<ContentInfo>>() {
+                                }.getType());
+                                if (SubList != null && SubList.size() > 0) {
+                                    SubListAll.addAll(SubList);
+                                    mainAdapter = new AlbumMainAdapter(context, SubListAll);
+                                    lv_album.setAdapter(mainAdapter);
+                                    setListener();
+                                    getData();
+                                    adapter = new AlbumAdapter(context, SubListAll);
+                                    lv_download.setAdapter(adapter);
+                                    setInterface();
+                                    if (SubList.size() != 20) {
+                                        lv_album.setPullLoadEnable(false);
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
                             try {
                                 sequId = arg1.getString("ContentId");
                             } catch (Exception e) {
@@ -312,7 +325,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.NO_DATA, "专辑中没有节目\n换个专辑看看吧");
                         }
-                    } else  {
+                    } else {
                         lv_album.stopLoadMore();
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.NO_DATA, "专辑中没有节目\n换个专辑看看吧");
@@ -490,6 +503,13 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                     FID.updataDownloadStatus(tempList.get(0).getUrl(), "1");
                     Log.e("数据库内数据", tempList.toString());
                     DownloadService.workStart(tempList.get(0));
+                    if(DownloadActivity.isVisible==true){
+                      /*  if(DownLoadUnCompleted.dwType!){
+
+                        }*/
+                        DownLoadUnCompleted.dwType=true;
+                    }
+                    ToastUtils.show_always(context,"已经开始下载您所选择的数据");
                     // 发送更新界面数据广播
                     Intent p_intent = new Intent("push_down_uncompleted");
                     context.sendBroadcast(p_intent);

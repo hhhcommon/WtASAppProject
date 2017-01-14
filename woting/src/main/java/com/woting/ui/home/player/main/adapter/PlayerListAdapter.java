@@ -94,14 +94,15 @@ public class PlayerListAdapter extends BaseAdapter {
         }
 
         // 来源
-        String contentPub = searchList.getIsPlaying();
+        String IsPlaying = searchList.getIsPlaying();
+        String contentPub= searchList.getContentPub();
         if(contentType!= null && contentType.equals("RADIO")) {
-            if (contentPub != null && !contentPub.equals("")) {
-                contentPub = "正在直播: " + contentPub;
+            if (IsPlaying != null && !IsPlaying.equals("")) {
+                IsPlaying = "正在直播: " + IsPlaying;
             } else {
-                contentPub = "正在直播: 未知";
+                IsPlaying = "正在直播: 未知";
             }
-            holder.RankContent.setText(contentPub);
+            holder.RankContent.setText(IsPlaying);
         } else {
             if (contentPub == null || contentPub.equals("")) {
                 contentPub = "未知";

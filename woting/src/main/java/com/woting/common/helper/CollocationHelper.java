@@ -1,4 +1,4 @@
-package com.woting.common.util;
+package com.woting.common.helper;
 
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
@@ -10,7 +10,7 @@ import com.woting.common.constant.CollocationConstant;
  * 2016/12/28 11:21
  * 邮箱：645700751@qq.com
  */
-public class CollocationUtils {
+public class CollocationHelper {
 
     private static String _PCDType = "1";
     private static String _socketPort = "16789";
@@ -66,8 +66,10 @@ public class CollocationUtils {
 
             if (baseUrl != null &&! baseUrl.equals("")) {
                 GlobalConfig.baseUrl = baseUrl;
+                GlobalConfig.imageurl= baseUrl + "wt/";
             } else {
                 GlobalConfig.baseUrl = _baseUrl;
+                GlobalConfig.imageurl= _baseUrl + "wt/";
             }
 
             if (uploadBaseUrl != null &&! uploadBaseUrl.equals("") ) {
@@ -75,6 +77,8 @@ public class CollocationUtils {
             } else {
                 GlobalConfig.uploadBaseUrl = _uploadBaseUrl;
             }
+
+
         } else {
             GlobalConfig.isToast=false;
             GlobalConfig.PCDType = Integer.parseInt(_PCDType);
@@ -82,6 +86,7 @@ public class CollocationUtils {
             GlobalConfig.socketPort = Integer.parseInt(_socketPort);
             GlobalConfig.baseUrl = _baseUrl;
             GlobalConfig.uploadBaseUrl = _uploadBaseUrl;
+            GlobalConfig.imageurl= _baseUrl + "wt/";
         }
     }
 }

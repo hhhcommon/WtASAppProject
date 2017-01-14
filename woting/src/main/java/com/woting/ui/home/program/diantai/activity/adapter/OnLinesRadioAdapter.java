@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -146,17 +147,19 @@ public class OnLinesRadioAdapter extends BaseExpandableListAdapter  {
 		if(lists!=null){
 			if(lists.getMediaType()!=null&&!lists.getMediaType().equals("")){
 				if (lists.getMediaType().equals("RADIO")) {
+
 					if (lists.getContentName() == null|| lists.getContentName().equals("")) {
 						holder.textview_ranktitle.setText("未知");
 					} else {
 						holder.textview_ranktitle.setText(lists.getContentName());
 					}
-//					if (lists.getContentPub() == null|| lists.getContentPub().equals("")) {
-//						holder.textview_rankplaying.setText("未知");
-//					} else {
-//						holder.textview_rankplaying.setText(lists.getContentPub());
-//					}
-					holder.textview_rankplaying.setText("测试-无节目单数据");
+
+					if(!TextUtils.isEmpty(lists.getIsPlaying())){
+						holder.textview_rankplaying.setText(lists.getIsPlaying());
+					}else {
+						holder.textview_rankplaying.setText("测试-无节目单数据");
+					}
+
 					if (lists.getContentImg() == null
 							|| lists.getContentImg().equals("")
 							|| lists.getContentImg().equals("null")
