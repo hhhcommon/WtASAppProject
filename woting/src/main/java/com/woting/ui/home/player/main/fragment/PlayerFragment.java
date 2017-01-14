@@ -2154,6 +2154,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 case MotionEvent.ACTION_UP:// 抬起
                     putUp();
                     break;
+                case MotionEvent.ACTION_CANCEL:// 抬起
+                    putUp();
+                    break;
             }
             return true;
         }

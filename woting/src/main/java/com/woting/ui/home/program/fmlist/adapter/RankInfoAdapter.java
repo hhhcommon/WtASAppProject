@@ -89,7 +89,7 @@ public class RankInfoAdapter extends BaseAdapter   {
 		if(!TextUtils.isEmpty(lists.getIsPlaying())){
 			holder.textview_rankplaying.setText("正在播放"+""+lists.getIsPlaying());
 		}else {
-			holder.textview_rankplaying.setText("测试-暂无节目单");
+			holder.textview_rankplaying.setText("暂无节目单");
 		}
 		if (lists.getContentImg() == null || lists.getContentImg().equals("")
 				|| lists.getContentImg().equals("null") || lists.getContentImg().trim().equals("")) {

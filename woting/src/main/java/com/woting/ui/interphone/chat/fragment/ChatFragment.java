@@ -277,12 +277,15 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        Log.e("按钮操作", "按下");
                         press();//按下状态
                         break;
                     case MotionEvent.ACTION_UP:
+                        Log.e("按钮操作", "松手");
                         jack();//抬起手后的操作
                         break;
                     case MotionEvent.ACTION_CANCEL:
+                        Log.e("按钮操作", "移动");
                         jack();//抬起手后的操作
                         break;
                 }
@@ -1015,7 +1018,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         if (interPhoneType.equals("group")) {
             // 此处处理组对讲的逻辑
             InterPhoneControl.Press(context, interPhoneId);                 // 发送说话请求
-            VoiceStreamRecordService.stop();                                // 停止可能存在的录音服务
+            VoiceStreamRecordService.stop();                                     // 停止可能存在的录音服务
             VoiceStreamRecordService.start(context, interPhoneId, "group"); // 开始录音
         } else {
             //此处处理个人对讲的逻辑
@@ -1528,10 +1531,15 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                         JSONObject arg1 = (JSONObject) jsonParser.nextValue();
                                         String userinfos = arg1.getString("UserInfo");
 
-                                        ListInfo userinfo = new Gson().fromJson(userinfos, new TypeToken<ListInfo>() {
-                                        }.getType());
-                                        String groupids = data.get("GroupId") + "";
-                                        listInfo.add(userinfo);
+                                        String groupids = null;
+                                        try {
+                                            ListInfo userinfo = new Gson().fromJson(userinfos, new TypeToken<ListInfo>() {
+                                            }.getType());
+                                            listInfo.add(userinfo);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        groupids = data.get("GroupId") + "";
                                         Log.i("组内成员人数", listInfo.size() + "");
                                         tv_num.setText(listInfo.size() + "");
                                         getGridViewPerson(groupids);
@@ -1551,18 +1559,23 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                         JSONObject arg1 = (JSONObject) jsonParser.nextValue();
                                         String userinfos = arg1.getString("UserInfo");
 
-                                        ListInfo userinfo = new Gson().fromJson(userinfos, new TypeToken<ListInfo>() {
-                                        }.getType());
-
-                                        String userinfoid = userinfo.getUserId();
-                                        String groupids = data.get("GroupId") + "";
-                                        for (int i = 0; i < listInfo.size(); i++) {
-                                            if (listInfo.get(i).getUserId().equals(userinfoid)) {
-                                                listInfo.remove(i);
+                                        String userinfoid ;
+                                        try {
+                                            ListInfo userinfo = new Gson().fromJson(userinfos, new TypeToken<ListInfo>() {
+                                            }.getType());
+                                            userinfoid = userinfo.getUserId();
+                                            for (int i = 0; i < listInfo.size(); i++) {
+                                                if (listInfo.get(i).getUserId().equals(userinfoid)) {
+                                                    listInfo.remove(i);
+                                                }
                                             }
+                                            Log.i("组内成员人数", listInfo.size() + "");
+                                            tv_num.setText(listInfo.size() + "");
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
                                         }
-                                        Log.i("组内成员人数", listInfo.size() + "");
-                                        tv_num.setText(listInfo.size() + "");
+
+                                        String groupids = data.get("GroupId") + "";
                                         getGridViewPerson(groupids);
                                         ToastUtils.show_short(context, "有人退出组");
                                     } catch (Exception e) {

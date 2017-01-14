@@ -392,7 +392,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
                             }
                             if((srclist_g == null || srclist_g.size() <= 0) && (srclist_p == null || srclist_p.size() <= 0)) {
                                 headViewNoFriendTip.setVisibility(View.VISIBLE);
-                                headViewNoFriendTip.setTipView(TipView.TipStatus.NO_DATA, "您还没有俩天对象哟\n快去找好友们聊天吧");
+                                headViewNoFriendTip.setTipView(TipView.TipStatus.NO_DATA, "您还没有聊天对象哟\n快去找好友们聊天吧");
                             } else {
                                 headViewNoFriendTip.setVisibility(View.GONE);
                             }

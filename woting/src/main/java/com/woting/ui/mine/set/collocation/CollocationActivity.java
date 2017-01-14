@@ -15,10 +15,10 @@ import com.woting.common.util.ToastUtils;
 import com.woting.ui.baseactivity.BaseActivity;
 
 /**
- * 设置
- *
- * @author 辛龙
- *         2016年2月26日
+ * 配置设置
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
+ * 邮箱：645700751@qq.com
  */
 public class CollocationActivity extends BaseActivity implements OnClickListener {
 

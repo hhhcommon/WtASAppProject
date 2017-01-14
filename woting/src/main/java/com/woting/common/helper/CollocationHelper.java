@@ -1,4 +1,4 @@
-package com.woting.common.util;
+package com.woting.common.helper;
 
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
@@ -10,7 +10,7 @@ import com.woting.common.constant.CollocationConstant;
  * 2016/12/28 11:21
  * 邮箱：645700751@qq.com
  */
-public class CollocationUtils {
+public class CollocationHelper {
 
     private static String _PCDType = "1";
     private static String _socketPort = "16789";
