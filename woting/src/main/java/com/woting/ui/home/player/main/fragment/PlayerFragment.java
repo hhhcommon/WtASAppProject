@@ -1677,8 +1677,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     if (ReturnType.equals("1001")) {
                         page++;
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        List<LanguageSearchInside> list = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<LanguageSearchInside>>() {
-                        }.getType());
+                        List<LanguageSearchInside> list = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<LanguageSearchInside>>() {}.getType());
                         list = clearContentPlayNull(list);
                         if (refreshType == 0) {
                             LanguageSearchInside fList = getDaoList(context);// 得到数据库里边的第一条数据
@@ -1760,7 +1759,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                         ToastUtils.show_always(context, "暂时没有更多的推荐了!");
                     }
                     resetHeadView();
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     setPullAndLoad(true, false);
                     ToastUtils.show_always(context, "数据出错了，请您稍后再试!");
@@ -2134,6 +2133,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
     // 去除 ContentPlay == null 的数据
     private List<LanguageSearchInside> clearContentPlayNull(List<LanguageSearchInside> list) {
+        if(list == null || list.size() <= 0) return null;
         int index = 0;
         while (index < list.size()) {
             if (list.get(index).getMediaType().equals("TTS")) {
