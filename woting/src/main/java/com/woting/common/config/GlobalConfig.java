@@ -294,19 +294,19 @@ public class GlobalConfig {
      */
 
     // 获取专辑列表
-    public static final String getSequMediaList = uploadBaseUrl + "content/seq/getSeqMediaList.do";
+    public static final String getSequMediaList =  "content/seq/getSeqMediaList.do";
     // 删除专辑
-    public static final String removeSequMedia = uploadBaseUrl + "content/seq/removeSeqMedia.do";
+    public static final String removeSequMedia ="content/seq/removeSeqMedia.do";
     // 获取节目列表
-    public static final String getMediaList = uploadBaseUrl + "content/media/getMediaList.do";
+    public static final String getMediaList = "content/media/getMediaList.do";
     // 删除节目
-    public static final String removeMedia = uploadBaseUrl + "content/media/removeMedia.do";
+    public static final String removeMedia =  "content/media/removeMedia.do";
     // 获取标签列表
-    public static final String getTags = uploadBaseUrl + "content/getTags.do";
+    public static final String getTags =  "content/getTags.do";
     // 上传文件 SrcType == 1、图片  == 2、音频
-    public static final String uploadFileUrl = uploadBaseUrl + "common/uploadCM.do";
+    public static final String uploadFileUrl =  "common/uploadCM.do";
     // 新增节目
-    public static final String addMediaInfo = uploadBaseUrl + "content/media/addMediaInfo.do";
+    public static final String addMediaInfo = "content/media/addMediaInfo.do";
 
 
 }

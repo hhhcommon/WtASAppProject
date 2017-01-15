@@ -225,42 +225,58 @@ public class UpdatePersonActivity extends AppBaseActivity implements
                 if (!TextUtils.isEmpty(catalogNameList.get(i).getCatalogId()) && !TextUtils.isEmpty(catalogNameList.get(i).getCatalogName())) {
                     if (catalogNameList.get(i).getSubCata() != null && catalogNameList.get(i).getSubCata().size() > 0) {
                         // 所返回的 list 有下一级的且不为 0
-                        if (!catalogNameList.get(i).getSubCata().get(0).getCatalogName().equals("市辖区")) {
-                            // 不是直辖市
-                            provinceList.add(catalogNameList.get(i).getCatalogName());
-                            myList = catalogNameList.get(i).getSubCata();
-                            tempMap.put(catalogNameList.get(i).getCatalogName(), myList);
-                        } else {
-                            // 直辖市
-                            List<CatalogName> myList1 = new ArrayList<>();
-                            provinceList.add(catalogNameList.get(i).getCatalogName());
-                            myList1.addAll(catalogNameList.get(i).getSubCata().get(0).getSubCata());
-                            myList1.addAll(catalogNameList.get(i).getSubCata().get(1).getSubCata());
-                            tempMap.put(catalogNameList.get(i).getCatalogName(), myList1);
+                        if(catalogNameList.get(i).getSubCata().get(0)!=null&&
+                                catalogNameList.get(i).getSubCata().get(0).getCatalogName()!=null) {
+                            if (!catalogNameList.get(i).getSubCata().get(0).getCatalogName().equals("市辖区")) {
+                                // 不是直辖市
+                                provinceList.add(catalogNameList.get(i).getCatalogName());
+                                myList = catalogNameList.get(i).getSubCata();
+                                tempMap.put(catalogNameList.get(i).getCatalogName(), myList);
+                            } else {
+                                // 直辖市
+                                List<CatalogName> myList1 = new ArrayList<>();
+                                provinceList.add(catalogNameList.get(i).getCatalogName());
+                                try {
+                                    myList1.addAll(catalogNameList.get(i).getSubCata().get(0).getSubCata());
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    myList1.addAll(catalogNameList.get(i).getSubCata().get(1).getSubCata());
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                tempMap.put(catalogNameList.get(i).getCatalogName(), myList1);
+
+                            }
                         }
                     } else {
                         // 港澳台
                         List<CatalogName> myList1 = new ArrayList<>();
                         for (int t = 0; t < 4; t++) {
                             CatalogName mCatalog = new CatalogName();
-                            mCatalog.setCatalogId(catalogNameList.get(i).getCatalogId());
+                            if(catalogNameList.get(i).getCatalogId()!=null&&
+                                    !catalogNameList.get(i).getCatalogId().trim().equals("")){
+                            mCatalog.setCatalogId(catalogNameList.get(i).getCatalogId());}
                             mCatalog.setCatalogName(" ");
                             myList1.add(mCatalog);
                         }
-                        if (catalogNameList.get(i).getCatalogId().equals("710000")) {
-                            provinceList.add("台湾");
-                            tempMap.put("台湾", myList1);
-                        } else if (catalogNameList.get(i).getCatalogId().equals("810000")) {
-                            provinceList.add("香港");
-                            tempMap.put("香港", myList1);
-                        } else if (catalogNameList.get(i).getCatalogId().equals("820000")) {
-                            provinceList.add("澳门");
-                            tempMap.put("澳门", myList1);
+                        if(catalogNameList.get(i).getCatalogId()!=null) {
+                            if (catalogNameList.get(i).getCatalogId().equals("710000")) {
+                                provinceList.add("台湾");
+                                tempMap.put("台湾", myList1);
+                            } else if (catalogNameList.get(i).getCatalogId().equals("810000")) {
+                                provinceList.add("香港");
+                                tempMap.put("香港", myList1);
+                            } else if (catalogNameList.get(i).getCatalogId().equals("820000")) {
+                                provinceList.add("澳门");
+                                tempMap.put("澳门", myList1);
+                            }
                         }
                     }
                 }
             }
-            if (tempMap.size() > 0) {
+            if (tempMap!=null&&tempMap.size() > 0&&provinceList!=null&&provinceList.size()>0) {
                 for (int i = 0; i < provinceList.size(); i++) {
                     List<CatalogName> mList = tempMap.get(provinceList.get(i));
                     ArrayList<String> cityList = new ArrayList<>();
@@ -550,6 +566,8 @@ public class UpdatePersonActivity extends AppBaseActivity implements
     protected void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
+        tempMap.clear();
+        tempMap=null;
     }
 
     @Override

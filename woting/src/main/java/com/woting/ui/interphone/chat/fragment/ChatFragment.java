@@ -105,7 +105,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
 
     private Button image_button;
     private View rootView;
-    private MyGridView gridView_person;
+    private static MyGridView gridView_person;
     private Dialog dialog;
     private static Dialog confirmDialog;
 
@@ -287,7 +287,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                         jack();//抬起手后的操作
                         break;
                     case MotionEvent.ACTION_CANCEL:
-                        Log.e("按钮操作", "移动");
+                        Log.e("按钮操作", "取消");
                         jack();//抬起手后的操作
                         break;
                 }
@@ -313,7 +313,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                 InterPhoneControl.Enter(context, groupId);//发送进入组的数据，socket
                 getGridViewPerson(groupId);//获取群成员
             }
-        },300);
+        }, 300);
 
     }
 
@@ -334,7 +334,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                 InterPhoneControl.Enter(context, talkGroupInside.getGroupId());//发送进入组的数据，socket
                 getGridViewPerson(talkGroupInside.getGroupId());//获取群成员
             }
-        },300);
+        }, 300);
     }
 
     /**
@@ -354,7 +354,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                 InterPhoneControl.Enter(context, talkGroupInside.getGroupId());//发送进入组的数据，socket
                 getGridViewPerson(talkGroupInside.getGroupId());//获取群成员
             }
-        },300);
+        }, 300);
     }
 
     /**
@@ -364,7 +364,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if ((isCallingForUser||isCallingForGroup) && interPhoneType != null) {
+                if ((isCallingForUser || isCallingForGroup) && interPhoneType != null) {
                     //此时有对讲状态
                     if (interPhoneType.equals("user")) {
 //                Log.e("上次通话ID", InterPhoneControl.bdcallid + "");
@@ -384,7 +384,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                     ToastUtils.show_always(context, "数据出错了，请您稍后再试");
                 }
             }
-        },300);
+        }, 300);
     }
 
     public static void setDatePerson() {
@@ -498,7 +498,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         getList();
         if (allList == null || allList.size() == 0) {
             //此时数据库里边没有数据，界面不变
-            isCallingForUser=false;
+            isCallingForUser = false;
             isCallingForGroup = false;
         } else {
             // 此处数据需要处理，第一条数据为激活状态组
@@ -507,7 +507,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
             //			String id = alllist.get(0).getId();//对讲组：groupid
             //			if(type!=null&&!type.equals("")&&type.equals("user")){
             //若上次退出前的通话状态是单对单通话则不处理
-            isCallingForUser=false;
+            isCallingForUser = false;
             isCallingForGroup = false;
             if (adapter == null) {
                 adapter = new ChatListAdapter(context, allList, allList.get(allList.size() - 1).getId());
@@ -629,6 +629,46 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                 } else {
                     tv_allnum.setText("/1");
                 }
+                if (ChatFragment.context != null) {
+                    if (groupPersonList != null && groupPersonList.size() != 0) {
+                        groupPersonListS.clear();
+                        if (listInfo != null && listInfo.size() > 0) {
+                            for (int j = 0; j < listInfo.size(); j++) {
+                                String id = listInfo.get(j).getUserId().trim();
+                                if (id != null && !id.equals("")) {
+                                    for (int i = 0; i < groupPersonList.size(); i++) {
+                                        String ids = groupPersonList.get(i).getUserId();
+                                        if (id.equals(ids)) {
+                                            Log.e("ids", ids + "=======" + i);
+                                            groupPersonList.get(i).setOnLine(2);
+                                            groupPersonListS.add(groupPersonList.get(i));
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            String id = CommonUtils.getUserId(context);
+                            if (id != null && !id.equals("")) {
+                                for (int i = 0; i < groupPersonList.size(); i++) {
+                                    String ids = groupPersonList.get(i).getUserId();
+                                    if (id.equals(ids)) {
+                                        Log.e("ids", ids + "=======" + i);
+                                        groupPersonList.get(i).setOnLine(2);
+                                        groupPersonListS.add(groupPersonList.get(i));
+                                    }
+                                }
+                            }
+                        }
+                        for (int h = 0; h < groupPersonList.size(); h++) {
+                            if (groupPersonList.get(h).getOnLine() != 2) {
+                                groupPersonListS.add(groupPersonList.get(h));
+                            }
+                        }
+                        GroupPersonAdapter adapter = new GroupPersonAdapter(context, groupPersonListS);
+                        gridView_person.setAdapter(adapter);
+                        checkGroupListener();// adapter的适配器监听
+                    }
+                }
             }
 
             @Override
@@ -659,7 +699,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                 if (dialogType == 1) {
                     InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
                     isCallingForUser = false;
-                    isCallingForGroup=false;
+                    isCallingForGroup = false;
                     lin_notalk.setVisibility(View.VISIBLE);
                     lin_personhead.setVisibility(View.GONE);
                     lin_head.setVisibility(View.GONE);
@@ -671,7 +711,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                 } else {
                     InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
                     isCallingForUser = false;
-                    isCallingForGroup=false;
+                    isCallingForGroup = false;
                     lin_notalk.setVisibility(View.VISIBLE);
                     lin_personhead.setVisibility(View.GONE);
                     lin_head.setVisibility(View.GONE);
@@ -720,12 +760,12 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
     // 挂断电话
     private void hangUp() {
         if (interPhoneType.equals("user")) {
-            isCallingForUser=false;
+            isCallingForUser = false;
             isCallingForGroup = false;
             InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
             historyDataBaseList = dbDao.queryHistory();//得到数据库里边数据
         } else {
-            isCallingForUser=false;
+            isCallingForUser = false;
             isCallingForGroup = false;
             InterPhoneControl.Quit(context, interPhoneId);//退出小组
             historyDataBaseList = dbDao.queryHistory();//得到数据库里边数据
@@ -823,7 +863,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
             @Override
             public void zhiding(int position) {
                 groupId = allList.get(position).getId();
-                if (isCallingForGroup||isCallingForUser) {
+                if (isCallingForGroup || isCallingForUser) {
                     //此时有对讲状态
                     if (interPhoneType.equals("user")) {
                         //对讲状态为个人时，弹出框展示
@@ -926,55 +966,17 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
 
     // 查看群成员
     private void checkGroup() {
-        if (groupPersonList != null && groupPersonList.size() != 0) {
-            groupPersonListS.clear();
-            if (listInfo != null && listInfo.size() > 0) {
-                for (int j = 0; j < listInfo.size(); j++) {
-                    String id = listInfo.get(j).getUserId().trim();
-                    if (id != null && !id.equals("")) {
-                        for (int i = 0; i < groupPersonList.size(); i++) {
-                            String ids = groupPersonList.get(i).getUserId();
-                            if (id.equals(ids)) {
-                                Log.e("ids", ids + "=======" + i);
-                                groupPersonList.get(i).setOnLine(2);
-                                groupPersonListS.add(groupPersonList.get(i));
-                            }
-                        }
-                    }
-                }
-            } else {
-                String id = CommonUtils.getUserId(context);
-                if (id != null && !id.equals("")) {
-                    for (int i = 0; i < groupPersonList.size(); i++) {
-                        String ids = groupPersonList.get(i).getUserId();
-                        if (id.equals(ids)) {
-                            Log.e("ids", ids + "=======" + i);
-                            groupPersonList.get(i).setOnLine(2);
-                            groupPersonListS.add(groupPersonList.get(i));
-                        }
-                    }
-                }
-            }
-            for (int h = 0; h < groupPersonList.size(); h++) {
-                if (groupPersonList.get(h).getOnLine() != 2) {
-                    groupPersonListS.add(groupPersonList.get(h));
-                }
-            }
-            GroupPersonAdapter adapter = new GroupPersonAdapter(context, groupPersonListS);
-            gridView_person.setAdapter(adapter);
-            checkGroupListener();// adapter的适配器监听
-            if (gridView_person.getVisibility() == View.VISIBLE) {
-                gridView_person.setVisibility(View.GONE);
-                gridView_tv.setVisibility(View.GONE);
-            } else {
-                gridView_person.setVisibility(View.VISIBLE);
-                gridView_tv.setVisibility(View.VISIBLE);
-            }
+        if (gridView_person.getVisibility() == View.VISIBLE) {
+            gridView_person.setVisibility(View.GONE);
+            gridView_tv.setVisibility(View.GONE);
+        } else {
+            gridView_person.setVisibility(View.VISIBLE);
+            gridView_tv.setVisibility(View.VISIBLE);
         }
     }
 
     // 查看群成员适配器的监听
-    private void checkGroupListener() {
+    private static void checkGroupListener() {
         gridView_person.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -996,7 +998,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                     bundle.putString("type", "talkoldlistfragment_p");
                     bundle.putSerializable("data", groupPersonListS.get(position));
                     intent.putExtras(bundle);
-                    startActivity(intent);
+                    context.startActivity(intent);
                 } else {
                     Intent intent = new Intent(context, GroupPersonNewsActivity.class);
                     Bundle bundle = new Bundle();
@@ -1004,7 +1006,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                     bundle.putString("id", interPhoneId);
                     bundle.putSerializable("data", groupPersonListS.get(position));
                     intent.putExtras(bundle);
-                    startActivityForResult(intent, 1);
+                    context.startActivityForResult(intent, 1);
                 }
             }
         });
@@ -1012,34 +1014,34 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
 
     // 抬手后的操作
     protected void jack() {
-        if (isTalking) {
-            if (interPhoneType.equals("group")) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        VoiceStreamRecordService.stop();
-                        InterPhoneControl.Loosen(context, interPhoneId);//发送取消说话控制
-                        image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
-                        if (draw_group.isRunning()) {
-                            draw_group.stop();
-                        }
-                        Log.e("对讲页面====", "录音机停止+发送取消说话控制+延时0.30秒");
+//        if (isTalking) {
+        if (interPhoneType.equals("group")) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    VoiceStreamRecordService.stop();
+                    InterPhoneControl.Loosen(context, interPhoneId);//发送取消说话控制
+                    image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
+                    if (draw_group.isRunning()) {
+                        draw_group.stop();
                     }
-                }, 300);
-            } else {//此处处理个人对讲的逻辑
-                VoiceStreamRecordService.stop();
-                InterPhoneControl.PersonTalkPressStop(context);//发送取消说话控制
-                image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
-                if (image_personvoice.getVisibility() == View.VISIBLE) {
-                    image_personvoice.setVisibility(View.INVISIBLE);
-                    if (draw.isRunning()) {
-                        draw.stop();
-                    }
+                    Log.e("对讲页面====", "录音机停止+发送取消说话控制+延时0.30秒");
+                }
+            }, 300);
+        } else {//此处处理个人对讲的逻辑
+            VoiceStreamRecordService.stop();
+            InterPhoneControl.PersonTalkPressStop(context);//发送取消说话控制
+            image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
+            if (image_personvoice.getVisibility() == View.VISIBLE) {
+                image_personvoice.setVisibility(View.INVISIBLE);
+                if (draw.isRunning()) {
+                    draw.stop();
                 }
             }
-        } else {
-            VoiceStreamRecordService.stop();
         }
+//        } else {
+//            VoiceStreamRecordService.stop();
+//        }
     }
 
     // 按下说话按钮的动作
@@ -1312,7 +1314,6 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                         MapContent data = (MapContent) message.getMsgContent();
                                         Map<String, Object> map = data.getContentMap();
                                         String news = new Gson().toJson(map);
-
                                         JSONTokener jsonParser = new JSONTokener(news);
                                         JSONObject arg1 = (JSONObject) jsonParser.nextValue();
                                         String ingroupusers = arg1.getString("InGroupUsers");
@@ -1321,8 +1322,17 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                         }.getType());
                                         //组内所有在线成员
                                         //组内有人说话时，根据这个list数据，得到该成员信息啊：头像，昵称等
-                                        Log.i("组内成员人数", listInfo.size() + "");
-                                        tv_num.setText(listInfo.size() + "");
+
+                                        String groupids = data.get("GroupId") + "";
+                                        if (groupids != null && !groupids.trim().equals("") &&
+                                                isCallingForGroup == true && groupId != null &&
+                                                groupId.trim().equals(groupids)) {
+                                            Log.i("组内成员人数", listInfo.size() + "");
+                                            tv_num.setText(listInfo.size() + "");
+                                            getGridViewPerson(groupids);
+                                            //有人加入组
+                                            ToastUtils.show_short(context, "有人加入组");
+                                        }
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
@@ -1465,7 +1475,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                     Map<String, Object> map = data.getContentMap();
                                     String callId = String.valueOf(map.get("CallId"));
                                     Log.e("chat的的CallId", callId + "");
-                                    if (isCallingForGroup||isCallingForUser) {
+                                    if (isCallingForGroup || isCallingForUser) {
                                         //此时有对讲状态
                                         if (interPhoneType.equals("user") && InterPhoneControl.bdcallid.equals(callId)) {
                                             //挂断电话的数据处理
@@ -1561,7 +1571,6 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                         JSONObject arg1 = (JSONObject) jsonParser.nextValue();
                                         String userinfos = arg1.getString("UserInfo");
 
-                                        String groupids = null;
                                         try {
                                             ListInfo userinfo = new Gson().fromJson(userinfos, new TypeToken<ListInfo>() {
                                             }.getType());
@@ -1569,12 +1578,16 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
-                                        groupids = data.get("GroupId") + "";
-                                        Log.i("组内成员人数", listInfo.size() + "");
-                                        tv_num.setText(listInfo.size() + "");
-                                        getGridViewPerson(groupids);
-                                        //有人加入组
-                                        ToastUtils.show_short(context, "有人加入组");
+                                        String groupids = data.get("GroupId") + "";
+                                        if (groupids != null && !groupids.trim().equals("") &&
+                                                isCallingForGroup == true && groupId != null &&
+                                                groupId.trim().equals(groupids)) {
+                                            Log.i("组内成员人数", listInfo.size() + "");
+                                            tv_num.setText(listInfo.size() + "");
+                                            getGridViewPerson(groupids);
+                                            //有人加入组
+                                            ToastUtils.show_short(context, "有人加入组");
+                                        }
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
@@ -1587,27 +1600,30 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
 
                                         JSONTokener jsonParser = new JSONTokener(news);
                                         JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                                        String userinfos = arg1.getString("UserInfo");
-
-                                        String userinfoid ;
-                                        try {
-                                            ListInfo userinfo = new Gson().fromJson(userinfos, new TypeToken<ListInfo>() {
-                                            }.getType());
-                                            userinfoid = userinfo.getUserId();
-                                            for (int i = 0; i < listInfo.size(); i++) {
-                                                if (listInfo.get(i).getUserId().equals(userinfoid)) {
-                                                    listInfo.remove(i);
+                                        String groupids = data.get("GroupId") + "";
+                                        if (groupids != null && !groupids.trim().equals("") &&
+                                                isCallingForGroup == true && groupId != null &&
+                                                groupId.trim().equals(groupids)) {
+                                            String userinfos = arg1.getString("UserInfo");
+                                            String userinfoid;
+                                            try {
+                                                ListInfo userinfo = new Gson().fromJson(userinfos, new TypeToken<ListInfo>() {
+                                                }.getType());
+                                                userinfoid = userinfo.getUserId();
+                                                for (int i = 0; i < listInfo.size(); i++) {
+                                                    if (listInfo.get(i).getUserId().equals(userinfoid)) {
+                                                        listInfo.remove(i);
+                                                    }
                                                 }
+                                                Log.i("组内成员人数", listInfo.size() + "");
+                                                tv_num.setText(listInfo.size() + "");
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
                                             }
-                                            Log.i("组内成员人数", listInfo.size() + "");
-                                            tv_num.setText(listInfo.size() + "");
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
+                                            getGridViewPerson(groupids);
+                                            ToastUtils.show_short(context, "有人退出组");
                                         }
 
-                                        String groupids = data.get("GroupId") + "";
-                                        getGridViewPerson(groupids);
-                                        ToastUtils.show_short(context, "有人退出组");
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
