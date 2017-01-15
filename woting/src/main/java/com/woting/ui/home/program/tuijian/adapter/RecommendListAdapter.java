@@ -112,8 +112,8 @@ public class RecommendListAdapter extends BaseAdapter {
 				if (lists.getContentTimes() == null|| lists.getContentTimes().equals("") || lists.getContentTimes().equals("null")) {
 					holder.textTotal.setText(context.getString(R.string.play_time));
 				} else {
-					int minute = Integer.valueOf(lists.getContentTimes()) / (1000 * 60);
-					int second = (Integer.valueOf(lists.getContentTimes()) / 1000) % 60;
+					long minute = Long.valueOf(lists.getContentTimes()) / (1000 * 60);
+                    long second = (Long.valueOf(lists.getContentTimes()) / 1000) % 60;
 					if(second < 10){
 						holder.textTotal.setText(minute + "\'" + " " + "0" + second + "\"");
 					}else{
