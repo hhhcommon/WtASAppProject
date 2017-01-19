@@ -1644,7 +1644,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 case BroadcastConstants.PLAY_TEXT_VOICE_SEARCH:
                     PlayerFragment.TextPage = 0;
                     sendTextContent = intent.getStringExtra("text");
-                    sendTextRequest(sendTextContent);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            sendTextRequest(sendTextContent);
+                        }
+                    },500);
                     break;
                 case BroadcastConstants.PLAYERVOICE:
                     voiceStr = intent.getStringExtra("VoiceContent");

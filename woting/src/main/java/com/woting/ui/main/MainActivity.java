@@ -1053,14 +1053,18 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     // 展示上次存在的单对单消息
     private void showPerson(String personName) {
-        pushDialog("对讲通知", "您刚刚在跟" + personName + "通话，是否继续？", 2);
-        ToastUtils.show_short(MainActivity.this, "展示上次存在的单对单消息");
+        if (ChatFragment.context == null) {
+            pushDialog("对讲通知", "您刚刚在跟" + personName + "通话，是否继续？", 2);
+            ToastUtils.show_short(MainActivity.this, "展示上次存在的单对单消息");
+        }
     }
 
     // 展示上次存在的组对讲消息
     private void showGroup(String groupName) {
-        pushDialog("对讲通知", "您刚刚在" + groupName + "对讲组中聊天，是否继续？", 3);
-        ToastUtils.show_short(MainActivity.this, "展示上次存在的组对讲消息");
+        if (ChatFragment.context == null) {
+            pushDialog("对讲通知", "您刚刚在" + groupName + "对讲组中聊天，是否继续？", 3);
+            ToastUtils.show_short(MainActivity.this, "展示上次存在的组对讲消息");
+        }
     }
 
     // 更改一下登录状态
@@ -1138,7 +1142,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
     //服务对话框
     private void pushDialog(String title, String message, final int type) {
         //type 0=默认值,1=被顶替,2=展示个人,3=展示群组
-        if (ChatFragment.context == null) {
             View dialog = LayoutInflater.from(this).inflate(R.layout.dialog_push_message, null);
             TextView push_dialog_text_context = (TextView) dialog.findViewById(R.id.text_context);// 展示内容
             TextView tv_title = (TextView) dialog.findViewById(R.id.tv_title);// 展示标题
@@ -1175,11 +1178,13 @@ public class MainActivity extends TabActivity implements OnClickListener {
                         // 挂断电话
 //                    dialogShowTypePerson = 0;
                         InterPhoneControl.PersonTalkHangUp(context, callId);
+                        talkdb=null;
                     } else if (type == 3) {
                         // 退出组
 //                    dialogShowTypeGroup = 0;
                         if (groupInfo != null)
                             InterPhoneControl.Quit(context, groupInfo.getGroupId());//退出小组
+                        groupInfo=null;
                     }
                     pushDialog.dismiss();
                 }
@@ -1202,7 +1207,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
                     pushDialog.dismiss();
                 }
             });
-        }
     }
 
     DialogInterface.OnKeyListener keyListener = new DialogInterface.OnKeyListener() {

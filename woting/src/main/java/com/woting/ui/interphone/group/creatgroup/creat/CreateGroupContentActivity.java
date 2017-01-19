@@ -436,13 +436,12 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 					if (dialog != null) {
 						dialog.dismiss();
 					}
-					Intent p=new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN);
-					context. sendBroadcast(p);
+					context. sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
 					setResult(1);
 					if(groupinfo==null||groupinfo.equals("")){
-						ToastUtils.show_always(context, "创建成功");
+						ToastUtils.show_always(context, "群组创建成功");
 					}else{
-						ToastUtils.show_always(context, "创建成功");
+						ToastUtils.show_always(context, "群组创建成功");
 						Intent intent = new Intent(CreateGroupContentActivity.this,TalkGroupNewsActivity.class);
 						Bundle bundle = new Bundle();
 						bundle.putString("type", "CreateGroupContentActivity");
@@ -456,12 +455,42 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 					if (dialog != null) {
 						dialog.dismiss();
 					}
-					ToastUtils.show_always(context, "头像保存失败，请稍后再试");
+					context. sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
+					setResult(1);
+					if(groupinfo==null||groupinfo.equals("")){
+						ToastUtils.show_always(context, "群组创建成功");
+					}else{
+						ToastUtils.show_always(context, "群组创建成功");
+						Intent intent = new Intent(CreateGroupContentActivity.this,TalkGroupNewsActivity.class);
+						Bundle bundle = new Bundle();
+						bundle.putString("type", "CreateGroupContentActivity");
+						bundle.putSerializable("news", groupinfo);
+						bundle.putString("imageurl","");
+						intent.putExtras(bundle);
+						startActivity(intent);
+					}
+					finish();
+					ToastUtils.show_always(context, "头像上传失败，请稍后再试");
 				} else if (msg.what == -1) {
 					if (dialog != null) {
 						dialog.dismiss();
 					}
-					ToastUtils.show_always(context, "头像保存异常，图片未上传成功，请重新发布");
+					context. sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
+					setResult(1);
+					if(groupinfo==null||groupinfo.equals("")){
+						ToastUtils.show_always(context, "群组创建成功");
+					}else{
+						ToastUtils.show_always(context, "群组创建成功");
+						Intent intent = new Intent(CreateGroupContentActivity.this,TalkGroupNewsActivity.class);
+						Bundle bundle = new Bundle();
+						bundle.putString("type", "CreateGroupContentActivity");
+						bundle.putSerializable("news", groupinfo);
+						bundle.putString("imageurl","");
+						intent.putExtras(bundle);
+						startActivity(intent);
+					}
+					finish();
+					ToastUtils.show_always(context, "头像保存异常，图片未上传成功，请重新上传");
 				}
 			}
 		};
@@ -479,7 +508,7 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 					for(int i=0;i<imageNum;i++){
 						filePath= PhotoCutAfterImagePath;
 						String ExtName = filePath.substring(filePath.lastIndexOf("."));
-						String TestURI = GlobalConfig.baseUrl + "wt/common/upload4App.do?FType=GrouP&ExtName=";
+						String TestURI = GlobalConfig.baseUrl + "wt/common/upload4App.do?FType=GroupP&ExtName=";
 						String Response = MyHttp.postFile(new File(filePath),TestURI+ ExtName+ "&PCDType=" + GlobalConfig.PCDType + "&GroupId="+ groupinfo.GroupId
 								+ "&IMEI="+ PhoneMessage.imei);
 						Log.e("图片上传数据",	TestURI+ ExtName
