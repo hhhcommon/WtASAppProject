@@ -111,6 +111,7 @@ public class UpdatePersonActivity extends AppBaseActivity implements
         initView();
         setValueByPrefer();
         if (GlobalConfig.CityCatalogList != null && GlobalConfig.CityCatalogList.size() > 0) {
+            int a=GlobalConfig.CityCatalogList.size();
             handleCityList(GlobalConfig.CityCatalogList);
         } else if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             send();
@@ -201,9 +202,15 @@ public class UpdatePersonActivity extends AppBaseActivity implements
                     Log.v("ReturnType", "ReturnType -- > > " + ReturnType);
                     if (ReturnType != null && ReturnType.equals("1001")) {
                         Catalog subListAll = new Gson().fromJson(result.getString("CatalogData"), new TypeToken<Catalog>() {}.getType());
-                        List<CatalogName> catalogNameList = subListAll.getSubCata();
-                        GlobalConfig.CityCatalogList = catalogNameList;
-                        handleCityList(catalogNameList);
+                        if(subListAll.getSubCata()!=null&&subListAll.getSubCata().size()>0){
+                            List<CatalogName> catalogNameList = subListAll.getSubCata();
+                            GlobalConfig.CityCatalogList = catalogNameList;
+                            handleCityList(catalogNameList);
+                        }else{
+                            ToastUtils.show_always(context,"城市列表获取异常，请检查您的网络后重试");
+                        }
+
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -225,23 +232,34 @@ public class UpdatePersonActivity extends AppBaseActivity implements
                 if (!TextUtils.isEmpty(catalogNameList.get(i).getCatalogId()) && !TextUtils.isEmpty(catalogNameList.get(i).getCatalogName())) {
                     if (catalogNameList.get(i).getSubCata() != null && catalogNameList.get(i).getSubCata().size() > 0) {
                         // 所返回的 list 有下一级的且不为 0
+
                         if (!catalogNameList.get(i).getSubCata().get(0).getCatalogName().equals("市辖区")) {
                             // 不是直辖市
                             provinceList.add(catalogNameList.get(i).getCatalogName());
                             myList = catalogNameList.get(i).getSubCata();
                             tempMap.put(catalogNameList.get(i).getCatalogName(), myList);
                         } else {
-                            // 直辖市
+                         /*   // 直辖市
+                            if(!TextUtils.isEmpty(catalogNameList.get(i).getCatalogName())){
                             List<CatalogName> myList1 = new ArrayList<>();
                             provinceList.add(catalogNameList.get(i).getCatalogName());
+                            if(catalogNameList.get(i).getSubCata().get(0).getSubCata()!=null){
                             myList1.addAll(catalogNameList.get(i).getSubCata().get(0).getSubCata());
-                            myList1.addAll(catalogNameList.get(i).getSubCata().get(1).getSubCata());
+                            }
+                            if(catalogNameList.get(i).getSubCata().get(1).getSubCata()!=null){
+                                myList1.addAll(catalogNameList.get(i).getSubCata().get(1).getSubCata());
+                            }
                             tempMap.put(catalogNameList.get(i).getCatalogName(), myList1);
+                            }else{
+                             //服务器返回的垃圾数据无意义
+                                ToastUtils.show_always(context,"服务器返回的垃圾数据无意义");
+                            }*/
                         }
                     } else {
                         // 港澳台
-                        List<CatalogName> myList1 = new ArrayList<>();
-                        for (int t = 0; t < 4; t++) {
+                       if (!TextUtils.isEmpty(catalogNameList.get(i).getCatalogId())){
+                           List<CatalogName> myList1 = new ArrayList<>();
+                           for (int t = 0; t < 4; t++) {
                             CatalogName mCatalog = new CatalogName();
                             mCatalog.setCatalogId(catalogNameList.get(i).getCatalogId());
                             mCatalog.setCatalogName(" ");
@@ -257,6 +275,10 @@ public class UpdatePersonActivity extends AppBaseActivity implements
                             provinceList.add("澳门");
                             tempMap.put("澳门", myList1);
                         }
+                       }else{
+                           //服务器返回的垃圾数据无意义
+                           ToastUtils.show_always(context,"服务器返回的垃圾数据无意义");
+                       }
                     }
                 }
             }
@@ -518,10 +540,16 @@ public class UpdatePersonActivity extends AppBaseActivity implements
         dialog.findViewById(R.id.tv_confirm).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                region = tempMap.get(provinceList.get(provinceIndex)).get(cityIndex).getCatalogId();
-                regionId = tempMap.get(provinceList.get(provinceIndex)).get(cityIndex).getCatalogId();
-                textRegion.setText(provinceList.get(provinceIndex) + " " + tempMap.get(provinceList.get(provinceIndex)).get(cityIndex).getCatalogName());
-                cityDialog.dismiss();
+                try {
+                    region = tempMap.get(provinceList.get(provinceIndex)).get(cityIndex).getCatalogId();
+                    regionId = tempMap.get(provinceList.get(provinceIndex)).get(cityIndex).getCatalogId();
+                    textRegion.setText(provinceList.get(provinceIndex) + " " + tempMap.get(provinceList.get(provinceIndex)).get(cityIndex).getCatalogName());
+                }catch (Exception e){
+                    /*region = tempMap.get(provinceList.get(0)).get(0).getCatalogId();
+                    regionId = tempMap.get(provinceList.get(0)).get(0).getCatalogId();*/
+                    textRegion.setText("北京市朝阳区");
+                }
+                    cityDialog.dismiss();
             }
         });
 
