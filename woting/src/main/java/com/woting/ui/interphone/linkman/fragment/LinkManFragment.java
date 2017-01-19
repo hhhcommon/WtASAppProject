@@ -303,7 +303,8 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
             public void onClick(View v) {
                 if (type == 1) {
                     InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
-                    ChatFragment.isCalling = false;
+                    ChatFragment.isCallingForGroup = false;
+                    ChatFragment.isCallingForUser = false;
                     ChatFragment.lin_notalk.setVisibility(View.VISIBLE);
                     ChatFragment.lin_personhead.setVisibility(View.GONE);
                     ChatFragment.lin_head.setVisibility(View.GONE);
@@ -312,7 +313,8 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
                     confirmDialog.dismiss();
                 } else {
                     InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
-                    ChatFragment.isCalling = false;
+                    ChatFragment.isCallingForGroup = false;
+                    ChatFragment.isCallingForUser = false;
                     ChatFragment.lin_notalk.setVisibility(View.VISIBLE);
                     ChatFragment.lin_personhead.setVisibility(View.GONE);
                     ChatFragment.lin_head.setVisibility(View.GONE);
@@ -392,7 +394,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
                             }
                             if((srclist_g == null || srclist_g.size() <= 0) && (srclist_p == null || srclist_p.size() <= 0)) {
                                 headViewNoFriendTip.setVisibility(View.VISIBLE);
-                                headViewNoFriendTip.setTipView(TipView.TipStatus.NO_DATA, "您还没有俩天对象哟\n快去找好友们聊天吧");
+                                headViewNoFriendTip.setTipView(TipView.TipStatus.NO_DATA, "您还没有聊天对象哟\n快去找好友们聊天吧");
                             } else {
                                 headViewNoFriendTip.setVisibility(View.GONE);
                             }
@@ -620,7 +622,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
             public void add(int position) {
                 id = ((UserInfo) adapter.getItem(position)).getUserId();
                 // 此时的对讲状态
-                if (ChatFragment.isCalling) {
+                if ((ChatFragment.isCallingForGroup||ChatFragment.isCallingForUser)) {
                     if (ChatFragment.interPhoneType.equals("user")) {
                         type = 1;
                         confirmDialog.show();
@@ -666,7 +668,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
             public void add(int position) {
                 group = groupList.get(position);
                 Log.e("组名称", group.getGroupName());
-                if (ChatFragment.isCalling) {
+                if ((ChatFragment.isCallingForGroup||ChatFragment.isCallingForUser)) {
                     if (ChatFragment.interPhoneType.equals("user")) {
                         type = 2;
                         confirmDialog.show();

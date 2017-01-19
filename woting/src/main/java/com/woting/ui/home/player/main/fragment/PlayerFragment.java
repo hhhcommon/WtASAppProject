@@ -1644,7 +1644,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 case BroadcastConstants.PLAY_TEXT_VOICE_SEARCH:
                     PlayerFragment.TextPage = 0;
                     sendTextContent = intent.getStringExtra("text");
-                    sendTextRequest(sendTextContent);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            sendTextRequest(sendTextContent);
+                        }
+                    },500);
                     break;
                 case BroadcastConstants.PLAYERVOICE:
                     voiceStr = intent.getStringExtra("VoiceContent");
@@ -1666,6 +1671,20 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 case BroadcastConstants.ACTION_FINISHED_NO_DOWNLOADVIEW:
                     if (mFileDao != null) {
                         fileInfoList = mFileDao.queryFileInfo("true", CommonUtils.getUserId(context));
+                        if(GlobalConfig.playerObject == null || GlobalConfig.playerObject.getContentPlay() == null) return ;
+                        for (int i = 0; i < fileInfoList.size(); i++) {
+                            if(fileInfoList.get(i).getUrl().equals(GlobalConfig.playerObject.getContentPlay())) {
+                                if(fileInfoList.get(i).getLocalurl() != null) {
+                                    GlobalConfig.playerObject.setLocalurl(fileInfoList.get(i).getLocalurl());
+                                }
+                                mPlayAudioTextDownLoad.setClickable(false);
+                                mPlayAudioTextDownLoad.setCompoundDrawablesWithIntrinsicBounds(
+                                        null, context.getResources().getDrawable(R.mipmap.wt_play_xiazai_no), null, null);
+                                mPlayAudioTextDownLoad.setTextColor(context.getResources().getColor(R.color.gray));
+                                mPlayAudioTextDownLoad.setText("已下载");
+                                break;
+                            }
+                        }
                     }
                     break;
             }
@@ -2152,6 +2171,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     pressDown();
                     break;
                 case MotionEvent.ACTION_UP:// 抬起
+                    putUp();
+                    break;
+                case MotionEvent.ACTION_CANCEL:// 抬起
                     putUp();
                     break;
             }

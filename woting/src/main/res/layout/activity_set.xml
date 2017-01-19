@@ -254,7 +254,6 @@
                 style="@style/PersonAndSetRelativeStyle" >
 
                 <View style="@style/LineStyle"/>
-
                 <ImageView
                     android:id="@+id/image_about"
                     style="@style/PersonAndSetLeftStyle"
@@ -275,8 +274,8 @@
             <RelativeLayout
                 android:id="@+id/lin_p_set"
                 android:visibility="gone"
+                android:layout_marginTop="20dp"
                 style="@style/PersonAndSetRelativeStyle" >
-                <View style="@style/LineStyle"/>
 
                 <ImageView
                     android:id="@+id/image_p_set"

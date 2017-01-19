@@ -10,8 +10,8 @@ android {
         applicationId "com.woting"
         minSdkVersion 11
         targetSdkVersion 21
-        versionCode 25
-        versionName "0.1.0.X.025"
+        versionCode 28
+        versionName "0.1.0.X.028"
     }
 
     buildTypes {

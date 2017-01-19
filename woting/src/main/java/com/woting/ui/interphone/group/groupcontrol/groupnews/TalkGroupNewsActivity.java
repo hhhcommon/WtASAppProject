@@ -638,7 +638,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
     }
 
     public void addGroup() {
-        if (ChatFragment.isCalling && ChatFragment.interPhoneType.equals("user")) {// 此时有对讲状态 对讲状态为个人时弹出框展示
+        if ((ChatFragment.isCallingForGroup||ChatFragment.isCallingForUser) && ChatFragment.interPhoneType.equals("user")) {// 此时有对讲状态 对讲状态为个人时弹出框展示
             InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
         }
         ChatFragment.zhiDingGroupSS(groupId);

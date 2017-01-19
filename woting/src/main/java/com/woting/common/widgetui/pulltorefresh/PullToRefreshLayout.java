@@ -472,6 +472,7 @@ public class PullToRefreshLayout extends RelativeLayout {
 
         loadmoreView.layout(0, (int) (pullDownY + pullUpY) + pullableView.getMeasuredHeight(), loadmoreView.getMeasuredWidth(),
                 (int) (pullDownY + pullUpY) + pullableView.getMeasuredHeight() + loadmoreView.getMeasuredHeight());
+
     }
 
     class MyTimer {

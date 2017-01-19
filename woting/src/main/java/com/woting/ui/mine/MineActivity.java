@@ -66,6 +66,7 @@ import com.woting.ui.mine.person.updatepersonnews.model.UpdatePerson;
 import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
 import com.woting.ui.mine.set.SetActivity;
 import com.woting.ui.mine.shapeapp.ShapeAppActivity;
+import com.woting.ui.mine.subscriber.activity.SubscriberListActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -285,7 +286,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                 ToastUtils.show_always(context, "我的主播!");
                 break;
             case R.id.lin_subscribe:        // 我的订阅
-                ToastUtils.show_always(context, "我的订阅!");
+                startActivity(new Intent(this, SubscriberListActivity.class));
                 break;
             case R.id.lin_album:            // 我的专辑  我上传的专辑
                 startActivity(new Intent(context, MyUploadActivity.class));

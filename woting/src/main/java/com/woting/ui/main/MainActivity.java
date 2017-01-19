@@ -61,6 +61,7 @@ import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.citylist.dao.CityInfoDao;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
+import com.woting.ui.interphone.chat.fragment.ChatFragment;
 import com.woting.ui.interphone.chat.model.DBTalkHistorary;
 import com.woting.ui.interphone.commom.message.MessageUtils;
 import com.woting.ui.interphone.commom.message.MsgNormal;
@@ -443,7 +444,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                 JSONObject arg1 = (JSONObject) jsonParser.nextValue();
                                 // 此处后期需要用typeToken将字符串StringSubList 转化成为一个list集合
                                 String ContentPlayType, contentid, mediatype, ContentImg, ContentName, CTime, ContentTimes,
-                                        ContentKeyWord, ContentFavorite, ContentShareURL, ContentPlay, ContentPub, ContentDescn, PlayCount,IsPlaying;
+                                        ContentKeyWord, ContentFavorite, ContentShareURL, ContentPlay, ContentPub, ContentDescn, PlayCount, IsPlaying;
                                 try {
                                     ContentPlayType = arg1.getString("ContentPlayType");
                                 } catch (Exception e) {
@@ -533,7 +534,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                     IsPlaying = arg1.getString("IsPlaying");
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    IsPlaying  = "";
+                                    IsPlaying = "";
                                 }
 
                                 //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
@@ -541,7 +542,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                         ContentName, ContentImg, ContentPlay, "", mediatype,
                                         ContentTimes, "0", ContentDescn, PlayCount,
                                         "0", ContentPub, "", "", CTime, CommonUtils.getUserId(context), ContentShareURL,
-                                        ContentFavorite, contentid, "", "", "", "", "", ContentPlayType,IsPlaying);
+                                        ContentFavorite, contentid, "", "", "", "", "", ContentPlayType, IsPlaying);
                                 dbDao.deleteHistory(ContentPlay);
                                 dbDao.addHistory(history);
                                 Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
@@ -1052,14 +1053,18 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     // 展示上次存在的单对单消息
     private void showPerson(String personName) {
-        pushDialog("对讲通知", "您刚刚在跟" + personName + "通话，是否继续？", 2);
-        ToastUtils.show_short(MainActivity.this, "展示上次存在的单对单消息");
+        if (ChatFragment.context == null) {
+            pushDialog("对讲通知", "您刚刚在跟" + personName + "通话，是否继续？", 2);
+            ToastUtils.show_short(MainActivity.this, "展示上次存在的单对单消息");
+        }
     }
 
     // 展示上次存在的组对讲消息
     private void showGroup(String groupName) {
-        pushDialog("对讲通知", "您刚刚在" + groupName + "对讲组中聊天，是否继续？", 3);
-        ToastUtils.show_short(MainActivity.this, "展示上次存在的组对讲消息");
+        if (ChatFragment.context == null) {
+            pushDialog("对讲通知", "您刚刚在" + groupName + "对讲组中聊天，是否继续？", 3);
+            ToastUtils.show_short(MainActivity.this, "展示上次存在的组对讲消息");
+        }
     }
 
     // 更改一下登录状态
@@ -1137,25 +1142,24 @@ public class MainActivity extends TabActivity implements OnClickListener {
     //服务对话框
     private void pushDialog(String title, String message, final int type) {
         //type 0=默认值,1=被顶替,2=展示个人,3=展示群组
+            View dialog = LayoutInflater.from(this).inflate(R.layout.dialog_push_message, null);
+            TextView push_dialog_text_context = (TextView) dialog.findViewById(R.id.text_context);// 展示内容
+            TextView tv_title = (TextView) dialog.findViewById(R.id.tv_title);// 展示标题
+            TextView tv_update = (TextView) dialog.findViewById(R.id.tv_ok);
+            TextView tv_qx = (TextView) dialog.findViewById(R.id.tv_qx);
 
-        View dialog = LayoutInflater.from(this).inflate(R.layout.dialog_push_message, null);
-        TextView push_dialog_text_context = (TextView) dialog.findViewById(R.id.text_context);// 展示内容
-        TextView tv_title = (TextView) dialog.findViewById(R.id.tv_title);// 展示标题
-        TextView tv_update = (TextView) dialog.findViewById(R.id.tv_ok);
-        TextView tv_qx = (TextView) dialog.findViewById(R.id.tv_qx);
+            push_dialog_text_context.setText("" + message);
+            tv_title.setText("" + title);
 
-        push_dialog_text_context.setText("" + message);
-        tv_title.setText("" + title);
+            tv_update.setOnClickListener(this);
+            tv_qx.setOnClickListener(this);
 
-        tv_update.setOnClickListener(this);
-        tv_qx.setOnClickListener(this);
-
-        final Dialog pushDialog = new Dialog(this, R.style.MyDialog);
-        pushDialog.setContentView(dialog);
-        pushDialog.setOnKeyListener(keyListener);
-        pushDialog.setCanceledOnTouchOutside(false);
-        pushDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
-        pushDialog.show();
+            final Dialog pushDialog = new Dialog(this, R.style.MyDialog);
+            pushDialog.setContentView(dialog);
+            pushDialog.setOnKeyListener(keyListener);
+            pushDialog.setCanceledOnTouchOutside(false);
+            pushDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
+            pushDialog.show();
 //        if (type == 1) {
 //            dialogShowTypeQuitPerson = 1;
 //        } else if (type == 2) {
@@ -1163,44 +1167,46 @@ public class MainActivity extends TabActivity implements OnClickListener {
 //        } else if (type == 3) {
 //            dialogShowTypeGroup = 1;
 //        }
-        // 取消
-        tv_qx.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (type == 1) {
-                    // 不需要处理
+            // 取消
+            tv_qx.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (type == 1) {
+                        // 不需要处理
 //                    dialogShowTypeQuitPerson = 0;
-                } else if (type == 2) {
-                    // 挂断电话
+                    } else if (type == 2) {
+                        // 挂断电话
 //                    dialogShowTypePerson = 0;
-                    InterPhoneControl.PersonTalkHangUp(context, callId);
-                } else if (type == 3) {
-                    // 退出组
+                        InterPhoneControl.PersonTalkHangUp(context, callId);
+                        talkdb=null;
+                    } else if (type == 3) {
+                        // 退出组
 //                    dialogShowTypeGroup = 0;
-                    if(groupInfo!=null)InterPhoneControl.Quit(context, groupInfo.getGroupId());//退出小组
+                        if (groupInfo != null)
+                            InterPhoneControl.Quit(context, groupInfo.getGroupId());//退出小组
+                        groupInfo=null;
+                    }
+                    pushDialog.dismiss();
                 }
-                pushDialog.dismiss();
-            }
-        });
+            });
 
-        // 继续
-        tv_update.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (type == 1) {
+            // 继续
+            tv_update.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (type == 1) {
 //                    dialogShowTypeQuitPerson = 0;
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                } else if (type == 2) {
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    } else if (type == 2) {
 //                    dialogShowTypePerson = 0;
-                    addUser();
-                } else if (type == 3) {
+                        addUser();
+                    } else if (type == 3) {
 //                    dialogShowTypeGroup = 0;
-                    addGroup();
+                        addGroup();
+                    }
+                    pushDialog.dismiss();
                 }
-                pushDialog.dismiss();
-            }
-        });
-
+            });
     }
 
     DialogInterface.OnKeyListener keyListener = new DialogInterface.OnKeyListener() {

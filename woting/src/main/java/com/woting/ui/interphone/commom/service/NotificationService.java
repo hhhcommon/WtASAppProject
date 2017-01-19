@@ -67,7 +67,7 @@ public class NotificationService extends Service {
     }
 
     public void add(String type, String imageUrl, String content, String title, String dealTime,
-                    String showType,int bizType,int cmdType,int command,String taskId) {
+                    String showType, int bizType, int cmdType, int command, String taskId) {
         String addTime = Long.toString(System.currentTimeMillis());
         String bjUserId = CommonUtils.getUserId(context);
         DBNotifyHistory history = new DBNotifyHistory(bjUserId, type, imageUrl, content,
@@ -133,7 +133,7 @@ public class NotificationService extends Service {
                                     bundle.putString("outMessage", news);
                                     p.putExtras(bundle);
                                     context.sendBroadcast(p);
-                                    add("Ub1", imageurl, news, "好友邀请信息", dealtime,"false",0,0,0,"");
+                                    add("Ub1", imageurl, news, "好友邀请信息", dealtime, "false", 0, 0, 0, "");
                                 } else if (command == 3) {
                                     //好友邀请被接受或拒绝(Server->App)
                                     String news;
@@ -178,12 +178,12 @@ public class NotificationService extends Service {
                                     }
                                     if (dealtype != null && dealtype.equals("1")) {
                                         setNewMessageNotification(context, news, "我听");
-                                        add("Ub3", imageurl, news, "好友邀请信息", dealtime,"true",0,0,0,"");
+                                        add("Ub3", imageurl, news, "好友邀请信息", dealtime, "true", 0, 0, 0, "");
                                         context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
 
                                     } else {
                                         setNewMessageNotification(context, news, "我听");
-                                        add("Ub3", imageurl, news, "好友邀请信息", dealtime,"true",0,0,0,"");
+                                        add("Ub3", imageurl, news, "好友邀请信息", dealtime, "true", 0, 0, 0, "");
                                     }
                                 } else if (command == 5) {
                                     //A与B原为好友，A把B从自己的好友中删除后，向B发送A已删除自己为好友的信息。
@@ -243,7 +243,7 @@ public class NotificationService extends Service {
                                         bundle.putString("outMessage", news);
                                         pushintent.putExtras(bundle);
                                         context.sendBroadcast(pushintent);
-                                        add("Gb1", friendurl, news, "组邀请信息", dealtime,"false",0,0,0,"");
+                                        add("Gb1", friendurl, news, "组邀请信息", dealtime, "false", 0, 0, 0, "");
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中Gb1的异常", e.toString());
                                     }
@@ -289,7 +289,7 @@ public class NotificationService extends Service {
 
                                         setNewMessageNotification(context, news, "我听");
                                         //组信息管理
-                                        add("Gb2", imageurl, news, "组邀请信息", dealtime,"false",0,0,0,"");
+                                        add("Gb2", imageurl, news, "组邀请信息", dealtime, "false", 0, 0, 0, "");
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中Gb2的异常", e.toString());
                                     }
@@ -330,7 +330,7 @@ public class NotificationService extends Service {
                                                 }
                                             }
                                             setNewMessageNotification(context, news, "我听");
-                                            add("Gb3", "", news, "组邀请信息", dealtime,"true",0,0,0,"");
+                                            add("Gb3", "", news, "组邀请信息", dealtime, "true", 0, 0, 0, "");
                                         }
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中Gb3的异常", e.toString());
@@ -378,7 +378,7 @@ public class NotificationService extends Service {
                                             }
                                         }
                                         setNewMessageNotification(context, news, "我听");
-                                        add("Gb4", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()),"true",0,0,0,"");
+                                        add("Gb4", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()), "true", 0, 0, 0, "");
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中Gb4的异常", e.toString());
                                     }
@@ -453,7 +453,7 @@ public class NotificationService extends Service {
                                         }
 
                                         setNewMessageNotification(context, news, "我听");
-                                        add("Gb5", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()),"true",0,0,0,"");
+                                        add("Gb5", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()), "true", 0, 0, 0, "");
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中Gb5的异常", e.toString());
                                     }
@@ -481,7 +481,7 @@ public class NotificationService extends Service {
                                     }
                                     //加入数据库
                                     setNewMessageNotification(context, news, "我听");
-                                    add("Gb6", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()),"true",0,0,0,"");
+                                    add("Gb6", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()), "true", 0, 0, 0, "");
                                     //刷新通讯录
                                     context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                                 } else if (command2 == 7) {
@@ -531,7 +531,7 @@ public class NotificationService extends Service {
                                         }
                                         //加入数据库
                                         setNewMessageNotification(context, news, "我听");
-                                        add("Gb7", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()),"true",0,0,0,"");
+                                        add("Gb7", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()), "true", 0, 0, 0, "");
 
                                         //如果管理员权限移交给自己，则需要刷新通讯录
                                         if (userid != null && !userid.equals("") && CommonUtils.getUserId(context) != null &&
@@ -591,7 +591,7 @@ public class NotificationService extends Service {
                                         }
                                         //加入数据库
                                         setNewMessageNotification(context, news, "我听");
-                                        add("Gb8", groupurl, news, "组信息", dealtime,"true",0,0,0,"");
+                                        add("Gb8", groupurl, news, "组信息", dealtime, "true", 0, 0, 0, "");
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中Gb8的异常", e.toString());
                                     }
@@ -629,11 +629,23 @@ public class NotificationService extends Service {
                                         }
                                         //加入数据库
                                         setNewMessageNotification(context, news, "我听");
-                                        add("Gb9", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()),"true",0,0,0,"");
+                                        add("Gb9", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()), "true", 0, 0, 0, "");
                                         //刷新通讯录
                                         context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中Gb9的异常", e.toString());
+                                    }
+                                }
+                                break;
+                            case 3:
+                                int command3 = message.getCommand();
+                                if (command3 == 1) {
+                                    // 订阅消息
+                                    try {
+                                        MapContent data = (MapContent) message.getMsgContent();
+                                        // 添加两个数据库中
+                                    } catch (Exception e) {
+                                        Log.e("消息接收服务中的异常", e.toString());
                                     }
                                 }
                                 break;
@@ -642,8 +654,7 @@ public class NotificationService extends Service {
                         }
                     }
                     //如果此时消息中心的界面在打开状态，则发送广播刷新消息中心界面
-                    Intent pushnews = new Intent(BroadcastConstants.PUSH_REFRESHNEWS);
-                    context.sendBroadcast(pushnews);
+                    context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESHNEWS));
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
@@ -683,7 +694,7 @@ public class NotificationService extends Service {
                 .setWhen(System.currentTimeMillis())// 通知产生时间
                 .setPriority(Notification.PRIORITY_DEFAULT)// 设置该通知优先级
                 .setAutoCancel(true)// 设置点击通知消息时通知栏的通知自动消失
-                .setDefaults(Notification.DEFAULT_VIBRATE|Notification.DEFAULT_SOUND)// 通知声音、闪灯和振动方式为使用当前的用户默认设置
+                .setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)// 通知声音、闪灯和振动方式为使用当前的用户默认设置
 //		Notification.DEFAULT_VIBRATE //添加默认震动提醒 需要 VIBRATE permission
 //		Notification.DEFAULT_SOUND // 添加默认声音提醒
 //		Notification.DEFAULT_LIGHTS// 添加默认三色灯提醒

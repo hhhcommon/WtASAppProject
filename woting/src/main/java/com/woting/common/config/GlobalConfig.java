@@ -87,7 +87,7 @@ public class GlobalConfig {
     /**
      * image请求路径前缀
      */
-    public static String imageurl = baseUrl + "wt/";// 服务器
+    public static String imageurl;// 服务器
 
     /**
      * "http://www.wotingfm.com/download/WoTing.apk"
@@ -260,6 +260,10 @@ public class GlobalConfig {
     public static final String afterThirdAuthUrl = "wt/passport/user/afterThirdAuth.do";
     //喜欢content/clickFavorite.do
     public static final String clickFavoriteUrl = "wt/content/clickFavorite.do";
+    //发送订阅信息（订阅/取消订阅）
+    public static final String clickSubscribe = "";
+    //获取订阅信息
+    public static final String getSubscribeList = "";
     //获取路况数据
     public static final String getLKTTS = "wt/lkTTS.do";
     //获取favorite列表
@@ -290,19 +294,19 @@ public class GlobalConfig {
      */
 
     // 获取专辑列表
-    public static final String getSequMediaList = uploadBaseUrl + "content/seq/getSeqMediaList.do";
+    public static final String getSequMediaList =  "content/seq/getSeqMediaList.do";
     // 删除专辑
-    public static final String removeSequMedia = uploadBaseUrl + "content/seq/removeSeqMedia.do";
+    public static final String removeSequMedia ="content/seq/removeSeqMedia.do";
     // 获取节目列表
-    public static final String getMediaList = uploadBaseUrl + "content/media/getMediaList.do";
+    public static final String getMediaList = "content/media/getMediaList.do";
     // 删除节目
-    public static final String removeMedia = uploadBaseUrl + "content/media/removeMedia.do";
+    public static final String removeMedia =  "content/media/removeMedia.do";
     // 获取标签列表
-    public static final String getTags = uploadBaseUrl + "content/getTags.do";
+    public static final String getTags =  "content/getTags.do";
     // 上传文件 SrcType == 1、图片  == 2、音频
-    public static final String uploadFileUrl = uploadBaseUrl + "common/uploadCM.do";
+    public static final String uploadFileUrl =  "common/uploadCM.do";
     // 新增节目
-    public static final String addMediaInfo = uploadBaseUrl + "content/media/addMediaInfo.do";
+    public static final String addMediaInfo = "content/media/addMediaInfo.do";
 
 
 }
