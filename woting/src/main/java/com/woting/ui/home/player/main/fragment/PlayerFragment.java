@@ -1643,6 +1643,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             switch (intent.getAction()) {
                 case BroadcastConstants.PLAY_TEXT_VOICE_SEARCH:
                     PlayerFragment.TextPage = 0;
+                    isResetData = true;
                     sendTextContent = intent.getStringExtra("text");
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -1988,6 +1989,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
     private String sendTextContent = "";// 关键字
 
+    private boolean isResetData;// 重新获取了数据  searchByText
+
     // 获取与文字相关的内容数据
     private void sendTextRequest(String contentName) {
         final LanguageSearchInside fList = getDaoList(context);// 得到数据库里边的第一条数据
@@ -2038,10 +2041,17 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     }
                     try {
                         if (list != null && list.size() != 0 && fList != null) {
-                            for (int i = 0; i < list.size(); i++) {
-                                if (list.get(i).getContentPlay() != null && list.get(i).getContentPlay().equals(fList.getContentPlay())) {
-                                    list.remove(i);
+                            if (isResetData) {
+                                for (int i = 0; i < list.size(); i++) {
+                                    if (list.get(i).getContentPlay() != null && list.get(i).getContentPlay().equals(fList.getContentPlay())) {
+                                        allList.clear();
+                                        num = i;
+                                        list.get(num).setType("2");
+                                        break;
+//                                        list.remove(i);
+                                    }
                                 }
+                                isResetData = false;
                             }
                             if (TextPage == 1 || refreshType == 2) {
                                 allList.addAll(list);
