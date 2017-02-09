@@ -106,8 +106,15 @@ public class VlcPlayer implements WtAudioPlay {
                 case EventHandler.MediaPlayerEncounteredError:// 播放出现错误重新播放
                     Log.e("TAG", "play error -- > " + Url);
                     Log.e("缓存播放路径111","======播放出现错误重新播放");
-                    audioPlay.playMRL(Url);
-//                    PlayerFragment.playRepeat();
+
+                    // 播放出现错误 一般是缓存错误 所以暂时的解决方法是出现错误时暂认定为就是缓存问题然后就放弃当前缓存直接播放网络地址
+                    String[] contentPlay = Url.split("http");
+                    if (contentPlay.length > 1) {
+                        Url = "http" + contentPlay[contentPlay.length - 1];
+                        audioPlay.playMRL(Url);
+                    } else {// 如果播放网络地址依然错误那就播放下一个节目
+                        PlayerFragment.playNext();
+                    }
                     break;
                 case EventHandler.MediaPlayerOpening:
                     Log.e("url", "MediaPlayerOpenning()" + Url);
