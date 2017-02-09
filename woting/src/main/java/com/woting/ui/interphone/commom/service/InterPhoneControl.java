@@ -56,7 +56,7 @@ public class InterPhoneControl {
         msg.setMsgId(SequenceUUID.getPureUUID());
         if (CommonUtils.getSocketUserId(context) != null)
             msg.setUserId(CommonUtils.getSocketUserId(context));
-        msg.setIMEI(PhoneMessage.imei);
+        msg.setDeviceId(PhoneMessage.imei);
         Map<String, Object> DataMap = new HashMap<String, Object>();
         DataMap.put("GroupId", groupId);
         MapContent map = new MapContent(DataMap);
@@ -96,7 +96,7 @@ public class InterPhoneControl {
         msg.setMsgId(SequenceUUID.getPureUUID());
         if (CommonUtils.getSocketUserId(context) != null)
             msg.setUserId(CommonUtils.getSocketUserId(context));
-        msg.setIMEI(PhoneMessage.imei);
+        msg.setDeviceId(PhoneMessage.imei);
         Map<String, Object> DataMap = new HashMap<String, Object>();
         DataMap.put("GroupId", groupId);
         MapContent map = new MapContent(DataMap);
@@ -136,7 +136,7 @@ public class InterPhoneControl {
         msg.setMsgId(SequenceUUID.getPureUUID());
         if (CommonUtils.getSocketUserId(context) != null)
             msg.setUserId(CommonUtils.getSocketUserId(context));
-        msg.setIMEI(PhoneMessage.imei);
+        msg.setDeviceId(PhoneMessage.imei);
         Map<String, Object> DataMap = new HashMap<String, Object>();
         DataMap.put("GroupId", groupId);
         MapContent map = new MapContent(DataMap);
@@ -176,7 +176,7 @@ public class InterPhoneControl {
         msg.setMsgId(SequenceUUID.getPureUUID());
         if (CommonUtils.getSocketUserId(context) != null)
             msg.setUserId(CommonUtils.getSocketUserId(context));
-        msg.setIMEI(PhoneMessage.imei);
+        msg.setDeviceId(PhoneMessage.imei);
         Map<String, Object> DataMap = new HashMap<String, Object>();
         DataMap.put("GroupId", groupId);
         MapContent map = new MapContent(DataMap);
@@ -218,7 +218,7 @@ public class InterPhoneControl {
         msg.setMsgId(SequenceUUID.getPureUUID());
         if (CommonUtils.getSocketUserId(context) != null)
             msg.setUserId(CommonUtils.getSocketUserId(context));
-        msg.setIMEI(PhoneMessage.imei);
+        msg.setDeviceId(PhoneMessage.imei);
         Map<String, Object> DataMap = new HashMap<String, Object>();
         DataMap.put("CallederId", id);
         DataMap.put("CallId", bdcallid);
@@ -263,7 +263,7 @@ public class InterPhoneControl {
         msg.setMsgId(SequenceUUID.getPureUUID());
         if (CommonUtils.getSocketUserId(context) != null)
             msg.setUserId(CommonUtils.getSocketUserId(context));
-        msg.setIMEI(PhoneMessage.imei);
+        msg.setDeviceId(PhoneMessage.imei);
         Map<String, Object> DataMap = new HashMap<String, Object>();
         DataMap.put("CallerId", callerId);
         DataMap.put("CallId", callId);
@@ -321,7 +321,7 @@ public class InterPhoneControl {
         msg.setMsgId(SequenceUUID.getPureUUID());
         if (CommonUtils.getSocketUserId(context) != null)
             msg.setUserId(CommonUtils.getSocketUserId(context));
-        msg.setIMEI(PhoneMessage.imei);
+        msg.setDeviceId(PhoneMessage.imei);
         Map<String, Object> DataMap = new HashMap<String, Object>();
         DataMap.put("CallId", bdcallid);
         MapContent map = new MapContent(DataMap);
@@ -360,7 +360,7 @@ public class InterPhoneControl {
         msg.setMsgId(SequenceUUID.getPureUUID());
         if (CommonUtils.getSocketUserId(context) != null)
             msg.setUserId(CommonUtils.getSocketUserId(context));
-        msg.setIMEI(PhoneMessage.imei);
+        msg.setDeviceId(PhoneMessage.imei);
         Map<String, Object> DataMap = new HashMap<String, Object>();
         DataMap.put("CallId", bdcallid);
         MapContent map = new MapContent(DataMap);
@@ -401,7 +401,7 @@ public class InterPhoneControl {
         msg.setMsgId(SequenceUUID.getPureUUID());
         if (CommonUtils.getSocketUserId(context) != null)
             msg.setUserId(CommonUtils.getSocketUserId(context));
-        msg.setIMEI(PhoneMessage.imei);
+        msg.setDeviceId(PhoneMessage.imei);
         Map<String, Object> DataMap = new HashMap<String, Object>();
         DataMap.put("CallerId", callerId);
         DataMap.put("ACKType", "1");
@@ -444,7 +444,7 @@ public class InterPhoneControl {
         msg.setMsgId(SequenceUUID.getPureUUID());
         if (CommonUtils.getSocketUserId(context) != null)
             msg.setUserId(CommonUtils.getSocketUserId(context));
-        msg.setIMEI(PhoneMessage.imei);
+        msg.setDeviceId(PhoneMessage.imei);
         Map<String, Object> DataMap = new HashMap<String, Object>();
         DataMap.put("CallerId", callerId);
         DataMap.put("ACKType", "2");
@@ -487,7 +487,7 @@ public class InterPhoneControl {
         msg.setMsgId(SequenceUUID.getPureUUID());
         if (CommonUtils.getSocketUserId(context) != null)
             msg.setUserId(CommonUtils.getSocketUserId(context));
-        msg.setIMEI(PhoneMessage.imei);
+        msg.setDeviceId(PhoneMessage.imei);
         Map<String, Object> DataMap = new HashMap<String, Object>();
         DataMap.put("CallerId", callerId);
         DataMap.put("ACKType", "31");
@@ -529,7 +529,7 @@ public class InterPhoneControl {
         msg.setMsgId(SequenceUUID.getPureUUID());
         if (CommonUtils.getSocketUserId(context) != null)
             msg.setUserId(CommonUtils.getSocketUserId(context));
-        msg.setIMEI(PhoneMessage.imei);
+        msg.setDeviceId(PhoneMessage.imei);
         Map<String, Object> DataMap = new HashMap<String, Object>();
         DataMap.put("CallId", callId);
         MapContent map = new MapContent(DataMap);
@@ -567,7 +567,7 @@ public class InterPhoneControl {
         msg.setMsgId(SequenceUUID.getPureUUID());
         if (CommonUtils.getSocketUserId(context) != null)
             msg.setUserId(CommonUtils.getSocketUserId(context));
-        msg.setIMEI(PhoneMessage.imei);
+        msg.setDeviceId(PhoneMessage.imei);
         pullToSocket(msg);
     }
 
@@ -695,7 +695,7 @@ public class InterPhoneControl {
         msg.setPCDType(GlobalConfig.PCDType);
         if (CommonUtils.getSocketUserId(context) != null)
             msg.setUserId(CommonUtils.getSocketUserId(context));
-        msg.setIMEI(PhoneMessage.imei);
+        msg.setDeviceId(PhoneMessage.imei);
         msg.setSendTime(System.currentTimeMillis());
         Map<String, Object> DataMap = new HashMap<String, Object>();
         DataMap.put("TaskID", taskID);

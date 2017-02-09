@@ -154,6 +154,7 @@ public class SplashActivity extends Activity {
                                     et.putString(StringConstant.NICK_NAME, nickName);
                                 }
                             }
+                            et.putString(StringConstant.ISLOGIN, "true");
                             if (!et.commit()) {
                                 Log.v("commit", "数据 commit 失败!");
                             }

@@ -344,7 +344,7 @@
                 android:scrollingCache="false" />
 
         </LinearLayout>
-        
+
         <com.woting.common.widgetui.MyLinearLayout
             android:id="@+id/lin_foot"
             android:layout_width="match_parent"
