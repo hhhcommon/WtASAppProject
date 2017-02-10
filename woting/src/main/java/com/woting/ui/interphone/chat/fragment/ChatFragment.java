@@ -100,7 +100,9 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
     private static ImageView image_persontx, image_grouptx, imageView_answer;
 
     private static TextView tv_groupname, tv_num, tv_grouptype, tv_allnum, tv_personname;
-    private TextView talkingName, talking_news, gridView_tv;
+    private TextView talkingName;
+    private TextView talking_news;
+    private static TextView gridView_tv;
     private ImageView image_personvoice, image_group_persontx, image_voice;
 
     private Button image_button;
@@ -135,10 +137,15 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
     private static List<DBTalkHistorary> historyDataBaseList;//list里边的数据
     private static List<ListInfo> listInfo;
 
+    private String oldTalkId;
+    private Handler handler;
+    private Runnable run;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this.getActivity();
+        handler = new Handler();
         initDao();      // 初始化数据库
         setReceiver();  // 注册广播接收socketService的数据
     }
@@ -401,6 +408,10 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         GlobalConfig.isActive = true;
         tipView.setVisibility(View.GONE);
         tv_personname.setText(firstdate.getName());
+        if (gridView_person.getVisibility() == View.VISIBLE) {
+            gridView_person.setVisibility(View.GONE);
+            gridView_tv.setVisibility(View.GONE);
+        }
         if (firstdate.getPortrait() == null || firstdate.getPortrait().equals("") || firstdate.getPortrait().trim().equals("")) {
             image_persontx.setImageResource(R.mipmap.wt_image_tx_qz);
         } else {
@@ -521,6 +532,15 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                 && !MainActivity.groupInfo.getGroupId().equals("")) {
             String id = MainActivity.groupInfo.getGroupId();
             dbDao.deleteHistory(id);
+            groupId = id;
+            if(MainActivity.groupEntryNum!=null&&!MainActivity.groupEntryNum.trim().equals("")){
+                tv_num.setText(MainActivity.groupEntryNum + "");
+            }else{
+                tv_num.setText("1");
+            }
+            isCallingForGroup = true;
+            interPhoneType="group";
+            MainActivity.groupEntryNum="";
             addGroup(id);//加入到数据库
             setDateGroup();
             getGridViewPerson(id);
@@ -787,7 +807,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
             }
         }
         setListener();
-        setImageView(2, "", "");
+        setImageViewForGroup(2, "", "");
         lin_notalk.setVisibility(View.VISIBLE);
         lin_personhead.setVisibility(View.GONE);
         lin_head.setVisibility(View.GONE);
@@ -876,7 +896,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                         }
                         confirmDialog.show();
                     } else {
-//                        InterPhoneControl.Quit(context, interPhoneId);//退出小组
+                        InterPhoneControl.Quit(context, interPhoneId);//退出小组
                         String t = allList.get(position).getTyPe();
                         if (t != null && !t.equals("") && t.equals("user")) {
                             call(allList.get(position).getId());
@@ -925,9 +945,12 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         });
     }
 
-    //设置有人说话时候界面友好交互
-    private void setImageView(int i, String userName, String url) {
+    //设置(组)有人说话时候界面友好交互
+    private void setImageViewForGroup(int i, String userName, String url) {
         if (i == 1) {
+            if (userName == null) {
+                userName = "";
+            }
             Log.e("userName===============", userName + "");
             talkingName.setVisibility(View.VISIBLE);
             if (userName.equals(UserName)) {
@@ -961,6 +984,42 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
             }
             image_group_persontx.setImageResource(R.mipmap.wt_image_tx_hy);
             image_voice.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    //设置(person)有人说话时候界面友好交互
+    private void setImageViewForUser(int i, String userName, String url) {
+        if (i == 1) {
+            Log.e("userName===============", userName + "");
+            if (userName.equals(UserName)) {
+                tv_personname.setText("我");
+            } else {
+                tv_personname.setText(userName);
+            }
+            image_personvoice.setVisibility(View.VISIBLE);
+            if (draw.isRunning()) {
+            } else {
+                draw.start();
+            }
+            if (url == null || url.equals("") || url.equals("null") || url.trim().equals("")) {
+                image_persontx.setImageResource(R.mipmap.wt_image_tx_hy);
+            } else {
+                String urls;
+                if (url.startsWith("http")) {
+                    urls = url;
+                } else {
+                    urls = GlobalConfig.imageurl + url;
+                }
+                urls = AssembleImageUrlUtils.assembleImageUrl150(urls);
+                Picasso.with(context).load(urls.replace("\\/", "/")).into(image_persontx);
+            }
+        } else {
+            image_personvoice.setVisibility(View.INVISIBLE);
+            tv_personname.setText("无人通话");
+            if (draw.isRunning()) {
+                draw.stop();
+            }
+            image_persontx.setImageResource(R.mipmap.wt_image_tx_hy);
         }
     }
 
@@ -1022,9 +1081,6 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                     VoiceStreamRecordService.stop();
                     InterPhoneControl.Loosen(context, interPhoneId);//发送取消说话控制
                     image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
-                    if (draw_group.isRunning()) {
-                        draw_group.stop();
-                    }
                     Log.e("对讲页面====", "录音机停止+发送取消说话控制+延时0.30秒");
                 }
             }, 300);
@@ -1032,12 +1088,6 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
             VoiceStreamRecordService.stop();
             InterPhoneControl.PersonTalkPressStop(context);//发送取消说话控制
             image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
-            if (image_personvoice.getVisibility() == View.VISIBLE) {
-                image_personvoice.setVisibility(View.INVISIBLE);
-                if (draw.isRunning()) {
-                    draw.stop();
-                }
-            }
         }
 //        } else {
 //            VoiceStreamRecordService.stop();
@@ -1106,8 +1156,8 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                             ToastUtils.show_short(context, "可以说话");
                                             image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.wt_duijiang_button_pressed));
                                             // headview中展示自己的头像
-                                            String url = BSApplication.SharedPreferences.getString(StringConstant.IMAGEURL, "");
-                                            setImageView(1, UserName, url);
+                                            // String url = BSApplication.SharedPreferences.getString(StringConstant.IMAGEURL, "");
+                                            // setImageViewForGroup(1, UserName, url);
                                             VoiceStreamRecordService.send();
                                             break;
                                         case 0x04:
@@ -1143,37 +1193,37 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                         case 0xff://TTT
                                             //结束对讲出异常
                                             isTalking = false;
-                                            setImageView(2, "", "");
+                                            setImageViewForGroup(2, "", "");
                                             ToastUtils.show_short(context, "结束对讲—出异常");
                                             break;
                                         case 0x00:
                                             //没有有效登录用户
                                             isTalking = false;
-                                            setImageView(2, "", "");
+                                            setImageViewForGroup(2, "", "");
                                             ToastUtils.show_always(context, "数据出错，请注销后重新登录账户");
                                             break;
                                         case 0x02:
                                             //无法获取用户组
                                             isTalking = false;
-                                            setImageView(2, "", "");
+                                            setImageViewForGroup(2, "", "");
                                             ToastUtils.show_always(context, "无法获取用户组");
                                             break;
                                         case 0x01:
                                             //成功结束对讲
                                             isTalking = false;
-                                            setImageView(2, "", "");
+                                            setImageViewForGroup(2, "", "");
                                             ToastUtils.show_short(context, "结束对讲—成功");
                                             break;
                                         case 0x04:
                                             //	用户不在组
                                             isTalking = false;
-                                            setImageView(2, "", "");
+                                            setImageViewForGroup(2, "", "");
                                             ToastUtils.show_short(context, "结束对讲");
                                             break;
                                         case 0x05:
                                             //	对讲人不是你，无需退出
                                             isTalking = false;
-                                            setImageView(2, "", "");
+                                            setImageViewForGroup(2, "", "");
                                             ToastUtils.show_short(context, "对讲人不是你，无需退出");
                                             break;
 
@@ -1183,20 +1233,20 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                 } else if (command == 0x10) {
                                     //组内有人说话
                                     ToastUtils.show_short(context, "组内人有人说话，有人按下说话钮");
-                                    MapContent data = (MapContent) message.getMsgContent();
-                                    //说话人
-                                    String talkUserId = data.get("SpeakerId") + "";
-                                    Log.i("talkUserId", talkUserId + "");
-                                    if (groupPersonList != null && groupPersonList.size() != 0) {
-                                        for (int i = 0; i < groupPersonList.size(); i++) {
-                                            if (groupPersonList.get(i).getUserId().equals(talkUserId)) {
-                                                setImageView(1, groupPersonList.get(i).getUserName(), groupPersonList.get(i).getPortraitMini());
-                                            }
-                                        }
-                                    }
+//                                    MapContent data = (MapContent) message.getMsgContent();
+//                                    //说话人
+//                                    String talkUserId = data.get("SpeakerId") + "";
+//                                    Log.i("talkUserId", talkUserId + "");
+//                                    if (groupPersonList != null && groupPersonList.size() != 0) {
+//                                        for (int i = 0; i < groupPersonList.size(); i++) {
+//                                            if (groupPersonList.get(i).getUserId().equals(talkUserId)) {
+//                                                setImageViewForGroup(1, groupPersonList.get(i).getUserName(), groupPersonList.get(i).getPortraitMini());
+//                                            }
+//                                        }
+//                                    }
                                 } else if (command == 0x20) {
                                     //组内人说话完毕，有人松手
-                                    setImageView(2, "", "");
+//                                    setImageViewForGroup(2, "", "");
                                     ToastUtils.show_short(context, "组内人说话完毕，有人松手");
                                 }
                             } else if (cmdType == 1) {
@@ -1331,7 +1381,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                             tv_num.setText(listInfo.size() + "");
                                             getGridViewPerson(groupids);
                                             //有人加入组
-                                            ToastUtils.show_short(context, "有人加入组");
+                                            ToastUtils.show_short(context, "有人进入组");
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -1361,11 +1411,6 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                             //用户可以通话了
                                             isTalking = true;
                                             ToastUtils.show_short(context, "可以说话");
-                                            image_personvoice.setVisibility(View.VISIBLE);
-                                            if (draw.isRunning()) {
-                                            } else {
-                                                draw.start();
-                                            }
                                             image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.wt_duijiang_button_pressed));
                                             VoiceStreamRecordService.send();
                                             break;
@@ -1386,61 +1431,41 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                     }
                                 } else if (command == 0x0a) {
                                     int returnType = message.getReturnType();
-                                    if (image_personvoice.getVisibility() == View.VISIBLE) {
-                                        image_personvoice.setVisibility(View.INVISIBLE);
-                                        if (draw.isRunning()) {
-                                            draw.stop();
-                                        }
-                                    }
                                     switch (returnType) {
                                         case 0xff://TT
                                             //结束对讲出异常
                                             isTalking = false;
-                                            if (draw.isRunning()) {
-                                                draw.stop();
-                                            }
-                                            image_personvoice.setVisibility(View.INVISIBLE);
                                             ToastUtils.show_short(context, "结束对讲—出异常");
                                             break;
                                         case 0x02:
                                             //	无法获取用户
                                             isTalking = false;
-                                            if (draw.isRunning()) {
-                                                draw.stop();
-                                            }
-                                            image_personvoice.setVisibility(View.INVISIBLE);
                                             ToastUtils.show_short(context, "无法获取用户");
                                             break;
                                         case 0x01:
                                             //成功结束对讲
                                             isTalking = false;
-                                            if (draw.isRunning()) {
-                                                draw.stop();
-                                            }
-                                            image_personvoice.setVisibility(View.INVISIBLE);
                                             ToastUtils.show_short(context, "结束对讲—成功");
                                             break;
                                         case 0x04:
                                             //	清除者和当前通话者不同，无法处理
                                             isTalking = false;
-                                            if (draw.isRunning()) {
-                                                draw.stop();
-                                            }
-                                            image_personvoice.setVisibility(View.INVISIBLE);
                                             ToastUtils.show_short(context, "清除者和当前通话者不同，无法处理");
                                             break;
                                         case 0x05:
                                             //	状态错误
                                             isTalking = false;
-                                            if (draw.isRunning()) {
-                                                draw.stop();
-                                            }
-                                            image_personvoice.setVisibility(View.INVISIBLE);
                                             ToastUtils.show_short(context, "状态错误");
                                             break;
                                         default:
                                             break;
                                     }
+                                } else if (command == 0x10) {
+                                    //有人说话
+                                    Log.e("有人说话", "有人说话");
+                                } else if (command == 0x20) {
+                                    //说话完毕，有人松手
+                                    Log.e("有人松手", "有人松手");
                                 }
                             }
                         }
@@ -1524,28 +1549,82 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                     e.printStackTrace();
                 }
             } else if (action.equals(BroadcastConstants.PUSH_VOICE_IMAGE_REFRESH)) {
-                int seqNum = intent.getIntExtra("seqNum", -1);
-                if (interPhoneType.equals("group")) {
-                    //			image_voice.setVisibility(View.VISIBLE);
-                } else {
-                    //此处处理个人对讲的逻辑
-                    if (seqNum < 0) {
-                        if (image_personvoice.getVisibility() == View.VISIBLE) {
-                            image_personvoice.setVisibility(View.INVISIBLE);
-                            if (draw.isRunning()) {
-                                draw.stop();
+                // int seqNum = intent.getIntExtra("seqNum", -1);
+                String imageUrl = null, userName = null;
+                String talkId = intent.getStringExtra("talkId");
+                if (talkId != null && !talkId.trim().equals("")) {
+                    if (oldTalkId == null || oldTalkId.trim().equals("")) {
+                        if (interPhoneType.equals("group")) {
+                            if (groupPersonListS != null && groupPersonListS.size() > 0) {
+                                for (int i = 0; i < groupPersonListS.size(); i++) {
+                                    if (groupPersonListS.get(i).getUserId().trim().equals(talkId)) {
+                                        userName = groupPersonListS.get(i).getUserName();
+                                        imageUrl = groupPersonListS.get(i).getPortraitBig();
+                                        break;
+                                    }
+                                }
+                            }
+                        } else {
+                            if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
+                                for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
+                                    if (GlobalConfig.list_person.get(i).getUserId().trim().equals(talkId)) {
+                                        userName = GlobalConfig.list_person.get(i).getUserName();
+                                        imageUrl = GlobalConfig.list_person.get(i).getPortraitBig();
+                                        break;
+                                    }
+                                }
                             }
                         }
-                    } else if (1 < seqNum && seqNum < 5) {
-                        if (image_personvoice.getVisibility() == View.INVISIBLE) {
-                            image_personvoice.setVisibility(View.VISIBLE);
-                            if (draw.isRunning()) {
+                    } else {
+                        if (!talkId.trim().equals(oldTalkId.trim())) {
+                            if (interPhoneType.equals("group")) {
+                                if (groupPersonListS != null && groupPersonListS.size() > 0) {
+                                    for (int i = 0; i < groupPersonListS.size(); i++) {
+                                        if (groupPersonListS.get(i).getUserId().trim().equals(talkId)) {
+                                            userName = groupPersonListS.get(i).getUserName();
+                                            imageUrl = groupPersonListS.get(i).getPortraitBig();
+                                            break;
+                                        }
+                                    }
+                                }
                             } else {
-                                draw.start();
+                                if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
+                                    for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
+                                        if (GlobalConfig.list_person.get(i).getUserId().trim().equals(talkId)) {
+                                            userName = GlobalConfig.list_person.get(i).getUserName();
+                                            imageUrl = GlobalConfig.list_person.get(i).getPortraitBig();
+                                            break;
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 }
+                oldTalkId = talkId;
+                if (run != null) {
+                    handler.removeCallbacks(run);
+                }
+
+                if (interPhoneType.equals("group")) {
+                    setImageViewForGroup(1, userName, imageUrl);
+                } else {
+                    //此处设置个人界面
+                    setImageViewForUser(1, userName, imageUrl);
+                }
+                run = new Runnable() {
+                    @Override
+                    public void run() {
+                        if (interPhoneType.equals("group")) {
+                            setImageViewForGroup(0, null, null);
+                        } else {
+                            //此处处理个人对讲的逻辑
+                            setImageViewForUser(0, null, null);
+                        }
+                        handler.removeCallbacks(run);
+                    }
+                };
+                handler.postDelayed(run, 500);
             } else if (action.equals(BroadcastConstants.PUSH_NOTIFY)) {
                 byte[] bt = intent.getByteArrayExtra("outMessage");
                 Log.e("chat的PUSH_NOTIFY", Arrays.toString(bt) + "");

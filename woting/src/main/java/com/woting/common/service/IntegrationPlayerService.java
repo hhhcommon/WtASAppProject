@@ -65,8 +65,8 @@ public class IntegrationPlayerService extends Service {
                 .setAutoCancel(false)
                 .setOngoing(true);
         Notification notification = builder.build();
-        startService(new Intent(this, IntegrationPlayerService.class));
-        startForeground(3, notification);
+//        startService(new Intent(this, IntegrationPlayerService.class));
+//        startForeground(3, notification);
         return notification;
     }
 

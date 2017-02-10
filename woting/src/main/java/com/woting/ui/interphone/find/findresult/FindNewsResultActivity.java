@@ -39,8 +39,9 @@ import java.util.List;
 
 /**
  * 搜索结果页面
+ *
  * @author 辛龙
- * 2016年1月20日
+ *         2016年1月20日
  */
 public class FindNewsResultActivity extends AppBaseActivity implements OnClickListener, TipView.WhiteViewClick {
     private XListView mxlistview;
@@ -154,13 +155,13 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
             public void onLoadMore() {
                 if (!type.trim().equals("")) {
                     if (type.equals("friend")) {// 获取加载更多好友数据
-                        if(CommonHelper.checkNetwork(context)) {
+                        if (CommonHelper.checkNetwork(context)) {
                             RefreshType = 2;
                             PageNum = PageNum + 1;
                             getFriend();
                         }
                     } else if (type.equals("group")) {// 获取加载更多群组数据
-                        if(CommonHelper.checkNetwork(context)) {
+                        if (CommonHelper.checkNetwork(context)) {
                             RefreshType = 2;
                             PageNum = PageNum + 1;
                             getGroup();
@@ -191,19 +192,22 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                     } else if (type.equals("group")) {
                         if (position > 0) {
                             if (GroupList != null && GroupList.size() > 0) {
-                                if (GroupList.get(position - 1).getGroupCreator().equals(CommonUtils.getUserId(context))) {
-                                    Intent intent = new Intent(context, TalkGroupNewsActivity.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putSerializable("data", GroupList.get(position - 1));
-                                    bundle.putString("type", "groupaddactivity");
-                                    intent.putExtras(bundle);
-                                    startActivity(intent);
-                                } else {
-                                    Intent intent = new Intent(context, GroupAddActivity.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putSerializable("contact", GroupList.get(position - 1));
-                                    intent.putExtras(bundle);
-                                    startActivity(intent);
+                                if (GroupList.get(position - 1).getUserIds() != null &&
+                                        !GroupList.get(position - 1).getUserIds().trim().equals("")) {
+                                    if (isGroupUser(GroupList.get(position - 1).getUserIds())) {
+                                        Intent intent = new Intent(context, TalkGroupNewsActivity.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putSerializable("data", GroupList.get(position - 1));
+                                        bundle.putString("type", "groupaddactivity");
+                                        intent.putExtras(bundle);
+                                        startActivity(intent);
+                                    } else {
+                                        Intent intent = new Intent(context, GroupAddActivity.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putSerializable("contact", GroupList.get(position - 1));
+                                        intent.putExtras(bundle);
+                                        startActivity(intent);
+                                    }
                                 }
                             } else {
                                 ToastUtils.show_always(context, "获取数据异常");
@@ -214,6 +218,23 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
             }
         });
     }
+
+    private boolean isGroupUser(String getUserIds) {
+        // 另外一种写法
+        // (","+userIds).indexOf(","+userId)!=-1
+
+        boolean isTrue = false;
+        String[] strArray;
+        strArray = getUserIds.split(",");
+        for (int i = 0; i < strArray.length; i++) {
+            if (strArray[i].equals(CommonUtils.getUserId(context))) {
+                isTrue = true;
+                break;
+            }
+        }
+        return isTrue;
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -253,7 +274,8 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                     e1.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
-                    UserList = new Gson().fromJson(ContactMeString, new TypeToken<List<UserInviteMeInside>>() {}.getType());
+                    UserList = new Gson().fromJson(ContactMeString, new TypeToken<List<UserInviteMeInside>>() {
+                    }.getType());
                     if (UserList != null && UserList.size() > 0) {
                         tipView.setVisibility(View.GONE);
                         if (RefreshType == 1) {
@@ -265,13 +287,13 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                         }
                         setItemListener();    // 设置 item 的点击事件
                     } else {
-                        if(RefreshType == 1) {
+                        if (RefreshType == 1) {
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到该好友哟\n换个好友再试一次吧");
                         }
                     }
                 } else {
-                    if(RefreshType == 1) {
+                    if (RefreshType == 1) {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到该好友哟\n换个好友再试一次吧");
                     }
@@ -287,7 +309,7 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
-                if(RefreshType == 1) {
+                if (RefreshType == 1) {
                     tipView.setVisibility(View.VISIBLE);
                     tipView.setTipView(TipView.TipStatus.IS_ERROR);
                 }
@@ -324,7 +346,8 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                     e1.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
-                    GroupList = new Gson().fromJson(GroupMeString, new TypeToken<List<GroupInfo>>() {}.getType());
+                    GroupList = new Gson().fromJson(GroupMeString, new TypeToken<List<GroupInfo>>() {
+                    }.getType());
                     if (GroupList != null && GroupList.size() > 0) {
                         tipView.setVisibility(View.GONE);
                         if (RefreshType == 1) {

@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -123,6 +124,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     // private List<String> userIds;
     private String callId, callerId;
     public static DBTalkHistorary talkdb;
+    public static String groupEntryNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,13 +140,13 @@ public class MainActivity extends TabActivity implements OnClickListener {
         }, 0);
 
         tabHost = extracted();
-
+        WifiNeverDormancy();       // 更改wifi连接状态
         MobclickAgent.openActivityDurationTrack(false);
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=56275014");            // 初始化语音配置对象
-        upDataType = 1;    //不需要强制升级
-        update();          //获取版本数据
-        InitTextView();    //设置界面
-        setType();         //设置顶栏样式
+        upDataType = 1;                   // 不需要强制升级
+        update();                         // 获取版本数据
+        InitTextView();                   // 设置界面
+        setType();                        // 设置顶栏样式
         InitDao();
         getTXL();
 //        tabHost.setCurrentTabByTag("five");
@@ -183,7 +185,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         startService(download);
         Notification = new Intent(this, NotificationService.class);
         startService(Notification);
-
 
     }
 
@@ -860,6 +861,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         n.addAction(NetWorkChangeReceiver.intentFilter);
         netWorkChangeReceiver = new NetWorkChangeReceiver(this);
         registerReceiver(netWorkChangeReceiver, n);
+
     }
 
 
@@ -909,6 +911,17 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                             if (gList != null && gList.size() > 0) {
                                                 try {
                                                     MessageForMainGroup gInfo = gList.get(0);   // 本版本（2017元旦前）暂时只获取第一条数据，后续需要修改
+                                                    try {
+                                                        List<String> users = gInfo.getGroupEntryUserIds();
+                                                        if (users != null && users.size() > 0) {
+                                                            groupEntryNum = String.valueOf(users.size());
+                                                        } else {
+                                                            groupEntryNum = "1";
+                                                        }
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                        groupEntryNum = "1";
+                                                    }
                                                     groupInfo = gInfo.getGroupInfo();
 //                                                    userIds = gInfo.getGroupEntryUserIds();
                                                     String groupName = groupInfo.getGroupName();
@@ -1091,6 +1104,25 @@ public class MainActivity extends TabActivity implements OnClickListener {
         }
     }
 
+    public void WifiNeverDormancy() {
+        int value = Settings.System.getInt(getContentResolver(), Settings.Global.WIFI_SLEEP_POLICY, Settings.Global.WIFI_SLEEP_POLICY_DEFAULT);
+        Log.e("wifi状态:", "默认状态"+value);
+        SharedPreferences.Editor editor = BSApplication.SharedPreferences.edit();
+        editor.putInt(StringConstant.WIFI_SLEEP_POLICY_DEFAULT, value);
+        editor.commit();
+        if (Settings.Global.WIFI_SLEEP_POLICY_NEVER != value) {
+            Settings.System.putInt(getContentResolver(), Settings.Global.WIFI_SLEEP_POLICY, Settings.Global.WIFI_SLEEP_POLICY_NEVER);
+        }
+        int values = Settings.System.getInt(getContentResolver(),Settings.Global.WIFI_SLEEP_POLICY, Settings.Global.WIFI_SLEEP_POLICY_DEFAULT);
+        Log.e("wifi状态:", "更改后状态"+values);
+    }
+
+
+    private void restoreWifiDormancy() {
+        int defaultPolicy = BSApplication.SharedPreferences.getInt(StringConstant.WIFI_SLEEP_POLICY_DEFAULT, Settings.System.WIFI_SLEEP_POLICY_DEFAULT);
+        Settings.System.putInt(getContentResolver(), Settings.Global.WIFI_SLEEP_POLICY, defaultPolicy);
+    }
+
     /**
      * 手机实体返回按键的处理 与onbackpress同理
      */
@@ -1118,7 +1150,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        restoreWifiDormancy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
         unregisterReceiver(netWorkChangeReceiver);
         unregisterReceiver(phoneStatReceiver);
@@ -1142,24 +1174,24 @@ public class MainActivity extends TabActivity implements OnClickListener {
     //服务对话框
     private void pushDialog(String title, String message, final int type) {
         //type 0=默认值,1=被顶替,2=展示个人,3=展示群组
-            View dialog = LayoutInflater.from(this).inflate(R.layout.dialog_push_message, null);
-            TextView push_dialog_text_context = (TextView) dialog.findViewById(R.id.text_context);// 展示内容
-            TextView tv_title = (TextView) dialog.findViewById(R.id.tv_title);// 展示标题
-            TextView tv_update = (TextView) dialog.findViewById(R.id.tv_ok);
-            TextView tv_qx = (TextView) dialog.findViewById(R.id.tv_qx);
+        View dialog = LayoutInflater.from(this).inflate(R.layout.dialog_push_message, null);
+        TextView push_dialog_text_context = (TextView) dialog.findViewById(R.id.text_context);// 展示内容
+        TextView tv_title = (TextView) dialog.findViewById(R.id.tv_title);// 展示标题
+        TextView tv_update = (TextView) dialog.findViewById(R.id.tv_ok);
+        TextView tv_qx = (TextView) dialog.findViewById(R.id.tv_qx);
 
-            push_dialog_text_context.setText("" + message);
-            tv_title.setText("" + title);
+        push_dialog_text_context.setText("" + message);
+        tv_title.setText("" + title);
 
-            tv_update.setOnClickListener(this);
-            tv_qx.setOnClickListener(this);
+        tv_update.setOnClickListener(this);
+        tv_qx.setOnClickListener(this);
 
-            final Dialog pushDialog = new Dialog(this, R.style.MyDialog);
-            pushDialog.setContentView(dialog);
-            pushDialog.setOnKeyListener(keyListener);
-            pushDialog.setCanceledOnTouchOutside(false);
-            pushDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
-            pushDialog.show();
+        final Dialog pushDialog = new Dialog(this, R.style.MyDialog);
+        pushDialog.setContentView(dialog);
+        pushDialog.setOnKeyListener(keyListener);
+        pushDialog.setCanceledOnTouchOutside(false);
+        pushDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
+        pushDialog.show();
 //        if (type == 1) {
 //            dialogShowTypeQuitPerson = 1;
 //        } else if (type == 2) {
@@ -1167,46 +1199,46 @@ public class MainActivity extends TabActivity implements OnClickListener {
 //        } else if (type == 3) {
 //            dialogShowTypeGroup = 1;
 //        }
-            // 取消
-            tv_qx.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (type == 1) {
-                        // 不需要处理
+        // 取消
+        tv_qx.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (type == 1) {
+                    // 不需要处理
 //                    dialogShowTypeQuitPerson = 0;
-                    } else if (type == 2) {
-                        // 挂断电话
+                } else if (type == 2) {
+                    // 挂断电话
 //                    dialogShowTypePerson = 0;
-                        InterPhoneControl.PersonTalkHangUp(context, callId);
-                        talkdb=null;
-                    } else if (type == 3) {
-                        // 退出组
+                    InterPhoneControl.PersonTalkHangUp(context, callId);
+                    talkdb = null;
+                } else if (type == 3) {
+                    // 退出组
 //                    dialogShowTypeGroup = 0;
-                        if (groupInfo != null)
-                            InterPhoneControl.Quit(context, groupInfo.getGroupId());//退出小组
-                        groupInfo=null;
-                    }
-                    pushDialog.dismiss();
+                    if (groupInfo != null)
+                        InterPhoneControl.Quit(context, groupInfo.getGroupId());//退出小组
+                    groupInfo = null;
                 }
-            });
+                pushDialog.dismiss();
+            }
+        });
 
-            // 继续
-            tv_update.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (type == 1) {
+        // 继续
+        tv_update.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (type == 1) {
 //                    dialogShowTypeQuitPerson = 0;
-                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                    } else if (type == 2) {
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                } else if (type == 2) {
 //                    dialogShowTypePerson = 0;
-                        addUser();
-                    } else if (type == 3) {
+                    addUser();
+                } else if (type == 3) {
 //                    dialogShowTypeGroup = 0;
-                        addGroup();
-                    }
-                    pushDialog.dismiss();
+                    addGroup();
                 }
-            });
+                pushDialog.dismiss();
+            }
+        });
     }
 
     DialogInterface.OnKeyListener keyListener = new DialogInterface.OnKeyListener() {
