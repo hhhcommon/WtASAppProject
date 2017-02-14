@@ -442,7 +442,11 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
             tv_radio.setTextColor(context.getResources().getColor(R.color.group_item_text2));
             tv_tts.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
             tv_qingkong.setVisibility(View.GONE);
-//            tv_bianji.setVisibility(View.VISIBLE);
+            if(TTSFragment.isData) {
+                tv_bianji.setVisibility(View.VISIBLE);
+            } else {
+                tv_bianji.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -452,15 +456,6 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
             tv_qingkong.setVisibility(View.VISIBLE);
         } else {
             tv_qingkong.setVisibility(View.GONE);
-        }
-    }
-
-    // 设置编辑可见或隐藏
-    public void setBjVisibleOrHide(boolean visible) {
-        if(visible) {
-            tv_bianji.setVisibility(View.VISIBLE);
-        } else {
-            tv_bianji.setVisibility(View.GONE);
         }
     }
 

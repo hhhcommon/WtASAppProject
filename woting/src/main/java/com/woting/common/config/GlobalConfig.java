@@ -261,9 +261,9 @@ public class GlobalConfig {
     //喜欢content/clickFavorite.do
     public static final String clickFavoriteUrl = "wt/content/clickFavorite.do";
     //发送订阅信息（订阅/取消订阅）
-    public static final String clickSubscribe = "";
+    public static final String clickSubscribe = "wt/content/clickSubscribe.do";
     //获取订阅信息
-    public static final String getSubscribeList = "";
+    public static final String getSubscribeList = "wt/content/getSubscribeList.do";
     //获取路况数据
     public static final String getLKTTS = "wt/lkTTS.do";
     //获取favorite列表

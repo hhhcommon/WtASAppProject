@@ -2048,7 +2048,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                                         num = i;
                                         list.get(num).setType("2");
                                         break;
-//                                        list.remove(i);
                                     }
                                 }
                                 isResetData = false;
@@ -2264,8 +2263,5 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
             }
         });
-
-
     }
-
 }

@@ -37,6 +37,7 @@ public class PhotoCutActivity extends AppBaseActivity implements OnClickListener
                     if (type == 1) {
                         long a = System.currentTimeMillis();
                         String s = String.valueOf(a);
+                        // 找不到文件夹会有问题  是不是要需要判断没有的话就创建文件夹？
                         FileOutputStream out = new FileOutputStream(new File(Environment.getExternalStorageDirectory() + "/woting/image/" + s + ".png"));
                         out.write(outputStream.toByteArray());
                         out.flush();
