@@ -17,6 +17,16 @@ public class SubscriberInfo {
 
     private String ContentMediaId;
 
+    private long ContentPubTime;// 更新时间
+
+    public long getContentPubTime() {
+        return ContentPubTime;
+    }
+
+    public void setContentPubTime(long contentPubTime) {
+        ContentPubTime = contentPubTime;
+    }
+
     public int getUpdateCount() {
         return UpdateCount;
     }

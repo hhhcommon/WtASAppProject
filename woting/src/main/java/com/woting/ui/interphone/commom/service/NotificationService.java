@@ -649,6 +649,8 @@ public class NotificationService extends Service {
                                     }
                                 }
                                 break;
+                            case 4:
+                                break;
                             default:
                                 break;
                         }

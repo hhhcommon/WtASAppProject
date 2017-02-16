@@ -115,7 +115,7 @@ public class MsgNormal extends Message {
         //二、类型
         byte f1=binaryMsg[_offset++];
         setMsgType(((f1&0x80)==0x80)?1:0);
-        setAffirm(((f1&0x08)==0x08)?1:((f1&0x0A)==0x0A)?3:((f1&0x02)==0x02)?2:0);
+        setAffirm(((f1&0x0F)==0x08)?1:((f1&0x0F)==0x0A)?3:((f1&0x0F)==0x02)?2:0);
         //三、时间
         byte[] _tempBytes=Arrays.copyOfRange(binaryMsg, _offset, _offset+8);
         setSendTime(ByteConvert.bytes2long(_tempBytes));

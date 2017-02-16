@@ -114,7 +114,10 @@ public class SubscriberAdapter extends BaseAdapter {
         holder.textContentPub.setText(contentName);
 
         // 更新时间
-        String updateTime = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(System.currentTimeMillis());
+        String updateTime = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(lists.getContentPubTime());
+        if (updateTime == null) {
+            updateTime = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(System.currentTimeMillis());
+        }
         holder.textNumber.setText(updateTime);
 
         // 更新数量

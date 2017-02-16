@@ -138,6 +138,7 @@ public class DetailsFragment extends Fragment implements OnClickListener {
         }
         VolleyRequest.RequestPost(GlobalConfig.getContentById, tag, jsonObject, new VolleyCallback() {
             private List<ContentCatalogs> contentCatalogsList;
+            private String contentId;
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -157,6 +158,11 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                         }
                         try {
                             contentDesc = arg1.getString("ContentDescn");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            contentId = arg1.getString("ContentId");
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -207,6 +213,8 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                             }else{
                                 PersonId="";
                             }
+
+                            ((AlbumActivity) context).setInfo(contentId, AlbumActivity.ContentImg, AlbumActivity.ContentName, contentDesc);
                         }catch (Exception e){
                             e.printStackTrace();
                         }

@@ -179,6 +179,10 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
         mPager.setCurrentItem(0);                                      // 设置当前显示标签页为第一页 mPager
     }
 
+    public void setInfo(String contentId, String contentImg, String contentName, String contentDesc) {
+        programFragment.setInfo(contentId, contentImg, contentName, contentDesc);
+    }
+
     public class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
         private int one = offset;                                                        // 两个相邻页面的偏移量
         private int currIndex;
