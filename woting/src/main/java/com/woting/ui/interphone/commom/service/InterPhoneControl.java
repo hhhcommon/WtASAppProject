@@ -592,7 +592,8 @@ public class InterPhoneControl {
             msg.setSendTime(System.currentTimeMillis());
             msg.setTalkId(talkId);
             msg.setSeqNo(num);
-            msg.setObjId(bdcallid);
+//            msg.setObjId(bdcallid);
+            msg.setChannelId(bdcallid);
             msg.setMediaData(audio);
             pullToSocket(msg);
         } else {
@@ -606,7 +607,8 @@ public class InterPhoneControl {
             msg.setSendTime(System.currentTimeMillis());
             msg.setTalkId(talkId);
             msg.setSeqNo(num);
-            msg.setObjId(groupId);
+//            msg.setObjId(groupId);
+            msg.setChannelId(groupId);
             msg.setMediaData(audio);
             pullToSocket(msg);
         }
@@ -632,7 +634,8 @@ public class InterPhoneControl {
             msg.setSendTime(System.currentTimeMillis());
             msg.setTalkId(talkId);
             msg.setSeqNo(num);
-            msg.setObjId(bdcallid);
+//            msg.setObjId(bdcallid);
+            msg.setChannelId(bdcallid);
             pullToSocket(msg);
         } else {
             MsgMedia msg = new MsgMedia();
@@ -645,7 +648,8 @@ public class InterPhoneControl {
             msg.setSendTime(System.currentTimeMillis());
             msg.setTalkId(talkId);
             msg.setSeqNo(num);
-            msg.setObjId(groupId);
+//            msg.setObjId(groupId);
+            msg.setChannelId(groupId);
             pullToSocket(msg);
         }
     }

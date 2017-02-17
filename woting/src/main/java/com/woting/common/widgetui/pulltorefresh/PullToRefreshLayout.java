@@ -108,7 +108,7 @@ public class PullToRefreshLayout extends RelativeLayout {
                 requestLayout();
             }
             if (pullUpY > 0) {// 已完成回弹
-                pullUpY = 0;
+//                pullUpY = 0;
 //                pullUpView.clearAnimation();
                 // 隐藏上拉头时有可能还在刷新，只有当前状态不是正在刷新时才改变状态
                 if (state != REFRESHING && state != LOADING) changeState(INIT);
@@ -460,7 +460,7 @@ public class PullToRefreshLayout extends RelativeLayout {
             isLayout = true;
             initView();
             refreshDist = ((ViewGroup) refreshView).getChildAt(0).getMeasuredHeight();
-            loadmoreDist = ((ViewGroup) loadmoreView).getChildAt(0).getMeasuredHeight();
+            loadmoreDist = ((ViewGroup) loadmoreView).getChildAt(1).getMeasuredHeight();
         }
 
         // 改变子控件的布局，这里直接用(pullDownY + pullUpY)作为偏移量，这样就可以不对当前状态作区分
