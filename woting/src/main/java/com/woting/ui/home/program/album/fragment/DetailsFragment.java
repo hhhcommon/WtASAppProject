@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -168,6 +169,7 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                         }
                         try {
                             AlbumActivity.ContentImg = arg1.getString("ContentImg");
+                            Log.w("TAG", "AlbumActivity.ContentImg -> " + AlbumActivity.ContentImg);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

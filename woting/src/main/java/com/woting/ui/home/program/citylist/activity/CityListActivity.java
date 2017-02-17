@@ -320,6 +320,7 @@ public class CityListActivity extends AppBaseActivity implements OnClickListener
         userList.addAll(filterDateList);
         if (filterDateList.size() == 0) {
             tipSearchNull.setVisibility(View.VISIBLE);
+            tipSearchNull.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关城市\n换个城市搜索一下吧");
         }
     }
 

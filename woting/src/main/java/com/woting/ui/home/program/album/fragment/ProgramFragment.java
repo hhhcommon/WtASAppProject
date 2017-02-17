@@ -282,17 +282,12 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                                 if (SubList != null && SubList.size() > 0) {
                                     if (page == 1) SubListAll.clear();
                                     if (SubList.size() >= 20) page++;
+                                    else lv_album.setPullLoadEnable(false);
                                     SubListAll.addAll(SubList);
-                                    mainAdapter = new AlbumMainAdapter(context, SubListAll);
-                                    lv_album.setAdapter(mainAdapter);
+                                    lv_album.setAdapter(mainAdapter = new AlbumMainAdapter(context, SubListAll));
                                     setListener();
-                                    getData();
-                                    adapter = new AlbumAdapter(context, SubListAll);
-                                    lv_download.setAdapter(adapter);
+                                    lv_download.setAdapter(adapter = new AlbumAdapter(context, SubListAll));
                                     setInterface();
-                                    if (SubList.size() != 20) {
-                                        lv_album.setPullLoadEnable(false);
-                                    }
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -412,6 +407,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                 if (SubListAll.size() == 0) {
                     return;
                 }
+                getData();
                 if (adapter != null) {
                     adapter.notifyDataSetChanged();
                 } else {
