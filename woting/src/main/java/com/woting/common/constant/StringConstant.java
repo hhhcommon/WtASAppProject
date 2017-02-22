@@ -25,6 +25,11 @@ public class StringConstant {
     public static final String AGE = "AGE";                                        // 年龄
     public static final String NICK_NAME = "NICK_NAME";                            // 昵称
 
+    public static final String TYPE_SEQU = "SEQU";                                  // 专辑
+    public static final String TYPE_AUDIO = "AUDIO";                                // 声音
+    public static final String TYPE_RADIO = "RADIO";                                // 电台
+    public static final String TYPE_TTS = "TTS";                                    // TTS
+
 
     public static final String WIFI_SLEEP_POLICY_DEFAULT = "WIFI_SLEEP_POLICY_DEFAULT";// WiFi连接状态
     /*

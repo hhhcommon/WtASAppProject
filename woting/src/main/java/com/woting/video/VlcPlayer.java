@@ -6,8 +6,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
-
 import org.videolan.libvlc.EventHandler;
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.LibVlcException;
@@ -113,7 +111,7 @@ public class VlcPlayer implements WtAudioPlay {
                         Url = "http" + contentPlay[contentPlay.length - 1];
                         audioPlay.playMRL(Url);
                     } else {// 如果播放网络地址依然错误那就播放下一个节目
-                        PlayerFragment.playNext();
+//                        PlayerFragment.playNext();
                     }
                     break;
                 case EventHandler.MediaPlayerOpening:
@@ -131,7 +129,7 @@ public class VlcPlayer implements WtAudioPlay {
                 case EventHandler.MediaPlayerEndReached:// 播放完成播下一首
                     Log.e("TAG", "========= MediaPlayerEndReached =========");
                     Log.e("缓存播放路径222","======播放完成播下一首");
-                    PlayerFragment.playNext();
+//                    PlayerFragment.playNext();
                 case EventHandler.MediaPlayerBuffering:
                     break;
             }

@@ -8,7 +8,6 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.cloud.SynthesizerListener;
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
 /**
  * TTS播放器
  * 作者：xinlong on 2016/11/29 15:54
@@ -134,7 +133,7 @@ public class TPlayer implements WtAudioPlay {
 
 		@Override
 		public void onCompleted(SpeechError arg0) {
-			PlayerFragment.playNext();
+//			PlayerFragment.playNext();
 		}
 
 		@Override

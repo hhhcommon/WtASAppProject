@@ -5,8 +5,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
-
 import org.videolan.libvlc.EventHandler;
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.LibVlcException;
@@ -136,7 +134,7 @@ public class VPlayer {
             switch (msg.getData().getInt("event")) {
                 case EventHandler.MediaPlayerEncounteredError:
                     Log.e("url", "playerror+Url");
-                    PlayerFragment.playNext();
+//                    PlayerFragment.playNext();
                     break;
 //                case EventHandler.MediaPlayerOpening:
 //                    Log.e("url", "MediaPlayerOpenning()" + Url);
@@ -153,7 +151,7 @@ public class VPlayer {
                     break;
                 case EventHandler.MediaPlayerEndReached://这个回调
                     Log.e("url", "MediaPlayerEndReached()");
-                    PlayerFragment.playNext();
+//                    PlayerFragment.playNext();
 //                case EventHandler.MediaPlayerBuffering:
 //    /*			String s=audioPlay.getCachePath();
 //				int a=audioPlay.getNetworkCaching();
