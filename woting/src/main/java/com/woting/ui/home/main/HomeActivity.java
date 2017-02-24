@@ -45,27 +45,17 @@ public class HomeActivity extends FragmentActivity {
     private static ViewPager mPager;
 
     private MyServiceConnection sc = new MyServiceConnection();
-    public static IntegrationPlayerService mService;// 服务
-    private boolean mBound;// 绑定服务
+//    public static IntegrationPlayerService mService;// 服务
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_wt_home);
         context = this;
+        bindService(new Intent(this, IntegrationPlayerService.class), sc, Context.BIND_AUTO_CREATE);
         InitTextView();
         InitViewPager();
         setType();           // 适配顶栏样式
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if(!mBound) {
-            Intent intent = new Intent(this, IntegrationPlayerService.class);
-            bindService(intent, sc, Context.BIND_AUTO_CREATE);
-            startService(intent);
-        }
     }
 
     // 绑定服务
@@ -73,10 +63,8 @@ public class HomeActivity extends FragmentActivity {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            mBound = true;
             IntegrationPlayerService.MyBinder mBinder = (IntegrationPlayerService.MyBinder) service;
-            mService = mBinder.getService();
-
+            IntegrationPlayerService  mService = mBinder.getService();
             Log.v("TAG", "Service Bind success");
         }
 
@@ -239,14 +227,7 @@ public class HomeActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        if(mBound) {
-            mBound = false;
-            unbindService(sc);
-
-            Log.v("TAG", "Service Unbind success");
-        }
-
+        unbindService(sc);
         Intent intent = new Intent(this, IntegrationPlayerService.class);
         stopService(intent);
     }

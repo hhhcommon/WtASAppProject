@@ -16,7 +16,10 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.util.CommonUtils;
+import com.woting.common.util.JsonEncloseUtils;
 import com.woting.ui.interphone.commom.message.MessageUtils;
 import com.woting.ui.interphone.commom.message.MsgNormal;
 import com.woting.ui.interphone.commom.message.content.MapContent;
@@ -24,12 +27,10 @@ import com.woting.ui.interphone.commom.model.ApplyUserInfo;
 import com.woting.ui.interphone.commom.model.BeInvitedUserInfo;
 import com.woting.ui.interphone.commom.model.GroupInfo;
 import com.woting.ui.interphone.commom.model.InviteUserInfo;
+import com.woting.ui.interphone.commom.model.SeqMediaInfo;
 import com.woting.ui.interphone.commom.model.UserInfo;
-import com.woting.ui.interphone.notify.dao.NotifyHistoryDao;
 import com.woting.ui.interphone.linkman.model.DBNotifyHistory;
-import com.woting.common.config.GlobalConfig;
-import com.woting.common.util.CommonUtils;
-import com.woting.common.util.JsonEncloseUtils;
+import com.woting.ui.interphone.notify.dao.NotifyHistoryDao;
 
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -638,22 +639,51 @@ public class NotificationService extends Service {
                                 }
                                 break;
                             case 3:
-                                int command3 = message.getCommand();
-                                if (command3 == 1) {
-                                    // 订阅消息
+//                                int command3 = message.getCommand();
+//                                if (command3 == 1) {
+//                                    // 订阅消息
+//                                    try {
+//                                        MapContent data = (MapContent) message.getMsgContent();
+//                                        // 添加两个数据库中
+//                                    } catch (Exception e) {
+//                                        Log.e("消息接收服务中的异常", e.toString());
+//                                    }
+//                                }
+                                break;
+                            case 4:// 订阅消息
+                                String news;
+                                int command4 = message.getCommand();
+                                if (command4 == 1) {
                                     try {
                                         MapContent data = (MapContent) message.getMsgContent();
-                                        // 添加两个数据库中
+                                        Map<String, Object> map = data.getContentMap();
+                                        String msg = new Gson().toJson(map);
+                                        JSONTokener jsonParser = new JSONTokener(msg);
+                                        JSONObject arg1 = (JSONObject) jsonParser.nextValue();
+                                        String seqMediaInfo = arg1.getString("SeqMediaInfo");
+                                        SeqMediaInfo seqInfo = new Gson().fromJson(seqMediaInfo, new TypeToken<SeqMediaInfo>() {}.getType());
+
+                                        String contentName = seqInfo.getContentName();
+                                        if (contentName == null || contentName.equals("")) {
+                                            news = "您订阅的专辑有新的更新, 点击查看";
+                                        } else {
+                                            news = "您订阅的专辑" + contentName + "有新的更新，点击查看";
+                                        }
+
+                                        String contentUrl = seqInfo.getContentImg();
+
+                                        // 发送通知
+                                        setNewMessageNotification(context, news, "我听");
+                                        // 加入数据库
+                                        add("Mb1", contentUrl, news, "订阅信息", String.valueOf(System.currentTimeMillis()), "true", 0, 0, 0, "");
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中的异常", e.toString());
                                     }
                                 }
                                 break;
-                            default:
-                                break;
                         }
                     }
-                    //如果此时消息中心的界面在打开状态，则发送广播刷新消息中心界面
+                    // 如果此时消息中心的界面在打开状态，则发送广播刷新消息中心界面
                     context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESHNEWS));
                 } catch (Exception e1) {
                     e1.printStackTrace();

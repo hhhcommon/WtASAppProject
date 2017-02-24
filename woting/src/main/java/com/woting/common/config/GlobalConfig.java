@@ -244,6 +244,8 @@ public class GlobalConfig {
     public static final String getProgrammeUrl = "wt/content/getBCProgramme.do";
     //根据contentID获取内容列表
     public static final String getContentById = "wt/content/getContentInfo.do";
+    // 得到专辑下节目列表
+    public static final String getSmSubMedias = "wt/content/getSmSubMedias.do";
     //搜索检索热词
     public static final String searchHotKeysUrl = "wt/searchHotKeys.do";
     //通过手机号码注册
@@ -261,9 +263,9 @@ public class GlobalConfig {
     //喜欢content/clickFavorite.do
     public static final String clickFavoriteUrl = "wt/content/clickFavorite.do";
     //发送订阅信息（订阅/取消订阅）
-    public static final String clickSubscribe = "";
+    public static final String clickSubscribe = "wt/content/clickSubscribe.do";
     //获取订阅信息
-    public static final String getSubscribeList = "";
+    public static final String getSubscribeList = "wt/content/getSubscribeList.do";
     //获取路况数据
     public static final String getLKTTS = "wt/lkTTS.do";
     //获取favorite列表

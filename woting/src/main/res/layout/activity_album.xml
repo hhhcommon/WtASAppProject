@@ -136,6 +136,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/text_subscriber"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="订阅"
@@ -143,6 +144,7 @@
                             android:textSize="@dimen/activity_normal_textone" />
 
                         <ImageView
+                            android:id="@+id/image_subscriber"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_marginTop="3dp"

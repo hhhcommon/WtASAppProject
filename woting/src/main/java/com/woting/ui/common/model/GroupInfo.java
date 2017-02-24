@@ -39,7 +39,24 @@ public class GroupInfo implements Serializable {
     private String UserNum;			// 用户码
     private String Descn;			//
     private String PortraitBig;
+    private String UserNames;
+    private String UserIds;
 
+    public String getUserIds() {
+        return UserIds;
+    }
+
+    public void setUserIds(String userIds) {
+        UserIds = userIds;
+    }
+
+    public String getUserNames() {
+        return UserNames;
+    }
+
+    public void setUserNames(String userNames) {
+        UserNames = userNames;
+    }
 
     public String getPortraitBig() {
         return PortraitBig;

@@ -1,8 +1,6 @@
 package com.woting.ui.common.welcome.fragment;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -16,11 +14,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.woting.R;
+import com.woting.common.application.BSApplication;
+import com.woting.common.constant.StringConstant;
+import com.woting.common.util.BitmapUtils;
 import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.register.RegisterActivity;
 import com.woting.ui.main.MainActivity;
-import com.woting.common.constant.StringConstant;
-import com.woting.common.util.BitmapUtils;
 
 /**
  * 第三张引导页
@@ -48,8 +47,7 @@ public class WelcomeThreeFragment extends Fragment implements OnClickListener {
         switch (v.getId()) {
             case R.id.lin_enter:        // 进入主页
                 startActivity(new Intent(context, MainActivity.class));
-                SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);// 保存引导页查看状态
-                Editor et = sp.edit();
+                Editor et = BSApplication.SharedPreferences.edit();
                 et.putString(StringConstant.FIRST, "1");
                 if (!et.commit()) {
                     Log.v("commit", "数据 commit 失败!");
@@ -76,8 +74,7 @@ public class WelcomeThreeFragment extends Fragment implements OnClickListener {
             case 1:            // 从登录界面返回，1登录成功，关闭当前界面
                 if (resultCode == 1) {
                     // 保存引导页查看状态
-                    SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
-                    Editor et = sp.edit();
+                    Editor et = BSApplication.SharedPreferences.edit();
                     et.putString(StringConstant.FIRST, "1");
                     if (!et.commit()) {
                         Log.v("commit", "数据 commit 失败!");
@@ -90,8 +87,7 @@ public class WelcomeThreeFragment extends Fragment implements OnClickListener {
             case 2:            // 从注册界面返回，1登录成功，关闭当前界面
                 if (resultCode == 1) {
                     // 保存引导页查看状态
-                    SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
-                    Editor et = sp.edit();
+                    Editor et = BSApplication.SharedPreferences.edit();
                     et.putString(StringConstant.FIRST, "1");
                     if (!et.commit()) {
                         Log.v("commit", "数据 commit 失败!");

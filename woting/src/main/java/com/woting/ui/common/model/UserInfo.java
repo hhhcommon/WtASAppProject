@@ -4,36 +4,36 @@ import java.io.Serializable;
 
 //用户信息实体类
 public class UserInfo implements Serializable {
-    private int Type = 1;//标记是否为最后一项的，新加入尾部的数据会设置type为2，在adapter里针对此属性设置对应的gridview
-    private int CheckType = 1;//标记item是否被选中，1为未选中，2为选中
-    private String name;   //显示的数据
-    private String sortLetters;  //显示数据拼音的首字母
+    private int Type = 1;           // 标记是否为最后一项的，新加入尾部的数据会设置type为2，在adapter里针对此属性设置对应的gridview
+    private int CheckType = 1;      // 标记item是否被选中，1为未选中，2为选中
+    private String name;            // 显示的数据
+    private String sortLetters;     // 显示数据拼音的首字母
     private String InnerPhoneNum;
     private String UserName;
     private String UserId;
     private String Email;
     private String PortraitBig;
-    private String PhoneNum;//用户主手机号
+    private String PhoneNum;        // 用户主手机号
     private String PortraitMini;
     private String pinYinName;
     private String UserAliasName;
     private String truename;
-    private String check = "1";        //1未选中2选中
-    private String RealName;        //实名
-    private String UserNum;            //用户码
-    private String Descn;            //
+    private String check = "1";     // 1未选中2选中
+    private String RealName;        // 实名
+    private String UserNum;         // 用户码
+    private String Descn;           //
     private String ApplyTime;
-    private String Portrait;//个人头像
-    private int OnLine=1;			//该成员是否在线
+    private String Portrait;        // 个人头像
+    private int OnLine=1;			// 该成员是否在线
     private String Url;
 
-    private String UserSign;// 用户签名
-    private String Sex;// 性别
-    private String StarSign;// 星座
-    private String Region;// 区域
-    private String Birthday;// 生日
-    private String Age;// 年龄
-    private String NickName; //昵称
+    private String UserSign;        // 用户签名
+    private String Sex;             // 性别
+    private String StarSign;        // 星座
+    private String Region;          // 区域
+    private String Birthday;        // 生日
+    private String Age;             // 年龄
+    private String NickName;        // 昵称
 
     public String getNickName() {
         return NickName;

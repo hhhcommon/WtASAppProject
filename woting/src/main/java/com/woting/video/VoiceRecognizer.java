@@ -79,7 +79,7 @@ public class VoiceRecognizer {
 		// 注：该参数暂时只对在线听写有效
 		mIat.setParameter(SpeechConstant.ASR_DWA, "1");
 		// 设置语音前端点:静音超时时间，即用户多长时间不说话则当做超时处理
-		mIat.setParameter(SpeechConstant.VAD_BOS, "10000");
+		mIat.setParameter(SpeechConstant.VAD_BOS, "5000");
 		// 设置语音后端点:后端点静音检测时间，即用户停止说话多长时间内即认为不再输入， 自动停止录音
 		mIat.setParameter(SpeechConstant.VAD_EOS, "5000");
 

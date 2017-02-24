@@ -54,7 +54,6 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -97,6 +96,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
     private String sequImg;
     private String sequDesc;
 
+    private int sortType = 1;// == 1 按卷号从大到小排序 默认排序；== 2 按卷号从小到大排序；
 
     @Override
     public void onWhiteViewClick() {
@@ -247,15 +247,15 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
     public void send() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            jsonObject.put("MediaType", "SEQU");
             jsonObject.put("ContentId", AlbumActivity.id);
             jsonObject.put("Page", String.valueOf(page));
             jsonObject.put("PageSize", "20");
+            jsonObject.put("SortType", String.valueOf(sortType));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.getContentById, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.RequestPost(GlobalConfig.getSmSubMedias, tag, jsonObject, new VolleyCallback() {
             private String subList;
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -264,7 +264,6 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                 try {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {
-                        page++;
                         try {
                             JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultInfo")).nextValue();
                             try {
@@ -279,45 +278,21 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                                 e.printStackTrace();
                             }
                             try {
-                                SubList = new Gson().fromJson(subList, new TypeToken<List<ContentInfo>>() {
-                                }.getType());
+                                SubList = new Gson().fromJson(subList, new TypeToken<List<ContentInfo>>() {}.getType());
                                 if (SubList != null && SubList.size() > 0) {
+                                    if (page == 1) SubListAll.clear();
+                                    if (SubList.size() >= 20) page++;
+                                    else lv_album.setPullLoadEnable(false);
                                     SubListAll.addAll(SubList);
-                                    mainAdapter = new AlbumMainAdapter(context, SubListAll);
-                                    lv_album.setAdapter(mainAdapter);
+                                    lv_album.setAdapter(mainAdapter = new AlbumMainAdapter(context, SubListAll));
                                     setListener();
-                                    getData();
-                                    adapter = new AlbumAdapter(context, SubListAll);
-                                    lv_download.setAdapter(adapter);
+                                    lv_download.setAdapter(adapter = new AlbumAdapter(context, SubListAll));
                                     setInterface();
-                                    if (SubList.size() != 20) {
-                                        lv_album.setPullLoadEnable(false);
-                                    }
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
 
-                            try {
-                                sequId = arg1.getString("ContentId");
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                sequImg = arg1.getString("ContentImg");
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                sequName = arg1.getString("ContentName");
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                sequDesc = arg1.getString("ContentDescn");
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
                             lv_album.stopLoadMore();
                             tipView.setVisibility(View.GONE);
                         } catch (Exception e) {
@@ -330,7 +305,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.NO_DATA, "专辑中没有节目\n换个专辑看看吧");
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     lv_album.stopLoadMore();
                     tipView.setVisibility(View.VISIBLE);
@@ -348,6 +323,13 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
         });
     }
 
+    // 设置下载需要的专辑信息
+    public void setInfo(String sequId, String sequImg, String sequName, String sequDesc) {
+        this.sequId = sequId;
+        this.sequImg = sequImg;
+        this.sequName = sequName;
+        this.sequDesc = sequDesc;
+    }
 
     // 实现接口的方法
     private void setInterface() {
@@ -398,8 +380,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
         ArrayList<FileInfo> seqList = new ArrayList<>();
         if (fList != null && fList.size() > 0) {
             for (int i = 0; i < fList.size(); i++) {
-                if (fList.get(i).getSequimgurl() != null
-                        && fList.get(i).getSequimgurl().equals(AlbumActivity.ContentImg)) {
+                if (fList.get(i).getSequimgurl() != null && fList.get(i).getSequimgurl().equals(AlbumActivity.ContentImg)) {
                     seqList.add(fList.get(i));
                 }
             }
@@ -410,8 +391,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                 String temp = seqList.get(i).getUrl();
                 if (temp != null && !temp.trim().equals("")) {
                     for (int j = 0; j < SubListAll.size(); j++) {
-                        if (SubListAll.get(j).getContentPlay() != null
-                                && SubListAll.get(j).getContentPlay().equals(temp)) {
+                        if (SubListAll.get(j).getContentPlay() != null && SubListAll.get(j).getContentPlay().equals(temp)) {
                             SubListAll.get(j).setCheckType(3);
                         }
                     }
@@ -427,6 +407,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                 if (SubListAll.size() == 0) {
                     return;
                 }
+                getData();
                 if (adapter != null) {
                     adapter.notifyDataSetChanged();
                 } else {
@@ -503,10 +484,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                     FID.updataDownloadStatus(tempList.get(0).getUrl(), "1");
                     Log.e("数据库内数据", tempList.toString());
                     DownloadService.workStart(tempList.get(0));
-                    if(DownloadActivity.isVisible==true){
-                      /*  if(DownLoadUnCompleted.dwType!){
-
-                        }*/
+                    if(DownloadActivity.isVisible){
                         DownLoadUnCompleted.dwType=true;
                     }
                     ToastUtils.show_always(context,"已经开始下载您所选择的数据");
@@ -521,16 +499,26 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                 break;
             case R.id.img_sort:
                 if (SubListAll.size() != 0 && mainAdapter != null) {
-                    Collections.reverse(SubListAll);            // 倒序
-                    mainAdapter.notifyDataSetChanged();
+                    sortType = 2;
+                    page = 1;
+                    dialog = DialogUtils.Dialogph(context, "正在获取数据...");
+                    send();
+
+//                    Collections.reverse(SubListAll);            // 倒序
+//                    mainAdapter.notifyDataSetChanged();
                     imageSortDown.setVisibility(View.VISIBLE);
                     imageSort.setVisibility(View.GONE);
                 }
                 break;
             case R.id.img_sort_down:
                 if (SubListAll.size() != 0 && mainAdapter != null) {
-                    Collections.reverse(SubListAll);            // 倒序
-                    mainAdapter.notifyDataSetChanged();
+                    sortType = 1;
+                    page = 1;
+                    dialog = DialogUtils.Dialogph(context, "正在获取数据...");
+                    send();
+
+//                    Collections.reverse(SubListAll);            // 倒序
+//                    mainAdapter.notifyDataSetChanged();
                     imageSortDown.setVisibility(View.GONE);
                     imageSort.setVisibility(View.VISIBLE);
                 }

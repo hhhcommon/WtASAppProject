@@ -86,6 +86,7 @@ public  class VoiceStreamPlayerService   extends  Service{
 	public static void dealVedioPack(byte[]  mResults ,int seqNum, String talkId) {
 		Bundle bundle=new Bundle();
 		bundle.putInt("seqNum", seqNum);
+		bundle.putString("talkId", talkId);
 		push.putExtras(bundle);
 		context.sendOrderedBroadcast(push, null);
 		if(mResults!=null){

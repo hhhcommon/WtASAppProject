@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -99,7 +101,7 @@ public class DetailsFragment extends Fragment implements OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.linear_concern://关注
+            case R.id.linear_concern:// 关注
                 if (!isConcern) {
                     imageConcern.setImageDrawable(context.getResources().getDrawable(R.mipmap.focus_concern));
                     textConcern.setText("已关注");
@@ -122,7 +124,6 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                     ToastUtils.show_always(context,"此专辑还没有主播哦");
                 }
                 break;
-
         }
     }
 
@@ -138,6 +139,7 @@ public class DetailsFragment extends Fragment implements OnClickListener {
         }
         VolleyRequest.RequestPost(GlobalConfig.getContentById, tag, jsonObject, new VolleyCallback() {
             private List<ContentCatalogs> contentCatalogsList;
+            private String contentId;
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -151,8 +153,7 @@ public class DetailsFragment extends Fragment implements OnClickListener {
 
                         try {
                             String s = arg1.getString("ContentCatalogs");
-                            contentCatalogsList = new Gson().fromJson(s, new TypeToken<List<ContentCatalogs>>() {
-                            }.getType());
+                            contentCatalogsList = new Gson().fromJson(s, new TypeToken<List<ContentCatalogs>>() {}.getType());
                         }catch (Exception e){
                             e.printStackTrace();
                         }
@@ -162,7 +163,13 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                             e.printStackTrace();
                         }
                         try {
+                            contentId = arg1.getString("ContentId");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        try {
                             AlbumActivity.ContentImg = arg1.getString("ContentImg");
+                            Log.w("TAG", "AlbumActivity.ContentImg -> " + AlbumActivity.ContentImg);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -187,6 +194,13 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                             e.printStackTrace();
                         }
 
+                        try {
+                            String contentSubscribe = arg1.getString("ContentSubscribe");// 专辑是否已经订阅 == "1" 订阅  == "0" 还没订阅
+                            ((AlbumActivity) context).setFlag(contentSubscribe);
+                        } catch(Exception e) {
+                            e.printStackTrace();
+                        }
+
                         try{
                             String ContentPersons=arg1.getString("ContentPersons");
                             List<PersonInfo> mPersonInfoList= new Gson().fromJson(ContentPersons, new TypeToken<List<com.woting.ui.home.program.album.model.PersonInfo>>() {
@@ -198,15 +212,14 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                                 }else{
                                     PersonId="";
                                 }
-
                             }else{
                                 PersonId="";
                             }
 
+                            ((AlbumActivity) context).setInfo(contentId, AlbumActivity.ContentImg, AlbumActivity.ContentName, contentDesc);
                         }catch (Exception e){
                             e.printStackTrace();
                         }
-
 
                         AlbumActivity.returnResult = 1;
                         if (AlbumActivity.ContentFavorite != null && !AlbumActivity.ContentFavorite.equals("")) {
@@ -238,8 +251,8 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                             Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(imageHead);
                         }
                         if (contentDesc != null && !contentDesc.equals("") && !contentDesc.equals("null")) {
-                            textContent.setText(contentDesc);
-                            AlbumActivity.ContentDesc=contentDesc;
+                            textContent.setText(Html.fromHtml("<font size='28'>" + contentDesc + "</font>"));
+                            AlbumActivity.ContentDesc = contentDesc;
                         } else {
                             textContent.setText("暂无介绍内容");
                         }
@@ -248,7 +261,6 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                         if (contentCatalogsList != null && contentCatalogsList.size() > 0) {
                             StringBuilder builder = new StringBuilder();
                             for (int i = 0; i < contentCatalogsList.size(); i++) {
-
                                 String str = contentCatalogsList.get(i).getCataTitle();
                                 builder.append(str);
                                 if (i != contentCatalogsList.size() - 1) builder.append("  ");

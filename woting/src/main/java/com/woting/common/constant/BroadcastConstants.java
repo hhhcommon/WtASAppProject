@@ -100,4 +100,19 @@ public class BroadcastConstants {
 
     // 播放界面文字搜索
     public static final String PLAY_TEXT_VOICE_SEARCH = "play_text_voice_search";
+
+    // 更新播放时间
+    public static final String UPDATE_PLAY_CURRENT_TIME = "UPDATE_PLAY_CURRENT_TIME";
+
+    // 更新播放总时间
+    public static final String UPDATE_PLAY_TOTAL_TIME = "UPDATE_PLAY_TOTAL_TIME";
+
+    // 更新播放列表
+    public static final String UPDATE_PLAY_LIST = "UPDATE_PLAY_LIST";
+
+    // 更新播放界面
+    public static final String UPDATE_PLAY_VIEW = "UPDATE_PLAY_VIEW";
+
+    // 更新已下载
+    public static final String UPDATE_DOWN_LOAD_VIEW = "UPDATE_DOWN_LOAD_VIEW";
 }

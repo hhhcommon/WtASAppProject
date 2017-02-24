@@ -41,7 +41,7 @@ public  class VoiceStreamRecordService   extends  Service{
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		creatRecord();//创建录音机
+		createRecord();//创建录音机
 		//压缩方法
 		try {
 			G729c= G729ACodec.getInstance();
@@ -52,7 +52,7 @@ public  class VoiceStreamRecordService   extends  Service{
 		}
 	}
 
-	private void creatRecord() {
+	private void createRecord() {
 		try {
 			//创建一个新的AudioRecord对象记录音频。
 			bufferSize = AudioRecord.getMinBufferSize(frequency, channelConfiguration,  audioEncoding);

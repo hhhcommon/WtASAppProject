@@ -46,7 +46,6 @@ import com.woting.common.widgetui.HorizontalListView;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseFragmentActivity;
 import com.woting.ui.baseadapter.MyFragmentChildPagerAdapter;
-import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.home.player.main.adapter.ImageAdapter;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
 import com.woting.ui.home.player.main.model.ShareModel;
@@ -71,31 +70,38 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
     private DetailsFragment detailsFragment;
     private ProgramFragment programFragment;
 
-    public static TextView tv_album_name,tv_favorite;
-    private TextView textDetails, textProgram;    // text_details text_program
-    public static ImageView img_album,imageFavorite;
-    private ImageView imageCursor;                //cursor
-    private LinearLayout lin_share,lin_pinglun,lin_favorite,lin_subscriber;
+    public static TextView tv_album_name;
+    public static TextView tv_favorite;
+    private TextView textSubscriber;      // 订阅
+    private ImageView imageSubscriber;    // 订阅小图标
+    private TextView textDetails;               // text_details
+    private TextView textProgram;               // text_program
+    public static ImageView img_album;
+    public static ImageView imageFavorite;
+    private ImageView imageCursor;              // cursor
+
+    private LinearLayout lin_share, lin_pinglun, lin_favorite, lin_subscriber;
     private ViewPager mPager;
-    private Dialog dialog,shareDialog,dialog1;
+    private Dialog dialog, shareDialog, dialog1;
     private UMImage image;
 
-    public static int returnResult = -1;          // =1说明信息获取正常，returntype=1001
-    private int offset;                           // 图片移动的偏移量
+    public static int returnResult = -1;        // == 1 说明信息获取正常，returnType == 1001
+    private int offset;                         // 图片移动的偏移量
     private boolean isCancelRequest;
 
-    public static String ContentDesc,ContentImg,ContentShareURL,ContentName,id;
-    public static String ContentFavorite;         // 从网络获取的当前值，如果为空，表示页面并未获取到此值
+    public static String ContentDesc, ContentImg, ContentShareURL, ContentName, id;
+    public static String ContentFavorite;       // 从网络获取的当前值，如果为空，表示页面并未获取到此值
     private String tag = "ALBUM_VOLLEY_REQUEST_CANCEL_TAG";
     private String RadioName;
+    private int flag = 0;                       // == 0 还没有订阅  == 1 已经订阅
 
-    private TipView tipView;                       // 提示
+    private TipView tipView;                    // 提示
 
     @Override
     public void onWhiteViewClick() {
-        if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            if(detailsFragment != null) detailsFragment.send();
-            if(programFragment != null) programFragment.send();
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            if (detailsFragment != null) detailsFragment.send();
+            if (programFragment != null) programFragment.send();
         } else {
             setTip(TipView.TipStatus.NO_NET);
         }
@@ -105,12 +111,12 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
-        setView();                                   // 设置界面
+        setView();// 设置界面
         setListener();
         InitImage();
         InitViewPager();
         handleIntent();
-        shareDialog();                               // 分享dialog
+        shareDialog();// 分享 dialog
     }
 
     private void setView() {
@@ -126,6 +132,9 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
         textDetails.setOnClickListener(this);
         textProgram = (TextView) findViewById(R.id.text_program);             // 专辑列表
         textProgram.setOnClickListener(this);
+
+        textSubscriber = (TextView) findViewById(R.id.text_subscriber);       // 订阅
+        imageSubscriber = (ImageView) findViewById(R.id.image_subscriber);    // 订阅小图标
 
         tipView = (TipView) findViewById(R.id.tip_view);
         tipView.setWhiteClick(this);
@@ -148,14 +157,14 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
         lp.width = PhoneMessage.ScreenWidth / 2;
         imageCursor.setLayoutParams(lp);
         offset = PhoneMessage.ScreenWidth / 2;
-        // imageView设置平移，使下划线平移到初始位置（平移一个offset）
+        // imageView 设置平移，使下划线平移到初始位置（平移一个 offset）
         Matrix matrix = new Matrix();
         matrix.postTranslate(offset, 0);
         imageCursor.setImageMatrix(matrix);
     }
 
     /**
-     * 初始化ViewPager
+     * 初始化 ViewPager
      */
     public void InitViewPager() {
         mPager = (ViewPager) findViewById(R.id.viewpager);
@@ -167,12 +176,17 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
         fragmentList.add(programFragment);
         mPager.setAdapter(new MyFragmentChildPagerAdapter(getSupportFragmentManager(), fragmentList));
         mPager.setOnPageChangeListener(new MyOnPageChangeListener());  // 页面变化时的监听器
-        mPager.setCurrentItem(0);                                      // 设置当前显示标签页为第一页mPager
+        mPager.setCurrentItem(0);                                      // 设置当前显示标签页为第一页 mPager
+    }
+
+    public void setInfo(String contentId, String contentImg, String contentName, String contentDesc) {
+        programFragment.setInfo(contentId, contentImg, contentName, contentDesc);
     }
 
     public class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
         private int one = offset;                                                        // 两个相邻页面的偏移量
         private int currIndex;
+
         @Override
         public void onPageScrolled(int arg0, float arg1, int arg2) {
         }
@@ -186,7 +200,7 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
             Animation animation = new TranslateAnimation(currIndex * one, arg0 * one, 0, 0);        // 平移动画
             currIndex = arg0;
             animation.setFillAfter(true);         // 动画终止时停留在最后一帧，不然会回到没有执行前的状态
-            animation.setDuration(200);           // 动画持续时间0.2秒
+            animation.setDuration(200);           // 动画持续时间 0.2 秒
             imageCursor.startAnimation(animation);// 是用ImageView来显示动画的
             if (arg0 == 0) {
                 textDetails.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
@@ -298,9 +312,9 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
 
     private void handleIntent() {
         Intent intent = getIntent();
-        if(intent == null) {
+        if (intent == null) {
             tipView.setTipView(TipView.TipStatus.IS_ERROR, "数据出错了\n请返回重试!");
-            return ;
+            return;
         }
         String type = getIntent().getStringExtra("type");
         if (type != null && type.trim().equals("radiolistactivity")) {
@@ -374,29 +388,39 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
                 textDetails.setTextColor(context.getResources().getColor(R.color.group_item_text2));
                 break;
             case R.id.lin_pinglun: // 评论
-                if(!TextUtils.isEmpty(id)){
-                    if(CommonUtils.getUserIdNoImei(context)!=null&&!CommonUtils.getUserIdNoImei(context).equals("")){
-                        Intent intent=new Intent(context, CommentActivity.class);
-                        intent.putExtra("contentId",id);
-                        intent.putExtra("MediaType","SEQU");
+                if (!TextUtils.isEmpty(id)) {
+                    if (CommonUtils.getUserIdNoImei(context) != null && !CommonUtils.getUserIdNoImei(context).equals("")) {
+                        Intent intent = new Intent(context, CommentActivity.class);
+                        intent.putExtra("contentId", id);
+                        intent.putExtra("MediaType", "SEQU");
                         startActivity(intent);
-                    }else{
-                        ToastUtils.show_always(context,"请先登录~~");
+                    } else {
+                        ToastUtils.show_always(context, "请先登录~~");
                     }
-                }else{
-                    ToastUtils.show_always(context,"当前播放的节目的信息有误，无法获取评论列表");
+                } else {
+                    ToastUtils.show_always(context, "当前播放的节目的信息有误，无法获取评论列表");
                 }
                 break;
             case R.id.lin_subscriber: // 订阅
-                String isLogin= BSApplication.SharedPreferences.getString(StringConstant.ISLOGIN,"false");
-                if(isLogin!=null&&!isLogin.trim().equals("")&&isLogin.equals("true")){
+                String isLogin = BSApplication.SharedPreferences.getString(StringConstant.ISLOGIN, "false");
+                if (!isLogin.trim().equals("") && isLogin.equals("true")) {
                     dialog = DialogUtils.Dialogph(context, "通讯中");
-//                    sendSubscribe();  // 发送订阅信息（订阅/取消订阅）
-                }else{
-                    ToastUtils.show_always(context,"请先登录~~");
-                    startActivity(new Intent(this, LoginActivity.class));
+                    sendSubscribe();  // 发送订阅信息（订阅/取消订阅）
+                } else {
+                    ToastUtils.show_always(context, "请先登录~~");
                 }
                 break;
+        }
+    }
+
+    public void setFlag(String contentSubscribe) {
+        flag = Integer.valueOf(contentSubscribe);
+        if(flag == 0) {
+            textSubscriber.setText("订阅");
+//            imageSubscriber
+        } else {
+            textSubscriber.setText("已订阅");
+//            imageSubscriber
         }
     }
 
@@ -406,7 +430,7 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
         try {
             jsonObject.put("MediaType", "SEQU");
             jsonObject.put("ContentId", id);
-            if (ContentFavorite.equals("0")) {
+            if (flag == 0) {
                 jsonObject.put("Flag", "1");
             } else {
                 jsonObject.put("Flag", "0");
@@ -428,7 +452,15 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
                     e.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
-
+                    if (flag == 1) {
+                        flag = 0;// 已经取消订阅
+                        textSubscriber.setText("订阅");
+//                        imageSubscriber
+                    } else {
+                        textSubscriber.setText("已订阅");
+                        flag = 1;// 订阅成功
+//                        imageSubscriber
+                    }
                 } else {
                     ToastUtils.show_always(context, "获取数据出错了，请重试!");
                 }
@@ -436,6 +468,7 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
 
             @Override
             protected void requestError(VolleyError error) {
+                ToastUtils.showVolleyError(context);
                 if (dialog != null) dialog.dismiss();
             }
         });

@@ -1,11 +1,14 @@
 package com.woting.ui.home.player.main.model;
 
+import com.woting.ui.home.program.album.model.PersonInfo;
+
 import java.io.Serializable;
+import java.util.List;
 
 public class SequInside implements Serializable{
 
 	private String ContentURI;
-	private String ContentPersons;
+	private List<PersonInfo> ContentPersons;
 	private String ContentKeyWord;
 	private String cTime;
 	private String ContentSubjectWord;
@@ -27,10 +30,12 @@ public class SequInside implements Serializable{
 	public void setContentURI(String contentURI) {
 		ContentURI = contentURI;
 	}
-	public String getContentPersons() {
+
+	public List<PersonInfo> getContentPersons() {
 		return ContentPersons;
 	}
-	public void setContentPersons(String contentPersons) {
+
+	public void setContentPersons(List<PersonInfo> contentPersons) {
 		ContentPersons = contentPersons;
 	}
 

@@ -17,7 +17,6 @@ import com.woting.common.config.SocketClientConfig;
 import com.woting.common.constant.KeyConstant;
 import com.woting.common.helper.CollocationHelper;
 import com.woting.common.helper.CommonHelper;
-import com.woting.common.helper.CrashHandler;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ResourceUtil;
 
@@ -45,8 +44,8 @@ public class BSApplication extends Application implements OnErrorListener, OnLog
         super.onCreate();
         instance = this;
 
-        CrashHandler handler = CrashHandler.getInstance();
-        handler.init(getApplicationContext());
+//        CrashHandler handler = CrashHandler.getInstance();
+//        handler.init(getApplicationContext());
 
         SharedPreferences = this.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
         CollocationHelper.setCollocation();  //设置配置文件

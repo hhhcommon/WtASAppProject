@@ -49,13 +49,11 @@ public class DownLoadUnCompleted extends Fragment {
     private ImageView imageStart;
     private LinearLayout linearStart;
     private LinearLayout linearClear;
-    private LinearLayout linearStatusYes;
     private TipView tipView;// 没有数据时的提示
 
     private String userId;
     private int num = -1;
     public static  boolean dwType=false; //true 全部开始 false 全部暂停
-    private Boolean FirstFlag=true; //标记第一次进入时的事件
 
     // 初始化数据库对象
     private void initDao() {
@@ -96,7 +94,6 @@ public class DownLoadUnCompleted extends Fragment {
         imageStart = (ImageView) rootView.findViewById(R.id.img_start);
         linearStart = (LinearLayout) rootView.findViewById(R.id.lin_start);
         linearClear = (LinearLayout) rootView.findViewById(R.id.lin_clear);
-        linearStatusYes = (LinearLayout) rootView.findViewById(R.id.lin_status_yes);// 有未下载时布局
     }
 
     @Override
@@ -115,7 +112,7 @@ public class DownLoadUnCompleted extends Fragment {
             textStart.setText("全部开始");
         } else {
             tipView.setVisibility(View.GONE);
-            if (dwType==false) {
+            if (!dwType) {
                 imageStart.setImageResource(R.mipmap.wt_download_play);
                 textStart.setText("全部开始");
             } else {
