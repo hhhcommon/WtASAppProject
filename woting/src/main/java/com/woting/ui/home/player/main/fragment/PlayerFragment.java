@@ -92,76 +92,76 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Ad
     private final static int VOICE_UI = 11;// 更新语音搜索
     private final static int RefreshProgram = 12;// 刷新节目单
 
-    private static SharedPreferences sp = BSApplication.SharedPreferences;// 数据存储
     public static FragmentActivity context;
-    public static IntegrationPlayer mPlayer;// 播放器
-    private static SearchPlayerHistoryDao mSearchHistoryDao;// 搜索历史数据库
-    private static String mRadioContentId;
+    public static int timerService;// 当前节目播放剩余时间长度
+    public static int TextPage = 0;// 文本搜索 page
+    public static boolean isCurrentPlay;
+
+    private SharedPreferences sp = BSApplication.SharedPreferences;// 数据存储
+    private IntegrationPlayer mPlayer;// 播放器
+    private SearchPlayerHistoryDao mSearchHistoryDao;// 搜索历史数据库
+    private String mRadioContentId;
     private FileInfoDao mFileDao;// 文件相关数据库
     private AudioManager audioMgr;// 声音管理
     private VoiceRecognizer mVoiceRecognizer;// 讯飞
     private MessageReceiver mReceiver;// 广播接收
 
-    private static PlayerListAdapter adapter;
+    private PlayerListAdapter adapter;
 
-    private static Dialog dialog;// 加载数据对话框
-    private static Dialog wifiDialog;// WIFI 提醒对话框
+    private Dialog dialog;// 加载数据对话框
+    private Dialog wifiDialog;// WIFI 提醒对话框
     private Dialog shareDialog;// 分享对话框
     private View rootView;
 
-    public static MarqueeTextView mPlayAudioTitleName;// 正在播放的节目的标题
-    private static View mViewVoice;// 语音搜索 点击右上角"语音"显示
-    public static TextView mVoiceTextSpeakStatus;// 语音搜索状态
+    private MarqueeTextView mPlayAudioTitleName;// 正在播放的节目的标题
+    private View mViewVoice;// 语音搜索 点击右上角"语音"显示
+    private TextView mVoiceTextSpeakStatus;// 语音搜索状态
     private ImageView mVoiceImageSpeak;// 按下说话 抬起开始搜索
 
-    private static ImageView mPlayAudioImageCover;// 播放节目的封面
-    private static ImageView mPlayImageStatus;// 播放状态图片  播放 OR 暂停
+    private ImageView mPlayAudioImageCover;// 播放节目的封面
+    private ImageView mPlayImageStatus;// 播放状态图片  播放 OR 暂停
 
-    private static SeekBar mSeekBar;// 播放进度
-    public static TextView mSeekBarStartTime;// 进度的开始时间
-    public static TextView mSeekBarEndTime;// 播放节目总长度
+    private SeekBar mSeekBar;// 播放进度
+    private TextView mSeekBarStartTime;// 进度的开始时间
+    private TextView mSeekBarEndTime;// 播放节目总长度
 
-    public static TextView mPlayAudioTextLike;// 喜欢播放节目
-    public static TextView mPlayAudioTextProgram;// 节目单
-    public static TextView mPlayAudioTextDownLoad;// 下载
-    public static TextView mPlayAudioTextShare;// 分享
-    public static TextView mPlayAudioTextComment;// 评论
-    public static TextView mPlayAudioTextMore;// 更多
+    private TextView mPlayAudioTextLike;// 喜欢播放节目
+    private TextView mPlayAudioTextProgram;// 节目单
+    private TextView mPlayAudioTextDownLoad;// 下载
+    private TextView mPlayAudioTextShare;// 分享
+    private TextView mPlayAudioTextComment;// 评论
+    private TextView mPlayAudioTextMore;// 更多
     private View mViewMoreChose;// 点击"更多"显示
 
     private View mProgramDetailsView;// 节目详情
     private TextView mProgramVisible;// "隐藏" OR "显示"
-    private static TextView mProgramTextAnchor;// 主播
-    public static TextView mProgramTextSequ;// 专辑
-    public static TextView mProgramSources;// 来源
-    public static TextView mProgramTextDescn;// 节目介绍
+    private TextView mProgramTextAnchor;// 主播
+    private TextView mProgramTextSequ;// 专辑
+    private TextView mProgramSources;// 来源
+    private TextView mProgramTextDescn;// 节目介绍
 
-    private static XListView mListView;// 播放列表
+    private XListView mListView;// 播放列表
 
-    public static int timerService;// 当前节目播放剩余时间长度
-    public static int TextPage = 0;// 文本搜索 page
-    private static int sendType;// 第一次获取数据是有分页加载的
-    private static int page = 1;// mainPage
-    private static int voicePage = 1;// 语音搜索 page
-    private static int num;// == -2 播放器没有播放  == -1 播放器里边的数据不在 list 中  == 其它 是在 list 中
+    private int sendType;// 第一次获取数据是有分页加载的
+    private int page = 1;// mainPage
+    private int voicePage = 1;// 语音搜索 page
+    private int num;// == -2 播放器没有播放  == -1 播放器里边的数据不在 list 中  == 其它 是在 list 中
 
     private int stepVolume;
     private int curVolume;// 当前音量
-    private int refreshType;// 是不是第一次请求数据
-//    private int voiceType = 2;// 是否按下语音按钮 == 1 按下  == 2 松手
+    private int refreshType = 0;// 是不是第一次请求数据
 
     private Bitmap bmpPress;// 语音搜索按钮按下的状态图片
     private Bitmap bmp;// 语音搜索按钮未按下的状态图片
 
-    public static boolean isCurrentPlay;
     private boolean detailsFlag = false;// 是否展示节目详情
     private boolean first = true;// 第一次进入界面
 
     private String voiceStr;// 语音搜索内容
 
-    private static ArrayList<LanguageSearchInside> allList = new ArrayList<>();
-    private static Timer mTimer;
-    private static String IsPlaying; //获取的当前的播放内容
+    private List<LanguageSearchInside> allList = new ArrayList<>();
+    private Timer mTimer;
+    private String IsPlaying; //获取的当前的播放内容
 
     /////////////////////////////////////////////////////////////
     // 以下是生命周期方法
@@ -285,7 +285,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Ad
     private void initData() {
         mPlayer = IntegrationPlayer.getInstance();
 
-        refreshType = 0;// 是不是第一次请求数据
         bmpPress = BitmapUtils.readBitMap(context, R.mipmap.wt_duijiang_button_pressed);
         bmp = BitmapUtils.readBitMap(context, R.mipmap.talknormal);
 
@@ -418,7 +417,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Ad
     }
 
     // 更新时间展示数据
-    private static void updateTextViewWithTimeFormat(TextView view, long second) {
+    private void updateTextViewWithTimeFormat(TextView view, long second) {
         int hh = (int) (second / 3600);
         int mm = (int) (second % 3600 / 60);
         int ss = (int) (second % 60);
@@ -441,7 +440,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Ad
     }
 
     // 设置 headView 的界面
-    protected static void resetHeadView() {
+    protected void resetHeadView() {
         if (GlobalConfig.playerObject != null) {
             String type = GlobalConfig.playerObject.getMediaType();
 
@@ -592,7 +591,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Ad
 
 
     // 关闭 linChose 界面
-    private static void linChoseClose(View view) {
+    private void linChoseClose(View view) {
         if (view.getVisibility() == View.VISIBLE) {
             Animation mAnimation = AnimationUtils.loadAnimation(context, R.anim.umeng_socialize_slide_out_from_bottom);
             view.setAnimation(mAnimation);
@@ -627,8 +626,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Ad
         window.setWindowAnimations(R.style.sharestyle);
         shareDialog.setCanceledOnTouchOutside(true);
         shareDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
-        PlayerFragment.dialog = DialogUtils.Dialogphnoshow(context, "通讯中", PlayerFragment.dialog);
-        Config.dialog = PlayerFragment.dialog;
+        dialog = DialogUtils.Dialogphnoshow(context, "通讯中", dialog);
+        Config.dialog = dialog;
         final List<ShareModel> mList = ShareUtils.getShareModelList();
         ImageAdapter shareAdapter = new ImageAdapter(context, mList);
         mGallery.setAdapter(shareAdapter);
@@ -684,7 +683,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Ad
     }
 
     // 获取数据库数据
-    private static LanguageSearchInside getDaoList(Context context) {
+    private LanguageSearchInside getDaoList(Context context) {
         if (mSearchHistoryDao == null) mSearchHistoryDao = new SearchPlayerHistoryDao(context);
         List<PlayerHistory> historyDatabaseList = mSearchHistoryDao.queryHistory();
         if (historyDatabaseList != null && historyDatabaseList.size() > 0) {
@@ -988,7 +987,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Ad
         }
     }
 
-    static Handler mUIHandler = new Handler() {
+    Handler mUIHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case TIME_UI: // 更新进度及时间
@@ -1132,7 +1131,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Ad
     }
 
     // 喜欢---不喜欢操作
-    private static void sendFavorite() {
+    private void sendFavorite() {
         dialog = DialogUtils.Dialogph(context, "通讯中");
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
@@ -1282,7 +1281,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Ad
     }
 
     // 设置刷新和加载
-    private static void setPullAndLoad(boolean isPull, boolean isLoad) {
+    private void setPullAndLoad(boolean isPull, boolean isLoad) {
         mListView.setPullRefreshEnable(isPull);
         mListView.setPullLoadEnable(isLoad);
         mListView.stopRefresh();

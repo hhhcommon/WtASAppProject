@@ -25,6 +25,21 @@ public class StringConstant {
     public static final String AGE = "AGE";                                        // 年龄
     public static final String NICK_NAME = "NICK_NAME";                            // 昵称
 
+    // 播放器缓存进度  数据传递
+    public static final String PLAY_SECOND_PROGRESS = "PLAY_SECOND_PROGRESS";
+
+    // 数据传递  当前播放进度
+    public static final String PLAY_CURRENT_TIME = "PLAY_CURRENT_TIME";
+
+    // 数据传递  当前播放总时间
+    public static final String PLAY_TOTAL_TIME = "PLAY_TOTAL_TIME";
+
+    // 数据传递  当前播放类型
+    public static final String PLAY_MEDIA_TYPE = "PLAY_MEDIA_TYPE";
+
+    // 数据传递  当前播放在列表中的位置
+    public static final String PLAY_POSITION = "PLAY_POSITION";
+
     public static final String TYPE_SEQU = "SEQU";                                  // 专辑
     public static final String TYPE_AUDIO = "AUDIO";                                // 声音
     public static final String TYPE_RADIO = "RADIO";                                // 电台
