@@ -60,6 +60,21 @@ public class StringConstant {
      */
     public static final String PERSONREFRESHB = "PERSON_REFRESH_B";                  // 是否刷新聊天
 
+    // 播放界面请求类型  主网络请求
+    public static final String PLAY_REQUEST_TYPE_MAIN_PAGE = "MAIN_PAGE";
+
+    // 播放界面请求类型  文字请求
+    public static final String PLAY_REQUEST_TYPE_SEARCH_TEXT = "SEARCH_TEXT";
+
+    // 播放界面请求类型  语音请求
+    public static final String PLAY_REQUEST_TYPE_SEARCH_VOICE = "SEARCH_VOICE";
+
+    // 数据获取  语音请求内容
+    public static final String VOICE_CONTENT = "VoiceContent";
+
+    // 数据获取  文字请求内容
+    public static final String TEXT_CONTENT = "text";
+
     /*
      * 保存2G,3G,4G等播放提醒
      */
