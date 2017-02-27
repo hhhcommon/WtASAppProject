@@ -221,7 +221,7 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
 
     // 更新播放列表  position
     public void updatePlayList(List<LanguageSearchInside> list, int position) {
-        if(list != null) {
+        if(list != null && list.size() > 0) {
             if(playList != null) playList.clear();
             playList = list;
 

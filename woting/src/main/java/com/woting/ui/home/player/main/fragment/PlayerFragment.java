@@ -95,7 +95,6 @@ import java.util.TimerTask;
  * 播放主界面
  */
 public class PlayerFragment extends Fragment implements View.OnClickListener, XListView.IXListViewListener, AdapterView.OnItemClickListener {
-    private final static int TIME_UI = 10;// 更新时间
     private final static int VOICE_UI = 11;// 更新语音搜索
     private final static int RefreshProgram = 12;// 刷新节目单
 
@@ -207,13 +206,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
     // 初始化视图
     private void initView(View view) {
-        // -----------------  HeadView 相关控件初始化 START  ----------------
-        ImageView mPlayAudioImageCoverMask = (ImageView) view.findViewById(R.id.image_liu);// 封面图片的六边形遮罩
-        mPlayAudioImageCoverMask.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_bd));
-
         // 开启服务绑定播放器 BVideoView
         BVideoView bVideoView = (BVideoView) rootView.findViewById(R.id.video_view);
         mPlayer.bindService(context, bVideoView);
+
+        // -----------------  HeadView 相关控件初始化 START  ----------------
+        ImageView mPlayAudioImageCoverMask = (ImageView) view.findViewById(R.id.image_liu);// 封面图片的六边形遮罩
+        mPlayAudioImageCoverMask.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_bd));
 
         mPlayAudioTitleName = (MarqueeTextView) view.findViewById(R.id.tv_name);// 正在播放的节目的标题
         mPlayAudioImageCover = (ImageView) view.findViewById(R.id.img_news);// 播放节目的封面
@@ -966,9 +965,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     Handler mUIHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case TIME_UI: // 更新进度及时间
-                    mUIHandler.sendEmptyMessageDelayed(TIME_UI, 1000);
-                    break;
                 case VOICE_UI:
                     linChoseClose(mViewVoice);
                     mVoiceTextSpeakStatus.setText("请按住讲话");
@@ -1396,7 +1392,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     // 上一首
     private void last() {
         index--;
-        if (index < 0) index = playList.size() - 1;
+        if (index < 0) {
+            ToastUtils.show_always(context, "已经是第一个节目了!");
+            return ;
+        }
         mPlayer.startPlay(index);
     }
 
@@ -1482,6 +1481,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             mPlayer.updatePlayList(playerList, index);
         }
 
+        if (requestType.equals(StringConstant.PLAY_REQUEST_TYPE_SEARCH_VOICE) && refreshType == 0) {
+            index = 0;
+            mPlayer.startPlay(index);
+        }
+
         if (dialog != null) dialog.dismiss();
         subList.clear();
     }
@@ -1555,5 +1559,22 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(context).onActivityResult(requestCode, resultCode, data);
+    }
+
+    // 是否弹框提醒
+    private boolean wifiPlayTip() {
+        String wifiSet = sp.getString(StringConstant.WIFISET, "true");
+        boolean isOpen = Boolean.valueOf(wifiSet); // 是否开启非 wifi 网络流量提醒
+        if (!isOpen) return false;
+
+        String wifiShow = sp.getString(StringConstant.WIFISHOW, "true");// 是否弹框提醒
+        boolean isShow = Boolean.valueOf(wifiShow);
+        if (!isShow) return false;
+
+        int netStatus = CommonHelper.checkNetworkStatus(context);// 网络设置获取
+        if (netStatus == 1) return false;
+
+        wifiDialog.show();
+        return true;
     }
 }
