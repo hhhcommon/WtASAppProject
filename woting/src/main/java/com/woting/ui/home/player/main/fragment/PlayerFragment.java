@@ -159,6 +159,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private boolean isResetData;// 重新获取了数据  searchByText
     private boolean isPlaying;// 是否正在播放
     private boolean isInitData;// 第一次进入应用加载数据
+    private boolean isNetPlay;// 播放网络地址
+    private boolean isPlayLK;// 正在播放路况
 
     /**
      * 1.== "MAIN_PAGE"  ->  mainPageRequest;
@@ -207,6 +209,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     // 初始化视图
     private void initView(View view) {
         // 开启服务绑定播放器 BVideoView
+        BVideoView.setAK("1f32c8ae32894fd4b3030ec6e9bd14c2");
         BVideoView bVideoView = (BVideoView) rootView.findViewById(R.id.video_view);
         mPlayer.bindService(context, bVideoView);
 
@@ -307,8 +310,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         mSearchHistoryDao = new SearchPlayerHistoryDao(context);
         mFileDao = new FileInfoDao(context);
 
-        BVideoView.setAK("1f32c8ae32894fd4b3030ec6e9bd14c2");
-
         mPlayer = IntegrationPlayer.getInstance();
 
         bmpPress = BitmapUtils.readBitMap(context, R.mipmap.wt_duijiang_button_pressed);
@@ -331,6 +332,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             filter.addAction(BroadcastConstants.UPDATE_PLAY_TOTAL_TIME);// 更新当前播放总时间
             filter.addAction(BroadcastConstants.UPDATE_PLAY_LIST);// 更新播放列表
             filter.addAction(BroadcastConstants.UPDATE_PLAY_VIEW);// 更新播放界面
+
+            filter.addAction(BroadcastConstants.PLAY_NO_NET);// 播放器没有网络
+            filter.addAction(BroadcastConstants.PLAY_WIFI_TIP);// 需要提示
+            filter.addAction(BroadcastConstants.LK_TTS_PLAY_OVER);// 路况播放完了
 
             // 下载完成更新 LocalUrl
             filter.addAction(BroadcastConstants.ACTION_FINISHED);
@@ -359,6 +364,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    mPlayer.setPlayCurrentTime((long) progress);
+                }
             }
         });
     }
@@ -637,13 +645,18 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         final View dialog1 = LayoutInflater.from(context).inflate(R.layout.dialog_wifi_set, null);
         wifiDialog = new Dialog(context, R.style.MyDialog);
         wifiDialog.setContentView(dialog1);
-        wifiDialog.setCanceledOnTouchOutside(true);
+        wifiDialog.setCanceledOnTouchOutside(false);
         wifiDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
         // 取消播放
         dialog1.findViewById(R.id.tv_cancle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 wifiDialog.dismiss();
+
+                isNetPlay = true;
+                mPlayImageStatus.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_play_stop));
+                isPlaying = false;
+                mUIHandler.sendEmptyMessage(IntegerConstant.PLAY_UPDATE_LIST_VIEW);
             }
         });
         // 允许本次播放
@@ -651,7 +664,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             @Override
             public void onClick(View v) {
                 wifiDialog.dismiss();
-                play();
+                mPlayer.startPlay(index, true);
+                isNetPlay = false;
             }
         });
         // 不再提醒
@@ -660,9 +674,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             public void onClick(View v) {
                 SharedPreferences.Editor et = sp.edit();
                 et.putString(StringConstant.WIFISHOW, "false");
-                if (et.commit()) Log.i("TAG", "commit Fail");
+                if (!et.commit()) Log.i("TAG", "commit Fail");
                 wifiDialog.dismiss();
-                play();
+                mPlayer.startPlay(index, true);
+                isNetPlay = false;
             }
         });
     }
@@ -844,6 +859,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.lin_lukuangtts:// 获取路况
+                TTSPlay();
                 break;
             case R.id.tv_cancel:// 取消 点击隐藏语音对话框
                 linChoseClose(mViewVoice);
@@ -1091,6 +1107,36 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 case BroadcastConstants.ACTION_FINISHED_NO_DOWNLOADVIEW:
                     if (mPlayer != null) mPlayer.updateLocalList();
                     break;
+                case BroadcastConstants.PLAY_NO_NET:// 播放器没有网络
+                    ToastUtils.show_always(context, "没有网络!");
+                    break;
+                case BroadcastConstants.PLAY_WIFI_TIP:// 需要提示
+                    wifiDialog.show();
+                    break;
+                case BroadcastConstants.LK_TTS_PLAY_OVER:// 路况播放完了
+                    isPlayLK = false;
+                    if (isPlaying) {// 正在播放
+                        mPlayer.continuePlay();
+                        mPlayImageStatus.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_play_play));
+                    } else {// 暂停状态
+                        mPlayer.pausePlay();
+                        mPlayImageStatus.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_play_stop));
+                    }
+
+                    // 播放的节目封面图片
+                    String url = GlobalConfig.playerObject.getContentImg();
+                    if (url != null) {// 有封面图片
+                        if (!url.startsWith("http")) {
+                            url = GlobalConfig.imageurl + url;
+                        }
+                        url = AssembleImageUrlUtils.assembleImageUrl180(url);
+                        Picasso.with(context).load(url.replace("\\/", "/")).into(mPlayAudioImageCover);
+                    } else {// 没有封面图片设置默认图片
+                        mPlayAudioImageCover.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx));
+                    }
+
+                    mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST_VIEW, 0);
+                    break;
             }
         }
     }
@@ -1161,7 +1207,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                         setPullAndLoad(true, true);
                     } else {
                         if (refreshType == 0 && playList.size() <= 0) {
-                            setPullAndLoad(false, false);
+                            setPullAndLoad(true, false);
                         } else {
                             setPullAndLoad(true, false);
                         }
@@ -1170,7 +1216,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (refreshType == 0 && playList.size() <= 0) {
-                        setPullAndLoad(false, false);
+                        setPullAndLoad(true, false);
                     } else {
                         setPullAndLoad(true, false);
                     }
@@ -1183,7 +1229,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
                 if (refreshType == 0 && playList.size() <= 0) {
-                    setPullAndLoad(false, false);
+                    setPullAndLoad(true, false);
                 } else {
                     setPullAndLoad(true, false);
                 }
@@ -1352,6 +1398,35 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         mainPageRequest();
     }
 
+    // 获取路况信息内容
+    private void getLuKuangTTS() {
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        VolleyRequest.RequestPost(GlobalConfig.getLKTTS, jsonObject, new VolleyCallback() {
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (dialog != null) dialog.dismiss();
+                try {
+                    String Message = result.getString("ContentURI");
+                    if (Message != null && Message.trim().length() > 0) {
+                        mPlayAudioImageCover.setImageResource(R.mipmap.wt_icon_lktts);
+                        mPlayImageStatus.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_play_play));
+                        mPlayer.playLKTts(Message);
+                        isPlayLK = true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    isPlayLK = false;
+                }
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+                if (dialog != null) dialog.dismiss();
+                isPlayLK = false;
+            }
+        });
+    }
+
     // listView 的 item 点击事件监听
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -1362,24 +1437,31 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             } else {// 和当前播放节目不相同则直接开始播放
                 index = position;
                 mPlayer.startPlay(index);
-                mPlayImageStatus.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_play_play));
             }
         }
     }
 
     // 开始播放
     private void play() {
-        if(GlobalConfig.playerObject == null) return ;
-        if (mPlayer.playStatus()) {// 正在播放
-            mPlayer.pausePlay();
-            mPlayImageStatus.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_play_stop));
-            isPlaying = false;
-        } else {// 暂停状态
-            mPlayer.continuePlay();
-            mPlayImageStatus.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_play_play));
-            isPlaying = true;
+        if (isPlayLK) {
+            mPlayer.stopLKTts();
+            return ;
         }
-        mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST_VIEW, 0);
+        if (GlobalConfig.playerObject == null) return ;
+        if (isNetPlay && !isPlaying) {
+            mPlayer.startPlay(index);
+        } else {
+            if (mPlayer.playStatus()) {// 正在播放
+                mPlayer.pausePlay();
+                mPlayImageStatus.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_play_stop));
+                isPlaying = false;
+            } else {// 暂停状态
+                mPlayer.continuePlay();
+                mPlayImageStatus.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_play_play));
+                isPlaying = true;
+            }
+            mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST_VIEW, 0);
+        }
     }
 
     // 下一首
@@ -1397,6 +1479,15 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             return ;
         }
         mPlayer.startPlay(index);
+    }
+
+    // TTS 的播放
+    private void TTSPlay() {
+        ToastUtils.show_always(context, "点击了路况TTS按钮");
+        if (CommonHelper.checkNetwork(context)) {
+            dialog = DialogUtils.Dialogph(context, "通讯中");
+            getLuKuangTTS();// 获取路况数据播报
+        }
     }
 
     @Override
@@ -1559,22 +1650,5 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(context).onActivityResult(requestCode, resultCode, data);
-    }
-
-    // 是否弹框提醒
-    private boolean wifiPlayTip() {
-        String wifiSet = sp.getString(StringConstant.WIFISET, "true");
-        boolean isOpen = Boolean.valueOf(wifiSet); // 是否开启非 wifi 网络流量提醒
-        if (!isOpen) return false;
-
-        String wifiShow = sp.getString(StringConstant.WIFISHOW, "true");// 是否弹框提醒
-        boolean isShow = Boolean.valueOf(wifiShow);
-        if (!isShow) return false;
-
-        int netStatus = CommonHelper.checkNetworkStatus(context);// 网络设置获取
-        if (netStatus == 1) return false;
-
-        wifiDialog.show();
-        return true;
     }
 }

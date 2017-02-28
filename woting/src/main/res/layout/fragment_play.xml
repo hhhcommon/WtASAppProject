@@ -5,6 +5,11 @@
     android:layout_height="match_parent"
     android:background="@color/beige">
 
+    <com.baidu.cyberplayer.core.BVideoView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"/>
+
     <com.woting.common.widgetui.xlistview.XListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
@@ -13,12 +18,6 @@
         android:divider="@color/WHITE"
         android:scrollbars="none"
         android:scrollingCache="false"/>
-
-    <com.baidu.cyberplayer.core.BVideoView
-        android:id="@+id/video_view"
-        android:layout_width="match_parent"
-        android:layout_below="@id/listView"
-        android:layout_height="0.1dp"/>
 
     <LinearLayout
         android:id="@+id/lin_chose"

@@ -257,8 +257,9 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                     Bitmap bitmap = BitmapUtils.readBitMap(context, R.mipmap.wt_person_on);
                     imageToggle.setImageBitmap(bitmap);
                     et.putString(StringConstant.WIFISET, "true");
+                    et.putString(StringConstant.WIFISHOW, "true");
                 }
-                if (et.commit()) Log.v("commit", "数据 commit 失败!");
+                if (!et.commit()) Log.v("commit", "数据 commit 失败!");
                 break;
             case R.id.lin_xiugai:           // 修改个人资料
                 startActivityForResult(new Intent(context, UpdatePersonActivity.class), UPDATE_USER);
