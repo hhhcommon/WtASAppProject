@@ -1574,13 +1574,21 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     @Override
     public void onRefresh() {
         refreshType = -1;
-        mainPageRequest();
+        if (StringConstant.PLAY_REQUEST_TYPE_SEARCH_SEQU.equals(requestType)) {
+            sequListRequest();
+        } else {
+            mainPageRequest();
+        }
     }
 
     @Override
     public void onLoadMore() {
         refreshType = 1;
-        mainPageRequest();
+        if (StringConstant.PLAY_REQUEST_TYPE_SEARCH_SEQU.equals(requestType)) {
+            sequListRequest();
+        } else {
+            mainPageRequest();
+        }
     }
 
     // 更新列表
