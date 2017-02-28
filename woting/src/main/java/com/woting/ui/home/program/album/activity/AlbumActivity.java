@@ -34,6 +34,7 @@ import com.umeng.socialize.media.UMImage;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -46,6 +47,7 @@ import com.woting.common.widgetui.HorizontalListView;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseFragmentActivity;
 import com.woting.ui.baseadapter.MyFragmentChildPagerAdapter;
+import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.adapter.ImageAdapter;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
 import com.woting.ui.home.player.main.model.ShareModel;
@@ -54,6 +56,7 @@ import com.woting.ui.home.program.album.fragment.ProgramFragment;
 import com.woting.ui.home.program.comment.CommentActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.home.program.radiolist.mode.ListInfo;
+import com.woting.ui.main.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -120,6 +123,8 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
     }
 
     private void setView() {
+        findViewById(R.id.head_right_btn).setOnClickListener(this);// 播放专辑
+
         tv_album_name = (TextView) findViewById(R.id.head_name_tv);
         img_album = (ImageView) findViewById(R.id.img_album);
         imageFavorite = (ImageView) findViewById(R.id.img_favorite);
@@ -409,6 +414,16 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
                 } else {
                     ToastUtils.show_always(context, "请先登录~~");
                 }
+                break;
+            case R.id.head_right_btn:// 播放专辑
+                ToastUtils.show_always(context, "播放专辑");
+                Intent intent = new Intent(BroadcastConstants.PLAY_SEQU_LIST);
+                intent.putExtra(StringConstant.ID_CONTENT, id);
+                intent.putExtra(StringConstant.SEQU_LIST_SIZE, programFragment.getListSize());
+                sendBroadcast(intent);
+                MainActivity.change();
+                HomeActivity.UpdateViewPager();
+                finish();
                 break;
         }
     }

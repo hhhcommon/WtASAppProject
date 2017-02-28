@@ -536,6 +536,11 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
         FID = new FileInfoDao(context);
     }
 
+    // 获取列表数量
+    public int getListSize() {
+        return SubListAll.size();
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();

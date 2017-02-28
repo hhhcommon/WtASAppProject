@@ -28,6 +28,12 @@
             android:textColor="@color/WHITE_1"
             android:textSize="@dimen/activity_head_center_s" />
 
+        <ImageView
+            android:id="@+id/head_right_btn"
+            style="@style/LeftImageStyle"
+            android:src="@mipmap/wt_image_album_music"
+            android:layout_alignParentRight="true"/>
+
     </RelativeLayout>
 
     <com.woting.common.widgetui.TipView

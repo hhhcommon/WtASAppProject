@@ -151,6 +151,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private int refreshType = 0;// == -1 刷新  == 1 加载更多  == 0 第一次加载
     private int stepVolume;
     private int curVolume;// 当前音量
+    private int index = 0;// 记录当前播放在列表中的位置
 
     private Bitmap bmpPress;// 语音搜索按钮按下的状态图片
     private Bitmap bmp;// 语音搜索按钮未按下的状态图片
@@ -166,14 +167,16 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
      * 1.== "MAIN_PAGE"  ->  mainPageRequest;
      * 2.== "SEARCH_TEXT"  ->  searchByTextRequest;
      * 3.== "SEARCH_VOICE"  ->  searchByVoiceRequest;
+     * 4.== "SEARCH_SEQU" -> 播放专辑
      * Default  == "MAIN_PAGE";
      */
     private String requestType = StringConstant.PLAY_REQUEST_TYPE_MAIN_PAGE;
     private String sendTextContent;// 文字搜索内容
     private String sendVoiceContent;// 语音搜索内容
     private String mediaType;// 当前播放节目类型
+    private String contentId;// 专辑 ID  播放专辑列表时获取专辑列表数据需要的参数
+    private int sequListSize;// 播放专辑 获取在专辑列表已经获取的列表数量
 
-    private int index = 0;// 记录当前播放在列表中的位置
     private List<LanguageSearchInside> playList = new ArrayList<>();// 播放列表
     private List<LanguageSearchInside> subList = new ArrayList<>();// 保存临时数据
 
@@ -340,6 +343,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             // 下载完成更新 LocalUrl
             filter.addAction(BroadcastConstants.ACTION_FINISHED);
             filter.addAction(BroadcastConstants.ACTION_FINISHED_NO_DOWNLOADVIEW);
+
+            // 播放专辑
+            filter.addAction(BroadcastConstants.PLAY_SEQU_LIST);
+
             context.registerReceiver(mReceiver, filter);
         }
     }
@@ -1137,6 +1144,15 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
                     mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST_VIEW, 0);
                     break;
+                case BroadcastConstants.PLAY_SEQU_LIST:// 播放专辑列表
+                    contentId = intent.getStringExtra(StringConstant.ID_CONTENT);
+                    sequListSize = intent.getIntExtra(StringConstant.SEQU_LIST_SIZE, 0);
+                    requestType = StringConstant.PLAY_REQUEST_TYPE_SEARCH_SEQU;
+
+                    page = 1;
+                    refreshType = 0;
+                    sequListRequest();
+                    break;
             }
         }
     }
@@ -1288,6 +1304,71 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
+            }
+        });
+    }
+
+    // 根据专辑获取播放列表
+    private void sequListRequest() {
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("ContentId", contentId);
+            jsonObject.put("Page", String.valueOf(page));
+            if (sequListSize > 10) {
+                jsonObject.put("PageSize", String.valueOf(sequListSize));
+                sequListSize = 10;
+            } else {
+                jsonObject.put("PageSize", String.valueOf(sequListSize));
+            }
+            jsonObject.put("SortType", "2");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        VolleyRequest.RequestPost(GlobalConfig.getSmSubMedias, jsonObject, new VolleyCallback() {
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (dialog != null) dialog.dismiss();
+                try {
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultInfo")).nextValue();
+                        List<LanguageSearchInside> list = new Gson().fromJson(arg1.getString("SubList"), new TypeToken<List<LanguageSearchInside>>() {}.getType());
+                        if (page == 1) playList.clear();
+                        if (list != null && list.size() >= sequListSize) page++;
+                        subList = clearContentPlayNull(list);// 去空
+                        if (subList != null && subList.size() > 0) {
+                            mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
+                        }
+                        setPullAndLoad(true, true);
+                    } else {
+                        if (refreshType == 0 && playList.size() <= 0) {
+                            setPullAndLoad(true, false);
+                        } else {
+                            setPullAndLoad(true, false);
+                        }
+                        mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (refreshType == 0 && playList.size() <= 0) {
+                        setPullAndLoad(true, false);
+                    } else {
+                        setPullAndLoad(true, false);
+                    }
+                    mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
+                }
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+                if (dialog != null) dialog.dismiss();
+                if (refreshType == 0 && playList.size() <= 0) {
+                    setPullAndLoad(true, false);
+                } else {
+                    setPullAndLoad(true, false);
+                }
+                mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
             }
         });
     }
@@ -1572,7 +1653,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             mPlayer.updatePlayList(playerList, index);
         }
 
-        if (requestType.equals(StringConstant.PLAY_REQUEST_TYPE_SEARCH_VOICE) && refreshType == 0) {
+        if (requestType.equals(StringConstant.PLAY_REQUEST_TYPE_SEARCH_VOICE) && refreshType == 0) {// 语音结束后自动播放第一个节目
+            index = 0;
+            mPlayer.startPlay(index);
+        } else if (requestType.equals(StringConstant.PLAY_REQUEST_TYPE_SEARCH_SEQU) && refreshType == 0) {// 播放专辑
             index = 0;
             mPlayer.startPlay(index);
         }

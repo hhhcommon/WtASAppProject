@@ -69,6 +69,9 @@ public class StringConstant {
     // 播放界面请求类型  语音请求
     public static final String PLAY_REQUEST_TYPE_SEARCH_VOICE = "SEARCH_VOICE";
 
+    // 播放专辑
+    public static final String PLAY_REQUEST_TYPE_SEARCH_SEQU = "SEARCH_SEQU";
+
     // 数据获取  语音请求内容
     public static final String VOICE_CONTENT = "VoiceContent";
 
@@ -91,4 +94,10 @@ public class StringConstant {
 //	public static final String REFRESHDOWNLOAD="refreshdownload";//
 
     public static final String FAVORITE_PROGRAM_TYPE = "FAVORITE_PROGRAM_TYPE";         // 保存是否已经选择喜欢的节目
+
+    // 数据传递 专辑 ID  播放专辑
+    public static final String ID_CONTENT = "ID_CONTENT";
+
+    // 数据传递 专辑列表 播放专辑
+    public static final String SEQU_LIST_SIZE = "SEQU_LIST_SIZE";
 }

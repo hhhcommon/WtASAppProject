@@ -124,4 +124,7 @@ public class BroadcastConstants {
 
     // 路况播放完了
     public static final String LK_TTS_PLAY_OVER = "LK_TTS_PLAY_OVER";
+
+    // 播放专辑列表中的数据
+    public static final String PLAY_SEQU_LIST = "PLAY_SEQU_LIST";
 }
