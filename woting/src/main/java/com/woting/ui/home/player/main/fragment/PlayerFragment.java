@@ -1480,6 +1480,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                             LanguageSearch lists = new Gson().fromJson(result.getString("ResultList"), new TypeToken<LanguageSearch>() {}.getType());
                             list = lists.getList();
                         }
+                        if (requestType.equals(StringConstant.PLAY_REQUEST_TYPE_SEARCH_VOICE) && refreshType == 0) playList.clear();
                         if (list != null && list.size() >= 10) {
                             page++;
                             setPullAndLoad(true, true);
@@ -1489,8 +1490,14 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                         subList = clearContentPlayNull(list);// 去空
                         mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
                     } else {
-                        setPullAndLoad(true, false);
-                        mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
+                        setPullAndLoad(false, false);
+                        if (!requestType.equals(StringConstant.PLAY_REQUEST_TYPE_MAIN_PAGE) && refreshType == 0) {
+                            ToastUtils.show_always(context, "没有查询到相关内容，您换个词试试吧~");
+                        } else if (!requestType.equals(StringConstant.PLAY_REQUEST_TYPE_SEARCH_VOICE) && refreshType != 0) {
+                            ToastUtils.show_always(context, "没有更多推荐了~~");
+                        } else if (refreshType == 0) {
+                            mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
