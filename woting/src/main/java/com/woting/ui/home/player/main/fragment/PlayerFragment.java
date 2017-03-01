@@ -662,6 +662,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     sequListSize = intent.getIntExtra(StringConstant.SEQU_LIST_SIZE, 0);
                     requestType = StringConstant.PLAY_REQUEST_TYPE_SEARCH_SEQU;
 
+                    sequListSize = 10;
                     page = 1;
                     refreshType = 0;
                     sequListRequest();
@@ -778,7 +779,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     @Override
     public void onRefresh() {
         refreshType = -1;
-        if (StringConstant.PLAY_REQUEST_TYPE_SEARCH_SEQU.equals(requestType)) {
+        if (requestType.equals(StringConstant.PLAY_REQUEST_TYPE_SEARCH_SEQU)) {
             sequListRequest();
         } else {
             mainPageRequest();
@@ -788,7 +789,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     @Override
     public void onLoadMore() {
         refreshType = 1;
-        if (StringConstant.PLAY_REQUEST_TYPE_SEARCH_SEQU.equals(requestType)) {
+        if (requestType.equals(StringConstant.PLAY_REQUEST_TYPE_SEARCH_SEQU)) {
             sequListRequest();
         } else {
             mainPageRequest();
@@ -1371,17 +1372,14 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
     // 根据专辑获取播放列表
     private void sequListRequest() {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) { // 没有网络
+            return ;
+        }
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("ContentId", contentId);
             jsonObject.put("Page", String.valueOf(page));
-            if (sequListSize > 10) {
-                jsonObject.put("PageSize", String.valueOf(sequListSize));
-                sequListSize = 10;
-            } else {
-                sequListSize = 10;
-                jsonObject.put("PageSize", String.valueOf(sequListSize));
-            }
+            jsonObject.put("PageSize", "10");
             jsonObject.put("SortType", "2");
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1397,19 +1395,17 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultInfo")).nextValue();
                         List<LanguageSearchInside> list = new Gson().fromJson(arg1.getString("SubList"), new TypeToken<List<LanguageSearchInside>>() {}.getType());
                         if (page == 1) playList.clear();
-                        if (list != null && list.size() >= sequListSize) page++;
-                        else setPullAndLoad(false, false);
-                        subList = clearContentPlayNull(list);// 去空
-                        if (subList != null && subList.size() > 0) {
-                            mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
-                        }
-                    } else {
-                        if (refreshType == 0 && playList.size() <= 0) {
-                            setPullAndLoad(false, false);
+                        if (list != null && list.size() >= sequListSize) {
+                            page++;
+                            setPullAndLoad(false, true);
                         } else {
                             setPullAndLoad(false, false);
                         }
-                        mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
+                        subList = clearContentPlayNull(list);// 去空
+                        mUIHandler.sendEmptyMessage(IntegerConstant.PLAY_UPDATE_LIST);
+                    } else {
+                        setPullAndLoad(false, false);
+                        mUIHandler.sendEmptyMessage(IntegerConstant.PLAY_UPDATE_LIST);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1418,7 +1414,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     } else {
                         setPullAndLoad(false, false);
                     }
-                    mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
+                    mUIHandler.sendEmptyMessage(IntegerConstant.PLAY_UPDATE_LIST);
                 }
             }
 
@@ -1430,7 +1426,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 } else {
                     setPullAndLoad(false, false);
                 }
-                mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
+                mUIHandler.sendEmptyMessage(IntegerConstant.PLAY_UPDATE_LIST);
             }
         });
     }
@@ -1484,27 +1480,21 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                             LanguageSearch lists = new Gson().fromJson(result.getString("ResultList"), new TypeToken<LanguageSearch>() {}.getType());
                             list = lists.getList();
                         }
-                        if (list != null && list.size() >= 10) page++;
-                        subList = clearContentPlayNull(list);// 去空
-                        if (subList != null && subList.size() > 0) {
-                            mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
-                        }
-                        setPullAndLoad(true, true);
-                    } else {
-                        if (refreshType == 0 && playList.size() <= 0) {
-                            setPullAndLoad(true, false);
+                        if (list != null && list.size() >= 10) {
+                            page++;
+                            setPullAndLoad(true, true);
                         } else {
                             setPullAndLoad(true, false);
                         }
+                        subList = clearContentPlayNull(list);// 去空
+                        mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
+                    } else {
+                        setPullAndLoad(true, false);
                         mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (refreshType == 0 && playList.size() <= 0) {
-                        setPullAndLoad(true, false);
-                    } else {
-                        setPullAndLoad(true, false);
-                    }
+                    setPullAndLoad(true, false);
                     mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
                 }
             }
@@ -1513,11 +1503,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
-                if (refreshType == 0 && playList.size() <= 0) {
-                    setPullAndLoad(true, false);
-                } else {
-                    setPullAndLoad(true, false);
-                }
+                setPullAndLoad(true, false);
                 mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
             }
         });
