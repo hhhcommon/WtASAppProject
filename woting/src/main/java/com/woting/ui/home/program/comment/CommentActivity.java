@@ -217,7 +217,7 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        VolleyRequest.RequestPost(GlobalConfig.delCommentUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.delCommentUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (isCancelRequest) return;
@@ -251,7 +251,7 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        VolleyRequest.RequestPost(GlobalConfig.getMyCommentListUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getMyCommentListUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (isCancelRequest) return;
@@ -322,7 +322,7 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.pushCommentUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.pushCommentUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (isCancelRequest) return;

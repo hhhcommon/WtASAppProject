@@ -67,7 +67,7 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
     }
 
     private void sendRequest() {
-        VolleyRequest.RequestPost(GlobalConfig.getContentUrl, tag, setParam(), new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, setParam(), new VolleyCallback() {
             private String StringSubList;
             private String ReturnType;
 

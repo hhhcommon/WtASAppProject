@@ -340,7 +340,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.getContentUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, jsonObject, new VolleyCallback() {
             private CityNewAdapter adapters;
 
             @Override
@@ -455,7 +455,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.getContentUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if(dialog != null) dialog.dismiss();

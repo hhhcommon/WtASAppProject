@@ -123,7 +123,7 @@ public class AnchorListActivity extends AppBaseActivity implements View.OnClickL
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        VolleyRequest.RequestPost(GlobalConfig.getPersonContents,tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getPersonContents,tag, jsonObject, new VolleyCallback() {
 
 
             @Override

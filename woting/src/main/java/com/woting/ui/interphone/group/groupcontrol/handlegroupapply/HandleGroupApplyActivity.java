@@ -133,7 +133,7 @@ public class HandleGroupApplyActivity extends AppBaseActivity implements OnClick
 			e.printStackTrace();
 		}
 
-		VolleyRequest.RequestPost(GlobalConfig.JoinGroupListUrl, tag, jsonObject, new VolleyCallback() {
+		VolleyRequest.requestPost(GlobalConfig.JoinGroupListUrl, tag, jsonObject, new VolleyCallback() {
 			private String ReturnType;
 
 			@Override
@@ -190,7 +190,7 @@ public class HandleGroupApplyActivity extends AppBaseActivity implements OnClick
 			e.printStackTrace();
 		}
 
-		VolleyRequest.RequestPost(GlobalConfig.applyDealUrl, tag, jsonObject, new VolleyCallback() {
+		VolleyRequest.requestPost(GlobalConfig.applyDealUrl, tag, jsonObject, new VolleyCallback() {
 			private String ReturnType;
 			private String Message;
 

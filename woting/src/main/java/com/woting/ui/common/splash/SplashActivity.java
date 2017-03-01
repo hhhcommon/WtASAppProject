@@ -58,7 +58,7 @@ public class SplashActivity extends Activity {
 
     protected void send() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(this);
-        VolleyRequest.RequestPost(GlobalConfig.splashUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.splashUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (isCancelRequest) return;

@@ -255,7 +255,7 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.searchStrangerUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.searchStrangerUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String ContactMeString;
 
@@ -327,7 +327,7 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.searchStrangerGroupUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.searchStrangerGroupUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String GroupMeString;
 

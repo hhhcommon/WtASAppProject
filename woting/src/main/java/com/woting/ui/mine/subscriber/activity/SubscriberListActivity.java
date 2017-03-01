@@ -144,7 +144,7 @@ public class SubscriberListActivity extends AppBaseActivity implements OnClickLi
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        VolleyRequest.RequestPost(GlobalConfig.getSubscribeList, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getSubscribeList, tag, jsonObject, new VolleyCallback() {
 
             @Override
             protected void requestSuccess(JSONObject result) {

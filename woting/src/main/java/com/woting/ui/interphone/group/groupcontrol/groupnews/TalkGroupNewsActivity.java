@@ -413,7 +413,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.grouptalkUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.grouptalkUrl, tag, jsonObject, new VolleyCallback() {
             private String returnType;
 
             @Override
@@ -609,7 +609,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.UpdateGroupInfoUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.UpdateGroupInfoUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
@@ -656,7 +656,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.ExitGroupurl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.ExitGroupurl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();

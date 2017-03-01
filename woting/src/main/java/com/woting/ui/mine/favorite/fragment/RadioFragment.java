@@ -263,7 +263,7 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
 			e.printStackTrace();
 		}
 		
-		VolleyRequest.RequestPost(GlobalConfig.getFavoriteListUrl, tag, jsonObject, new VolleyCallback() {
+		VolleyRequest.requestPost(GlobalConfig.getFavoriteListUrl, tag, jsonObject, new VolleyCallback() {
 			private String ReturnType;
 
 			@Override
@@ -466,7 +466,7 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
 			e.printStackTrace();
 		}
 		
-		VolleyRequest.RequestPost(GlobalConfig.delFavoriteListUrl, tag, jsonObject, new VolleyCallback() {
+		VolleyRequest.requestPost(GlobalConfig.delFavoriteListUrl, tag, jsonObject, new VolleyCallback() {
             private String returnType;
 
 			@Override

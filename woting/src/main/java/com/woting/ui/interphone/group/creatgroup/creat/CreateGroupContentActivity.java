@@ -165,7 +165,7 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 			e.printStackTrace();
 		}
 
-		VolleyRequest.RequestPost(GlobalConfig.talkgroupcreatUrl, tag, jsonObject, new VolleyCallback() {
+		VolleyRequest.requestPost(GlobalConfig.talkgroupcreatUrl, tag, jsonObject, new VolleyCallback() {
 			private String ReturnType;
 			private String Message;
 			private GroupInfo groupinfo;

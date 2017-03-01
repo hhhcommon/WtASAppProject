@@ -121,7 +121,7 @@ public class ModifyGroupPasswordActivity extends AppBaseActivity implements OnCl
 			e.printStackTrace();
 		}
 		
-		VolleyRequest.RequestPost(GlobalConfig.UpdateGroupPassWordUrl, tag, jsonObject, new VolleyCallback() {
+		VolleyRequest.requestPost(GlobalConfig.UpdateGroupPassWordUrl, tag, jsonObject, new VolleyCallback() {
 			private String ReturnType;
 			private String Message;
 

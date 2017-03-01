@@ -454,7 +454,7 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.clickSubscribe, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.clickSubscribe, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
 
             @Override
@@ -504,7 +504,7 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.clickFavoriteUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.clickFavoriteUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
 
             @Override

@@ -837,7 +837,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         }
         isUpdate = false;
         Log.v("数据改动", "数据有改动，将数据提交到服务器!");
-        VolleyRequest.RequestPost(GlobalConfig.updateUserUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.updateUserUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();

@@ -345,7 +345,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
             }
             JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 
-            VolleyRequest.RequestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
+            VolleyRequest.requestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
                 @Override
                 protected void requestSuccess(JSONObject result) {
                     if (dialogs != null) dialogs.dismiss();

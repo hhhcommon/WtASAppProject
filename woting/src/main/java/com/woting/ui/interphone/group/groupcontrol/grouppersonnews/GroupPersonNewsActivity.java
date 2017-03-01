@@ -264,7 +264,7 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.sendInviteUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.sendInviteUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String Message;
 
@@ -326,7 +326,7 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.updategroupFriendnewsUrl, groupSignature, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.updategroupFriendnewsUrl, groupSignature, jsonObject, new VolleyCallback() {
             private String ReturnType;
 
             @Override

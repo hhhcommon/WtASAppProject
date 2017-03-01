@@ -112,7 +112,7 @@ public class ModifyPasswordActivity extends AppBaseActivity implements OnClickLi
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.modifyPasswordUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.modifyPasswordUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String Message;
 

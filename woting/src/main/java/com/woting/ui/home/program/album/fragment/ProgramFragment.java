@@ -255,7 +255,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.getSmSubMedias, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getSmSubMedias, tag, jsonObject, new VolleyCallback() {
             private String subList;
             @Override
             protected void requestSuccess(JSONObject result) {

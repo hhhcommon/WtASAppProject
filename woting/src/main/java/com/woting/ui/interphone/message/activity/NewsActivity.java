@@ -128,7 +128,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
 
     private void sendPerson() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        VolleyRequest.RequestPost(GlobalConfig.getInvitedMeListUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getInvitedMeListUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (isCancelRequest) return;
@@ -182,7 +182,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
     private void sendGroup() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 
-        VolleyRequest.RequestPost(GlobalConfig.getInvitedMeGroupListUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getInvitedMeGroupListUrl, tag, jsonObject, new VolleyCallback() {
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -340,7 +340,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
             return;
         }
 
-        VolleyRequest.RequestPost(url, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(url, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String Message;
 

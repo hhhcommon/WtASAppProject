@@ -456,7 +456,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             dialog = DialogUtils.Dialogph(context, "正在获取数据");
             JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-            VolleyRequest.RequestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
+            VolleyRequest.requestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
                 @Override
                 protected void requestSuccess(JSONObject result) {
                     if (dialog != null) {
@@ -624,7 +624,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        VolleyRequest.RequestPost(GlobalConfig.grouptalkUrl, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.grouptalkUrl, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 String UserList = null;

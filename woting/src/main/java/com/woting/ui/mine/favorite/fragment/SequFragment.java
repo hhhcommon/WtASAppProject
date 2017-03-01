@@ -209,7 +209,7 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
 			e.printStackTrace();
 		}
 		
-		VolleyRequest.RequestPost(GlobalConfig.getFavoriteListUrl, tag, jsonObject, new VolleyCallback() {
+		VolleyRequest.requestPost(GlobalConfig.getFavoriteListUrl, tag, jsonObject, new VolleyCallback() {
 			@Override
 			protected void requestSuccess(JSONObject result) {
 				if (dialog != null) dialog.dismiss();
@@ -377,7 +377,7 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
 			e.printStackTrace();
 		}
 		
-		VolleyRequest.RequestPost(GlobalConfig.delFavoriteListUrl, tag, jsonObject, new VolleyCallback() {
+		VolleyRequest.requestPost(GlobalConfig.delFavoriteListUrl, tag, jsonObject, new VolleyCallback() {
             private String returnType;
 
 			@Override

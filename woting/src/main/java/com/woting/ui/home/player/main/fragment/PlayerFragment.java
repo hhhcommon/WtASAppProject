@@ -1253,7 +1253,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        VolleyRequest.RequestPost(GlobalConfig.getIsPlayIngUrl, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getIsPlayIngUrl, jsonObject, new VolleyCallback() {
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -1302,7 +1302,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.clickFavoriteUrl, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.clickFavoriteUrl, jsonObject, new VolleyCallback() {
             private String ReturnType;
 
             @Override
@@ -1343,7 +1343,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     // 获取路况信息内容
     private void getLuKuangTTS() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        VolleyRequest.RequestPost(GlobalConfig.getLKTTS, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getLKTTS, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
@@ -1385,7 +1385,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.getSmSubMedias, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getSmSubMedias, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
@@ -1465,7 +1465,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(requestUrl, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(requestUrl, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 try {

@@ -146,7 +146,7 @@ public class PhoneCheckActivity extends AppActivity implements OnClickListener {
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(url, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(url, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
@@ -197,7 +197,7 @@ public class PhoneCheckActivity extends AppActivity implements OnClickListener {
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.checkPhoneCheckCodeUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.checkPhoneCheckCodeUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
@@ -244,7 +244,7 @@ public class PhoneCheckActivity extends AppActivity implements OnClickListener {
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.updateUserUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.updateUserUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
