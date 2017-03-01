@@ -100,4 +100,7 @@ public class StringConstant {
 
     // 数据传递 专辑列表 播放专辑
     public static final String SEQU_LIST_SIZE = "SEQU_LIST_SIZE";
+
+    // 数据传递 是否正在播放
+    public static final String IS_PLAYING = "IS_PLAYING";
 }
