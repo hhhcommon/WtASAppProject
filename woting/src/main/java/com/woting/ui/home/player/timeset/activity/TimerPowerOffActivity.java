@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.StringConstant;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.player.main.fragment.PlayerFragment;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
@@ -73,9 +74,15 @@ public class TimerPowerOffActivity extends AppBaseActivity implements OnClickLis
         imageTimeProgramOver = (ImageView) findViewById(R.id.image_time_program_over);
         imageTimeNoStart = (ImageView) findViewById(R.id.image_time_nostart);
 
+        Intent intent = getIntent();
+        boolean isPlaying = false;
+        if (intent != null) {
+            isPlaying = intent.getBooleanExtra(StringConstant.IS_PLAYING, false);
+        }
+
         // 正在播放电台之外的节目时显示
         if(GlobalConfig.playerObject != null && !GlobalConfig.playerObject.getMediaType().equals("RADIO")) {
-            if(PlayerFragment.mPlayer.isPlaying()) {
+            if(isPlaying) {
                 viewPlayEnd.setVisibility(View.VISIBLE);
                 if (PlayerFragment.isCurrentPlay) {
                     viewPlayEnd.setClickable(false);
@@ -152,21 +159,21 @@ public class TimerPowerOffActivity extends AppBaseActivity implements OnClickLis
             case R.id.lin_60:            //六十分钟
                 setTime(60);
                 break;
-            case R.id.lin_playend:        //当前节目播放完
+            case R.id.lin_playend:        // 当前节目播放完
+                PlayerFragment.isCurrentPlay = true;
                 imageTimeCheck = 100;
                 int time = PlayerFragment.timerService;
                 intent.putExtra("time", time);
                 startService(intent);
-                PlayerFragment.isCurrentPlay = true;
                 viewPlayEnd.setClickable(false);
                 break;
             case R.id.lin_nostart:// 不启动
+                PlayerFragment.isCurrentPlay = false;
                 imageTimeCheck = 0;
                 Intent intent = new Intent(context, timeroffservice.class);
                 intent.setAction(BroadcastConstants.TIMER_STOP);
                 startService(intent);
                 textTime.setText("00:00");
-                PlayerFragment.isCurrentPlay = false;
                 viewPlayEnd.setClickable(true);
                 break;
         }
@@ -175,10 +182,10 @@ public class TimerPowerOffActivity extends AppBaseActivity implements OnClickLis
 
     // 启动服务时间
     private void setTime(int time) {
+        PlayerFragment.isCurrentPlay = false;
         imageTimeCheck = time;
         intent.putExtra("time", time);
         startService(intent);
-        PlayerFragment.isCurrentPlay = false;
         viewPlayEnd.setClickable(true);
     }
 

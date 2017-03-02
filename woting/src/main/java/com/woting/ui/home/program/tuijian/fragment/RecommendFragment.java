@@ -158,7 +158,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             }
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.getContentUrl, tag, setParam(), new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, setParam(), new VolleyCallback() {
             private String returnType;
 
             @Override

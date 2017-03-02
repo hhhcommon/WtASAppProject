@@ -238,7 +238,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
     // 注销数据交互
     private void sendRequestLogout() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        VolleyRequest.RequestPost(GlobalConfig.logoutUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.logoutUrl, tag, jsonObject, new VolleyCallback() {
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -299,7 +299,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        VolleyRequest.RequestPost(GlobalConfig.VersionUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.VersionUrl, tag, jsonObject, new VolleyCallback() {
 
             @Override
             protected void requestSuccess(JSONObject result) {

@@ -516,7 +516,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.searchHotKeysUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.searchHotKeysUrl, tag, jsonObject, new VolleyCallback() {
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -592,7 +592,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        VolleyRequest.RequestPost(GlobalConfig.getHotSearch, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getHotSearch, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 tipView.setVisibility(View.GONE);

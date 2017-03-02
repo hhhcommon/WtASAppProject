@@ -210,7 +210,7 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
             }
             return;
         }
-        VolleyRequest.RequestPost(GlobalConfig.getSearchByText, tag, setParam(), new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getSearchByText, tag, setParam(), new VolleyCallback() {
             private String ReturnType;
 
             @Override

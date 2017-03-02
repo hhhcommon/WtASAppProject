@@ -100,7 +100,7 @@ public class FMListActivity extends AppBaseActivity implements OnClickListener, 
     }
 
     private void sendRequest() {
-        VolleyRequest.RequestPost(GlobalConfig.getContentUrl, tag, setParam(), new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, setParam(), new VolleyCallback() {
             private String StringSubList;
             private String ReturnType;
 

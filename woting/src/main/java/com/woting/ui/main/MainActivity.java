@@ -192,7 +192,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         //第一次获取群成员跟组
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-            VolleyRequest.RequestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
+            VolleyRequest.requestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
 
                 @Override
                 protected void requestSuccess(JSONObject result) {
@@ -269,7 +269,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        VolleyRequest.RequestPost(GlobalConfig.getCatalogUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getCatalogUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 Log.e("获取城市列表", "" + result.toString());
@@ -426,7 +426,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        VolleyRequest.RequestPost(GlobalConfig.getContentById, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getContentById, tag, jsonObject, new VolleyCallback() {
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -597,7 +597,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.VersionUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.VersionUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (isCancelRequest) {

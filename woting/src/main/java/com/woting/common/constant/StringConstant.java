@@ -25,6 +25,26 @@ public class StringConstant {
     public static final String AGE = "AGE";                                        // 年龄
     public static final String NICK_NAME = "NICK_NAME";                            // 昵称
 
+    // 播放器缓存进度  数据传递
+    public static final String PLAY_SECOND_PROGRESS = "PLAY_SECOND_PROGRESS";
+
+    // 数据传递  当前播放进度
+    public static final String PLAY_CURRENT_TIME = "PLAY_CURRENT_TIME";
+
+    // 数据传递  当前播放总时间
+    public static final String PLAY_TOTAL_TIME = "PLAY_TOTAL_TIME";
+
+    // 数据传递  当前播放类型
+    public static final String PLAY_MEDIA_TYPE = "PLAY_MEDIA_TYPE";
+
+    // 数据传递  当前播放在列表中的位置
+    public static final String PLAY_POSITION = "PLAY_POSITION";
+
+    public static final String TYPE_SEQU = "SEQU";                                  // 专辑
+    public static final String TYPE_AUDIO = "AUDIO";                                // 声音
+    public static final String TYPE_RADIO = "RADIO";                                // 电台
+    public static final String TYPE_TTS = "TTS";                                    // TTS
+
 
     public static final String WIFI_SLEEP_POLICY_DEFAULT = "WIFI_SLEEP_POLICY_DEFAULT";// WiFi连接状态
     /*
@@ -39,6 +59,24 @@ public class StringConstant {
      * 保存的刷新界面信息
      */
     public static final String PERSONREFRESHB = "PERSON_REFRESH_B";                  // 是否刷新聊天
+
+    // 播放界面请求类型  主网络请求
+    public static final String PLAY_REQUEST_TYPE_MAIN_PAGE = "MAIN_PAGE";
+
+    // 播放界面请求类型  文字请求
+    public static final String PLAY_REQUEST_TYPE_SEARCH_TEXT = "SEARCH_TEXT";
+
+    // 播放界面请求类型  语音请求
+    public static final String PLAY_REQUEST_TYPE_SEARCH_VOICE = "SEARCH_VOICE";
+
+    // 播放专辑
+    public static final String PLAY_REQUEST_TYPE_SEARCH_SEQU = "SEARCH_SEQU";
+
+    // 数据获取  语音请求内容
+    public static final String VOICE_CONTENT = "VoiceContent";
+
+    // 数据获取  文字请求内容
+    public static final String TEXT_CONTENT = "text";
 
     /*
      * 保存2G,3G,4G等播放提醒
@@ -56,4 +94,13 @@ public class StringConstant {
 //	public static final String REFRESHDOWNLOAD="refreshdownload";//
 
     public static final String FAVORITE_PROGRAM_TYPE = "FAVORITE_PROGRAM_TYPE";         // 保存是否已经选择喜欢的节目
+
+    // 数据传递 专辑 ID  播放专辑
+    public static final String ID_CONTENT = "ID_CONTENT";
+
+    // 数据传递 专辑列表 播放专辑
+    public static final String SEQU_LIST_SIZE = "SEQU_LIST_SIZE";
+
+    // 数据传递 是否正在播放
+    public static final String IS_PLAYING = "IS_PLAYING";
 }

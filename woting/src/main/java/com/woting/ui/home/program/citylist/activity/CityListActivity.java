@@ -148,7 +148,7 @@ public class CityListActivity extends AppBaseActivity implements OnClickListener
 
     // 发送网络请求
     private void sendRequest() {
-        VolleyRequest.RequestPost(GlobalConfig.getCatalogUrl, tag, setParam(), new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getCatalogUrl, tag, setParam(), new VolleyCallback() {
             private String ReturnType;
 
             @Override

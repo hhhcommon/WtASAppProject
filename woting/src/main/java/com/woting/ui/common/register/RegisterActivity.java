@@ -161,7 +161,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.checkPhoneCheckCodeUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.checkPhoneCheckCodeUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String Message;
 
@@ -210,7 +210,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.registerUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.registerUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String Message;
             private String userId;
@@ -311,7 +311,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(url, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(url, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String Message;
 

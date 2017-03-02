@@ -274,7 +274,7 @@ public class AddLabelActivity extends AppBaseActivity implements
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        VolleyRequest.RequestPostForUpload(GlobalConfig.getTags, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPostForUpload(GlobalConfig.getTags, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
 //                if(dialog != null) dialog.dismiss();

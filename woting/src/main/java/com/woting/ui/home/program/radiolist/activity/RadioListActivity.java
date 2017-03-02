@@ -114,7 +114,7 @@ public class RadioListActivity extends AppBaseFragmentActivity implements OnClic
             tipView.setTipView(TipView.TipStatus.NO_NET);
             return ;
         }
-        VolleyRequest.RequestPost(GlobalConfig.getCatalogUrl, tag, setParam(), new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getCatalogUrl, tag, setParam(), new VolleyCallback() {
             private String ReturnType;
             private List<SubCata> subDataList;
             private String CatalogData;

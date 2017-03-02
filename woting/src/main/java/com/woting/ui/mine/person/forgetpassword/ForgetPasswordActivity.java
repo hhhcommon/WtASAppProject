@@ -151,7 +151,7 @@ public class ForgetPasswordActivity extends AppBaseActivity implements OnClickLi
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.checkPhoneCheckCodeUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.checkPhoneCheckCodeUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String Message;
             private String UserId;
@@ -214,7 +214,7 @@ public class ForgetPasswordActivity extends AppBaseActivity implements OnClickLi
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(url, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(url, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String Message;
 
@@ -266,7 +266,7 @@ public class ForgetPasswordActivity extends AppBaseActivity implements OnClickLi
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.updatePwd_AfterCheckPhoneOKUrl, userId, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.updatePwd_AfterCheckPhoneOKUrl, userId, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String Message;
 

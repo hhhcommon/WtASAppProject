@@ -15,7 +15,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.common.config.GlobalConfig;
+import com.woting.common.application.BSApplication;
+import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.StringConstant;
+import com.woting.common.util.CommonUtils;
+import com.woting.common.util.ToastUtils;
 import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.downloadlist.adapter.DownLoadListAdapter;
@@ -26,11 +30,6 @@ import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.fragment.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.main.MainActivity;
-import com.woting.common.application.BSApplication;
-import com.woting.common.constant.BroadcastConstants;
-import com.woting.common.constant.StringConstant;
-import com.woting.common.util.CommonUtils;
-import com.woting.common.util.ToastUtils;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -255,28 +254,21 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
                                     ContentId, playlocalrurl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
                             dbDao.deleteHistory(playerurl);
                             dbDao.addHistory(history);
-                            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                                if (PlayerFragment.context != null) {
-                                    MainActivity.change();
-                                    HomeActivity.UpdateViewPager();
-                                    Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
-                                    Bundle bundle1 = new Bundle();
-                                    bundle1.putString("text", mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4));
-                                    push.putExtras(bundle1);
-                                    context.sendBroadcast(push);
-                                } else {
-                                    SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
-                                    et.putString(StringConstant.PLAYHISTORYENTER, "true");
-                                    et.putString(StringConstant.PLAYHISTORYENTERNEWS, mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4));
-                                    if (!et.commit()) Log.v("commit", "数据 commit 失败!");
-                                    MainActivity.change();
-                                    HomeActivity.UpdateViewPager();
-                                }
-                            } else {
-                                // 没网的状态下
+                            if (PlayerFragment.context != null) {
                                 MainActivity.change();
                                 HomeActivity.UpdateViewPager();
-                                PlayerFragment.playNoNet();
+                                Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                                Bundle bundle1 = new Bundle();
+                                bundle1.putString("text", mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4));
+                                push.putExtras(bundle1);
+                                context.sendBroadcast(push);
+                            } else {
+                                SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
+                                et.putString(StringConstant.PLAYHISTORYENTER, "true");
+                                et.putString(StringConstant.PLAYHISTORYENTERNEWS, mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4));
+                                if (!et.commit()) Log.v("commit", "数据 commit 失败!");
+                                MainActivity.change();
+                                HomeActivity.UpdateViewPager();
                             }
                             setResult(1);
                             finish();

@@ -96,7 +96,7 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
     }
 
     private void sendRequest() {
-        VolleyRequest.RequestPost(GlobalConfig.getSearchByText, tag, setParam(), new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getSearchByText, tag, setParam(), new VolleyCallback() {
             private String ReturnType;
 
             @Override

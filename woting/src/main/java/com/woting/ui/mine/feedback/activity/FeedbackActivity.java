@@ -86,7 +86,7 @@ public class FeedbackActivity extends AppBaseActivity implements OnClickListener
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.FeedBackUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.FeedBackUrl, tag, jsonObject, new VolleyCallback() {
 
             @Override
             protected void requestSuccess(JSONObject result) {

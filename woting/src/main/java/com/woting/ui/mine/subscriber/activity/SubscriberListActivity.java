@@ -1,6 +1,7 @@
 package com.woting.ui.mine.subscriber.activity;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -24,7 +25,9 @@ import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.album.model.SubscriberInfo;
+import com.woting.ui.home.program.radiolist.mode.ListInfo;
 import com.woting.ui.mine.subscriber.adapter.SubscriberAdapter;
 
 import org.json.JSONException;
@@ -141,7 +144,7 @@ public class SubscriberListActivity extends AppBaseActivity implements OnClickLi
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        VolleyRequest.RequestPost(GlobalConfig.getSubscribeList, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getSubscribeList, tag, jsonObject, new VolleyCallback() {
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -196,14 +199,31 @@ public class SubscriberListActivity extends AppBaseActivity implements OnClickLi
         });
     }
 
-    // 这里要改
+    // 这里要改 ?
     protected void setListView() {
         mListView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position - 1 < 0) return ;
+                position = position - 1;
+                ListInfo listInfo = new ListInfo();
+                listInfo.setContentName(newList.get(position).getContentSeqName());
+                listInfo.setContentDescn(newList.get(position).getContentMediaName());
+                listInfo.setContentId(newList.get(position).getContentSeqId());
 
+                Intent intent = new Intent(context, AlbumActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("type", "radiolistactivity");
+                bundle.putSerializable("list", listInfo);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, 1);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        finish();
     }
 
     @Override

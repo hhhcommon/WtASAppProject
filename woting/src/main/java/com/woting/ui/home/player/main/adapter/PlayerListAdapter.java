@@ -30,6 +30,11 @@ public class PlayerListAdapter extends BaseAdapter {
         bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
     }
 
+    public void setList(List<LanguageSearchInside> list) {
+        this.list = list;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return list.size();

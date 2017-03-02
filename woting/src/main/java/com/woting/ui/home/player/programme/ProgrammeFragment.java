@@ -105,7 +105,7 @@ public class ProgrammeFragment extends Fragment implements TipView.WhiteViewClic
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        VolleyRequest.RequestPost(GlobalConfig.getProgrammeUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getProgrammeUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
 
             @Override

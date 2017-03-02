@@ -138,7 +138,7 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.grouptalkUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.grouptalkUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
 
             @Override
@@ -294,7 +294,7 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.KickOutMembersUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.KickOutMembersUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String Message;
 

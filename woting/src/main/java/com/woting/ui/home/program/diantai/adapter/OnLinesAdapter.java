@@ -149,11 +149,6 @@ public class OnLinesAdapter extends BaseExpandableListAdapter  {
 					} else {
 						holder.textview_ranktitle.setText(lists.getContentName());
 					}
-//					if (lists.getContentPub() == null|| lists.getContentPub().equals("")) {
-//						holder.textview_rankplaying.setText("未知");
-//					} else {
-//						holder.textview_rankplaying.setText(lists.getContentPub());
-//					}
 					if(!TextUtils.isEmpty(lists.getIsPlaying())){
 						holder.textview_rankplaying.setText(lists.getIsPlaying());
 					}else{

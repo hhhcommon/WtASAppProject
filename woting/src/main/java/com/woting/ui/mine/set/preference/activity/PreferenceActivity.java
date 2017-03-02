@@ -130,7 +130,7 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.setPreferenceUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.setPreferenceUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
 
             @Override
@@ -172,7 +172,7 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.getPreferenceUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getPreferenceUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
 
             @Override
@@ -228,7 +228,7 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
 
     private void sendTwice() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        VolleyRequest.RequestPost(GlobalConfig.getPreferenceUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getPreferenceUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
 
             @Override

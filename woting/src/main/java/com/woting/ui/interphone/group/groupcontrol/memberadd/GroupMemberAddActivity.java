@@ -139,7 +139,7 @@ public class GroupMemberAddActivity extends AppBaseActivity implements
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.getfriendlist, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getfriendlist, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
 
             @Override
@@ -291,7 +291,7 @@ public class GroupMemberAddActivity extends AppBaseActivity implements
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.sendInviteintoGroupUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.sendInviteintoGroupUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String Message;
 

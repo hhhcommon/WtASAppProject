@@ -193,7 +193,7 @@ public class UpdatePersonActivity extends AppBaseActivity implements
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.getCatalogUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getCatalogUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (isCancelRequest) return;

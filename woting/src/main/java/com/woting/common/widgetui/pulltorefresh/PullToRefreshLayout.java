@@ -44,7 +44,7 @@ public class PullToRefreshLayout extends RelativeLayout {
     public float pullDownY = 0;// 下拉的距离。注意：pullDownY 和 pullUpY 不可能同时不为 0
     private float pullUpY = 0;// 上拉的距离
     private float refreshDist = 200;// 释放刷新的距离
-    private float loadmoreDist = 200;// 释放加载的距离
+    private float loadmoreDist = 300;// 释放加载的距离
     public float MOVE_SPEED = 8;// 回滚速度
     private float radio = 2;// 手指滑动距离与下拉头的滑动距离比，中间会随正切函数变化
 
@@ -460,7 +460,7 @@ public class PullToRefreshLayout extends RelativeLayout {
             isLayout = true;
             initView();
             refreshDist = ((ViewGroup) refreshView).getChildAt(0).getMeasuredHeight();
-            loadmoreDist = ((ViewGroup) loadmoreView).getChildAt(0).getMeasuredHeight();
+            loadmoreDist = ((ViewGroup) loadmoreView).getChildAt(1).getMeasuredHeight();
         }
 
         // 改变子控件的布局，这里直接用(pullDownY + pullUpY)作为偏移量，这样就可以不对当前状态作区分

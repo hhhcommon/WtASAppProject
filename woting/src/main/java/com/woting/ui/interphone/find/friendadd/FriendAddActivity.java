@@ -155,7 +155,7 @@ public class FriendAddActivity extends AppBaseActivity implements OnClickListene
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		VolleyRequest.RequestPost(GlobalConfig.sendInviteUrl, tag, jsonObject, new VolleyCallback() {
+		VolleyRequest.requestPost(GlobalConfig.sendInviteUrl, tag, jsonObject, new VolleyCallback() {
 			private String ReturnType;
 			private String Message;
 

@@ -128,7 +128,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
 
     // 请求网络数据
     public void sendRequest() {
-        VolleyRequest.RequestPost(GlobalConfig.getContentUrl, RadioListActivity.tag, setParam(), new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getContentUrl, RadioListActivity.tag, setParam(), new VolleyCallback() {
             private String ReturnType;
 
             @Override
