@@ -44,12 +44,12 @@ public class InterPhoneControl {
         //  命令类型：CmdType   0001{1=group;2=ptt};   0010{1=call;2=ptt};       0100{1=user;2=group};
         msg.setCmdType(1);
         msg.setCommand(2);
-        //消息源地址类型：FromType 最新数据：0000-设备；0001-服务器
+        //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-        msg.setFromType(0);
-        //消息源地址类型：ToType  最新数据：0000-设备；0001-服务器
+//		msg.setFromType(0);
+        //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
-        msg.setToType(1);
+        msg.setToType(0);
         //消息源地址类型：PCDType  客户端型号  目前1=手机；2=设备；3=PC，默认1
         msg.setPCDType(GlobalConfig.PCDType);
         msg.setSendTime(System.currentTimeMillis());
@@ -84,12 +84,12 @@ public class InterPhoneControl {
         //  命令类型：CmdType   0001{1=group;2=ptt};   0010{1=call;2=ptt};       0100{1=user;2=group};
         msg.setCmdType(1);
         msg.setCommand(1);
-        //消息源地址类型：FromType 最新数据：0000-设备；0001-服务器
+        //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-        msg.setFromType(0);
-        //消息源地址类型：ToType  最新数据：0000-设备；0001-服务器
+//		msg.setFromType(0);
+        //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
-        msg.setToType(1);
+        msg.setToType(0);
         //消息源地址类型：PCDType  客户端型号  目前1=手机；2=设备；3=PC，默认1
         msg.setPCDType(GlobalConfig.PCDType);
         msg.setSendTime(System.currentTimeMillis());
@@ -124,12 +124,12 @@ public class InterPhoneControl {
         //  命令类型：CmdType   0001{1=group;2=ptt};   0010{1=call;2=ptt};       0100{1=user;2=group};
         msg.setCmdType(2);
         msg.setCommand(2);
-        //消息源地址类型：FromType 最新数据：0000-设备；0001-服务器
+        //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-        msg.setFromType(0);
-        //消息源地址类型：ToType  最新数据：0000-设备；0001-服务器
+//		msg.setFromType(0);
+        //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
-        msg.setToType(1);
+        msg.setToType(0);
         //消息源地址类型：PCDType  客户端型号  目前1=手机；2=设备；3=PC，默认1
         msg.setPCDType(GlobalConfig.PCDType);
         msg.setSendTime(System.currentTimeMillis());
@@ -164,12 +164,12 @@ public class InterPhoneControl {
         //  命令类型：CmdType   0001{1=group;2=ptt};   0010{1=call;2=ptt};       0100{1=user;2=group};
         msg.setCmdType(2);
         msg.setCommand(1);
-        //消息源地址类型：FromType 最新数据：0000-设备；0001-服务器
+        //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-        msg.setFromType(0);
-        //消息源地址类型：ToType  最新数据：0000-设备；0001-服务器
+//		msg.setFromType(0);
+        //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
-        msg.setToType(1);
+        msg.setToType(0);
         //消息源地址类型：PCDType  客户端型号  目前1=手机；2=设备；3=PC，默认1
         msg.setPCDType(GlobalConfig.PCDType);
         msg.setSendTime(System.currentTimeMillis());
@@ -206,12 +206,12 @@ public class InterPhoneControl {
         //  命令类型：CmdType   0001{1=group;2=ptt};   0010{1=call;2=ptt};       0100{1=user;2=group};
         msg.setCmdType(1);
         msg.setCommand(1);
-        //消息源地址类型：FromType 最新数据：0000-设备；0001-服务器
+        //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-        msg.setFromType(0);
-        //消息源地址类型：ToType  最新数据：0000-设备；0001-服务器
+//		msg.setFromType(0);
+        //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
-        msg.setToType(1);
+        msg.setToType(0);
         //消息源地址类型：PCDType  客户端型号  目前1=手机；2=设备；3=PC，默认1
         msg.setPCDType(GlobalConfig.PCDType);
         msg.setSendTime(System.currentTimeMillis());
@@ -251,12 +251,12 @@ public class InterPhoneControl {
         //  命令类型：CmdType   0001{1=group;2=ptt};   0010{1=call;2=ptt};       0100{1=user;2=group};
         msg.setCmdType(1);
         msg.setCommand(0x90);
-        //消息源地址类型：FromType 最新数据：0000-设备；0001-服务器
+        //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-        msg.setFromType(0);
-        //消息源地址类型：ToType  最新数据：0000-设备；0001-服务器
+//		msg.setFromType(0);
+        //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
-        msg.setToType(1);
+        msg.setToType(0);
         //消息源地址类型：PCDType  客户端型号  目前1=手机；2=设备；3=PC，默认1
         msg.setPCDType(GlobalConfig.PCDType);
         msg.setSendTime(System.currentTimeMillis());
@@ -309,12 +309,12 @@ public class InterPhoneControl {
         //  命令类型：CmdType   0001{1=group;2=ptt};   0010{1=call;2=ptt};       0100{1=user;2=group};
         msg.setCmdType(2);
         msg.setCommand(1);
-        //消息源地址类型：FromType 最新数据：0000-设备；0001-服务器
+        //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-        msg.setFromType(0);
-        //消息源地址类型：ToType  最新数据：0000-设备；0001-服务器
+//		msg.setFromType(0);
+        //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
-        msg.setToType(1);
+        msg.setToType(0);
         //消息源地址类型：PCDType  客户端型号  目前1=手机；2=设备；3=PC，默认1
         msg.setPCDType(GlobalConfig.PCDType);
         msg.setSendTime(System.currentTimeMillis());
@@ -348,12 +348,12 @@ public class InterPhoneControl {
         //  命令类型：CmdType   0001{1=group;2=ptt};   0010{1=call;2=ptt};       0100{1=user;2=group};
         msg.setCmdType(2);
         msg.setCommand(2);
-        //消息源地址类型：FromType 最新数据：0000-设备；0001-服务器
+        //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-        msg.setFromType(0);
-        //消息源地址类型：ToType  最新数据：0000-设备；0001-服务器
+//		msg.setFromType(0);
+        //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
-        msg.setToType(1);
+        msg.setToType(0);
         //消息源地址类型：PCDType  客户端型号  目前1=手机；2=设备；3=PC，默认1
         msg.setPCDType(GlobalConfig.PCDType);
         msg.setSendTime(System.currentTimeMillis());
@@ -389,12 +389,12 @@ public class InterPhoneControl {
         //  命令类型：CmdType   0001{1=group;2=ptt};   0010{1=call;2=ptt};       0100{1=user;2=group};
         msg.setCmdType(1);
         msg.setCommand(2);
-        //消息源地址类型：FromType 最新数据：0000-设备；0001-服务器
+        //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-        msg.setFromType(0);
-        //消息源地址类型：ToType  最新数据：0000-设备；0001-服务器
+//		msg.setFromType(0);
+        //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
-        msg.setToType(1);
+        msg.setToType(0);
         //消息源地址类型：PCDType  客户端型号  目前1=手机；2=设备；3=PC，默认1
         msg.setPCDType(GlobalConfig.PCDType);
         msg.setSendTime(System.currentTimeMillis());
@@ -432,12 +432,12 @@ public class InterPhoneControl {
         //  命令类型：CmdType   0001{1=group;2=ptt};   0010{1=call;2=ptt};       0100{1=user;2=group};
         msg.setCmdType(1);
         msg.setCommand(2);
-        //消息源地址类型：FromType 最新数据：0000-设备；0001-服务器
+        //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-        msg.setFromType(0);
-        //消息源地址类型：ToType  最新数据：0000-设备；0001-服务器
+//		msg.setFromType(0);
+        //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
-        msg.setToType(1);
+        msg.setToType(0);
         //消息源地址类型：PCDType  客户端型号  目前1=手机；2=设备；3=PC，默认1
         msg.setPCDType(GlobalConfig.PCDType);
         msg.setSendTime(System.currentTimeMillis());
@@ -475,12 +475,12 @@ public class InterPhoneControl {
         //  命令类型：CmdType   0001{1=group;2=ptt};   0010{1=call;2=ptt};       0100{1=user;2=group};
         msg.setCmdType(1);
         msg.setCommand(2);
-        //消息源地址类型：FromType 最新数据：0000-设备；0001-服务器
+        //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-        msg.setFromType(0);
-        //消息源地址类型：ToType  最新数据：0000-设备；0001-服务器
+//		msg.setFromType(0);
+        //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
-        msg.setToType(1);
+        msg.setToType(0);
         //消息源地址类型：PCDType  客户端型号  目前1=手机；2=设备；3=PC，默认1
         msg.setPCDType(GlobalConfig.PCDType);
         msg.setSendTime(System.currentTimeMillis());
@@ -517,12 +517,12 @@ public class InterPhoneControl {
         //  命令类型：CmdType   0001{1=group;2=ptt};   0010{1=call;2=ptt};       0100{1=user;2=group};
         msg.setCmdType(1);
         msg.setCommand(3);
-        //消息源地址类型：FromType 最新数据：0000-设备；0001-服务器
+        //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-        msg.setFromType(0);
-        //消息源地址类型：ToType  最新数据：0000-设备；0001-服务器
+//		msg.setFromType(0);
+        //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
-        msg.setToType(1);
+        msg.setToType(0);
         //消息源地址类型：PCDType  客户端型号  目前1=手机；2=设备；3=PC，默认1
         msg.setPCDType(GlobalConfig.PCDType);
         msg.setSendTime(System.currentTimeMillis());
@@ -555,12 +555,12 @@ public class InterPhoneControl {
         msg.setBizType(0x0f);
         //  命令类型：CmdType   0001{1=group;2=ptt};   0010{1=call;2=ptt};       0100{1=user;2=group};
         msg.setCmdType(0);
-        //消息源地址类型：FromType 最新数据：0000-设备；0001-服务器
+        //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-        msg.setFromType(0);
-        //消息源地址类型：ToType  最新数据：0000-设备；0001-服务器
+//		msg.setFromType(0);
+        //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
-        msg.setToType(1);
+        msg.setToType(0);
         //消息源地址类型：PCDType  客户端型号  目前1=手机；2=设备；3=PC，默认1
         msg.setPCDType(GlobalConfig.PCDType);
         msg.setSendTime(System.currentTimeMillis());
@@ -585,8 +585,8 @@ public class InterPhoneControl {
             MsgMedia msg = new MsgMedia();
             msg.setMsgType(0);
             msg.setAffirm(1);
-            msg.setFromType(0);
-            msg.setToType(1);
+//			msg.setFromType(0);
+            msg.setToType(0);
             msg.setBizType(2);
             msg.setMediaType(1);
             msg.setSendTime(System.currentTimeMillis());
@@ -599,8 +599,8 @@ public class InterPhoneControl {
             MsgMedia msg = new MsgMedia();
             msg.setMsgType(0);
             msg.setAffirm(1);
-            msg.setFromType(0);
-            msg.setToType(1);
+//			msg.setFromType(0);
+            msg.setToType(0);
             msg.setBizType(1);
             msg.setMediaType(1);
             msg.setSendTime(System.currentTimeMillis());
@@ -625,8 +625,8 @@ public class InterPhoneControl {
             MsgMedia msg = new MsgMedia();
             msg.setMsgType(0);
             msg.setAffirm(1);
-            msg.setFromType(0);
-            msg.setToType(1);
+//			msg.setFromType(0);
+            msg.setToType(0);
             msg.setBizType(2);
             msg.setMediaType(1);
             msg.setSendTime(System.currentTimeMillis());
@@ -638,8 +638,8 @@ public class InterPhoneControl {
             MsgMedia msg = new MsgMedia();
             msg.setMsgType(0);
             msg.setAffirm(1);
-            msg.setFromType(0);
-            msg.setToType(1);
+//			msg.setFromType(0);
+            msg.setToType(0);
             msg.setBizType(1);
             msg.setMediaType(1);
             msg.setSendTime(System.currentTimeMillis());
@@ -663,8 +663,8 @@ public class InterPhoneControl {
         msg.setReMsgId(ReMsgId);
         // 16进制编码：0000=0；1000=8
         msg.setAffirm(Affirm);
-        msg.setFromType(0);
-        msg.setToType(1);
+//		msg.setFromType(0);
+        msg.setToType(0);
         msg.setBizType(0);
         msg.setCmdType(0);
         msg.setSendTime(System.currentTimeMillis());
@@ -686,8 +686,8 @@ public class InterPhoneControl {
         msg.setMsgType(0);
         // 16进制编码：0000=0；1000=8
         msg.setAffirm(0);
-        msg.setFromType(0);
-        msg.setToType(1);
+//		msg.setFromType(0);
+        msg.setToType(0);
         msg.setBizType(4);
         msg.setCmdType(cmdType);
         msg.setCommand(command);
