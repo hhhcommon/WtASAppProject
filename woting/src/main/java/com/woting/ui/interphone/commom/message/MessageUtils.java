@@ -150,10 +150,6 @@ public abstract class MessageUtils {
         ret.setBizType(15);
         ret.setCmdType(0);
 
-        ret.setDeviceId(orgMsg.getDeviceId());
-        ret.setUserId(orgMsg.getUserId());
-        ret.setPCDType(orgMsg.getPCDType());
-
         return ret;
     }
 
