@@ -37,7 +37,7 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
+import com.woting.ui.home.player.main.fragment.PlayerActivity;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
@@ -429,7 +429,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
                         dbDao.deleteHistory(playerurl);
                     }
                     dbDao.addHistory(history);
-					if (PlayerFragment.context != null) {
+					if (PlayerActivity.context != null) {
 						MainActivity.change();
 						HomeActivity.UpdateViewPager();
 						Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);

@@ -41,7 +41,7 @@ import com.woting.ui.download.model.FileInfo;
 import com.woting.ui.download.service.DownloadService;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
+import com.woting.ui.home.player.main.fragment.PlayerActivity;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.album.adapter.AlbumAdapter;
@@ -217,7 +217,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                                 ContentFavorite, ContentId, localUrl, sequName1, sequId1, sequDesc1, sequImg1, ContentPlayType, IsPlaying);
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
-                        if (PlayerFragment.context != null) {
+                        if (PlayerActivity.context != null) {
                             MainActivity.change();
                             HomeActivity.UpdateViewPager();
                             Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);

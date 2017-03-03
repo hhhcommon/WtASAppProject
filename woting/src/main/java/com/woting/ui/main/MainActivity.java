@@ -51,12 +51,12 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.common.favoritetype.FavoriteProgramTypeActivity;
 import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.model.GroupInfo;
-import com.woting.ui.download.activity.DownloadActivity;
 import com.woting.ui.download.service.DownloadService;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.model.Catalog;
 import com.woting.ui.home.model.CatalogName;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
+import com.woting.ui.home.player.main.fragment.PlayerActivity;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
@@ -98,11 +98,13 @@ public class MainActivity extends TabActivity implements OnClickListener {
     public static TabHost tabHost;
     private static Intent Socket, record, voicePlayer, Subclass, download, Location, Notification;
 
+    private static ImageView image0;// 播放
     private static ImageView image1;
     private static ImageView image2;
-    private static ImageView image4;
     private static ImageView image5;
     private Dialog upDataDialog;
+
+    private View tabNavigation;// 底部导航菜单
 
     private int upDataType;//1,不需要强制升级2，需要强制升级
     private String upDataNews;
@@ -146,12 +148,14 @@ public class MainActivity extends TabActivity implements OnClickListener {
         setType();                        // 设置顶栏样式
         InitDao();
         getTXL();
-        tabHost.setCurrentTabByTag("one");
+        tabHost.setCurrentTabByTag("zero");
         handleIntent();
 
         if (!BSApplication.SharedPreferences.getBoolean(StringConstant.FAVORITE_PROGRAM_TYPE, false)) {
             startActivity(new Intent(context, FavoriteProgramTypeActivity.class));
         }
+
+//        tabNavigation.setVisibility(View.GONE);
     }
 
     private void createService() {
@@ -694,34 +698,38 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     // 初始化视图
     private void InitTextView() {
+        tabNavigation = findViewById(R.id.tab_navigation);// 底部导航菜单
+
+        LinearLayout lin0 = (LinearLayout) findViewById(R.id.main_lin_0);// 播放
         LinearLayout lin1 = (LinearLayout) findViewById(R.id.main_lin_1);
         LinearLayout lin2 = (LinearLayout) findViewById(R.id.main_lin_2);
-        LinearLayout lin4 = (LinearLayout) findViewById(R.id.main_lin_4);
         LinearLayout lin5 = (LinearLayout) findViewById(R.id.main_lin_5);
+
+        image0 = (ImageView) findViewById(R.id.main_image_0);
         image1 = (ImageView) findViewById(R.id.main_image_1);
         image2 = (ImageView) findViewById(R.id.main_image_2);
-        image4 = (ImageView) findViewById(R.id.main_image_4);
         image5 = (ImageView) findViewById(R.id.main_image_5);
+
+        lin0.setOnClickListener(this);
         lin1.setOnClickListener(this);
         lin2.setOnClickListener(this);
-        lin4.setOnClickListener(this);
         lin5.setOnClickListener(this);
 
 		/*
          * 主页跳转的4个界面
 		 */
+        tabHost.addTab(tabHost.newTabSpec("zero").setIndicator("zero")
+                .setContent(new Intent(this, PlayerActivity.class)));
         tabHost.addTab(tabHost.newTabSpec("one").setIndicator("one")
                 .setContent(new Intent(this, HomeActivity.class)));
         tabHost.addTab(tabHost.newTabSpec("two").setIndicator("two")
                 .setContent(new Intent(this, DuiJiangActivity.class)));
-        tabHost.addTab(tabHost.newTabSpec("four").setIndicator("four")
-                .setContent(new Intent(this, DownloadActivity.class)));
         tabHost.addTab(tabHost.newTabSpec("five").setIndicator("five")
                 .setContent(new Intent(this, MineActivity.class)));
     }
 
     public static void change() {
-        setViewOne();
+        setViewZero();
     }
 
     public static void changeTwo() {
@@ -731,14 +739,14 @@ public class MainActivity extends TabActivity implements OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.main_lin_0:// 播放
+                setViewZero();
+                break;
             case R.id.main_lin_1:
                 setViewOne();
                 break;
             case R.id.main_lin_2:
                 setViewTwo();
-                break;
-            case R.id.main_lin_4:
-                setViewFour();
                 break;
             case R.id.main_lin_5:
                 setViewFive();
@@ -746,35 +754,36 @@ public class MainActivity extends TabActivity implements OnClickListener {
         }
     }
 
+    // 播放
+    private static void setViewZero() {
+        tabHost.setCurrentTabByTag("zero");
+        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_selected);
+        image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
+        image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
+        image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+    }
+
     private static void setViewOne() {
         tabHost.setCurrentTabByTag("one");
+        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_selected);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
-        image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
     }
 
     private static void setViewTwo() {
         tabHost.setCurrentTabByTag("two");
+        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_selected);
-        image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
-        image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
-    }
-
-    private void setViewFour() {
-        tabHost.setCurrentTabByTag("four");
-        image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
-        image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
-        image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_selected);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
     }
 
     private void setViewFive() {
         tabHost.setCurrentTabByTag("five");
+        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
-        image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_selected);
     }
 

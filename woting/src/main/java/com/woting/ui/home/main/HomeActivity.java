@@ -20,8 +20,9 @@ import com.woting.R;
 import com.woting.common.service.SocketService;
 import com.woting.common.util.ToastUtils;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
-import com.woting.ui.home.program.main.ProgramFragment;
+import com.woting.ui.home.program.diantai.fragment.OnLineFragment;
+import com.woting.ui.home.program.fenlei.fragment.FenLeiFragment;
+import com.woting.ui.home.program.tuijian.fragment.RecommendFragment;
 import com.woting.ui.home.search.activity.SearchLikeActivity;
 import com.woting.ui.interphone.notify.activity.NotifyNewsActivity;
 import com.woting.ui.main.MainActivity;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 public class HomeActivity extends FragmentActivity {
     private static TextView view1;
     private static TextView view2;
+    private static TextView view3;
     private static HomeActivity context;
     private static ViewPager mPager;
 
@@ -69,6 +71,8 @@ public class HomeActivity extends FragmentActivity {
     private void InitTextView() {
         view1 = (TextView) findViewById(R.id.tv_guid1);
         view2 = (TextView) findViewById(R.id.tv_guid2);
+        view3 = (TextView) findViewById(R.id.tv_guid3);
+
         LinearLayout lin_news = (LinearLayout) findViewById(R.id.lin_news);
         lin_news.setOnClickListener(new OnClickListener() {
             @Override
@@ -88,6 +92,7 @@ public class HomeActivity extends FragmentActivity {
         });
         view1.setOnClickListener(new txListener(0));
         view2.setOnClickListener(new txListener(1));
+        view3.setOnClickListener(new txListener(2));
     }
 
     public class txListener implements OnClickListener {
@@ -102,14 +107,31 @@ public class HomeActivity extends FragmentActivity {
             mPager.setCurrentItem(index);
             if (index == 0) {
                 view1.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
-                view2.setTextColor(context.getResources().getColor(R.color.white));
                 view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_home_white));
+
+                view2.setTextColor(context.getResources().getColor(R.color.white));
                 view2.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+
+                view3.setTextColor(context.getResources().getColor(R.color.white));
+                view3.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
             } else if (index == 1) {
                 view1.setTextColor(context.getResources().getColor(R.color.white));
-                view2.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
                 view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+
+                view2.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
                 view2.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_home_white));
+
+                view3.setTextColor(context.getResources().getColor(R.color.white));
+                view3.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+            } else if (index == 2) {
+                view1.setTextColor(context.getResources().getColor(R.color.white));
+                view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+
+                view2.setTextColor(context.getResources().getColor(R.color.white));
+                view2.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+
+                view3.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
+                view3.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_home_white));
             }
         }
     }
@@ -121,10 +143,13 @@ public class HomeActivity extends FragmentActivity {
         mPager = (ViewPager) findViewById(R.id.viewpager);
         mPager.setOffscreenPageLimit(1);
         ArrayList<Fragment> fragmentList = new ArrayList<>();
-        PlayerFragment playFragment = new PlayerFragment();
-        ProgramFragment newsFragment = new ProgramFragment();
-        fragmentList.add(playFragment);
-        fragmentList.add(newsFragment);
+        RecommendFragment rf = new RecommendFragment();
+        OnLineFragment of = new OnLineFragment();
+        FenLeiFragment ff = new FenLeiFragment();
+
+        fragmentList.add(rf);
+        fragmentList.add(of);
+        fragmentList.add(ff);
         mPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager(), fragmentList));
         mPager.setOnPageChangeListener(new MyOnPageChangeListener());    // 页面变化时的监听器
         mPager.setCurrentItem(0);    // 设置当前显示标签页为第一页mPager
@@ -143,24 +168,37 @@ public class HomeActivity extends FragmentActivity {
         public void onPageSelected(int arg0) {
             if (arg0 == 0) {
                 view1.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
-                view2.setTextColor(context.getResources().getColor(R.color.white));
                 view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_home_white));
+
+                view2.setTextColor(context.getResources().getColor(R.color.white));
                 view2.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+
+                view3.setTextColor(context.getResources().getColor(R.color.white));
+                view3.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
             } else if (arg0 == 1) {
                 view1.setTextColor(context.getResources().getColor(R.color.white));
-                view2.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
                 view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+
+                view2.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
                 view2.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_home_white));
+
+                view3.setTextColor(context.getResources().getColor(R.color.white));
+                view3.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+            } else if (arg0 == 2) {
+                view1.setTextColor(context.getResources().getColor(R.color.white));
+                view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+
+                view2.setTextColor(context.getResources().getColor(R.color.white));
+                view2.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+
+                view3.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
+                view3.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_home_white));
             }
         }
     }
 
     public static void UpdateViewPager() {
-        mPager.setCurrentItem(0);// 设置当前显示标签页为第一页mPager
-        view1.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
-        view2.setTextColor(context.getResources().getColor(R.color.white));
-        view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_home_white));
-        view2.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+
     }
 
     // 设置android app 的字体大小不受系统字体大小改变的影响
