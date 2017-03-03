@@ -108,7 +108,7 @@ public class updateUserNumActivity extends AppActivity implements View.OnClickLi
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.updateUserUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.updateUserUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();

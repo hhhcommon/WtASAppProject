@@ -94,7 +94,6 @@ import java.util.Map;
  * 邮箱：645700751@qq.com
  */
 public class MainActivity extends TabActivity implements OnClickListener {
-
     private static MainActivity context;
     public static TabHost tabHost;
     private static Intent Socket, record, voicePlayer, Subclass, download, Location, Notification;
@@ -105,7 +104,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private static ImageView image5;
     private Dialog upDataDialog;
 
-    //    public static int dialogShowTypeQuitPerson, dialogShowTypePerson, dialogShowTypeGroup = 0;
     private int upDataType;//1,不需要强制升级2，需要强制升级
     private String upDataNews;
     private String contentId;
@@ -121,7 +119,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private SearchTalkHistoryDao talkDao;
     // 消息通知
     public static GroupInfo groupInfo;
-    // private List<String> userIds;
     private String callId, callerId;
     public static DBTalkHistorary talkdb;
     public static String groupEntryNum;
@@ -149,21 +146,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
         setType();                        // 设置顶栏样式
         InitDao();
         getTXL();
-//        tabHost.setCurrentTabByTag("five");
-//        tabHost.setCurrentTabByTag("four");
-//        tabHost.setCurrentTabByTag("two");
         tabHost.setCurrentTabByTag("one");
         handleIntent();
-//        String first = BSApplication.SharedPreferences.getString(StringConstant.PREFERENCE, "0");//是否是第一次打开偏好设置界面
-//        if (first != null && first.equals("1")) {
-//            // 此时已经进行过偏好设置
-//        } else {// 1：第一次进入  其它：其它界面进入
-//            Intent intent = new Intent(this, PreferenceActivity.class);
-//            Bundle bundle = new Bundle();
-//            bundle.putString("type", "1");
-//            intent.putExtras(bundle);
-//            startActivity(intent);
-//        }
 
         if (!BSApplication.SharedPreferences.getBoolean(StringConstant.FAVORITE_PROGRAM_TYPE, false)) {
             startActivity(new Intent(context, FavoriteProgramTypeActivity.class));
@@ -185,15 +169,13 @@ public class MainActivity extends TabActivity implements OnClickListener {
         startService(download);
         Notification = new Intent(this, NotificationService.class);
         startService(Notification);
-
     }
 
     public void getTXL() {
         //第一次获取群成员跟组
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-            VolleyRequest.RequestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
-
+            VolleyRequest.requestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
                 @Override
                 protected void requestSuccess(JSONObject result) {
                     if (isCancelRequest) {
@@ -243,7 +225,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     //初始化数据库并且发送获取地理位置的请求
@@ -269,7 +250,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        VolleyRequest.RequestPost(GlobalConfig.getCatalogUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getCatalogUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 Log.e("获取城市列表", "" + result.toString());
@@ -278,7 +259,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 }
                 try {
                     String ReturnType = result.getString("ReturnType");
-                    // 根据返回值来对程序进行解析
                     if (ReturnType != null) {
                         if (ReturnType.equals("1001")) {
                             try {
@@ -334,7 +314,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
             @Override
             protected void requestError(VolleyError error) {
-
             }
         });
     }
@@ -358,8 +337,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         Intent intent = getIntent();
         if (intent != null) {
             Uri uri = intent.getData();
-            // Uri uri=Uri.parse("com.woting.htmlcallback://AUDIO?jsonStr={'ContentId':'42ee92d85af2400392653af7842551e0'}");
-            //  Uri uri=Uri.parse("com.woting.htmlcallback://SEQU?jsonStr={'ContentName':'强强三人组','ContentId':'aa4064113e1b4ce8b69dc7d840c1878b','ContentImg':'http://www.wotingfm.com:908/CM/dataCenter/group03/bc12cf08e8b74d06a29b7a5082baa7e3.300_300.png','ContentDescn':'#####sequdescn#####'}");
             if (uri != null) {
                 String s = uri.toString();
                 String host = uri.getHost();
@@ -369,13 +346,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                         try {
                             JSONTokener jsonParser = new JSONTokener(queryString);
                             JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                            /*contentName = arg1.getString("ContentName");*/
                             contentId = arg1.getString("ContentId");
-                          /*  String contentimg = arg1.getString("ContentImg");
-                            String contentdesc = arg1.getString("ContentDesc");
-                            String contenturl = arg1.getString("ContentURL");
-                            String contenttime = arg1.getString("ContentTimes");
-                            String mediatype = "AUDIO";*/
                             String mediatype = "AUDIO";
                             if (!TextUtils.isEmpty(contentId)) {
                                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
@@ -386,21 +357,15 @@ public class MainActivity extends TabActivity implements OnClickListener {
                             } else {
                                 ToastUtils.show_always(context, "啊哦~由网页端传送的数据有误");
                             }
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
                     } else if (host.equals("SEQU")) {
                         String s11 = uri.getQuery().substring(8);//不要jsonstr=
                         try {
                             JSONTokener jsonParser = new JSONTokener(s11);
                             JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                           /* contentName = arg1.getString("ContentName");*/
                             contentId = arg1.getString("ContentId");
-                       /*     String contentimg = arg1.getString("ContentImg");
-                            String contentdesc = arg1.getString("ContentDesc");
-                            String contenturl = arg1.getString("ContentURL");*/
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -408,7 +373,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
                         Intent intent1 = new Intent(this, AlbumActivity.class);
                         intent1.putExtra("type", "main");
                         intent1.putExtra("id", contentId);
-                      /*  intent1.putExtra("contentname", contentName);*/
                         startActivity(intent1);
                     } else {
                         ToastUtils.show_short(context, "返回的host值不属于AUDIO或者SEQU，请检查返回值");
@@ -426,11 +390,9 @@ public class MainActivity extends TabActivity implements OnClickListener {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        VolleyRequest.RequestPost(GlobalConfig.getContentById, tag, jsonObject, new VolleyCallback() {
-
+        VolleyRequest.requestPost(GlobalConfig.getContentById, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
-
                 if (isCancelRequest) {
                     return;
                 }
@@ -524,7 +486,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                     e.printStackTrace();
                                     ContentKeyWord = "";
                                 }
-
                                 try {
                                     ContentFavorite = arg1.getString("ContentFavorite");
                                 } catch (Exception e) {
@@ -556,19 +517,14 @@ public class MainActivity extends TabActivity implements OnClickListener {
                             }
                         } else {
                             if (ReturnType.equals("0000")) {
-//							ToastUtils.show_always(context, "无法获取相关的参数");
                                 ToastUtils.show_always(context, "数据出错了，请稍后再试！");
                             } else if (ReturnType.equals("1002")) {
-//							ToastUtils.show_always(context, "无此分类信息");
                                 ToastUtils.show_always(context, "数据出错了，请稍后再试！");
                             } else if (ReturnType.equals("1003")) {
-//							ToastUtils.show_always(context, "无法获得列表");
                                 ToastUtils.show_always(context, "数据出错了，请稍后再试！");
                             } else if (ReturnType.equals("1011")) {
-//							ToastUtils.show_always(context, "列表为空（列表为空[size==0]");
                                 ToastUtils.show_always(context, "数据出错了，请稍后再试！");
                             } else if (ReturnType.equals("T")) {
-//							ToastUtils.show_always(context, "获取列表异常");
                                 ToastUtils.show_always(context, "数据出错了，请稍后再试！");
                             }
                         }
@@ -580,13 +536,9 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
             @Override
             protected void requestError(VolleyError error) {
-
             }
         });
-
-
     }
-
 
     //更新数据交互
     private void update() {
@@ -597,7 +549,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.VersionUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.VersionUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (isCancelRequest) {
@@ -605,7 +557,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 }
                 String ReturnType = null;
                 try {
-                    //String SessionId = result.getString("SessionId");
                     ReturnType = result.getString("ReturnType");
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -640,15 +591,12 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
             @Override
             protected void requestError(VolleyError error) {
-
             }
         });
     }
 
     /*
      * 检查版本更新
-     * @param ResultList
-     * @param mastUpdate
      */
     protected void dealVersion(String ResultList, String mastUpdate) {
         String Version = "0.1.0.X.0";
@@ -657,11 +605,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
             JSONTokener jsonParser = new JSONTokener(ResultList);
             JSONObject arg1 = (JSONObject) jsonParser.nextValue();
             Version = arg1.getString("Version");
-            //			String AppName = arg1.getString("AppName");
             DescN = arg1.getString("Descn");
-            //			String BugPatch = arg1.getString("BugPatch");
-            //			String ApkSize = arg1.getString("ApkSize");
-            //			String PubTime = arg1.getString("Version");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -670,10 +614,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         String version = Version;
         String[] strArray;
         strArray = version.split("\\.");
-        //String version_big = strArray[0].toString();//大版本
-        //String version_medium = strArray[1].toString();//中版本
-        //String version_small = strArray[2].toString();//小版本
-        //String version_x = strArray[3];//X
         String version_build;
         try {
             version_build = strArray[4];
@@ -703,7 +643,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 }
             } else {
                 Log.v("检查版本更新", "已经是最新版本");
-//                ToastUtils.show_always(context, "已经是最新版本");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -861,9 +800,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         n.addAction(NetWorkChangeReceiver.intentFilter);
         netWorkChangeReceiver = new NetWorkChangeReceiver(this);
         registerReceiver(netWorkChangeReceiver, n);
-
     }
-
 
     //接收定时服务发送过来的广播  用于结束应用
     private BroadcastReceiver endApplicationBroadcast = new BroadcastReceiver() {
@@ -904,7 +841,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                             JSONObject arg1 = (JSONObject) jsonParser.nextValue();
                                             String groupList = arg1.getString("GroupList");
 
-
                                             List<MessageForMainGroup> gList = new Gson().fromJson(groupList, new TypeToken<List<MessageForMainGroup>>() {
                                             }.getType());
 
@@ -923,7 +859,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                                         groupEntryNum = "1";
                                                     }
                                                     groupInfo = gInfo.getGroupInfo();
-//                                                    userIds = gInfo.getGroupEntryUserIds();
                                                     String groupName = groupInfo.getGroupName();
                                                     showGroup(groupName); // 展示上次存在的对讲组
                                                 } catch (Exception e) {
@@ -962,17 +897,11 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                                 Data userInfo = userList.get(0);   // 本版本（2017元旦前）暂时只获取第一条数据，后续需要修改
                                                 try {
                                                     callId = userInfo.getCallId(); // 本次通信的id
-
                                                     if (CommonUtils.getUserIdNoImei(context) != null && !CommonUtils.getUserIdNoImei(context).equals("")) {
                                                         if (CommonUtils.getUserIdNoImei(context).equals(userInfo.getCallerId())) {
                                                             // 此次呼叫是"我"主动呼叫别人，所以callerId就是自己==主叫方
                                                             callerId = userInfo.getCallerId();
                                                             try {
-//                                                                String callerInfo = arg1.getString("CallerInfo");
-//                                                                CallerInfo caller = new Gson().fromJson(callerInfo, new TypeToken<CallerInfo>() {
-//                                                                 }.getType());
-
-
                                                                 CallerInfo caller = userInfo.getCallerInfo();
                                                                 String name = caller.getUserName();
                                                                 showPerson(name); // 展示上次存在的单对单对讲
@@ -984,9 +913,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                                             // 此次呼叫是"我"被别人呼叫，所以callerId就是对方==被叫方
                                                             callerId = userInfo.getCallederId();
                                                             try {
-//                                                                String callederInfo = arg1.getString("CallederInfo");
-//                                                                CallerInfo calleder = new Gson().fromJson(callederInfo, new TypeToken<CallerInfo>() {
-//                                                                }.getType());
                                                                 CallerInfo calleder = userInfo.getCallederInfo();
                                                                 String name = calleder.getUserName();
                                                                 showPerson(name); // 展示上次存在的单对单对讲
@@ -1117,7 +1043,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         Log.e("wifi状态:", "更改后状态"+values);
     }
 
-
     private void restoreWifiDormancy() {
         int defaultPolicy = BSApplication.SharedPreferences.getInt(StringConstant.WIFI_SLEEP_POLICY_DEFAULT, Settings.System.WIFI_SLEEP_POLICY_DEFAULT);
         Settings.System.putInt(getContentResolver(), Settings.Global.WIFI_SLEEP_POLICY, defaultPolicy);
@@ -1137,12 +1062,10 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 ToastUtils.show_always(MainActivity.this, "再按一次退出");
                 touchTime = currentTime;
             } else {
-
                 MobclickAgent.onKillProcess(this);
                 finish();
             }
             return true;
-
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -1192,28 +1115,18 @@ public class MainActivity extends TabActivity implements OnClickListener {
         pushDialog.setCanceledOnTouchOutside(false);
         pushDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
         pushDialog.show();
-//        if (type == 1) {
-//            dialogShowTypeQuitPerson = 1;
-//        } else if (type == 2) {
-//            dialogShowTypePerson = 1;
-//        } else if (type == 3) {
-//            dialogShowTypeGroup = 1;
-//        }
         // 取消
         tv_qx.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (type == 1) {
                     // 不需要处理
-//                    dialogShowTypeQuitPerson = 0;
                 } else if (type == 2) {
                     // 挂断电话
-//                    dialogShowTypePerson = 0;
                     InterPhoneControl.PersonTalkHangUp(context, callId);
                     talkdb = null;
                 } else if (type == 3) {
                     // 退出组
-//                    dialogShowTypeGroup = 0;
                     if (groupInfo != null)
                         InterPhoneControl.Quit(context, groupInfo.getGroupId());//退出小组
                     groupInfo = null;
@@ -1227,13 +1140,10 @@ public class MainActivity extends TabActivity implements OnClickListener {
             @Override
             public void onClick(View v) {
                 if (type == 1) {
-//                    dialogShowTypeQuitPerson = 0;
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 } else if (type == 2) {
-//                    dialogShowTypePerson = 0;
                     addUser();
                 } else if (type == 3) {
-//                    dialogShowTypeGroup = 0;
                     addGroup();
                 }
                 pushDialog.dismiss();
@@ -1278,17 +1188,4 @@ public class MainActivity extends TabActivity implements OnClickListener {
         MainActivity.changeTwo();
         DuiJiangActivity.update();
     }
-
-//    private void test(){
-//        System.out.println("==========================");
-//        byte[] msgBytes1={124, 94, 0, 0, 0, 0, 0, 0, 0, 0, 0, 67, 1, 51, 98, 50, 48, 101, 50, 99, 51, 97, 55, 52, 49, 124, 124, 16, 94, 94, 85, 0, 123, 34, 85, 115, 101, 114, 73, 100, 34, 58, 34, 100, 56, 99, 51, 99, 99, 102, 56, 49, 49, 54, 98, 34, 44, 34, 80, 67, 68, 84, 121, 112, 101, 34, 58, 34, 49, 34, 44, 34, 68, 101, 118, 105, 99, 101, 73, 100, 34, 58, 34, 69, 56, 67, 56, 68, 48, 49, 52, 67, 67, 49, 70, 68, 54, 65, 57, 66, 52, 57, 66, 54, 57, 69, 52, 51, 57, 52, 57, 65, 51, 52, 66, 34, 125};
-//        System.out.println(new String(msgBytes1));
-//        MsgNormal test12= null;
-//        try {
-//            test12 = new MsgNormal(msgBytes1);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println(JsonEncloseUtils.btToString(test12));
-//    }
 }

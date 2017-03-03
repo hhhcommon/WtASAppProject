@@ -87,7 +87,7 @@ public class FeedbackListActivity extends AppBaseActivity implements OnClickList
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.FeedBackListUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.FeedBackListUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();

@@ -456,7 +456,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             dialog = DialogUtils.Dialogph(context, "正在获取数据");
             JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-            VolleyRequest.RequestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
+            VolleyRequest.requestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
                 @Override
                 protected void requestSuccess(JSONObject result) {
                     if (dialog != null) {
@@ -624,7 +624,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        VolleyRequest.RequestPost(GlobalConfig.grouptalkUrl, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.grouptalkUrl, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 String UserList = null;
@@ -949,7 +949,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
     private void setImageViewForGroup(int i, String userName, String url) {
         if (i == 1) {
             if (userName == null) {
-                userName = "";
+                userName = "未知";
             }
             Log.e("userName===============", userName + "");
             talkingName.setVisibility(View.VISIBLE);
@@ -990,6 +990,9 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
     //设置(person)有人说话时候界面友好交互
     private void setImageViewForUser(int i, String userName, String url) {
         if (i == 1) {
+            if (userName == null) {
+                userName = "未知";
+            }
             Log.e("userName===============", userName + "");
             if (userName.equals(UserName)) {
                 tv_personname.setText("我");

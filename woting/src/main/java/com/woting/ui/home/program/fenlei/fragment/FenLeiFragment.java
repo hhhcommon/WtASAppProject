@@ -115,7 +115,7 @@ public class FenLeiFragment extends Fragment implements TipView.WhiteViewClick {
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.getPreferenceUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getPreferenceUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
 
             @Override

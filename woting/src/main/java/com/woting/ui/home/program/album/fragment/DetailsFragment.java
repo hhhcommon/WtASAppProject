@@ -137,7 +137,7 @@ public class DetailsFragment extends Fragment implements OnClickListener {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        VolleyRequest.RequestPost(GlobalConfig.getContentById, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getContentById, tag, jsonObject, new VolleyCallback() {
             private List<ContentCatalogs> contentCatalogsList;
             private String contentId;
 

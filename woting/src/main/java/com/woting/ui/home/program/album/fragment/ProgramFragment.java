@@ -255,7 +255,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.getSmSubMedias, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getSmSubMedias, tag, jsonObject, new VolleyCallback() {
             private String subList;
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -534,6 +534,11 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
     private void initDao() {
         dbDao = new SearchPlayerHistoryDao(context);
         FID = new FileInfoDao(context);
+    }
+
+    // 获取列表数量
+    public int getListSize() {
+        return SubListAll.size();
     }
 
     @Override

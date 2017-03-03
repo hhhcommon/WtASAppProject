@@ -384,7 +384,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
                 jsonObject.put("UserAliasDescn", groupSignature);
                 url = GlobalConfig.updategroupFriendnewsUrl;
             }
-            VolleyRequest.RequestPost(url, groupSignature, jsonObject, new VolleyCallback() {
+            VolleyRequest.requestPost(url, groupSignature, jsonObject, new VolleyCallback() {
                 private String ReturnType;
 
                 @Override
@@ -446,7 +446,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.delFriendUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.delFriendUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
 
             @Override

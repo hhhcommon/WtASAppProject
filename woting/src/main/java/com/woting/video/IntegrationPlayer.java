@@ -116,6 +116,15 @@ public class IntegrationPlayer {
     }
 
     /**
+     * 播放
+     */
+    public void startPlay(int index, boolean isAllow) {
+        if(mBound && mService != null) {
+            mService.startPlay(index, isAllow);
+        }
+    }
+
+    /**
      * 暂停播放
      */
     public void pausePlay() {
@@ -152,5 +161,19 @@ public class IntegrationPlayer {
      */
     public void updateLocalList() {
         mService.updateLocalList();
+    }
+
+    /**
+     * 播放路况 TTS
+     */
+    public void playLKTts(String ttsContent) {
+        mService.playLKTts(ttsContent);
+    }
+
+    /**
+     * 播放路况 TTS
+     */
+    public void stopLKTts() {
+        mService.stopLKTts();
     }
 }

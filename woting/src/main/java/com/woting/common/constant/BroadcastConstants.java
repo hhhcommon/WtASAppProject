@@ -115,4 +115,16 @@ public class BroadcastConstants {
 
     // 更新已下载
     public static final String UPDATE_DOWN_LOAD_VIEW = "UPDATE_DOWN_LOAD_VIEW";
+
+    // 播放器没有网络
+    public static final String PLAY_NO_NET = "PLAY_NO_NET";
+
+    // 需要弹框提示
+    public static final String PLAY_WIFI_TIP = "PLAY_WIFI_TIP";
+
+    // 路况播放完了
+    public static final String LK_TTS_PLAY_OVER = "LK_TTS_PLAY_OVER";
+
+    // 播放专辑列表中的数据
+    public static final String PLAY_SEQU_LIST = "PLAY_SEQU_LIST";
 }

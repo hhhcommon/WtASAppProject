@@ -171,7 +171,7 @@ public class TransferAuthorityActivity extends AppBaseActivity implements OnClic
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.grouptalkUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.grouptalkUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
 
             @Override
@@ -290,7 +290,7 @@ public class TransferAuthorityActivity extends AppBaseActivity implements OnClic
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.changGroupAdminnerUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.changGroupAdminnerUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String Message;
 

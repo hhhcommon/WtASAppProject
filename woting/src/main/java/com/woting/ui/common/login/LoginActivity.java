@@ -197,7 +197,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.loginUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.loginUrl, tag, jsonObject, new VolleyCallback() {
             private String UserNum;
             private String phoneNumber;
             private String gender;   // 性别
@@ -400,7 +400,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.afterThirdAuthUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.afterThirdAuthUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String Message;
             private String UserNum;

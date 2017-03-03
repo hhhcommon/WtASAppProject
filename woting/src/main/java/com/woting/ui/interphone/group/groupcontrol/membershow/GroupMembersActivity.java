@@ -148,7 +148,7 @@ public class GroupMembersActivity extends AppBaseActivity implements
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.grouptalkUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.grouptalkUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String Message;
 

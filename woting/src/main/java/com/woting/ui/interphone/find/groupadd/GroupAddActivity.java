@@ -221,7 +221,7 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 			e.printStackTrace();
 		}
 
-		VolleyRequest.RequestPost(GlobalConfig.JoinGroupVertifyUrl, tag, jsonObject, new VolleyCallback() {
+		VolleyRequest.requestPost(GlobalConfig.JoinGroupVertifyUrl, tag, jsonObject, new VolleyCallback() {
 			private String ReturnType;
 
 			@Override
@@ -282,7 +282,7 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 			e.printStackTrace();
 		}
 
-		VolleyRequest.RequestPost(GlobalConfig.JoinGroupUrl, tag, jsonObject, new VolleyCallback() {
+		VolleyRequest.requestPost(GlobalConfig.JoinGroupUrl, tag, jsonObject, new VolleyCallback() {
 			private String ReturnType;
 
 			@Override

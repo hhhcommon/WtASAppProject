@@ -107,7 +107,7 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
     }
 
     private void send() {
-        VolleyRequest.RequestPost(GlobalConfig.getContentUrl, tag, setParamSend(), new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, setParamSend(), new VolleyCallback() {
             private String StringSubList;
             private String ReturnType;
 
@@ -274,7 +274,7 @@ public class CityRadioActivity extends AppBaseActivity implements View.OnClickLi
     }
 
     private void sendTwice() {
-        VolleyRequest.RequestPost(GlobalConfig.getContentUrl, tag, setParam(), new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, setParam(), new VolleyCallback() {
             private String StringSubList;
             private String ReturnType;
 

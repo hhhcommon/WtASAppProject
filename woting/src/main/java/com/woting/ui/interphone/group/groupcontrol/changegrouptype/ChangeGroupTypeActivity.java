@@ -144,7 +144,7 @@ public class ChangeGroupTypeActivity extends Activity implements OnClickListener
 	private void send() {
 		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		
-		VolleyRequest.RequestPost(GlobalConfig.talkgroupcreatUrl, tag, jsonObject, new VolleyCallback() {
+		VolleyRequest.requestPost(GlobalConfig.talkgroupcreatUrl, tag, jsonObject, new VolleyCallback() {
 			private String ReturnType;
 			private String Message;
 

@@ -149,7 +149,7 @@ public class JoinGroupListActivity extends AppBaseActivity implements OnClickLis
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.checkVertifyUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.checkVertifyUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
 
             @Override
@@ -225,7 +225,7 @@ public class JoinGroupListActivity extends AppBaseActivity implements OnClickLis
             e.printStackTrace();
         }
 
-        VolleyRequest.RequestPost(GlobalConfig.checkDealUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.checkDealUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String Message;
 

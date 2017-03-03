@@ -208,7 +208,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
 			e.printStackTrace();
 		}
 		
-		VolleyRequest.RequestPost(GlobalConfig.delFavoriteListUrl, tag, jsonObject, new VolleyCallback() {
+		VolleyRequest.requestPost(GlobalConfig.delFavoriteListUrl, tag, jsonObject, new VolleyCallback() {
 			private String ReturnType;
 
 			@Override
@@ -246,7 +246,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
 			e.printStackTrace();
 		}
 
-		VolleyRequest.RequestPost(GlobalConfig.getFavoriteListUrl, tag, jsonObject, new VolleyCallback() {
+		VolleyRequest.requestPost(GlobalConfig.getFavoriteListUrl, tag, jsonObject, new VolleyCallback() {
 			private String ReturnType;
 
 			@Override

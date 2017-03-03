@@ -586,6 +586,8 @@ public class SocketService extends Service {
             int msgType = -1;//消息类型
             byte[] endMsgFlag = {0x00, 0x00, 0x00};
             int isRegist = 0;
+            int isCtlAck = 0, tempFlag = 0, fieldFlag = 0, countFlag = 0;
+
             while (true) {
                 try {
                     int r = -1;
@@ -622,56 +624,53 @@ public class SocketService extends Service {
                                 if (msgType == -1) msgType = MessageUtils.decideMsg(ba);
                                 if (msgType == 0) {//0=控制消息(一般消息)
                                     if (isAck == -1 && i == 12) {
-                                        if (((ba[2] & 0x80) == 0x80) && ((ba[2] & 0x00) == 0x00) && (((ba[i - 1] & 0xF0) == 0x00) || ((ba[i - 1] & 0xF0) == 0xF0)))
-                                            isAck = 1;
+                                        tempFlag = i;
+                                        if ((ba[2] & 0x80) == 0x80) isAck = 1;
                                         else isAck = 0;
-                                        if ((ba[i - 1] & 0xF0) == 0xF0) isRegist = 1;
-                                    } else if (isAck == 1) {//是回复消息
-//                                        if (isRegist == 1) { //是注册消息
-//                                            if (i == 48 && endMsgFlag[2] == 0) _dataLen = 80;
-//                                            else _dataLen = 91;
-//                                            if (_dataLen >= 0 && i == _dataLen) break;
-//                                        } else { //非注册消息
-//                                            if (_dataLen < 0) _dataLen = 45;
-//                                            if (_dataLen >= 0 && i == _dataLen) break;
-//                                        }
-                                        if (isRegist == 1) { //是注册消息
-                                            if (_dataLen < 0) _dataLen = 91;
-                                            if (i == 48 && endMsgFlag[2] == 0) _dataLen = 80;
-                                        } else { //非注册消息
-                                            if (_dataLen < 0) _dataLen = 45;
-                                        }
-                                        if (_dataLen >= 0 && i == _dataLen) break;
-                                    } else if (isAck == 0) {//是一般消息
-//                                        if (isRegist == 1) {//是注册消息
-//                                            if (((ba[2] & 0x80) == 0x80) && ((ba[2] & 0x00) == 0x00)) {
-//                                                if (i == 48 && endMsgFlag[2] == 0) _dataLen = 80;
-//                                                else _dataLen = 91;
-//                                            } else {
-//                                                if (i == 47 && endMsgFlag[2] == 0) _dataLen = 79;
-//                                                else _dataLen = 90;
-//                                            }
-                                        if (isRegist == 1) {//是注册消息
-                                            if (((ba[2] & 0x80) == 0x80) && ((ba[2] & 0x00) == 0x00)) {
-                                                if (_dataLen < 0) _dataLen = 91;
-                                                if (i == 48 && endMsgFlag[2] == 0) _dataLen = 80;
-                                            } else {
-                                                if (_dataLen < 0) _dataLen = 90;
-                                                if (i == 47 && endMsgFlag[2] == 0) _dataLen = 79;
+                                        if (isAck == 1) countFlag = 1;
+                                        else countFlag = 0;
+
+                                        if (((ba[i - 1] >> 4) & 0x0F) == 0x0F) isRegist = 1;
+                                        else if (((ba[i - 1] >> 4) | 0x00) == 0x00) isCtlAck = 1;
+                                    }
+                                    if (isAck != -1) {
+                                        if (isCtlAck == 1) {
+                                            if (fieldFlag == 0 && ((endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 32)) {
+                                                countFlag = 1;
+                                                tempFlag = i;
+                                                fieldFlag = 1;
+                                            } else if (fieldFlag == 1 && (i - tempFlag) > countFlag && (ba[i - countFlag] == 0 || (endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 12)) {
+                                                countFlag = 0;
+                                                tempFlag = i;
+                                                fieldFlag = 2;
+                                            } else if (fieldFlag == 2 && ((endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 32)) {
+                                                break;//通用回复消息读取完毕
                                             }
-                                            if (_dataLen >= 0 && i == _dataLen) break;
-                                        } else {//非注册消息
-                                            if (_dataLen == -3 && endMsgFlag[1] == '^' && endMsgFlag[2] == '^')
-                                                _dataLen++;
-                                            else if (_dataLen > -3 && _dataLen < -1) _dataLen++;
-                                            else if (_dataLen == -1) {
+                                        } else if (isRegist == 1) {
+                                            if (fieldFlag == 0 && (i - tempFlag) > countFlag && ((endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 32)) {
+                                                countFlag = 1;
+                                                tempFlag = i;
+                                                fieldFlag = 1;
+                                            } else if (fieldFlag == 1 && (i - tempFlag) > countFlag && ((ba[i - countFlag] == 0 || (endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 12))) {
+                                                countFlag = 0;
+                                                tempFlag = i;
+                                                fieldFlag = 2;
+                                            } else if (fieldFlag == 2 && ((endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 32)) {
+                                                break;//注册消息完成
+                                            }
+                                        } else { //一般消息
+                                            if (fieldFlag == 0 && endMsgFlag[1] == '^' && endMsgFlag[2] == '^') {
+                                                fieldFlag = 1;
+                                                tempFlag = 0;
+                                            } else if (fieldFlag == 1 && (++tempFlag) == 2) {
                                                 _dataLen = (short) (((endMsgFlag[2] << 8) | endMsgFlag[1] & 0xff));
-                                                if (_dataLen == 0) break;
-                                            } else if (_dataLen >= 0) {
-                                                if (--_dataLen == 0) break;
-                                            }
+                                                tempFlag = 0;
+                                                fieldFlag = 2;
+                                            } else if (fieldFlag == 2 && (++tempFlag) == _dataLen)
+                                                break;
                                         }
                                     }
+
                                 } else if (msgType == 1) {//1=媒体消息
                                     if (isAck == -1) {
                                         if (((ba[2] & 0x80) == 0x80) && ((ba[2] & 0x40) == 0x00))
@@ -697,6 +696,10 @@ public class SocketService extends Service {
                     isAck = -1;
                     isRegist = 0;
                     msgType = -1;
+                    isCtlAck = 0;
+                    tempFlag = 0;
+                    fieldFlag = 0;
+                    countFlag = 0;
                     endMsgFlag[0] = 0x00;
                     endMsgFlag[1] = 0x00;
                     endMsgFlag[2] = 0x00;

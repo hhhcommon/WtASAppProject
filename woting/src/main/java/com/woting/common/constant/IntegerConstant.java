@@ -14,4 +14,7 @@ public class IntegerConstant {
 
     // 更新列表界面
     public static final int PLAY_UPDATE_LIST_VIEW = 1002;
+
+    // 刷新节目单
+    public static final int REFRESH_PROGRAM = 1003;
 }

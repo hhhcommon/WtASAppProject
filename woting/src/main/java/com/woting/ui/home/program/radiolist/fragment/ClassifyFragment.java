@@ -145,7 +145,7 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
 
     // 请求网络获取分类信息
     private void sendRequest() {
-        VolleyRequest.RequestPost(GlobalConfig.getContentUrl, RadioListActivity.tag, setParam(), new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getContentUrl, RadioListActivity.tag, setParam(), new VolleyCallback() {
             private String ReturnType;
 
             @Override

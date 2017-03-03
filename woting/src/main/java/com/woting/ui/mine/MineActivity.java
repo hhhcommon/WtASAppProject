@@ -257,8 +257,9 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                     Bitmap bitmap = BitmapUtils.readBitMap(context, R.mipmap.wt_person_on);
                     imageToggle.setImageBitmap(bitmap);
                     et.putString(StringConstant.WIFISET, "true");
+                    et.putString(StringConstant.WIFISHOW, "true");
                 }
-                if (et.commit()) Log.v("commit", "数据 commit 失败!");
+                if (!et.commit()) Log.v("commit", "数据 commit 失败!");
                 break;
             case R.id.lin_xiugai:           // 修改个人资料
                 startActivityForResult(new Intent(context, UpdatePersonActivity.class), UPDATE_USER);
@@ -836,7 +837,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         }
         isUpdate = false;
         Log.v("数据改动", "数据有改动，将数据提交到服务器!");
-        VolleyRequest.RequestPost(GlobalConfig.updateUserUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.updateUserUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();

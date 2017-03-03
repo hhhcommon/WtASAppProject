@@ -23,9 +23,11 @@ import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.cloud.SynthesizerListener;
 import com.kingsoft.media.httpcache.KSYProxyService;
 import com.kingsoft.media.httpcache.OnCacheStatusListener;
+import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
+import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.ResourceUtil;
 import com.woting.ui.download.dao.FileInfoDao;
@@ -51,6 +53,7 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
     private List<LanguageSearchInside> playList = new ArrayList<>();
     private List<FileInfo> mFileInfoList;// 下载数据
 
+    private SpeechSynthesizer mTtsPlay;// 播放路况 TTS
     private BVideoView mVV;// mVV 播放器
     private LibVLC mVlc;// VLC 播放器
     private SpeechSynthesizer mTts;// 讯飞播放 TTS
@@ -221,7 +224,7 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
 
     // 更新播放列表  position
     public void updatePlayList(List<LanguageSearchInside> list, int position) {
-        if(list != null) {
+        if(list != null && list.size() > 0) {
             if(playList != null) playList.clear();
             playList = list;
 
@@ -239,8 +242,19 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
         }
     }
 
+    private boolean isAllow;// 是否允许流量播放
+
+    public void startPlay(int index, boolean isAllow) {
+        this.isAllow = isAllow;
+        this.startPlay(index);
+    }
+
     // 开始播放
     public void startPlay(int index) {
+        if (mTtsPlay != null) {// mTtsPlay != null 说明当前正在播放路况
+            mTtsPlay.stopSpeaking();
+            mTtsPlay = null;
+        }
         if(index < 0 || index >= playList.size()) return ;
         position = index;
         secondProgress = 0;
@@ -320,6 +334,9 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
         mediaType = GlobalConfig.playerObject.getMediaType();
         httpUrl = GlobalConfig.playerObject.getContentPlay();
         localUrl = GlobalConfig.playerObject.getLocalurl();
+
+        Log.v("TAG", "httpUrl -- > > " + httpUrl);
+
         return mediaType != null && (httpUrl != null || localUrl != null);
     }
 
@@ -330,7 +347,7 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
         if(mVlc == null) initVlc();
         else if(mVlc.isPlaying() && isVlcPlaying) mVlc.stop();
 
-        if(localUrl != null) {// 播放本地 URL
+        if(localUrl != null) {// 播放本地 URL 即使在流量环境下也不要提示
             mVlc.playMRL(localUrl);
             secondProgress = -100;// MAX
 
@@ -338,8 +355,25 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
         } else {
             if(mediaType.equals(StringConstant.TYPE_AUDIO)) {
                 if (!isCacheFinish(contentPlay)) {// 判断是否已经缓存过  没有则开始缓存
+
+                    // 没有网络
+                    if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
+                        sendBroadcast(new Intent(BroadcastConstants.PLAY_NO_NET));
+                        return ;
+                    }
+
+                    // 需要弹框提示
+                    if (!isAllow) {
+                        isAllow = !Boolean.valueOf(BSApplication.SharedPreferences.getString(StringConstant.WIFISHOW, "true"));
+                        if (wifiPlayTip()) {
+                            sendBroadcast(new Intent(BroadcastConstants.PLAY_WIFI_TIP));
+                            return ;
+                        }
+                    }
+                    isAllow = !Boolean.valueOf(BSApplication.SharedPreferences.getString(StringConstant.WIFISHOW, "true"));
+
                     proxyService.registerCacheStatusListener(this, contentPlay);
-                } else {
+                } else {// 已经缓存过不需要耗流量所以也不需要提示
                     secondProgress = -1;
                 }
                 contentPlay = proxyService.getProxyUrl(contentPlay);
@@ -381,6 +415,22 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
         if(mTts != null && mTts.isSpeaking() && isTtsPlaying) stopTts();
         if(mVlc != null && mVlc.isPlaying() && isVlcPlaying) stopVlc();
 
+        // 没有网络
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
+            sendBroadcast(new Intent(BroadcastConstants.PLAY_NO_NET));// 没有网络
+            return ;
+        }
+
+        // 需要弹框提示
+        if (!isAllow) {
+            isAllow = !Boolean.valueOf(BSApplication.SharedPreferences.getString(StringConstant.WIFISHOW, "true"));
+            if (wifiPlayTip()) {
+                sendBroadcast(new Intent(BroadcastConstants.PLAY_WIFI_TIP));// 需要弹框提示
+                return ;
+            }
+        }
+        isAllow = !Boolean.valueOf(BSApplication.SharedPreferences.getString(StringConstant.WIFISHOW, "true"));
+
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -411,6 +461,23 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
         if(mVV != null && mVV.isPlaying() && isBVVPlaying) stopRadio();
         if(mTts == null) initTts();
         else if(mTts.isSpeaking() && isTtsPlaying) mTts.stopSpeaking();
+
+        // 没有网络
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
+            sendBroadcast(new Intent(BroadcastConstants.PLAY_NO_NET));// 没有网络
+            return ;
+        }
+
+        // 需要弹框提示
+        if (!isAllow) {
+            isAllow = !Boolean.valueOf(BSApplication.SharedPreferences.getString(StringConstant.WIFISHOW, "true"));
+            if (wifiPlayTip()) {
+                sendBroadcast(new Intent(BroadcastConstants.PLAY_WIFI_TIP));// 需要弹框提示
+                return ;
+            }
+        }
+        isAllow = !Boolean.valueOf(BSApplication.SharedPreferences.getString(StringConstant.WIFISHOW, "true"));
+
         mTts.startSpeaking(contentPlay, mTtsListener);
         mHandler.postDelayed(mTotalTimeRunnable, 1000);
 
@@ -611,6 +678,71 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
         }
     };
 
+    // 播放路况 TTS
+    public void playLKTts(String ttsContent) {
+        // 将正在播放的暂停
+        if (isBVVPlaying && mVV.isPlaying()) mVV.pause();
+        if (isVlcPlaying && mVlc.isPlaying()) mVlc.pause();
+        if (isTtsPlaying && mTts.isSpeaking()) mTts.stopSpeaking();
+        if (mTtsPlay == null) {
+            mTtsPlay = SpeechSynthesizer.createSynthesizer(this, null);
+            setParamTTS();
+        }
+        mTtsPlay.startSpeaking(ttsContent, mLKTtsListener);
+    }
+
+    // 停止路况
+    public void stopLKTts() {
+        if (mTtsPlay != null) {
+            mTtsPlay.stopSpeaking();
+            sendBroadcast(new Intent(BroadcastConstants.LK_TTS_PLAY_OVER));// 路况播放完了
+            mTtsPlay = null;
+        }
+
+//        if (isBVVPlaying && mVV.isPlaying()) {
+//            mVV.resume();
+//        } else if (isVlcPlaying && mVlc.isPlaying()) {
+//            mVlc.play();
+//        } else if (isTtsPlaying) {// TTS 没有继续播放的方法 所以就播放下一个节目
+//            position = position + 1;
+//            startPlay(position);
+//        } else {
+//            sendBroadcast(new Intent(BroadcastConstants.LK_TTS_PLAY_OVER));// 路况播放完了
+//        }
+    }
+
+    // TTS 播放监听
+    private SynthesizerListener mLKTtsListener = new SynthesizerListener() {
+        @Override
+        public void onCompleted(SpeechError arg0) {
+            sendBroadcast(new Intent(BroadcastConstants.LK_TTS_PLAY_OVER));// 路况播放完了
+        }
+
+        @Override
+        public void onBufferProgress(int arg0, int arg1, int arg2, String arg3) {
+        }
+
+        @Override
+        public void onEvent(int arg0, int arg1, int arg2, Bundle arg3) {
+        }
+
+        @Override
+        public void onSpeakBegin() {
+        }
+
+        @Override
+        public void onSpeakPaused() {
+        }
+
+        @Override
+        public void onSpeakProgress(int arg0, int arg1, int arg2) {
+        }
+
+        @Override
+        public void onSpeakResumed() {
+        }
+    };
+
     /**
      * 播放出错
      * 电台播放出错则重新播放 播放电台没有播放完成事件
@@ -626,6 +758,20 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
             }
         }, 1000);
         return true;
+    }
+
+    // 是否弹框提醒
+    private boolean wifiPlayTip() {
+        String wifiSet = BSApplication.SharedPreferences.getString(StringConstant.WIFISET, "true");
+        boolean isOpen = Boolean.valueOf(wifiSet); // 是否开启非 wifi 网络流量提醒
+        if (!isOpen) return false;
+
+        String wifiShow = BSApplication.SharedPreferences.getString(StringConstant.WIFISHOW, "true");// 是否弹框提醒
+        boolean isShow = Boolean.valueOf(wifiShow);
+        if (!isShow) return false;
+
+        int netStatus = CommonHelper.checkNetworkStatus(this);// 网络设置获取
+        return netStatus != 1;
     }
 
     // 回收资源
