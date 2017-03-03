@@ -1,13 +1,9 @@
 package com.woting.ui.home.main;
 
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -21,7 +17,6 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 import com.woting.R;
-import com.woting.common.service.IntegrationPlayerService;
 import com.woting.common.service.SocketService;
 import com.woting.common.util.ToastUtils;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
@@ -44,34 +39,14 @@ public class HomeActivity extends FragmentActivity {
     private static HomeActivity context;
     private static ViewPager mPager;
 
-    private MyServiceConnection sc = new MyServiceConnection();
-//    public static IntegrationPlayerService mService;// 服务
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_wt_home);
         context = this;
-        bindService(new Intent(this, IntegrationPlayerService.class), sc, Context.BIND_AUTO_CREATE);
         InitTextView();
         InitViewPager();
-        setType();           // 适配顶栏样式
-    }
-
-    // 绑定服务
-    private class MyServiceConnection implements ServiceConnection {
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            IntegrationPlayerService.MyBinder mBinder = (IntegrationPlayerService.MyBinder) service;
-            IntegrationPlayerService  mService = mBinder.getService();
-            Log.v("TAG", "Service Bind success");
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
+        setType();
     }
 
     // 适配顶栏样式
@@ -85,7 +60,6 @@ public class HomeActivity extends FragmentActivity {
         }
         TextView tv_main = (TextView) findViewById(R.id.tv_main);
         if (v) {
-
             tv_main.setVisibility(View.VISIBLE);
         } else {
             tv_main.setVisibility(View.GONE);
@@ -222,13 +196,5 @@ public class HomeActivity extends FragmentActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unbindService(sc);
-        Intent intent = new Intent(this, IntegrationPlayerService.class);
-        stopService(intent);
     }
 }
