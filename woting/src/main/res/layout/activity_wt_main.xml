@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/app_bg"
@@ -18,8 +18,8 @@
             <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/tab_navigation"
                 android:background="@color/WHITE" >
             </FrameLayout>
 
@@ -27,6 +27,7 @@
                 android:id="@+id/tab_navigation"
                 android:layout_width="match_parent"
                 android:layout_height="51dp"
+                android:layout_alignParentBottom="true"
                 android:background="@color/main_tab_bg" >
 
                 <View
@@ -112,7 +113,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone" />
-        </LinearLayout>
+        </RelativeLayout>
     </TabHost>
 
     <LinearLayout

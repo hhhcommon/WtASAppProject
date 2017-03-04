@@ -104,7 +104,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private static ImageView image5;
     private Dialog upDataDialog;
 
-    private View tabNavigation;// 底部导航菜单
+    private static View tabNavigation;// 底部导航菜单
 
     private int upDataType;//1,不需要强制升级2，需要强制升级
     private String upDataNews;
@@ -734,6 +734,11 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     public static void changeTwo() {
         setViewTwo();
+    }
+
+    public static void hideOrShowTab(boolean isVisible) {
+        if (isVisible) tabNavigation.setVisibility(View.VISIBLE);
+        else tabNavigation.setVisibility(View.GONE);
     }
 
     @Override
