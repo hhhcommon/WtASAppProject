@@ -270,6 +270,13 @@
 
         <!--  -->
         <activity
+            android:name=".ui.home.player.main.fragment.PlayerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <!--  -->
+        <activity
             android:name=".ui.common.welcome.activity.WelcomeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"

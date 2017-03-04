@@ -329,7 +329,7 @@ public class AnchorDetailsActivity extends AppBaseActivity implements View.OnCli
                 dbDao.deleteHistory(playerurl);
                 dbDao.addHistory(history);
                 HomeActivity.UpdateViewPager();
-                PlayerFragment.TextPage=1;
+                PlayerActivity.TextPage=1;
                 Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                 Bundle bundle1=new Bundle();
                 bundle1.putString("text",newList.get(position - 2).getContentName());

@@ -22,7 +22,7 @@ import com.woting.common.util.CommonUtils;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
+import com.woting.ui.home.player.main.fragment.PlayerActivity;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.main.MainActivity;
 import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
@@ -212,7 +212,7 @@ public class SoundFragment extends Fragment {
                                 ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
                         dbDao.deleteHistory(playerurl);
                         dbDao.addHistory(history);
-                        if (PlayerFragment.context != null) {
+                        if (PlayerActivity.context != null) {
                             MainActivity.change();
                             HomeActivity.UpdateViewPager();
                             String s = playList.get(position).getPlayerName();

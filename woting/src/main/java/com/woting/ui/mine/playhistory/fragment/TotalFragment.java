@@ -26,7 +26,7 @@ import com.woting.common.util.CommonUtils;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
+import com.woting.ui.home.player.main.fragment.PlayerActivity;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.search.model.SuperRankInfo;
 import com.woting.ui.main.MainActivity;
@@ -186,7 +186,7 @@ public class TotalFragment extends Fragment {
                     if (playermediatype != null && playermediatype.equals("TTS")) dbDao.deleteHistoryById(ContentId);
                     else dbDao.deleteHistory(playerurl);
                     dbDao.addHistory(history);
-                    if (PlayerFragment.context != null) {
+                    if (PlayerActivity.context != null) {
                         MainActivity.change();
                         HomeActivity.UpdateViewPager();
                         String s = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerName();

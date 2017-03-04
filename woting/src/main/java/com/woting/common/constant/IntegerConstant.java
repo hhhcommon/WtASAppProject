@@ -7,7 +7,7 @@ package com.woting.common.constant;
 public class IntegerConstant {
 
     /**
-     * PlayerFragment 相关
+     * PlayerActivity 相关
      */
     // 更新列表
     public static final int PLAY_UPDATE_LIST = 1001;

@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
+import com.woting.ui.home.player.main.fragment.PlayerActivity;
 import com.woting.common.constant.BroadcastConstants;
 
 import java.text.SimpleDateFormat;
@@ -26,7 +26,7 @@ public class timeroffservice extends Service {
 		if (BroadcastConstants.TIMER_START.equals(intent.getAction())) {
 			int a = intent.getIntExtra("time", 0);
 			final int index = a;
-			if(PlayerFragment.isCurrentPlay){
+			if(PlayerActivity.isCurrentPlay){
 				EndTime = a;
 			}else{
 				EndTime = a * 1000 * 60;
@@ -52,7 +52,7 @@ public class timeroffservice extends Service {
 
 					// 此处需要将此消息已广播形式发送回主activity
 					mIntent.putExtra("update", s);
-					if(PlayerFragment.isCurrentPlay){
+					if(PlayerActivity.isCurrentPlay){
 						mIntent.putExtra("check_image", 100);
 					}else{
 						mIntent.putExtra("check_image", index);
