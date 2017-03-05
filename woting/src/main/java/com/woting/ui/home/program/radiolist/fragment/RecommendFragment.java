@@ -34,7 +34,7 @@ import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
-import com.woting.ui.home.program.radiolist.activity.RadioListActivity;
+import com.woting.ui.home.program.radiolist.activity.RadioListFragment;
 import com.woting.ui.home.program.radiolist.adapter.RadioListAdapter;
 import com.woting.ui.home.program.radiolist.rollviewpager.RollPagerView;
 import com.woting.ui.home.program.radiolist.rollviewpager.adapter.LoopPagerAdapter;
@@ -128,14 +128,14 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
 
     // 请求网络数据
     public void sendRequest() {
-        VolleyRequest.requestPost(GlobalConfig.getContentUrl, RadioListActivity.tag, setParam(), new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getContentUrl, RadioListFragment.tag, setParam(), new VolleyCallback() {
             private String ReturnType;
 
             @Override
             protected void requestSuccess(JSONObject result) {
-                ((RadioListActivity) getActivity()).closeDialog();
+                RadioListFragment.closeDialog();
                 if (dialog != null) dialog.dismiss();
-                if (((RadioListActivity) getActivity()).isCancel()) return;
+                if (RadioListFragment.isCancelRequest) return;
                 page++;
                 try {
                     ReturnType = result.getString("ReturnType");
@@ -193,7 +193,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             @Override
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
-                ((RadioListActivity) getActivity()).closeDialog();
+                RadioListFragment.closeDialog();
                 ToastUtils.showVolleyError(context);
                 tipView.setVisibility(View.VISIBLE);
                 tipView.setTipView(TipView.TipStatus.IS_ERROR);
@@ -205,8 +205,8 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("MediaType", "");
-            jsonObject.put("CatalogType", RadioListActivity.catalogType);
-            jsonObject.put("CatalogId", RadioListActivity.id);
+            jsonObject.put("CatalogType", RadioListFragment.catalogType);
+            jsonObject.put("CatalogId", RadioListFragment.id);
             jsonObject.put("Page", String.valueOf(page));
             jsonObject.put("PerSize", "3");
             jsonObject.put("ResultType", "2");

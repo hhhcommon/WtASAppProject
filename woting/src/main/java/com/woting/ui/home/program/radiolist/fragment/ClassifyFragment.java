@@ -33,7 +33,7 @@ import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
-import com.woting.ui.home.program.radiolist.activity.RadioListActivity;
+import com.woting.ui.home.program.radiolist.activity.RadioListFragment;
 import com.woting.ui.home.program.radiolist.adapter.ListInfoAdapter;
 import com.woting.ui.home.program.radiolist.mode.ListInfo;
 import com.woting.ui.home.program.radiolist.rollviewpager.RollPagerView;
@@ -145,13 +145,13 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
 
     // 请求网络获取分类信息
     private void sendRequest() {
-        VolleyRequest.requestPost(GlobalConfig.getContentUrl, RadioListActivity.tag, setParam(), new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getContentUrl, RadioListFragment.tag, setParam(), new VolleyCallback() {
             private String ReturnType;
 
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
-                if (((RadioListActivity) getActivity()).isCancel()) return;
+                if (RadioListFragment.isCancelRequest) return;
                 page++;
                 try {
                     ReturnType = result.getString("ReturnType");

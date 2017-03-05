@@ -375,7 +375,7 @@
 
         <!--  -->
         <activity
-            android:name=".ui.home.program.radiolist.activity.RadioListActivity"
+            android:name=".ui.home.program.radiolist.activity.RadioListFragment"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
