@@ -1062,28 +1062,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         Settings.System.putInt(getContentResolver(), Settings.Global.WIFI_SLEEP_POLICY, defaultPolicy);
     }
 
-    /**
-     * 手机实体返回按键的处理 与onbackpress同理
-     */
-    long waitTime = 2000;
-    long touchTime = 0;
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN && KeyEvent.KEYCODE_BACK == keyCode) {
-            long currentTime = System.currentTimeMillis();
-            if ((currentTime - touchTime) >= waitTime) {
-                ToastUtils.show_always(MainActivity.this, "再按一次退出");
-                touchTime = currentTime;
-            } else {
-                MobclickAgent.onKillProcess(this);
-                finish();
-            }
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

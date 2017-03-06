@@ -1,11 +1,16 @@
-package com.woting.ui.home.program.diantai.activity;
+package com.woting.ui.home.program.diantai.fragment;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
@@ -21,12 +26,11 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
-import com.woting.ui.home.program.diantai.activity.adapter.RadioNationAdapter;
+import com.woting.ui.home.program.diantai.fragment.adapter.RadioNationAdapter;
 import com.woting.ui.home.program.diantai.model.RadioPlay;
 
 import org.json.JSONException;
@@ -37,7 +41,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RadioNationalActivity extends AppBaseActivity implements View.OnClickListener, TipView.WhiteViewClick {
+public class RadioNationalFragment extends Fragment implements View.OnClickListener, TipView.WhiteViewClick {
+    private Context context;
+
     private TextView mTextView_Head;
     private Dialog dialog;
 
@@ -49,21 +55,32 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
     private ExpandableListView mListView;
     private RadioNationAdapter adapter;
 
+    private View rootView;
     private TipView tipView;// 没有网络、没有数据提示
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_radio_nation);
-        setView();
-        initDao();
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在获取数据");
-            sendRequest();
-        } else {
-            tipView.setVisibility(View.VISIBLE);
-            tipView.setTipView(TipView.TipStatus.NO_NET);
+        context = getActivity();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.activity_radio_nation, container, false);
+            rootView.setOnClickListener(this);
+            setView();
+            initDao();
+            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                dialog = DialogUtils.Dialogph(context, "正在获取数据");
+                sendRequest();
+            } else {
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_NET);
+            }
         }
+        return rootView;
     }
 
     private void sendRequest() {
@@ -147,7 +164,6 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
 
     // 这里要改
     protected void setListView() {
-
         mListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
@@ -191,7 +207,6 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
                         HomeActivity.UpdateViewPager();
-                        finish();
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
                         bundle1.putString("text", SubList.get(groupPosition).getList().get(childPosition).getContentName());
@@ -215,13 +230,13 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
 
 
     private void setView() {
-        tipView = (TipView) findViewById(R.id.tip_view);
+        tipView = (TipView) rootView.findViewById(R.id.tip_view);
         tipView.setWhiteClick(this);
 
-        findViewById(R.id.head_left_btn).setOnClickListener(this);
+        rootView.findViewById(R.id.head_left_btn).setOnClickListener(this);
 
-        mListView = (ExpandableListView) findViewById(R.id.listview_fm);
-        mTextView_Head = (TextView) findViewById(R.id.head_name_tv);
+        mListView = (ExpandableListView) rootView.findViewById(R.id.listview_fm);
+        mTextView_Head = (TextView) rootView.findViewById(R.id.head_name_tv);
         mTextView_Head.setText("国家台");
         mListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
 
@@ -236,8 +251,8 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.head_left_btn:
-                finish();
+            case R.id.head_left_btn:// 返回
+                HomeActivity.close();
                 break;
         }
     }
@@ -254,7 +269,7 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
         mListView = null;
@@ -271,6 +286,5 @@ public class RadioNationalActivity extends AppBaseActivity implements View.OnCli
             SubList = null;
         }
         adapter = null;
-        setContentView(R.layout.activity_null);
     }
 }

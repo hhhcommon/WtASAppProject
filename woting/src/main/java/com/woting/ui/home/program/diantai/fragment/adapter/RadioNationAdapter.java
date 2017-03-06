@@ -1,13 +1,10 @@
-package com.woting.ui.home.program.diantai.activity.adapter;
+package com.woting.ui.home.program.diantai.fragment.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
@@ -21,7 +18,6 @@ import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.ui.home.program.diantai.model.RadioPlay;
-import com.woting.ui.home.program.fmlist.activity.FMListActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 
 import java.util.List;
@@ -29,11 +25,11 @@ import java.util.List;
 /**
  * expandableListView适配器
  */
-public class OnLinesRadioAdapter extends BaseExpandableListAdapter  {
+public class RadioNationAdapter extends BaseExpandableListAdapter  {
 	private Context context;
 	private List<RadioPlay> group;
 
-	public OnLinesRadioAdapter(Context context, List<RadioPlay> group) {
+	public RadioNationAdapter(Context context, List<RadioPlay> group) {
 		this.context = context;
 		this.group = group;
  	}
@@ -80,10 +76,9 @@ public class OnLinesRadioAdapter extends BaseExpandableListAdapter  {
 	public View getGroupView(int groupPosition, boolean isExpanded,View convertView, ViewGroup parent) {
 		final ViewHolder holder;
 		if (convertView == null) {
-			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_fragment_radio_list, null);
+			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_fragment_radio_nation, null);
 			holder = new ViewHolder();
 			holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
-			holder.lin_more = (LinearLayout) convertView.findViewById(R.id.lin_head_more);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -94,22 +89,6 @@ public class OnLinesRadioAdapter extends BaseExpandableListAdapter  {
 		} else {
 			holder.tv_name.setText(lists.getCatalogName());
 		}
-
-		// 判断回调对象决定是哪个fragment的对象调用的词adapter 从而实现多种布局
-		holder.lin_more.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(context, FMListActivity.class);
-				Bundle bundle = new Bundle();
-				bundle.putString("fromtype", "cityRadio");
-				bundle.putSerializable("list", lists);
-				bundle.putString("name", lists.getCatalogName());
-				bundle.putString("type", "2");
-				bundle.putString("id", lists.getCatalogId());
-				intent.putExtras(bundle);
-				context.startActivity(intent);
-			}
-		});
 		return convertView;
 	}
 
@@ -128,14 +107,12 @@ public class OnLinesRadioAdapter extends BaseExpandableListAdapter  {
 			holder.imageview_rankimage = (ImageView) convertView.findViewById(R.id.RankImageUrl);// 电台图标
 			holder.mTv_number = (TextView) convertView.findViewById(R.id.tv_num);
 			holder.lin_CurrentPlay = (LinearLayout) convertView.findViewById(R.id.lin_currentplay);
-
 			holder.image_last = (ImageView) convertView.findViewById(R.id.image_last);//
 			holder.image_num = (ImageView) convertView.findViewById(R.id.image_num);//
 			holder.tv_last = (TextView) convertView.findViewById(R.id.tv_last);
 			holder.image_last.setVisibility(View.GONE);
 			holder.image_num.setVisibility(View.GONE);
 			holder.tv_last.setVisibility(View.GONE);
-
 			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
 			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
 			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
@@ -147,19 +124,16 @@ public class OnLinesRadioAdapter extends BaseExpandableListAdapter  {
 		if(lists!=null){
 			if(lists.getMediaType()!=null&&!lists.getMediaType().equals("")){
 				if (lists.getMediaType().equals("RADIO")) {
-
 					if (lists.getContentName() == null|| lists.getContentName().equals("")) {
 						holder.textview_ranktitle.setText("未知");
 					} else {
 						holder.textview_ranktitle.setText(lists.getContentName());
 					}
-
 					if(!TextUtils.isEmpty(lists.getIsPlaying())){
 						holder.textview_rankplaying.setText(lists.getIsPlaying());
-					}else {
+					}else{
 						holder.textview_rankplaying.setText("暂无节目单");
 					}
-
 					if (lists.getContentImg() == null
 							|| lists.getContentImg().equals("")
 							|| lists.getContentImg().equals("null")
@@ -222,7 +196,6 @@ public class OnLinesRadioAdapter extends BaseExpandableListAdapter  {
 		public TextView textview_rankplaying;
 		public TextView textview_ranktitle;
 		public TextView tv_name;
-		public LinearLayout lin_more;
 		public TextView mTv_number;
 		public LinearLayout lin_CurrentPlay;
 		public ImageView img_zhezhao;

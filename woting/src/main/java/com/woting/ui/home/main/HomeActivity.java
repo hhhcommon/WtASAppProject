@@ -10,7 +10,9 @@ import android.view.View;
 
 import com.woting.R;
 import com.woting.common.util.SequenceUUID;
+import com.woting.common.util.ToastUtils;
 import com.woting.ui.home.main.fragment.HomeFragment;
+import com.woting.ui.main.MainActivity;
 
 /**
  * 内容主页
@@ -63,6 +65,7 @@ public class HomeActivity extends FragmentActivity {
         return res;
     }
 
+    // 打开新的 Fragment
     public static void open(Fragment frg) {
         context.getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_content, frg)
@@ -70,7 +73,26 @@ public class HomeActivity extends FragmentActivity {
                 .commit();
     }
 
+    // 关闭已经打开的 Fragment
     public static void close() {
         context.getSupportFragmentManager().popBackStack();
+    }
+
+    private long tempTime;
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            MainActivity.hideOrShowTab(true);
+            long time = System.currentTimeMillis();
+            if (time - tempTime <= 2000) {
+                android.os.Process.killProcess(android.os.Process.myPid());
+            } else {
+                tempTime = time;
+                ToastUtils.show_always(context, "再按一次退出程序!");
+            }
+        } else {
+            super.onBackPressed();
+        }
     }
 }

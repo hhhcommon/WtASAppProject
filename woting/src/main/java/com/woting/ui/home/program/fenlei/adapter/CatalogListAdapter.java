@@ -15,7 +15,7 @@ import com.woting.R;
 import com.woting.common.widgetui.MyGridView;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.program.fenlei.model.FenLei;
-import com.woting.ui.home.program.radiolist.activity.RadioListFragment;
+import com.woting.ui.home.program.radiolist.main.RadioListFragment;
 
 import java.util.List;
 

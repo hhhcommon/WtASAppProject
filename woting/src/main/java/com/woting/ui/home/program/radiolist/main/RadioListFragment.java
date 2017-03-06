@@ -1,4 +1,4 @@
-package com.woting.ui.home.program.radiolist.activity;
+package com.woting.ui.home.program.radiolist.main;
 
 import android.app.Dialog;
 import android.content.Context;

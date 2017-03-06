@@ -34,7 +34,7 @@ import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
-import com.woting.ui.home.program.radiolist.activity.RadioListFragment;
+import com.woting.ui.home.program.radiolist.main.RadioListFragment;
 import com.woting.ui.home.program.radiolist.adapter.RadioListAdapter;
 import com.woting.ui.home.program.radiolist.rollviewpager.RollPagerView;
 import com.woting.ui.home.program.radiolist.rollviewpager.adapter.LoopPagerAdapter;

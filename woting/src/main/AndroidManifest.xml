@@ -188,12 +188,12 @@
 
         <!--  -->
         <activity
-            android:name=".ui.home.program.diantai.activity.RadioNationalActivity"
+            android:name=".ui.home.program.diantai.fragment.RadioNationalFragment"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name=".ui.home.program.diantai.activity.CityRadioActivity"
+            android:name=".ui.home.program.diantai.fragment.CityRadioFragment"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan"/>
@@ -208,7 +208,7 @@
 
         <!--  -->
         <activity
-            android:name=".ui.home.program.citylist.activity.CityListActivity"
+            android:name=".ui.home.program.citylist.main.CityListFragment"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan"/>
@@ -369,20 +369,6 @@
         <!--  -->
         <activity
             android:name=".ui.home.search.activity.SearchLikeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
-
-        <!--  -->
-        <activity
-            android:name=".ui.home.program.radiolist.activity.RadioListFragment"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
-
-        <!--  -->
-        <activity
-            android:name=".ui.home.program.fmlist.activity.FMListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>

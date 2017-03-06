@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
-import com.woting.ui.home.program.diantai.fragment.OnLineFragment;
+import com.woting.ui.home.program.diantai.main.OnLineFragment;
 import com.woting.ui.home.program.fenlei.fragment.FenLeiFragment;
 import com.woting.ui.home.program.tuijian.fragment.RecommendFragment;
 import com.woting.ui.home.search.activity.SearchLikeActivity;
