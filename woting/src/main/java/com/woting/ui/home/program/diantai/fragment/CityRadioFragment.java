@@ -33,7 +33,6 @@ import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
-import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.diantai.fragment.adapter.OnLinesRadioAdapter;
 import com.woting.ui.home.program.diantai.model.RadioPlay;
 import com.woting.ui.home.program.fmlist.adapter.RankInfoAdapter;
@@ -43,7 +42,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -262,7 +260,7 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
 
                         String ContentPlayType = SubList.get(groupPosition).getList().get(childPosition).getContentPlayType();
 
-                        //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+                        // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playName, playImage, playUrl, playUri, playMediaType,
                                 playAllTime, playInTime, playContentDesc, playerNum,
@@ -277,13 +275,6 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
                         bundle1.putString("text", SubList.get(groupPosition).getList().get(childPosition).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
-                    } else if (MediaType.equals("SEQU")) {
-                        Intent intent = new Intent(context, AlbumActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("type", "recommend");
-                        bundle.putSerializable("list", (Serializable) SubList.get(groupPosition).getList());
-                        intent.putExtras(bundle);
-                        startActivity(intent);
                     } else {
                         ToastUtils.show_short(context, "暂不支持的Type类型");
                     }

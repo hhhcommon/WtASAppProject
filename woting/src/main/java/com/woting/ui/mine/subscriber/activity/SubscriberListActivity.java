@@ -25,7 +25,7 @@ import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.home.program.album.activity.AlbumActivity;
+import com.woting.ui.home.program.album.activity.AlbumFragment;
 import com.woting.ui.home.program.album.model.SubscriberInfo;
 import com.woting.ui.home.program.radiolist.mode.ListInfo;
 import com.woting.ui.mine.subscriber.adapter.SubscriberAdapter;
@@ -211,7 +211,7 @@ public class SubscriberListActivity extends AppBaseActivity implements OnClickLi
                 listInfo.setContentDescn(newList.get(position).getContentMediaName());
                 listInfo.setContentId(newList.get(position).getContentSeqId());
 
-                Intent intent = new Intent(context, AlbumActivity.class);
+                Intent intent = new Intent(context, AlbumFragment.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("type", "radiolistactivity");
                 bundle.putSerializable("list", listInfo);

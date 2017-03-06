@@ -36,7 +36,7 @@ import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.fragment.PlayerActivity;
+import com.woting.ui.home.player.main.play.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.main.MainActivity;
@@ -188,7 +188,7 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
                                     ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg,ContentPlayType,IsPlaying);
                             dbDao.deleteHistory(playerurl);
                             dbDao.addHistory(history);
-                            if (PlayerActivity.context != null) {
+                            if (PlayerFragment.context != null) {
                                 MainActivity.change();
                                 HomeActivity.UpdateViewPager();
                                 Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);

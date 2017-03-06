@@ -1,4 +1,4 @@
-package com.woting.ui.home.main.fragment;
+package com.woting.ui.home.main;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +16,7 @@ import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.home.program.diantai.main.OnLineFragment;
 import com.woting.ui.home.program.fenlei.fragment.FenLeiFragment;
 import com.woting.ui.home.program.tuijian.fragment.RecommendFragment;
-import com.woting.ui.home.search.activity.SearchLikeActivity;
+import com.woting.ui.home.search.main.SearchLikeFragment;
 import com.woting.ui.interphone.notify.activity.NotifyNewsActivity;
 
 import java.util.ArrayList;
@@ -42,8 +42,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 startActivity(intentNews);
                 break;
             case R.id.lin_find:// 搜索
-                Intent intentFind = new Intent(context, SearchLikeActivity.class);
-                startActivity(intentFind);
+                SearchLikeFragment fragment = new SearchLikeFragment();
+                HomeActivity.open(fragment);
                 break;
         }
     }

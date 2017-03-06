@@ -34,7 +34,7 @@ import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
-import com.woting.ui.home.program.album.activity.AlbumActivity;
+import com.woting.ui.home.program.album.activity.AlbumFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.main.MainActivity;
 import com.woting.ui.mine.favorite.adapter.FavorListAdapter;
@@ -91,6 +91,7 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_search_sound, container, false);
+            rootView.setOnClickListener(null);
             tipView = (TipView) rootView.findViewById(R.id.tip_view);
             tipView.setWhiteClick(this);
             mListView = (XListView) rootView.findViewById(R.id.listView);
@@ -177,12 +178,13 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
                         context.sendBroadcast(push);
                         context.finish();
                     } else if(MediaType.equals("SEQU")) {
-                        Intent intent = new Intent(context, AlbumActivity.class);
+                        AlbumFragment fragment = new AlbumFragment();
                         Bundle bundle = new Bundle();
+                        bundle.putInt("fromType", 2);
                         bundle.putString("type", "search");
                         bundle.putSerializable("list", newList.get(position - 1));
-                        intent.putExtras(bundle);
-                        startActivity(intent);
+                        fragment.setArguments(bundle);
+                        HomeActivity.open(fragment);
                     } else {
                         ToastUtils.show_always(context, "暂不支持的Type类型");
                     }

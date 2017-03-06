@@ -47,11 +47,10 @@ import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout.OnRefreshLis
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
-import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.citylist.main.CityListFragment;
-import com.woting.ui.home.program.diantai.fragment.RadioNationalFragment;
 import com.woting.ui.home.program.diantai.adapter.CityNewAdapter;
 import com.woting.ui.home.program.diantai.adapter.OnLinesAdapter;
+import com.woting.ui.home.program.diantai.fragment.RadioNationalFragment;
 import com.woting.ui.home.program.diantai.model.RadioPlay;
 import com.woting.ui.home.program.fmlist.fragment.FMListFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
@@ -60,7 +59,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -564,13 +562,6 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                         bundle1.putString("text", newList.get(groupPosition).getList().get(childPosition).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
-                    } else if (MediaType.equals("SEQU")) {
-                        Intent intent = new Intent(context, AlbumActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("type", "recommend");
-                        bundle.putSerializable("list", (Serializable) newList.get(groupPosition).getList());
-                        intent.putExtras(bundle);
-                        startActivity(intent);
                     } else {
                         ToastUtils.show_short(context, "暂不支持的Type类型");
                     }

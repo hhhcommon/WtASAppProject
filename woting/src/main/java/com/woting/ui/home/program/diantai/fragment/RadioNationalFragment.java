@@ -29,7 +29,6 @@ import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
-import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.diantai.fragment.adapter.RadioNationAdapter;
 import com.woting.ui.home.program.diantai.model.RadioPlay;
 
@@ -37,7 +36,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -212,13 +210,6 @@ public class RadioNationalFragment extends Fragment implements View.OnClickListe
                         bundle1.putString("text", SubList.get(groupPosition).getList().get(childPosition).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
-                    } else if (MediaType.equals("SEQU")) {
-                        Intent intent = new Intent(context, AlbumActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("type", "recommend");
-                        bundle.putSerializable("list", (Serializable) SubList.get(groupPosition).getList());
-                        intent.putExtras(bundle);
-                        startActivity(intent);
                     } else {
                         ToastUtils.show_short(context, "暂不支持的Type类型");
                     }

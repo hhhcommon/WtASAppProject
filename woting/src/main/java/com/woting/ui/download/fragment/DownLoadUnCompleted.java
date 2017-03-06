@@ -34,7 +34,7 @@ import java.util.List;
 
 /**
  * 要注意删除事件和下载完毕事件后对数据库表的操作
- * PlayerActivity 里添加下载功能 将数据插入数据库 sequId 为空  修改 DownloadCompleteFragment 内获取 list 的方法
+ * PlayerFragment 里添加下载功能 将数据插入数据库 sequId 为空  修改 DownloadCompleteFragment 内获取 list 的方法
  */
 public class DownLoadUnCompleted extends Fragment {
     private FragmentActivity context;

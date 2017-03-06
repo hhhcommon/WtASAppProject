@@ -27,7 +27,7 @@ import com.woting.ui.download.downloadlist.adapter.DownLoadListAdapter.downloadl
 import com.woting.ui.download.model.FileInfo;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.fragment.PlayerActivity;
+import com.woting.ui.home.player.main.play.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.main.MainActivity;
 
@@ -254,7 +254,7 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
                                     ContentId, playlocalrurl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
                             dbDao.deleteHistory(playerurl);
                             dbDao.addHistory(history);
-                            if (PlayerActivity.context != null) {
+                            if (PlayerFragment.context != null) {
                                 MainActivity.change();
                                 HomeActivity.UpdateViewPager();
                                 Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);

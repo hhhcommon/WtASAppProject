@@ -41,9 +41,9 @@ import com.woting.ui.download.model.FileInfo;
 import com.woting.ui.download.service.DownloadService;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.fragment.PlayerActivity;
+import com.woting.ui.home.player.main.play.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
-import com.woting.ui.home.program.album.activity.AlbumActivity;
+import com.woting.ui.home.program.album.activity.AlbumFragment;
 import com.woting.ui.home.program.album.adapter.AlbumAdapter;
 import com.woting.ui.home.program.album.adapter.AlbumMainAdapter;
 import com.woting.ui.home.program.album.model.ContentInfo;
@@ -217,7 +217,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                                 ContentFavorite, ContentId, localUrl, sequName1, sequId1, sequDesc1, sequImg1, ContentPlayType, IsPlaying);
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
-                        if (PlayerActivity.context != null) {
+                        if (PlayerFragment.context != null) {
                             MainActivity.change();
                             HomeActivity.UpdateViewPager();
                             Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
@@ -247,7 +247,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
     public void send() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            jsonObject.put("ContentId", AlbumActivity.id);
+            jsonObject.put("ContentId", AlbumFragment.id);
             jsonObject.put("Page", String.valueOf(page));
             jsonObject.put("PageSize", "20");
             jsonObject.put("SortType", String.valueOf(sortType));
@@ -380,7 +380,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
         ArrayList<FileInfo> seqList = new ArrayList<>();
         if (fList != null && fList.size() > 0) {
             for (int i = 0; i < fList.size(); i++) {
-                if (fList.get(i).getSequimgurl() != null && fList.get(i).getSequimgurl().equals(AlbumActivity.ContentImg)) {
+                if (fList.get(i).getSequimgurl() != null && fList.get(i).getSequimgurl().equals(AlbumFragment.ContentImg)) {
                     seqList.add(fList.get(i));
                 }
             }
@@ -458,10 +458,10 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                 for (int i = 0; i < SubListAll.size(); i++) {
                     if (SubListAll.get(i).getCheckType() == 2) {
                         ContentInfo mContent = SubListAll.get(i);
-                        mContent.setSequdesc(AlbumActivity.ContentDesc);
-                        mContent.setSequname(AlbumActivity.ContentName);
-                        mContent.setSequimgurl(AlbumActivity.ContentImg);
-                        mContent.setSequid(AlbumActivity.id);
+                        mContent.setSequdesc(AlbumFragment.ContentDesc);
+                        mContent.setSequname(AlbumFragment.ContentName);
+                        mContent.setSequimgurl(AlbumFragment.ContentImg);
+                        mContent.setSequid(AlbumFragment.id);
                         // 判断 userId 是否为空
                         mContent.setUserid(userId);
                         mContent.setDownloadtype("0");

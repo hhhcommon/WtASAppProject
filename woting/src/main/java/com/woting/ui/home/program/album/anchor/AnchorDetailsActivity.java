@@ -30,7 +30,8 @@ import com.woting.common.widgetui.RoundImageView;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.home.program.album.activity.AlbumActivity;
+import com.woting.ui.home.main.HomeActivity;
+import com.woting.ui.home.program.album.activity.AlbumFragment;
 import com.woting.ui.home.program.album.anchor.activity.AnchorListActivity;
 import com.woting.ui.home.program.album.anchor.adapter.AnchorMainAdapter;
 import com.woting.ui.home.program.album.anchor.adapter.AnchorSequAdapter;
@@ -283,10 +284,13 @@ public class AnchorDetailsActivity extends AppBaseActivity implements View.OnCli
         lv_sequ.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent1 = new Intent(context, AlbumActivity.class);
-                intent1.putExtra("type", "main");
-                intent1.putExtra("id", personInfoList.get(position).getContentId());
-                startActivity(intent1);
+                AlbumFragment fragment = new AlbumFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt("fromType", 2);
+                bundle.putString("type", "main");
+                bundle.putString("id", personInfoList.get(position).getContentId());
+                fragment.setArguments(bundle);
+                HomeActivity.open(fragment);
             }
         });
         // 跳到单体
@@ -329,7 +333,7 @@ public class AnchorDetailsActivity extends AppBaseActivity implements View.OnCli
                 dbDao.deleteHistory(playerurl);
                 dbDao.addHistory(history);
                 HomeActivity.UpdateViewPager();
-                PlayerActivity.TextPage=1;
+                PlayerFragment.TextPage=1;
                 Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                 Bundle bundle1=new Bundle();
                 bundle1.putString("text",newList.get(position - 2).getContentName());

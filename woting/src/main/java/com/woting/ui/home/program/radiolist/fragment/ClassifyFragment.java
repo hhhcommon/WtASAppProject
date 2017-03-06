@@ -32,7 +32,7 @@ import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
-import com.woting.ui.home.program.album.activity.AlbumActivity;
+import com.woting.ui.home.program.album.activity.AlbumFragment;
 import com.woting.ui.home.program.radiolist.main.RadioListFragment;
 import com.woting.ui.home.program.radiolist.adapter.ListInfoAdapter;
 import com.woting.ui.home.program.radiolist.mode.ListInfo;
@@ -285,12 +285,13 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                         context.sendBroadcast(push);
                         getActivity().finish();
                     } else if (MediaType.equals("SEQU")) {
-                        Intent intent = new Intent(context, AlbumActivity.class);
+                        AlbumFragment fragment = new AlbumFragment();
                         Bundle bundle = new Bundle();
+                        bundle.putInt("fromType", 2);
                         bundle.putString("type", "radiolistactivity");
                         bundle.putSerializable("list", newList.get(position - 2));
-                        intent.putExtras(bundle);
-                        startActivityForResult(intent, 1);
+                        fragment.setArguments(bundle);
+                        HomeActivity.open(fragment);
                     } else {
                         ToastUtils.show_short(context, "暂不支持的Type类型");
                     }

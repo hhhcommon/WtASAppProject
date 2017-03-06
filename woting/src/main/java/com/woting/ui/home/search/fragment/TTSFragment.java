@@ -94,6 +94,7 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_search_sound, container, false);
+            rootView.setOnClickListener(null);
             tipView = (TipView) rootView.findViewById(R.id.tip_view);
             tipView.setWhiteClick(this);
             mListView = (XListView) rootView.findViewById(R.id.listView);

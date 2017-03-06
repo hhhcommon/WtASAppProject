@@ -29,7 +29,7 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
-import com.woting.ui.home.program.album.activity.AlbumActivity;
+import com.woting.ui.home.program.album.activity.AlbumFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.mine.favorite.activity.FavoriteActivity;
 import com.woting.ui.mine.favorite.adapter.FavorListAdapter;
@@ -137,7 +137,7 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
 					adapter.notifyDataSetChanged();
 				} else {
 					if (newList != null && newList.get(position - 1) != null && newList.get(position - 1).getMediaType() != null) {
-						Intent intent = new Intent(context, AlbumActivity.class);
+						Intent intent = new Intent(context, AlbumFragment.class);
 						Bundle bundle = new Bundle();
 						bundle.putString("type", "recommend");
 						bundle.putSerializable("list", newList.get(position - 1));

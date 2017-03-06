@@ -181,19 +181,7 @@
 
         <!--  -->
         <activity
-            android:name=".ui.mine.MineActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
-
-        <!--  -->
-        <activity
-            android:name=".ui.home.program.diantai.fragment.RadioNationalFragment"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name=".ui.home.program.diantai.fragment.CityRadioFragment"
+            android:name=".ui.mine.main.MineActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan"/>
@@ -205,13 +193,6 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
-
-        <!--  -->
-        <activity
-            android:name=".ui.home.program.citylist.main.CityListFragment"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
 
         <!--  -->
         <activity
@@ -229,6 +210,13 @@
         <!--  -->
         <activity
             android:name=".ui.common.login.LoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <!--  -->
+        <activity
+            android:name=".ui.home.player.main.play.PlayerActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan"/>
@@ -264,13 +252,6 @@
         <!--  -->
         <activity
             android:name=".ui.common.register.RegisterActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
-
-        <!--  -->
-        <activity
-            android:name=".ui.home.player.main.fragment.PlayerActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan"/>
@@ -368,13 +349,6 @@
 
         <!--  -->
         <activity
-            android:name=".ui.home.search.activity.SearchLikeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
-
-        <!--  -->
-        <activity
             android:name=".ui.interphone.find.friendadd.FriendAddActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
@@ -425,13 +399,6 @@
         <!--  -->
         <activity
             android:name=".ui.interphone.group.groupcontrol.membershow.GroupMembersActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
-
-        <!--  -->
-        <activity
-            android:name=".ui.home.program.album.activity.AlbumActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>

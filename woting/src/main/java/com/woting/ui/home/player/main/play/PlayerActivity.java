@@ -1,7 +1,5 @@
-package com.woting.ui.home.main;
+package com.woting.ui.home.player.main.play;
 
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -14,23 +12,20 @@ import com.woting.common.util.ToastUtils;
 import com.woting.ui.main.MainActivity;
 
 /**
- * 内容主页
- * 作者：xinlong on 2016/11/6 21:18
- * 邮箱：645700751@qq.com
+ * Play
+ * Created by Administrator on 2017/3/6.
  */
-public class HomeActivity extends FragmentActivity {
-
-    private static HomeActivity context;
+public class PlayerActivity extends FragmentActivity {
+    private static PlayerActivity context;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wt_home);
-
+        setContentView(R.layout.activity_play);
         context = this;
-        setType();
 
-        open(new HomeFragment());
+        setType();
+        PlayerActivity.open(new PlayerFragment());
     }
 
     // 适配顶栏样式
@@ -48,20 +43,6 @@ public class HomeActivity extends FragmentActivity {
         } else {
             tv_main.setVisibility(View.GONE);
         }
-    }
-
-    public static void UpdateViewPager() {
-
-    }
-
-    // 设置android app 的字体大小不受系统字体大小改变的影响
-    @Override
-    public Resources getResources() {
-        Resources res = super.getResources();
-        Configuration config = new Configuration();
-        config.setToDefaults();
-        res.updateConfiguration(config, res.getDisplayMetrics());
-        return res;
     }
 
     // 打开新的 Fragment

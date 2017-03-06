@@ -56,10 +56,9 @@ import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.model.Catalog;
 import com.woting.ui.home.model.CatalogName;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.fragment.PlayerActivity;
 import com.woting.ui.home.player.main.model.PlayerHistory;
+import com.woting.ui.home.player.main.play.PlayerActivity;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
-import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.citylist.dao.CityInfoDao;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
 import com.woting.ui.interphone.chat.fragment.ChatFragment;
@@ -76,7 +75,7 @@ import com.woting.ui.interphone.commom.service.VoiceStreamPlayerService;
 import com.woting.ui.interphone.commom.service.VoiceStreamRecordService;
 import com.woting.ui.interphone.linkman.model.LinkMan;
 import com.woting.ui.interphone.main.DuiJiangActivity;
-import com.woting.ui.mine.MineActivity;
+import com.woting.ui.mine.main.MineActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -364,7 +363,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    } else if (host.equals("SEQU")) {
+                    } /*else if (host.equals("SEQU")) {
                         String s11 = uri.getQuery().substring(8);//不要jsonstr=
                         try {
                             JSONTokener jsonParser = new JSONTokener(s11);
@@ -373,12 +372,14 @@ public class MainActivity extends TabActivity implements OnClickListener {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        //跳到专辑界面
-                        Intent intent1 = new Intent(this, AlbumActivity.class);
-                        intent1.putExtra("type", "main");
-                        intent1.putExtra("id", contentId);
-                        startActivity(intent1);
-                    } else {
+                        // 跳到专辑界面
+                        AlbumFragment fragment = new AlbumFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("type", "main");
+                        bundle.putString("id", contentId);
+                        fragment.setArguments(bundle);
+                        HomeActivity.open(fragment);
+                    }*/ else {
                         ToastUtils.show_short(context, "返回的host值不属于AUDIO或者SEQU，请检查返回值");
                     }
                 }

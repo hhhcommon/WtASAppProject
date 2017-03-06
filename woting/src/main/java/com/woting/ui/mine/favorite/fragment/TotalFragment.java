@@ -37,9 +37,9 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.fragment.PlayerActivity;
+import com.woting.ui.home.player.main.play.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
-import com.woting.ui.home.program.album.activity.AlbumActivity;
+import com.woting.ui.home.program.album.activity.AlbumFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.home.search.adapter.SearchContentAdapter;
 import com.woting.ui.home.search.model.SuperRankInfo;
@@ -429,7 +429,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
                         dbDao.deleteHistory(playerurl);
                     }
                     dbDao.addHistory(history);
-					if (PlayerActivity.context != null) {
+					if (PlayerFragment.context != null) {
 						MainActivity.change();
 						HomeActivity.UpdateViewPager();
 						Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
@@ -450,7 +450,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
 						getActivity().finish();
 					}
 				} else if (mediaType.equals("SEQU")) {
-					Intent intent = new Intent(context, AlbumActivity.class);
+					Intent intent = new Intent(context, AlbumFragment.class);
 					Bundle bundle = new Bundle();
 					bundle.putString("type", "search");
 					bundle.putSerializable("list", list.get(groupPosition).getList().get(childPosition));

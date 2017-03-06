@@ -2,7 +2,6 @@ package com.woting.ui.home.program.album.anchor.activity;
 
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -22,7 +21,8 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.home.program.album.activity.AlbumActivity;
+import com.woting.ui.home.main.HomeActivity;
+import com.woting.ui.home.program.album.activity.AlbumFragment;
 import com.woting.ui.home.program.album.anchor.adapter.AnchorSequAdapter;
 import com.woting.ui.home.program.album.anchor.model.PersonInfo;
 
@@ -225,11 +225,13 @@ public class AnchorListActivity extends AppBaseActivity implements View.OnClickL
         listAnchor.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-             //   ToastUtils.show_always(context,MediaInfoList.get(position-1).getContentName());
-                Intent intent1 = new Intent(context, AlbumActivity.class);
-                intent1.putExtra("type", "main");
-                intent1.putExtra("id",MediaInfoList.get(position-1).getContentId());
-                startActivity(intent1);
+                AlbumFragment fragment = new AlbumFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt("fromType", 2);
+                bundle.putString("type", "main");
+                bundle.putString("id", MediaInfoList.get(position-1).getContentId());
+                fragment.setArguments(bundle);
+                HomeActivity.open(fragment);
             }
         });
     }

@@ -15,7 +15,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.home.player.main.fragment.PlayerActivity;
+import com.woting.ui.home.player.main.play.PlayerFragment;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
 
 /**
@@ -84,7 +84,7 @@ public class TimerPowerOffActivity extends AppBaseActivity implements OnClickLis
         if(GlobalConfig.playerObject != null && !GlobalConfig.playerObject.getMediaType().equals("RADIO")) {
             if(isPlaying) {
                 viewPlayEnd.setVisibility(View.VISIBLE);
-                if (PlayerActivity.isCurrentPlay) {
+                if (PlayerFragment.isCurrentPlay) {
                     viewPlayEnd.setClickable(false);
                 }
             }
@@ -160,15 +160,15 @@ public class TimerPowerOffActivity extends AppBaseActivity implements OnClickLis
                 setTime(60);
                 break;
             case R.id.lin_playend:        // 当前节目播放完
-                PlayerActivity.isCurrentPlay = true;
+                PlayerFragment.isCurrentPlay = true;
                 imageTimeCheck = 100;
-                int time = PlayerActivity.timerService;
+                int time = PlayerFragment.timerService;
                 intent.putExtra("time", time);
                 startService(intent);
                 viewPlayEnd.setClickable(false);
                 break;
             case R.id.lin_nostart:// 不启动
-                PlayerActivity.isCurrentPlay = false;
+                PlayerFragment.isCurrentPlay = false;
                 imageTimeCheck = 0;
                 Intent intent = new Intent(context, timeroffservice.class);
                 intent.setAction(BroadcastConstants.TIMER_STOP);
@@ -182,7 +182,7 @@ public class TimerPowerOffActivity extends AppBaseActivity implements OnClickLis
 
     // 启动服务时间
     private void setTime(int time) {
-        PlayerActivity.isCurrentPlay = false;
+        PlayerFragment.isCurrentPlay = false;
         imageTimeCheck = time;
         intent.putExtra("time", time);
         startService(intent);

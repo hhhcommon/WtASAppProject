@@ -94,6 +94,7 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
         if (rootView == null) {
             Log.e("search_radio","RadioFragment创建成功");
             rootView = inflater.inflate(R.layout.fragment_search_sound, container, false);
+            rootView.setOnClickListener(null);
             tipView = (TipView) rootView.findViewById(R.id.tip_view);
             tipView.setWhiteClick(this);
             mListView = (XListView) rootView.findViewById(R.id.listView);

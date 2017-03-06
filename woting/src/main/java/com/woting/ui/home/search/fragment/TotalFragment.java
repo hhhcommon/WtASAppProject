@@ -30,9 +30,9 @@ import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
-import com.woting.ui.home.program.album.activity.AlbumActivity;
+import com.woting.ui.home.program.album.activity.AlbumFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
-import com.woting.ui.home.search.activity.SearchLikeActivity;
+import com.woting.ui.home.search.main.SearchLikeFragment;
 import com.woting.ui.home.search.adapter.SearchContentAdapter;
 import com.woting.ui.home.search.model.SuperRankInfo;
 import com.woting.ui.main.MainActivity;
@@ -87,6 +87,7 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_favorite_total, container, false);
+            rootView.setOnClickListener(null);
             tipView = (TipView) rootView.findViewById(R.id.tip_view);
             expandListView = (ExpandableListView) rootView.findViewById(R.id.ex_listview);
             expandListView.setGroupIndicator(null);
@@ -267,12 +268,13 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                     context.sendBroadcast(push);
                     context.finish();
                 } else if (MediaType != null && MediaType.equals("SEQU")) {
-                    Intent intent = new Intent(context, AlbumActivity.class);
+                    AlbumFragment fragment = new AlbumFragment();
                     Bundle bundle = new Bundle();
+                    bundle.putInt("fromType", 2);
                     bundle.putString("type", "search");
                     bundle.putSerializable("list", list.get(groupPosition).getList().get(childPosition));
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                    fragment.setArguments(bundle);
+                    HomeActivity.open(fragment);
                 } else {
                     ToastUtils.show_always(context, "暂不支持的Type类型");
                 }
@@ -283,7 +285,7 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
 
     @Override
     public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-        SearchLikeActivity.updateViewPage(list.get(groupPosition).getKey());
+        SearchLikeFragment.updateViewPage(list.get(groupPosition).getKey());
         return true;
     }
 

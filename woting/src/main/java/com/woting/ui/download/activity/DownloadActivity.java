@@ -21,7 +21,7 @@ import com.woting.common.util.ToastUtils;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.download.fragment.DownLoadCompleted;
 import com.woting.ui.download.fragment.DownLoadUnCompleted;
-import com.woting.ui.home.search.activity.SearchLikeActivity;
+import com.woting.ui.home.search.main.SearchLikeFragment;
 import com.woting.ui.interphone.notify.activity.NotifyNewsActivity;
 import com.woting.ui.main.MainActivity;
 
@@ -48,7 +48,7 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
                 startActivity(new Intent(context, NotifyNewsActivity.class));
                 break;
             case R.id.lin_find:            // 跳转到搜索界面
-                startActivity(new Intent(context, SearchLikeActivity.class));
+                startActivity(new Intent(context, SearchLikeFragment.class));
                 break;
         }
     }
