@@ -3,7 +3,6 @@ package com.woting.ui.home.program.album.fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -22,10 +21,8 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
-import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
-import com.woting.common.constant.StringConstant;
 import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -39,11 +36,9 @@ import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.fragment.DownLoadUnCompleted;
 import com.woting.ui.download.model.FileInfo;
 import com.woting.ui.download.service.DownloadService;
-import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.play.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
-import com.woting.ui.home.program.album.activity.AlbumFragment;
+import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.album.adapter.AlbumAdapter;
 import com.woting.ui.home.program.album.adapter.AlbumMainAdapter;
 import com.woting.ui.home.program.album.model.ContentInfo;
@@ -217,24 +212,12 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                                 ContentFavorite, ContentId, localUrl, sequName1, sequId1, sequDesc1, sequImg1, ContentPlayType, IsPlaying);
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
-                        if (PlayerFragment.context != null) {
-                            MainActivity.change();
-                            HomeActivity.UpdateViewPager();
-                            Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
-                            Bundle bundle1 = new Bundle();
-                            bundle1.putString("text", SubListAll.get(position - 1).getContentName());
-                            push.putExtras(bundle1);
-                            context.sendBroadcast(push);
-                        } else {
-                            SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
-                            et.putString(StringConstant.PLAYHISTORYENTER, "true");
-                            et.putString(StringConstant.PLAYHISTORYENTERNEWS, SubListAll.get(position - 1).getContentName());
-                            et.commit();
-                            MainActivity.change();
-                            HomeActivity.UpdateViewPager();
-                        }
-                        getActivity().setResult(1);
-                        getActivity().finish();
+                        MainActivity.change();
+                        Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                        Bundle bundle1 = new Bundle();
+                        bundle1.putString("text", SubListAll.get(position - 1).getContentName());
+                        push.putExtras(bundle1);
+                        context.sendBroadcast(push);
                     } else {
                         ToastUtils.show_always(context, "暂不支持播放");
                     }

@@ -29,7 +29,6 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
-import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
@@ -181,14 +180,13 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
                                 ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg,ContentPlayType,IsPlaying);
                         dbDao.deleteHistory(playerurl);
                         dbDao.addHistory(history);
+
                         MainActivity.change();
-                        HomeActivity.UpdateViewPager();
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
                         bundle1.putString("text", newList.get(position - 1).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
-                        context.finish();
                     } else {
                         ToastUtils.show_short(context, "暂不支持的Type类型");
                     }

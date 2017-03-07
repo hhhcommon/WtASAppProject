@@ -2,10 +2,8 @@ package com.woting.ui.mine.playhistory.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.woting.R;
-import com.woting.common.application.BSApplication;
 import com.woting.common.constant.BroadcastConstants;
-import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.play.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.main.MainActivity;
 import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
@@ -212,25 +206,15 @@ public class SoundFragment extends Fragment {
                                 ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
                         dbDao.deleteHistory(playerurl);
                         dbDao.addHistory(history);
-                        if (PlayerFragment.context != null) {
-                            MainActivity.change();
-                            HomeActivity.UpdateViewPager();
-                            String s = playList.get(position).getPlayerName();
-                            Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
-                            Bundle bundle1 = new Bundle();
-                            bundle1.putString("text", s);
-                            push.putExtras(bundle1);
-                            context.sendBroadcast(push);
-                            getActivity().finish();
-                        } else {
-                            Editor et = BSApplication.SharedPreferences.edit();
-                            et.putString(StringConstant.PLAYHISTORYENTER, "true");
-                            et.putString(StringConstant.PLAYHISTORYENTERNEWS, subList.get(position).getPlayerName());
-                            if (!et.commit()) Log.w("commit", "数据 commit 失败!");
-                            MainActivity.change();
-                            HomeActivity.UpdateViewPager();
-                            getActivity().finish();
-                        }
+
+                        MainActivity.change();
+                        String s = playList.get(position).getPlayerName();
+                        Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                        Bundle bundle1 = new Bundle();
+                        bundle1.putString("text", s);
+                        push.putExtras(bundle1);
+                        context.sendBroadcast(push);
+                        getActivity().finish();
                     }
                 }
             }

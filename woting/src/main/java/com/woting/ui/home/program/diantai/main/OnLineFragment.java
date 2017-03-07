@@ -434,7 +434,6 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                         bundle1.putString("text", mainLists.get(position).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
-                        HomeActivity.UpdateViewPager();
                     }
                 }
             }
@@ -556,7 +555,6 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
 
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
-                        HomeActivity.UpdateViewPager();
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
                         bundle1.putString("text", newList.get(groupPosition).getList().get(childPosition).getContentName());

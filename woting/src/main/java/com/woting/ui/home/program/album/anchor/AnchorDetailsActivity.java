@@ -31,7 +31,7 @@ import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.main.HomeActivity;
-import com.woting.ui.home.program.album.activity.AlbumFragment;
+import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.album.anchor.activity.AnchorListActivity;
 import com.woting.ui.home.program.album.anchor.adapter.AnchorMainAdapter;
 import com.woting.ui.home.program.album.anchor.adapter.AnchorSequAdapter;

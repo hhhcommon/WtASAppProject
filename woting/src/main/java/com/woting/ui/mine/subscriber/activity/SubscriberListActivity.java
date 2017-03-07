@@ -25,7 +25,7 @@ import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.home.program.album.activity.AlbumFragment;
+import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.album.model.SubscriberInfo;
 import com.woting.ui.home.program.radiolist.mode.ListInfo;
 import com.woting.ui.mine.subscriber.adapter.SubscriberAdapter;

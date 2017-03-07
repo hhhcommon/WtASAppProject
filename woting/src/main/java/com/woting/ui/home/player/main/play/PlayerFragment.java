@@ -75,7 +75,7 @@ import com.woting.ui.home.player.main.model.ShareModel;
 import com.woting.ui.home.player.programme.ProgrammeActivity;
 import com.woting.ui.home.player.timeset.activity.TimerPowerOffActivity;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
-import com.woting.ui.home.program.album.activity.AlbumFragment;
+import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.album.model.ContentInfo;
 import com.woting.ui.home.program.comment.CommentActivity;
 import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;

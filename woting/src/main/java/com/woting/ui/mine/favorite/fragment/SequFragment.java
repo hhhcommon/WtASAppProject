@@ -29,7 +29,7 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
-import com.woting.ui.home.program.album.activity.AlbumFragment;
+import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.mine.favorite.activity.FavoriteActivity;
 import com.woting.ui.mine.favorite.adapter.FavorListAdapter;

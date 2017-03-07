@@ -32,7 +32,7 @@ import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
-import com.woting.ui.home.program.album.activity.AlbumFragment;
+import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.radiolist.main.RadioListFragment;
 import com.woting.ui.home.program.radiolist.adapter.ListInfoAdapter;
 import com.woting.ui.home.program.radiolist.mode.ListInfo;
@@ -277,7 +277,6 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                                 ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
-                        HomeActivity.UpdateViewPager();
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
                         bundle1.putString("text", newList.get(position - 2).getContentName());

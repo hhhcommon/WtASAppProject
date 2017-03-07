@@ -20,10 +20,9 @@ import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.play.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
+import com.woting.ui.home.player.main.play.PlayerFragment;
 import com.woting.ui.main.MainActivity;
 import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
 import com.woting.ui.mine.playhistory.adapter.PlayHistoryAdapter;
@@ -193,7 +192,6 @@ public class RadioFragment extends Fragment {
                         dbdDao.addHistory(history);
                         if (PlayerFragment.context != null) {
                             MainActivity.change();
-                            HomeActivity.UpdateViewPager();
                             String s = playList.get(position).getPlayerName();
                             Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                             Bundle bundle1 = new Bundle();
@@ -207,7 +205,6 @@ public class RadioFragment extends Fragment {
                             et.putString(StringConstant.PLAYHISTORYENTERNEWS, subList.get(position).getPlayerName());
                             if (!et.commit()) Log.w("commit", "数据 commit 失败!");
                             MainActivity.change();
-                            HomeActivity.UpdateViewPager();
                             getActivity().finish();
                         }
                     }

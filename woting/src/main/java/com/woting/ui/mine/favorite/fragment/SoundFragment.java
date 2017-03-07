@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -22,10 +21,8 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
-import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
-import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
@@ -34,9 +31,7 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
-import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.play.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.main.MainActivity;
@@ -190,26 +185,13 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
                             dbDao.deleteHistory(playerurl);
                             dbDao.addHistory(history);
 
-							if (PlayerFragment.context != null) {
-								MainActivity.change();
-								HomeActivity.UpdateViewPager();
-								Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
-								Bundle bundle1=new Bundle();
-								bundle1.putString("text",newList.get(position - 1).getContentName());
-								push.putExtras(bundle1);
-								context.sendBroadcast(push);
-								getActivity().finish();
-							} else {
-								Editor et = BSApplication.SharedPreferences.edit();
-								et.putString(StringConstant.PLAYHISTORYENTER, "true");
-								et.putString(StringConstant.PLAYHISTORYENTERNEWS, newList.get(position - 1).getContentName());
-                                if(!et.commit()) {
-                                    Log.w("commit", "数据 commit 失败!");
-                                }
-								MainActivity.change();
-								HomeActivity.UpdateViewPager();
-								getActivity().finish();
-							}
+                            MainActivity.change();
+                            Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                            Bundle bundle1=new Bundle();
+                            bundle1.putString("text",newList.get(position - 1).getContentName());
+                            push.putExtras(bundle1);
+                            context.sendBroadcast(push);
+                            getActivity().finish();
 						}
 					}
 				}

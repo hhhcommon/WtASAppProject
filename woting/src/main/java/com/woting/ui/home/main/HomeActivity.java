@@ -50,10 +50,6 @@ public class HomeActivity extends FragmentActivity {
         }
     }
 
-    public static void UpdateViewPager() {
-
-    }
-
     // 设置android app 的字体大小不受系统字体大小改变的影响
     @Override
     public Resources getResources() {

@@ -29,7 +29,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.RoundImageView;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.home.program.album.activity.AlbumFragment;
+import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.album.anchor.AnchorDetailsActivity;
 import com.woting.ui.home.program.album.model.ContentCatalogs;
 import com.woting.ui.home.program.album.model.PersonInfo;

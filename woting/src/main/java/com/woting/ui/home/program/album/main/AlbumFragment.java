@@ -1,4 +1,4 @@
-package com.woting.ui.home.program.album.activity;
+package com.woting.ui.home.program.album.main;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -446,7 +446,6 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
                 intent.putExtra(StringConstant.SEQU_LIST_SIZE, programFragment.getListSize());
                 context.sendBroadcast(intent);
                 MainActivity.change();
-                HomeActivity.UpdateViewPager();
                 break;
         }
     }

@@ -30,7 +30,6 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
-import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
@@ -92,7 +91,7 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
-            Log.e("search_radio","RadioFragment创建成功");
+            Log.e("search_radio", "RadioFragment创建成功");
             rootView = inflater.inflate(R.layout.fragment_search_sound, container, false);
             rootView.setOnClickListener(null);
             tipView = (TipView) rootView.findViewById(R.id.tip_view);
@@ -174,24 +173,22 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
                         String sequDesc = newList.get(position - 1).getSequDesc();
                         String sequImg = newList.get(position - 1).getSequImg();
 
-                        String ContentPlayType= newList.get(position-1).getContentPlayType();
-                        String IsPlaying=newList.get(position - 1).getIsPlaying();
+                        String ContentPlayType = newList.get(position - 1).getContentPlayType();
+                        String IsPlaying = newList.get(position - 1).getIsPlaying();
 
-                        //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+                        // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playername, playerimage, playerurl, playerurI, playermediatype,
                                 plaplayeralltime, playerintime, playercontentdesc, playernum,
                                 playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playcontentshareurl,
-                                ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg,ContentPlayType,IsPlaying);
+                                ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying);
                         dbDao.addHistory(history);
                         MainActivity.change();
-                        HomeActivity.UpdateViewPager();
-                        Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
-                        Bundle bundle1=new Bundle();
-                        bundle1.putString("text",newList.get(position - 1).getContentName());
+                        Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                        Bundle bundle1 = new Bundle();
+                        bundle1.putString("text", newList.get(position - 1).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
-                        context.finish();
                     } else {
                         ToastUtils.show_always(context, "暂不支持的Type类型");
                     }
@@ -202,7 +199,7 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
 
     private void sendRequest() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
-            if(dialog != null) dialog.dismiss();
+            if (dialog != null) dialog.dismiss();
             if (refreshType == 1) {
                 mListView.stopRefresh();
                 tipView.setVisibility(View.VISIBLE);
@@ -229,7 +226,8 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     try {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        SubList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
+                        SubList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {
+                        }.getType());
                         try {
                             String allCountString = arg1.getString("AllCount");
                             String pageSizeString = arg1.getString("PageSize");
@@ -252,17 +250,17 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
                             e.printStackTrace();
                         }
                         if (refreshType == 1) newList.clear();
-                        for(int i=0; i<SubList.size(); i++) {
-                            if(SubList.get(i).getMediaType().equals("RADIO")) {
+                        for (int i = 0; i < SubList.size(); i++) {
+                            if (SubList.get(i).getMediaType().equals("RADIO")) {
                                 newList.add(SubList.get(i));
                             }
                         }
-                        if(newList.size() > 0) {
+                        if (newList.size() > 0) {
                             adapter.notifyDataSetChanged();
                             setListener();
                             tipView.setVisibility(View.GONE);
                         } else {
-                            if(refreshType == 1) {
+                            if (refreshType == 1) {
                                 tipView.setVisibility(View.VISIBLE);
                                 tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关结果\n试试其他词，不要太逆天哟");
                             }
@@ -273,7 +271,7 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
                         tipView.setTipView(TipView.TipStatus.IS_ERROR);
                     }
                 } else {
-                    if(refreshType == 1) {
+                    if (refreshType == 1) {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关结果\n试试其他词，不要太逆天哟");
                     }
@@ -318,7 +316,7 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
             String action = intent.getAction();
             if (action.equals(BroadcastConstants.SEARCH_VIEW_UPDATE)) {
                 searchStr = intent.getStringExtra("searchStr");
-                Log.e("search_radio","SEARCH_VIEW_UPDATE"+searchStr);
+                Log.e("search_radio", "SEARCH_VIEW_UPDATE" + searchStr);
                 if (searchStr != null && !searchStr.equals("")) {
                     refreshType = 1;
                     page = 1;

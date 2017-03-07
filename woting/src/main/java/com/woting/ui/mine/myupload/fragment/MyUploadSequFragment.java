@@ -26,7 +26,7 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.home.program.album.activity.AlbumFragment;
+import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.mine.myupload.MyUploadActivity;
 import com.woting.ui.mine.myupload.adapter.MyUploadListAdapter;
