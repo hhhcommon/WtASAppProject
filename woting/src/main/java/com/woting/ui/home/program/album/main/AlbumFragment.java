@@ -60,6 +60,7 @@ import com.woting.ui.home.program.comment.CommentActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.home.program.radiolist.mode.ListInfo;
 import com.woting.ui.main.MainActivity;
+import com.woting.ui.mine.main.MineActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -106,6 +107,7 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
     private View rootView;
     private static TipView tipView;                    // 提示
     private FragmentActivity context;
+    private View viewBack;
 
     @Override
     public void onWhiteViewClick() {
@@ -141,6 +143,7 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
 
     private void setView() {
         rootView.findViewById(R.id.head_right_btn).setOnClickListener(this);// 播放专辑
+        viewBack = rootView.findViewById(R.id.view_back);
 
         tv_album_name = (TextView) rootView.findViewById(R.id.head_name_tv);
         img_album = (ImageView) rootView.findViewById(R.id.img_album);
@@ -339,6 +342,8 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
             return;
         }
         fromType = bundle.getInt("fromType");
+        if (fromType == 3) viewBack.setVisibility(View.VISIBLE);
+        else viewBack.setVisibility(View.GONE);
         String type = bundle.getString("type");
         if (type != null && type.trim().equals("radiolistactivity")) {
             ListInfo list = (ListInfo) bundle.getSerializable("list");
@@ -388,7 +393,7 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
                 } else if (fromType == 2) {// Home
                     HomeActivity.close();
                 } else {// Mine
-
+                    MineActivity.close();
                 }
                 break;
             case R.id.lin_share: // 分享

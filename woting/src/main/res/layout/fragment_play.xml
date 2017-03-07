@@ -5,6 +5,11 @@
     android:layout_height="match_parent"
     android:background="@color/beige">
 
+    <com.baidu.cyberplayer.core.BVideoView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"/>
+
     <TextView
         android:id="@+id/tv_main"
         android:layout_width="match_parent"
@@ -42,11 +47,6 @@
             android:textSize="18sp"/>
 
     </RelativeLayout>
-
-    <com.baidu.cyberplayer.core.BVideoView
-        android:id="@+id/video_view"
-        android:layout_width="match_parent"
-        android:layout_height="0.1dp"/>
 
     <com.woting.common.widgetui.xlistview.XListView
         android:id="@+id/listView"

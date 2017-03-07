@@ -1,4 +1,4 @@
-package com.woting.ui.mine.favorite.activity;
+package com.woting.ui.mine.favorite.main;
 
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -8,15 +8,17 @@ import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,16 +29,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.common.manager.MyActivityManager;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
-import com.woting.ui.baseactivity.AppBaseFragmentActivity;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.mine.favorite.fragment.RadioFragment;
 import com.woting.ui.mine.favorite.fragment.SequFragment;
 import com.woting.ui.mine.favorite.fragment.SoundFragment;
 import com.woting.ui.mine.favorite.fragment.TTSFragment;
 import com.woting.ui.mine.favorite.fragment.TotalFragment;
+import com.woting.ui.mine.main.MineActivity;
 
 import java.util.ArrayList;
 
@@ -45,8 +46,8 @@ import java.util.ArrayList;
  * 作者：xinlong on 2016/8/1 21:18
  * 邮箱：645700751@qq.com
  */
-public class FavoriteActivity extends AppBaseFragmentActivity implements OnClickListener {
-    private static FavoriteActivity context;
+public class FavoriteFragment extends Fragment implements OnClickListener {
+    private static FragmentActivity context;
     private MyBroadcast mBroadcast;
     private TotalFragment totalFragment;
     private SequFragment sequfragment;
@@ -54,6 +55,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
     private RadioFragment radiofragment;
     private TTSFragment ttsfragment;
 
+    private View rootView;
     private static TextView tv_total;
     private static TextView tv_sequ;
     private static TextView tv_sound;
@@ -82,49 +84,58 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
     public static boolean isEdit = false;// 是否为编辑状态
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favorite);
-        context = this;
+        context = getActivity();
+
         // 注册广播
         mBroadcast = new MyBroadcast();
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(FavoriteActivity.SET_ALL_IMAGE);
-        intentFilter.addAction(FavoriteActivity.SET_NOT_ALL_IMAGE);
-        registerReceiver(mBroadcast, intentFilter);
+        intentFilter.addAction(FavoriteFragment.SET_ALL_IMAGE);
+        intentFilter.addAction(FavoriteFragment.SET_NOT_ALL_IMAGE);
+        context.registerReceiver(mBroadcast, intentFilter);
+    }
 
-        initImage();
-        delDialog();
-        confirmDialog();
-        setView();
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.activity_favorite, container, false);
+
+            initImage();
+            delDialog();
+            confirmDialog();
+            setView();
+        }
+        return rootView;
     }
 
     // 初始化视图
     private void setView() {
-        findViewById(R.id.head_left_btn).setOnClickListener(this);      // 返回按钮
+        rootView.findViewById(R.id.head_left_btn).setOnClickListener(this);      // 返回按钮
         
-        tv_total = (TextView) findViewById(R.id.tv_total);              // 全部
+        tv_total = (TextView) rootView.findViewById(R.id.tv_total);              // 全部
         tv_total.setOnClickListener(new txListener(0));
         
-        tv_sequ = (TextView) findViewById(R.id.tv_sequ);                // 专辑
+        tv_sequ = (TextView) rootView.findViewById(R.id.tv_sequ);                // 专辑
         tv_sequ.setOnClickListener(new txListener(1));
         
-        tv_sound = (TextView) findViewById(R.id.tv_sound);              // 声音
+        tv_sound = (TextView) rootView.findViewById(R.id.tv_sound);              // 声音
         tv_sound.setOnClickListener(new txListener(2));
         
-        tv_radio = (TextView) findViewById(R.id.tv_radio);              // 电台
+        tv_radio = (TextView) rootView.findViewById(R.id.tv_radio);              // 电台
         tv_radio.setOnClickListener(new txListener(3));
         
-        tv_tts = (TextView) findViewById(R.id.tv_tts);                  // TTS
+        tv_tts = (TextView) rootView.findViewById(R.id.tv_tts);                  // TTS
         tv_tts.setOnClickListener(new txListener(4));
         
-        mPager = (ViewPager) findViewById(R.id.viewpager);
+        mPager = (ViewPager) rootView.findViewById(R.id.viewpager);
         mPager.setOffscreenPageLimit(1);
         
-        tv_qingkong = (TextView) findViewById(R.id.tv_qingkong);
+        tv_qingkong = (TextView) rootView.findViewById(R.id.tv_qingkong);
         tv_qingkong.setOnClickListener(this);
         
-        tv_bianji = (TextView) findViewById(R.id.tv_bianji);
+        tv_bianji = (TextView) rootView.findViewById(R.id.tv_bianji);
         tv_bianji.setOnClickListener(this);
 
         initViewPager();
@@ -143,7 +154,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
         fragmentList.add(soundfragment);
         fragmentList.add(radiofragment);
         fragmentList.add(ttsfragment);
-        mPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager(), fragmentList));
+        mPager.setAdapter(new MyFragmentPagerAdapter(getChildFragmentManager(), fragmentList));
         mPager.setOnPageChangeListener(new MyOnPageChangeListener());    // 页面变化时的监听器
         mPager.setCurrentItem(0);                                        // 设置当前显示标签页为第
     }
@@ -168,13 +179,13 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
 
     // 动态设置cursor的宽
     public void initImage() {
-        image = (ImageView) findViewById(R.id.cursor);
+        image = (ImageView) rootView.findViewById(R.id.cursor);
         LayoutParams lp = image.getLayoutParams();
         lp.width = (PhoneMessage.ScreenWidth / 5);
         image.setLayoutParams(lp);
         bmpW = BitmapFactory.decodeResource(getResources(), R.mipmap.left_personal_bg).getWidth();
         DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
         int screenW = dm.widthPixels;
         offset = (screenW / 5 - bmpW) / 2;
         Matrix matrix = new Matrix();
@@ -186,7 +197,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_left_btn:// 返回
-                finish();
+                MineActivity.close();
                 break;
             case R.id.tv_qingkong:// 清空
                 handleData(0);
@@ -227,7 +238,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
                 if (flag) {
                     isEdit = true;
                     sequfragment.setViewVisibility();
-                    sendBroadcast(new Intent(FavoriteActivity.SET_NOT_LOAD_REFRESH));
+                    context.sendBroadcast(new Intent(FavoriteFragment.SET_NOT_LOAD_REFRESH));
 
                     textFlag = 1;
                     tv_bianji.setText("取消");
@@ -240,7 +251,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
             } else if (type == 2) {// 隐藏view
                 sequfragment.changeviewtype(0);
                 sequfragment.setViewHint();
-                sendBroadcast(new Intent(FavoriteActivity.SET_LOAD_REFRESH));
+                context.sendBroadcast(new Intent(FavoriteFragment.SET_LOAD_REFRESH));
 
             } else if (type == 3) {// 全选
                 sequfragment.changechecktype(1);
@@ -260,7 +271,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
                 tv_bianji.setText("编辑");
                 sequfragment.delitem();
                 sequfragment.setViewHint();
-                sendBroadcast(new Intent(FavoriteActivity.SET_LOAD_REFRESH));
+                context.sendBroadcast(new Intent(FavoriteFragment.SET_LOAD_REFRESH));
             }
         } else if (currentIndex == 2) {
             // 声音
@@ -269,7 +280,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
                 if (flag) {
                     isEdit = true;
                     soundfragment.setViewVisibility();
-                    sendBroadcast(new Intent(FavoriteActivity.SET_NOT_LOAD_REFRESH));
+                    context.sendBroadcast(new Intent(FavoriteFragment.SET_NOT_LOAD_REFRESH));
                     textFlag = 1;
                     tv_bianji.setText("取消");
                     if (DelDialog != null) {
@@ -281,7 +292,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
             } else if (type == 2) {// 隐藏view
                 soundfragment.changeviewtype(0);
                 soundfragment.setViewHint();
-                sendBroadcast(new Intent(FavoriteActivity.SET_LOAD_REFRESH));
+                context.sendBroadcast(new Intent(FavoriteFragment.SET_LOAD_REFRESH));
             } else if (type == 3) {// 全选
                 soundfragment.changechecktype(1);
             } else if (type == 4) {// 解除全选
@@ -300,7 +311,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
                 tv_bianji.setText("编辑");
                 soundfragment.delitem();
                 soundfragment.setViewHint();
-                sendBroadcast(new Intent(FavoriteActivity.SET_LOAD_REFRESH));
+                context.sendBroadcast(new Intent(FavoriteFragment.SET_LOAD_REFRESH));
             }
         } else if (currentIndex == 3) {
             // 电台
@@ -309,7 +320,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
                 if (flag) {
                     isEdit = true;
                     radiofragment.setViewVisibility();
-                    sendBroadcast(new Intent(FavoriteActivity.SET_NOT_LOAD_REFRESH));
+                    context.sendBroadcast(new Intent(FavoriteFragment.SET_NOT_LOAD_REFRESH));
                     textFlag = 1;
                     tv_bianji.setText("取消");
                     if (DelDialog != null) {
@@ -321,7 +332,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
             } else if (type == 2) {// 隐藏view
                 radiofragment.changeviewtype(0);
                 radiofragment.setViewHint();
-                sendBroadcast(new Intent(FavoriteActivity.SET_LOAD_REFRESH));
+                context.sendBroadcast(new Intent(FavoriteFragment.SET_LOAD_REFRESH));
             } else if (type == 3) {// 全选
                 radiofragment.changechecktype(1);
             } else if (type == 4) {// 解除全选
@@ -340,7 +351,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
                 tv_bianji.setText("编辑");
                 radiofragment.delitem();
                 radiofragment.setViewHint();
-                sendBroadcast(new Intent(FavoriteActivity.SET_LOAD_REFRESH));
+                context.sendBroadcast(new Intent(FavoriteFragment.SET_LOAD_REFRESH));
             }
         } else if (currentIndex == 4) {
             // TTS
@@ -349,7 +360,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
                 if (flag) {
                     isEdit = true;
                     ttsfragment.setViewVisibility();
-                    sendBroadcast(new Intent(FavoriteActivity.SET_NOT_LOAD_REFRESH));
+                    context.sendBroadcast(new Intent(FavoriteFragment.SET_NOT_LOAD_REFRESH));
                     textFlag = 1;
                     tv_bianji.setText("取消");
                     if (DelDialog != null) {
@@ -361,7 +372,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
             } else if (type == 2) {// 隐藏view
                 ttsfragment.changeviewtype(0);
                 ttsfragment.setViewHint();
-                sendBroadcast(new Intent(FavoriteActivity.SET_LOAD_REFRESH));
+                context.sendBroadcast(new Intent(FavoriteFragment.SET_LOAD_REFRESH));
             } else if (type == 3) {// 全选
                 ttsfragment.changechecktype(1);
             } else if (type == 4) {// 解除全选
@@ -380,7 +391,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
                 tv_bianji.setText("编辑");
                 ttsfragment.delitem();
                 ttsfragment.setViewHint();
-                sendBroadcast(new Intent(FavoriteActivity.SET_LOAD_REFRESH));
+                context.sendBroadcast(new Intent(FavoriteFragment.SET_LOAD_REFRESH));
             }
         }
     }
@@ -451,7 +462,7 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
     }
 
     // 设置清空可见或隐藏
-    public void setQkVisibleOrHide(boolean visible) {
+    public static void setQkVisibleOrHide(boolean visible) {
         if(visible) {
             tv_qingkong.setVisibility(View.VISIBLE);
         } else {
@@ -618,33 +629,9 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN && KeyEvent.KEYCODE_BACK == keyCode) {
-            if (isEdit) {
-                handleData(2);
-                handleData(4);
-                if (DelDialog.isShowing()) {
-                    DelDialog.dismiss();
-                    imageAllCheck.setImageResource(R.mipmap.wt_group_nochecked);
-                    dialogFlag = 0;
-                }
-                textFlag = 0;
-                tv_bianji.setText("编辑");
-                isEdit = false;
-            } else {
-                finish();
-            }
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
-        MyActivityManager mam = MyActivityManager.getInstance();
-        mam.popOneActivity(context);
-        unregisterReceiver(mBroadcast);
+        context.unregisterReceiver(mBroadcast);
         if(DelDialog != null) {
             DelDialog.dismiss();
             DelDialog = null;
@@ -665,6 +652,5 @@ public class FavoriteActivity extends AppBaseFragmentActivity implements OnClick
         soundfragment = null;
         radiofragment = null;
         context = null;
-        setContentView(R.layout.activity_null);
     }
 }

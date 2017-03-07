@@ -19,7 +19,7 @@ import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.main.MainActivity;
-import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
+import com.woting.ui.mine.playhistory.main.PlayHistoryFragment;
 import com.woting.ui.mine.playhistory.adapter.PlayHistoryAdapter;
 import com.woting.ui.mine.playhistory.adapter.PlayHistoryAdapter.playhistorycheck;
 
@@ -142,7 +142,7 @@ public class TTSFragment extends Fragment {
         listView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (!PlayHistoryActivity.isEdit) {
+                if (!PlayHistoryFragment.isEdit) {
                     if (playList.get(position).getStatus() == 0) {
                         playList.get(position).setStatus(1);
                     } else if (playList.get(position).getStatus() == 1) {
@@ -195,7 +195,6 @@ public class TTSFragment extends Fragment {
                         bundle1.putString("text", s);
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
-                        getActivity().finish();
                     }
                 }
             }

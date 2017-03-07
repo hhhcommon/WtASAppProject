@@ -38,7 +38,8 @@ import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.home.search.adapter.SearchContentAdapter;
 import com.woting.ui.home.search.model.SuperRankInfo;
 import com.woting.ui.main.MainActivity;
-import com.woting.ui.mine.favorite.activity.FavoriteActivity;
+import com.woting.ui.mine.favorite.main.FavoriteFragment;
+import com.woting.ui.mine.main.MineActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,7 +84,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
         } else {
             tipView.setVisibility(View.VISIBLE);
             tipView.setTipView(TipView.TipStatus.NO_NET);
-            ((FavoriteActivity) context).setQkVisibleOrHide(false);
+            FavoriteFragment.setQkVisibleOrHide(false);
         }
     }
 
@@ -95,7 +96,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
         delDialog();
 
         IntentFilter mFilter = new IntentFilter();
-        mFilter.addAction(FavoriteActivity.VIEW_UPDATE);
+        mFilter.addAction(FavoriteFragment.VIEW_UPDATE);
         context.registerReceiver(mBroadcastReceiver, mFilter);
     }
 
@@ -115,7 +116,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
             } else {
                 tipView.setVisibility(View.VISIBLE);
                 tipView.setTipView(TipView.TipStatus.NO_NET);
-                ((FavoriteActivity) context).setQkVisibleOrHide(false);
+                FavoriteFragment.setQkVisibleOrHide(false);
             }
         }
         return rootView;
@@ -131,7 +132,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
         expandListView.setOnGroupClickListener(new OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                FavoriteActivity.updateViewPager(list.get(groupPosition).getKey());
+                FavoriteFragment.updateViewPager(list.get(groupPosition).getKey());
                 return true;
             }
         });
@@ -215,7 +216,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
                     e.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
-                    context.sendBroadcast(new Intent(FavoriteActivity.VIEW_UPDATE));
+                    context.sendBroadcast(new Intent(FavoriteFragment.VIEW_UPDATE));
                     send();
                 } else {
                     ToastUtils.show_always(context, "删除失败，请检查网络或稍后重试!");
@@ -341,19 +342,19 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
                             setItemListener();
                             tipView.setVisibility(View.GONE);
                             isData = true;
-                            ((FavoriteActivity) context).setQkVisibleOrHide(true);
+                            FavoriteFragment.setQkVisibleOrHide(true);
                         } else {
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有喜欢的节目\n快去收听喜欢的节目吧");
                             isData = false;
-                            ((FavoriteActivity) context).setQkVisibleOrHide(false);
+                            FavoriteFragment.setQkVisibleOrHide(false);
                         }
                     }
                 } else {
                     tipView.setVisibility(View.VISIBLE);
                     tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有喜欢的节目\n快去收听喜欢的节目吧");
                     isData = false;
-                    ((FavoriteActivity) context).setQkVisibleOrHide(false);
+                    FavoriteFragment.setQkVisibleOrHide(false);
                 }
             }
 
@@ -364,7 +365,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
                 ToastUtils.showVolleyError(context);
                 tipView.setVisibility(View.VISIBLE);
                 tipView.setTipView(TipView.TipStatus.IS_ERROR);
-                ((FavoriteActivity) context).setQkVisibleOrHide(false);
+                FavoriteFragment.setQkVisibleOrHide(false);
             }
         });
     }
@@ -431,30 +432,18 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
                     bundle1.putString("text", list.get(groupPosition).getList().get(childPosition).getContentName());
                     push.putExtras(bundle1);
                     context.sendBroadcast(push);
-                    getActivity().finish();
                 } else if (mediaType.equals("SEQU")) {
-                    Intent intent = new Intent(context, AlbumFragment.class);
+                    AlbumFragment fragment = new AlbumFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("type", "search");
+                    bundle.putInt("fromType", 3);// Mine
+                    bundle.putString("type", "recommend");
                     bundle.putSerializable("list", list.get(groupPosition).getList().get(childPosition));
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, 1);
+                    fragment.setArguments(bundle);
+                    MineActivity.open(fragment);
                 }
                 return true;
             }
         });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case 1:
-                if (resultCode == 1) {
-                    getActivity().finish();
-                }
-                break;
-        }
     }
 
     // 广播接收器 用于刷新界面
@@ -463,7 +452,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(FavoriteActivity.VIEW_UPDATE)) {
+            if (action.equals(FavoriteFragment.VIEW_UPDATE)) {
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                     send();
                 } else {

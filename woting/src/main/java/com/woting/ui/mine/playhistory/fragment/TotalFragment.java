@@ -24,7 +24,7 @@ import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.search.model.SuperRankInfo;
 import com.woting.ui.main.MainActivity;
-import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
+import com.woting.ui.mine.playhistory.main.PlayHistoryFragment;
 import com.woting.ui.mine.playhistory.adapter.PlayHistoryExpandableAdapter;
 
 import java.util.ArrayList;
@@ -131,7 +131,7 @@ public class TotalFragment extends Fragment {
         if (!isData) {
             tipView.setVisibility(View.VISIBLE);
             tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有收听节目\n快去收听喜欢的节目吧");
-            ((PlayHistoryActivity) context).setNodataHideView();
+            PlayHistoryFragment.setNoDataHideView();
         }
     }
 
@@ -188,7 +188,6 @@ public class TotalFragment extends Fragment {
                     bundle1.putString("text", s);
                     push.putExtras(bundle1);
                     context.sendBroadcast(push);
-                    getActivity().finish();
                 }
                 return true;
             }
@@ -203,7 +202,7 @@ public class TotalFragment extends Fragment {
         mListView.setOnGroupClickListener(new OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                ((PlayHistoryActivity) getActivity()).updateViewPager(list.get(groupPosition).getKey());
+                PlayHistoryFragment.updateViewPager(list.get(groupPosition).getKey());
                 return true;
             }
         });

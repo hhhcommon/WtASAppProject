@@ -7,6 +7,10 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical" >
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="24dp"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/wt_dinglan_high">

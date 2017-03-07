@@ -35,7 +35,7 @@ import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.main.MainActivity;
-import com.woting.ui.mine.favorite.activity.FavoriteActivity;
+import com.woting.ui.mine.favorite.main.FavoriteFragment;
 import com.woting.ui.mine.favorite.adapter.FavorListAdapter;
 import com.woting.ui.mine.favorite.adapter.FavorListAdapter.favorCheck;
 
@@ -83,9 +83,9 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
         initDao();
 
         IntentFilter mFilter = new IntentFilter();
-        mFilter.addAction(FavoriteActivity.VIEW_UPDATE);
-        mFilter.addAction(FavoriteActivity.SET_NOT_LOAD_REFRESH);
-        mFilter.addAction(FavoriteActivity.SET_LOAD_REFRESH);
+        mFilter.addAction(FavoriteFragment.VIEW_UPDATE);
+        mFilter.addAction(FavoriteFragment.SET_NOT_LOAD_REFRESH);
+        mFilter.addAction(FavoriteFragment.SET_LOAD_REFRESH);
         context.registerReceiver(mBroadcastReceiver, mFilter);
     }
 
@@ -136,7 +136,7 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
         mListView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (FavoriteActivity.isEdit) {
+                if (FavoriteFragment.isEdit) {
                     if (newList.get(position - 1).getChecktype() == 0) {
                         newList.get(position - 1).setChecktype(1);
                     } else {
@@ -190,7 +190,6 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
                             bundle1.putString("text", newList.get(position - 1).getContentName());
                             push.putExtras(bundle1);
                             context.sendBroadcast(push);
-                            getActivity().finish();
                         }
                     }
                 }
@@ -341,17 +340,17 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             switch (action) {
-                case FavoriteActivity.VIEW_UPDATE:
+                case FavoriteFragment.VIEW_UPDATE:
                     page = 1;
                     send();
                     break;
-                case FavoriteActivity.SET_NOT_LOAD_REFRESH:
+                case FavoriteFragment.SET_NOT_LOAD_REFRESH:
                     if (isVisible()) {
                         mListView.setPullRefreshEnable(false);
                         mListView.setPullLoadEnable(false);
                     }
                     break;
-                case FavoriteActivity.SET_LOAD_REFRESH:
+                case FavoriteFragment.SET_LOAD_REFRESH:
                     if (isVisible()) {
                         mListView.setPullRefreshEnable(true);
                         if (newList.size() >= 10) {
@@ -407,11 +406,11 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
     public void ifAll() {
         if (getdelitemsum() == newList.size()) {
             Intent intentAll = new Intent();
-            intentAll.setAction(FavoriteActivity.SET_ALL_IMAGE);
+            intentAll.setAction(FavoriteFragment.SET_ALL_IMAGE);
             context.sendBroadcast(intentAll);
         } else {
             Intent intentNotAll = new Intent();
-            intentNotAll.setAction(FavoriteActivity.SET_NOT_ALL_IMAGE);
+            intentNotAll.setAction(FavoriteFragment.SET_NOT_ALL_IMAGE);
             context.sendBroadcast(intentNotAll);
         }
     }
@@ -465,7 +464,7 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
                     e.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
-                    context.sendBroadcast(new Intent(FavoriteActivity.VIEW_UPDATE));
+                    context.sendBroadcast(new Intent(FavoriteFragment.VIEW_UPDATE));
                 } else {
                     ToastUtils.show_always(context, "删除失败，请检查网络或稍后重试!");
                 }

@@ -53,16 +53,16 @@ import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.photocut.PhotoCutActivity;
 import com.woting.ui.common.qrcodes.EWMShowActivity;
 import com.woting.ui.interphone.model.UserInviteMeInside;
-import com.woting.ui.mine.favorite.activity.FavoriteActivity;
+import com.woting.ui.mine.favorite.main.FavoriteFragment;
 import com.woting.ui.mine.hardware.HardwareIntroduceActivity;
 import com.woting.ui.mine.model.UserPortaitInside;
 import com.woting.ui.mine.myupload.MyUploadActivity;
 import com.woting.ui.mine.person.updatepersonnews.UpdatePersonActivity;
 import com.woting.ui.mine.person.updatepersonnews.model.UpdatePerson;
-import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
+import com.woting.ui.mine.playhistory.main.PlayHistoryFragment;
 import com.woting.ui.mine.set.SetActivity;
 import com.woting.ui.mine.shapeapp.ShapeAppActivity;
-import com.woting.ui.mine.subscriber.activity.SubscriberListActivity;
+import com.woting.ui.mine.subscriber.activity.SubscriberListFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -232,7 +232,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 startActivityForResult(intentSet, 0x222);
                 break;
             case R.id.lin_playhistory:      // 播放历史
-                startActivity(new Intent(context, PlayHistoryActivity.class));
+                MineActivity.open(new PlayHistoryFragment());
                 break;
             case R.id.text_denglu:          // 登陆
                 startActivity(new Intent(context, LoginActivity.class));
@@ -272,13 +272,13 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.lin_like:             // 我喜欢的
-                startActivity(new Intent(context, FavoriteActivity.class));
+                MineActivity.open(new FavoriteFragment());
                 break;
             case R.id.lin_anchor:           // 我的主播  我关注的主播
                 ToastUtils.show_always(context, "我的主播!");
                 break;
             case R.id.lin_subscribe:        // 我的订阅
-                startActivity(new Intent(context, SubscriberListActivity.class));
+                MineActivity.open(new SubscriberListFragment());
                 break;
             case R.id.lin_album:            // 我的专辑  我上传的专辑
                 startActivity(new Intent(context, MyUploadActivity.class));

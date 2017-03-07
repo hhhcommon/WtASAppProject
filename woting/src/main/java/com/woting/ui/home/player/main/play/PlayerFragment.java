@@ -78,7 +78,7 @@ import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.album.model.ContentInfo;
 import com.woting.ui.home.program.comment.CommentActivity;
-import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
+import com.woting.ui.mine.playhistory.main.PlayHistoryFragment;
 import com.woting.video.IntegrationPlayer;
 import com.woting.video.VoiceRecognizer;
 
@@ -482,7 +482,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 break;
             case R.id.lin_ly_history:// 播放历史
                 linChoseClose(mViewMoreChose);
-                startActivity(new Intent(context, PlayHistoryActivity.class));
+                startActivity(new Intent(context, PlayHistoryFragment.class));
                 break;
             case R.id.tv_programme:// 节目单
                 Intent p = new Intent(context, ProgrammeActivity.class);

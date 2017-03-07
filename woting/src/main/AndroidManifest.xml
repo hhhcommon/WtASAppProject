@@ -286,7 +286,7 @@
 
         <!--  -->
         <activity
-            android:name=".ui.mine.playhistory.activity.PlayHistoryActivity"
+            android:name=".ui.mine.playhistory.main.PlayHistoryFragment"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan"/>
@@ -474,7 +474,7 @@
 
         <!--  -->
         <activity
-            android:name=".ui.mine.favorite.activity.FavoriteActivity"
+            android:name=".ui.mine.favorite.main.FavoriteFragment"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
@@ -571,7 +571,7 @@
 
         <!--主播详情介绍界面-->
         <activity
-            android:name="com.woting.ui.mine.subscriber.activity.SubscriberListActivity"
+            android:name=".ui.mine.subscriber.activity.SubscriberListFragment"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>

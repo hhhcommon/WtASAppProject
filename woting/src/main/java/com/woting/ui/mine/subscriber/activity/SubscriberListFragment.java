@@ -1,12 +1,16 @@
 package com.woting.ui.mine.subscriber.activity;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
@@ -24,10 +28,10 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
-import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.album.model.SubscriberInfo;
 import com.woting.ui.home.program.radiolist.mode.ListInfo;
+import com.woting.ui.mine.main.MineActivity;
 import com.woting.ui.mine.subscriber.adapter.SubscriberAdapter;
 
 import org.json.JSONException;
@@ -42,10 +46,11 @@ import java.util.List;
  * 2017/1/10 12:24
  * 邮箱：645700751@qq.com
  */
-public class SubscriberListActivity extends AppBaseActivity implements OnClickListener, TipView.WhiteViewClick {
+public class SubscriberListFragment extends Fragment implements OnClickListener, TipView.WhiteViewClick {
+    private FragmentActivity context;
     private XListView mListView;
     private Dialog dialog;
-    protected SubscriberAdapter adapter;
+    private SubscriberAdapter adapter;
 
     private int page = 1;
     private int refreshType = 1;// refreshType == 1 为下拉加载  == 2 为上拉加载更多
@@ -55,6 +60,7 @@ public class SubscriberListActivity extends AppBaseActivity implements OnClickLi
     private ArrayList<SubscriberInfo> newList = new ArrayList<>();
     protected List<SubscriberInfo> subList;
 
+    private View rootView;
     private TipView tipView;// 没有网络、没有数据、加载错误提示
 
     @Override
@@ -69,29 +75,39 @@ public class SubscriberListActivity extends AppBaseActivity implements OnClickLi
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fmlist);
-        initView();
-        initEvent();
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在获取数据");
-            sendRequest();
-        } else {
-            tipView.setVisibility(View.VISIBLE);
-            tipView.setTipView(TipView.TipStatus.NO_NET);
+        context = getActivity();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.activity_fmlist, container, false);
+
+            initView();
+            initEvent();
+            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                dialog = DialogUtils.Dialogph(context, "正在获取数据");
+                sendRequest();
+            } else {
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_NET);
+            }
         }
+        return rootView;
     }
 
     // 初始化视图
     private void initView() {
-        TextView textHead = (TextView) findViewById(R.id.head_name_tv);// 标题
+        TextView textHead = (TextView) rootView.findViewById(R.id.head_name_tv);// 标题
         textHead.setText("订阅");
 
-        findViewById(R.id.head_left_btn).setOnClickListener(this);// 返回
+        rootView.findViewById(R.id.head_left_btn).setOnClickListener(this);// 返回
 
-        mListView = (XListView) findViewById(R.id.listview_fm);
-        tipView = (TipView) findViewById(R.id.tip_view);
+        mListView = (XListView) rootView.findViewById(R.id.listview_fm);
+        tipView = (TipView) rootView.findViewById(R.id.tip_view);
         tipView.setWhiteClick(this);
     }
 
@@ -129,8 +145,8 @@ public class SubscriberListActivity extends AppBaseActivity implements OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.head_left_btn:
-                finish();
+            case R.id.head_left_btn:// 返回
+                MineActivity.close();
                 break;
         }
     }
@@ -145,7 +161,6 @@ public class SubscriberListActivity extends AppBaseActivity implements OnClickLi
             e.printStackTrace();
         }
         VolleyRequest.requestPost(GlobalConfig.getSubscribeList, tag, jsonObject, new VolleyCallback() {
-
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
@@ -199,7 +214,7 @@ public class SubscriberListActivity extends AppBaseActivity implements OnClickLi
         });
     }
 
-    // 这里要改 ?
+    // ListView Item Click
     protected void setListView() {
         mListView.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -211,26 +226,22 @@ public class SubscriberListActivity extends AppBaseActivity implements OnClickLi
                 listInfo.setContentDescn(newList.get(position).getContentMediaName());
                 listInfo.setContentId(newList.get(position).getContentSeqId());
 
-                Intent intent = new Intent(context, AlbumFragment.class);
+                // 跳往专辑界面
+                AlbumFragment fragment = new AlbumFragment();
                 Bundle bundle = new Bundle();
+                bundle.putInt("fromType", 3);
                 bundle.putString("type", "radiolistactivity");
                 bundle.putSerializable("list", listInfo);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, 1);
+                fragment.setArguments(bundle);
+                MineActivity.open(fragment);
             }
         });
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        finish();
-    }
-
-    @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
         adapter = null;
-        setContentView(R.layout.activity_null);
     }
 }
