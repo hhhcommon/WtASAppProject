@@ -1,13 +1,16 @@
 package com.woting.ui.home.program.album.anchor;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,13 +32,12 @@ import com.woting.common.widgetui.HeightListView;
 import com.woting.common.widgetui.RoundImageView;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
-import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.main.HomeActivity;
-import com.woting.ui.home.program.album.main.AlbumFragment;
-import com.woting.ui.home.program.album.anchor.activity.AnchorListActivity;
+import com.woting.ui.home.program.album.anchor.activity.AnchorListFragment;
 import com.woting.ui.home.program.album.anchor.adapter.AnchorMainAdapter;
 import com.woting.ui.home.program.album.anchor.adapter.AnchorSequAdapter;
 import com.woting.ui.home.program.album.anchor.model.PersonInfo;
+import com.woting.ui.home.program.album.main.AlbumFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,12 +47,14 @@ import java.util.List;
 /**
  * 主播详情界面
  */
-public class AnchorDetailsActivity extends AppBaseActivity implements View.OnClickListener, TipView.WhiteViewClick {
+public class AnchorDetailsFragment extends Fragment implements View.OnClickListener, TipView.WhiteViewClick {
+    private FragmentActivity context;
     private List<PersonInfo> MediaInfoList;
     private List<PersonInfo> personInfoList;
     private AnchorSequAdapter adapterSequ;
     private AnchorMainAdapter adapterMain;
 
+    private View rootView;
     private Dialog dialog;
     private XListView listAnchor;
     private RoundImageView img_head;
@@ -73,7 +77,6 @@ public class AnchorDetailsActivity extends AppBaseActivity implements View.OnCli
     private boolean isCancelRequest;
 
     @Override
-
     public void onWhiteViewClick() {
         if (!TextUtils.isEmpty(PersonId)) {
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
@@ -90,17 +93,26 @@ public class AnchorDetailsActivity extends AppBaseActivity implements View.OnCli
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_anchor_details);
+        context = getActivity();
+    }
 
-        initView();
-        handleIntent();
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.activity_anchor_details, container, false);
+
+            initView();
+            handleIntent();
+        }
+        return rootView;
     }
 
     // 初始化视图
     private void initView() {
-        tipView = (TipView) findViewById(R.id.tip_view);
+        tipView = (TipView) rootView.findViewById(R.id.tip_view);
 
         View headView = LayoutInflater.from(context).inflate(R.layout.headview_activity_anchor_details, null);
         img_head = (RoundImageView) headView.findViewById(R.id.round_image_head);   //  头像
@@ -110,19 +122,19 @@ public class AnchorDetailsActivity extends AppBaseActivity implements View.OnCli
         tv_visible_all = (TextView) headView.findViewById(R.id.text_visible_all);
         tv_more = (TextView) headView.findViewById(R.id.tv_more);                   //  更多
 
-        listAnchor = (XListView) findViewById(R.id.list_anchor);                    // 主播的节目列表
+        listAnchor = (XListView) rootView.findViewById(R.id.list_anchor);                    // 主播的节目列表
         listAnchor.setSelector(new ColorDrawable(Color.TRANSPARENT));
         listAnchor.setHeaderDividersEnabled(false);
         listAnchor.addHeaderView(headView);
 
-        textAnchorName = (TextView) findViewById(R.id.text_anchor_name);// 标题  即主播 Name
+        textAnchorName = (TextView) rootView.findViewById(R.id.text_anchor_name);// 标题  即主播 Name
         initEvent();
     }
 
     // 初始化点击事件
     private void initEvent() {
         tipView.setWhiteClick(this);
-        findViewById(R.id.head_left_btn).setOnClickListener(this);// 返回
+        rootView.findViewById(R.id.head_left_btn).setOnClickListener(this);// 返回
         tv_more.setOnClickListener(this);
 
         listAnchor.setXListViewListener(new XListView.IXListViewListener() {
@@ -153,8 +165,10 @@ public class AnchorDetailsActivity extends AppBaseActivity implements View.OnCli
     }
 
     private void handleIntent() {
-        PersonId = getIntent().getStringExtra("PersonId");
-        ContentPub = getIntent().getStringExtra("ContentPub");
+        Bundle bundle = getArguments();
+
+        PersonId = bundle.getString("PersonId");
+        ContentPub = bundle.getString("ContentPub");
         if (!TextUtils.isEmpty(PersonId)) {
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                 dialog = DialogUtils.Dialogph(context, "正在获取数据");
@@ -219,7 +233,8 @@ public class AnchorDetailsActivity extends AppBaseActivity implements View.OnCli
                         Gson gson = new Gson();
                         try {
                             String SeqList = result.getString("SeqMediaList");
-                            personInfoList = gson.fromJson(SeqList, new TypeToken<List<PersonInfo>>() {}.getType());
+                            personInfoList = gson.fromJson(SeqList, new TypeToken<List<PersonInfo>>() {
+                            }.getType());
                             if (personInfoList != null && personInfoList.size() > 0) {
                                 // 此处要对 lv_sequ 的高度进行适配
                                 adapterSequ = new AnchorSequAdapter(context, personInfoList);
@@ -234,7 +249,8 @@ public class AnchorDetailsActivity extends AppBaseActivity implements View.OnCli
                         }
                         try {
                             String MediaList = result.getString("MediaAssetList");
-                            MediaInfoList = gson.fromJson(MediaList, new TypeToken<List<PersonInfo>>() {}.getType());
+                            MediaInfoList = gson.fromJson(MediaList, new TypeToken<List<PersonInfo>>() {
+                            }.getType());
                             if (MediaInfoList != null && MediaInfoList.size() > 0) {
                                 // listAnchor
                                 adapterMain = new AnchorMainAdapter(context, MediaInfoList);
@@ -361,7 +377,8 @@ public class AnchorDetailsActivity extends AppBaseActivity implements View.OnCli
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {
                         String MediaList = result.getString("ResultList");
-                        List<PersonInfo> ResultList = new Gson().fromJson(MediaList, new TypeToken<List<PersonInfo>>() {}.getType());
+                        List<PersonInfo> ResultList = new Gson().fromJson(MediaList, new TypeToken<List<PersonInfo>>() {
+                        }.getType());
                         if (ResultList != null && ResultList.size() > 0) {
                             MediaInfoList.addAll(ResultList);
                             if (ResultList.size() < 10) {
@@ -409,16 +426,18 @@ public class AnchorDetailsActivity extends AppBaseActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_left_btn:// 返回
-                finish();
+                HomeActivity.close();
                 break;
-            case R.id.tv_more:
+            case R.id.tv_more:// 查看主播的更多专辑列表
                 if (!TextUtils.isEmpty(PersonId)) {
-                    Intent intent = new Intent(context, AnchorListActivity.class);
-                    intent.putExtra("PersonId", PersonId);
+                    AnchorListFragment fragment = new AnchorListFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("PersonId", PersonId);
                     if (!TextUtils.isEmpty(PersonName)) {
-                        intent.putExtra("PersonName", PersonName);
+                        bundle.putString("PersonName", PersonName);
                     }
-                    startActivity(intent);
+                    fragment.setArguments(bundle);
+                    HomeActivity.open(fragment);
                 } else {
                     ToastUtils.show_always(context, "该主播还没有详细的个人信息~");
                 }
@@ -427,7 +446,7 @@ public class AnchorDetailsActivity extends AppBaseActivity implements View.OnCli
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
     }

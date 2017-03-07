@@ -2,7 +2,6 @@ package com.woting.ui.home.program.album.fragment;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -29,8 +28,9 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.RoundImageView;
 import com.woting.common.widgetui.TipView;
+import com.woting.ui.home.main.HomeActivity;
+import com.woting.ui.home.program.album.anchor.AnchorDetailsFragment;
 import com.woting.ui.home.program.album.main.AlbumFragment;
-import com.woting.ui.home.program.album.anchor.AnchorDetailsActivity;
 import com.woting.ui.home.program.album.model.ContentCatalogs;
 import com.woting.ui.home.program.album.model.PersonInfo;
 
@@ -51,7 +51,7 @@ public class DetailsFragment extends Fragment implements OnClickListener {
     private View rootView;
     private Dialog dialog;
     private RoundImageView imageHead;
-    private TextView textAnchor, textContent, textLabel,textConcern;
+    private TextView textAnchor, textContent, textLabel, textConcern;
     private ImageView imageConcern;
 
     private String contentDesc;
@@ -115,13 +115,15 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                 break;
             case R.id.round_image_head:// 主播详情
             case R.id.text_anchor_name:
-                if(!TextUtils.isEmpty(PersonId)){
-                    Intent intent=new Intent(context, AnchorDetailsActivity.class);
-                    intent.putExtra("PersonId",PersonId);
-                    intent.putExtra("ContentPub",ContentPub);
-                    startActivity(intent);
-                }else{
-                    ToastUtils.show_always(context,"此专辑还没有主播哦");
+                if (!TextUtils.isEmpty(PersonId)) {
+                    AnchorDetailsFragment fragment = new AnchorDetailsFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("PersonId", PersonId);
+                    bundle.putString("ContentPub", ContentPub);
+                    fragment.setArguments(bundle);
+                    HomeActivity.open(fragment);
+                } else {
+                    ToastUtils.show_always(context, "此专辑还没有主播哦");
                 }
                 break;
         }
@@ -153,8 +155,9 @@ public class DetailsFragment extends Fragment implements OnClickListener {
 
                         try {
                             String s = arg1.getString("ContentCatalogs");
-                            contentCatalogsList = new Gson().fromJson(s, new TypeToken<List<ContentCatalogs>>() {}.getType());
-                        }catch (Exception e){
+                            contentCatalogsList = new Gson().fromJson(s, new TypeToken<List<ContentCatalogs>>() {
+                            }.getType());
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                         try {
@@ -197,27 +200,27 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                         try {
                             String contentSubscribe = arg1.getString("ContentSubscribe");// 专辑是否已经订阅 == "1" 订阅  == "0" 还没订阅
                             AlbumFragment.setFlag(contentSubscribe);
-                        } catch(Exception e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
-                        try{
-                            String ContentPersons=arg1.getString("ContentPersons");
-                            List<PersonInfo> mPersonInfoList= new Gson().fromJson(ContentPersons, new TypeToken<List<com.woting.ui.home.program.album.model.PersonInfo>>() {
+                        try {
+                            String ContentPersons = arg1.getString("ContentPersons");
+                            List<PersonInfo> mPersonInfoList = new Gson().fromJson(ContentPersons, new TypeToken<List<com.woting.ui.home.program.album.model.PersonInfo>>() {
                             }.getType());
-                            if(mPersonInfoList!=null&&mPersonInfoList.size()>0){
+                            if (mPersonInfoList != null && mPersonInfoList.size() > 0) {
 
-                                if(mPersonInfoList.get(0).getPerId()!=null){
-                                    PersonId=mPersonInfoList.get(0).getPerId();
-                                }else{
-                                    PersonId="";
+                                if (mPersonInfoList.get(0).getPerId() != null) {
+                                    PersonId = mPersonInfoList.get(0).getPerId();
+                                } else {
+                                    PersonId = "";
                                 }
-                            }else{
-                                PersonId="";
+                            } else {
+                                PersonId = "";
                             }
 
                             AlbumFragment.setInfo(contentId, AlbumFragment.ContentImg, AlbumFragment.ContentName, contentDesc);
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 

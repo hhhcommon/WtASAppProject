@@ -53,11 +53,21 @@ public class MineActivity extends FragmentActivity {
                 .add(R.id.fragment_content, frg)
                 .addToBackStack(SequenceUUID.getUUID())
                 .commit();
+        if (context.getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            MainActivity.hideOrShowTab(false);
+        } else {
+            MainActivity.hideOrShowTab(true);
+        }
     }
 
     // 关闭已经打开的 Fragment
     public static void close() {
         context.getSupportFragmentManager().popBackStack();
+        if (context.getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            MainActivity.hideOrShowTab(false);
+        } else {
+            MainActivity.hideOrShowTab(true);
+        }
     }
 
     private long tempTime;

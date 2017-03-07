@@ -466,7 +466,7 @@
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
         <activity
-            android:name=".ui.home.program.album.anchor.activity.AnchorListActivity"
+            android:name=".ui.home.program.album.anchor.activity.AnchorListFragment"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
@@ -543,7 +543,7 @@
 
         <!--主播详情介绍界面-->
         <activity
-            android:name=".ui.home.program.album.anchor.AnchorDetailsActivity"
+            android:name=".ui.home.program.album.anchor.AnchorDetailsFragment"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>

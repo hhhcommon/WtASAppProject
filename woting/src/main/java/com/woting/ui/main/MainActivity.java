@@ -1181,18 +1181,4 @@ public class MainActivity extends TabActivity implements OnClickListener {
         MainActivity.changeTwo();
         DuiJiangActivity.update();
     }
-
-    /**
-     * 隐藏底部 TAB 留一个播放
-     */
-    public static void hideTab() {
-        tabNavigation.setVisibility(View.GONE);
-    }
-
-    /**
-     * 底部 TAB 全部显示
-     */
-    public static void showTab() {
-        tabNavigation.setVisibility(View.VISIBLE);
-    }
 }

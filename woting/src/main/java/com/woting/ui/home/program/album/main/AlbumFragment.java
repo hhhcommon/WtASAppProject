@@ -586,6 +586,7 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
     public void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
+        context = null;
         RadioName = null;
         tv_album_name = null;
         img_album = null;
@@ -607,5 +608,7 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
         imageCursor = null;
         detailsFragment = null;
         programFragment = null;
+
+        Log.e("TAG", "onDestroy album");
     }
 }
