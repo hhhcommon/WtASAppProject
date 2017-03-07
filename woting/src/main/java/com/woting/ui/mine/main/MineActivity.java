@@ -53,19 +53,15 @@ public class MineActivity extends FragmentActivity {
                 .add(R.id.fragment_content, frg)
                 .addToBackStack(SequenceUUID.getUUID())
                 .commit();
-        if (context.getSupportFragmentManager().getBackStackEntryCount() > 1) {
+        if (context.getSupportFragmentManager().getBackStackEntryCount() > 0) {
             MainActivity.hideOrShowTab(false);
-        } else {
-            MainActivity.hideOrShowTab(true);
         }
     }
 
     // 关闭已经打开的 Fragment
     public static void close() {
-        context.getSupportFragmentManager().popBackStack();
-        if (context.getSupportFragmentManager().getBackStackEntryCount() > 1) {
-            MainActivity.hideOrShowTab(false);
-        } else {
+        context.getSupportFragmentManager().popBackStackImmediate();
+        if (context.getSupportFragmentManager().getBackStackEntryCount() == 1) {
             MainActivity.hideOrShowTab(true);
         }
     }
@@ -84,7 +80,7 @@ public class MineActivity extends FragmentActivity {
                 ToastUtils.show_always(this, "再按一次退出");
             }
         } else {
-            super.onBackPressed();
+            close();
         }
     }
 }

@@ -69,18 +69,11 @@ public class HomeActivity extends FragmentActivity {
         if (context.getSupportFragmentManager().getBackStackEntryCount() > 0) {
             MainActivity.hideOrShowTab(false);
         }
-
-        Log.e("TAG", "BackStackEntryCount open2 -- > > " + context.getSupportFragmentManager().getBackStackEntryCount());
     }
 
     // 关闭已经打开的 Fragment
     public static void close() {
-        Log.e("TAG", "BackStackEntryCount close1 -- > > " + context.getSupportFragmentManager().getBackStackEntryCount());
-
         context.getSupportFragmentManager().popBackStackImmediate();// 立即删除回退栈中的数据
-
-        Log.e("TAG", "BackStackEntryCount close2 -- > > " + context.getSupportFragmentManager().getBackStackEntryCount());
-
         if (context.getSupportFragmentManager().getBackStackEntryCount() == 1) {
             MainActivity.hideOrShowTab(true);
         }
@@ -101,7 +94,5 @@ public class HomeActivity extends FragmentActivity {
         } else {
             close();
         }
-
-        Log.e("TAG", "BackStackEntryCount onBackPressed -- > > " + context.getSupportFragmentManager().getBackStackEntryCount());
     }
 }

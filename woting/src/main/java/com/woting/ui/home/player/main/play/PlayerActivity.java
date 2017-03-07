@@ -50,20 +50,16 @@ public class PlayerActivity extends FragmentActivity {
         context.getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_content, frg)
                 .addToBackStack(SequenceUUID.getUUID())
-                .commit();
-        if (context.getSupportFragmentManager().getBackStackEntryCount() > 1) {
+                .commitAllowingStateLoss();
+        if (context.getSupportFragmentManager().getBackStackEntryCount() > 0) {
             MainActivity.hideOrShowTab(false);
-        } else {
-            MainActivity.hideOrShowTab(true);
         }
     }
 
     // 关闭已经打开的 Fragment
     public static void close() {
-        context.getSupportFragmentManager().popBackStack();
-        if (context.getSupportFragmentManager().getBackStackEntryCount() > 1) {
-            MainActivity.hideOrShowTab(false);
-        } else {
+        context.getSupportFragmentManager().popBackStackImmediate();
+        if (context.getSupportFragmentManager().getBackStackEntryCount() == 1) {
             MainActivity.hideOrShowTab(true);
         }
     }
@@ -82,7 +78,7 @@ public class PlayerActivity extends FragmentActivity {
                 ToastUtils.show_always(context, "再按一次退出");
             }
         } else {
-            super.onBackPressed();
+            close();
         }
     }
 }
