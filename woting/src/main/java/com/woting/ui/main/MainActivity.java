@@ -767,8 +767,10 @@ public class MainActivity extends TabActivity implements OnClickListener {
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+        hideOrShowTab(true);
     }
 
+    // 享听
     private static void setViewOne() {
         tabHost.setCurrentTabByTag("one");
         image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
@@ -777,6 +779,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
     }
 
+    // 享讲
     private static void setViewTwo() {
         tabHost.setCurrentTabByTag("two");
         image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
@@ -785,6 +788,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
     }
 
+    // 我的
     private void setViewFive() {
         tabHost.setCurrentTabByTag("five");
         image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
