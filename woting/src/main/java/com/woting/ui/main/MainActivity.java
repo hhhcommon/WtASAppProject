@@ -729,14 +729,17 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 .setContent(new Intent(this, MineActivity.class)));
     }
 
+    // 切换到播放界面
     public static void change() {
         setViewZero();
     }
 
+    // 切换到通讯录界面
     public static void changeTwo() {
         setViewTwo();
     }
 
+    // 隐藏或显示 TAB
     public static void hideOrShowTab(boolean isVisible) {
         if (isVisible) tabNavigation.setVisibility(View.VISIBLE);
         else tabNavigation.setVisibility(View.GONE);
@@ -748,13 +751,13 @@ public class MainActivity extends TabActivity implements OnClickListener {
             case R.id.main_lin_0:// 播放
                 setViewZero();
                 break;
-            case R.id.main_lin_1:
+            case R.id.main_lin_1:// 享听
                 setViewOne();
                 break;
-            case R.id.main_lin_2:
+            case R.id.main_lin_2:// 享讲
                 setViewTwo();
                 break;
-            case R.id.main_lin_5:
+            case R.id.main_lin_5:// 我的
                 setViewFive();
                 break;
         }
