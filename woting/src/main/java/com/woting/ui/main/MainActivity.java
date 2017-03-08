@@ -26,6 +26,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.baidu.cyberplayer.core.BVideoView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.iflytek.cloud.SpeechConstant;
@@ -128,6 +129,13 @@ public class MainActivity extends TabActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wt_main);
+
+        BVideoView videoView = (BVideoView) findViewById(R.id.video_view);
+        videoView.setVideoPath(null);
+        videoView.start();
+        videoView.stopPlayback();
+        videoView.setVisibility(View.GONE);
+
         context = this;
         new Handler().postDelayed(new Runnable() {
             @Override

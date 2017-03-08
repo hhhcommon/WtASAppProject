@@ -4,6 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <com.baidu.cyberplayer.core.BVideoView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"/>
+
     <TabHost
         android:id="@android:id/tabhost"
         android:layout_width="match_parent"
