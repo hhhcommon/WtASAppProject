@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -133,6 +134,8 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
 
             @Override
             protected void requestSuccess(JSONObject result) {
+                long a = System.currentTimeMillis();
+                Log.e("返回值时间2", "--- > > >  " +a);
                 ((RadioListActivity) getActivity()).closeDialog();
                 if (dialog != null) dialog.dismiss();
                 if (((RadioListActivity) getActivity()).isCancel()) return;

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -121,6 +122,8 @@ public class RadioListActivity extends AppBaseFragmentActivity implements OnClic
 
             @Override
             protected void requestSuccess(JSONObject result) {
+                long a = System.currentTimeMillis();
+                Log.e("返回值时间1", "--- > > >  " +a);
                 tipView.setVisibility(View.GONE);
                 try {
                     ReturnType = result.getString("ReturnType");

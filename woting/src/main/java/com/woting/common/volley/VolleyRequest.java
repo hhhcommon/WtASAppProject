@@ -57,6 +57,8 @@ public class VolleyRequest {
         jsonObjectRequest.setTag(tag);// 设置标签
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(GlobalConfig.HTTP_CONNECTION_TIMEOUT, 1, 1.0f));
         BSApplication.getHttpQueues().add(jsonObjectRequest);// 加入队列
+        long a = System.currentTimeMillis();
+        Log.e("请求服务器时间", "--- > > >  " +a);
 
         Log.i("请求服务器地址", "--- > > >  " + GlobalConfig.baseUrl + url);
         Log.v("请求服务器提交的参数", "--- > > >  " + jsonObject.toString());
