@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
+import com.woting.ui.home.player.main.play.PlayerFragment;
 import com.woting.common.constant.BroadcastConstants;
 
 import java.text.SimpleDateFormat;

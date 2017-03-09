@@ -29,10 +29,9 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
+import com.woting.ui.home.player.main.play.PlayerFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.main.MainActivity;
 import com.woting.ui.mine.myupload.MyUploadActivity;
@@ -228,7 +227,6 @@ public class MyUploadSoundFragment extends Fragment implements AdapterView.OnIte
 
                 if (PlayerFragment.context != null) {
                     MainActivity.change();
-                    HomeActivity.UpdateViewPager();
                     Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                     Bundle bundle1 = new Bundle();
                     bundle1.putString("text", newList.get(position).getContentName());
@@ -241,7 +239,6 @@ public class MyUploadSoundFragment extends Fragment implements AdapterView.OnIte
                     et.putString(StringConstant.PLAYHISTORYENTERNEWS, newList.get(position).getContentName());
                     if (!et.commit()) Log.w("commit", "数据 commit 失败!");
                     MainActivity.change();
-                    HomeActivity.UpdateViewPager();
                     getActivity().finish();
                 }
             }

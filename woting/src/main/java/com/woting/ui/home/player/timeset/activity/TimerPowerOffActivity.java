@@ -15,7 +15,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
+import com.woting.ui.home.player.main.play.PlayerFragment;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
 
 /**

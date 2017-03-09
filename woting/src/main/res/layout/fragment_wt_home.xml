@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,8 +13,10 @@
         android:visibility="gone"/>
 
     <RelativeLayout
+        android:id="@+id/view_title"
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="48dp"
+        android:layout_below="@id/tv_main">
 
         <LinearLayout
             android:id="@+id/lin_news"
@@ -36,9 +38,8 @@
             android:layout_centerInParent="true">
 
             <LinearLayout
-                android:layout_width="81dp"
+                android:layout_width="70dp"
                 android:layout_height="28dp"
-                android:layout_marginRight="8dp"
                 android:gravity="center">
 
                 <TextView
@@ -47,14 +48,14 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/color_wt_circle_home_white"
                     android:gravity="center"
-                    android:text="播 放"
+                    android:text="推 荐"
                     android:textColor="@color/dinglan_orange"
                     android:textSize="15sp"/>
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="81dp"
+                android:layout_width="70dp"
                 android:layout_height="28dp"
                 android:layout_marginLeft="8dp"
                 android:gravity="center">
@@ -65,7 +66,25 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/color_wt_circle_orange"
                     android:gravity="center"
-                    android:text="节 目"
+                    android:text="电 台"
+                    android:textColor="@color/WHITE"
+                    android:textSize="15sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="70dp"
+                android:layout_height="28dp"
+                android:layout_marginLeft="8dp"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_guid3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/color_wt_circle_orange"
+                    android:gravity="center"
+                    android:text="分 类"
                     android:textColor="@color/WHITE"
                     android:textSize="15sp"/>
 
@@ -95,6 +114,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/WHITE"
+        android:layout_below="@id/view_title"
         android:persistentDrawingCache="animation"/>
 
-</LinearLayout>
+</RelativeLayout>

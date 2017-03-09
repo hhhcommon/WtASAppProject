@@ -32,7 +32,7 @@ import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
-import com.woting.ui.home.program.album.activity.AlbumActivity;
+import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.home.program.radiolist.rollviewpager.RollPagerView;
 import com.woting.ui.home.program.radiolist.rollviewpager.adapter.LoopPagerAdapter;
@@ -299,19 +299,20 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                                 ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
                         dbDao.deleteHistory(playerurl);
                         dbDao.addHistory(history);
-                        HomeActivity.UpdateViewPager();
+
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
                         bundle1.putString("text", newList.get(position - 2).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
                     } else if (MediaType.equals("SEQU")) {
-                        Intent intent = new Intent(context, AlbumActivity.class);
+                        AlbumFragment fragment = new AlbumFragment();
                         Bundle bundle = new Bundle();
+                        bundle.putInt("fromType", 2);
                         bundle.putString("type", "recommend");
                         bundle.putSerializable("list", newList.get(position - 2));
-                        intent.putExtras(bundle);
-                        startActivity(intent);
+                        fragment.setArguments(bundle);
+                        HomeActivity.open(fragment);
                     } else {
                         ToastUtils.show_short(context, "暂不支持的Type类型");
                     }

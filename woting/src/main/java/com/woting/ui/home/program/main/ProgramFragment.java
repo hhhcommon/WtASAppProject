@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.woting.R;
 import com.woting.common.util.PhoneMessage;
 import com.woting.ui.baseadapter.MyFragmentChildPagerAdapter;
-import com.woting.ui.home.program.diantai.fragment.OnLineFragment;
+import com.woting.ui.home.program.diantai.main.OnLineFragment;
 import com.woting.ui.home.program.fenlei.fragment.FenLeiFragment;
 import com.woting.ui.home.program.tuijian.fragment.RecommendFragment;
 

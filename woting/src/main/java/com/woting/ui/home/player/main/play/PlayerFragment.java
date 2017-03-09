@@ -1,5 +1,6 @@
-package com.woting.ui.home.player.main.fragment;
+package com.woting.ui.home.player.main.play;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,8 +12,8 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -74,10 +75,10 @@ import com.woting.ui.home.player.main.model.ShareModel;
 import com.woting.ui.home.player.programme.ProgrammeActivity;
 import com.woting.ui.home.player.timeset.activity.TimerPowerOffActivity;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
-import com.woting.ui.home.program.album.activity.AlbumActivity;
+import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.album.model.ContentInfo;
 import com.woting.ui.home.program.comment.CommentActivity;
-import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
+import com.woting.ui.mine.playhistory.main.PlayHistoryFragment;
 import com.woting.video.IntegrationPlayer;
 import com.woting.video.VoiceRecognizer;
 
@@ -97,7 +98,7 @@ import java.util.TimerTask;
  */
 public class PlayerFragment extends Fragment implements View.OnClickListener, XListView.IXListViewListener, AdapterView.OnItemClickListener {
 
-    public static FragmentActivity context;
+    public static Context context;
     public static int timerService;// 当前节目播放剩余时间长度
     public static boolean isCurrentPlay;
 
@@ -114,7 +115,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private Dialog dialog;// 加载数据对话框
     private Dialog wifiDialog;// WIFI 提醒对话框
     private Dialog shareDialog;// 分享对话框
-    private View rootView;
 
     private MarqueeTextView mPlayAudioTitleName;// 正在播放的节目的标题
     private View mViewVoice;// 语音搜索 点击右上角"语音"显示
@@ -143,6 +143,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private TextView mProgramSources;// 来源
     private TextView mProgramTextDescn;// 节目介绍
 
+    private View rootView;
     private XListView mListView;// 播放列表
 
     private long totalTime;// 播放总长度
@@ -212,15 +213,18 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
+
         setReceiver();// 注册广播接收器
         initData();// 初始化数据
         initTimerTask(); // 定时获取节目单的方法
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_play, container, false);
+
             View headView = LayoutInflater.from(context).inflate(R.layout.headview_fragment_play, null);
             initView(headView);// 设置界面
             initEvent(headView);// 设置控件点击事件
@@ -329,7 +333,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         rootView.findViewById(R.id.tv_ly_qx).setOnClickListener(this);// 取消 点击隐藏更多
 
         rootView.findViewById(R.id.tv_cancel).setOnClickListener(this);// 取消  点击关闭语音搜索
-        rootView.findViewById(R.id.view__voice_other).setOnClickListener(this);// 点击隐藏语音搜索
+        rootView.findViewById(R.id.view_voice_other).setOnClickListener(this);// 点击隐藏语音搜索
         mVoiceImageSpeak.setOnTouchListener(new MyVoiceSpeakTouchLis());
         mVoiceImageSpeak.setImageBitmap(bmp);
         // -----------------  RootView 相关控件设置监听 END  ----------------
@@ -415,7 +419,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             case R.id.lin_voicesearch:// 语音搜索框
                 linChoseOpen(mViewVoice);
                 break;
-            case R.id.view__voice_other:
+            case R.id.view_voice_other:
                 linChoseClose(mViewVoice);
                 if (mCloseVoiceRunnable != null) {
                     mUIHandler.removeCallbacks(mCloseVoiceRunnable);
@@ -478,7 +482,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 break;
             case R.id.lin_ly_history:// 播放历史
                 linChoseClose(mViewMoreChose);
-                startActivity(new Intent(context, PlayHistoryActivity.class));
+                startActivity(new Intent(context, PlayHistoryFragment.class));
                 break;
             case R.id.tv_programme:// 节目单
                 Intent p = new Intent(context, ProgrammeActivity.class);
@@ -497,12 +501,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 if (GlobalConfig.playerObject == null) return;
                 linChoseClose(mViewMoreChose);
                 if (GlobalConfig.playerObject.getSequId() != null) {
-                    Intent intent = new Intent(context, AlbumActivity.class);
-                    intent.putExtra("type", "player");
+                    AlbumFragment fragment = new AlbumFragment();
                     Bundle bundle = new Bundle();
+                    bundle.putInt("fromType", 1);
+                    bundle.putString("type", "player");
                     bundle.putSerializable("list", GlobalConfig.playerObject);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                    fragment.setArguments(bundle);
+                    PlayerActivity.open(fragment);
                 } else {
                     ToastUtils.show_always(context, "本节目没有所属专辑");
                 }
@@ -577,8 +582,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     addDb(GlobalConfig.playerObject);// 将播放对象加入数据库
                     break;
                 case BroadcastConstants.UPDATE_PLAY_CURRENT_TIME:// 更新当前播放时间
-                    if (!isVisible()) return ;// 不可见时不更新
-
                     // 缓存进度
                     if (mediaType != null && mediaType.equals(StringConstant.TYPE_AUDIO)) {
                         long secondProgress = intent.getLongExtra(StringConstant.PLAY_SECOND_PROGRESS, 0);
@@ -1039,14 +1042,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (null != rootView) {
-            ((ViewGroup) rootView.getParent()).removeView(rootView);
-        }
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         if (mVoiceRecognizer != null) {
@@ -1175,7 +1170,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         shareDialog.setContentView(dialogView);
         Window window = shareDialog.getWindow();
         DisplayMetrics dm = new DisplayMetrics();
-        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        ((Activity)context).getWindowManager().getDefaultDisplay().getMetrics(dm);
         int screenWidth = dm.widthPixels;
         ViewGroup.LayoutParams params = dialogView.getLayoutParams();
         params.width = screenWidth;
@@ -1225,7 +1220,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             if (shareUrl == null || shareUrl.equals("")) {
                 shareUrl = "http://www.wotingfm.com/";
             }
-            new ShareAction(context).setPlatform(Platform).withMedia(image).withText(shareDesc).withTitle(shareName).withTargetUrl(shareUrl).share();
+            new ShareAction((Activity) context).setPlatform(Platform).withMedia(image).withText(shareDesc).withTitle(shareName).withTargetUrl(shareUrl).share();
         }
     }
 

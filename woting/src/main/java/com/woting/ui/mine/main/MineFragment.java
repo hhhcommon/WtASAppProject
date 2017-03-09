@@ -1,4 +1,4 @@
-package com.woting.ui.mine;
+package com.woting.ui.mine.main;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -20,12 +19,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,7 +33,6 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
-import com.umeng.analytics.MobclickAgent;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
@@ -41,7 +40,6 @@ import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.http.MyHttp;
 import com.woting.common.manager.FileManager;
-import com.woting.common.service.SocketService;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
@@ -51,22 +49,20 @@ import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.photocut.PhotoCutActivity;
 import com.woting.ui.common.qrcodes.EWMShowActivity;
 import com.woting.ui.interphone.model.UserInviteMeInside;
-import com.woting.ui.main.MainActivity;
-import com.woting.ui.mine.favorite.activity.FavoriteActivity;
+import com.woting.ui.mine.favorite.main.FavoriteFragment;
 import com.woting.ui.mine.hardware.HardwareIntroduceActivity;
 import com.woting.ui.mine.model.UserPortaitInside;
 import com.woting.ui.mine.myupload.MyUploadActivity;
 import com.woting.ui.mine.person.updatepersonnews.UpdatePersonActivity;
 import com.woting.ui.mine.person.updatepersonnews.model.UpdatePerson;
-import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
+import com.woting.ui.mine.playhistory.main.PlayHistoryFragment;
 import com.woting.ui.mine.set.SetActivity;
 import com.woting.ui.mine.shapeapp.ShapeAppActivity;
-import com.woting.ui.mine.subscriber.activity.SubscriberListActivity;
+import com.woting.ui.mine.subscriber.activity.SubscriberListFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,11 +72,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 个人信息主页
- * 作者：xinlong on 2016/11/6 21:18
- * 邮箱：645700751@qq.com
+ * Mine
+ * Created by Administrator on 2017/3/6.
  */
-public class MineActivity extends BaseActivity implements OnClickListener {
+public class MineFragment extends Fragment implements View.OnClickListener {
+    private FragmentActivity context;
     private SharedPreferences sharedPreferences = BSApplication.SharedPreferences;
     private UpdatePerson pModel;
 
@@ -104,6 +100,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     private String region;
     private String regionId;
 
+    private View rootView;
     private Dialog dialog;
     private Dialog imageDialog;
     private View linStatusNoLogin;              // 没有登录时的状态
@@ -131,11 +128,20 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_person);
-        imageDialog();
-        setView();
-        setType();
-        setReceiver();
+        context = getActivity();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.activity_person, container, false);
+
+            imageDialog();
+            setView();
+            setReceiver();
+        }
+        return rootView;
     }
 
     // 设置广播接收器
@@ -144,7 +150,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             Receiver = new MessageReceiver();
             IntentFilter filter = new IntentFilter();
             filter.addAction(BroadcastConstants.PUSH_ALLURL_CHANGE);
-            registerReceiver(Receiver, filter);
+            context.registerReceiver(Receiver, filter);
         }
     }
 
@@ -156,21 +162,6 @@ public class MineActivity extends BaseActivity implements OnClickListener {
             if (action.equals(BroadcastConstants.PUSH_ALLURL_CHANGE)) {
                 initLoginStates();
             }
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    private void setType() {
-        String a = android.os.Build.VERSION.RELEASE;
-        Log.e("系统版本号", a + "");
-        Log.e("系统版本号截取", a.substring(0, a.indexOf(".")) + "");
-        boolean v = false;
-        if (Integer.parseInt(a.substring(0, a.indexOf("."))) >= 5) {
-            v = true;
-        }
-        if (v) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        // 透明状态栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    // 透明导航栏
         }
     }
 
@@ -190,46 +181,46 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     private void setView() {
         Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.img_person_background);
 
-        findViewById(R.id.imageView_ewm).setOnClickListener(this);          // 二维码
-        findViewById(R.id.lin_xiugai).setOnClickListener(this);             // 修改个人资料
-        findViewById(R.id.text_denglu).setOnClickListener(this);            // 点击登录
-        findViewById(R.id.image_nodenglu).setOnClickListener(this);         // 没有登录时的头像
-        findViewById(R.id.lin_playhistory).setOnClickListener(this);        // 播放历史
-        findViewById(R.id.lin_liuliang).setOnClickListener(this);           // 流量提醒
-        findViewById(R.id.lin_hardware).setOnClickListener(this);           // 智能硬件
-        findViewById(R.id.lin_app).setOnClickListener(this);                // 应用分享
-        findViewById(R.id.lin_set).setOnClickListener(this);                // 设置
+        rootView.findViewById(R.id.imageView_ewm).setOnClickListener(this);          // 二维码
+        rootView.findViewById(R.id.lin_xiugai).setOnClickListener(this);             // 修改个人资料
+        rootView.findViewById(R.id.text_denglu).setOnClickListener(this);            // 点击登录
+        rootView.findViewById(R.id.image_nodenglu).setOnClickListener(this);         // 没有登录时的头像
+        rootView.findViewById(R.id.lin_playhistory).setOnClickListener(this);        // 播放历史
+        rootView.findViewById(R.id.lin_liuliang).setOnClickListener(this);           // 流量提醒
+        rootView.findViewById(R.id.lin_hardware).setOnClickListener(this);           // 智能硬件
+        rootView.findViewById(R.id.lin_app).setOnClickListener(this);                // 应用分享
+        rootView.findViewById(R.id.lin_set).setOnClickListener(this);                // 设置
 
-        linStatusNoLogin = findViewById(R.id.lin_status_nodenglu);          // 未登录时的状态
-        ImageView lin_image_0 = (ImageView) findViewById(R.id.lin_image_0); // 未登录时的背景图片
+        linStatusNoLogin = rootView.findViewById(R.id.lin_status_nodenglu);          // 未登录时的状态
+        ImageView lin_image_0 = (ImageView) rootView.findViewById(R.id.lin_image_0); // 未登录时的背景图片
         lin_image_0.setImageBitmap(bmp);
 
-        linStatusLogin = findViewById(R.id.lin_status_denglu);              // 登录时的状态
-        imageToggle = (ImageView) findViewById(R.id.wt_img_toggle);         // 流量提醒开关
-        textUserName = (TextView) findViewById(R.id.tv_username);           // 用户名
-        ImageView lin_image = (ImageView) findViewById(R.id.lin_image);     // 登录时的背景图片
+        linStatusLogin = rootView.findViewById(R.id.lin_status_denglu);              // 登录时的状态
+        imageToggle = (ImageView) rootView.findViewById(R.id.wt_img_toggle);         // 流量提醒开关
+        textUserName = (TextView) rootView.findViewById(R.id.tv_username);           // 用户名
+        ImageView lin_image = (ImageView) rootView.findViewById(R.id.lin_image);     // 登录时的背景图片
         lin_image.setImageBitmap(bmp);
 
-        imageHead = (ImageView) findViewById(R.id.image_touxiang);          // 登录后的头像
+        imageHead = (ImageView) rootView.findViewById(R.id.image_touxiang);          // 登录后的头像
         imageHead.setOnClickListener(this);
 
-        linLike = findViewById(R.id.lin_like);                              // like
+        linLike = rootView.findViewById(R.id.lin_like);                              // like
         linLike.setOnClickListener(this);
 
-        linAnchor = findViewById(R.id.lin_anchor);                          // 我的主播
+        linAnchor = rootView.findViewById(R.id.lin_anchor);                          // 我的主播
         linAnchor.setOnClickListener(this);
 
-        linSubscribe = findViewById(R.id.lin_subscribe);                    // 我的订阅
+        linSubscribe = rootView.findViewById(R.id.lin_subscribe);                    // 我的订阅
         linSubscribe.setOnClickListener(this);
 
-        linAlbum = findViewById(R.id.lin_album);                            // 我的专辑
+        linAlbum = rootView.findViewById(R.id.lin_album);                            // 我的专辑
         linAlbum.setOnClickListener(this);
 
-        textUserArea = (TextView) findViewById(R.id.text_user_area);        // 用户信息
-        textUserId = (TextView) findViewById(R.id.text_user_id);            // 显示用户 ID
-        textUserAutograph = (TextView) findViewById(R.id.text_user_autograph);// 用户签名
-        circleView = findViewById(R.id.circle_view);
-        viewLine = findViewById(R.id.view_line);
+        textUserArea = (TextView) rootView.findViewById(R.id.text_user_area);        // 用户信息
+        textUserId = (TextView) rootView.findViewById(R.id.text_user_id);            // 显示用户 ID
+        textUserAutograph = (TextView) rootView.findViewById(R.id.text_user_autograph);// 用户签名
+        circleView = rootView.findViewById(R.id.circle_view);
+        viewLine = rootView.findViewById(R.id.view_line);
     }
 
     @Override
@@ -241,14 +232,14 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                 startActivityForResult(intentSet, 0x222);
                 break;
             case R.id.lin_playhistory:      // 播放历史
-                startActivity(new Intent(context, PlayHistoryActivity.class));
+                MineActivity.open(new PlayHistoryFragment());
                 break;
             case R.id.text_denglu:          // 登陆
                 startActivity(new Intent(context, LoginActivity.class));
                 break;
             case R.id.lin_liuliang:         // 流量提示
                 String wifiSet = sharedPreferences.getString(StringConstant.WIFISET, "true");
-                Editor et = sharedPreferences.edit();
+                SharedPreferences.Editor et = sharedPreferences.edit();
                 if (wifiSet.equals("true")) {
                     Bitmap bitmap = BitmapUtils.readBitMap(context, R.mipmap.wt_person_close);
                     imageToggle.setImageBitmap(bitmap);
@@ -281,13 +272,13 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.lin_like:             // 我喜欢的
-                startActivity(new Intent(context, FavoriteActivity.class));
+                MineActivity.open(new FavoriteFragment());
                 break;
             case R.id.lin_anchor:           // 我的主播  我关注的主播
                 ToastUtils.show_always(context, "我的主播!");
                 break;
             case R.id.lin_subscribe:        // 我的订阅
-                startActivity(new Intent(this, SubscriberListActivity.class));
+                MineActivity.open(new SubscriberListFragment());
                 break;
             case R.id.lin_album:            // 我的专辑  我上传的专辑
                 startActivity(new Intent(context, MyUploadActivity.class));
@@ -316,7 +307,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         initLoginStates();
     }
@@ -441,7 +432,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case TO_GALLERY:                // 照片的原始资源地址
-                if (resultCode == RESULT_OK) {
+                if (resultCode == -1) {
                     Uri uri = data.getData();
                     Log.e("URI:", uri.toString());
                     int sdkVersion = Integer.valueOf(Build.VERSION.SDK);
@@ -479,7 +470,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                     sendUpdate(pModel);
                 }
             case 0x222:// 其它设置界面返回
-                if (resultCode == RESULT_OK) {
+                if (resultCode == -1) {
                     userNum = sharedPreferences.getString(StringConstant.USER_NUM, "");// 用户号
                     if (!userNum.equals("")) {
                         circleView.setVisibility(View.VISIBLE);
@@ -507,7 +498,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                 super.handleMessage(msg);
                 if (msg.what == 1) {
                     ToastUtils.show_always(context, "保存成功");
-                    Editor et = sharedPreferences.edit();
+                    SharedPreferences.Editor et = sharedPreferences.edit();
                     String imageUrl;
                     if (miniUri.startsWith("http:")) {
                         imageUrl = miniUri;
@@ -549,12 +540,12 @@ public class MineActivity extends BaseActivity implements OnClickListener {
                             + "&PCDType="
                             + GlobalConfig.PCDType
                             + "&UserId="
-                            + CommonUtils.getUserId(getApplicationContext())
+                            + CommonUtils.getUserId(context)
                             + "&IMEI=" + PhoneMessage.imei);
                     Log.e("图片上传数据", TestURI
                             + ExtName
                             + "&UserId="
-                            + CommonUtils.getUserId(getApplicationContext())
+                            + CommonUtils.getUserId(context)
                             + "&IMEI=" + PhoneMessage.imei);
                     Log.e("图片上传结果", Response);
                     Gson gson = new Gson();
@@ -606,7 +597,7 @@ public class MineActivity extends BaseActivity implements OnClickListener {
         String[] proj = {MediaStore.Images.Media.DATA};
 
         // 好像是 android 多媒体数据库的封装接口，具体的看 Android 文档
-        Cursor cursor = getContentResolver().query(uri, proj, null, null, null);
+        Cursor cursor = context.getContentResolver().query(uri, proj, null, null, null);
 
         // 获得用户选择的图片的索引值
         int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -728,31 +719,6 @@ public class MineActivity extends BaseActivity implements OnClickListener {
      */
     public static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
-    }
-
-    /**
-     * 与 onBackPress 同理 手机实体返回按键的处理
-     */
-    long waitTime = 2000;
-    long touchTime = 0;
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN && KeyEvent.KEYCODE_BACK == keyCode) {
-            long currentTime = System.currentTimeMillis();
-            if ((currentTime - touchTime) >= waitTime) {
-                ToastUtils.show_always(context, "再按一次退出");
-                touchTime = currentTime;
-            } else {
-                SocketService.workStop(false);
-                MainActivity.stop();
-                MobclickAgent.onKillProcess(this);
-                finish();
-                android.os.Process.killProcess(android.os.Process.myPid());
-            }
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
     }
 
     String nickName;
@@ -923,10 +889,10 @@ public class MineActivity extends BaseActivity implements OnClickListener {
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         if (Receiver != null) {
-            unregisterReceiver(Receiver);
+            context.unregisterReceiver(Receiver);
             Receiver = null;
         }
         isCancelRequest = VolleyRequest.cancelRequest(tag);

@@ -33,8 +33,8 @@ import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
-import com.woting.ui.home.program.album.activity.AlbumActivity;
-import com.woting.ui.home.program.radiolist.activity.RadioListActivity;
+import com.woting.ui.home.program.album.main.AlbumFragment;
+import com.woting.ui.home.program.radiolist.main.RadioListFragment;
 import com.woting.ui.home.program.radiolist.adapter.ListInfoAdapter;
 import com.woting.ui.home.program.radiolist.mode.ListInfo;
 import com.woting.ui.home.program.radiolist.rollviewpager.RollPagerView;
@@ -146,7 +146,7 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
 
     // 请求网络获取分类信息
     private void sendRequest() {
-        VolleyRequest.requestPost(GlobalConfig.getContentUrl, RadioListActivity.tag, setParam(), new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.getContentUrl, RadioListFragment.tag, setParam(), new VolleyCallback() {
             private String ReturnType;
 
             @Override
@@ -154,7 +154,7 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                 long a = System.currentTimeMillis();
                 Log.e("返回值时间3", "--- > > >  " +a);
                 if (dialog != null) dialog.dismiss();
-                if (((RadioListActivity) getActivity()).isCancel()) return;
+                if (RadioListFragment.isCancelRequest) return;
                 page++;
                 try {
                     ReturnType = result.getString("ReturnType");
@@ -280,7 +280,6 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                                 ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
-                        HomeActivity.UpdateViewPager();
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
                         bundle1.putString("text", newList.get(position - 2).getContentName());
@@ -288,12 +287,13 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                         context.sendBroadcast(push);
                         getActivity().finish();
                     } else if (MediaType.equals("SEQU")) {
-                        Intent intent = new Intent(context, AlbumActivity.class);
+                        AlbumFragment fragment = new AlbumFragment();
                         Bundle bundle = new Bundle();
+                        bundle.putInt("fromType", 2);
                         bundle.putString("type", "radiolistactivity");
                         bundle.putSerializable("list", newList.get(position - 2));
-                        intent.putExtras(bundle);
-                        startActivityForResult(intent, 1);
+                        fragment.setArguments(bundle);
+                        HomeActivity.open(fragment);
                     } else {
                         ToastUtils.show_short(context, "暂不支持的Type类型");
                     }

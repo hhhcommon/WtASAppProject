@@ -1,16 +1,19 @@
-package com.woting.ui.home.program.citylist.activity;
+package com.woting.ui.home.program.citylist.main;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
@@ -22,17 +25,18 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
+import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.model.Catalog;
 import com.woting.ui.home.model.CatalogName;
 import com.woting.ui.home.program.citylist.adapter.CityListAdapter;
-import com.woting.ui.home.program.diantai.activity.CityRadioActivity;
+import com.woting.ui.home.program.diantai.fragment.CityRadioFragment;
 import com.woting.ui.interphone.linkman.view.CharacterParser;
 import com.woting.ui.interphone.linkman.view.PinyinComparator_d;
 import com.woting.ui.interphone.linkman.view.SideBar;
@@ -50,7 +54,8 @@ import java.util.List;
  * @author 辛龙
  * 2016年4月7日
  */
-public class CityListActivity extends AppBaseActivity implements OnClickListener, TipView.WhiteViewClick {
+public class CityListFragment extends Fragment implements OnClickListener, TipView.WhiteViewClick {
+    private Context context;
     private CharacterParser characterParser;
     private PinyinComparator_d pinyinComparator;
     private Dialog dialog;
@@ -66,6 +71,7 @@ public class CityListActivity extends AppBaseActivity implements OnClickListener
     private boolean isCancelRequest;
     private String type;
 
+    private View rootView;
     private TipView tipView;// 出错、没有数据、没有网络提示
     private TipView tipSearchNull;// 搜索为空
 
@@ -81,48 +87,61 @@ public class CityListActivity extends AppBaseActivity implements OnClickListener
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_citylists);
-        type = getIntent().getStringExtra("type");
+        context = getActivity();
+
+        Bundle bundle = getArguments();
+        type = bundle.getString("type");
         characterParser = CharacterParser.getInstance();// 实例化汉字转拼音类
         pinyinComparator = new PinyinComparator_d();
-        setView();
-        setListener();
-        if (GlobalConfig.CityCatalogList != null && GlobalConfig.CityCatalogList.size() > 0) {
-            srcList = GlobalConfig.CityCatalogList;
-            handleCityList(srcList);
-        } else {
-            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                dialog = DialogUtils.Dialogph(context, "正在获取信息");
-                sendRequest();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.activity_citylists, container, false);
+            rootView.setOnClickListener(this);
+
+            setView();
+            setListener();
+            if (GlobalConfig.CityCatalogList != null && GlobalConfig.CityCatalogList.size() > 0) {
+                srcList = GlobalConfig.CityCatalogList;
+                handleCityList(srcList);
             } else {
-                tipView.setVisibility(View.VISIBLE);
-                tipView.setTipView(TipView.TipStatus.NO_NET);
+                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                    dialog = DialogUtils.Dialogph(context, "正在获取信息");
+                    sendRequest();
+                } else {
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.NO_NET);
+                }
             }
         }
+        return rootView;
     }
 
     private void setView() {
-        sideBar = (SideBar) findViewById(R.id.sidrbar);
-        dialogs = (TextView) findViewById(R.id.dialog);
+        sideBar = (SideBar) rootView.findViewById(R.id.sidrbar);
+        dialogs = (TextView) rootView.findViewById(R.id.dialog);
         sideBar.setTextView(dialogs);
-        listView = (ListView) findViewById(R.id.country_lvcountry);
-        et_Search_content = (EditText) findViewById(R.id.et_search);
-        image_clear = (ImageView) findViewById(R.id.image_clear);
+        listView = (ListView) rootView.findViewById(R.id.country_lvcountry);
+        et_Search_content = (EditText) rootView.findViewById(R.id.et_search);
+        image_clear = (ImageView) rootView.findViewById(R.id.image_clear);
 
-        tipView = (TipView) findViewById(R.id.tip_view);
+        tipView = (TipView) rootView.findViewById(R.id.tip_view);
         tipView.setWhiteClick(this);
 
-        tipSearchNull = (TipView) findViewById(R.id.tip_search_null);
+        tipSearchNull = (TipView) rootView.findViewById(R.id.tip_search_null);
         tipSearchNull.setTipView(TipView.TipStatus.NO_DATA, "没有找到该城市\n换个城市再试一次吧");
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.head_left_btn:
-                finish();
+            case R.id.head_left_btn:// 返回
+                HomeActivity.close();
                 break;
             case R.id.image_clear:
                 image_clear.setVisibility(View.INVISIBLE);
@@ -214,7 +233,7 @@ public class CityListActivity extends AppBaseActivity implements OnClickListener
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (type != null && !type.trim().equals("") && type.equals("address")) {
-                    SharedPreferences sp = getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
+                    SharedPreferences sp = BSApplication.SharedPreferences;
                     Editor et = sp.edit();
                     et.putString(StringConstant.CITYTYPE, "true");
                     if (userList.get(position).getCatalogId() != null && !userList.get(position).getCatalogId().equals("")) {
@@ -226,17 +245,15 @@ public class CityListActivity extends AppBaseActivity implements OnClickListener
                         GlobalConfig.CityName = userList.get(position).getCatalogName();
                     }
                     et.commit();
-                    finish();
                 } else {
-                    Intent intent = new Intent(context, CityRadioActivity.class);
+                    CityRadioFragment fragment = new CityRadioFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("fromtype", "city");
                     bundle.putString("name", userList.get(position).getCatalogName());
                     bundle.putString("type", "2");
                     bundle.putString("id", userList.get(position).getCatalogId());
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                    finish();
+                    fragment.setArguments(bundle);
+                    HomeActivity.open(fragment);
                 }
             }
         });
@@ -255,7 +272,7 @@ public class CityListActivity extends AppBaseActivity implements OnClickListener
     }
 
     private void setListener() {
-        findViewById(R.id.head_left_btn).setOnClickListener(this);
+        rootView.findViewById(R.id.head_left_btn).setOnClickListener(this);
         image_clear.setOnClickListener(this);
 
         // 当输入框输入过汉字，且回复0后就要调用使用 userList1 的原表数据
@@ -325,7 +342,7 @@ public class CityListActivity extends AppBaseActivity implements OnClickListener
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
         srcList = null;
@@ -340,6 +357,5 @@ public class CityListActivity extends AppBaseActivity implements OnClickListener
         pinyinComparator = null;
         context = null;
         characterParser = null;
-        setContentView(R.layout.activity_null);
     }
 }

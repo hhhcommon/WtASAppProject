@@ -26,7 +26,7 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.home.program.album.activity.AlbumActivity;
+import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.mine.myupload.MyUploadActivity;
 import com.woting.ui.mine.myupload.adapter.MyUploadListAdapter;
@@ -176,7 +176,7 @@ public class MyUploadSequFragment extends Fragment implements AdapterView.OnItem
             adapter.setList(newList);
             ifAll();
         } else {
-            Intent intent = new Intent(context, AlbumActivity.class);
+            Intent intent = new Intent(context, AlbumFragment.class);
             Bundle bundle = new Bundle();
             bundle.putString("type", "recommend");
             bundle.putSerializable("list", newList.get(position));

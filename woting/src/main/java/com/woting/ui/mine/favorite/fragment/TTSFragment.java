@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -22,10 +21,8 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
-import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
-import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
@@ -34,13 +31,11 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
-import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.main.MainActivity;
-import com.woting.ui.mine.favorite.activity.FavoriteActivity;
+import com.woting.ui.mine.favorite.main.FavoriteFragment;
 import com.woting.ui.mine.favorite.adapter.FavorListAdapter;
 import com.woting.ui.mine.favorite.adapter.FavorListAdapter.favorCheck;
 
@@ -88,9 +83,9 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
         initDao();
 
         IntentFilter mFilter = new IntentFilter();
-        mFilter.addAction(FavoriteActivity.VIEW_UPDATE);
-        mFilter.addAction(FavoriteActivity.SET_NOT_LOAD_REFRESH);
-        mFilter.addAction(FavoriteActivity.SET_LOAD_REFRESH);
+        mFilter.addAction(FavoriteFragment.VIEW_UPDATE);
+        mFilter.addAction(FavoriteFragment.SET_NOT_LOAD_REFRESH);
+        mFilter.addAction(FavoriteFragment.SET_LOAD_REFRESH);
         context.registerReceiver(mBroadcastReceiver, mFilter);
     }
 
@@ -141,7 +136,7 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
         mListView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (FavoriteActivity.isEdit) {
+                if (FavoriteFragment.isEdit) {
                     if (newList.get(position - 1).getChecktype() == 0) {
                         newList.get(position - 1).setChecktype(1);
                     } else {
@@ -159,7 +154,7 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
                             String playerurI = newList.get(position - 1).getContentURI();
                             String playermediatype = newList.get(position - 1).getMediaType();
                             String playcontentshareurl = newList.get(position - 1).getContentShareURL();
-                            String plaplayeralltime =newList.get(position - 1).getContentTimes();
+                            String plaplayeralltime = newList.get(position - 1).getContentTimes();
                             String playerintime = "0";
                             String playercontentdesc = newList.get(position - 1).getContentDescn();
                             String playernum = newList.get(position - 1).getPlayCount();
@@ -177,37 +172,24 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
                             String sequId = newList.get(position - 1).getSequId();
                             String sequDesc = newList.get(position - 1).getSequDesc();
                             String sequImg = newList.get(position - 1).getSequImg();
-                            String ContentPlayType= newList.get(position - 1).getContentPlayType();
-                            String IsPlaying=newList.get(position - 1).getIsPlaying();
+                            String ContentPlayType = newList.get(position - 1).getContentPlayType();
+                            String IsPlaying = newList.get(position - 1).getIsPlaying();
 
                             // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                             PlayerHistory history = new PlayerHistory(
                                     playername, playerimage, playerurl, playerurI, playermediatype,
                                     plaplayeralltime, playerintime, playercontentdesc, playernum,
                                     playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playcontentshareurl,
-                                    ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg,ContentPlayType,IsPlaying);
+                                    ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying);
                             dbDao.deleteHistory(playerurl);
                             dbDao.addHistory(history);
-                            if (PlayerFragment.context != null) {
-                                MainActivity.change();
-                                HomeActivity.UpdateViewPager();
-                                Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
-                                Bundle bundle1=new Bundle();
-                                bundle1.putString("text",newList.get(position - 1).getContentName());
-                                push.putExtras(bundle1);
-                                context.sendBroadcast(push);
-                                getActivity().finish();
-                            } else {
-                                Editor et = BSApplication.SharedPreferences.edit();
-                                et.putString(StringConstant.PLAYHISTORYENTER, "true");
-                                et.putString(StringConstant.PLAYHISTORYENTERNEWS, newList.get(position - 1).getContentName());
-                                if (!et.commit()) {
-                                    Log.w("commit", "数据 commit 失败!");
-                                }
-                                MainActivity.change();
-                                HomeActivity.UpdateViewPager();
-                                getActivity().finish();
-                            }
+
+                            MainActivity.change();
+                            Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                            Bundle bundle1 = new Bundle();
+                            bundle1.putString("text", newList.get(position - 1).getContentName());
+                            push.putExtras(bundle1);
+                            context.sendBroadcast(push);
                         }
                     }
                 }
@@ -241,9 +223,9 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
 
     // 发送网络请求
     private void send() {
-        if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
-            if(dialog != null) dialog.dismiss();
-            if(refreshType == 1) {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
+            if (dialog != null) dialog.dismiss();
+            if (refreshType == 1) {
                 tipView.setVisibility(View.VISIBLE);
                 tipView.setTipView(TipView.TipStatus.NO_NET);
                 isData = false;
@@ -251,7 +233,7 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
             } else {
                 mListView.stopLoadMore();
             }
-            return ;
+            return;
         }
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
@@ -277,7 +259,8 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
                             isDel = false;
                         }
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        subList = new Gson().fromJson(arg1.getString("FavoriteList"), new TypeToken<List<RankInfo>>() {}.getType());
+                        subList = new Gson().fromJson(arg1.getString("FavoriteList"), new TypeToken<List<RankInfo>>() {
+                        }.getType());
 
                         try {
                             String allCountString = arg1.getString("AllCount");
@@ -314,7 +297,7 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
                         tipView.setVisibility(View.GONE);
                         isData = true;
                     } else {
-                        if(refreshType == 1) {
+                        if (refreshType == 1) {
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有喜欢的节目\n快去收听喜欢的节目吧");
                             isData = false;
@@ -322,7 +305,7 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    if(refreshType == 1) {
+                    if (refreshType == 1) {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.IS_ERROR);
                         isData = false;
@@ -341,7 +324,7 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
-                if(refreshType == 1) {
+                if (refreshType == 1) {
                     tipView.setVisibility(View.VISIBLE);
                     tipView.setTipView(TipView.TipStatus.IS_ERROR);
                     isData = false;
@@ -357,17 +340,17 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             switch (action) {
-                case FavoriteActivity.VIEW_UPDATE:
+                case FavoriteFragment.VIEW_UPDATE:
                     page = 1;
                     send();
                     break;
-                case FavoriteActivity.SET_NOT_LOAD_REFRESH:
+                case FavoriteFragment.SET_NOT_LOAD_REFRESH:
                     if (isVisible()) {
                         mListView.setPullRefreshEnable(false);
                         mListView.setPullLoadEnable(false);
                     }
                     break;
-                case FavoriteActivity.SET_LOAD_REFRESH:
+                case FavoriteFragment.SET_LOAD_REFRESH:
                     if (isVisible()) {
                         mListView.setPullRefreshEnable(true);
                         if (newList.size() >= 10) {
@@ -423,11 +406,11 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
     public void ifAll() {
         if (getdelitemsum() == newList.size()) {
             Intent intentAll = new Intent();
-            intentAll.setAction(FavoriteActivity.SET_ALL_IMAGE);
+            intentAll.setAction(FavoriteFragment.SET_ALL_IMAGE);
             context.sendBroadcast(intentAll);
         } else {
             Intent intentNotAll = new Intent();
-            intentNotAll.setAction(FavoriteActivity.SET_NOT_ALL_IMAGE);
+            intentNotAll.setAction(FavoriteFragment.SET_NOT_ALL_IMAGE);
             context.sendBroadcast(intentNotAll);
         }
     }
@@ -481,7 +464,7 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
                     e.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
-                    context.sendBroadcast(new Intent(FavoriteActivity.VIEW_UPDATE));
+                    context.sendBroadcast(new Intent(FavoriteFragment.VIEW_UPDATE));
                 } else {
                     ToastUtils.show_always(context, "删除失败，请检查网络或稍后重试!");
                 }

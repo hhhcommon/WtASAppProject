@@ -26,6 +26,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.baidu.cyberplayer.core.BVideoView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.iflytek.cloud.SpeechConstant;
@@ -51,15 +52,14 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.common.favoritetype.FavoriteProgramTypeActivity;
 import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.model.GroupInfo;
-import com.woting.ui.download.activity.DownloadActivity;
 import com.woting.ui.download.service.DownloadService;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.model.Catalog;
 import com.woting.ui.home.model.CatalogName;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
+import com.woting.ui.home.player.main.play.PlayerActivity;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
-import com.woting.ui.home.program.album.activity.AlbumActivity;
 import com.woting.ui.home.program.citylist.dao.CityInfoDao;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
 import com.woting.ui.interphone.chat.fragment.ChatFragment;
@@ -76,7 +76,7 @@ import com.woting.ui.interphone.commom.service.VoiceStreamPlayerService;
 import com.woting.ui.interphone.commom.service.VoiceStreamRecordService;
 import com.woting.ui.interphone.linkman.model.LinkMan;
 import com.woting.ui.interphone.main.DuiJiangActivity;
-import com.woting.ui.mine.MineActivity;
+import com.woting.ui.mine.main.MineActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -94,18 +94,18 @@ import java.util.Map;
  * 邮箱：645700751@qq.com
  */
 public class MainActivity extends TabActivity implements OnClickListener {
-
     private static MainActivity context;
     public static TabHost tabHost;
     private static Intent Socket, record, voicePlayer, Subclass, download, Location, Notification;
 
+    private static ImageView image0;// 播放
     private static ImageView image1;
     private static ImageView image2;
-    private static ImageView image4;
     private static ImageView image5;
     private Dialog upDataDialog;
 
-    //    public static int dialogShowTypeQuitPerson, dialogShowTypePerson, dialogShowTypeGroup = 0;
+    private static View tabNavigation;// 底部导航菜单
+
     private int upDataType;//1,不需要强制升级2，需要强制升级
     private String upDataNews;
     private String contentId;
@@ -121,7 +121,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private SearchTalkHistoryDao talkDao;
     // 消息通知
     public static GroupInfo groupInfo;
-    // private List<String> userIds;
     private String callId, callerId;
     public static DBTalkHistorary talkdb;
     public static String groupEntryNum;
@@ -130,6 +129,13 @@ public class MainActivity extends TabActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wt_main);
+
+        BVideoView videoView = (BVideoView) findViewById(R.id.video_view);
+        videoView.setVideoPath(null);
+        videoView.start();
+        videoView.stopPlayback();
+        videoView.setVisibility(View.GONE);
+
         context = this;
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -149,25 +155,14 @@ public class MainActivity extends TabActivity implements OnClickListener {
         setType();                        // 设置顶栏样式
         InitDao();
         getTXL();
-//        tabHost.setCurrentTabByTag("five");
-//        tabHost.setCurrentTabByTag("four");
-//        tabHost.setCurrentTabByTag("two");
-        tabHost.setCurrentTabByTag("one");
+        tabHost.setCurrentTabByTag("zero");
         handleIntent();
-//        String first = BSApplication.SharedPreferences.getString(StringConstant.PREFERENCE, "0");//是否是第一次打开偏好设置界面
-//        if (first != null && first.equals("1")) {
-//            // 此时已经进行过偏好设置
-//        } else {// 1：第一次进入  其它：其它界面进入
-//            Intent intent = new Intent(this, PreferenceActivity.class);
-//            Bundle bundle = new Bundle();
-//            bundle.putString("type", "1");
-//            intent.putExtras(bundle);
-//            startActivity(intent);
-//        }
 
         if (!BSApplication.SharedPreferences.getBoolean(StringConstant.FAVORITE_PROGRAM_TYPE, false)) {
             startActivity(new Intent(context, FavoriteProgramTypeActivity.class));
         }
+
+//        tabNavigation.setVisibility(View.GONE);
     }
 
     private void createService() {
@@ -185,7 +180,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         startService(download);
         Notification = new Intent(this, NotificationService.class);
         startService(Notification);
-
     }
 
     public void getTXL() {
@@ -193,7 +187,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             JSONObject jsonObject = VolleyRequest.getJsonObject(context);
             VolleyRequest.requestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
-
                 @Override
                 protected void requestSuccess(JSONObject result) {
                     if (isCancelRequest) {
@@ -243,7 +236,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     //初始化数据库并且发送获取地理位置的请求
@@ -278,7 +270,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 }
                 try {
                     String ReturnType = result.getString("ReturnType");
-                    // 根据返回值来对程序进行解析
                     if (ReturnType != null) {
                         if (ReturnType.equals("1001")) {
                             try {
@@ -334,7 +325,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
             @Override
             protected void requestError(VolleyError error) {
-
             }
         });
     }
@@ -358,8 +348,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         Intent intent = getIntent();
         if (intent != null) {
             Uri uri = intent.getData();
-            // Uri uri=Uri.parse("com.woting.htmlcallback://AUDIO?jsonStr={'ContentId':'42ee92d85af2400392653af7842551e0'}");
-            //  Uri uri=Uri.parse("com.woting.htmlcallback://SEQU?jsonStr={'ContentName':'强强三人组','ContentId':'aa4064113e1b4ce8b69dc7d840c1878b','ContentImg':'http://www.wotingfm.com:908/CM/dataCenter/group03/bc12cf08e8b74d06a29b7a5082baa7e3.300_300.png','ContentDescn':'#####sequdescn#####'}");
             if (uri != null) {
                 String s = uri.toString();
                 String host = uri.getHost();
@@ -369,13 +357,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                         try {
                             JSONTokener jsonParser = new JSONTokener(queryString);
                             JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                            /*contentName = arg1.getString("ContentName");*/
                             contentId = arg1.getString("ContentId");
-                          /*  String contentimg = arg1.getString("ContentImg");
-                            String contentdesc = arg1.getString("ContentDesc");
-                            String contenturl = arg1.getString("ContentURL");
-                            String contenttime = arg1.getString("ContentTimes");
-                            String mediatype = "AUDIO";*/
                             String mediatype = "AUDIO";
                             if (!TextUtils.isEmpty(contentId)) {
                                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
@@ -386,31 +368,26 @@ public class MainActivity extends TabActivity implements OnClickListener {
                             } else {
                                 ToastUtils.show_always(context, "啊哦~由网页端传送的数据有误");
                             }
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
-                    } else if (host.equals("SEQU")) {
+                    } /*else if (host.equals("SEQU")) {
                         String s11 = uri.getQuery().substring(8);//不要jsonstr=
                         try {
                             JSONTokener jsonParser = new JSONTokener(s11);
                             JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                           /* contentName = arg1.getString("ContentName");*/
                             contentId = arg1.getString("ContentId");
-                       /*     String contentimg = arg1.getString("ContentImg");
-                            String contentdesc = arg1.getString("ContentDesc");
-                            String contenturl = arg1.getString("ContentURL");*/
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        //跳到专辑界面
-                        Intent intent1 = new Intent(this, AlbumActivity.class);
-                        intent1.putExtra("type", "main");
-                        intent1.putExtra("id", contentId);
-                      /*  intent1.putExtra("contentname", contentName);*/
-                        startActivity(intent1);
-                    } else {
+                        // 跳到专辑界面
+                        AlbumFragment fragment = new AlbumFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("type", "main");
+                        bundle.putString("id", contentId);
+                        fragment.setArguments(bundle);
+                        HomeActivity.open(fragment);
+                    }*/ else {
                         ToastUtils.show_short(context, "返回的host值不属于AUDIO或者SEQU，请检查返回值");
                     }
                 }
@@ -427,10 +404,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
             e.printStackTrace();
         }
         VolleyRequest.requestPost(GlobalConfig.getContentById, tag, jsonObject, new VolleyCallback() {
-
             @Override
             protected void requestSuccess(JSONObject result) {
-
                 if (isCancelRequest) {
                     return;
                 }
@@ -524,7 +499,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                     e.printStackTrace();
                                     ContentKeyWord = "";
                                 }
-
                                 try {
                                     ContentFavorite = arg1.getString("ContentFavorite");
                                 } catch (Exception e) {
@@ -556,19 +530,14 @@ public class MainActivity extends TabActivity implements OnClickListener {
                             }
                         } else {
                             if (ReturnType.equals("0000")) {
-//							ToastUtils.show_always(context, "无法获取相关的参数");
                                 ToastUtils.show_always(context, "数据出错了，请稍后再试！");
                             } else if (ReturnType.equals("1002")) {
-//							ToastUtils.show_always(context, "无此分类信息");
                                 ToastUtils.show_always(context, "数据出错了，请稍后再试！");
                             } else if (ReturnType.equals("1003")) {
-//							ToastUtils.show_always(context, "无法获得列表");
                                 ToastUtils.show_always(context, "数据出错了，请稍后再试！");
                             } else if (ReturnType.equals("1011")) {
-//							ToastUtils.show_always(context, "列表为空（列表为空[size==0]");
                                 ToastUtils.show_always(context, "数据出错了，请稍后再试！");
                             } else if (ReturnType.equals("T")) {
-//							ToastUtils.show_always(context, "获取列表异常");
                                 ToastUtils.show_always(context, "数据出错了，请稍后再试！");
                             }
                         }
@@ -580,13 +549,9 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
             @Override
             protected void requestError(VolleyError error) {
-
             }
         });
-
-
     }
-
 
     //更新数据交互
     private void update() {
@@ -605,7 +570,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 }
                 String ReturnType = null;
                 try {
-                    //String SessionId = result.getString("SessionId");
                     ReturnType = result.getString("ReturnType");
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -640,15 +604,12 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
             @Override
             protected void requestError(VolleyError error) {
-
             }
         });
     }
 
     /*
      * 检查版本更新
-     * @param ResultList
-     * @param mastUpdate
      */
     protected void dealVersion(String ResultList, String mastUpdate) {
         String Version = "0.1.0.X.0";
@@ -657,11 +618,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
             JSONTokener jsonParser = new JSONTokener(ResultList);
             JSONObject arg1 = (JSONObject) jsonParser.nextValue();
             Version = arg1.getString("Version");
-            //			String AppName = arg1.getString("AppName");
             DescN = arg1.getString("Descn");
-            //			String BugPatch = arg1.getString("BugPatch");
-            //			String ApkSize = arg1.getString("ApkSize");
-            //			String PubTime = arg1.getString("Version");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -670,10 +627,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         String version = Version;
         String[] strArray;
         strArray = version.split("\\.");
-        //String version_big = strArray[0].toString();//大版本
-        //String version_medium = strArray[1].toString();//中版本
-        //String version_small = strArray[2].toString();//小版本
-        //String version_x = strArray[3];//X
         String version_build;
         try {
             version_build = strArray[4];
@@ -703,7 +656,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 }
             } else {
                 Log.v("检查版本更新", "已经是最新版本");
-//                ToastUtils.show_always(context, "已经是最新版本");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -755,87 +707,104 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     // 初始化视图
     private void InitTextView() {
+        tabNavigation = findViewById(R.id.tab_navigation);// 底部导航菜单
+
+        LinearLayout lin0 = (LinearLayout) findViewById(R.id.main_lin_0);// 播放
         LinearLayout lin1 = (LinearLayout) findViewById(R.id.main_lin_1);
         LinearLayout lin2 = (LinearLayout) findViewById(R.id.main_lin_2);
-        LinearLayout lin4 = (LinearLayout) findViewById(R.id.main_lin_4);
         LinearLayout lin5 = (LinearLayout) findViewById(R.id.main_lin_5);
+
+        image0 = (ImageView) findViewById(R.id.main_image_0);
         image1 = (ImageView) findViewById(R.id.main_image_1);
         image2 = (ImageView) findViewById(R.id.main_image_2);
-        image4 = (ImageView) findViewById(R.id.main_image_4);
         image5 = (ImageView) findViewById(R.id.main_image_5);
+
+        lin0.setOnClickListener(this);
         lin1.setOnClickListener(this);
         lin2.setOnClickListener(this);
-        lin4.setOnClickListener(this);
         lin5.setOnClickListener(this);
 
 		/*
          * 主页跳转的4个界面
 		 */
+        tabHost.addTab(tabHost.newTabSpec("zero").setIndicator("zero")
+                .setContent(new Intent(this, PlayerActivity.class)));
         tabHost.addTab(tabHost.newTabSpec("one").setIndicator("one")
                 .setContent(new Intent(this, HomeActivity.class)));
         tabHost.addTab(tabHost.newTabSpec("two").setIndicator("two")
                 .setContent(new Intent(this, DuiJiangActivity.class)));
-        tabHost.addTab(tabHost.newTabSpec("four").setIndicator("four")
-                .setContent(new Intent(this, DownloadActivity.class)));
         tabHost.addTab(tabHost.newTabSpec("five").setIndicator("five")
                 .setContent(new Intent(this, MineActivity.class)));
     }
 
+    // 切换到播放界面
     public static void change() {
-        setViewOne();
+        setViewZero();
     }
 
+    // 切换到通讯录界面
     public static void changeTwo() {
         setViewTwo();
+    }
+
+    // 隐藏或显示 TAB
+    public static void hideOrShowTab(boolean isVisible) {
+        if (isVisible) tabNavigation.setVisibility(View.VISIBLE);
+        else tabNavigation.setVisibility(View.GONE);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.main_lin_1:
+            case R.id.main_lin_0:// 播放
+                setViewZero();
+                break;
+            case R.id.main_lin_1:// 享听
                 setViewOne();
                 break;
-            case R.id.main_lin_2:
+            case R.id.main_lin_2:// 享讲
                 setViewTwo();
                 break;
-            case R.id.main_lin_4:
-                setViewFour();
-                break;
-            case R.id.main_lin_5:
+            case R.id.main_lin_5:// 我的
                 setViewFive();
                 break;
         }
     }
 
+    // 播放
+    private static void setViewZero() {
+        tabHost.setCurrentTabByTag("zero");
+        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_selected);
+        image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
+        image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
+        image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+        hideOrShowTab(true);
+    }
+
+    // 享听
     private static void setViewOne() {
         tabHost.setCurrentTabByTag("one");
+        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_selected);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
-        image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
     }
 
+    // 享讲
     private static void setViewTwo() {
         tabHost.setCurrentTabByTag("two");
+        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_selected);
-        image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
     }
 
-    private void setViewFour() {
-        tabHost.setCurrentTabByTag("four");
-        image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
-        image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
-        image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_selected);
-        image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
-    }
-
+    // 我的
     private void setViewFive() {
         tabHost.setCurrentTabByTag("five");
+        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
-        image4.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_selected);
     }
 
@@ -861,9 +830,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         n.addAction(NetWorkChangeReceiver.intentFilter);
         netWorkChangeReceiver = new NetWorkChangeReceiver(this);
         registerReceiver(netWorkChangeReceiver, n);
-
     }
-
 
     //接收定时服务发送过来的广播  用于结束应用
     private BroadcastReceiver endApplicationBroadcast = new BroadcastReceiver() {
@@ -904,7 +871,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                             JSONObject arg1 = (JSONObject) jsonParser.nextValue();
                                             String groupList = arg1.getString("GroupList");
 
-
                                             List<MessageForMainGroup> gList = new Gson().fromJson(groupList, new TypeToken<List<MessageForMainGroup>>() {
                                             }.getType());
 
@@ -923,7 +889,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                                         groupEntryNum = "1";
                                                     }
                                                     groupInfo = gInfo.getGroupInfo();
-//                                                    userIds = gInfo.getGroupEntryUserIds();
                                                     String groupName = groupInfo.getGroupName();
                                                     showGroup(groupName); // 展示上次存在的对讲组
                                                 } catch (Exception e) {
@@ -962,17 +927,11 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                                 Data userInfo = userList.get(0);   // 本版本（2017元旦前）暂时只获取第一条数据，后续需要修改
                                                 try {
                                                     callId = userInfo.getCallId(); // 本次通信的id
-
                                                     if (CommonUtils.getUserIdNoImei(context) != null && !CommonUtils.getUserIdNoImei(context).equals("")) {
                                                         if (CommonUtils.getUserIdNoImei(context).equals(userInfo.getCallerId())) {
                                                             // 此次呼叫是"我"主动呼叫别人，所以callerId就是自己==主叫方
                                                             callerId = userInfo.getCallerId();
                                                             try {
-//                                                                String callerInfo = arg1.getString("CallerInfo");
-//                                                                CallerInfo caller = new Gson().fromJson(callerInfo, new TypeToken<CallerInfo>() {
-//                                                                 }.getType());
-
-
                                                                 CallerInfo caller = userInfo.getCallerInfo();
                                                                 String name = caller.getUserName();
                                                                 showPerson(name); // 展示上次存在的单对单对讲
@@ -984,9 +943,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                                             // 此次呼叫是"我"被别人呼叫，所以callerId就是对方==被叫方
                                                             callerId = userInfo.getCallederId();
                                                             try {
-//                                                                String callederInfo = arg1.getString("CallederInfo");
-//                                                                CallerInfo calleder = new Gson().fromJson(callederInfo, new TypeToken<CallerInfo>() {
-//                                                                }.getType());
                                                                 CallerInfo calleder = userInfo.getCallederInfo();
                                                                 String name = calleder.getUserName();
                                                                 showPerson(name); // 展示上次存在的单对单对讲
@@ -1117,34 +1073,9 @@ public class MainActivity extends TabActivity implements OnClickListener {
         Log.e("wifi状态:", "更改后状态"+values);
     }
 
-
     private void restoreWifiDormancy() {
         int defaultPolicy = BSApplication.SharedPreferences.getInt(StringConstant.WIFI_SLEEP_POLICY_DEFAULT, Settings.System.WIFI_SLEEP_POLICY_DEFAULT);
         Settings.System.putInt(getContentResolver(), Settings.Global.WIFI_SLEEP_POLICY, defaultPolicy);
-    }
-
-    /**
-     * 手机实体返回按键的处理 与onbackpress同理
-     */
-    long waitTime = 2000;
-    long touchTime = 0;
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN && KeyEvent.KEYCODE_BACK == keyCode) {
-            long currentTime = System.currentTimeMillis();
-            if ((currentTime - touchTime) >= waitTime) {
-                ToastUtils.show_always(MainActivity.this, "再按一次退出");
-                touchTime = currentTime;
-            } else {
-
-                MobclickAgent.onKillProcess(this);
-                finish();
-            }
-            return true;
-
-        }
-        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -1192,28 +1123,18 @@ public class MainActivity extends TabActivity implements OnClickListener {
         pushDialog.setCanceledOnTouchOutside(false);
         pushDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
         pushDialog.show();
-//        if (type == 1) {
-//            dialogShowTypeQuitPerson = 1;
-//        } else if (type == 2) {
-//            dialogShowTypePerson = 1;
-//        } else if (type == 3) {
-//            dialogShowTypeGroup = 1;
-//        }
         // 取消
         tv_qx.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (type == 1) {
                     // 不需要处理
-//                    dialogShowTypeQuitPerson = 0;
                 } else if (type == 2) {
                     // 挂断电话
-//                    dialogShowTypePerson = 0;
                     InterPhoneControl.PersonTalkHangUp(context, callId);
                     talkdb = null;
                 } else if (type == 3) {
                     // 退出组
-//                    dialogShowTypeGroup = 0;
                     if (groupInfo != null)
                         InterPhoneControl.Quit(context, groupInfo.getGroupId());//退出小组
                     groupInfo = null;
@@ -1227,13 +1148,10 @@ public class MainActivity extends TabActivity implements OnClickListener {
             @Override
             public void onClick(View v) {
                 if (type == 1) {
-//                    dialogShowTypeQuitPerson = 0;
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 } else if (type == 2) {
-//                    dialogShowTypePerson = 0;
                     addUser();
                 } else if (type == 3) {
-//                    dialogShowTypeGroup = 0;
                     addGroup();
                 }
                 pushDialog.dismiss();
@@ -1278,17 +1196,4 @@ public class MainActivity extends TabActivity implements OnClickListener {
         MainActivity.changeTwo();
         DuiJiangActivity.update();
     }
-
-//    private void test(){
-//        System.out.println("==========================");
-//        byte[] msgBytes1={124, 94, 0, 0, 0, 0, 0, 0, 0, 0, 0, 67, 1, 51, 98, 50, 48, 101, 50, 99, 51, 97, 55, 52, 49, 124, 124, 16, 94, 94, 85, 0, 123, 34, 85, 115, 101, 114, 73, 100, 34, 58, 34, 100, 56, 99, 51, 99, 99, 102, 56, 49, 49, 54, 98, 34, 44, 34, 80, 67, 68, 84, 121, 112, 101, 34, 58, 34, 49, 34, 44, 34, 68, 101, 118, 105, 99, 101, 73, 100, 34, 58, 34, 69, 56, 67, 56, 68, 48, 49, 52, 67, 67, 49, 70, 68, 54, 65, 57, 66, 52, 57, 66, 54, 57, 69, 52, 51, 57, 52, 57, 65, 51, 52, 66, 34, 125};
-//        System.out.println(new String(msgBytes1));
-//        MsgNormal test12= null;
-//        try {
-//            test12 = new MsgNormal(msgBytes1);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println(JsonEncloseUtils.btToString(test12));
-//    }
 }

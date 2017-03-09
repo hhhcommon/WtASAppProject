@@ -25,10 +25,9 @@ import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.downloadlist.adapter.DownLoadListAdapter;
 import com.woting.ui.download.downloadlist.adapter.DownLoadListAdapter.downloadlist;
 import com.woting.ui.download.model.FileInfo;
-import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
+import com.woting.ui.home.player.main.play.PlayerFragment;
 import com.woting.ui.main.MainActivity;
 
 import java.io.File;
@@ -256,7 +255,6 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
                             dbDao.addHistory(history);
                             if (PlayerFragment.context != null) {
                                 MainActivity.change();
-                                HomeActivity.UpdateViewPager();
                                 Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                                 Bundle bundle1 = new Bundle();
                                 bundle1.putString("text", mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4));
@@ -268,7 +266,6 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
                                 et.putString(StringConstant.PLAYHISTORYENTERNEWS, mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4));
                                 if (!et.commit()) Log.v("commit", "数据 commit 失败!");
                                 MainActivity.change();
-                                HomeActivity.UpdateViewPager();
                             }
                             setResult(1);
                             finish();

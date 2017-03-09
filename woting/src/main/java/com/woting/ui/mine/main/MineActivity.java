@@ -1,12 +1,12 @@
-package com.woting.ui.home.main;
+package com.woting.ui.mine.main;
 
-import android.content.res.Configuration;
-import android.content.res.Resources;
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.View;
+import android.view.WindowManager;
 
 import com.woting.R;
 import com.woting.common.util.SequenceUUID;
@@ -14,26 +14,24 @@ import com.woting.common.util.ToastUtils;
 import com.woting.ui.main.MainActivity;
 
 /**
- * 内容主页
+ * 个人信息主页
  * 作者：xinlong on 2016/11/6 21:18
  * 邮箱：645700751@qq.com
  */
-public class HomeActivity extends FragmentActivity {
-
-    private static HomeActivity context;
+public class MineActivity extends FragmentActivity {
+    private static MineActivity context;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wt_home);
-
+        setContentView(R.layout.activity_mine);
         context = this;
         setType();
 
-        open(new HomeFragment());
+        MineActivity.open(new MineFragment());
     }
 
-    // 适配顶栏样式
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     private void setType() {
         String a = android.os.Build.VERSION.RELEASE;
         Log.e("系统版本号", a + "");
@@ -42,30 +40,19 @@ public class HomeActivity extends FragmentActivity {
         if (Integer.parseInt(a.substring(0, a.indexOf("."))) >= 5) {
             v = true;
         }
-        View tv_main = findViewById(R.id.tv_main);
         if (v) {
-            tv_main.setVisibility(View.VISIBLE);
-        } else {
-            tv_main.setVisibility(View.GONE);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        // 透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    // 透明导航栏
         }
     }
 
-    // 设置android app 的字体大小不受系统字体大小改变的影响
-    @Override
-    public Resources getResources() {
-        Resources res = super.getResources();
-        Configuration config = new Configuration();
-        config.setToDefaults();
-        res.updateConfiguration(config, res.getDisplayMetrics());
-        return res;
-    }
 
     // 打开新的 Fragment
     public static void open(Fragment frg) {
         context.getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_content, frg)
                 .addToBackStack(SequenceUUID.getUUID())
-                .commitAllowingStateLoss();
+                .commit();
         if (context.getSupportFragmentManager().getBackStackEntryCount() > 0) {
             MainActivity.hideOrShowTab(false);
         }
@@ -73,7 +60,7 @@ public class HomeActivity extends FragmentActivity {
 
     // 关闭已经打开的 Fragment
     public static void close() {
-        context.getSupportFragmentManager().popBackStackImmediate();// 立即删除回退栈中的数据
+        context.getSupportFragmentManager().popBackStackImmediate();
         if (context.getSupportFragmentManager().getBackStackEntryCount() == 1) {
             MainActivity.hideOrShowTab(true);
         }
@@ -84,12 +71,13 @@ public class HomeActivity extends FragmentActivity {
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            MainActivity.hideOrShowTab(true);
             long time = System.currentTimeMillis();
             if (time - tempTime <= 2000) {
                 android.os.Process.killProcess(android.os.Process.myPid());
             } else {
                 tempTime = time;
-                ToastUtils.show_always(context, "再按一次退出");
+                ToastUtils.show_always(this, "再按一次退出");
             }
         } else {
             close();

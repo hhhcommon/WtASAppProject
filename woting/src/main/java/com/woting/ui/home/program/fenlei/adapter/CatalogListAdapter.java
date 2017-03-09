@@ -1,7 +1,6 @@
 package com.woting.ui.home.program.fenlei.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -14,8 +13,9 @@ import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.common.widgetui.MyGridView;
+import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.program.fenlei.model.FenLei;
-import com.woting.ui.home.program.radiolist.activity.RadioListActivity;
+import com.woting.ui.home.program.radiolist.main.RadioListFragment;
 
 import java.util.List;
 
@@ -72,12 +72,12 @@ public class CatalogListAdapter extends BaseAdapter {
         holder.gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int positions, long id) {
-                Intent intent = new Intent(context, RadioListActivity.class);
+                RadioListFragment radioListFragment = new RadioListFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("type", "fenLeiAdapter");
                 bundle.putSerializable("Catalog", list.get(position).getChildren().get(positions));
-                intent.putExtras(bundle);
-                context.startActivity(intent);
+                radioListFragment.setArguments(bundle);
+                HomeActivity.open(radioListFragment);
             }
         });
     }

@@ -30,9 +30,9 @@ import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
-import com.woting.ui.home.program.album.activity.AlbumActivity;
+import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
-import com.woting.ui.home.search.activity.SearchLikeActivity;
+import com.woting.ui.home.search.main.SearchLikeFragment;
 import com.woting.ui.home.search.adapter.SearchContentAdapter;
 import com.woting.ui.home.search.model.SuperRankInfo;
 import com.woting.ui.main.MainActivity;
@@ -87,6 +87,7 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_favorite_total, container, false);
+            rootView.setOnClickListener(null);
             tipView = (TipView) rootView.findViewById(R.id.tip_view);
             expandListView = (ExpandableListView) rootView.findViewById(R.id.ex_listview);
             expandListView.setGroupIndicator(null);
@@ -111,7 +112,8 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     try {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
+                        subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {
+                        }.getType());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -119,8 +121,8 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                     tipView.setVisibility(View.GONE);
                     if (playList != null) playList.clear();
                     if (sequList != null) sequList.clear();
-                    if(ttsList != null) ttsList.clear();
-                    if(radioList != null) radioList.clear();
+                    if (ttsList != null) ttsList.clear();
+                    if (radioList != null) radioList.clear();
                     if (subList != null && subList.size() > 0) {
                         for (int i = 0; i < subList.size(); i++) {
                             if (subList.get(i).getMediaType() != null && !subList.get(i).getMediaType().equals("")) {
@@ -164,7 +166,7 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                             list.add(mSuperRankInfo1);
                         }
                         if (list.size() != 0) {
-                            if(searchAdapter == null) {
+                            if (searchAdapter == null) {
                                 expandListView.setAdapter(searchAdapter = new SearchContentAdapter(context, list));
                             } else {
                                 searchAdapter.setList(list);
@@ -228,7 +230,7 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                     String playUri = list.get(groupPosition).getList().get(childPosition).getContentURI();
                     String playMediaType = list.get(groupPosition).getList().get(childPosition).getMediaType();
                     String playContentShareUrl = list.get(groupPosition).getList().get(childPosition).getContentShareURL();
-                    String playAllTime =list.get(groupPosition).getList().get(childPosition).getContentTimes();
+                    String playAllTime = list.get(groupPosition).getList().get(childPosition).getContentTimes();
                     String playInTime = "0";
                     String playContentDesc = list.get(groupPosition).getList().get(childPosition).getContentDescn();
                     String playerNum = list.get(groupPosition).getList().get(childPosition).getPlayCount();
@@ -247,32 +249,31 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                     String sequDesc = list.get(groupPosition).getList().get(childPosition).getSequDesc();
                     String sequImg = list.get(groupPosition).getList().get(childPosition).getSequImg();
 
-                    String ContentPlayType= list.get(groupPosition).getList().get(childPosition).getContentPlayType();
-                    String IsPlaying=list.get(groupPosition).getList().get(childPosition).getIsPlaying();
+                    String ContentPlayType = list.get(groupPosition).getList().get(childPosition).getContentPlayType();
+                    String IsPlaying = list.get(groupPosition).getList().get(childPosition).getIsPlaying();
                     // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                     PlayerHistory history = new PlayerHistory(
                             playName, playImage, playUrl, playUri, playMediaType,
                             playAllTime, playInTime, playContentDesc, playerNum,
                             playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                            ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg,ContentPlayType,IsPlaying);
+                            ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying);
 
                     dbDao.deleteHistory(playUrl);
                     dbDao.addHistory(history);
                     MainActivity.change();
-                    HomeActivity.UpdateViewPager();
-                    Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
-                    Bundle bundle1=new Bundle();
-                    bundle1.putString("text",list.get(groupPosition).getList().get(childPosition).getContentName());
+                    Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putString("text", list.get(groupPosition).getList().get(childPosition).getContentName());
                     push.putExtras(bundle1);
                     context.sendBroadcast(push);
-                    context.finish();
                 } else if (MediaType != null && MediaType.equals("SEQU")) {
-                    Intent intent = new Intent(context, AlbumActivity.class);
+                    AlbumFragment fragment = new AlbumFragment();
                     Bundle bundle = new Bundle();
+                    bundle.putInt("fromType", 2);
                     bundle.putString("type", "search");
                     bundle.putSerializable("list", list.get(groupPosition).getList().get(childPosition));
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                    fragment.setArguments(bundle);
+                    HomeActivity.open(fragment);
                 } else {
                     ToastUtils.show_always(context, "暂不支持的Type类型");
                 }
@@ -283,7 +284,7 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
 
     @Override
     public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-        SearchLikeActivity.updateViewPage(list.get(groupPosition).getKey());
+        SearchLikeFragment.updateViewPage(list.get(groupPosition).getKey());
         return true;
     }
 
@@ -298,7 +299,7 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                     searchStr = intent.getStringExtra("searchStr");
                     if (searchStr != null && !searchStr.equals("")) {
                         list.clear();
-                        if(searchAdapter == null) {
+                        if (searchAdapter == null) {
                             expandListView.setAdapter(searchAdapter = new SearchContentAdapter(context, list));
                         } else {
                             searchAdapter.setList(list);

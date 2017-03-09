@@ -3,10 +3,8 @@ package com.woting.ui.mine.playhistory.fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,18 +17,14 @@ import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.common.application.BSApplication;
 import com.woting.common.constant.BroadcastConstants;
-import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.fragment.PlayerFragment;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.search.model.SuperRankInfo;
 import com.woting.ui.main.MainActivity;
-import com.woting.ui.mine.playhistory.activity.PlayHistoryActivity;
+import com.woting.ui.mine.playhistory.main.PlayHistoryFragment;
 import com.woting.ui.mine.playhistory.adapter.PlayHistoryExpandableAdapter;
 
 import java.util.ArrayList;
@@ -137,7 +131,7 @@ public class TotalFragment extends Fragment {
         if (!isData) {
             tipView.setVisibility(View.VISIBLE);
             tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有收听节目\n快去收听喜欢的节目吧");
-            ((PlayHistoryActivity) context).setNodataHideView();
+            PlayHistoryFragment.setNoDataHideView();
         }
     }
 
@@ -186,25 +180,14 @@ public class TotalFragment extends Fragment {
                     if (playermediatype != null && playermediatype.equals("TTS")) dbDao.deleteHistoryById(ContentId);
                     else dbDao.deleteHistory(playerurl);
                     dbDao.addHistory(history);
-                    if (PlayerFragment.context != null) {
-                        MainActivity.change();
-                        HomeActivity.UpdateViewPager();
-                        String s = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerName();
-                        Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
-                        Bundle bundle1 = new Bundle();
-                        bundle1.putString("text", s);
-                        push.putExtras(bundle1);
-                        context.sendBroadcast(push);
-                        getActivity().finish();
-                    } else {
-                        Editor et = BSApplication.SharedPreferences.edit();
-                        et.putString(StringConstant.PLAYHISTORYENTER, "true");
-                        et.putString(StringConstant.PLAYHISTORYENTERNEWS, subList.get(childPosition).getPlayerName());
-                        if (!et.commit()) Log.w("commit", "数据 commit 失败!");
-                        MainActivity.change();
-                        HomeActivity.UpdateViewPager();
-                        getActivity().finish();
-                    }
+
+                    MainActivity.change();
+                    String s = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerName();
+                    Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putString("text", s);
+                    push.putExtras(bundle1);
+                    context.sendBroadcast(push);
                 }
                 return true;
             }
@@ -219,7 +202,7 @@ public class TotalFragment extends Fragment {
         mListView.setOnGroupClickListener(new OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                ((PlayHistoryActivity) getActivity()).updateViewPager(list.get(groupPosition).getKey());
+                PlayHistoryFragment.updateViewPager(list.get(groupPosition).getKey());
                 return true;
             }
         });

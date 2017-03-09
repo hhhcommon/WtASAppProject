@@ -1,4 +1,4 @@
-package com.woting.ui.mine.playhistory.activity;
+package com.woting.ui.mine.playhistory.main;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
@@ -11,16 +11,18 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
@@ -36,8 +38,8 @@ import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.widgetui.MyViewPager;
-import com.woting.ui.baseactivity.AppBaseFragmentActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
+import com.woting.ui.mine.main.MineActivity;
 import com.woting.ui.mine.playhistory.fragment.RadioFragment;
 import com.woting.ui.mine.playhistory.fragment.SoundFragment;
 import com.woting.ui.mine.playhistory.fragment.TTSFragment;
@@ -51,7 +53,8 @@ import java.util.List;
  * 作者：xinlong on 2016/8/1 21:18
  * 邮箱：645700751@qq.com
  */
-public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnClickListener {
+public class PlayHistoryFragment extends Fragment implements OnClickListener {
+    private FragmentActivity context;
     private SearchPlayerHistoryDao dbDao;// 播放历史数据库
     private TotalFragment allFragment;// 全部
     private SoundFragment soundFragment;// 声音
@@ -59,12 +62,15 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
     private TTSFragment ttsFragment;// TTS
     private List<Fragment> fragmentList;
 
+    private View rootView;
     private Dialog delDialog;
     private Dialog confirmDialog;
-    private MyViewPager viewPager;
-    private TextView allText, soundText, radioText, ttsText, clearEmpty, openEdit;
+    private static MyViewPager viewPager;
+    private TextView allText, soundText, radioText, ttsText;
     private ImageView image;
     private ImageView imgAllCheck;
+    private static TextView clearEmpty;
+    private static TextView openEdit;
     
     private int currIndex;// 当前页卡编号
     private int bmpW;// 横线图片宽度
@@ -76,54 +82,64 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_playhistory);
+        context = getActivity();
 
         // 注册广播
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BroadcastConstants.UPDATE_ACTION_ALL);
         intentFilter.addAction(BroadcastConstants.UPDATE_ACTION_CHECK);
-        registerReceiver(myBroadcast, intentFilter);
+        context.registerReceiver(myBroadcast, intentFilter);
         dbDao = new SearchPlayerHistoryDao(context);// 初始化数据库
+    }
 
-        initImage();
-        setView();
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.activity_playhistory, container, false);
+            rootView.setOnClickListener(this);
+
+            initImage();
+            setView();
+        }
+        return rootView;
     }
 
     // 初始化视图
     private void setView() {
-        findViewById(R.id.head_left_btn).setOnClickListener(this);// 左上返回键
+        rootView.findViewById(R.id.head_left_btn).setOnClickListener(this);// 左上返回键
         
-        clearEmpty = (TextView) findViewById(R.id.clear_empty);// 清空
+        clearEmpty = (TextView) rootView.findViewById(R.id.clear_empty);// 清空
         clearEmpty.setOnClickListener(this);
         
-        openEdit = (TextView) findViewById(R.id.open_edit);// 编辑
+        openEdit = (TextView) rootView.findViewById(R.id.open_edit);// 编辑
         openEdit.setOnClickListener(this);
 
         fragmentList = new ArrayList<>();// 存放 Fragment
-        viewPager = (MyViewPager) findViewById(R.id.viewpager);
-        allText = (TextView) findViewById(R.id.text_all);// 全部
+        viewPager = (MyViewPager) rootView.findViewById(R.id.viewpager);
+        allText = (TextView) rootView.findViewById(R.id.text_all);// 全部
         allText.setOnClickListener(new TxListener(0));
         allFragment = new TotalFragment();
         fragmentList.add(allFragment);
 
-        soundText = (TextView) findViewById(R.id.text_sound);// 声音
+        soundText = (TextView) rootView.findViewById(R.id.text_sound);// 声音
         soundText.setOnClickListener(new TxListener(1));
         soundFragment = new SoundFragment();
         fragmentList.add(soundFragment);
 
-        radioText = (TextView) findViewById(R.id.text_radio);// 电台
+        radioText = (TextView) rootView.findViewById(R.id.text_radio);// 电台
         radioText.setOnClickListener(new TxListener(2));
         radioFragment = new RadioFragment();
         fragmentList.add(radioFragment);
 
-        ttsText = (TextView) findViewById(R.id.text_tts);// TTS
+        ttsText = (TextView) rootView.findViewById(R.id.text_tts);// TTS
         ttsText.setOnClickListener(new TxListener(3));
         ttsFragment = new TTSFragment();
         fragmentList.add(ttsFragment);
 
-        viewPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager()));
+        viewPager.setAdapter(new MyFragmentPagerAdapter(getChildFragmentManager()));
         viewPager.setOnPageChangeListener(new MyOnPageChangeListener());    // 页面变化时的监听器
         viewPager.setCurrentItem(0);                                        // 设置当前显示标签页为第一页
     }
@@ -136,7 +152,7 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
                 if (SoundFragment.isData) {
                     delDialog();
                     openEdit.setText("取消");
-                    PlayHistoryActivity.isEdit = false;
+                    PlayHistoryFragment.isEdit = false;
                     soundFragment.setCheck(true);
                     delDialog.show();
                     soundFragment.setLinearVisibility();
@@ -146,7 +162,7 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
                 if (RadioFragment.isData) {
                     delDialog();
                     openEdit.setText("取消");
-                    PlayHistoryActivity.isEdit = false;
+                    PlayHistoryFragment.isEdit = false;
                     radioFragment.setCheck(true);
                     delDialog.show();
                     radioFragment.setLinearVisibility();
@@ -156,7 +172,7 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
                 if (TTSFragment.isData) {
                     delDialog();
                     openEdit.setText("取消");
-                    PlayHistoryActivity.isEdit = false;
+                    PlayHistoryFragment.isEdit = false;
                     ttsFragment.setCheck(true);
                     delDialog.show();
                     ttsFragment.setLinearVisibility();
@@ -188,20 +204,20 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
         if (delDialog != null) {
             delDialog.dismiss();
         }
-        PlayHistoryActivity.isEdit = true;
+        PlayHistoryFragment.isEdit = true;
         openEdit.setText("编辑");
         dialogFlag = 0;
     }
 
     // 设置 cursor 的宽
     public void initImage() {
-        image = (ImageView) findViewById(R.id.cursor);
+        image = (ImageView) rootView.findViewById(R.id.cursor);
         LayoutParams lp = image.getLayoutParams();
         lp.width = (PhoneMessage.ScreenWidth / 4);
         image.setLayoutParams(lp);
         bmpW = BitmapFactory.decodeResource(getResources(), R.mipmap.left_personal_bg).getWidth();
         DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
         int screenW = dm.widthPixels;
         offset = (screenW / 4 - bmpW) / 2;
         Matrix matrix = new Matrix();
@@ -213,7 +229,7 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_left_btn:    // 左上角返回键
-                finish();
+                MineActivity.close();
                 break;
             case R.id.clear_empty:        // 清空数据
                 if (TotalFragment.isData) {
@@ -241,7 +257,7 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
         delDialog.setContentView(dialog); // 从底部上升到一个位置
         Window window = delDialog.getWindow();
         DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
         int scrEnw = dm.widthPixels;
         LayoutParams params = dialog.getLayoutParams();
         params.width = scrEnw;
@@ -322,7 +338,7 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
     }
 
     // 查看更多
-    public void updateViewPager(String mediaType) {
+    public static void updateViewPager(String mediaType) {
         int index = 0;
         if (mediaType != null && !mediaType.equals("")) {
             if (mediaType.equals("AUDIO")) {
@@ -338,12 +354,12 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
 
     // 清空所有数据 对话框
     private void confirmDialog() {
-        final View dialog1 = LayoutInflater.from(this).inflate(R.layout.dialog_exit_confirm, null);
+        final View dialog1 = LayoutInflater.from(context).inflate(R.layout.dialog_exit_confirm, null);
         TextView tv_cancle = (TextView) dialog1.findViewById(R.id.tv_cancle);
         TextView tv_confirm = (TextView) dialog1.findViewById(R.id.tv_confirm);
         TextView tv_title = (TextView) dialog1.findViewById(R.id.tv_title);
         tv_title.setText("是否清空全部历史记录");
-        confirmDialog = new Dialog(this, R.style.MyDialog);
+        confirmDialog = new Dialog(context, R.style.MyDialog);
         confirmDialog.setContentView(dialog1);
         confirmDialog.setCanceledOnTouchOutside(true);
         confirmDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
@@ -497,29 +513,15 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
     }
 
     // 设置没有数据时隐藏 View
-    public void setNodataHideView() {
+    public static void setNoDataHideView() {
         clearEmpty.setVisibility(View.GONE);
         openEdit.setVisibility(View.GONE);
     }
 
-    // 返回键功能
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN && KeyEvent.KEYCODE_BACK == keyCode) {
-            if (!isEdit) {
-                setCancel();
-            } else {
-                finish();
-            }
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(myBroadcast);
+        context.unregisterReceiver(myBroadcast);
         if(delDialog != null) {
             delDialog.dismiss();
             delDialog = null;
@@ -538,6 +540,5 @@ public class PlayHistoryActivity extends AppBaseFragmentActivity implements OnCl
         soundFragment = null;
         radioFragment = null;
         ttsFragment = null;
-        setContentView(R.layout.activity_null);
     }
 }

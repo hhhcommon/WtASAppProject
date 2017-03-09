@@ -181,19 +181,7 @@
 
         <!--  -->
         <activity
-            android:name=".ui.mine.MineActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
-
-        <!--  -->
-        <activity
-            android:name=".ui.home.program.diantai.activity.RadioNationalActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name=".ui.home.program.diantai.activity.CityRadioActivity"
+            android:name=".ui.mine.main.MineActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan"/>
@@ -205,13 +193,6 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
-
-        <!--  -->
-        <activity
-            android:name=".ui.home.program.citylist.activity.CityListActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
 
         <!--  -->
         <activity
@@ -229,6 +210,13 @@
         <!--  -->
         <activity
             android:name=".ui.common.login.LoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <!--  -->
+        <activity
+            android:name=".ui.home.player.main.play.PlayerActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan"/>
@@ -298,13 +286,6 @@
 
         <!--  -->
         <activity
-            android:name=".ui.mine.playhistory.activity.PlayHistoryActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
-
-        <!--  -->
-        <activity
             android:name=".ui.mine.person.modifypassword.ModifyPasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
@@ -361,27 +342,6 @@
 
         <!--  -->
         <activity
-            android:name=".ui.home.search.activity.SearchLikeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
-
-        <!--  -->
-        <activity
-            android:name=".ui.home.program.radiolist.activity.RadioListActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
-
-        <!--  -->
-        <activity
-            android:name=".ui.home.program.fmlist.activity.FMListActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
-
-        <!--  -->
-        <activity
             android:name=".ui.interphone.find.friendadd.FriendAddActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
@@ -432,13 +392,6 @@
         <!--  -->
         <activity
             android:name=".ui.interphone.group.groupcontrol.membershow.GroupMembersActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
-
-        <!--  -->
-        <activity
-            android:name=".ui.home.program.album.activity.AlbumActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
@@ -512,26 +465,6 @@
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
-        <!--  -->
-        <activity
-            android:name=".ui.mine.favorite.activity.FavoriteActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
-
-        <activity
-            android:name=".ui.home.program.album.anchor.activity.AnchorListActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
-        <!--  -->
-        <!-- <activity -->
-        <!-- android:name=".ui.home.program.tuijian.activity.RecommendLikeListActivity" -->
-        <!-- android:screenOrientation="portrait" -->
-        <!-- android:theme="@android:style/Theme.Light.NoTitleBar" -->
-        <!-- android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/> -->
-
-
         <!-- 智能硬件 -->
         <activity
             android:name=".ui.mine.hardware.HardwareIntroduceActivity"
@@ -598,20 +531,6 @@
         <!--电台节目单界面-->
         <activity
             android:name=".ui.home.player.programme.ProgrammeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
-
-        <!--主播详情介绍界面-->
-        <activity
-            android:name=".ui.home.program.album.anchor.AnchorDetailsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
-
-        <!--主播详情介绍界面-->
-        <activity
-            android:name="com.woting.ui.mine.subscriber.activity.SubscriberListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>

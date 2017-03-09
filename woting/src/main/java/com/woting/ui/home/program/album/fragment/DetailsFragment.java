@@ -2,7 +2,6 @@ package com.woting.ui.home.program.album.fragment;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -29,8 +28,9 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.RoundImageView;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.home.program.album.activity.AlbumActivity;
-import com.woting.ui.home.program.album.anchor.AnchorDetailsActivity;
+import com.woting.ui.home.main.HomeActivity;
+import com.woting.ui.home.program.album.anchor.AnchorDetailsFragment;
+import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.album.model.ContentCatalogs;
 import com.woting.ui.home.program.album.model.PersonInfo;
 
@@ -51,7 +51,7 @@ public class DetailsFragment extends Fragment implements OnClickListener {
     private View rootView;
     private Dialog dialog;
     private RoundImageView imageHead;
-    private TextView textAnchor, textContent, textLabel,textConcern;
+    private TextView textAnchor, textContent, textLabel, textConcern;
     private ImageView imageConcern;
 
     private String contentDesc;
@@ -76,7 +76,7 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                 dialog = DialogUtils.Dialogph(context, "正在获取数据");
                 send();
             } else {
-                ((AlbumActivity) context).setTip(TipView.TipStatus.NO_NET);
+                AlbumFragment.setTip(TipView.TipStatus.NO_NET);
             }
         }
         return rootView;
@@ -115,13 +115,15 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                 break;
             case R.id.round_image_head:// 主播详情
             case R.id.text_anchor_name:
-                if(!TextUtils.isEmpty(PersonId)){
-                    Intent intent=new Intent(context, AnchorDetailsActivity.class);
-                    intent.putExtra("PersonId",PersonId);
-                    intent.putExtra("ContentPub",ContentPub);
-                    startActivity(intent);
-                }else{
-                    ToastUtils.show_always(context,"此专辑还没有主播哦");
+                if (!TextUtils.isEmpty(PersonId)) {
+                    AnchorDetailsFragment fragment = new AnchorDetailsFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("PersonId", PersonId);
+                    bundle.putString("ContentPub", ContentPub);
+                    fragment.setArguments(bundle);
+                    HomeActivity.open(fragment);
+                } else {
+                    ToastUtils.show_always(context, "此专辑还没有主播哦");
                 }
                 break;
         }
@@ -132,7 +134,7 @@ public class DetailsFragment extends Fragment implements OnClickListener {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("MediaType", "SEQU");
-            jsonObject.put("ContentId", AlbumActivity.id);
+            jsonObject.put("ContentId", AlbumFragment.id);
             jsonObject.put("Page", "1");
         } catch (JSONException e) {
             e.printStackTrace();
@@ -153,8 +155,9 @@ public class DetailsFragment extends Fragment implements OnClickListener {
 
                         try {
                             String s = arg1.getString("ContentCatalogs");
-                            contentCatalogsList = new Gson().fromJson(s, new TypeToken<List<ContentCatalogs>>() {}.getType());
-                        }catch (Exception e){
+                            contentCatalogsList = new Gson().fromJson(s, new TypeToken<List<ContentCatalogs>>() {
+                            }.getType());
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                         try {
@@ -168,23 +171,23 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                             e.printStackTrace();
                         }
                         try {
-                            AlbumActivity.ContentImg = arg1.getString("ContentImg");
-                            Log.w("TAG", "AlbumActivity.ContentImg -> " + AlbumActivity.ContentImg);
+                            AlbumFragment.ContentImg = arg1.getString("ContentImg");
+                            Log.w("TAG", "AlbumFragment.ContentImg -> " + AlbumFragment.ContentImg);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                         try {
-                            AlbumActivity.ContentName = arg1.getString("ContentName");
+                            AlbumFragment.ContentName = arg1.getString("ContentName");
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                         try {
-                            AlbumActivity.ContentShareURL = arg1.getString("ContentShareURL");
+                            AlbumFragment.ContentShareURL = arg1.getString("ContentShareURL");
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                         try {
-                            AlbumActivity.ContentFavorite = arg1.getString("ContentFavorite");
+                            AlbumFragment.ContentFavorite = arg1.getString("ContentFavorite");
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -196,63 +199,63 @@ public class DetailsFragment extends Fragment implements OnClickListener {
 
                         try {
                             String contentSubscribe = arg1.getString("ContentSubscribe");// 专辑是否已经订阅 == "1" 订阅  == "0" 还没订阅
-                            ((AlbumActivity) context).setFlag(contentSubscribe);
-                        } catch(Exception e) {
+                            AlbumFragment.setFlag(contentSubscribe);
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
-                        try{
-                            String ContentPersons=arg1.getString("ContentPersons");
-                            List<PersonInfo> mPersonInfoList= new Gson().fromJson(ContentPersons, new TypeToken<List<com.woting.ui.home.program.album.model.PersonInfo>>() {
+                        try {
+                            String ContentPersons = arg1.getString("ContentPersons");
+                            List<PersonInfo> mPersonInfoList = new Gson().fromJson(ContentPersons, new TypeToken<List<com.woting.ui.home.program.album.model.PersonInfo>>() {
                             }.getType());
-                            if(mPersonInfoList!=null&&mPersonInfoList.size()>0){
+                            if (mPersonInfoList != null && mPersonInfoList.size() > 0) {
 
-                                if(mPersonInfoList.get(0).getPerId()!=null){
-                                    PersonId=mPersonInfoList.get(0).getPerId();
-                                }else{
-                                    PersonId="";
+                                if (mPersonInfoList.get(0).getPerId() != null) {
+                                    PersonId = mPersonInfoList.get(0).getPerId();
+                                } else {
+                                    PersonId = "";
                                 }
-                            }else{
-                                PersonId="";
+                            } else {
+                                PersonId = "";
                             }
 
-                            ((AlbumActivity) context).setInfo(contentId, AlbumActivity.ContentImg, AlbumActivity.ContentName, contentDesc);
-                        }catch (Exception e){
+                            AlbumFragment.setInfo(contentId, AlbumFragment.ContentImg, AlbumFragment.ContentName, contentDesc);
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
-                        AlbumActivity.returnResult = 1;
-                        if (AlbumActivity.ContentFavorite != null && !AlbumActivity.ContentFavorite.equals("")) {
-                            if (AlbumActivity.ContentFavorite.equals("0")) {
-                                AlbumActivity.tv_favorite.setText("喜欢");
-                                AlbumActivity.imageFavorite.setImageDrawable(context.getResources().getDrawable(R.mipmap.wt_img_like));
+                        AlbumFragment.returnResult = 1;
+                        if (AlbumFragment.ContentFavorite != null && !AlbumFragment.ContentFavorite.equals("")) {
+                            if (AlbumFragment.ContentFavorite.equals("0")) {
+                                AlbumFragment.tv_favorite.setText("喜欢");
+                                AlbumFragment.imageFavorite.setImageDrawable(context.getResources().getDrawable(R.mipmap.wt_img_like));
                             } else {
-                                AlbumActivity.tv_favorite.setText("已喜欢");
-                                AlbumActivity.imageFavorite.setImageDrawable(context.getResources().getDrawable(R.mipmap.wt_img_liked));
+                                AlbumFragment.tv_favorite.setText("已喜欢");
+                                AlbumFragment.imageFavorite.setImageDrawable(context.getResources().getDrawable(R.mipmap.wt_img_liked));
                             }
                         }
-                        if (AlbumActivity.ContentName != null && !AlbumActivity.ContentName.equals("")) {
-                            AlbumActivity.tv_album_name.setText(AlbumActivity.ContentName);
-                            textAnchor.setText(AlbumActivity.ContentName);
+                        if (AlbumFragment.ContentName != null && !AlbumFragment.ContentName.equals("")) {
+                            AlbumFragment.tv_album_name.setText(AlbumFragment.ContentName);
+                            textAnchor.setText(AlbumFragment.ContentName);
                         } else {
                             textAnchor.setText("我听我享听");
                         }
-                        if (AlbumActivity.ContentImg == null || AlbumActivity.ContentImg.equals("")) {
-                            AlbumActivity.img_album.setImageResource(R.mipmap.wt_image_playertx);
+                        if (AlbumFragment.ContentImg == null || AlbumFragment.ContentImg.equals("")) {
+                            AlbumFragment.img_album.setImageResource(R.mipmap.wt_image_playertx);
                         } else {
                             String url;
-                            if (AlbumActivity.ContentImg.startsWith("http")) {
-                                url = AlbumActivity.ContentImg;
+                            if (AlbumFragment.ContentImg.startsWith("http")) {
+                                url = AlbumFragment.ContentImg;
                             } else {
-                                url = GlobalConfig.imageurl + AlbumActivity.ContentImg;
+                                url = GlobalConfig.imageurl + AlbumFragment.ContentImg;
                             }
                             url = AssembleImageUrlUtils.assembleImageUrl150(url);
-                            Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(AlbumActivity.img_album);
+                            Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(AlbumFragment.img_album);
                             Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(imageHead);
                         }
                         if (contentDesc != null && !contentDesc.equals("") && !contentDesc.equals("null")) {
                             textContent.setText(Html.fromHtml("<font size='28'>" + contentDesc + "</font>"));
-                            AlbumActivity.ContentDesc = contentDesc;
+                            AlbumFragment.ContentDesc = contentDesc;
                         } else {
                             textContent.setText("暂无介绍内容");
                         }
@@ -267,20 +270,20 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                             }
                             textLabel.setText(builder.toString());
                         }
-                        ((AlbumActivity) context).hideTip();
+                        AlbumFragment.hideTip();
                     } else {
-                        ((AlbumActivity) context).setTip(TipView.TipStatus.IS_ERROR);
+                        AlbumFragment.setTip(TipView.TipStatus.IS_ERROR);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    ((AlbumActivity) context).setTip(TipView.TipStatus.IS_ERROR);
+                    AlbumFragment.setTip(TipView.TipStatus.IS_ERROR);
                 }
             }
 
             @Override
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
-                ((AlbumActivity) context).setTip(TipView.TipStatus.IS_ERROR);
+                AlbumFragment.setTip(TipView.TipStatus.IS_ERROR);
             }
         });
     }

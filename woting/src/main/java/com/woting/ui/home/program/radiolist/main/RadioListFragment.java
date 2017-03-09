@@ -1,13 +1,15 @@
-package com.woting.ui.home.program.radiolist.activity;
+package com.woting.ui.home.program.radiolist.main;
 
 import android.app.Dialog;
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -21,7 +23,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.PagerSlidingTabStrip;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.baseactivity.AppBaseFragmentActivity;
+import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.program.fenlei.model.FenLeiName;
 import com.woting.ui.home.program.radiolist.adapter.MyPagerAdapter;
 import com.woting.ui.home.program.radiolist.fragment.ClassifyFragment;
@@ -40,19 +42,25 @@ import java.util.List;
  * @author 辛龙
  * 2016年4月5日
  */
-public class RadioListActivity extends AppBaseFragmentActivity implements OnClickListener, TipView.WhiteViewClick {
+public class RadioListFragment extends Fragment implements OnClickListener, TipView.WhiteViewClick {
+    private Context context;
+
+    private View rootView;
+    private static Dialog dialog;// 加载对话框
     private TextView mTextView_Head;
     public static String catalogName;
     public static String catalogType;
     public static String id;
-    private Dialog dialog;// 加载对话框
+
     private List<String> list;
     private List<Fragment> fragments;
+
     private PagerSlidingTabStrip pageSlidingTab;
     private ViewPager viewPager;
+
     private int count = 1;
     public static final String tag = "RADIO_LIST_VOLLEY_REQUEST_CANCEL_TAG";
-    private boolean isCancelRequest;
+    public static boolean isCancelRequest = false;
     private RecommendFragment recommend;
 
     private TipView tipView;// 没有网络提示
@@ -63,36 +71,42 @@ public class RadioListActivity extends AppBaseFragmentActivity implements OnClic
         sendRequest();
     }
 
-    public boolean isCancel() {
-        return isCancelRequest;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        context = getActivity();
     }
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_radiolist);
-        fragments = new ArrayList<>();
-        setView();
-        handleRequestType();
-        if (list == null) {
-            list = new ArrayList<>();
-            list.add("推荐");
-            recommend = new RecommendFragment();
-            fragments.add(recommend);
-        }
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.activity_radiolist, container, false);
+            rootView.setOnClickListener(this);
+            fragments = new ArrayList<>();
+            setView();
+            handleRequestType();
+            if (list == null) {
+                list = new ArrayList<>();
+                list.add("推荐");
+                recommend = new RecommendFragment();
+                fragments.add(recommend);
+            }
 
-        dialog = DialogUtils.Dialogph(context, "正在获取数据");
-        sendRequest();
+            dialog = DialogUtils.Dialogph(context, "正在获取数据");
+            sendRequest();
+        }
+        return rootView;
     }
 
     // 接收上一个页面传递过来的数据
     private void handleRequestType() {
-        Intent listIntent = getIntent();
-        if (listIntent != null) {
-            String type = listIntent.getStringExtra("type");
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            String type = bundle.getString("type");
             if (type != null && type.trim().equals("fenLeiAdapter")) {
                 try {
-                    FenLeiName list = (FenLeiName) listIntent.getSerializableExtra("Catalog");
+                    FenLeiName list = (FenLeiName) bundle.getSerializable("Catalog");
                     catalogName = list.getName();
                     catalogType = list.getAttributes().getmId();
                     id = list.getAttributes().getId();
@@ -105,9 +119,7 @@ public class RadioListActivity extends AppBaseFragmentActivity implements OnClic
         }
     }
 
-    /**
-     * 请求网络获取分类信息
-     */
+    // 请求网络获取分类信息
     private void sendRequest() {
         if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
             if(dialog != null) dialog.dismiss();
@@ -122,8 +134,6 @@ public class RadioListActivity extends AppBaseFragmentActivity implements OnClic
 
             @Override
             protected void requestSuccess(JSONObject result) {
-                long a = System.currentTimeMillis();
-                Log.e("返回值时间1", "--- > > >  " +a);
                 tipView.setVisibility(View.GONE);
                 try {
                     ReturnType = result.getString("ReturnType");
@@ -141,7 +151,7 @@ public class RadioListActivity extends AppBaseFragmentActivity implements OnClic
                             count++;
                         }
                     }
-                    viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), list, fragments));
+                    viewPager.setAdapter(new MyPagerAdapter(getChildFragmentManager(), list, fragments));
                     pageSlidingTab.setViewPager(viewPager);
                     if (count == 1) pageSlidingTab.setVisibility(View.GONE);
                 } else {
@@ -159,7 +169,7 @@ public class RadioListActivity extends AppBaseFragmentActivity implements OnClic
     }
 
     private JSONObject setParam() {
-        JSONObject jsonObject = VolleyRequest.getJsonObject(this);
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("CatalogType", catalogType);
             jsonObject.put("CatalogId", id);
@@ -175,33 +185,21 @@ public class RadioListActivity extends AppBaseFragmentActivity implements OnClic
     /**
      * 关闭加载对话框
      */
-    public void closeDialog() {
+    public static void closeDialog() {
         if (dialog != null) {
             dialog.dismiss();
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case 1:
-                if (resultCode == 1) {
-                    finish();
-                }
-                break;
-        }
-    }
-
     // 初始化界面
     private void setView() {
-        tipView = (TipView) findViewById(R.id.tip_view);
+        tipView = (TipView) rootView.findViewById(R.id.tip_view);
         tipView.setWhiteClick(this);
 
-        findViewById(R.id.head_left_btn).setOnClickListener(this);
-        mTextView_Head = (TextView) findViewById(R.id.head_name_tv);
-        pageSlidingTab = (PagerSlidingTabStrip) findViewById(R.id.tabs_title);
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        rootView.findViewById(R.id.head_left_btn).setOnClickListener(this);
+        mTextView_Head = (TextView) rootView.findViewById(R.id.head_name_tv);
+        pageSlidingTab = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs_title);
+        viewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
         pageSlidingTab.setIndicatorHeight(4);                                // 滑动指示器的高度
         pageSlidingTab.setIndicatorColorResource(R.color.dinglan_orange);    // 滑动指示器的颜色
         pageSlidingTab.setDividerColorResource(R.color.WHITE);                // 菜单之间的分割线颜色
@@ -213,28 +211,27 @@ public class RadioListActivity extends AppBaseFragmentActivity implements OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_left_btn:
-                finish();
+                HomeActivity.close();
                 break;
         }
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
         pageSlidingTab = null;
         viewPager = null;
         mTextView_Head = null;
         dialog = null;
+        recommend = null;
         if (list != null) {
             list.clear();
             list = null;
         }
-        recommend = null;
         if (fragments != null) {
             fragments.clear();
             fragments = null;
         }
-        setContentView(R.layout.activity_null);
     }
 }

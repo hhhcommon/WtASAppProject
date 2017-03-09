@@ -1,4 +1,4 @@
-package com.woting.ui.home.search.activity;
+package com.woting.ui.home.search.main;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -7,8 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -18,6 +16,7 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -30,6 +29,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.animation.Animation;
@@ -57,8 +57,8 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.MyLinearLayout;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.baseactivity.AppBaseFragmentActivity;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
+import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.search.adapter.SearchHistoryAdapter;
 import com.woting.ui.home.search.adapter.SearchHotAdapter;
 import com.woting.ui.home.search.adapter.SearchLikeAdapter;
@@ -82,7 +82,9 @@ import java.util.List;
  * @author 辛龙
  * 2016年4月16日
  */
-public class SearchLikeActivity extends AppBaseFragmentActivity implements OnClickListener, TipView.WhiteViewClick {
+public class SearchLikeFragment extends Fragment implements OnClickListener, TipView.WhiteViewClick {
+    private static Context context;
+
     private LinearLayout lin_head_left;
     private LinearLayout lin_head_right;
     private GridView gv_TopSearch;
@@ -98,7 +100,6 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
     public int offset;
     private ImageView img_edit_clear;
     private ImageView img_edit_normal;
-    private static SearchLikeActivity context;
     private MyLinearLayout rl_voice;
     private TextView tv_cancel;
     private TextView tv_speak_status;
@@ -131,6 +132,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
     private boolean isCancelRequest;
     private VoiceRecognizer mVoiceRecognizer;
 
+    private View rootView;
     private TipView tipView;// 没有网络提示
 
     @Override
@@ -146,39 +148,53 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_searchlike);
-        context = this;
+        context = getActivity();
+
         bmp = BitmapUtils.readBitMap(context, R.mipmap.talknormal);
         bmpPress = BitmapUtils.readBitMap(context, R.mipmap.wt_duijiang_button_pressed);
 
         // 初始化广播
         mIntent = new Intent();
         mIntent.setAction(BroadcastConstants.SEARCH_VIEW_UPDATE);
-        setView();// 初始化控件
-        dialog();
-        setListener();// 设置监听
-        InitImage();
-        initDao();// 初始化数据库命令执行对象
-        initTextWatcher();
-        InitViewPager();
-        // 设置 listView 内部 item 点击事件 接口完成后需 添加该方法进入到 returnType == 1001 中
-        setListView();
+
         audioMgr = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int maxVolume = audioMgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);// 获取最大音乐音量
         stepVolume = maxVolume / 100;
-        // 此处获取热门搜索 对应接口HotKey
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "通讯中");
-            send();
-        } else {
-            tipView.setVisibility(View.VISIBLE);
-            tipView.setTipView(TipView.TipStatus.NO_NET);
-        }
+
         IntentFilter myFilter = new IntentFilter();
         myFilter.addAction(BroadcastConstants.SEARCHVOICE);
-        registerReceiver(mBroadcastReceiver, myFilter);
+        context.registerReceiver(mBroadcastReceiver, myFilter);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.activity_searchlike, container, false);
+            rootView.setOnClickListener(this);
+
+            setView();// 初始化控件
+            dialog();
+            setListener();// 设置监听
+            InitImage();
+            initDao();// 初始化数据库命令执行对象
+            initTextWatcher();
+            InitViewPager();
+            // 设置 listView 内部 item 点击事件 接口完成后需 添加该方法进入到 returnType == 1001 中
+            setListView();
+
+            // 此处获取热门搜索 对应接口 HotKey
+            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                dialog = DialogUtils.Dialogph(context, "通讯中");
+                send();
+            } else {
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_NET);
+            }
+        }
+        return rootView;
     }
 
     // 广播接收器
@@ -220,7 +236,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
         yuyinDialog.setContentView(dialog);
         Window window = yuyinDialog.getWindow();
         DisplayMetrics dm = new DisplayMetrics();
-        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        ((HomeActivity)context).getWindowManager().getDefaultDisplay().getMetrics(dm);
         int scrEnw = dm.widthPixels;
         LayoutParams params = dialog.getLayoutParams();
         params.width = scrEnw;
@@ -239,7 +255,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
         imageView_voice.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
+                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
                     ToastUtils.show_always(context, "网络失败，请检查网络");
                     return true;
                 }
@@ -273,32 +289,31 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
         fragmentList.add(new SoundFragment());
         fragmentList.add(new RadioFragment());
         fragmentList.add(new TTSFragment());
-//        mPager.setOffscreenPageLimit(4);
-        mPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager(), fragmentList));
+        mPager.setAdapter(new MyFragmentPagerAdapter(getChildFragmentManager(), fragmentList));
         mPager.setOnPageChangeListener(new MyOnPageChangeListener());// 页面变化时的监听器
         mPager.setCurrentItem(0);// 设置当前显示标签页为第
         mPager.setOffscreenPageLimit(5);
     }
 
     private void setView() {
-        tipView = (TipView) findViewById(R.id.tip_view);
+        tipView = (TipView) rootView.findViewById(R.id.tip_view);
         tipView.setWhiteClick(this);
 
-        mEtSearchContent = (EditText) findViewById(R.id.et_searchlike);
-        lin_head_left = (LinearLayout) findViewById(R.id.head_left_btn);
-        lin_head_right = (LinearLayout) findViewById(R.id.lin_head_right);
+        mEtSearchContent = (EditText) rootView.findViewById(R.id.et_searchlike);
+        lin_head_left = (LinearLayout) rootView.findViewById(R.id.head_left_btn);
+        lin_head_right = (LinearLayout) rootView.findViewById(R.id.lin_head_right);
         // 清理历史搜索数据库
-        img_clear = (LinearLayout) findViewById(R.id.img_clear);
-        gv_TopSearch = (GridView) findViewById(R.id.gv_topsearch);
-        gv_history = (GridView) findViewById(R.id.gv_history);
-        lin_status_first = (LinearLayout) findViewById(R.id.lin_searchlike_status_first);
-        lin_status_second = (LinearLayout) findViewById(R.id.lin_searchlike_status_second);
-        lin_history = (LinearLayout) findViewById(R.id.lin_history);
-        lv_mListView = (ListView) findViewById(R.id.lv_searchlike_status_second);
+        img_clear = (LinearLayout) rootView.findViewById(R.id.img_clear);
+        gv_TopSearch = (GridView) rootView.findViewById(R.id.gv_topsearch);
+        gv_history = (GridView) rootView.findViewById(R.id.gv_history);
+        lin_status_first = (LinearLayout) rootView.findViewById(R.id.lin_searchlike_status_first);
+        lin_status_second = (LinearLayout) rootView.findViewById(R.id.lin_searchlike_status_second);
+        lin_history = (LinearLayout) rootView.findViewById(R.id.lin_history);
+        lv_mListView = (ListView) rootView.findViewById(R.id.lv_searchlike_status_second);
         // 清理 editText 内容
-        img_edit_clear = (ImageView) findViewById(R.id.img_edit_clear);
+        img_edit_clear = (ImageView) rootView.findViewById(R.id.img_edit_clear);
         // 正常状态
-        img_edit_normal = (ImageView) findViewById(R.id.img_edit_normal);
+        img_edit_normal = (ImageView) rootView.findViewById(R.id.img_edit_normal);
 
         // 取消默认 selector
         gv_TopSearch.setSelector(new ColorDrawable(Color.TRANSPARENT));
@@ -306,13 +321,13 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
         lv_mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 
         // lin_third
-        lin_status_third = (LinearLayout) findViewById(R.id.lin_searchlike_status_third);
-        tv_total = (TextView) findViewById(R.id.tv_total);// 全部
-        tv_sequ = (TextView) findViewById(R.id.tv_sequ);// 专辑
-        tv_sound = (TextView) findViewById(R.id.tv_sound);// 声音
-        tv_radio = (TextView) findViewById(R.id.tv_radio);// 电台
-        tv_tts = (TextView) findViewById(R.id.tv_tts);// TTS
-        mPager = (ViewPager) findViewById(R.id.viewpager);
+        lin_status_third = (LinearLayout) rootView.findViewById(R.id.lin_searchlike_status_third);
+        tv_total = (TextView) rootView.findViewById(R.id.tv_total);// 全部
+        tv_sequ = (TextView) rootView.findViewById(R.id.tv_sequ);// 专辑
+        tv_sound = (TextView) rootView.findViewById(R.id.tv_sound);// 声音
+        tv_radio = (TextView) rootView.findViewById(R.id.tv_radio);// 电台
+        tv_tts = (TextView) rootView.findViewById(R.id.tv_tts);// TTS
+        mPager = (ViewPager) rootView.findViewById(R.id.viewpager);
         mPager.setOffscreenPageLimit(5);
     }
 
@@ -327,26 +342,10 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
         tv_sound.setOnClickListener(new txListener(2));
         tv_radio.setOnClickListener(new txListener(3));
         tv_tts.setOnClickListener(new txListener(4));
-//        mEtSearchContent.setOnFocusChangeListener(new OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (hasFocus) {
-//                    Handler handler = new Handler();
-//                    handler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            if (yuyinDialog != null) {
-//                                yuyinDialog.dismiss();
-//                            }
-//                        }
-//                    }, 2000);
-//                }
-//            }
-//        });
     }
 
     private void initDao() {
-        shd = new SearchHistoryDao(this);
+        shd = new SearchHistoryDao(context);
     }
 
     private void setListView() {
@@ -379,7 +378,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
                 if (!s.toString().trim().equals("")) {
                     img_edit_clear.setVisibility(View.VISIBLE);
                     img_edit_normal.setVisibility(View.GONE);
-                    if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                    if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                         sendKey(s.toString());// 发送搜索变更内容
                     }
                     lin_status_first.setVisibility(View.GONE);
@@ -418,8 +417,8 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.head_left_btn:
-                finish();
+            case R.id.head_left_btn:// 返回
+                HomeActivity.close();
                 break;
             case R.id.lin_head_right:
                 if (mEtSearchContent != null && mEtSearchContent.getText() != null && !mEtSearchContent.getText().toString().trim().equals("")) {
@@ -428,14 +427,14 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
                 }
                 break;
             case R.id.img_clear:
-                shd.deleteHistoryall(CommonUtils.getUserId(this));
-                History history1 = new History(CommonUtils.getUserId(this), "");
+                shd.deleteHistoryall(CommonUtils.getUserId(context));
+                History history1 = new History(CommonUtils.getUserId(context), "");
                 historyDatabaseList = shd.queryHistory(history1);
                 if (historyDatabaseList.size() == 0) {
                     lin_history.setVisibility(View.GONE);
                 }
                 if (adapterHistory == null) {
-                    adapterHistory = new SearchHistoryAdapter(this, historyDatabaseList);
+                    adapterHistory = new SearchHistoryAdapter(context, historyDatabaseList);
                 }
                 gv_history.setAdapter(adapterHistory);
                 break;
@@ -456,7 +455,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
             case R.id.img_edit_normal:
                 dialog();
                 yuyinDialog.show();
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(rl_voice.getWindowToken(), 0);
                 break;
         }
@@ -491,7 +490,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
                 adapterHistory = new SearchHistoryAdapter(context, historyDatabaseList);
                 gv_history.setAdapter(adapterHistory);
             }
-            sendBroadcast(mIntent);
+            context.sendBroadcast(mIntent);
             mPager.setCurrentItem(0);
             if (adapterHistory == null) {
                 adapterHistory = new SearchHistoryAdapter(context, historyDatabaseList);
@@ -500,7 +499,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
                 adapterHistory.notifyDataSetChanged();
             }
         } else {
-            ToastUtils.show_always(getApplicationContext(), "网络连接失败，请稍后重试");
+            ToastUtils.show_always(context, "网络连接失败，请稍后重试");
         }
     }
 
@@ -525,9 +524,9 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
                 topSearchList.clear();
                 try {
                     String s = result.getString("SysKeyList");
-                    if(s == null || s.trim().equals("")) {
+                    if (s == null || s.trim().equals("")) {
                         lv_mListView.setVisibility(View.GONE);
-                        return ;
+                        return;
                     } else {
                         lv_mListView.setVisibility(View.VISIBLE);
                         String[] s1 = s.split(",");
@@ -540,7 +539,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
                     lv_mListView.setVisibility(View.GONE);
                 }
                 try {
-                    String  ReturnType = result.getString("ReturnType");
+                    String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {
                         if (topSearchList != null && topSearchList.size() > 0) {
                             if (searchHotAdapter == null) {
@@ -556,13 +555,13 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
                         }
                     } else if (ReturnType != null && ReturnType.equals("1002")) {
                         lv_mListView.setVisibility(View.GONE);
-                        ToastUtils.show_always(getApplicationContext(), "没有查询到内容");
+                        ToastUtils.show_always(context, "没有查询到内容");
                     } else {
                         lv_mListView.setVisibility(View.GONE);
                         try {
                             String Message = result.getString("Message");
                             if (Message != null && !Message.trim().equals("")) {
-                                ToastUtils.show_always(getApplicationContext(), Message + "请稍后重试");
+                                ToastUtils.show_always(context, Message + "请稍后重试");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -628,7 +627,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
                         try {
                             String Message = result.getString("Message");
                             if (Message != null && !Message.trim().equals("")) {
-                                ToastUtils.show_short(getApplicationContext(), Message + "请稍后重试");
+                                ToastUtils.show_short(context, Message + "请稍后重试");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -746,13 +745,13 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
 
     //动态设置cursor的宽
     public void InitImage() {
-        image = (ImageView) findViewById(R.id.cursor);
+        image = (ImageView) rootView.findViewById(R.id.cursor);
         LayoutParams lp = image.getLayoutParams();
         lp.width = (PhoneMessage.ScreenWidth / 5);
         image.setLayoutParams(lp);
         bmpW = BitmapFactory.decodeResource(getResources(), R.mipmap.left_personal_bg).getWidth();
         DisplayMetrics dm = new DisplayMetrics();
-        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        ((HomeActivity)context).getWindowManager().getDefaultDisplay().getMetrics(dm);
         int screenW = dm.widthPixels;
         offset = (screenW / 5 - bmpW) / 2;
         // imageView设置平移，使下划线平移到初始位置（平移一个offset）
@@ -762,26 +761,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
     }
 
     @Override
-    protected void onActivityResult(int arg0, int arg1, Intent arg2) {
-        super.onActivityResult(arg0, arg1, arg2);
-        if (arg1 == 1) {
-            finish();
-        }
-    }
-
-    // 设置android app 的字体大小不受系统字体大小改变的影响
-    @Override
-    public Resources getResources() {
-        Resources res = super.getResources();
-        Configuration config = new Configuration();
-        config.setToDefaults();
-        res.updateConfiguration(config, res.getDisplayMetrics());
-        return res;
-    }
-
-
-    @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
         mEtSearchContent = null;
@@ -817,8 +797,7 @@ public class SearchLikeActivity extends AppBaseFragmentActivity implements OnCli
             mVoiceRecognizer.ondestroy();
             mVoiceRecognizer = null;
         }
-        unregisterReceiver(mBroadcastReceiver);
+        context.unregisterReceiver(mBroadcastReceiver);
         context = null;
-        setContentView(R.layout.activity_null);
     }
 }

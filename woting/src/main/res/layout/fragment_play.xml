@@ -10,12 +10,51 @@
         android:layout_width="match_parent"
         android:layout_height="0.1dp"/>
 
+    <TextView
+        android:id="@+id/tv_main"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:background="@color/dinglan_orange"
+        android:visibility="gone"/>
+
+    <RelativeLayout
+        android:id="@+id/view_title"
+        android:layout_below="@id/tv_main"
+        android:layout_width="match_parent"
+        android:background="@color/dinglan_orange"
+        android:layout_height="48dp">
+
+        <LinearLayout
+            android:id="@+id/lin_news"
+            android:layout_width="45dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="21dp"
+                android:layout_height="21dp"
+                android:src="@mipmap/news"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="播放"
+            android:textColor="@color/WHITE"
+            android:layout_centerInParent="true"
+            android:textSize="18sp"/>
+
+    </RelativeLayout>
+
     <com.woting.common.widgetui.xlistview.XListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animationCache="false"
         android:divider="@color/WHITE"
+        android:layout_below="@id/view_title"
         android:scrollbars="none"
         android:scrollingCache="false"/>
 
@@ -26,6 +65,7 @@
         android:background="#80000000"
         android:gravity="bottom|center"
         android:orientation="vertical"
+        android:layout_below="@id/view_title"
         android:visibility="gone">
 
         <LinearLayout
@@ -203,7 +243,7 @@
         android:visibility="gone">
 
         <View
-            android:id="@+id/view__voice_other"
+            android:id="@+id/view_voice_other"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

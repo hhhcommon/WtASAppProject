@@ -1,4 +1,4 @@
-package com.woting.ui.home.program.diantai.fragment;
+package com.woting.ui.home.program.diantai.main;
 
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -47,25 +47,24 @@ import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout.OnRefreshLis
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
-import com.woting.ui.home.program.album.activity.AlbumActivity;
-import com.woting.ui.home.program.citylist.activity.CityListActivity;
-import com.woting.ui.home.program.diantai.activity.RadioNationalActivity;
+import com.woting.ui.home.program.citylist.main.CityListFragment;
 import com.woting.ui.home.program.diantai.adapter.CityNewAdapter;
 import com.woting.ui.home.program.diantai.adapter.OnLinesAdapter;
+import com.woting.ui.home.program.diantai.fragment.RadioNationalFragment;
 import com.woting.ui.home.program.diantai.model.RadioPlay;
-import com.woting.ui.home.program.fmlist.activity.FMListActivity;
+import com.woting.ui.home.program.fmlist.fragment.FMListFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 电台主页
+ *
  * @author 辛龙 2016年2月26日
  */
 public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
@@ -178,7 +177,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                 }
                 Editor et = shared.edit();
                 et.putString(StringConstant.CITYTYPE, "false");
-                if(!et.commit()) Log.w("TAG", "数据 commit 失败!");
+                if (!et.commit()) Log.w("TAG", "数据 commit 失败!");
             }
         }
 
@@ -216,65 +215,70 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
     }
 
     private void setView() {
+        // 城市列表
         linAddress.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, CityListActivity.class);
+                CityListFragment fragment = new CityListFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("type", "address");
-                intent.putExtras(bundle);
-                startActivity(intent);
+                fragment.setArguments(bundle);
+                HomeActivity.open(fragment);
             }
         });
-        linLocal.setOnClickListener(new OnClickListener() {
 
+        // 城市列表
+        linLocal.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, CityListActivity.class);
+                CityListFragment fragment = new CityListFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("type", "local");
-                intent.putExtras(bundle);
-                startActivity(intent);
+                fragment.setArguments(bundle);
+                HomeActivity.open(fragment);
             }
         });
+
+        // 国家台
         linCountry.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, RadioNationalActivity.class);
-                startActivity(intent);
+                RadioNationalFragment fragment = new RadioNationalFragment();
+                HomeActivity.open(fragment);
             }
         });
-        linNet.setOnClickListener(new OnClickListener() {
 
+        // 网络台
+        linNet.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, FMListActivity.class);
+                FMListFragment fragment = new FMListFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("fromtype", "net"); // 界面判断标签
                 bundle.putString("name", "网络台");
                 bundle.putString("type", "9");
                 bundle.putString("id", "dtfl2002");
-                intent.putExtras(bundle);
-                startActivity(intent);
+                fragment.setArguments(bundle);
+                HomeActivity.open(fragment);
             }
         });
-        viewHeadMore.setOnClickListener(new OnClickListener() {
 
+        // 更多
+        viewHeadMore.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mainLists != null) {
                     String cityId = shared.getString(StringConstant.CITYID, "110000");
                     String cityName = shared.getString(StringConstant.CITYNAME, "北京");
-                    Intent intent = new Intent(context, FMListActivity.class);
+
+                    FMListFragment fragment = new FMListFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("fromtype", "online");
                     bundle.putString("name", cityName);
                     bundle.putString("type", "2");
                     bundle.putString("id", cityId);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                    fragment.setArguments(bundle);
+                    HomeActivity.open(fragment);
                 }
             }
         });
@@ -289,7 +293,6 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
 
         expandableListMain.setGroupIndicator(null);
         mPullToRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-
             @Override
             public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
@@ -298,9 +301,9 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                     beginCatalogId = "";
                     send();
                 } else {
-                    if(mainLists!=null&&mainLists.size()>0){
+                    if (mainLists != null && mainLists.size() > 0) {
                         mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-                    }else{
+                    } else {
                         mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.NO_NET);
@@ -351,7 +354,8 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                     if (returnType != null && returnType.equals("1001")) {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         String MainList = arg1.getString("List");
-                        mainLists = new Gson().fromJson(MainList, new TypeToken<List<RankInfo>>() {}.getType());
+                        mainLists = new Gson().fromJson(MainList, new TypeToken<List<RankInfo>>() {
+                        }.getType());
                         if (mainLists != null && mainLists.size() != 0) {
                             if (mainLists.size() > 3) {
                                 List tempList = new ArrayList();
@@ -416,13 +420,13 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                         String sequDesc = mainLists.get(position).getSequDesc();
                         String sequImg = mainLists.get(position).getSequImg();
                         String ContentPlayType = mainLists.get(position).getContentPlayType();
-                        String IsPlaying=mainLists.get(position).getIsPlaying();
+                        String IsPlaying = mainLists.get(position).getIsPlaying();
                         // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playName, playImage, playUrl, playUri, playMediaType,
                                 playAllTime, playInTime, playContentDesc, playerNum,
                                 playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
+                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying);
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
@@ -430,7 +434,6 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                         bundle1.putString("text", mainLists.get(position).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
-                        HomeActivity.UpdateViewPager();
                     }
                 }
             }
@@ -458,7 +461,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
         VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
-                if(dialog != null) dialog.dismiss();
+                if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 page++;
                 try {
@@ -466,7 +469,8 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                     if (returnType != null && returnType.equals("1001")) {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         beginCatalogId = arg1.getString("BeginCatalogId");
-                        mainList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RadioPlay>>() {}.getType());
+                        mainList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RadioPlay>>() {
+                        }.getType());
                         if (RefreshType == 1) {
                             mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
                             newList.clear();
@@ -497,7 +501,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
 
             @Override
             protected void requestError(VolleyError error) {
-                if(dialog != null) dialog.dismiss();
+                if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
                 tipView.setVisibility(View.VISIBLE);
                 tipView.setTipView(TipView.TipStatus.IS_ERROR);
@@ -540,30 +544,22 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                         String sequImg = newList.get(groupPosition).getList().get(childPosition).getSequImg();
 
                         String ContentPlayType = newList.get(groupPosition).getList().get(childPosition).getContentPlayType();
-                        String IsPlaying=newList.get(groupPosition).getList().get(childPosition).getIsPlaying();
+                        String IsPlaying = newList.get(groupPosition).getList().get(childPosition).getIsPlaying();
 
                         // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playName, playImage, playUrl, playUri, playMediaType,
                                 playAllTime, playInTime, playContentDesc, playerNum,
                                 playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
+                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying);
 
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
-                        HomeActivity.UpdateViewPager();
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
                         bundle1.putString("text", newList.get(groupPosition).getList().get(childPosition).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
-                    } else if (MediaType.equals("SEQU")) {
-                        Intent intent = new Intent(context, AlbumActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("type", "recommend");
-                        bundle.putSerializable("list", (Serializable) newList.get(groupPosition).getList());
-                        intent.putExtras(bundle);
-                        startActivity(intent);
                     } else {
                         ToastUtils.show_short(context, "暂不支持的Type类型");
                     }
@@ -589,7 +585,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
             send();
             Editor et = shared.edit();
             et.putString(StringConstant.CITYTYPE, "false");
-            if(!et.commit()) Log.w("TAG", "数据 commit 失败!");
+            if (!et.commit()) Log.w("TAG", "数据 commit 失败!");
         }
     }
 

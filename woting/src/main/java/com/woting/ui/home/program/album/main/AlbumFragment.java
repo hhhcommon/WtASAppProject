@@ -1,10 +1,12 @@
-package com.woting.ui.home.program.album.activity;
+package com.woting.ui.home.program.album.main;
 
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -13,6 +15,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.animation.Animation;
@@ -45,18 +48,19 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.HorizontalListView;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.baseactivity.AppBaseFragmentActivity;
 import com.woting.ui.baseadapter.MyFragmentChildPagerAdapter;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.adapter.ImageAdapter;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
 import com.woting.ui.home.player.main.model.ShareModel;
+import com.woting.ui.home.player.main.play.PlayerActivity;
 import com.woting.ui.home.program.album.fragment.DetailsFragment;
 import com.woting.ui.home.program.album.fragment.ProgramFragment;
 import com.woting.ui.home.program.comment.CommentActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.home.program.radiolist.mode.ListInfo;
 import com.woting.ui.main.MainActivity;
+import com.woting.ui.mine.main.MineActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -69,14 +73,15 @@ import java.util.List;
  * 作者：xinlong on 2016/4/1 17:40
  * 邮箱：645700751@qq.com
  */
-public class AlbumActivity extends AppBaseFragmentActivity implements OnClickListener, TipView.WhiteViewClick {
+public class AlbumFragment extends Fragment implements OnClickListener, TipView.WhiteViewClick {
+
     private DetailsFragment detailsFragment;
-    private ProgramFragment programFragment;
+    private static ProgramFragment programFragment;
 
     public static TextView tv_album_name;
     public static TextView tv_favorite;
-    private TextView textSubscriber;      // 订阅
-    private ImageView imageSubscriber;    // 订阅小图标
+    private static TextView textSubscriber;      // 订阅
+    private static ImageView imageSubscriber;    // 订阅小图标
     private TextView textDetails;               // text_details
     private TextView textProgram;               // text_program
     public static ImageView img_album;
@@ -88,6 +93,7 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
     private Dialog dialog, shareDialog, dialog1;
     private UMImage image;
 
+    private int fromType;// == 1 PlayerActivity  == 2 HomeActivity  == 3 MineActivity
     public static int returnResult = -1;        // == 1 说明信息获取正常，returnType == 1001
     private int offset;                         // 图片移动的偏移量
     private boolean isCancelRequest;
@@ -96,9 +102,12 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
     public static String ContentFavorite;       // 从网络获取的当前值，如果为空，表示页面并未获取到此值
     private String tag = "ALBUM_VOLLEY_REQUEST_CANCEL_TAG";
     private String RadioName;
-    private int flag = 0;                       // == 0 还没有订阅  == 1 已经订阅
+    private static int flag = 0;                       // == 0 还没有订阅  == 1 已经订阅
 
-    private TipView tipView;                    // 提示
+    private View rootView;
+    private static TipView tipView;                    // 提示
+    private FragmentActivity context;
+    private View viewBack;
 
     @Override
     public void onWhiteViewClick() {
@@ -111,42 +120,53 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_album);
-        setView();// 设置界面
-        setListener();
-        InitImage();
-        InitViewPager();
-        handleIntent();
-        shareDialog();// 分享 dialog
+        context = getActivity();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.activity_album, container, false);
+            rootView.setOnClickListener(this);
+            setView();// 设置界面
+            setListener();
+            InitImage();
+            InitViewPager();
+            handleIntent();
+            shareDialog();// 分享 dialog
+        }
+        return rootView;
     }
 
     private void setView() {
-        findViewById(R.id.head_right_btn).setOnClickListener(this);// 播放专辑
+        rootView.findViewById(R.id.head_right_btn).setOnClickListener(this);// 播放专辑
+        viewBack = rootView.findViewById(R.id.view_back);
 
-        tv_album_name = (TextView) findViewById(R.id.head_name_tv);
-        img_album = (ImageView) findViewById(R.id.img_album);
-        imageFavorite = (ImageView) findViewById(R.id.img_favorite);
-        lin_share = (LinearLayout) findViewById(R.id.lin_share);              // 分享按钮
-        lin_pinglun = (LinearLayout) findViewById(R.id.lin_pinglun);          // 评论
-        lin_subscriber = (LinearLayout) findViewById(R.id.lin_subscriber);    // 订阅
-        lin_favorite = (LinearLayout) findViewById(R.id.lin_favorite);        // 喜欢按钮
-        tv_favorite = (TextView) findViewById(R.id.tv_favorite);              // tv_favorite
-        textDetails = (TextView) findViewById(R.id.text_details);             // 专辑详情
+        tv_album_name = (TextView) rootView.findViewById(R.id.head_name_tv);
+        img_album = (ImageView) rootView.findViewById(R.id.img_album);
+        imageFavorite = (ImageView) rootView.findViewById(R.id.img_favorite);
+        lin_share = (LinearLayout) rootView.findViewById(R.id.lin_share);              // 分享按钮
+        lin_pinglun = (LinearLayout) rootView.findViewById(R.id.lin_pinglun);          // 评论
+        lin_subscriber = (LinearLayout) rootView.findViewById(R.id.lin_subscriber);    // 订阅
+        lin_favorite = (LinearLayout) rootView.findViewById(R.id.lin_favorite);        // 喜欢按钮
+        tv_favorite = (TextView) rootView.findViewById(R.id.tv_favorite);              // tv_favorite
+        textDetails = (TextView) rootView.findViewById(R.id.text_details);             // 专辑详情
         textDetails.setOnClickListener(this);
-        textProgram = (TextView) findViewById(R.id.text_program);             // 专辑列表
+        textProgram = (TextView) rootView.findViewById(R.id.text_program);             // 专辑列表
         textProgram.setOnClickListener(this);
 
-        textSubscriber = (TextView) findViewById(R.id.text_subscriber);       // 订阅
-        imageSubscriber = (ImageView) findViewById(R.id.image_subscriber);    // 订阅小图标
+        textSubscriber = (TextView) rootView.findViewById(R.id.text_subscriber);       // 订阅
+        imageSubscriber = (ImageView) rootView.findViewById(R.id.image_subscriber);    // 订阅小图标
 
-        tipView = (TipView) findViewById(R.id.tip_view);
+        tipView = (TipView) rootView.findViewById(R.id.tip_view);
         tipView.setWhiteClick(this);
     }
 
     private void setListener() {
-        findViewById(R.id.head_left_btn).setOnClickListener(this);             // 返回按钮
+        rootView.findViewById(R.id.head_left_btn).setOnClickListener(this);             // 返回按钮
         lin_share.setOnClickListener(this);
         lin_favorite.setOnClickListener(this);
         lin_pinglun.setOnClickListener(this);
@@ -157,7 +177,7 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
      * 设置cursor的宽
      */
     public void InitImage() {
-        imageCursor = (ImageView) findViewById(R.id.cursor);
+        imageCursor = (ImageView) rootView.findViewById(R.id.cursor);
         LayoutParams lp = imageCursor.getLayoutParams();
         lp.width = PhoneMessage.ScreenWidth / 2;
         imageCursor.setLayoutParams(lp);
@@ -172,19 +192,19 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
      * 初始化 ViewPager
      */
     public void InitViewPager() {
-        mPager = (ViewPager) findViewById(R.id.viewpager);
+        mPager = (ViewPager) rootView.findViewById(R.id.viewpager);
         mPager.setOffscreenPageLimit(1);
         ArrayList<Fragment> fragmentList = new ArrayList<>();
         detailsFragment = new DetailsFragment();                      // 专辑详情页
         programFragment = new ProgramFragment();                      // 专辑列表页
         fragmentList.add(detailsFragment);
         fragmentList.add(programFragment);
-        mPager.setAdapter(new MyFragmentChildPagerAdapter(getSupportFragmentManager(), fragmentList));
+        mPager.setAdapter(new MyFragmentChildPagerAdapter(getChildFragmentManager(), fragmentList));
         mPager.setOnPageChangeListener(new MyOnPageChangeListener());  // 页面变化时的监听器
         mPager.setCurrentItem(0);                                      // 设置当前显示标签页为第一页 mPager
     }
 
-    public void setInfo(String contentId, String contentImg, String contentName, String contentDesc) {
+    public static void setInfo(String contentId, String contentImg, String contentName, String contentDesc) {
         programFragment.setInfo(contentId, contentImg, contentName, contentDesc);
     }
 
@@ -226,7 +246,7 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
         shareDialog.setContentView(dialog);
         Window window = shareDialog.getWindow();
         DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
         int screenWidth = dm.widthPixels;
         LayoutParams params = dialog.getLayoutParams();
         params.width = screenWidth;
@@ -286,7 +306,7 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
             }
             dialog1 = DialogUtils.Dialogph(context, "分享中");
             Config.dialog = dialog1;
-            new ShareAction(AlbumActivity.this).setPlatform(Platform).setCallback(umShareListener).withMedia(image)
+            new ShareAction(context).setPlatform(Platform).setCallback(umShareListener).withMedia(image)
                     .withText(shareDesc).withTitle(shareName).withTargetUrl(shareUrl).share();
         } else {
             ToastUtils.show_always(context, "分享失败，请稍后再试！");
@@ -316,39 +336,42 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
     };
 
     private void handleIntent() {
-        Intent intent = getIntent();
-        if (intent == null) {
+        Bundle bundle = getArguments();
+        if (bundle == null) {
             tipView.setTipView(TipView.TipStatus.IS_ERROR, "数据出错了\n请返回重试!");
             return;
         }
-        String type = getIntent().getStringExtra("type");
+        fromType = bundle.getInt("fromType");
+        if (fromType == 3) viewBack.setVisibility(View.VISIBLE);
+        else viewBack.setVisibility(View.GONE);
+        String type = bundle.getString("type");
         if (type != null && type.trim().equals("radiolistactivity")) {
-            ListInfo list = (ListInfo) getIntent().getSerializableExtra("list");
+            ListInfo list = (ListInfo) bundle.getSerializable("list");
             RadioName = list.getContentName();
             ContentDesc = list.getContentDescn();
             id = list.getContentId();
         } else if (type != null && type.trim().equals("recommend")) {
-            RankInfo list = (RankInfo) getIntent().getSerializableExtra("list");
+            RankInfo list = (RankInfo) bundle.getSerializable("list");
             RadioName = list.getContentName();
             ContentDesc = list.getContentDescn();
             id = list.getContentId();
         } else if (type != null && type.trim().equals("search")) {
-            RankInfo list = (RankInfo) getIntent().getSerializableExtra("list");
+            RankInfo list = (RankInfo) bundle.getSerializable("list");
             RadioName = list.getContentName();
             ContentDesc = list.getContentDescn();
             id = list.getContentId();
         } else if (type != null && type.trim().equals("main")) {
             // 再做一个
-            RadioName = this.getIntent().getStringExtra("conentname");
-            id = this.getIntent().getStringExtra("id");
+            RadioName = bundle.getString("conentname");
+            id = bundle.getString("id");
         } else if (type != null && type.trim().equals("player")) {
             // 再做一个
-            LanguageSearchInside list = (LanguageSearchInside) getIntent().getSerializableExtra("list");
+            LanguageSearchInside list = (LanguageSearchInside) bundle.getSerializable("list");
             RadioName = list.getSequName();
             ContentDesc = list.getSequDesc();
             id = list.getSequId();
         } else {
-            LanguageSearchInside list = (LanguageSearchInside) getIntent().getSerializableExtra("list");
+            LanguageSearchInside list = (LanguageSearchInside) bundle.getSerializable("list");
             RadioName = list.getContentName();
             ContentDesc = list.getContentDescn();
             id = list.getContentId();
@@ -365,7 +388,13 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_left_btn: // 左上角返回键
-                finish();
+                if (fromType == 1) {// Play
+                    PlayerActivity.close();
+                } else if (fromType == 2) {// Home
+                    HomeActivity.close();
+                } else {// Mine
+                    MineActivity.close();
+                }
                 break;
             case R.id.lin_share: // 分享
                 shareDialog.show();
@@ -420,15 +449,13 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
                 Intent intent = new Intent(BroadcastConstants.PLAY_SEQU_LIST);
                 intent.putExtra(StringConstant.ID_CONTENT, id);
                 intent.putExtra(StringConstant.SEQU_LIST_SIZE, programFragment.getListSize());
-                sendBroadcast(intent);
+                context.sendBroadcast(intent);
                 MainActivity.change();
-                HomeActivity.UpdateViewPager();
-                finish();
                 break;
         }
     }
 
-    public void setFlag(String contentSubscribe) {
+    public static void setFlag(String contentSubscribe) {
         flag = Integer.valueOf(contentSubscribe);
         if(flag == 0) {
             textSubscriber.setText("订阅");
@@ -539,26 +566,27 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
     }
 
     // 设置提示
-    public void setTip(TipView.TipStatus tipStatus) {
+    public static void setTip(TipView.TipStatus tipStatus) {
         tipView.setVisibility(View.VISIBLE);
         tipView.setTipView(tipStatus);
     }
 
     // 隐藏提示
-    public void hideTip() {
+    public static void hideTip() {
         tipView.setVisibility(View.GONE);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(context).onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
+        context = null;
         RadioName = null;
         tv_album_name = null;
         img_album = null;
@@ -580,6 +608,7 @@ public class AlbumActivity extends AppBaseFragmentActivity implements OnClickLis
         imageCursor = null;
         detailsFragment = null;
         programFragment = null;
-        setContentView(R.layout.activity_null);
+
+        Log.e("TAG", "onDestroy album");
     }
 }
