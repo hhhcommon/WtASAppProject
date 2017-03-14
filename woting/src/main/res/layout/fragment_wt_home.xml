@@ -35,6 +35,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/color_wt_circle_orange"
             android:layout_centerInParent="true">
 
             <LinearLayout
@@ -57,14 +58,12 @@
             <LinearLayout
                 android:layout_width="70dp"
                 android:layout_height="28dp"
-                android:layout_marginLeft="8dp"
                 android:gravity="center">
 
                 <TextView
                     android:id="@+id/tv_guid2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/color_wt_circle_orange"
                     android:gravity="center"
                     android:text="电 台"
                     android:textColor="@color/WHITE"
@@ -75,14 +74,12 @@
             <LinearLayout
                 android:layout_width="70dp"
                 android:layout_height="28dp"
-                android:layout_marginLeft="8dp"
                 android:gravity="center">
 
                 <TextView
                     android:id="@+id/tv_guid3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/color_wt_circle_orange"
                     android:gravity="center"
                     android:text="分 类"
                     android:textColor="@color/WHITE"

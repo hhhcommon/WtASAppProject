@@ -58,7 +58,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp">
+            android:layout_marginTop="10dp">
 
             <ImageView
                 android:id="@+id/lin_left"
@@ -78,22 +78,22 @@
 
                 <ImageView
                     android:id="@+id/img_news"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:layout_centerInParent="true"
                     android:scaleType="centerCrop"
                     android:src="@mipmap/wt_image_playertx"/>
 
                 <ImageView
                     android:id="@+id/image_liu"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:layout_centerInParent="true"/>
 
                 <ImageView
                     android:id="@+id/img_play"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_centerInParent="true"
                     android:src="@mipmap/wt_play_stop"/>
 
@@ -115,9 +115,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="18dp"
+            android:layout_marginBottom="12dp"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -160,6 +161,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:layout_marginTop="12dp"
+            android:visibility="gone"
             android:paddingLeft="20dp"
             android:paddingRight="20dp">
 
@@ -238,11 +240,12 @@
 
         </LinearLayout>
 
-        <View style="@style/LineStyle"/>
+        <View style="@style/LineStyle" android:visibility="gone"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp">
+            android:layout_height="40dp"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"

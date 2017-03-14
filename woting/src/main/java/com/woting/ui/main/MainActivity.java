@@ -22,6 +22,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 
@@ -709,7 +710,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private void InitTextView() {
         tabNavigation = findViewById(R.id.tab_navigation);// 底部导航菜单
 
-        LinearLayout lin0 = (LinearLayout) findViewById(R.id.main_lin_0);// 播放
+        RelativeLayout lin0 = (RelativeLayout) findViewById(R.id.main_lin_0);// 播放
         LinearLayout lin1 = (LinearLayout) findViewById(R.id.main_lin_1);
         LinearLayout lin2 = (LinearLayout) findViewById(R.id.main_lin_2);
         LinearLayout lin5 = (LinearLayout) findViewById(R.id.main_lin_5);

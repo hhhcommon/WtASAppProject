@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <com.baidu.cyberplayer.core.BVideoView
         android:id="@+id/video_view"
@@ -12,20 +13,21 @@
     <TabHost
         android:id="@android:id/tabhost"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/app_bg"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/tab_navigation"
-                android:background="@color/WHITE" >
+                android:background="@color/WHITE">
+
             </FrameLayout>
 
             <LinearLayout
@@ -33,18 +35,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="51dp"
                 android:layout_alignParentBottom="true"
-                android:background="@color/main_tab_bg" >
+                android:background="@color/main_tab_bg">
 
                 <View
                     android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
 
                 <LinearLayout
                     android:id="@+id/main_lin_1"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -52,7 +54,7 @@
                         android:id="@+id/main_image_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_main_navi_action_bar_tab_feed_normal" />
+                        android:src="@mipmap/ic_main_navi_action_bar_tab_feed_normal"/>
 
                     <TextView
                         android:id="@+id/tv_guid1"
@@ -61,7 +63,8 @@
                         android:layout_marginTop="2dp"
                         android:text="享听"
                         android:textColor="@color/dinglan_orange"
-                        android:textSize="11sp" />
+                        android:textSize="11sp"/>
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -70,29 +73,30 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/main_image_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_main_navi_action_bar_tab_discover_normal" />
+                        android:src="@mipmap/ic_main_navi_action_bar_tab_discover_normal"/>
 
                     <TextView
-                      android:id="@+id/tv_guid2"
+                        android:id="@+id/tv_guid2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
                         android:text="享讲"
                         android:textColor="@color/dinglan_orange"
-                        android:layout_marginTop="2dp"
-                        android:textSize="11sp" />
+                        android:textSize="11sp"/>
+
                 </LinearLayout>
 
                 <LinearLayout
-                     android:id="@+id/main_lin_5"
+                    android:id="@+id/main_lin_5"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -106,44 +110,49 @@
                         android:id="@+id/tv_guid5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
                         android:text="我的"
                         android:textColor="@color/dinglan_orange"
-                        android:layout_marginTop="2dp"
-                        android:textSize="11sp" />
+                        android:textSize="11sp"/>
+
                 </LinearLayout>
+
             </LinearLayout>
 
             <TabWidget
                 android:id="@android:id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone" />
+                android:visibility="gone"/>
+
         </RelativeLayout>
+
     </TabHost>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/main_lin_0"
-        android:layout_width="90dp"
+        android:layout_width="wrap_content"
         android:layout_height="51dp"
-        android:gravity="center"
-        android:layout_alignParentBottom="true"
-        android:background="@color/main_tab_bg"
-        android:orientation="vertical">
+        android:layout_alignParentBottom="true">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/wt_image_play_btn_back_white"/>
 
         <ImageView
             android:id="@+id/main_image_0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:src="@mipmap/ic_main_navi_action_bar_tab_chat_selected"/>
 
-        <TextView
-            android:id="@+id/tv_guid0"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="播放"
-            android:textColor="@color/dinglan_orange"
-            android:layout_marginTop="2dp"
-            android:textSize="11sp" />
-    </LinearLayout>
+            android:src="@mipmap/wt_image_play_back_mask"
+            android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

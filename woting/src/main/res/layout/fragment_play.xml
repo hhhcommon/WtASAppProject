@@ -46,6 +46,21 @@
             android:layout_centerInParent="true"
             android:textSize="18sp"/>
 
+        <LinearLayout
+            android:id="@+id/lin_find"
+            android:layout_width="45dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="19dp"
+                android:layout_height="19dp"
+                android:src="@mipmap/wt_find"/>
+
+        </LinearLayout>
+
     </RelativeLayout>
 
     <com.woting.common.widgetui.xlistview.XListView
