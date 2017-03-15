@@ -20,6 +20,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -32,6 +35,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
+import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
@@ -44,12 +48,15 @@ import com.woting.common.receiver.PhoneStatReceiver;
 import com.woting.common.service.LocationService;
 import com.woting.common.service.SocketService;
 import com.woting.common.service.SubclassService;
+import com.woting.common.util.AssembleImageUrlUtils;
+import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.JsonEncloseUtils;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.RoundImageView;
 import com.woting.ui.common.favoritetype.FavoriteProgramTypeActivity;
 import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.model.GroupInfo;
@@ -99,11 +106,12 @@ public class MainActivity extends TabActivity implements OnClickListener {
     public static TabHost tabHost;
     private static Intent Socket, record, voicePlayer, Subclass, download, Location, Notification;
 
-    private static ImageView image0;// 播放
+    private static RoundImageView image0;// 播放
     private static ImageView image1;
     private static ImageView image2;
     private static ImageView image5;
     private Dialog upDataDialog;
+    private ImageView imagePlay;
 
     private static View tabNavigation;// 底部导航菜单
 
@@ -113,6 +121,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private String mPageName = "MainActivity";
     private String tag = "MAIN_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
+    private boolean isFirst = true;
+
     private List<CatalogName> list;
     private NetWorkChangeReceiver netWorkChangeReceiver = null;
     private PhoneStatReceiver phoneStatReceiver = null;
@@ -125,6 +135,26 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private String callId, callerId;
     public static DBTalkHistorary talkdb;
     public static String groupEntryNum;
+
+    // 开始动画
+    private void playStartAnimation() {
+//        image0.clearAnimation();
+//        Animation rotateAnimation = new RotateAnimation(0, 270, 0, 50);
+//        rotateAnimation.setFillAfter(true);
+//        rotateAnimation.setDuration(4 * 1000);
+//        rotateAnimation.setRepeatCount(-1);
+//        image0.startAnimation(rotateAnimation);
+
+        Animation rotateAnimation = AnimationUtils.loadAnimation(context, R.anim.running_circle);
+        LinearInterpolator lin = new LinearInterpolator();
+        rotateAnimation.setInterpolator(lin);
+        image0.startAnimation(rotateAnimation);
+    }
+
+    // 停止动画
+    private void playStopAnimation() {
+        image0.clearAnimation();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -708,6 +738,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     // 初始化视图
     private void InitTextView() {
+        imagePlay = (ImageView) findViewById(R.id.image_play);// 暂停显示  播放隐藏
         tabNavigation = findViewById(R.id.tab_navigation);// 底部导航菜单
 
         RelativeLayout lin0 = (RelativeLayout) findViewById(R.id.main_lin_0);// 播放
@@ -715,7 +746,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         LinearLayout lin2 = (LinearLayout) findViewById(R.id.main_lin_2);
         LinearLayout lin5 = (LinearLayout) findViewById(R.id.main_lin_5);
 
-        image0 = (ImageView) findViewById(R.id.main_image_0);
+        image0 = (RoundImageView) findViewById(R.id.main_image_0);
         image1 = (ImageView) findViewById(R.id.main_image_1);
         image2 = (ImageView) findViewById(R.id.main_image_2);
         image5 = (ImageView) findViewById(R.id.main_image_5);
@@ -775,7 +806,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     // 播放
     private static void setViewZero() {
         tabHost.setCurrentTabByTag("zero");
-        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_selected);
+//        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_selected);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
@@ -785,16 +816,21 @@ public class MainActivity extends TabActivity implements OnClickListener {
     // 享听
     private static void setViewOne() {
         tabHost.setCurrentTabByTag("one");
-        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
+//        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_selected);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+        if (HomeActivity.isVisible) {
+            hideOrShowTab(true);
+        } else {
+            hideOrShowTab(false);
+        }
     }
 
     // 享讲
     private static void setViewTwo() {
         tabHost.setCurrentTabByTag("two");
-        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
+//        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_selected);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
@@ -803,10 +839,15 @@ public class MainActivity extends TabActivity implements OnClickListener {
     // 我的
     private void setViewFive() {
         tabHost.setCurrentTabByTag("five");
-        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
+//        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_selected);
+        if (MineActivity.isVisible) {
+            hideOrShowTab(true);
+        } else {
+            hideOrShowTab(false);
+        }
     }
 
     private TabHost extracted() {
@@ -820,6 +861,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
         m.addAction(BroadcastConstants.PUSH_REGISTER);
         m.addAction(BroadcastConstants.PUSH_NOTIFY);
         m.addAction(BroadcastConstants.PUSH);
+        m.addAction(BroadcastConstants.UPDATE_PLAY_VIEW);// 更新播放节目图片
+        m.addAction(BroadcastConstants.UPDATE_PLAY_IMAGE);// 更新播放按钮的暂停图片是否出现
         registerReceiver(endApplicationBroadcast, m);
 
         IntentFilter p = new IntentFilter();
@@ -833,11 +876,39 @@ public class MainActivity extends TabActivity implements OnClickListener {
         registerReceiver(netWorkChangeReceiver, n);
     }
 
-    //接收定时服务发送过来的广播  用于结束应用
+    //接收广播
     private BroadcastReceiver endApplicationBroadcast = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(BroadcastConstants.TIMER_END)) {
+            if (intent.getAction().equals(BroadcastConstants.UPDATE_PLAY_IMAGE)) {
+                boolean isPlaying = intent.getBooleanExtra(StringConstant.PLAY_IMAGE, false);
+                if (isPlaying) {// 正在播放
+                    imagePlay.setVisibility(View.GONE);
+                    playStartAnimation();
+                } else {// 此时暂停
+                    imagePlay.setVisibility(View.VISIBLE);
+                    playStopAnimation();
+                }
+            } else if (intent.getAction().equals(BroadcastConstants.UPDATE_PLAY_VIEW)) {// 更新播放节目图片
+                if (GlobalConfig.playerObject != null && GlobalConfig.playerObject.getContentImg() != null) {
+                    String contentImage = GlobalConfig.playerObject.getContentImg();
+                    if (!contentImage.startsWith("http")) {
+                        contentImage = GlobalConfig.imageurl + contentImage;
+                    }
+                    contentImage = AssembleImageUrlUtils.assembleImageUrl180(contentImage);
+                    Picasso.with(context).load(contentImage.replace("\\/", "/")).into(image0);
+                    if (isFirst) {// 第一次进应用时暂停状态
+                        imagePlay.setVisibility(View.VISIBLE);
+                        playStopAnimation();
+                        isFirst = false;
+                    } else {// 之后的每次都是播放状态
+                        imagePlay.setVisibility(View.GONE);
+                        playStartAnimation();
+                    }
+                } else {// 没有封面图片设置默认图片
+                    image0.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx));
+                }
+            } else if (intent.getAction().equals(BroadcastConstants.TIMER_END)) {// 结束应用
                 ToastUtils.show_always(MainActivity.this, "定时关闭应用时间就要到了，应用即将退出");
                 stopService(new Intent(MainActivity.this, timeroffservice.class));    // 停止服务
                 new Handler().postDelayed(new Runnable() {
