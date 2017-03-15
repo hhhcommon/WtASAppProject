@@ -134,25 +134,31 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_home_white));
 
             view2.setTextColor(context.getResources().getColor(R.color.white));
-            view2.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+            view2.setBackgroundColor(0);
+//            view2.setBackgroundDrawable(context.getResources().getDrawable(0));
 
             view3.setTextColor(context.getResources().getColor(R.color.white));
-            view3.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+//            view3.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+            view3.setBackgroundColor(0);
         } else if (index == 1) {// 电台
             view1.setTextColor(context.getResources().getColor(R.color.white));
-            view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+//            view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+            view1.setBackgroundColor(0);
 
             view2.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
             view2.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_home_white));
 
             view3.setTextColor(context.getResources().getColor(R.color.white));
-            view3.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+//            view3.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+            view3.setBackgroundColor(0);
         } else if (index == 2) {// 分类
             view1.setTextColor(context.getResources().getColor(R.color.white));
-            view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+//            view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+            view1.setBackgroundColor(0);
 
             view2.setTextColor(context.getResources().getColor(R.color.white));
-            view2.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+//            view2.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+            view2.setBackgroundColor(0);
 
             view3.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
             view3.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_home_white));
