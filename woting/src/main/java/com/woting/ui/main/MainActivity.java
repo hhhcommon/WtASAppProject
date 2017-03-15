@@ -1,5 +1,7 @@
 package com.woting.ui.main;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.app.TabActivity;
 import android.content.BroadcastReceiver;
@@ -20,8 +22,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -136,6 +136,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
     public static DBTalkHistorary talkdb;
     public static String groupEntryNum;
 
+    private ObjectAnimator animator;
+
     // 开始动画
     private void playStartAnimation() {
 //        image0.clearAnimation();
@@ -145,15 +147,27 @@ public class MainActivity extends TabActivity implements OnClickListener {
 //        rotateAnimation.setRepeatCount(-1);
 //        image0.startAnimation(rotateAnimation);
 
-        Animation rotateAnimation = AnimationUtils.loadAnimation(context, R.anim.running_circle);
-        LinearInterpolator lin = new LinearInterpolator();
-        rotateAnimation.setInterpolator(lin);
-        image0.startAnimation(rotateAnimation);
+        if (animator == null) {
+            animator = ObjectAnimator.ofFloat(image0, "rotation", 0f, 360.0f);
+            animator.setDuration(4000);
+            animator.setInterpolator(new LinearInterpolator());// 不停顿
+            animator.setRepeatCount(-1);// 设置动画重复次数
+            animator.setRepeatMode(ValueAnimator.RESTART);// 动画重复模式
+            animator.start();// 开始动画
+        } else {
+            animator.resume();// 恢复动画
+        }
+
+//        Animation rotateAnimation = AnimationUtils.loadAnimation(context, R.anim.running_circle);
+//        LinearInterpolator lin = new LinearInterpolator();
+//        rotateAnimation.setInterpolator(lin);
+//        image0.startAnimation(rotateAnimation);
     }
 
     // 停止动画
     private void playStopAnimation() {
-        image0.clearAnimation();
+//        image0.clearAnimation();
+        if (animator != null) animator.pause();// 暂停动画
     }
 
     @Override
@@ -177,9 +191,9 @@ public class MainActivity extends TabActivity implements OnClickListener {
         }, 0);
 
         tabHost = extracted();
-        WifiNeverDormancy();       // 更改wifi连接状态
+        WifiNeverDormancy();              // 更改wifi连接状态
         MobclickAgent.openActivityDurationTrack(false);
-        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=56275014");            // 初始化语音配置对象
+        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=56275014");// 初始化语音配置对象
         upDataType = 1;                   // 不需要强制升级
         update();                         // 获取版本数据
         InitTextView();                   // 设置界面
@@ -192,20 +206,18 @@ public class MainActivity extends TabActivity implements OnClickListener {
         if (!BSApplication.SharedPreferences.getBoolean(StringConstant.FAVORITE_PROGRAM_TYPE, false)) {
             startActivity(new Intent(context, FavoriteProgramTypeActivity.class));
         }
-
-//        tabNavigation.setVisibility(View.GONE);
     }
 
     private void createService() {
-        Socket = new Intent(this, SocketService.class);                //socket服务
+        Socket = new Intent(this, SocketService.class);                // socket服务
         startService(Socket);
-        record = new Intent(this, VoiceStreamRecordService.class);     //录音服务
+        record = new Intent(this, VoiceStreamRecordService.class);     // 录音服务
         startService(record);
-        voicePlayer = new Intent(this, VoiceStreamPlayerService.class);//播放服务
+        voicePlayer = new Intent(this, VoiceStreamPlayerService.class);// 播放服务
         startService(voicePlayer);
-        Location = new Intent(this, LocationService.class);            //定位服务
+        Location = new Intent(this, LocationService.class);            // 定位服务
         startService(Location);
-        Subclass = new Intent(this, SubclassService.class);            //单对单接听控制服务
+        Subclass = new Intent(this, SubclassService.class);            // 单对单接听控制服务
         startService(Subclass);
         download = new Intent(this, DownloadService.class);
         startService(download);
@@ -261,15 +273,15 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 v = true;
             }
             if (v) {
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        //透明状态栏
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    //透明导航栏
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        // 透明状态栏
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    // 透明导航栏
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    //初始化数据库并且发送获取地理位置的请求
+    // 初始化数据库并且发送获取地理位置的请求
     private void InitDao() {
         CID = new CityInfoDao(context);
         dbDao = new SearchPlayerHistoryDao(context);
@@ -281,7 +293,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         }
     }
 
-    //获取地理位置
+    // 获取地理位置
     private void sendRequest() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
@@ -310,7 +322,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                 List<CatalogName> s = SubList_all.getSubCata();
 
                                 if (s != null && s.size() > 0) {
-                                    //将数据写入数据库
+                                    // 将数据写入数据库
                                     GlobalConfig.CityCatalogList = s;
                                     list = CID.queryCityInfo();
                                     List<CatalogName> m = new ArrayList<>();
@@ -325,7 +337,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                             CID.InsertCityInfo(m);
                                         }
                                     } else {
-                                        //此处要对数据库查询出的list和获取的mlist进行去重
+                                        // 此处要对数据库查询出的list和获取的mlist进行去重
                                         CID.DelCityInfo();
                                         if (m.size() != 0) {
                                             CID.InsertCityInfo(m);
@@ -373,7 +385,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     }
 
     /**
-     * 从html页面启动当前页面的intent
+     * 从 html 页面启动当前页面的 intent
      */
     private void handleIntent() {
         Intent intent = getIntent();
@@ -384,7 +396,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 String host = uri.getHost();
                 if (host != null && !host.equals("")) {
                     if (host.equals("AUDIO")) {
-                        String queryString = uri.getQuery().substring(8);//不要jsonstr=
+                        String queryString = uri.getQuery().substring(8);// 不要 jsonstr =
                         try {
                             JSONTokener jsonParser = new JSONTokener(queryString);
                             JSONObject arg1 = (JSONObject) jsonParser.nextValue();
@@ -449,7 +461,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                 String ResultList = result.getString("ResultInfo"); // 获取列表
                                 JSONTokener jsonParser = new JSONTokener(ResultList);
                                 JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                                // 此处后期需要用typeToken将字符串StringSubList 转化成为一个list集合
+                                // 此处后期需要用 typeToken 将字符串 StringSubList 转化成为一个 list 集合
                                 String ContentPlayType, contentid, mediatype, ContentImg, ContentName, CTime, ContentTimes,
                                         ContentKeyWord, ContentFavorite, ContentShareURL, ContentPlay, ContentPub, ContentDescn, PlayCount, IsPlaying;
                                 try {
@@ -584,7 +596,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         });
     }
 
-    //更新数据交互
+    // 更新数据交互
     private void update() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
@@ -639,9 +651,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         });
     }
 
-    /*
-     * 检查版本更新
-     */
+    // 检查版本更新
     protected void dealVersion(String ResultList, String mastUpdate) {
         String Version = "0.1.0.X.0";
         String DescN = null;
@@ -665,7 +675,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
             int version_new = Integer.parseInt(version_build);
             if (version_new > version_old) {
                 if (mastUpdate != null && mastUpdate.equals("1")) {
-                    //强制升级
+                    // 强制升级
                     if (DescN != null && !DescN.trim().equals("")) {
                         upDataNews = DescN;
                     } else {
@@ -675,13 +685,13 @@ public class MainActivity extends TabActivity implements OnClickListener {
                     UpdateDialog();
                     upDataDialog.show();
                 } else {
-                    //普通升级
+                    // 普通升级
                     if (DescN != null && !DescN.trim().equals("")) {
                         upDataNews = DescN;
                     } else {
                         upDataNews = "有新的版本需要升级喽";
                     }
-                    upDataType = 1;//不需要强制升级
+                    upDataType = 1;// 不需要强制升级
                     UpdateDialog();
                     upDataDialog.show();
                 }
@@ -694,7 +704,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         }
     }
 
-    //版本更新对话框
+    // 版本更新对话框
     private void UpdateDialog() {
         View dialog = LayoutInflater.from(this).inflate(R.layout.dialog_update, null);
         TextView text_context = (TextView) dialog.findViewById(R.id.text_context);
@@ -708,7 +718,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         upDataDialog.setCanceledOnTouchOutside(false);
         upDataDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
 
-        //开始更新
+        // 开始更新
         tv_update.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -717,7 +727,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
             }
         });
 
-        //取消更新
+        // 取消更新
         tv_qx.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

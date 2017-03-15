@@ -43,6 +43,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.lin_find:// 搜索
                 SearchLikeFragment fragment = new SearchLikeFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt("FROM_TYPE", 1);// == 1 HomeFragment
+                fragment.setArguments(bundle);
                 HomeActivity.open(fragment);
                 break;
         }
