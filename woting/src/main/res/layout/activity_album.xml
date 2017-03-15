@@ -34,10 +34,14 @@
             android:textColor="@color/WHITE_1"
             android:textSize="@dimen/activity_head_center_s" />
 
-        <ImageView
+        <TextView
             android:id="@+id/head_right_btn"
-            style="@style/LeftImageStyle"
-            android:src="@mipmap/wt_image_album_music"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:text="举报"
+            android:paddingRight="10dp"
+            android:gravity="center|left"
+            android:textColor="@color/white"
             android:layout_alignParentRight="true"/>
 
     </RelativeLayout>
