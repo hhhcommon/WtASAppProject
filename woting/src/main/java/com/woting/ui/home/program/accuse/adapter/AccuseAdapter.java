@@ -10,18 +10,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.ui.home.program.accuse.model.Accuse;
+import com.woting.ui.home.program.accuse.model.Accuses;
 
 import java.util.List;
 
 public class AccuseAdapter extends BaseAdapter {
-	private List<Accuse> list;
+	private List<Accuses> list;
 	private Context context;
-	private Accuse lists;
+	private Accuses lists;
 
 	private AccuseCheck friendcheck;
 
-	public AccuseAdapter(Context context, List<Accuse> list) {
+	public AccuseAdapter(Context context, List<Accuses> list) {
 		super();
 		this.list = list;
 		this.context = context;
@@ -52,7 +52,7 @@ public class AccuseAdapter extends BaseAdapter {
 		ViewHolder holder ;
 		if (convertView == null) {
 			holder = new ViewHolder();
-			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_accuse, parent,false);
+			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_accuses, parent,false);
 			holder.tv_name=(TextView)convertView.findViewById(R.id.tv_name);
 			holder.imageView_check=(ImageView)convertView.findViewById(R.id.img_check);
 			convertView.setTag(holder);
