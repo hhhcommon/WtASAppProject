@@ -140,17 +140,23 @@
             android:layout_height="wrap_content"
             android:src="@mipmap/wt_image_play_btn_back_white"/>
 
-        <ImageView
+        <com.woting.common.widgetui.RoundImageView
             android:id="@+id/main_image_0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@mipmap/ic_main_navi_action_bar_tab_chat_selected"/>
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"/>
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@mipmap/wt_image_play_back_mask"
+            android:layout_centerInParent="true"/>
+
+        <ImageView
+            android:id="@+id/image_play"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@mipmap/wt_image_play_player"
             android:layout_centerInParent="true"/>
 
     </RelativeLayout>

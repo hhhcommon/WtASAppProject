@@ -748,6 +748,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             }
             mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST_VIEW, 0);
         }
+        Intent intent = new Intent(BroadcastConstants.UPDATE_PLAY_IMAGE);
+        intent.putExtra(StringConstant.PLAY_IMAGE, isPlaying);
+        context.sendBroadcast(intent);
         stopCurrentTimer();
     }
 
