@@ -7,9 +7,6 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical" >
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="24dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -74,7 +71,6 @@
         android:layout_height="wrap_content"
         android:background="@color/WHITE"
         android:scrollbars="none"
-        android:paddingLeft="6dp"
         />
     </LinearLayout>
 

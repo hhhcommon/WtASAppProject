@@ -53,6 +53,7 @@ import com.woting.ui.home.player.main.adapter.ImageAdapter;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
 import com.woting.ui.home.player.main.model.ShareModel;
 import com.woting.ui.home.player.main.play.PlayerActivity;
+import com.woting.ui.home.program.accuse.activity.AccuseFragment;
 import com.woting.ui.home.program.album.fragment.DetailsFragment;
 import com.woting.ui.home.program.album.fragment.ProgramFragment;
 import com.woting.ui.home.program.comment.CommentActivity;
@@ -442,15 +443,23 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
                     ToastUtils.show_always(context, "请先登录~~");
                 }
                 break;
-            case R.id.head_right_btn:// 播放专辑
+            case R.id.head_right_btn://  举报
               /*  ToastUtils.show_always(context, "播放专辑");
                 Intent intent = new Intent(BroadcastConstants.PLAY_SEQU_LIST);
                 intent.putExtra(StringConstant.ID_CONTENT, id);
                 intent.putExtra(StringConstant.SEQU_LIST_SIZE, programFragment.getListSize());
                 context.sendBroadcast(intent);
                 MainActivity.change();*/
-
-
+                if(!TextUtils.isEmpty(id)){
+                AccuseFragment fragment = new AccuseFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("ContentId", id);
+                bundle.putString("MediaType","SEQU");
+                fragment.setArguments(bundle);
+                HomeActivity.open(fragment);
+                }else{
+                    ToastUtils.show_always(context,"获取本专辑信息有误，请回退回上一级界面重试");
+                }
                 break;
         }
     }

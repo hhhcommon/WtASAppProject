@@ -52,7 +52,7 @@ public class AccuseAdapter extends BaseAdapter {
 		ViewHolder holder ;
 		if (convertView == null) {
 			holder = new ViewHolder();
-			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_accuse, null);
+			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_accuse, parent,false);
 			holder.tv_name=(TextView)convertView.findViewById(R.id.tv_name);
 			holder.imageView_check=(ImageView)convertView.findViewById(R.id.img_check);
 			convertView.setTag(holder);
@@ -68,13 +68,6 @@ public class AccuseAdapter extends BaseAdapter {
 			} else {
 				holder.imageView_check.setVisibility(View.VISIBLE);
 			}
-
-			holder.imageView_check.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					friendcheck.checkposition(position);
-				}
-			});
 
 		}
 		return convertView;

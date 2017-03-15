@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -30,7 +31,6 @@ import com.woting.ui.home.program.accuse.model.Accuse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.List;
 
 /**
@@ -38,7 +38,7 @@ import java.util.List;
  * @author 辛龙
  * 2016年8月8日
  */
-public class AccuseFragment extends Fragment implements OnClickListener, TipView.WhiteViewClick {
+public class AccuseFragment extends Fragment implements OnClickListener {
     private Context context;
     private Dialog dialog;
 
@@ -47,24 +47,26 @@ public class AccuseFragment extends Fragment implements OnClickListener, TipView
     private boolean isCancelRequest;
 
     private View rootView;
-//    private TipView tipView;// 没有网络、没有数据、加载错误提示
+    private TipView tipView;// 没有网络、没有数据、加载错误提示
     private List<Accuse> allList;
     private ListView mListView;
     private EditText et_InputReason;
     private String ContentId;
-    private Boolean IsNetOk;
+    private Boolean IsDataOk;
     private AccuseAdapter adapter;
+    private String MediaType;
+    private String SelReasons;
 
-    @Override
+  /*  @Override
     public void onWhiteViewClick() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             dialog = DialogUtils.Dialogph(context, "正在获取数据");
             sendRequest();
         } else {
-           /* tipView.setVisibility(View.VISIBLE);
-            tipView.setTipView(TipView.TipStatus.NO_NET);*/
+           *//* tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);*//*
         }
-    }
+    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,6 +92,14 @@ public class AccuseFragment extends Fragment implements OnClickListener, TipView
             rootView = inflater.inflate(R.layout.activity_accuse, container, false);
             setView();
             HandleIntent();
+            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                dialog = DialogUtils.Dialogph(context, "正在获取数据");
+                sendRequest();
+            } else {
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_NET);
+
+            }
         }
         return rootView;
     }
@@ -100,6 +110,7 @@ public class AccuseFragment extends Fragment implements OnClickListener, TipView
         Bundle bundle = getArguments();
         if (bundle == null) return ;
         ContentId = bundle.getString("ContentId");
+        MediaType=bundle.getString("MediaType");
     }
 
 
@@ -117,9 +128,12 @@ public class AccuseFragment extends Fragment implements OnClickListener, TipView
         VolleyRequest.requestPost(GlobalConfig.getCatalogUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
-                Log.e("获取城市列表", "" + result.toString());
-                if (isCancelRequest) {
+                Log.e("获取举报列表","" + result.toString());
+                    if (isCancelRequest) {
                     return;
+                }
+                if(dialog!=null&&dialog.isShowing()){
+                    dialog.dismiss();
                 }
                 try {
                     String ReturnType = result.getString("ReturnType");
@@ -155,6 +169,9 @@ public class AccuseFragment extends Fragment implements OnClickListener, TipView
 
             @Override
             protected void requestError(VolleyError error) {
+                if(dialog!=null&&dialog.isShowing()){
+                    dialog.dismiss();
+                }
             }
         });
     }
@@ -165,24 +182,26 @@ public class AccuseFragment extends Fragment implements OnClickListener, TipView
             adapter=new AccuseAdapter(context,allList);
             mListView.setAdapter(adapter);
 
-            adapter.setOnListener(new AccuseAdapter.AccuseCheck() {
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void checkposition(int position) {
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if(allList.get(position).getCheckType()==1){
-                       allList.get(position).setCheckType(0);
+                        allList.get(position).setCheckType(0);
                     }else{
                         for(int i=0;i<allList.size();i++){
                             if(allList.get(i).getCheckType()==1){
-                                allList.get(position).setCheckType(0);
+                                allList.get(i).setCheckType(0);
                             }
                         }
                         allList.get(position).setCheckType(1);
                     }
-                 adapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();
                 }
+
             });
         }
     }
+
 
 
     @Override
@@ -192,11 +211,16 @@ public class AccuseFragment extends Fragment implements OnClickListener, TipView
                 HomeActivity.close();
                 break;
             case R.id.head_right_btn:
-                if(!TextUtils.isEmpty(ContentId)&&IsNetOk){
+                if(!TextUtils.isEmpty(ContentId)){
+                       if(!handledata()){
+                           ToastUtils.show_always(context,"请至少选择一项举报理由");
+                           return;
+                       }
+
                         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                  /*          dialog = DialogUtils.Dialogph(context, "正在提交您的举报意见~");
-                            sendAccuse();*/
-                            ToastUtils.show_always(context,"Accuse List is ok");
+                            dialog = DialogUtils.Dialogph(context, "正在提交您的举报意见~");
+                            sendAccuse();
+                           // ToastUtils.show_always(context,"Accuse List is ok");
                         }
                 }else{
                     ToastUtils.show_always(context,"发生错误啦，请返回上一界面重试");
@@ -205,8 +229,81 @@ public class AccuseFragment extends Fragment implements OnClickListener, TipView
         }
     }
 
-    private void sendAccuse() {
+    private boolean handledata() {
+    //单选策略
+        for(int i=0;i<allList.size();i++){
+            if(allList.get(i).getCheckType()==1){
+                IsDataOk=true;
+                SelReasons=allList.get(i).getCatalogId()+"::"+allList.get(i).getCatalogName();
+            }
+        }
+        return IsDataOk;
+    }
 
+
+    private void sendAccuse() {
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("ContentId", ContentId);
+            jsonObject.put("MediaType", MediaType);
+
+            if(!TextUtils.isEmpty(SelReasons)){
+            jsonObject.put("SelReasons",SelReasons);
+            }
+
+            if(!TextUtils.isEmpty(et_InputReason.getText().toString().trim())){
+                jsonObject.put("InputReason", et_InputReason.getText().toString().trim());//   文字
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        VolleyRequest.requestPost(GlobalConfig.presentAccuseUrl, tag, jsonObject, new VolleyCallback() {
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                Log.e("获取举报列表","" + result.toString());
+                if (isCancelRequest) {
+                    return;
+                }
+                IsDataOk=false;
+                if(dialog!=null&&dialog.isShowing()){
+                    dialog.dismiss();
+                }
+                try {
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null) {
+                        if (ReturnType.equals("1001")) {
+                            try {
+                                ToastUtils.show_always(context,"举报成功，我们会尽快处理");
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else if (ReturnType.equals("1002")) {
+                            ToastUtils.show_short(context, "无此分类信息");
+                        } else if (ReturnType.equals("1003")) {
+                            ToastUtils.show_short(context, "分类不存在");
+                        } else if (ReturnType.equals("1011")) {
+                            ToastUtils.show_short(context, "当前暂无分类");
+                        } else if (ReturnType.equals("T")) {
+                            ToastUtils.show_short(context, "获取列表异常");
+                        }
+                    } else {
+                        ToastUtils.show_short(context, "数据获取异常，请稍候重试");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+                IsDataOk=false;
+                if(dialog!=null&&dialog.isShowing()){
+                    dialog.dismiss();
+                }
+            }
+        });
 
 
     }
