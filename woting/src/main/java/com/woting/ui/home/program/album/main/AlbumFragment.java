@@ -37,7 +37,6 @@ import com.umeng.socialize.media.UMImage;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
-import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -59,7 +58,6 @@ import com.woting.ui.home.program.album.fragment.ProgramFragment;
 import com.woting.ui.home.program.comment.CommentActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.home.program.radiolist.mode.ListInfo;
-import com.woting.ui.main.MainActivity;
 import com.woting.ui.mine.main.MineActivity;
 
 import org.json.JSONException;
@@ -445,12 +443,14 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
                 }
                 break;
             case R.id.head_right_btn:// 播放专辑
-                ToastUtils.show_always(context, "播放专辑");
+              /*  ToastUtils.show_always(context, "播放专辑");
                 Intent intent = new Intent(BroadcastConstants.PLAY_SEQU_LIST);
                 intent.putExtra(StringConstant.ID_CONTENT, id);
                 intent.putExtra(StringConstant.SEQU_LIST_SIZE, programFragment.getListSize());
                 context.sendBroadcast(intent);
-                MainActivity.change();
+                MainActivity.change();*/
+
+
                 break;
         }
     }
