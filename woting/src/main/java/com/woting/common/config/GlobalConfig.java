@@ -288,7 +288,8 @@ public class GlobalConfig {
     public static final String getPersonContents = "wt/person/getPersonContents.do";
     // 获取当前的电台直播内容
     public static final String getIsPlayIngUrl= "wt/content/getIsPlayingBCProgramme.do";
-
+    // 获取轮播图
+    public static final String getImage ="wt/content/getLoopImgs.do";
 
 
     /**

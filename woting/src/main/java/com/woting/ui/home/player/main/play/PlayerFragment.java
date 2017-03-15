@@ -78,6 +78,7 @@ import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.album.model.ContentInfo;
 import com.woting.ui.home.program.comment.CommentActivity;
+import com.woting.ui.interphone.notify.activity.MessageFragment;
 import com.woting.ui.mine.playhistory.main.PlayHistoryFragment;
 import com.woting.video.IntegrationPlayer;
 import com.woting.video.VoiceRecognizer;
@@ -324,6 +325,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         mListView.setOnItemClickListener(this);
         mListView.setPullRefreshEnable(true);
         mListView.setPullLoadEnable(true);
+        rootView.findViewById(R.id.lin_news).setOnClickListener(this);// 消息中心
 
         rootView.findViewById(R.id.lin_other).setOnClickListener(this);// 灰色透明遮罩 点击隐藏更多
         rootView.findViewById(R.id.lin_ly_ckzj).setOnClickListener(this);// 查看专辑
@@ -406,6 +408,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.lin_news:// 获取路况
+                PlayerActivity.open(new MessageFragment());
+                break;
             case R.id.lin_lukuangtts:// 获取路况
                 TTSPlay();
                 break;
