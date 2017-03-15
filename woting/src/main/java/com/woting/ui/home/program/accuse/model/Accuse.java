@@ -2,7 +2,7 @@ package com.woting.ui.home.program.accuse.model;
 
 import java.io.Serializable;
 
-public class Accuses implements Serializable{
+public class Accuse implements Serializable{
 	private static final long serialVersionUID = 4523673229526198349L;
 
 	private String CatalogType;

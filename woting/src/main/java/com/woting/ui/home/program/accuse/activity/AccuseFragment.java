@@ -27,7 +27,7 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.program.accuse.adapter.AccuseAdapter;
-import com.woting.ui.home.program.accuse.model.Accuses;
+import com.woting.ui.home.program.accuse.model.Accuse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,7 +48,7 @@ public class AccuseFragment extends Fragment implements OnClickListener {
 
     private View rootView;
     private TipView tipView;// 没有网络、没有数据、加载错误提示
-    private List<Accuses> allList;
+    private List<Accuse> allList;
     private ListView mListView;
     private EditText et_InputReason;
     private String ContentId;
@@ -89,7 +89,7 @@ public class AccuseFragment extends Fragment implements OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (rootView == null) {
-            rootView = inflater.inflate(R.layout.activity_accuses, container, false);
+            rootView = inflater.inflate(R.layout.activity_accuse, container, false);
             setView();
             HandleIntent();
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
@@ -141,7 +141,7 @@ public class AccuseFragment extends Fragment implements OnClickListener {
                         if (ReturnType.equals("1001")) {
                             try {
                                 String ResultList = result.getString("CatalogData");
-                                allList= new Gson().fromJson(ResultList, new TypeToken<List<Accuses>>() { }.getType());
+                                allList= new Gson().fromJson(ResultList, new TypeToken<List<Accuse>>() { }.getType());
                                 if(allList!=null&&allList.size()>0){
                                     setListView();
                                 }else{
@@ -220,7 +220,7 @@ public class AccuseFragment extends Fragment implements OnClickListener {
                         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                             dialog = DialogUtils.Dialogph(context, "正在提交您的举报意见~");
                             sendAccuse();
-                           // ToastUtils.show_always(context,"Accuses List is ok");
+                           // ToastUtils.show_always(context,"Accuse List is ok");
                         }
                 }else{
                     ToastUtils.show_always(context,"发生错误啦，请返回上一界面重试");
