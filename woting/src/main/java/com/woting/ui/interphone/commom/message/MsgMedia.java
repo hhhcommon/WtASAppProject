@@ -13,7 +13,7 @@ import java.util.Arrays;
 public class MsgMedia extends Message {
     private static final long serialVersionUID=-3827446721333425724L;
 
-    private final static int COMPACT_LEN=36;//若删除ObjId，则这个值为24
+    private final static int COMPACT_LEN=38;//若删除ObjId，则这个值为24
 
     private int mediaType; //流类型:1音频2视频
     private int bizType; //流业务类型:1对讲组；2电话
@@ -97,7 +97,8 @@ public class MsgMedia extends Message {
 
     @Override
     public void fromBytes(byte[] binaryMsg) throws Exception {
-        if (MessageUtils.decideMsg(binaryMsg)!=1) throw new Exception("消息类型错误！");
+        if (MessageUtils.decideMsg(binaryMsg)!=1) throw new Exception("非数据包格式错误！");
+        if (MessageUtils.endOK(binaryMsg)!=1) throw new Exception("消息未正常结束！");
 
         int _offset=2;
         byte f1=binaryMsg[_offset++];
@@ -213,6 +214,8 @@ public class MsgMedia extends Message {
             }
         }
 
+        ret[_offset++]=Message.END_MSG[0];
+        ret[_offset++]=Message.END_MSG[1];
         byte[] _ret=Arrays.copyOfRange(ret, 0, _offset);
         return _ret;
     }

@@ -194,7 +194,6 @@
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
 
-        <!--  -->
         <activity
             android:name=".ui.interphone.message.activity.NewsActivity"
             android:screenOrientation="portrait"

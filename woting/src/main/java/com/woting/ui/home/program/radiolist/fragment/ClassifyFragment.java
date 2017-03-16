@@ -7,17 +7,16 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
@@ -33,11 +32,13 @@ import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.main.AlbumFragment;
-import com.woting.ui.home.program.radiolist.main.RadioListFragment;
+import com.woting.ui.home.program.radiolist.adapter.ForNullAdapter;
 import com.woting.ui.home.program.radiolist.adapter.ListInfoAdapter;
+import com.woting.ui.home.program.radiolist.adapter.LoopAdapter;
+import com.woting.ui.home.program.radiolist.main.RadioListFragment;
+import com.woting.ui.home.program.radiolist.mode.Image;
 import com.woting.ui.home.program.radiolist.mode.ListInfo;
 import com.woting.ui.home.program.radiolist.rollviewpager.RollPagerView;
-import com.woting.ui.home.program.radiolist.rollviewpager.adapter.LoopPagerAdapter;
 import com.woting.ui.home.program.radiolist.rollviewpager.hintview.IconHintView;
 
 import org.json.JSONException;
@@ -68,6 +69,8 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
     private int RefreshType;// refreshType 1为下拉加载 2为上拉加载更多
     private String CatalogId;
     private String CatalogType;
+    private RollPagerView mLoopViewPager;
+    private List<Image> imageList;
 
     @Override
     public void onWhiteViewClick() {
@@ -107,15 +110,13 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_radio_list_layout, container, false);
-            View headView = LayoutInflater.from(context).inflate(R.layout.headview_acitivity_radiolist, null);
+
             tipView = (TipView) rootView.findViewById(R.id.tip_view);
             tipView.setWhiteClick(this);
-
-            // 轮播图
-            RollPagerView mLoopViewPager = (RollPagerView) headView.findViewById(R.id.slideshowView);
-            mLoopViewPager.setAdapter(new LoopAdapter(mLoopViewPager));
-            mLoopViewPager.setHintView(new IconHintView(context, R.mipmap.indicators_now, R.mipmap.indicators_default));
             mListView = (XListView) rootView.findViewById(R.id.listview_fm);
+            View headView = LayoutInflater.from(context).inflate(R.layout.headview_acitivity_radiolist, null);
+            // 轮播图
+            mLoopViewPager = (RollPagerView) headView.findViewById(R.id.slideshowView);
             mListView.addHeaderView(headView);
             setListener();
         }
@@ -134,6 +135,8 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                 tipView.setTipView(TipView.TipStatus.NO_NET);
             }
         }
+        // 如果轮播图没有的话重新加载轮播图
+        if(imageList==null)getImage();
         super.setUserVisibleHint(isVisibleToUser);
     }
 
@@ -150,6 +153,8 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
 
             @Override
             protected void requestSuccess(JSONObject result) {
+                long a = System.currentTimeMillis();
+                Log.e("返回值时间3", "--- > > >  " +a);
                 if (dialog != null) dialog.dismiss();
                 if (RadioListFragment.isCancelRequest) return;
                 page++;
@@ -199,13 +204,22 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                         tipView.setVisibility(View.GONE);
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        mListView.setAdapter( new ForNullAdapter(context));
+                        if (imageList == null) {
+                                tipView.setVisibility(View.VISIBLE);
+                                tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        }
+
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.IS_ERROR);
                     }
                 } else {
-                    if(RefreshType == 1) {
-                        tipView.setVisibility(View.VISIBLE);
-                        tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
+                    mListView.setAdapter(new ForNullAdapter(context));
+                    if (imageList == null) {
+                        if (RefreshType == 1) {
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
+                        }
                     }
                 }
             }
@@ -347,32 +361,43 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
         }
     }
 
-    private class LoopAdapter extends LoopPagerAdapter {
-        public LoopAdapter(RollPagerView viewPager) {
-            super(viewPager);
+    // 请求网络获取分类信息
+    private void getImage() {
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("CatalogType", CatalogType);
+            jsonObject.put("CatalogId", CatalogId);
+            jsonObject.put("Size", "10");// 此处需要改成-1
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+        VolleyRequest.requestPost(GlobalConfig.getImage, RadioListFragment.tag, jsonObject, new VolleyCallback() {
+            private String ReturnType;
 
-        private int count = images.length;
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (dialog != null) dialog.dismiss();
+                if (RadioListFragment.isCancel()) return;
+                try {
+                    ReturnType = result.getString("ReturnType");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (ReturnType != null && ReturnType.equals("1001")) {
+                    try {
+                        imageList = new Gson().fromJson(result.getString("LoopImgs"), new TypeToken<List<Image>>() {
+                        }.getType());
+                        mLoopViewPager.setAdapter(new LoopAdapter(mLoopViewPager, context, imageList));
+                        mLoopViewPager.setHintView(new IconHintView(context, R.mipmap.indicators_now, R.mipmap.indicators_default));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
 
-        @Override
-        public View getView(ViewGroup container, int position) {
-            ImageView view = new ImageView(container.getContext());
-            view.setScaleType(ImageView.ScaleType.FIT_XY);
-            view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            Picasso.with(context).load(images[position % count]).into(view);
-            return view;
-        }
-
-        @Override
-        public int getRealCount() {
-            return count;
-        }
+            @Override
+            protected void requestError(VolleyError error) {
+            }
+        });
     }
-
-    public String[] images = {
-            "http://pic.500px.me/picurl/vcg5da48ce9497b91f9c81c17958d4f882e?code=e165fb4d228d4402",
-            "http://pic.500px.me/picurl/49431365352e4e94936d4562a7fbc74a---jpg?code=647e8e97cd219143",
-            "http://pic.500px.me/picurl/vcgd5d3cfc7257da293f5d2686eec1068d1?code=2597028fc68bd766",
-            "http://pic.500px.me/picurl/vcg1aa807a1b8bd1369e4f983e555d5b23b?code=c0c4bb78458e5503",
-    };
 }
