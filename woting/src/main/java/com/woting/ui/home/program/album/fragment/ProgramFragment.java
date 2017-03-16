@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -38,9 +40,9 @@ import com.woting.ui.download.model.FileInfo;
 import com.woting.ui.download.service.DownloadService;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
-import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.album.adapter.AlbumAdapter;
 import com.woting.ui.home.program.album.adapter.AlbumMainAdapter;
+import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.album.model.ContentInfo;
 import com.woting.ui.main.MainActivity;
 
@@ -92,6 +94,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
     private String sequDesc;
 
     private int sortType = 1;// == 1 按卷号从大到小排序 默认排序；== 2 按卷号从小到大排序；
+    private ImageView img_play_all;
 
     @Override
     public void onWhiteViewClick() {
@@ -144,12 +147,15 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
         lv_download = (ListView) view.findViewById(R.id.lv_download);        // lv_download
         tv_download = (TextView) view.findViewById(R.id.tv_download);        // 开始下载
         tv_download.setOnClickListener(this);
-        tv_sum = (TextView) view.findViewById(R.id.tv_sum);                // 计数项
+        tv_sum = (TextView) view.findViewById(R.id.tv_sum);                  // 计数项
         lin_status2 = (LinearLayout) view.findViewById(R.id.lin_status2);    // 第二种状态
-        textTotal = (TextView) view.findViewById(R.id.text_total);            // 下载列表的总计
+        textTotal = (TextView) view.findViewById(R.id.text_total);           // 下载列表的总计
 
         imageSort = (ImageView) view.findViewById(R.id.img_sort);            // 排序
         imageSort.setOnClickListener(this);
+
+        img_play_all=(ImageView)view.findViewById(R.id.img_play_all);
+        img_play_all.setOnClickListener(this);                               // 播放专辑内全部内容
 
         imageSortDown = (ImageView) view.findViewById(R.id.img_sort_down);
         imageSortDown.setOnClickListener(this);
@@ -504,6 +510,15 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
 //                    mainAdapter.notifyDataSetChanged();
                     imageSortDown.setVisibility(View.GONE);
                     imageSort.setVisibility(View.VISIBLE);
+                }
+                break;
+            case R.id.img_play_all:
+                if(!TextUtils.isEmpty(AlbumFragment.id)){
+                Intent intent = new Intent(BroadcastConstants.PLAY_SEQU_LIST);
+                intent.putExtra(StringConstant.ID_CONTENT, AlbumFragment.id);
+                intent.putExtra(StringConstant.SEQU_LIST_SIZE, getListSize());
+                context.sendBroadcast(intent);
+                MainActivity.change();
                 }
                 break;
         }

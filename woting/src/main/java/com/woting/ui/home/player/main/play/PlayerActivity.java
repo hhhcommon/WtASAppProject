@@ -18,6 +18,8 @@ import com.woting.ui.main.MainActivity;
 public class PlayerActivity extends FragmentActivity {
     private static PlayerActivity context;
 
+    public static boolean isVisible = true;// 是否显示
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +63,7 @@ public class PlayerActivity extends FragmentActivity {
         context.getSupportFragmentManager().popBackStackImmediate();
         if (context.getSupportFragmentManager().getBackStackEntryCount() == 1) {
             MainActivity.hideOrShowTab(true);
+            if (PlayerFragment.frag != null) PlayerFragment.frag = null;
         }
     }
 
