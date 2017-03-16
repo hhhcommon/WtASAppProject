@@ -155,6 +155,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
             animator.setRepeatMode(ValueAnimator.RESTART);// 动画重复模式
             animator.start();// 开始动画
         } else {
+            // 此方法 API 需要 >= 19
             animator.resume();// 恢复动画
         }
 
@@ -167,6 +168,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     // 停止动画
     private void playStopAnimation() {
 //        image0.clearAnimation();
+        // 此方法 API 需要 >= 19
         if (animator != null) animator.pause();// 暂停动画
     }
 
@@ -821,6 +823,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
         hideOrShowTab(true);
+        PlayerActivity.showPlayer();
+        PlayerActivity.isVisible = true;
     }
 
     // 享听

@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -101,7 +102,7 @@ import java.util.TimerTask;
  */
 public class PlayerFragment extends Fragment implements View.OnClickListener, XListView.IXListViewListener, AdapterView.OnItemClickListener {
 
-    public static Context context;
+    public static FragmentActivity context;
     public static int timerService;// 当前节目播放剩余时间长度
     public static boolean isCurrentPlay;
 
@@ -409,6 +410,14 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         });
     }
 
+    // 显示搜索界面
+    private void showSearch() {
+        if (frag != null && PlayerActivity.playerFragment != null) {
+            context.getSupportFragmentManager().beginTransaction()
+                    .hide(PlayerActivity.playerFragment).show(frag).commit();
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -418,9 +427,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     Bundle bun = new Bundle();
                     bun.putInt("FROM_TYPE", 0);// == 0 PlayerFragment
                     frag.setArguments(bun);
+                    PlayerActivity.open(frag);
+                } else {
+                    showSearch();
                 }
-                PlayerActivity.open(frag);
                 MainActivity.hideOrShowTab(false);
+                PlayerActivity.isVisible = false;
                 break;
             case R.id.lin_news://
                 PlayerActivity.open(new MessageFragment());

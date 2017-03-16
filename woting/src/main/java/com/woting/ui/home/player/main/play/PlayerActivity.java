@@ -20,6 +20,8 @@ public class PlayerActivity extends FragmentActivity {
 
     public static boolean isVisible = true;// 是否显示
 
+    public static PlayerFragment playerFragment;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +29,9 @@ public class PlayerActivity extends FragmentActivity {
         context = this;
 
         setType();
-        PlayerActivity.open(new PlayerFragment());
+
+        playerFragment = new PlayerFragment();
+        PlayerActivity.open(playerFragment);
     }
 
     // 适配顶栏样式
@@ -55,7 +59,10 @@ public class PlayerActivity extends FragmentActivity {
                 .commitAllowingStateLoss();
         if (context.getSupportFragmentManager().getBackStackEntryCount() > 0) {
             MainActivity.hideOrShowTab(false);
+            PlayerActivity.isVisible = false;
         }
+
+        Log.v("TAG", "Player open count -- > " + context.getSupportFragmentManager().getBackStackEntryCount());
     }
 
     // 关闭已经打开的 Fragment
@@ -64,19 +71,26 @@ public class PlayerActivity extends FragmentActivity {
         if (context.getSupportFragmentManager().getBackStackEntryCount() == 1) {
             MainActivity.hideOrShowTab(true);
             if (PlayerFragment.frag != null) PlayerFragment.frag = null;
+            PlayerActivity.isVisible = true;
+            showPlayer();
         }
     }
 
-    public static void hideShow(Fragment from,Fragment to) {
-        context.getSupportFragmentManager().beginTransaction().
-                hide(from).show(to).commit();
+    // 显示播放界面
+    public static void showPlayer() {
+        if (playerFragment != null && PlayerFragment.frag != null) {
+            context.getSupportFragmentManager().beginTransaction()
+                    .hide(PlayerFragment.frag).show(playerFragment).commit();
+        } else {
+            context.getSupportFragmentManager().beginTransaction().show(playerFragment).commit();
+        }
     }
 
     private long tempTime;
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1 || PlayerActivity.isVisible) {
             MainActivity.hideOrShowTab(true);
             long time = System.currentTimeMillis();
             if (time - tempTime <= 2000) {
