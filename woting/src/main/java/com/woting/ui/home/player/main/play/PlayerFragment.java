@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -78,6 +79,9 @@ import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.album.model.ContentInfo;
 import com.woting.ui.home.program.comment.CommentActivity;
+import com.woting.ui.interphone.notify.activity.MessageFragment;
+import com.woting.ui.home.search.main.SearchLikeFragment;
+import com.woting.ui.main.MainActivity;
 import com.woting.ui.mine.playhistory.main.PlayHistoryFragment;
 import com.woting.video.IntegrationPlayer;
 import com.woting.video.VoiceRecognizer;
@@ -98,7 +102,7 @@ import java.util.TimerTask;
  */
 public class PlayerFragment extends Fragment implements View.OnClickListener, XListView.IXListViewListener, AdapterView.OnItemClickListener {
 
-    public static Context context;
+    public static FragmentActivity context;
     public static int timerService;// 当前节目播放剩余时间长度
     public static boolean isCurrentPlay;
 
@@ -111,6 +115,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private VoiceRecognizer mVoiceRecognizer;// 讯飞
     private MessageReceiver mReceiver;// 广播接收
     private PlayerListAdapter adapter;
+    public static SearchLikeFragment frag;// 搜索
 
     private Dialog dialog;// 加载数据对话框
     private Dialog wifiDialog;// WIFI 提醒对话框
@@ -324,6 +329,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         mListView.setOnItemClickListener(this);
         mListView.setPullRefreshEnable(true);
         mListView.setPullLoadEnable(true);
+        rootView.findViewById(R.id.lin_news).setOnClickListener(this);// 消息中心
 
         rootView.findViewById(R.id.lin_other).setOnClickListener(this);// 灰色透明遮罩 点击隐藏更多
         rootView.findViewById(R.id.lin_ly_ckzj).setOnClickListener(this);// 查看专辑
@@ -331,6 +337,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         rootView.findViewById(R.id.lin_ly_history).setOnClickListener(this);// 查看播放历史
         rootView.findViewById(R.id.lin_ly_timeover).setOnClickListener(this);// 定时关闭
         rootView.findViewById(R.id.tv_ly_qx).setOnClickListener(this);// 取消 点击隐藏更多
+        rootView.findViewById(R.id.lin_find).setOnClickListener(this);// 搜索
 
         rootView.findViewById(R.id.tv_cancel).setOnClickListener(this);// 取消  点击关闭语音搜索
         rootView.findViewById(R.id.view_voice_other).setOnClickListener(this);// 点击隐藏语音搜索
@@ -403,9 +410,33 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         });
     }
 
+    // 显示搜索界面
+    private void showSearch() {
+        if (frag != null && PlayerActivity.playerFragment != null) {
+            context.getSupportFragmentManager().beginTransaction()
+                    .hide(PlayerActivity.playerFragment).show(frag).commit();
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.lin_find:// 搜索
+                if (frag == null) {
+                    frag = new SearchLikeFragment();
+                    Bundle bun = new Bundle();
+                    bun.putInt("FROM_TYPE", 0);// == 0 PlayerFragment
+                    frag.setArguments(bun);
+                    PlayerActivity.open(frag);
+                } else {
+                    showSearch();
+                }
+                MainActivity.hideOrShowTab(false);
+                PlayerActivity.isVisible = false;
+                break;
+            case R.id.lin_news://
+                PlayerActivity.open(new MessageFragment());
+                break;
             case R.id.lin_lukuangtts:// 获取路况
                 TTSPlay();
                 break;

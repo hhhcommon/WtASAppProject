@@ -46,7 +46,7 @@ public class InterPhoneControl {
         msg.setCommand(2);
         //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-//		msg.setFromType(0);
+		msg.setFromType(1);
         //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
         msg.setToType(0);
@@ -86,7 +86,7 @@ public class InterPhoneControl {
         msg.setCommand(1);
         //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-//		msg.setFromType(0);
+        msg.setFromType(1);
         //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
         msg.setToType(0);
@@ -126,7 +126,7 @@ public class InterPhoneControl {
         msg.setCommand(2);
         //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-//		msg.setFromType(0);
+        msg.setFromType(1);
         //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
         msg.setToType(0);
@@ -166,7 +166,7 @@ public class InterPhoneControl {
         msg.setCommand(1);
         //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-//		msg.setFromType(0);
+        msg.setFromType(1);
         //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
         msg.setToType(0);
@@ -208,7 +208,7 @@ public class InterPhoneControl {
         msg.setCommand(1);
         //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-//		msg.setFromType(0);
+        msg.setFromType(1);
         //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
         msg.setToType(0);
@@ -253,7 +253,7 @@ public class InterPhoneControl {
         msg.setCommand(0x90);
         //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-//		msg.setFromType(0);
+        msg.setFromType(1);
         //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
         msg.setToType(0);
@@ -311,7 +311,7 @@ public class InterPhoneControl {
         msg.setCommand(1);
         //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-//		msg.setFromType(0);
+        msg.setFromType(1);
         //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
         msg.setToType(0);
@@ -350,7 +350,7 @@ public class InterPhoneControl {
         msg.setCommand(2);
         //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-//		msg.setFromType(0);
+        msg.setFromType(1);
         //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
         msg.setToType(0);
@@ -391,7 +391,7 @@ public class InterPhoneControl {
         msg.setCommand(2);
         //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-//		msg.setFromType(0);
+        msg.setFromType(1);
         //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
         msg.setToType(0);
@@ -434,7 +434,7 @@ public class InterPhoneControl {
         msg.setCommand(2);
         //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-//		msg.setFromType(0);
+        msg.setFromType(1);
         //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
         msg.setToType(0);
@@ -477,7 +477,7 @@ public class InterPhoneControl {
         msg.setCommand(2);
         //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-//		msg.setFromType(0);
+        msg.setFromType(1);
         //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
         msg.setToType(0);
@@ -519,7 +519,7 @@ public class InterPhoneControl {
         msg.setCommand(3);
         //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-//		msg.setFromType(0);
+        msg.setFromType(1);
         //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
         msg.setToType(0);
@@ -557,7 +557,7 @@ public class InterPhoneControl {
         msg.setCmdType(0);
         //消息源地址类型：ToType  最新数据：0000-服务器
         //16进制编码：0000=0；0001=1；
-//		msg.setFromType(0);
+        msg.setFromType(1);
         //消息源地址类型：ToType  最新数据：0000-服务器
         // 16进制编码：0000=0；0001=1；
         msg.setToType(0);
@@ -585,7 +585,7 @@ public class InterPhoneControl {
             MsgMedia msg = new MsgMedia();
             msg.setMsgType(0);
             msg.setAffirm(1);
-//			msg.setFromType(0);
+            msg.setFromType(1);
             msg.setToType(0);
             msg.setBizType(2);
             msg.setMediaType(1);
@@ -599,7 +599,7 @@ public class InterPhoneControl {
             MsgMedia msg = new MsgMedia();
             msg.setMsgType(0);
             msg.setAffirm(1);
-//			msg.setFromType(0);
+            msg.setFromType(1);
             msg.setToType(0);
             msg.setBizType(1);
             msg.setMediaType(1);
@@ -625,7 +625,7 @@ public class InterPhoneControl {
             MsgMedia msg = new MsgMedia();
             msg.setMsgType(0);
             msg.setAffirm(1);
-//			msg.setFromType(0);
+            msg.setFromType(1);
             msg.setToType(0);
             msg.setBizType(2);
             msg.setMediaType(1);
@@ -638,7 +638,7 @@ public class InterPhoneControl {
             MsgMedia msg = new MsgMedia();
             msg.setMsgType(0);
             msg.setAffirm(1);
-//			msg.setFromType(0);
+            msg.setFromType(1);
             msg.setToType(0);
             msg.setBizType(1);
             msg.setMediaType(1);
@@ -663,7 +663,7 @@ public class InterPhoneControl {
         msg.setReMsgId(ReMsgId);
         // 16进制编码：0000=0；1000=8
         msg.setAffirm(Affirm);
-//		msg.setFromType(0);
+        msg.setFromType(1);
         msg.setToType(0);
         msg.setBizType(0);
         msg.setCmdType(0);
@@ -686,7 +686,7 @@ public class InterPhoneControl {
         msg.setMsgType(0);
         // 16进制编码：0000=0；1000=8
         msg.setAffirm(0);
-//		msg.setFromType(0);
+        msg.setFromType(1);
         msg.setToType(0);
         msg.setBizType(4);
         msg.setCmdType(cmdType);

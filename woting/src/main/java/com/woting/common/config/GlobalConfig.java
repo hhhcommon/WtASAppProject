@@ -291,6 +291,8 @@ public class GlobalConfig {
     // 添加举报/wt/content/accuse.do
     public static final String presentAccuseUrl= "wt/content/accuse.do";
 
+    // 获取轮播图
+    public static final String getImage ="wt/content/getLoopImgs.do";
 
 
     /**

@@ -36,6 +36,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**
@@ -56,9 +58,9 @@ public class SocketService extends Service {
     private volatile long lastReceiveTime;                            // 最后收到服务器消息时间
     private volatile Object socketSendLock = new Object();            // 发送锁
     private volatile Object socketRecvLock = new Object();            // 接收锁
-    private static HealthWatch healthWatch;                           // 健康检查线程
+    private static Timer healthWatch;                                 // 健康检查线程
     private static ReConn reConn;                                     // 重新连接线程
-    private static SendBeat sendBeat;                                 // 发送心跳线程
+    private static Timer sendBeat;                                    // 发送心跳线程
     private static SendMsg sendMsg;                                   // 发送消息线程
     private static ReceiveMsg receiveMsg;                             // 结束消息线程
     private static ArrayBlockingQueue<Message> audioMsgQueue = new ArrayBlockingQueue<Message>(128);                // 接收到的音频消息队列
@@ -205,15 +207,16 @@ public class SocketService extends Service {
 
     /**
      * 开始工作：
-     * 包括创建检测线程，并启动Socket连接
+     * 包括创建检测线程，并启动Socet连接
      */
     public void workStart() {
         if (!isRunning) {
             this.toBeStop = false;
             this.lastReceiveTime = System.currentTimeMillis(); //最后收到服务器消息时间
             //连接
-            this.healthWatch = new HealthWatch("Socket客户端长连接监控");
-            this.healthWatch.start();
+            healthWatch = new Timer("Socket客户端长连接监控");
+            System.out.println("<" + (new Date()).toString() + ">" + "Socket客户端长连接监控线程启动");
+            healthWatch.scheduleAtFixedRate(new HealthWatchTimer(), 0, scc.getIntervalCheckSocket());
         } else {
             this.workStop(false);
             this.workStart();//循环了，可能死掉
@@ -230,9 +233,9 @@ public class SocketService extends Service {
         toBeStop = true;
         if (b) {
             int i = 0, limitCount = 6000;//一分钟后退出
-            while ((healthWatch != null && healthWatch.isAlive()) ||
+            while ((healthWatch != null) ||
                     (reConn != null && reConn.isAlive()) ||
-                    (sendBeat != null && sendBeat.isAlive()) ||
+                    (sendBeat != null) ||
                     (sendMsg != null && sendMsg.isAlive()) ||
                     (receiveMsg != null && receiveMsg.isAlive())) {
                 try {
@@ -243,17 +246,12 @@ public class SocketService extends Service {
                 if (i++ > limitCount) break;
             }
         }
-
-        if (healthWatch != null && healthWatch.isAlive()) {
-            healthWatch.interrupt();
-            healthWatch = null;
-        }
         if (reConn != null && reConn.isAlive()) {
             reConn.interrupt();
             reConn = null;
         }
-        if (sendBeat != null && sendBeat.isAlive()) {
-            sendBeat.interrupt();
+        if (sendBeat != null) {
+            sendBeat.cancel();
             sendBeat = null;
         }
         if (sendMsg != null && sendMsg.isAlive()) {
@@ -301,70 +299,64 @@ public class SocketService extends Service {
         isRunning = false;
     }
 
-    //健康监控线程
-    private class HealthWatch extends Thread {
-        protected HealthWatch(String name) {
-            super.setName(name);
-            this.setDaemon(true);
-        }
 
-        public void run() { //主线程监控连接
-            System.out.println("<" + (new Date()).toString() + ">" + this.getName() + "线程启动");
+    //健康监控线程
+    class HealthWatchTimer extends TimerTask {
+        public void run() {
             try {
-                while (true) {//检查线程的健康状况
-                    Log.e("toBeStop","toBeStop状态==="+toBeStop);
-                    if(reConn!=null){
-                        Log.e("!reConn.isAlive","!reConn.isAlive状态"+!reConn.isAlive());
-                    }else {
-                        Log.e("reConn","reConn状态===null");
+                Log.e("toBeStop", "toBeStop状态===" + toBeStop);
+                if (reConn != null) {
+                    Log.e("!reConn.isAlive", "!reConn.isAlive状态" + !reConn.isAlive());
+                } else {
+                    Log.e("reConn", "reConn状态===null");
+                }
+                Log.e("!socketOk()", "!socketOk()状态" + !socketOk());
+                Log.e("时间", "时间状态" + (System.currentTimeMillis() - lastReceiveTime > scc.getExpireTime()));
+                if (toBeStop) {
+                    if (healthWatch != null) {
+                        healthWatch.cancel();
+                        healthWatch = null;
                     }
-                    Log.e("!socketOk()","!socketOk()状态"+!socketOk());
-                    Log.e("时间","时间状态"+(System.currentTimeMillis() - lastReceiveTime > scc.getExpireTime()));
-                    if (toBeStop) break;
-                    if (reConn == null || !reConn.isAlive()) {
-                        Log.e("toBeStop", "toBeStop状态===" + toBeStop);
-                        if (!socketOk() || (System.currentTimeMillis() - lastReceiveTime > scc.getExpireTime())) {//连接失败了
-                            if (socket != null) {
-                                try {
-                                    socket.shutdownInput();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                try {
-                                    socket.shutdownOutput();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                try {
-                                    socket.close();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+                }
+                if (reConn == null || !reConn.isAlive()) {
+                    Log.e("toBeStop", "toBeStop状态===" + toBeStop);
+                    if (!socketOk() || (System.currentTimeMillis() - lastReceiveTime > scc.getExpireTime())) {//连接失败了
+                        if (socket != null) {
+                            try {
+                                socket.shutdownInput();
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                            if (out != null) {
-                                try {
-                                    out.close();
-                                } catch (Exception e1) {
-                                } finally {
-                                    out = null;
-                                }
+                            try {
+                                socket.shutdownOutput();
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                            if (in != null) {
-                                try {
-                                    in.close();
-                                } catch (Exception e2) {
-                                } finally {
-                                    in = null;
-                                }
+                            try {
+                                socket.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                            socket = null;
-                            reConn = new ReConn("socket连接", nextReConnIndex);//此线程在健康监护线程中启动
-                            reConn.start();
                         }
-                    }
-                    try {
-                        sleep(scc.getIntervalCheckSocket());
-                    } catch (InterruptedException e) {
+                        if (out != null) {
+                            try {
+                                out.close();
+                            } catch (Exception e1) {
+                            } finally {
+                                out = null;
+                            }
+                        }
+                        if (in != null) {
+                            try {
+                                in.close();
+                            } catch (Exception e2) {
+                            } finally {
+                                in = null;
+                            }
+                        }
+                        socket = null;
+                        reConn = new ReConn("socket连接", nextReConnIndex);//此线程在健康监护线程中启动
+                        reConn.start();
                     }
                 }
             } catch (Exception e) {
@@ -390,9 +382,9 @@ public class SocketService extends Service {
 
         public void run() {
             System.out.println("<" + (new Date()).toString() + ">" + this.getName() + "线程启动");
-            try {
-                sendBeat.interrupt();
-            } catch (Exception e) {
+            if (sendBeat != null) {
+                sendBeat.cancel();
+                sendBeat = null;
             }
             try {
                 sendMsg.interrupt();
@@ -430,8 +422,11 @@ public class SocketService extends Service {
                             if (out == null)
                                 out = new BufferedOutputStream(socket.getOutputStream());
                             lastReceiveTime = System.currentTimeMillis();
-                            sendBeat = new SendBeat("发送心跳");
-                            sendBeat.start();
+                            //启动监控线程
+                            sendBeat = new Timer("发送心跳");
+                            System.out.println("<" + (new Date()).toString() + ">" + "发送心跳线程启动");
+                            sendBeat.scheduleAtFixedRate(new sendBeatTimer(), 0, scc.getIntervalBeat());
+
                             sendMsg = new SendMsg("发消息");
                             sendMsg.start();
                             receiveMsg = new ReceiveMsg("接收消息");
@@ -461,43 +456,34 @@ public class SocketService extends Service {
     }
 
     //发送心跳
-    private class SendBeat extends Thread {
-        protected SendBeat(String name) {
-            super.setName(name);
-        }
-
+    class sendBeatTimer extends TimerTask {
         public void run() {
-            System.out.println("<" + (new Date()).toString() + ">" + this.getName() + "线程启动");
             try {
-                while (true) {
-                    try {
-                        Log.e("心跳线程toBeStop", toBeStop + "");
-                        if (toBeStop) break;
-                        if (socketOk()) {
-                            synchronized (socketSendLock) {
-                                byte[] rb = new byte[3];
-                                rb[0] = 'b';
-                                rb[1] = '^';
-                                rb[2] = '^';
-                                out.write(rb);
-                                out.flush();
-                                Log.i("心跳包", "Socket[" + socket.hashCode() + "]【发送】:【B】");
-                            }
-                        } else {
-                            break;
-                        }
-                        try {
-                            sleep(scc.getIntervalBeat());
-                        } catch (InterruptedException e) {
-                        }
-
-                    } catch (Exception e) {
-                        Log.e("心跳内线程异常", e.toString() + "");
+                Log.e("心跳线程toBeStop", toBeStop + "");
+                if (toBeStop) {
+                    if (sendBeat != null) {
+                        sendBeat.cancel();
+                        sendBeat = null;
+                    }
+                }
+                if (socketOk()) {
+                    synchronized (socketSendLock) {
+                        byte[] rb = new byte[3];
+                        rb[0] = 'b';
+                        rb[1] = '^';
+                        rb[2] = '^';
+                        out.write(rb);
+                        out.flush();
+                        Log.i("心跳包", "Socket[" + socket.hashCode() + "]【发送】:【B】");
+                    }
+                } else {
+                    if (sendBeat != null) {
+                        sendBeat.cancel();
+                        sendBeat = null;
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
-                Log.e("心跳线程异常", e.toString() + "");
+                Log.e("心跳内线程异常", e.toString() + "");
             }
         }
     }
@@ -587,7 +573,6 @@ public class SocketService extends Service {
             byte[] endMsgFlag = {0x00, 0x00, 0x00};
             int isRegist = 0;
             int isCtlAck = 0, tempFlag = 0, fieldFlag = 0, countFlag = 0;
-
             while (true) {
                 try {
                     int r = -1;
@@ -598,93 +583,113 @@ public class SocketService extends Service {
                             endMsgFlag[0] = endMsgFlag[1];
                             endMsgFlag[1] = endMsgFlag[2];
                             endMsgFlag[2] = (byte) r;
-
                             if (!hasBeginMsg) {
-                                if (endMsgFlag[0] == 'B' && endMsgFlag[1] == '^' && endMsgFlag[2] == '^') {
-                                    break;
-                                } else if ((endMsgFlag[0] == '|' && endMsgFlag[1] == '^') || (endMsgFlag[0] == '^' && endMsgFlag[1] == '|')) {
-                                    hasBeginMsg = true;
-                                    ba[0] = endMsgFlag[0];
-                                    ba[1] = endMsgFlag[1];
-                                    ba[2] = endMsgFlag[2];
-                                    i = 3;
+                                if (endMsgFlag[0]=='B'&&endMsgFlag[1]=='^'&&endMsgFlag[2]=='^') {
+                                    break;//是心跳消息
+                                } else if ((endMsgFlag[0]=='|'&&endMsgFlag[1]=='^')||(endMsgFlag[0]=='^'&&endMsgFlag[1]=='|')) {
+                                    hasBeginMsg=true;
+                                    ba[0]=endMsgFlag[0];
+                                    ba[1]=endMsgFlag[1];
+                                    ba[2]=endMsgFlag[2];
+                                    i=3;
                                     continue;
-                                } else if ((endMsgFlag[1] == '|' && endMsgFlag[2] == '^') || (endMsgFlag[1] == '^' && endMsgFlag[2] == '|')) {
-                                    hasBeginMsg = true;
-                                    ba[0] = endMsgFlag[1];
-                                    ba[1] = endMsgFlag[2];
-                                    i = 2;
+                                } else if ((endMsgFlag[1]=='|'&&endMsgFlag[2]=='^')||(endMsgFlag[1]=='^'&&endMsgFlag[2]=='|')) {
+                                    hasBeginMsg=true;
+                                    ba[0]=endMsgFlag[1];
+                                    ba[1]=endMsgFlag[2];
+                                    i=2;
                                     continue;
                                 }
-                                if (i > 2) {
-                                    for (int n = 1; n <= i; n++) ba[n - 1] = ba[n];
+                                if (i>2) {
+                                    for (int n=1;n<=i;n++) ba[n-1]=ba[n];
                                     --i;
                                 }
-                            } else {
-                                if (msgType == -1) msgType = MessageUtils.decideMsg(ba);
-                                if (msgType == 0) {//0=控制消息(一般消息)
-                                    if (isAck == -1 && i == 12) {
-                                        tempFlag = i;
-                                        if ((ba[2] & 0x80) == 0x80) isAck = 1;
-                                        else isAck = 0;
-                                        if (isAck == 1) countFlag = 1;
-                                        else countFlag = 0;
-
-                                        if (((ba[i - 1] >> 4) & 0x0F) == 0x0F) isRegist = 1;
-                                        else if (((ba[i - 1] >> 4) | 0x00) == 0x00) isCtlAck = 1;
-                                    }
-                                    if (isAck != -1) {
-                                        if (isCtlAck == 1) {
-                                            if (fieldFlag == 0 && ((endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 32)) {
-                                                countFlag = 1;
-                                                tempFlag = i;
-                                                fieldFlag = 1;
-                                            } else if (fieldFlag == 1 && (i - tempFlag) > countFlag && (ba[i - countFlag] == 0 || (endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 12)) {
-                                                countFlag = 0;
-                                                tempFlag = i;
-                                                fieldFlag = 2;
-                                            } else if (fieldFlag == 2 && ((endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 32)) {
-                                                break;//通用回复消息读取完毕
-                                            }
-                                        } else if (isRegist == 1) {
-                                            if (fieldFlag == 0 && (i - tempFlag) > countFlag && ((endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 32)) {
-                                                countFlag = 1;
-                                                tempFlag = i;
-                                                fieldFlag = 1;
-                                            } else if (fieldFlag == 1 && (i - tempFlag) > countFlag && ((ba[i - countFlag] == 0 || (endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 12))) {
-                                                countFlag = 0;
-                                                tempFlag = i;
-                                                fieldFlag = 2;
-                                            } else if (fieldFlag == 2 && ((endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 32)) {
-                                                break;//注册消息完成
-                                            }
-                                        } else { //一般消息
-                                            if (fieldFlag == 0 && endMsgFlag[1] == '^' && endMsgFlag[2] == '^') {
-                                                fieldFlag = 1;
-                                                tempFlag = 0;
-                                            } else if (fieldFlag == 1 && (++tempFlag) == 2) {
-                                                _dataLen = (short) (((endMsgFlag[2] << 8) | endMsgFlag[1] & 0xff));
-                                                tempFlag = 0;
-                                                fieldFlag = 2;
-                                            } else if (fieldFlag == 2 && (++tempFlag) == _dataLen)
-                                                break;
-                                        }
-                                    }
-
-                                } else if (msgType == 1) {//1=媒体消息
-                                    if (isAck == -1) {
-                                        if (((ba[2] & 0x80) == 0x80) && ((ba[2] & 0x40) == 0x00))
-                                            isAck = 1;
-                                        else isAck = 0;
-                                    } else if (isAck == 1) {//是回复消息
-                                        if (i == _headLen + 1) break;
-                                    } else if (isAck == 0) {//是一般媒体消息
-                                        if (i == _headLen + 2)
-                                            _dataLen = (short) (((ba[_headLen + 1] << 8) | ba[_headLen] & 0xff));
-                                        if (_dataLen >= 0 && i == _dataLen + _headLen + 2) break;
-                                    }
-                                }
-                            }
+                            } else if (endMsgFlag[1]=='^'&&endMsgFlag[2]=='^') break;
+//                            if (!hasBeginMsg) {
+//                                if (endMsgFlag[0] == 'B' && endMsgFlag[1] == '^' && endMsgFlag[2] == '^') {
+//                                    break;
+//                                } else if ((endMsgFlag[0] == '|' && endMsgFlag[1] == '^') || (endMsgFlag[0] == '^' && endMsgFlag[1] == '|')) {
+//                                    hasBeginMsg = true;
+//                                    ba[0] = endMsgFlag[0];
+//                                    ba[1] = endMsgFlag[1];
+//                                    ba[2] = endMsgFlag[2];
+//                                    i = 3;
+//                                    continue;
+//                                } else if ((endMsgFlag[1] == '|' && endMsgFlag[2] == '^') || (endMsgFlag[1] == '^' && endMsgFlag[2] == '|')) {
+//                                    hasBeginMsg = true;
+//                                    ba[0] = endMsgFlag[1];
+//                                    ba[1] = endMsgFlag[2];
+//                                    i = 2;
+//                                    continue;
+//                                }
+//                                if (i > 2) {
+//                                    for (int n = 1; n <= i; n++) ba[n - 1] = ba[n];
+//                                    --i;
+//                                }
+//                            } else {
+//                                if (msgType == -1) msgType = MessageUtils.decideMsg(ba);
+//                                if (msgType == 0) {//0=控制消息(一般消息)
+//                                    if (isAck == -1 && i == 12) {
+//                                        tempFlag = i;
+//                                        if ((ba[2] & 0x80) == 0x80) isAck = 1;
+//                                        else isAck = 0;
+//                                        if (isAck == 1) countFlag = 1;
+//                                        else countFlag = 0;
+//
+//                                        if (((ba[i - 1] >> 4) & 0x0F) == 0x0F) isRegist = 1;
+//                                        else if (((ba[i - 1] >> 4) | 0x00) == 0x00) isCtlAck = 1;
+//                                    }
+//                                    if (isAck != -1) {
+//                                        if (isCtlAck == 1) {
+//                                            if (fieldFlag == 0 && ((endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 32)) {
+//                                                countFlag = 1;
+//                                                tempFlag = i;
+//                                                fieldFlag = 1;
+//                                            } else if (fieldFlag == 1 && (i - tempFlag) > countFlag && (ba[i - countFlag] == 0 || (endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 12)) {
+//                                                countFlag = 0;
+//                                                tempFlag = i;
+//                                                fieldFlag = 2;
+//                                            } else if (fieldFlag == 2 && ((endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 32)) {
+//                                                break;//通用回复消息读取完毕
+//                                            }
+//                                        } else if (isRegist == 1) {
+//                                            if (fieldFlag == 0 && (i - tempFlag) > countFlag && ((endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 32)) {
+//                                                countFlag = 1;
+//                                                tempFlag = i;
+//                                                fieldFlag = 1;
+//                                            } else if (fieldFlag == 1 && (i - tempFlag) > countFlag && ((ba[i - countFlag] == 0 || (endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 12))) {
+//                                                countFlag = 0;
+//                                                tempFlag = i;
+//                                                fieldFlag = 2;
+//                                            } else if (fieldFlag == 2 && ((endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 32)) {
+//                                                break;//注册消息完成
+//                                            }
+//                                        } else { //一般消息
+//                                            if (fieldFlag == 0 && endMsgFlag[1] == '^' && endMsgFlag[2] == '^') {
+//                                                fieldFlag = 1;
+//                                                tempFlag = 0;
+//                                            } else if (fieldFlag == 1 && (++tempFlag) == 2) {
+//                                                _dataLen = (short) (((endMsgFlag[2] << 8) | endMsgFlag[1] & 0xff));
+//                                                tempFlag = 0;
+//                                                fieldFlag = 2;
+//                                            } else if (fieldFlag == 2 && (++tempFlag) == _dataLen)
+//                                                break;
+//                                        }
+//                                    }
+//                                } else if (msgType == 1) {//1=媒体消息
+//                                    if (isAck == -1) {
+//                                        if (((ba[2] & 0x80) == 0x80) && ((ba[2] & 0x40) == 0x00))
+//                                            isAck = 1;
+//                                        else isAck = 0;
+//                                    } else if (isAck == 1) {//是回复消息
+//                                        if (i == _headLen + 1) break;
+//                                    } else if (isAck == 0) {//是一般媒体消息
+//                                        if (i == _headLen + 2)
+//                                            _dataLen = (short) (((ba[_headLen + 1] << 8) | ba[_headLen] & 0xff));
+//                                        if (_dataLen >= 0 && i == _dataLen + _headLen + 2) break;
+//                                    }
+//                                }
+//                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -700,6 +705,7 @@ public class SocketService extends Service {
                     tempFlag = 0;
                     fieldFlag = 0;
                     countFlag = 0;
+
                     endMsgFlag[0] = 0x00;
                     endMsgFlag[1] = 0x00;
                     endMsgFlag[2] = 0x00;
@@ -852,7 +858,7 @@ public class SocketService extends Service {
                                             context.sendBroadcast(push_call);
                                         } else if (command == 0x30) {
                                     /*
-									 * 接收该广播的地方
+                                     * 接收该广播的地方
 									 */
                                             Intent push_back = new Intent(BroadcastConstants.PUSH_BACK);
                                             Bundle bundle212 = new Bundle();
@@ -861,7 +867,7 @@ public class SocketService extends Service {
                                             //context. sendBroadcast(pushintent);
                                             context.sendOrderedBroadcast(push_back, null);
                                         } else if (command == 0x10) {
-									/*
+                                    /*
 									 * 接收该广播的地方
 									 */
                                             Intent push_service = new Intent(BroadcastConstants.PUSH_SERVICE);
@@ -955,11 +961,9 @@ public class SocketService extends Service {
     public void onDestroy() {
         super.onDestroy();
         stopForeground(true);// 停止前台服务--参数：表示是否移除之前的通知
-        this.healthWatch.destroy();
         this.healthWatch = null;
         this.reConn.destroy();
         this.reConn = null;
-        sendBeat.destroy();
         sendBeat = null;
         this.sendMsg.destroy();
         this.sendMsg = null;
@@ -970,17 +974,16 @@ public class SocketService extends Service {
                 socket.shutdownInput();
             } catch (Exception e) {
             }
-            ;
             try {
                 socket.shutdownOutput();
             } catch (Exception e) {
             }
-            ;
+
             try {
                 socket.close();
             } catch (Exception e) {
             }
-            ;
+
             socket = null;
         }
         if (out != null) {
@@ -991,7 +994,7 @@ public class SocketService extends Service {
                 out = null;
             }
         }
-        ;
+
         if (in != null) {
             try {
                 in.close();
@@ -1000,7 +1003,7 @@ public class SocketService extends Service {
                 in = null;
             }
         }
-        ;
+
         Log.e("socket销毁", "已经全部销毁");
     }
 

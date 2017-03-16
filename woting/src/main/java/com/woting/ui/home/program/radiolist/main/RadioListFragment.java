@@ -83,6 +83,7 @@ public class RadioListFragment extends Fragment implements OnClickListener, TipV
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.activity_radiolist, container, false);
             rootView.setOnClickListener(this);
+            isCancelRequest = false;
             fragments = new ArrayList<>();
             setView();
             handleRequestType();
@@ -117,6 +118,10 @@ public class RadioListFragment extends Fragment implements OnClickListener, TipV
                 }
             }
         }
+    }
+
+    public static boolean isCancel() {
+        return isCancelRequest;
     }
 
     // 请求网络获取分类信息
