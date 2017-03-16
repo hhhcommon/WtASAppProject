@@ -67,6 +67,11 @@ public class PlayerActivity extends FragmentActivity {
         }
     }
 
+    public static void hideShow(Fragment from,Fragment to) {
+        context.getSupportFragmentManager().beginTransaction().
+                hide(from).show(to).commit();
+    }
+
     private long tempTime;
 
     @Override

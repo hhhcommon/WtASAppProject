@@ -79,6 +79,7 @@ import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.album.model.ContentInfo;
 import com.woting.ui.home.program.comment.CommentActivity;
 import com.woting.ui.home.search.main.SearchLikeFragment;
+import com.woting.ui.main.MainActivity;
 import com.woting.ui.mine.playhistory.main.PlayHistoryFragment;
 import com.woting.video.IntegrationPlayer;
 import com.woting.video.VoiceRecognizer;
@@ -410,15 +411,14 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.lin_find:// 搜索
-                ToastUtils.show_always(context, "搜索");
-//                if (frag == null) {
-//                    frag = new SearchLikeFragment();
-//                    Bundle bun = new Bundle();
-//                    bun.putInt("FROM_TYPE", 1);// == 0 PlayerFragment
-//                    frag.setArguments(bun);
-//                }
-//                HomeActivity.open(frag);
-//                MainActivity.hideOrShowTab(false);
+                if (frag == null) {
+                    frag = new SearchLikeFragment();
+                    Bundle bun = new Bundle();
+                    bun.putInt("FROM_TYPE", 0);// == 0 PlayerFragment
+                    frag.setArguments(bun);
+                }
+                PlayerActivity.open(frag);
+                MainActivity.hideOrShowTab(false);
                 break;
             case R.id.lin_lukuangtts:// 获取路况
                 TTSPlay();
