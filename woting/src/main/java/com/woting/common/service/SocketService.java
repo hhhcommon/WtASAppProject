@@ -583,92 +583,113 @@ public class SocketService extends Service {
                             endMsgFlag[0] = endMsgFlag[1];
                             endMsgFlag[1] = endMsgFlag[2];
                             endMsgFlag[2] = (byte) r;
-
                             if (!hasBeginMsg) {
-                                if (endMsgFlag[0] == 'B' && endMsgFlag[1] == '^' && endMsgFlag[2] == '^') {
-                                    break;
-                                } else if ((endMsgFlag[0] == '|' && endMsgFlag[1] == '^') || (endMsgFlag[0] == '^' && endMsgFlag[1] == '|')) {
-                                    hasBeginMsg = true;
-                                    ba[0] = endMsgFlag[0];
-                                    ba[1] = endMsgFlag[1];
-                                    ba[2] = endMsgFlag[2];
-                                    i = 3;
+                                if (endMsgFlag[0]=='B'&&endMsgFlag[1]=='^'&&endMsgFlag[2]=='^') {
+                                    break;//是心跳消息
+                                } else if ((endMsgFlag[0]=='|'&&endMsgFlag[1]=='^')||(endMsgFlag[0]=='^'&&endMsgFlag[1]=='|')) {
+                                    hasBeginMsg=true;
+                                    ba[0]=endMsgFlag[0];
+                                    ba[1]=endMsgFlag[1];
+                                    ba[2]=endMsgFlag[2];
+                                    i=3;
                                     continue;
-                                } else if ((endMsgFlag[1] == '|' && endMsgFlag[2] == '^') || (endMsgFlag[1] == '^' && endMsgFlag[2] == '|')) {
-                                    hasBeginMsg = true;
-                                    ba[0] = endMsgFlag[1];
-                                    ba[1] = endMsgFlag[2];
-                                    i = 2;
+                                } else if ((endMsgFlag[1]=='|'&&endMsgFlag[2]=='^')||(endMsgFlag[1]=='^'&&endMsgFlag[2]=='|')) {
+                                    hasBeginMsg=true;
+                                    ba[0]=endMsgFlag[1];
+                                    ba[1]=endMsgFlag[2];
+                                    i=2;
                                     continue;
                                 }
-                                if (i > 2) {
-                                    for (int n = 1; n <= i; n++) ba[n - 1] = ba[n];
+                                if (i>2) {
+                                    for (int n=1;n<=i;n++) ba[n-1]=ba[n];
                                     --i;
                                 }
-                            } else {
-                                if (msgType == -1) msgType = MessageUtils.decideMsg(ba);
-                                if (msgType == 0) {//0=控制消息(一般消息)
-                                    if (isAck == -1 && i == 12) {
-                                        tempFlag = i;
-                                        if ((ba[2] & 0x80) == 0x80) isAck = 1;
-                                        else isAck = 0;
-                                        if (isAck == 1) countFlag = 1;
-                                        else countFlag = 0;
-
-                                        if (((ba[i - 1] >> 4) & 0x0F) == 0x0F) isRegist = 1;
-                                        else if (((ba[i - 1] >> 4) | 0x00) == 0x00) isCtlAck = 1;
-                                    }
-                                    if (isAck != -1) {
-                                        if (isCtlAck == 1) {
-                                            if (fieldFlag == 0 && ((endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 32)) {
-                                                countFlag = 1;
-                                                tempFlag = i;
-                                                fieldFlag = 1;
-                                            } else if (fieldFlag == 1 && (i - tempFlag) > countFlag && (ba[i - countFlag] == 0 || (endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 12)) {
-                                                countFlag = 0;
-                                                tempFlag = i;
-                                                fieldFlag = 2;
-                                            } else if (fieldFlag == 2 && ((endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 32)) {
-                                                break;//通用回复消息读取完毕
-                                            }
-                                        } else if (isRegist == 1) {
-                                            if (fieldFlag == 0 && (i - tempFlag) > countFlag && ((endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 32)) {
-                                                countFlag = 1;
-                                                tempFlag = i;
-                                                fieldFlag = 1;
-                                            } else if (fieldFlag == 1 && (i - tempFlag) > countFlag && ((ba[i - countFlag] == 0 || (endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 12))) {
-                                                countFlag = 0;
-                                                tempFlag = i;
-                                                fieldFlag = 2;
-                                            } else if (fieldFlag == 2 && ((endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 32)) {
-                                                break;//注册消息完成
-                                            }
-                                        } else { //一般消息
-                                            if (fieldFlag == 0 && endMsgFlag[1] == '^' && endMsgFlag[2] == '^') {
-                                                fieldFlag = 1;
-                                                tempFlag = 0;
-                                            } else if (fieldFlag == 1 && (++tempFlag) == 2) {
-                                                _dataLen = (short) (((endMsgFlag[2] << 8) | endMsgFlag[1] & 0xff));
-                                                tempFlag = 0;
-                                                fieldFlag = 2;
-                                            } else if (fieldFlag == 2 && (++tempFlag) == _dataLen)
-                                                break;
-                                        }
-                                    }
-                                } else if (msgType == 1) {//1=媒体消息
-                                    if (isAck == -1) {
-                                        if (((ba[2] & 0x80) == 0x80) && ((ba[2] & 0x40) == 0x00))
-                                            isAck = 1;
-                                        else isAck = 0;
-                                    } else if (isAck == 1) {//是回复消息
-                                        if (i == _headLen + 1) break;
-                                    } else if (isAck == 0) {//是一般媒体消息
-                                        if (i == _headLen + 2)
-                                            _dataLen = (short) (((ba[_headLen + 1] << 8) | ba[_headLen] & 0xff));
-                                        if (_dataLen >= 0 && i == _dataLen + _headLen + 2) break;
-                                    }
-                                }
-                            }
+                            } else if (endMsgFlag[1]=='^'&&endMsgFlag[2]=='^') break;
+//                            if (!hasBeginMsg) {
+//                                if (endMsgFlag[0] == 'B' && endMsgFlag[1] == '^' && endMsgFlag[2] == '^') {
+//                                    break;
+//                                } else if ((endMsgFlag[0] == '|' && endMsgFlag[1] == '^') || (endMsgFlag[0] == '^' && endMsgFlag[1] == '|')) {
+//                                    hasBeginMsg = true;
+//                                    ba[0] = endMsgFlag[0];
+//                                    ba[1] = endMsgFlag[1];
+//                                    ba[2] = endMsgFlag[2];
+//                                    i = 3;
+//                                    continue;
+//                                } else if ((endMsgFlag[1] == '|' && endMsgFlag[2] == '^') || (endMsgFlag[1] == '^' && endMsgFlag[2] == '|')) {
+//                                    hasBeginMsg = true;
+//                                    ba[0] = endMsgFlag[1];
+//                                    ba[1] = endMsgFlag[2];
+//                                    i = 2;
+//                                    continue;
+//                                }
+//                                if (i > 2) {
+//                                    for (int n = 1; n <= i; n++) ba[n - 1] = ba[n];
+//                                    --i;
+//                                }
+//                            } else {
+//                                if (msgType == -1) msgType = MessageUtils.decideMsg(ba);
+//                                if (msgType == 0) {//0=控制消息(一般消息)
+//                                    if (isAck == -1 && i == 12) {
+//                                        tempFlag = i;
+//                                        if ((ba[2] & 0x80) == 0x80) isAck = 1;
+//                                        else isAck = 0;
+//                                        if (isAck == 1) countFlag = 1;
+//                                        else countFlag = 0;
+//
+//                                        if (((ba[i - 1] >> 4) & 0x0F) == 0x0F) isRegist = 1;
+//                                        else if (((ba[i - 1] >> 4) | 0x00) == 0x00) isCtlAck = 1;
+//                                    }
+//                                    if (isAck != -1) {
+//                                        if (isCtlAck == 1) {
+//                                            if (fieldFlag == 0 && ((endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 32)) {
+//                                                countFlag = 1;
+//                                                tempFlag = i;
+//                                                fieldFlag = 1;
+//                                            } else if (fieldFlag == 1 && (i - tempFlag) > countFlag && (ba[i - countFlag] == 0 || (endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 12)) {
+//                                                countFlag = 0;
+//                                                tempFlag = i;
+//                                                fieldFlag = 2;
+//                                            } else if (fieldFlag == 2 && ((endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 32)) {
+//                                                break;//通用回复消息读取完毕
+//                                            }
+//                                        } else if (isRegist == 1) {
+//                                            if (fieldFlag == 0 && (i - tempFlag) > countFlag && ((endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 32)) {
+//                                                countFlag = 1;
+//                                                tempFlag = i;
+//                                                fieldFlag = 1;
+//                                            } else if (fieldFlag == 1 && (i - tempFlag) > countFlag && ((ba[i - countFlag] == 0 || (endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 12))) {
+//                                                countFlag = 0;
+//                                                tempFlag = i;
+//                                                fieldFlag = 2;
+//                                            } else if (fieldFlag == 2 && ((endMsgFlag[1] == '|' && endMsgFlag[2] == '|') || (i - tempFlag - countFlag) == 32)) {
+//                                                break;//注册消息完成
+//                                            }
+//                                        } else { //一般消息
+//                                            if (fieldFlag == 0 && endMsgFlag[1] == '^' && endMsgFlag[2] == '^') {
+//                                                fieldFlag = 1;
+//                                                tempFlag = 0;
+//                                            } else if (fieldFlag == 1 && (++tempFlag) == 2) {
+//                                                _dataLen = (short) (((endMsgFlag[2] << 8) | endMsgFlag[1] & 0xff));
+//                                                tempFlag = 0;
+//                                                fieldFlag = 2;
+//                                            } else if (fieldFlag == 2 && (++tempFlag) == _dataLen)
+//                                                break;
+//                                        }
+//                                    }
+//                                } else if (msgType == 1) {//1=媒体消息
+//                                    if (isAck == -1) {
+//                                        if (((ba[2] & 0x80) == 0x80) && ((ba[2] & 0x40) == 0x00))
+//                                            isAck = 1;
+//                                        else isAck = 0;
+//                                    } else if (isAck == 1) {//是回复消息
+//                                        if (i == _headLen + 1) break;
+//                                    } else if (isAck == 0) {//是一般媒体消息
+//                                        if (i == _headLen + 2)
+//                                            _dataLen = (short) (((ba[_headLen + 1] << 8) | ba[_headLen] & 0xff));
+//                                        if (_dataLen >= 0 && i == _dataLen + _headLen + 2) break;
+//                                    }
+//                                }
+//                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
