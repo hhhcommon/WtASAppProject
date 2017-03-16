@@ -245,7 +245,10 @@ public class AccuseFragment extends Fragment implements OnClickListener {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("ContentId", ContentId);
-            jsonObject.put("MediaType", MediaType);
+
+            if(!TextUtils.isEmpty(MediaType)) {
+                jsonObject.put("MediaType", MediaType);
+            }
 
             if(!TextUtils.isEmpty(SelReasons)){
             jsonObject.put("SelReasons",SelReasons);
