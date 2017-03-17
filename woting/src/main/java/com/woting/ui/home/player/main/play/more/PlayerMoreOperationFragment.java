@@ -35,7 +35,7 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.HorizontalListView;
 import com.woting.ui.download.activity.DownloadFragment;
 import com.woting.ui.download.dao.FileInfoDao;
-import com.woting.ui.download.fragment.DownLoadUnCompleted;
+import com.woting.ui.download.fragment.DownLoadUnCompletedFragment;
 import com.woting.ui.download.model.FileInfo;
 import com.woting.ui.download.service.DownloadService;
 import com.woting.ui.home.player.main.adapter.ImageAdapter;
@@ -386,7 +386,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                     FileInfo file = fileUnDownloadList.get(k);
                     mFileDao.updataDownloadStatus(m.getContentPlay(), "1");
                     DownloadService.workStart(file);
-                    DownLoadUnCompleted.dwType = true;
+                    DownLoadUnCompletedFragment.dwType = true;
                     Intent p_intent = new Intent(BroadcastConstants.PUSH_DOWN_UNCOMPLETED);
                     context.sendBroadcast(p_intent);
                     break;
