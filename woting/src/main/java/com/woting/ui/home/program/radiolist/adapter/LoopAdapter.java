@@ -50,9 +50,10 @@ public class LoopAdapter extends LoopPagerAdapter {
                 contentImg = GlobalConfig.imageurl + contentImg;
             }
             contentImg = AssembleImageUrlUtils.assembleImageUrl150(contentImg);
-            Picasso.with(context).load(contentImg.replace("\\/", "/")).into(view);
+            Picasso.with(context).load(contentImg.replace("\\/", "/")).resize(50,50).centerCrop().into(view);
         } else {
-            view.setImageBitmap(bmp);
+            //view.setImageBitmap(bmp);
+            Picasso.with(context).load(R.mipmap.img_person_background).resize(50,50).centerCrop().into(view);
         }
         return view;
     }
