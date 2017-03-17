@@ -158,6 +158,7 @@ public class RadioListFragment extends Fragment implements OnClickListener, TipV
                     }
                     viewPager.setAdapter(new MyPagerAdapter(getChildFragmentManager(), list, fragments));
                     pageSlidingTab.setViewPager(viewPager);
+
                     if (count == 1) pageSlidingTab.setVisibility(View.GONE);
                 } else {
                     ToastUtils.show_always(context, "暂没有该分类数据");
