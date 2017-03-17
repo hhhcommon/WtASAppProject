@@ -67,6 +67,7 @@ import com.woting.ui.home.model.CatalogName;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.player.main.play.PlayerActivity;
+import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.citylist.dao.CityInfoDao;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
@@ -779,6 +780,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 .setContent(new Intent(this, DuiJiangActivity.class)));
         tabHost.addTab(tabHost.newTabSpec("five").setIndicator("five")
                 .setContent(new Intent(this, MineActivity.class)));
+        tabHost.addTab(tabHost.newTabSpec("six").setIndicator("six")
+                .setContent(new Intent(this, PlayerMoreOperationActivity.class)));
     }
 
     // 切换到播放界面
@@ -862,6 +865,15 @@ public class MainActivity extends TabActivity implements OnClickListener {
         } else {
             hideOrShowTab(false);
         }
+    }
+
+    // 更多
+    public static void setViewSix() {
+        tabHost.setCurrentTabByTag("six");
+        image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
+        image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
+        image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+        hideOrShowTab(false);
     }
 
     private TabHost extracted() {

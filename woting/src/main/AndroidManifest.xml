@@ -8,7 +8,7 @@
         android:required="false"/>
 
     <!-- 屏幕点亮 -->
-    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT"></uses-permission>
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT"/>
     <!-- 蓝牙管理 -->
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE"/>
@@ -70,6 +70,7 @@
     <permission
         android:name="com.wotingfm.permission.C2D_MESSAGE"
         android:protectionLevel="signature"/>
+
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
     <!-- 使用权限 -->
     <uses-permission android:name="android.permission.READ_PHONE_SINTERNETWIFI_STATE"/>
@@ -106,6 +107,7 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -193,7 +195,6 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
-
         <activity
             android:name=".ui.interphone.message.activity.NewsActivity"
             android:screenOrientation="portrait"
@@ -527,16 +528,22 @@
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
-        <!--电台节目单界面-->
+        <!-- 电台节目单界面 -->
         <activity
             android:name=".ui.home.player.programme.ProgrammeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
-        <!--配置文件界面-->
         <activity
-            android:name="com.woting.ui.mine.set.collocation.CollocationActivity"
+            android:name=".ui.home.player.main.play.more.PlayerMoreOperationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+
+        <!-- 配置文件界面 -->
+        <activity
+            android:name=".ui.mine.set.collocation.CollocationActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
@@ -602,7 +609,8 @@
                 <category android:name="android.intent.category.HOME"/>
             </intent-filter>
         </receiver>
-        <!--  暂时不恢复
+        <!--
+        暂时不恢复
         <receiver android:name="com.wotingfm.receiver.TickAlarmReceiver" >
         </receiver>
         <receiver android:name="com.wotingfm.receiver.PhoneStatReceiver" >
@@ -623,7 +631,8 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
-        </receiver>-->
+        </receiver>
+        -->
 
         <service android:name=".common.service.SubclassService"/>
         <service android:name=".ui.interphone.commom.service.NotificationService"/>
