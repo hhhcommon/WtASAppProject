@@ -286,7 +286,11 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 ToastUtils.show_always(context, "我的主播!");
                 break;
             case R.id.lin_subscribe:        // 我的订阅
-                MineActivity.open(new SubscriberListFragment());
+                SubscriberListFragment subscriberListFragment = new SubscriberListFragment();
+                Bundle bundleSub = new Bundle();
+                bundleSub.putInt("fromType", 5);
+                subscriberListFragment.setArguments(bundleSub);
+                MineActivity.open(subscriberListFragment);
                 break;
             case R.id.lin_album:            // 我的专辑  我上传的专辑
                 startActivity(new Intent(context, MyUploadActivity.class));

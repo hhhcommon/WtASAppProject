@@ -9,8 +9,7 @@
     <TextView
         android:id="@+id/tv_main"
         android:layout_width="match_parent"
-        android:layout_height="24dp"
-        android:visibility="gone"/>
+        android:layout_height="24dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

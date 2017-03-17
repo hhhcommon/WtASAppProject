@@ -12,6 +12,7 @@ import com.woting.R;
 import com.woting.ui.download.activity.DownloadFragment;
 import com.woting.ui.mine.favorite.main.FavoriteFragment;
 import com.woting.ui.mine.playhistory.main.PlayHistoryFragment;
+import com.woting.ui.mine.subscriber.activity.SubscriberListFragment;
 
 /**
  * PlayerMoreOperation
@@ -64,7 +65,11 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                 PlayerMoreOperationActivity.open(historyFrag);
                 break;
             case R.id.text_subscribe:// 我的订阅
-
+                SubscriberListFragment subscriberListFragment = new SubscriberListFragment();
+                Bundle bundleSub = new Bundle();
+                bundleSub.putInt("fromType", 6);
+                subscriberListFragment.setArguments(bundleSub);
+                PlayerMoreOperationActivity.open(subscriberListFragment);
                 break;
             case R.id.text_local:// 我的下载
                 PlayerMoreOperationActivity.open(new DownloadFragment());
