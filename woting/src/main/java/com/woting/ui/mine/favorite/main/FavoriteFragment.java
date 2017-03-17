@@ -75,7 +75,7 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
     public static final String SET_NOT_ALL_IMAGE = "SET_NOT_ALL_IMAGE";// 非全选
     public static final String SET_NOT_LOAD_REFRESH = "SET_NOT_LOAD_REFRESH";// 禁止刷新加载
     public static final String SET_LOAD_REFRESH = "SET_LOAD_REFRESH";// 允许刷新加载
-    private int type;
+    public static int type;
 
     private static int lastIndex = -1;
     private static int currentIndex = 0;// 标记当前viewpager显示的页面
