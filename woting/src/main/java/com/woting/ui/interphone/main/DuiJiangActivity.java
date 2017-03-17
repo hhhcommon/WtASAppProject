@@ -30,7 +30,7 @@ import com.woting.ui.interphone.chat.fragment.ChatFragment;
 import com.woting.ui.interphone.find.main.FindActivity;
 import com.woting.ui.interphone.group.creatgroup.CreateGroupActivity;
 import com.woting.ui.interphone.linkman.fragment.LinkManFragment;
-import com.woting.ui.interphone.notify.activity.NotifyNewsActivity;
+import com.woting.ui.interphone.message.messagecenter.activity.MessageMainActivity;
 import com.woting.ui.main.MainActivity;
 
 import java.util.ArrayList;
@@ -201,7 +201,7 @@ public class DuiJiangActivity extends FragmentActivity {
         lin_news.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, NotifyNewsActivity.class);
+                Intent intent = new Intent(context, MessageMainActivity.class);
                 startActivity(intent);
             }
         });

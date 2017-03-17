@@ -1,4 +1,4 @@
-package com.woting.ui.interphone.notify.activity;
+package com.woting.ui.interphone.message.messagecenter.fragment;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,22 +15,25 @@ import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
-import com.woting.ui.home.player.main.play.PlayerActivity;
 import com.woting.ui.interphone.linkman.model.DBNotifyHistory;
-import com.woting.ui.interphone.notify.dao.NotifyHistoryDao;
+import com.woting.ui.interphone.message.messagecenter.activity.MessageMainActivity;
+import com.woting.ui.interphone.message.messagecenter.dao.MessageNotifyDao;
+import com.woting.ui.interphone.message.messagecenter.dao.MessageSubscriberDao;
+import com.woting.ui.interphone.message.messagecenter.dao.MessageSystemDao;
 import com.woting.ui.mine.subscriber.activity.SubscriberListFragment;
 
 import java.util.List;
 
 /**
- * 系统消息
+ * 消息中心列表
  * 作者：xinlong on 2016/5/5 21:18
  * 邮箱：645700751@qq.com
  */
-public class MessageSystemFragment extends Fragment implements OnClickListener {
-    private NotifyHistoryDao dbDao;
+public class MessageFragment extends Fragment implements OnClickListener {
 	private MessageReceiver Receiver;
-
+	private MessageNotifyDao dbDaoNotify;
+	private MessageSubscriberDao dbDaoSubscriber;
+	private MessageSystemDao dbDaoSystem;
     private List<DBNotifyHistory> list;
 	private TextView tv_system,tv_subscribe,tv_group_messageN,tv_group_messageR;
 	private View rootView;
@@ -67,20 +70,24 @@ public class MessageSystemFragment extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.head_left_btn:
-				PlayerActivity.close();
+				context.finish();
 				break;
 			case R.id.lin_system:
-				PlayerActivity.close();
+				MessageSystemFragment fragment1 = new MessageSystemFragment();
+				MessageMainActivity.open(fragment1);
 				break;
 			case R.id.lin_subscribe:
-				SubscriberListFragment fragment = new SubscriberListFragment();
-				PlayerActivity.open(fragment);
+				SubscriberListFragment fragment2 = new SubscriberListFragment();
+				Bundle b=new Bundle();
+				b.putInt("fromType",7);
+				fragment2.setArguments(b);
+				MessageMainActivity.open(fragment2);
 				break;
 			case R.id.lin_group_messageN:
-				PlayerActivity.close();
+				MessageNotifyFragment fragment3 = new MessageNotifyFragment();
+				MessageMainActivity.open(fragment3);
 				break;
 			case R.id.lin_group_messageR:
-				PlayerActivity.close();
 				break;
 		}
 	}
@@ -109,12 +116,15 @@ public class MessageSystemFragment extends Fragment implements OnClickListener {
 
 	// 获取数据库的数据
 	private void getData() {
-		list = dbDao.queryHistory();
+		list = dbDaoNotify.queryNotifyMessage();
+
 	}
 
 	// 初始化数据库命令执行对象
 	private void initDao() {
-		dbDao = new NotifyHistoryDao(context);
+		dbDaoNotify = new MessageNotifyDao(context); // 通知消息
+		dbDaoSubscriber= new MessageSubscriberDao(context);// 订阅消息
+		dbDaoSystem= new MessageSystemDao(context);// 系统消息
 	}
 
 
@@ -126,7 +136,6 @@ public class MessageSystemFragment extends Fragment implements OnClickListener {
 			context.unregisterReceiver(Receiver);
 			Receiver = null;
 		}
-		dbDao = null;
 		list = null;
 	}
 }

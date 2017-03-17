@@ -58,7 +58,7 @@ import com.woting.ui.home.player.main.model.LanguageSearchInside;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.search.main.SearchLikeFragment;
-import com.woting.ui.interphone.notify.activity.MessageFragment;
+import com.woting.ui.interphone.message.messagecenter.activity.MessageMainActivity;
 import com.woting.ui.main.MainActivity;
 import com.woting.video.IntegrationPlayer;
 import com.woting.video.VoiceRecognizer;
@@ -356,7 +356,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 PlayerActivity.isVisible = false;
                 break;
             case R.id.lin_news://
-                PlayerActivity.open(new MessageFragment());
+                startActivity(new Intent(context, MessageMainActivity.class));
                 break;
             case R.id.lin_lukuangtts:// 获取路况
                 TTSPlay();

@@ -1,33 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="48dp"
     android:background="@color/white"
     >
-
-    <TextView
-        android:id="@+id/tv_name"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:ellipsize="end"
-        android:gravity="left|center"
-        android:paddingLeft="10dp"
-        android:singleLine="true"
-        android:text="朋友"
-        android:textColor="@color/group_4b"
-        android:textSize="14sp"/>
-
-    <ImageView
-        android:id="@+id/img_check"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
-        android:src="@mipmap/wt_img_accuse"/>
+                   <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                       android:gravity="left|center"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="朋友"
+                        android:textColor="@color/group_4b"
+                        android:textSize="14sp"
+                       android:layout_centerVertical="true"
+                       android:layout_alignParentLeft="true"
+                       android:paddingLeft="10dp"
+                       android:layout_alignParentStart="true" />
+            <ImageView
+                android:id="@+id/img_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/wt_img_accuse"
+                android:layout_marginRight="10dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 </RelativeLayout>

@@ -22,6 +22,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
+import com.woting.common.util.PicassoBannerLoader;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
@@ -32,11 +33,10 @@ import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
-import com.woting.ui.home.program.radiolist.adapter.LoopAdapter;
 import com.woting.ui.home.program.radiolist.mode.Image;
-import com.woting.ui.home.program.radiolist.rollviewpager.RollPagerView;
-import com.woting.ui.home.program.radiolist.rollviewpager.hintview.IconHintView;
 import com.woting.ui.home.program.tuijian.adapter.RecommendListAdapter;
+import com.youth.banner.Banner;
+import com.youth.banner.listener.OnBannerListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -69,7 +69,8 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
     private int refreshType = 1; // refreshType 1 为下拉加载 2 为上拉加载更多
     private boolean isCancelRequest;
     private String tag = "RECOMMEND_VOLLEY_REQUEST_CANCEL_TAG";
-    private RollPagerView mLoopViewPager;
+    private Banner mLoopViewPager;
+    private List<String> ImageStringList=new ArrayList<>();
 
     @Override
     public void onWhiteViewClick() {
@@ -98,7 +99,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             mListView = (XListView) rootView.findViewById(R.id.listView);
             headView = LayoutInflater.from(context).inflate(R.layout.headview_fragment_recommend, null);
             // 轮播图
-            mLoopViewPager = (RollPagerView) headView.findViewById(R.id.slideshowView);
+            mLoopViewPager = (Banner) headView.findViewById(R.id.slideshowView);
             mListView.addHeaderView(headView);
             mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 
@@ -352,8 +353,22 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                     try {
                         List<Image>  imageList = new Gson().fromJson(result.getString("LoopImgs"), new TypeToken<List<Image>>() {
                         }.getType());
-                        mLoopViewPager.setAdapter(new LoopAdapter(mLoopViewPager, context, imageList));
-                        mLoopViewPager.setHintView(new IconHintView(context, R.mipmap.indicators_now, R.mipmap.indicators_default));
+                       // mLoopViewPager.setAdapter(new LoopAdapter(mLoopViewPager, context, imageList));
+                       // mLoopViewPager.setHintView(new IconHintView(context, R.mipmap.indicators_now, R.mipmap.indicators_default));
+                        mLoopViewPager.setImageLoader(new PicassoBannerLoader());
+
+                        for(int i=0;i<imageList.size();i++){
+                            ImageStringList.add(imageList.get(i).getLoopImg());
+                        }
+                            mLoopViewPager.setImages(ImageStringList);
+
+                        mLoopViewPager.setOnBannerListener(new OnBannerListener() {
+                            @Override
+                            public void OnBannerClick(int position) {
+                                ToastUtils.show_always(context,ImageStringList.get(position-1));
+                            }
+                        });
+                        mLoopViewPager.start();
                         tipView.setVisibility(View.GONE);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -366,6 +381,9 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             }
         });
     }
+
+
+
 
     @Override
     public void onDestroy() {
@@ -384,4 +402,24 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             dbDao = null;
         }
     }
+  /*  public class PicassoImageLoader extends ImageLoader {
+        @Override
+        public void displayImage(Context context, Object path, ImageView imageView) {
+            *//**
+             注意：
+             1.图片加载器由自己选择，这里不限制，只是提供几种使用方法
+             2.返回的图片路径为Object类型，由于不能确定你到底使用的那种图片加载器，
+             传输的到的是什么格式，那么这种就使用Object接收和返回，你只需要强转成你传输的类型就行，
+             切记不要胡乱强转！
+             *//*
+                String contentImg=path.toString();
+                if (!contentImg.startsWith("http")) {
+                    contentImg = GlobalConfig.imageurl + contentImg;
+                }
+                contentImg = AssembleImageUrlUtils.assembleImageUrl150(contentImg);
+                Picasso.with(context).load(contentImg.replace("\\/", "/")).resize(50,50).centerCrop().into(imageView);
+        }
+
+
+    }*/
 }

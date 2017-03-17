@@ -1,4 +1,4 @@
-package com.woting.ui.interphone.message.activity;
+package com.woting.ui.interphone.message.newfriend.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -24,9 +24,8 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.GroupInfo;
-import com.woting.ui.interphone.message.adapter.NewsAdapter;
-import com.woting.ui.interphone.message.adapter.NewsAdapter.OnListener;
-import com.woting.ui.interphone.message.model.MessageInFo;
+import com.woting.ui.interphone.message.newfriend.adapter.NewsAdapter;
+import com.woting.ui.interphone.message.newfriend.model.MessageInFo;
 import com.woting.ui.interphone.model.UserInviteMeInside;
 
 import org.json.JSONException;
@@ -287,7 +286,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
     }
 
     private void setAdapterListener() {
-        adapter.setOnListener(new OnListener() {
+        adapter.setOnListener(new NewsAdapter.OnListener() {
             @Override
             public void tongyi(int position) {
                 if (mes != null && mes.get(position) != null && mes.get(position).getMSType() != null && !mes.get(position).getMSType().equals("")) {

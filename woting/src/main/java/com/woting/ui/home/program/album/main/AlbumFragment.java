@@ -444,12 +444,6 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
                 }
                 break;
             case R.id.head_right_btn://  举报
-              /*  ToastUtils.show_always(context, "播放专辑");
-                Intent intent = new Intent(BroadcastConstants.PLAY_SEQU_LIST);
-                intent.putExtra(StringConstant.ID_CONTENT, id);
-                intent.putExtra(StringConstant.SEQU_LIST_SIZE, programFragment.getListSize());
-                context.sendBroadcast(intent);
-                MainActivity.change();*/
                 if(!TextUtils.isEmpty(id)){
                 AccuseFragment fragment = new AccuseFragment();
                 Bundle bundle = new Bundle();

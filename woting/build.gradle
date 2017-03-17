@@ -32,4 +32,5 @@ dependencies {
     compile 'com.android.support:design:23.3.0'
     compile files('libs/libksystat.jar')
     compile files('libs/cyberplayer-sdk.jar')
+    compile 'com.youth.banner:banner:1.4.9'
 }

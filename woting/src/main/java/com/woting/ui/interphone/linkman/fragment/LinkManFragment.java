@@ -59,7 +59,7 @@ import com.woting.ui.interphone.linkman.view.PinyinComparator;
 import com.woting.ui.interphone.linkman.view.SideBar;
 import com.woting.ui.interphone.linkman.view.SideBar.OnTouchingLetterChangedListener;
 import com.woting.ui.interphone.main.DuiJiangActivity;
-import com.woting.ui.interphone.message.activity.NewsActivity;
+import com.woting.ui.interphone.message.newfriend.activity.NewsActivity;
 
 import org.json.JSONObject;
 

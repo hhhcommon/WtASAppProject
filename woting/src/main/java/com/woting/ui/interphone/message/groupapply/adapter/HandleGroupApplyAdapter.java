@@ -1,4 +1,4 @@
-package com.woting.ui.interphone.group.groupcontrol.joingrouplist.adapter;
+package com.woting.ui.interphone.message.groupapply.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,31 +12,35 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
-import com.woting.ui.interphone.group.groupcontrol.joingrouplist.model.CheckInfo;
-import com.woting.common.config.GlobalConfig;
+import com.woting.ui.common.model.UserInfo;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class JoinGroupAdapter extends BaseAdapter implements OnClickListener{
-	private List<CheckInfo> list;
+public class HandleGroupApplyAdapter extends BaseAdapter implements OnClickListener{
+	private List<UserInfo> list;
 	private Context context;
+	private UserInfo Inviter;
 	private Callback mCallback;
-
-
+	private SimpleDateFormat format;
 	public interface Callback {
 		public void click(View v);
 	}
 
-	public JoinGroupAdapter(Context context, List<CheckInfo> list, Callback callback) {
+	public HandleGroupApplyAdapter(Context context, List<UserInfo> list,
+			Callback callback) {
 		super();
 		this.list = list;
 		this.context = context;
 		this.mCallback = callback;
+		format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	}
 
-	public void ChangeData(List<CheckInfo> list) {
+	public void ChangeData(List<UserInfo> list) {
 		this.list = list;
 		this.notifyDataSetChanged();
 	}
@@ -59,8 +63,8 @@ public class JoinGroupAdapter extends BaseAdapter implements OnClickListener{
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		ViewHolder holder ;
 		if (convertView == null) {
-			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_userinviteme, null);
 			holder = new ViewHolder();
+			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_userinviteme, null);
 			holder.textview_invitename = (TextView) convertView.findViewById(R.id.tv_invitemeusername);// 邀请我的人名
 			holder.textview_invitemessage = (TextView) convertView.findViewById(R.id.tv_invitemeusermessage);// 申请消息
 			holder.imageview_inviteimage = (ImageView) convertView.findViewById(R.id.imageView_inviter);// 该人头像
@@ -73,15 +77,20 @@ public class JoinGroupAdapter extends BaseAdapter implements OnClickListener{
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		CheckInfo Inviter = list.get(position);
-		holder.textview_invitestauswait.setText("同意");
-		holder.textview_invitestausyes.setText("已同意");
+		Inviter = list.get(position);
+
 		if (Inviter.getUserName() == null || Inviter.getUserName().equals("")) {
 			holder.textview_invitename.setText("未知");
 		} else {
 			holder.textview_invitename.setText(Inviter.getUserName());
 		}
-		holder.textview_invitemessage.setText(Inviter.getInvitedUserName()+"邀请了"+Inviter.getUserName()+"进入群组");
+		if (Inviter.getApplyTime() == null || Inviter.getApplyTime().equals("")) {
+			holder.textview_invitemessage.setText("申请进入该群");
+		} else {
+			String time = format.format(new Date(Long.parseLong(Inviter.getApplyTime())));
+			
+			holder.textview_invitemessage.setText("于"+time+"申请进入该群");
+		}
 		if (Inviter.getPortraitMini() == null || Inviter.getPortraitMini().equals("")
 				|| Inviter.getPortraitMini().equals("null") || Inviter.getPortraitMini().trim().equals("")) {
 			holder.imageview_inviteimage.setImageResource(R.mipmap.wt_image_tx_hy);
@@ -95,12 +104,12 @@ public class JoinGroupAdapter extends BaseAdapter implements OnClickListener{
 			url=AssembleImageUrlUtils.assembleImageUrl150(url);
 			Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageview_inviteimage);
 		}
-		if (Inviter.getCheckType() == 1) {
+		if (Inviter.getType() == 1) {
 			holder.textview_invitestauswait.setVisibility(View.VISIBLE);
 			holder.textview_invitestausyes.setVisibility(View.GONE);
 			holder.textview_invitestauswait.setOnClickListener(this);
 			holder.textview_invitestauswait.setTag(position);
-		} else if (Inviter.getCheckType() == 2) {
+		} else if (Inviter.getType() == 2) {
 			holder.textview_invitestauswait.setVisibility(View.GONE);
 			holder.textview_invitestausyes.setVisibility(View.VISIBLE);
 		}

@@ -1,4 +1,4 @@
-package com.woting.ui.interphone.group.groupcontrol.handlegroupapply;
+package com.woting.ui.interphone.message.groupapply;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -22,8 +22,8 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.UserInfo;
-import com.woting.ui.interphone.group.groupcontrol.handlegroupapply.adapter.HandleGroupApplyAdapter;
-import com.woting.ui.interphone.group.groupcontrol.handlegroupapply.adapter.HandleGroupApplyAdapter.Callback;
+import com.woting.ui.interphone.message.groupapply.adapter.HandleGroupApplyAdapter;
+import com.woting.ui.interphone.message.groupapply.adapter.HandleGroupApplyAdapter.Callback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
