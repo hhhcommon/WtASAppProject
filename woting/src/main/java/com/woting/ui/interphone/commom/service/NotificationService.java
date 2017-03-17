@@ -74,6 +74,19 @@ public class NotificationService extends Service {
 
     }
 
+    /**
+     * 添加数据到数据库
+     * @param type      消息类型
+     * @param imageUrl  展示图片
+     * @param content   展示内容
+     * @param title     展示标题
+     * @param dealTime  展示消息处理时间
+     * @param showType  是否需要跳转
+     * @param bizType
+     * @param cmdType
+     * @param command
+     * @param taskId
+     */
     public void addNotifyMessage(String type, String imageUrl, String content, String title, String dealTime,
                     String showType, int bizType, int cmdType, int command, String taskId) {
         String addTime = Long.toString(System.currentTimeMillis());
@@ -700,7 +713,7 @@ public class NotificationService extends Service {
                                         // 发送通知
                                         setNewMessageNotification(context, news, "我听");
                                         // 加入数据库
-                                        addNotifyMessage("Mb1", contentUrl, news, "订阅信息", String.valueOf(System.currentTimeMillis()), "true", 0, 0, 0, "");
+                                        addSubscriberMessage("Mb1", contentUrl, news, "订阅信息", String.valueOf(System.currentTimeMillis()), "true", 0, 0, 0, "");
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中的异常", e.toString());
                                     }
