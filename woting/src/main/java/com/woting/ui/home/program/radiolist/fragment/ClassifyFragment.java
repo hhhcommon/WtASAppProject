@@ -296,7 +296,6 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                         bundle1.putString("text", newList.get(position - 2).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
-                        getActivity().finish();
                     } else if (MediaType.equals("SEQU")) {
                         AlbumFragment fragment = new AlbumFragment();
                         Bundle bundle = new Bundle();

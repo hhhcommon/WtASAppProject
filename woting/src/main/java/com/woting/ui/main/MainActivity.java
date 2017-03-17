@@ -67,6 +67,7 @@ import com.woting.ui.home.model.CatalogName;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.player.main.play.PlayerActivity;
+import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.citylist.dao.CityInfoDao;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
@@ -155,6 +156,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
             animator.setRepeatMode(ValueAnimator.RESTART);// 动画重复模式
             animator.start();// 开始动画
         } else {
+            // 此方法 API 需要 >= 19
             animator.resume();// 恢复动画
         }
 
@@ -167,6 +169,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     // 停止动画
     private void playStopAnimation() {
 //        image0.clearAnimation();
+        // 此方法 API 需要 >= 19
         if (animator != null) animator.pause();// 暂停动画
     }
 
@@ -777,6 +780,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 .setContent(new Intent(this, DuiJiangActivity.class)));
         tabHost.addTab(tabHost.newTabSpec("five").setIndicator("five")
                 .setContent(new Intent(this, MineActivity.class)));
+        tabHost.addTab(tabHost.newTabSpec("six").setIndicator("six")
+                .setContent(new Intent(this, PlayerMoreOperationActivity.class)));
     }
 
     // 切换到播放界面
@@ -821,6 +826,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
         hideOrShowTab(true);
+        PlayerActivity.showPlayer();
+        PlayerActivity.isVisible = true;
     }
 
     // 享听
@@ -858,6 +865,15 @@ public class MainActivity extends TabActivity implements OnClickListener {
         } else {
             hideOrShowTab(false);
         }
+    }
+
+    // 更多
+    public static void setViewSix() {
+        tabHost.setCurrentTabByTag("six");
+        image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
+        image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
+        image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+        hideOrShowTab(false);
     }
 
     private TabHost extracted() {
