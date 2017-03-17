@@ -33,7 +33,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
-import com.woting.ui.download.activity.DownloadActivity;
+import com.woting.ui.download.activity.DownloadFragment;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.fragment.DownLoadUnCompleted;
 import com.woting.ui.download.model.FileInfo;
@@ -473,7 +473,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                     FID.updataDownloadStatus(tempList.get(0).getUrl(), "1");
                     Log.e("数据库内数据", tempList.toString());
                     DownloadService.workStart(tempList.get(0));
-                    if(DownloadActivity.isVisible){
+                    if(DownloadFragment.isVisible){
                         DownLoadUnCompleted.dwType=true;
                     }
                     ToastUtils.show_always(context,"已经开始下载您所选择的数据");
