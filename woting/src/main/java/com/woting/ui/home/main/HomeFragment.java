@@ -17,7 +17,7 @@ import com.woting.ui.home.program.diantai.main.OnLineFragment;
 import com.woting.ui.home.program.fenlei.fragment.FenLeiFragment;
 import com.woting.ui.home.program.tuijian.fragment.RecommendFragment;
 import com.woting.ui.home.search.main.SearchLikeFragment;
-import com.woting.ui.interphone.notify.activity.NotifyNewsActivity;
+import com.woting.ui.interphone.message.messagecenter.activity.MessageMainActivity;
 
 import java.util.ArrayList;
 
@@ -38,7 +38,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.lin_news:// 消息
-                Intent intentNews = new Intent(context, NotifyNewsActivity.class);
+                Intent intentNews = new Intent(context, MessageMainActivity.class);
                 startActivity(intentNews);
                 break;
             case R.id.lin_find:// 搜索

@@ -22,7 +22,6 @@ import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.download.fragment.DownLoadCompleted;
 import com.woting.ui.download.fragment.DownLoadUnCompleted;
 import com.woting.ui.home.search.main.SearchLikeFragment;
-import com.woting.ui.interphone.notify.activity.NotifyNewsActivity;
 import com.woting.ui.main.MainActivity;
 
 import java.util.ArrayList;
@@ -44,8 +43,7 @@ public class DownloadActivity extends FragmentActivity implements OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.lin_news:            // 跳转到新消息界面
-                startActivity(new Intent(context, NotifyNewsActivity.class));
+            case R.id.lin_news:            // 已经删除，不需要
                 break;
             case R.id.lin_find:            // 跳转到搜索界面
                 startActivity(new Intent(context, SearchLikeFragment.class));

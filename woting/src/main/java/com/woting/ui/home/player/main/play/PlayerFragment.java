@@ -78,8 +78,8 @@ import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.album.model.ContentInfo;
 import com.woting.ui.home.program.comment.CommentActivity;
-import com.woting.ui.interphone.notify.activity.MessageFragment;
 import com.woting.ui.home.search.main.SearchLikeFragment;
+import com.woting.ui.interphone.message.messagecenter.activity.MessageMainActivity;
 import com.woting.ui.mine.playhistory.main.PlayHistoryFragment;
 import com.woting.video.IntegrationPlayer;
 import com.woting.video.VoiceRecognizer;
@@ -423,7 +423,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 //                MainActivity.hideOrShowTab(false);
                 break;
             case R.id.lin_news://
-                PlayerActivity.open(new MessageFragment());
+                startActivity(new Intent(context, MessageMainActivity.class));
                 break;
             case R.id.lin_lukuangtts:// 获取路况
                 TTSPlay();

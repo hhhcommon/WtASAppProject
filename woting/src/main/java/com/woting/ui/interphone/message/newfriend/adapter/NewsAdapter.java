@@ -1,4 +1,4 @@
-package com.woting.ui.interphone.message.adapter;
+package com.woting.ui.interphone.message.newfriend.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,7 +14,7 @@ import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
-import com.woting.ui.interphone.message.model.MessageInFo;
+import com.woting.ui.interphone.message.newfriend.model.MessageInFo;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;

@@ -1,4 +1,4 @@
-package com.woting.ui.interphone.group.groupcontrol.joingrouplist;
+package com.woting.ui.interphone.message.reviewednews;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -22,9 +22,9 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.GroupInfo;
-import com.woting.ui.interphone.group.groupcontrol.joingrouplist.adapter.JoinGroupAdapter;
-import com.woting.ui.interphone.group.groupcontrol.joingrouplist.adapter.JoinGroupAdapter.Callback;
-import com.woting.ui.interphone.group.groupcontrol.joingrouplist.model.CheckInfo;
+import com.woting.ui.interphone.message.reviewednews.adapter.JoinGroupAdapter;
+import com.woting.ui.interphone.message.reviewednews.adapter.JoinGroupAdapter.Callback;
+import com.woting.ui.interphone.message.reviewednews.model.CheckInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;

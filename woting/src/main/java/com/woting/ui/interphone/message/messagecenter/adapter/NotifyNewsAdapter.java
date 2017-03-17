@@ -1,4 +1,4 @@
-package com.woting.ui.interphone.notify.adapter;
+package com.woting.ui.interphone.message.messagecenter.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;

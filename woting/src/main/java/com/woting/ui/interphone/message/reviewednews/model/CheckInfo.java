@@ -1,4 +1,4 @@
-package com.woting.ui.interphone.group.groupcontrol.joingrouplist.model;
+package com.woting.ui.interphone.message.reviewednews.model;
 
 import java.io.Serializable;
 
