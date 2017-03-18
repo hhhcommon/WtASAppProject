@@ -17,7 +17,7 @@ import com.woting.ui.home.program.diantai.main.OnLineFragment;
 import com.woting.ui.home.program.fenlei.fragment.FenLeiFragment;
 import com.woting.ui.home.program.tuijian.fragment.RecommendFragment;
 import com.woting.ui.home.search.main.SearchLikeFragment;
-import com.woting.ui.interphone.notify.activity.NotifyNewsActivity;
+import com.woting.ui.interphone.message.messagecenter.activity.MessageMainActivity;
 
 import java.util.ArrayList;
 
@@ -38,11 +38,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.lin_news:// 消息
-                Intent intentNews = new Intent(context, NotifyNewsActivity.class);
+                Intent intentNews = new Intent(context, MessageMainActivity.class);
                 startActivity(intentNews);
                 break;
             case R.id.lin_find:// 搜索
                 SearchLikeFragment fragment = new SearchLikeFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt("FROM_TYPE", 1);// == 1 HomeFragment
+                fragment.setArguments(bundle);
                 HomeActivity.open(fragment);
                 break;
         }
@@ -134,25 +137,31 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_home_white));
 
             view2.setTextColor(context.getResources().getColor(R.color.white));
-            view2.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+            view2.setBackgroundColor(0);
+//            view2.setBackgroundDrawable(context.getResources().getDrawable(0));
 
             view3.setTextColor(context.getResources().getColor(R.color.white));
-            view3.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+//            view3.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+            view3.setBackgroundColor(0);
         } else if (index == 1) {// 电台
             view1.setTextColor(context.getResources().getColor(R.color.white));
-            view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+//            view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+            view1.setBackgroundColor(0);
 
             view2.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
             view2.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_home_white));
 
             view3.setTextColor(context.getResources().getColor(R.color.white));
-            view3.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+//            view3.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+            view3.setBackgroundColor(0);
         } else if (index == 2) {// 分类
             view1.setTextColor(context.getResources().getColor(R.color.white));
-            view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+//            view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+            view1.setBackgroundColor(0);
 
             view2.setTextColor(context.getResources().getColor(R.color.white));
-            view2.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+//            view2.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
+            view2.setBackgroundColor(0);
 
             view3.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
             view3.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_home_white));

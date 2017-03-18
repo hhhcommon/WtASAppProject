@@ -60,6 +60,14 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:src="@mipmap/image_down_load"/>
+
+			<ImageView
+				android:id="@+id/img_play_all"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="14dp"
+				android:clickable="true"
+				android:src="@mipmap/img_album_playall"/>
         </LinearLayout>
     </LinearLayout>
 

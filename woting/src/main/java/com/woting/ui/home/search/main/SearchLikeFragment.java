@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Editable;
@@ -59,6 +60,7 @@ import com.woting.common.widgetui.MyLinearLayout;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.home.main.HomeActivity;
+import com.woting.ui.home.player.main.play.PlayerActivity;
 import com.woting.ui.home.search.adapter.SearchHistoryAdapter;
 import com.woting.ui.home.search.adapter.SearchHotAdapter;
 import com.woting.ui.home.search.adapter.SearchLikeAdapter;
@@ -83,7 +85,7 @@ import java.util.List;
  * 2016年4月16日
  */
 public class SearchLikeFragment extends Fragment implements OnClickListener, TipView.WhiteViewClick {
-    private static Context context;
+    private static FragmentActivity context;
 
     private LinearLayout lin_head_left;
     private LinearLayout lin_head_right;
@@ -135,6 +137,8 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
     private View rootView;
     private TipView tipView;// 没有网络提示
 
+    private int from;// == 0 PlayerFragment  == 1 HomeFragment
+
     @Override
     public void onWhiteViewClick() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
@@ -151,6 +155,9 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
+
+        Bundle bundle = getArguments();
+        from = bundle.getInt("FROM_TYPE");
 
         bmp = BitmapUtils.readBitMap(context, R.mipmap.talknormal);
         bmpPress = BitmapUtils.readBitMap(context, R.mipmap.wt_duijiang_button_pressed);
@@ -236,7 +243,7 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
         yuyinDialog.setContentView(dialog);
         Window window = yuyinDialog.getWindow();
         DisplayMetrics dm = new DisplayMetrics();
-        ((HomeActivity)context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
         int scrEnw = dm.widthPixels;
         LayoutParams params = dialog.getLayoutParams();
         params.width = scrEnw;
@@ -418,7 +425,11 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_left_btn:// 返回
-                HomeActivity.close();
+                if (from == 0) {
+                    PlayerActivity.close();
+                } else {
+                    HomeActivity.close();
+                }
                 break;
             case R.id.lin_head_right:
                 if (mEtSearchContent != null && mEtSearchContent.getText() != null && !mEtSearchContent.getText().toString().trim().equals("")) {
@@ -751,7 +762,7 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
         image.setLayoutParams(lp);
         bmpW = BitmapFactory.decodeResource(getResources(), R.mipmap.left_personal_bg).getWidth();
         DisplayMetrics dm = new DisplayMetrics();
-        ((HomeActivity)context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
         int screenW = dm.widthPixels;
         offset = (screenW / 5 - bmpW) / 2;
         // imageView设置平移，使下划线平移到初始位置（平移一个offset）

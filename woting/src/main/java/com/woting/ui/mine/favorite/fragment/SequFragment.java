@@ -29,11 +29,12 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
+import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
 import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
-import com.woting.ui.mine.favorite.main.FavoriteFragment;
 import com.woting.ui.mine.favorite.adapter.FavorListAdapter;
 import com.woting.ui.mine.favorite.adapter.FavorListAdapter.favorCheck;
+import com.woting.ui.mine.favorite.main.FavoriteFragment;
 import com.woting.ui.mine.main.MineActivity;
 
 import org.json.JSONException;
@@ -140,11 +141,15 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
 					if (newList != null && newList.get(position - 1) != null && newList.get(position - 1).getMediaType() != null) {
                         AlbumFragment fragment = new AlbumFragment();
 						Bundle bundle = new Bundle();
-                        bundle.putInt("fromType", 3);// Mine
+                        bundle.putInt("fromType", FavoriteFragment.type);// Mine
 						bundle.putString("type", "recommend");
 						bundle.putSerializable("list", newList.get(position - 1));
                         fragment.setArguments(bundle);
-                        MineActivity.open(fragment);
+                        if (FavoriteFragment.type == 5) {// Mine
+                            MineActivity.open(fragment);
+                        } else if (FavoriteFragment.type == 6) {// PlayMore
+                            PlayerMoreOperationActivity.open(fragment);
+                        }
 					}
 				}
 			}

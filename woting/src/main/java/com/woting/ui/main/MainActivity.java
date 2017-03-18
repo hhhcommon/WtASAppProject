@@ -1,5 +1,7 @@
 package com.woting.ui.main;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.app.TabActivity;
 import android.content.BroadcastReceiver;
@@ -20,8 +22,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 
@@ -31,6 +35,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
+import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
@@ -43,12 +48,15 @@ import com.woting.common.receiver.PhoneStatReceiver;
 import com.woting.common.service.LocationService;
 import com.woting.common.service.SocketService;
 import com.woting.common.service.SubclassService;
+import com.woting.common.util.AssembleImageUrlUtils;
+import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.JsonEncloseUtils;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.RoundImageView;
 import com.woting.ui.common.favoritetype.FavoriteProgramTypeActivity;
 import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.model.GroupInfo;
@@ -59,6 +67,7 @@ import com.woting.ui.home.model.CatalogName;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.player.main.play.PlayerActivity;
+import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.citylist.dao.CityInfoDao;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
@@ -98,11 +107,12 @@ public class MainActivity extends TabActivity implements OnClickListener {
     public static TabHost tabHost;
     private static Intent Socket, record, voicePlayer, Subclass, download, Location, Notification;
 
-    private static ImageView image0;// 播放
+    private static RoundImageView image0;// 播放
     private static ImageView image1;
     private static ImageView image2;
     private static ImageView image5;
     private Dialog upDataDialog;
+    private ImageView imagePlay;
 
     private static View tabNavigation;// 底部导航菜单
 
@@ -112,6 +122,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private String mPageName = "MainActivity";
     private String tag = "MAIN_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
+    private boolean isFirst = true;
+
     private List<CatalogName> list;
     private NetWorkChangeReceiver netWorkChangeReceiver = null;
     private PhoneStatReceiver phoneStatReceiver = null;
@@ -124,6 +136,42 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private String callId, callerId;
     public static DBTalkHistorary talkdb;
     public static String groupEntryNum;
+
+    private ObjectAnimator animator;
+
+    // 开始动画
+    private void playStartAnimation() {
+//        image0.clearAnimation();
+//        Animation rotateAnimation = new RotateAnimation(0, 270, 0, 50);
+//        rotateAnimation.setFillAfter(true);
+//        rotateAnimation.setDuration(4 * 1000);
+//        rotateAnimation.setRepeatCount(-1);
+//        image0.startAnimation(rotateAnimation);
+
+        if (animator == null) {
+            animator = ObjectAnimator.ofFloat(image0, "rotation", 0f, 360.0f);
+            animator.setDuration(4000);
+            animator.setInterpolator(new LinearInterpolator());// 不停顿
+            animator.setRepeatCount(-1);// 设置动画重复次数
+            animator.setRepeatMode(ValueAnimator.RESTART);// 动画重复模式
+            animator.start();// 开始动画
+        } else {
+            // 此方法 API 需要 >= 19
+            animator.resume();// 恢复动画
+        }
+
+//        Animation rotateAnimation = AnimationUtils.loadAnimation(context, R.anim.running_circle);
+//        LinearInterpolator lin = new LinearInterpolator();
+//        rotateAnimation.setInterpolator(lin);
+//        image0.startAnimation(rotateAnimation);
+    }
+
+    // 停止动画
+    private void playStopAnimation() {
+//        image0.clearAnimation();
+        // 此方法 API 需要 >= 19
+        if (animator != null) animator.pause();// 暂停动画
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,9 +194,9 @@ public class MainActivity extends TabActivity implements OnClickListener {
         }, 0);
 
         tabHost = extracted();
-        WifiNeverDormancy();       // 更改wifi连接状态
+        WifiNeverDormancy();              // 更改wifi连接状态
         MobclickAgent.openActivityDurationTrack(false);
-        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=56275014");            // 初始化语音配置对象
+        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=56275014");// 初始化语音配置对象
         upDataType = 1;                   // 不需要强制升级
         update();                         // 获取版本数据
         InitTextView();                   // 设置界面
@@ -161,20 +209,18 @@ public class MainActivity extends TabActivity implements OnClickListener {
         if (!BSApplication.SharedPreferences.getBoolean(StringConstant.FAVORITE_PROGRAM_TYPE, false)) {
             startActivity(new Intent(context, FavoriteProgramTypeActivity.class));
         }
-
-//        tabNavigation.setVisibility(View.GONE);
     }
 
     private void createService() {
-        Socket = new Intent(this, SocketService.class);                //socket服务
+        Socket = new Intent(this, SocketService.class);                // socket服务
         startService(Socket);
-        record = new Intent(this, VoiceStreamRecordService.class);     //录音服务
+        record = new Intent(this, VoiceStreamRecordService.class);     // 录音服务
         startService(record);
-        voicePlayer = new Intent(this, VoiceStreamPlayerService.class);//播放服务
+        voicePlayer = new Intent(this, VoiceStreamPlayerService.class);// 播放服务
         startService(voicePlayer);
-        Location = new Intent(this, LocationService.class);            //定位服务
+        Location = new Intent(this, LocationService.class);            // 定位服务
         startService(Location);
-        Subclass = new Intent(this, SubclassService.class);            //单对单接听控制服务
+        Subclass = new Intent(this, SubclassService.class);            // 单对单接听控制服务
         startService(Subclass);
         download = new Intent(this, DownloadService.class);
         startService(download);
@@ -230,15 +276,15 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 v = true;
             }
             if (v) {
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        //透明状态栏
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    //透明导航栏
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        // 透明状态栏
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    // 透明导航栏
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    //初始化数据库并且发送获取地理位置的请求
+    // 初始化数据库并且发送获取地理位置的请求
     private void InitDao() {
         CID = new CityInfoDao(context);
         dbDao = new SearchPlayerHistoryDao(context);
@@ -250,7 +296,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         }
     }
 
-    //获取地理位置
+    // 获取地理位置
     private void sendRequest() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
@@ -279,7 +325,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                 List<CatalogName> s = SubList_all.getSubCata();
 
                                 if (s != null && s.size() > 0) {
-                                    //将数据写入数据库
+                                    // 将数据写入数据库
                                     GlobalConfig.CityCatalogList = s;
                                     list = CID.queryCityInfo();
                                     List<CatalogName> m = new ArrayList<>();
@@ -294,7 +340,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                             CID.InsertCityInfo(m);
                                         }
                                     } else {
-                                        //此处要对数据库查询出的list和获取的mlist进行去重
+                                        // 此处要对数据库查询出的list和获取的mlist进行去重
                                         CID.DelCityInfo();
                                         if (m.size() != 0) {
                                             CID.InsertCityInfo(m);
@@ -342,7 +388,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     }
 
     /**
-     * 从html页面启动当前页面的intent
+     * 从 html 页面启动当前页面的 intent
      */
     private void handleIntent() {
         Intent intent = getIntent();
@@ -353,7 +399,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 String host = uri.getHost();
                 if (host != null && !host.equals("")) {
                     if (host.equals("AUDIO")) {
-                        String queryString = uri.getQuery().substring(8);//不要jsonstr=
+                        String queryString = uri.getQuery().substring(8);// 不要 jsonstr =
                         try {
                             JSONTokener jsonParser = new JSONTokener(queryString);
                             JSONObject arg1 = (JSONObject) jsonParser.nextValue();
@@ -418,7 +464,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                 String ResultList = result.getString("ResultInfo"); // 获取列表
                                 JSONTokener jsonParser = new JSONTokener(ResultList);
                                 JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                                // 此处后期需要用typeToken将字符串StringSubList 转化成为一个list集合
+                                // 此处后期需要用 typeToken 将字符串 StringSubList 转化成为一个 list 集合
                                 String ContentPlayType, contentid, mediatype, ContentImg, ContentName, CTime, ContentTimes,
                                         ContentKeyWord, ContentFavorite, ContentShareURL, ContentPlay, ContentPub, ContentDescn, PlayCount, IsPlaying;
                                 try {
@@ -553,7 +599,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         });
     }
 
-    //更新数据交互
+    // 更新数据交互
     private void update() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
@@ -608,9 +654,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         });
     }
 
-    /*
-     * 检查版本更新
-     */
+    // 检查版本更新
     protected void dealVersion(String ResultList, String mastUpdate) {
         String Version = "0.1.0.X.0";
         String DescN = null;
@@ -634,7 +678,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
             int version_new = Integer.parseInt(version_build);
             if (version_new > version_old) {
                 if (mastUpdate != null && mastUpdate.equals("1")) {
-                    //强制升级
+                    // 强制升级
                     if (DescN != null && !DescN.trim().equals("")) {
                         upDataNews = DescN;
                     } else {
@@ -644,13 +688,13 @@ public class MainActivity extends TabActivity implements OnClickListener {
                     UpdateDialog();
                     upDataDialog.show();
                 } else {
-                    //普通升级
+                    // 普通升级
                     if (DescN != null && !DescN.trim().equals("")) {
                         upDataNews = DescN;
                     } else {
                         upDataNews = "有新的版本需要升级喽";
                     }
-                    upDataType = 1;//不需要强制升级
+                    upDataType = 1;// 不需要强制升级
                     UpdateDialog();
                     upDataDialog.show();
                 }
@@ -663,7 +707,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         }
     }
 
-    //版本更新对话框
+    // 版本更新对话框
     private void UpdateDialog() {
         View dialog = LayoutInflater.from(this).inflate(R.layout.dialog_update, null);
         TextView text_context = (TextView) dialog.findViewById(R.id.text_context);
@@ -677,7 +721,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         upDataDialog.setCanceledOnTouchOutside(false);
         upDataDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
 
-        //开始更新
+        // 开始更新
         tv_update.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -686,7 +730,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
             }
         });
 
-        //取消更新
+        // 取消更新
         tv_qx.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -707,14 +751,15 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     // 初始化视图
     private void InitTextView() {
+        imagePlay = (ImageView) findViewById(R.id.image_play);// 暂停显示  播放隐藏
         tabNavigation = findViewById(R.id.tab_navigation);// 底部导航菜单
 
-        LinearLayout lin0 = (LinearLayout) findViewById(R.id.main_lin_0);// 播放
+        RelativeLayout lin0 = (RelativeLayout) findViewById(R.id.main_lin_0);// 播放
         LinearLayout lin1 = (LinearLayout) findViewById(R.id.main_lin_1);
         LinearLayout lin2 = (LinearLayout) findViewById(R.id.main_lin_2);
         LinearLayout lin5 = (LinearLayout) findViewById(R.id.main_lin_5);
 
-        image0 = (ImageView) findViewById(R.id.main_image_0);
+        image0 = (RoundImageView) findViewById(R.id.main_image_0);
         image1 = (ImageView) findViewById(R.id.main_image_1);
         image2 = (ImageView) findViewById(R.id.main_image_2);
         image5 = (ImageView) findViewById(R.id.main_image_5);
@@ -735,6 +780,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 .setContent(new Intent(this, DuiJiangActivity.class)));
         tabHost.addTab(tabHost.newTabSpec("five").setIndicator("five")
                 .setContent(new Intent(this, MineActivity.class)));
+        tabHost.addTab(tabHost.newTabSpec("six").setIndicator("six")
+                .setContent(new Intent(this, PlayerMoreOperationActivity.class)));
     }
 
     // 切换到播放界面
@@ -774,26 +821,33 @@ public class MainActivity extends TabActivity implements OnClickListener {
     // 播放
     private static void setViewZero() {
         tabHost.setCurrentTabByTag("zero");
-        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_selected);
+//        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_selected);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
         hideOrShowTab(true);
+        PlayerActivity.showPlayer();
+        PlayerActivity.isVisible = true;
     }
 
     // 享听
     private static void setViewOne() {
         tabHost.setCurrentTabByTag("one");
-        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
+//        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_selected);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+        if (HomeActivity.isVisible) {
+            hideOrShowTab(true);
+        } else {
+            hideOrShowTab(false);
+        }
     }
 
     // 享讲
     private static void setViewTwo() {
         tabHost.setCurrentTabByTag("two");
-        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
+//        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_selected);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
@@ -802,10 +856,24 @@ public class MainActivity extends TabActivity implements OnClickListener {
     // 我的
     private void setViewFive() {
         tabHost.setCurrentTabByTag("five");
-        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
+//        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_selected);
+        if (MineActivity.isVisible) {
+            hideOrShowTab(true);
+        } else {
+            hideOrShowTab(false);
+        }
+    }
+
+    // 更多
+    public static void setViewSix() {
+        tabHost.setCurrentTabByTag("six");
+        image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
+        image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
+        image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+        hideOrShowTab(false);
     }
 
     private TabHost extracted() {
@@ -819,6 +887,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
         m.addAction(BroadcastConstants.PUSH_REGISTER);
         m.addAction(BroadcastConstants.PUSH_NOTIFY);
         m.addAction(BroadcastConstants.PUSH);
+        m.addAction(BroadcastConstants.UPDATE_PLAY_VIEW);// 更新播放节目图片
+        m.addAction(BroadcastConstants.UPDATE_PLAY_IMAGE);// 更新播放按钮的暂停图片是否出现
         registerReceiver(endApplicationBroadcast, m);
 
         IntentFilter p = new IntentFilter();
@@ -832,11 +902,39 @@ public class MainActivity extends TabActivity implements OnClickListener {
         registerReceiver(netWorkChangeReceiver, n);
     }
 
-    //接收定时服务发送过来的广播  用于结束应用
+    //接收广播
     private BroadcastReceiver endApplicationBroadcast = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(BroadcastConstants.TIMER_END)) {
+            if (intent.getAction().equals(BroadcastConstants.UPDATE_PLAY_IMAGE)) {
+                boolean isPlaying = intent.getBooleanExtra(StringConstant.PLAY_IMAGE, false);
+                if (isPlaying) {// 正在播放
+                    imagePlay.setVisibility(View.GONE);
+                    playStartAnimation();
+                } else {// 此时暂停
+                    imagePlay.setVisibility(View.VISIBLE);
+                    playStopAnimation();
+                }
+            } else if (intent.getAction().equals(BroadcastConstants.UPDATE_PLAY_VIEW)) {// 更新播放节目图片
+                if (GlobalConfig.playerObject != null && GlobalConfig.playerObject.getContentImg() != null) {
+                    String contentImage = GlobalConfig.playerObject.getContentImg();
+                    if (!contentImage.startsWith("http")) {
+                        contentImage = GlobalConfig.imageurl + contentImage;
+                    }
+                    contentImage = AssembleImageUrlUtils.assembleImageUrl180(contentImage);
+                    Picasso.with(context).load(contentImage.replace("\\/", "/")).into(image0);
+                    if (isFirst) {// 第一次进应用时暂停状态
+                        imagePlay.setVisibility(View.VISIBLE);
+                        playStopAnimation();
+                        isFirst = false;
+                    } else {// 之后的每次都是播放状态
+                        imagePlay.setVisibility(View.GONE);
+                        playStartAnimation();
+                    }
+                } else {// 没有封面图片设置默认图片
+                    image0.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx));
+                }
+            } else if (intent.getAction().equals(BroadcastConstants.TIMER_END)) {// 结束应用
                 ToastUtils.show_always(MainActivity.this, "定时关闭应用时间就要到了，应用即将退出");
                 stopService(new Intent(MainActivity.this, timeroffservice.class));    // 停止服务
                 new Handler().postDelayed(new Runnable() {

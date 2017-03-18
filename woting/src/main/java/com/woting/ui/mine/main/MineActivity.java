@@ -20,6 +20,7 @@ import com.woting.ui.main.MainActivity;
  */
 public class MineActivity extends FragmentActivity {
     private static MineActivity context;
+    public static boolean isVisible = true;// 是否可见
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,7 @@ public class MineActivity extends FragmentActivity {
                 .commit();
         if (context.getSupportFragmentManager().getBackStackEntryCount() > 0) {
             MainActivity.hideOrShowTab(false);
+            isVisible = false;
         }
     }
 
@@ -63,6 +65,7 @@ public class MineActivity extends FragmentActivity {
         context.getSupportFragmentManager().popBackStackImmediate();
         if (context.getSupportFragmentManager().getBackStackEntryCount() == 1) {
             MainActivity.hideOrShowTab(true);
+            isVisible = true;
         }
     }
 

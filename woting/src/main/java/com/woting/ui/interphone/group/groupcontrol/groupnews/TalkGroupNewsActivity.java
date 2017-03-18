@@ -67,8 +67,8 @@ import com.woting.ui.interphone.group.groupcontrol.changegrouptype.ChangeGroupTy
 import com.woting.ui.interphone.group.groupcontrol.groupnews.adapter.GroupTalkAdapter;
 import com.woting.ui.interphone.group.groupcontrol.groupnumdel.GroupMemberDelActivity;
 import com.woting.ui.interphone.group.groupcontrol.grouppersonnews.GroupPersonNewsActivity;
-import com.woting.ui.interphone.group.groupcontrol.handlegroupapply.HandleGroupApplyActivity;
-import com.woting.ui.interphone.group.groupcontrol.joingrouplist.JoinGroupListActivity;
+import com.woting.ui.interphone.message.groupapply.HandleGroupApplyActivity;
+import com.woting.ui.interphone.message.reviewednews.JoinGroupListActivity;
 import com.woting.ui.interphone.group.groupcontrol.memberadd.GroupMemberAddActivity;
 import com.woting.ui.interphone.group.groupcontrol.membershow.GroupMembersActivity;
 import com.woting.ui.interphone.group.groupcontrol.modifygrouppassword.ModifyGroupPasswordActivity;

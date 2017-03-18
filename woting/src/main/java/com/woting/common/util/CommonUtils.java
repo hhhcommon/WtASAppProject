@@ -3,6 +3,7 @@ package com.woting.common.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.woting.common.application.BSApplication;
 import com.woting.common.constant.StringConstant;
 
 /**
@@ -31,7 +32,7 @@ public class CommonUtils {
      * @return
      */
     public static String getUserId(Context context) {
-        SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
+        SharedPreferences sp = BSApplication.SharedPreferences;
         String UserId = sp.getString(StringConstant.USERID, "userid");
         if (UserId == null || UserId.equals("") || UserId.equals("userid")) {
             return PhoneMessage.imei;
@@ -47,7 +48,7 @@ public class CommonUtils {
      * @return
      */
     public static String getUserIdNoImei(Context context) {
-        SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
+        SharedPreferences sp = BSApplication.SharedPreferences;
         String UserId = sp.getString(StringConstant.USERID, "userid");
         if (UserId == null || UserId.equals("") || UserId.equals("userid")) {
             return "";
@@ -66,7 +67,7 @@ public class CommonUtils {
 
     public static String getSocketUserId(Context context) {
         try {
-            SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
+            SharedPreferences sp =BSApplication.SharedPreferences;
             String UserId = sp.getString(StringConstant.USERID, "userid");
             if (UserId == null || UserId.equals("") || UserId.equals("userid")) {
                 return null;
@@ -86,7 +87,7 @@ public class CommonUtils {
      * @return
      */
     public static String getCity(Context context) {
-        SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
+        SharedPreferences sp =BSApplication.SharedPreferences;
         String UserId = sp.getString(StringConstant.CITYNAME, "userid");
         if (UserId == null || UserId.equals("") || UserId.equals("userid")) {
             return "北京";
@@ -102,7 +103,7 @@ public class CommonUtils {
      * @return
      */
     public static String getADCode(Context context) {
-        SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
+        SharedPreferences sp = BSApplication.SharedPreferences;
         String UserId = sp.getString(StringConstant.CITYID, "userid");
         if (UserId == null || UserId.equals("") || UserId.equals("userid")) {
             return "110000";
@@ -118,7 +119,7 @@ public class CommonUtils {
      * @return
      */
     public static String getLongitude(Context context) {
-        SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
+        SharedPreferences sp = BSApplication.SharedPreferences;
         String UserId = sp.getString(StringConstant.LONGITUDE, "userid");
         if (UserId == null || UserId.equals("") || UserId.equals("userid")) {
             return "";
@@ -134,7 +135,7 @@ public class CommonUtils {
      * @return
      */
     public static String getLatitude(Context context) {
-        SharedPreferences sp = context.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
+        SharedPreferences sp = BSApplication.SharedPreferences;
         String UserId = sp.getString(StringConstant.LATITUDE, "userid");
         if (UserId == null || UserId.equals("") || UserId.equals("userid")) {
             return null;

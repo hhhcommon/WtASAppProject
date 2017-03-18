@@ -83,6 +83,7 @@ public class RadioListFragment extends Fragment implements OnClickListener, TipV
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.activity_radiolist, container, false);
             rootView.setOnClickListener(this);
+            isCancelRequest = false;
             fragments = new ArrayList<>();
             setView();
             handleRequestType();
@@ -119,6 +120,10 @@ public class RadioListFragment extends Fragment implements OnClickListener, TipV
         }
     }
 
+    public static boolean isCancel() {
+        return isCancelRequest;
+    }
+
     // 请求网络获取分类信息
     private void sendRequest() {
         if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
@@ -153,6 +158,7 @@ public class RadioListFragment extends Fragment implements OnClickListener, TipV
                     }
                     viewPager.setAdapter(new MyPagerAdapter(getChildFragmentManager(), list, fragments));
                     pageSlidingTab.setViewPager(viewPager);
+
                     if (count == 1) pageSlidingTab.setVisibility(View.GONE);
                 } else {
                     ToastUtils.show_always(context, "暂没有该分类数据");

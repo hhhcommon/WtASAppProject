@@ -19,10 +19,10 @@
 
     <RelativeLayout
         android:id="@+id/view_title"
-        android:layout_below="@id/tv_main"
         android:layout_width="match_parent"
-        android:background="@color/dinglan_orange"
-        android:layout_height="48dp">
+        android:layout_height="48dp"
+        android:layout_below="@id/tv_main"
+        android:background="@color/dinglan_orange">
 
         <LinearLayout
             android:id="@+id/lin_news"
@@ -41,10 +41,25 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:text="播放"
             android:textColor="@color/WHITE"
-            android:layout_centerInParent="true"
             android:textSize="18sp"/>
+
+        <LinearLayout
+            android:id="@+id/lin_find"
+            android:layout_width="45dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="19dp"
+                android:layout_height="19dp"
+                android:src="@mipmap/wt_find"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
 
@@ -52,187 +67,11 @@
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/view_title"
         android:animationCache="false"
         android:divider="@color/WHITE"
-        android:layout_below="@id/view_title"
         android:scrollbars="none"
         android:scrollingCache="false"/>
-
-    <LinearLayout
-        android:id="@+id/lin_chose"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#80000000"
-        android:gravity="bottom|center"
-        android:orientation="vertical"
-        android:layout_below="@id/view_title"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:id="@+id/lin_other"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="10dip"
-                android:text="更多"
-                android:textColor="@color/black"
-                android:textSize="18sp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0.1dip"
-                android:background="@color/gray"/>
-
-            <LinearLayout
-                android:id="@+id/lin_ly_ckzj"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left|center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginTop="5dp"
-                    android:src="@mipmap/wt_play_ly_ckzj"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="查看专辑"
-                    android:textSize="16sp"/>
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0.1dip"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@color/gray"/>
-
-            <LinearLayout
-                android:id="@+id/lin_ly_ckzb"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left|center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginTop="5dp"
-                    android:src="@mipmap/wt_play_ly_ckzb"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="查看主播"
-                    android:textSize="16sp"/>
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0.1dip"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@color/gray"/>
-
-            <LinearLayout
-                android:id="@+id/lin_ly_history"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left|center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginTop="5dp"
-                    android:src="@mipmap/wt_play_ly_history"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="播放历史"
-                    android:textSize="16sp"/>
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0.1dip"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@color/gray"/>
-
-            <LinearLayout
-                android:id="@+id/lin_ly_timeover"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left|center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginTop="5dp"
-                    android:src="@mipmap/wt_play_ly_timeover"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="定时关闭"
-                    android:textSize="16sp"/>
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0.1dip"
-                android:background="@color/gray"/>
-
-            <TextView
-                android:id="@+id/tv_ly_qx"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/wt_play_ly_more"
-                android:gravity="center"
-                android:padding="10dip"
-                android:text="取消"
-                android:textSize="18sp"/>
-        </LinearLayout>
-
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/id_voice_transparent"
@@ -316,6 +155,7 @@
                     android:layout_height="99dp"/>
 
             </LinearLayout>
+
         </com.woting.common.widgetui.MyLinearLayout>
 
     </LinearLayout>

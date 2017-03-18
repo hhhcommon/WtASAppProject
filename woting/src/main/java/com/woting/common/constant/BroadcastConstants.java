@@ -127,4 +127,7 @@ public class BroadcastConstants {
 
     // 播放专辑列表中的数据
     public static final String PLAY_SEQU_LIST = "PLAY_SEQU_LIST";
+
+    // 更新播放状态的图片
+    public static final String UPDATE_PLAY_IMAGE = "UPDATE_PLAY_IMAGE";
 }

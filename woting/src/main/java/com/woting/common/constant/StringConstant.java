@@ -103,4 +103,7 @@ public class StringConstant {
 
     // 数据传递 是否正在播放
     public static final String IS_PLAYING = "IS_PLAYING";
+
+    // 数据传递 播放暂停状态
+    public static final String PLAY_IMAGE = "PLAY_IMAGE";
 }
