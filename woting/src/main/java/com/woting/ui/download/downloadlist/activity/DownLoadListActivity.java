@@ -27,7 +27,6 @@ import com.woting.ui.download.downloadlist.adapter.DownLoadListAdapter.downloadl
 import com.woting.ui.download.model.FileInfo;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
-import com.woting.ui.home.player.main.play.PlayerFragment;
 import com.woting.ui.main.MainActivity;
 
 import java.io.File;
@@ -172,8 +171,6 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
         });
     }
 
-
-
     private void setListValue() {
         int sum = 0;
         fileInfoList = FID.queryFileInfo(sequId, CommonUtils.getUserId(context), 0);
@@ -253,21 +250,11 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
                                     ContentId, playlocalrurl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
                             dbDao.deleteHistory(playerurl);
                             dbDao.addHistory(history);
-                            if (PlayerFragment.context != null) {
-                                MainActivity.change();
-                                Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
-                                Bundle bundle1 = new Bundle();
-                                bundle1.putString("text", mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4));
-                                push.putExtras(bundle1);
-                                context.sendBroadcast(push);
-                            } else {
-                                SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
-                                et.putString(StringConstant.PLAYHISTORYENTER, "true");
-                                et.putString(StringConstant.PLAYHISTORYENTERNEWS, mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4));
-                                if (!et.commit()) Log.v("commit", "数据 commit 失败!");
-                                MainActivity.change();
-                            }
-                            setResult(1);
+                            SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
+                            et.putString(StringConstant.PLAYHISTORYENTER, "true");
+                            et.putString(StringConstant.PLAYHISTORYENTERNEWS, mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4));
+                            if (!et.commit()) Log.v("commit", "数据 commit 失败!");
+                            MainActivity.change();
                             finish();
                             dbDao.closedb();
                         } else {    // 此处要调对话框，点击同意删除对应的文件信息

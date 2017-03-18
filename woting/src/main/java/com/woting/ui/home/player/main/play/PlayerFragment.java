@@ -388,7 +388,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 next();
                 break;
             case R.id.image_more:// 更多操作
-                if (GlobalConfig.playerObject == null) return ;
                 MainActivity.setViewSix();
                 break;
         }
@@ -765,6 +764,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
     // 更新列表界面
     private void updateListView() {
+        if (playList == null || playList.size() == 0) return ;
         for (int i = 0, size = playList.size(); i < size; i++) {
             if (i == index) {
                 if (isPlaying) playList.get(i).setType("2");
@@ -1217,12 +1217,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                             list = lists.getList();
                         }
                         if (requestType.equals(StringConstant.PLAY_REQUEST_TYPE_SEARCH_VOICE) && refreshType == 0) playList.clear();
-                        if (list != null && list.size() >= 10) {
-                            page++;
-                            setPullAndLoad(true, true);
-                        } else {
-                            setPullAndLoad(true, false);
-                        }
+                        page++;
+                        setPullAndLoad(true, true);
                         subList = clearContentPlayNull(list);// 去空
                         mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
                     } else {

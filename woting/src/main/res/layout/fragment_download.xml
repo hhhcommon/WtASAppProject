@@ -27,6 +27,17 @@
             android:textColor="@color/WHITE"
             android:layout_centerInParent="true"/>
 
+        <TextView
+            android:id="@+id/text_clear"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:text="清空"
+            android:textColor="@color/WHITE"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:layout_marginRight="10dp"/>
+
     </RelativeLayout>
 
     <LinearLayout
@@ -47,9 +58,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="全部"
+                android:text="专辑"
                 android:textColor="@color/dinglan_orange"
-                android:textSize="@dimen/wt_edittext_default_text" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/text_audio"
@@ -57,9 +68,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="专辑"
+                android:text="声音"
                 android:textColor="@color/group_item_text2"
-                android:textSize="@dimen/wt_edittext_default_text" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/text_down"
@@ -67,9 +78,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="声音"
+                android:text="下载中"
                 android:textColor="@color/group_item_text2"
-                android:textSize="@dimen/wt_edittext_default_text" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 

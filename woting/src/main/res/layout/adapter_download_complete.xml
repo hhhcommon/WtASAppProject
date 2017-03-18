@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -12,22 +13,6 @@
         android:gravity="left|center"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/lin_check"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:visibility="visible"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/img_check"
-                android:layout_width="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/wt_group_nochecked" />
-        </LinearLayout>
-
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,21 +23,21 @@
                 android:layout_width="65dip"
                 android:layout_height="65dip"
                 android:layout_centerInParent="true"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"/>
 
             <ImageView
                 android:id="@+id/img_liu"
                 android:layout_width="65dip"
                 android:layout_height="65dip"
-                android:layout_centerInParent="true" />
+                android:layout_centerInParent="true"/>
         </RelativeLayout>
 
         <LinearLayout
             android:layout_width="0dip"
             android:layout_height="match_parent"
-            android:layout_weight="2"
             android:layout_marginLeft="13dp"
             android:layout_marginRight="5dp"
+            android:layout_weight="2"
             android:gravity="left|center"
             android:orientation="vertical">
 
@@ -64,7 +49,7 @@
                 android:singleLine="true"
                 android:text="我听之声"
                 android:textColor="@color/dinglan_orange"
-                android:textSize="@dimen/wt_group_detail_16" />
+                android:textSize="@dimen/wt_group_detail_16"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -77,7 +62,7 @@
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:layout_marginRight="6dp"
-                    android:src="@mipmap/image_program_album" />
+                    android:src="@mipmap/image_program_album"/>
 
                 <TextView
                     android:id="@+id/RankContent"
@@ -87,7 +72,7 @@
                     android:maxLines="1"
                     android:text="我听科技"
                     android:textColor="@color/beijing"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -96,10 +81,11 @@
                 android:gravity="left|center">
 
                 <ImageView
+                    android:id="@+id/image_count"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:layout_marginRight="6dp"
-                    android:src="@mipmap/image_program_number" />
+                    android:src="@mipmap/image_program_number"/>
 
                 <TextView
                     android:id="@+id/tv_count"
@@ -107,14 +93,14 @@
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textColor="@color/beijing"
-                    android:textSize="9sp" />
+                    android:layout_marginRight="14dp"
+                    android:textSize="9sp"/>
 
                 <ImageView
                     android:layout_width="12dp"
                     android:layout_height="12dp"
-                    android:layout_marginLeft="14dp"
                     android:layout_marginRight="6dp"
-                    android:src="@mipmap/image_program_size" />
+                    android:src="@mipmap/image_program_size"/>
 
                 <TextView
                     android:id="@+id/tv_sum"
@@ -122,10 +108,18 @@
                     android:layout_height="wrap_content"
                     android:text="MB"
                     android:textColor="@color/beijing"
-                    android:textSize="9sp" />
+                    android:textSize="9sp"/>
             </LinearLayout>
+
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/image_del"
+            android:layout_width="57dp"
+            android:layout_height="57dp"
+            android:src="@mipmap/wt_image_down_del"
+            android:padding="15dp"
+            android:layout_marginRight="14dp"/>
 
     </LinearLayout>
 
