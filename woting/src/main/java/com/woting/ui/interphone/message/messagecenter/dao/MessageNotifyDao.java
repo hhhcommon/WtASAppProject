@@ -54,7 +54,8 @@ public class MessageNotifyDao {
         String userid = CommonUtils.getUserId(context);
         Cursor cursor = null;
         try {
-            cursor = db.rawQuery("Select * from message_notify  where bjuserid=? and showtype=? order by addtime desc", new String[]{userid,"true"});
+//            cursor = db.rawQuery("Select * from message_notify  where bjuserid=? and showtype=? order by addtime desc", new String[]{userid,"true"});
+            cursor = db.rawQuery("Select * from message_notify  where bjuserid=?  order by addtime desc", new String[]{userid});
             while (cursor.moveToNext()) {
                 String bjuserid = cursor.getString(1);
                 String type = cursor.getString(2);
@@ -97,6 +98,17 @@ public class MessageNotifyDao {
         String addtimes = addtime;
         db.execSQL("Delete from message_notify where addtime=? and bjuserid=?",
                 new String[]{addtimes, userid});
+        db.close();
+    }
+
+    /**
+     * 更改展示状态，把true变成false
+     * @param addtime
+     */
+    public void updataNotifyMessage(String addtime) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.execSQL("update message_notify set showtype=? where addtime=?",
+                new Object[] {"false",addtime});
         db.close();
     }
 }

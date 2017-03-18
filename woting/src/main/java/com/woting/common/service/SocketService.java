@@ -304,14 +304,15 @@ public class SocketService extends Service {
     class HealthWatchTimer extends TimerTask {
         public void run() {
             try {
-                Log.e("toBeStop", "toBeStop状态===" + toBeStop);
+                Log.e("健康监控线程", "↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓");
+                Log.e("健康监控线程", "↑↑    toBeStop状态===" + toBeStop);
                 if (reConn != null) {
-                    Log.e("!reConn.isAlive", "!reConn.isAlive状态" + !reConn.isAlive());
+                    Log.e("健康监控线程", "↑↑    !reConn.isAlive状态" + !reConn.isAlive());
                 } else {
-                    Log.e("reConn", "reConn状态===null");
+                    Log.e("健康监控线程", "↑↑    reConn状态===null");
                 }
-                Log.e("!socketOk()", "!socketOk()状态" + !socketOk());
-                Log.e("时间", "时间状态" + (System.currentTimeMillis() - lastReceiveTime > scc.getExpireTime()));
+                Log.e("健康监控线程", "↑↑    !socketOk()状态" + !socketOk());
+                Log.e("健康监控线程", "↑↑    时间状态" + (System.currentTimeMillis() - lastReceiveTime > scc.getExpireTime()));
                 if (toBeStop) {
                     if (healthWatch != null) {
                         healthWatch.cancel();
@@ -319,7 +320,9 @@ public class SocketService extends Service {
                     }
                 }
                 if (reConn == null || !reConn.isAlive()) {
-                    Log.e("toBeStop", "toBeStop状态===" + toBeStop);
+                    Log.e("健康监控线程", "↑↑    toBeStop状态===" + toBeStop);
+                    Log.e("健康监控线程", "↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑");
+
                     if (!socketOk() || (System.currentTimeMillis() - lastReceiveTime > scc.getExpireTime())) {//连接失败了
                         if (socket != null) {
                             try {
@@ -459,7 +462,7 @@ public class SocketService extends Service {
     class sendBeatTimer extends TimerTask {
         public void run() {
             try {
-                Log.e("心跳线程toBeStop", toBeStop + "");
+                Log.e("心跳线程", "toBeStop"+toBeStop );
                 if (toBeStop) {
                     if (sendBeat != null) {
                         sendBeat.cancel();
