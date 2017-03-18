@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentActivity;
 
 import com.woting.R;
 import com.woting.common.util.SequenceUUID;
-import com.woting.common.util.ToastUtils;
 import com.woting.ui.main.MainActivity;
 
 /**
@@ -46,19 +45,10 @@ public class PlayerMoreOperationActivity extends FragmentActivity {
         }
     }
 
-    private long tempTime;
-
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-            MainActivity.hideOrShowTab(true);
-            long time = System.currentTimeMillis();
-            if (time - tempTime <= 2000) {
-                android.os.Process.killProcess(android.os.Process.myPid());
-            } else {
-                tempTime = time;
-                ToastUtils.show_always(this, "再按一次退出");
-            }
+            MainActivity.change();
         } else {
             close();
         }

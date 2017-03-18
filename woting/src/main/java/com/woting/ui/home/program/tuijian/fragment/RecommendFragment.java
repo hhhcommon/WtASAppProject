@@ -306,7 +306,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                     } else if (MediaType.equals("SEQU")) {
                         AlbumFragment fragment = new AlbumFragment();
                         Bundle bundle = new Bundle();
-                        bundle.putInt("fromType", 2);
+                        bundle.putInt("fromType", 1);
                         bundle.putString("type", "recommend");
                         bundle.putSerializable("list", newList.get(position - 2));
                         fragment.setArguments(bundle);

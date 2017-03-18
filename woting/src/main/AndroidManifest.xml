@@ -163,7 +163,7 @@
 
         <!--  -->
         <activity
-            android:name=".ui.download.activity.DownloadActivity"
+            android:name=".ui.download.activity.DownloadFragment"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan"/>

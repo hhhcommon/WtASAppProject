@@ -232,7 +232,11 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 startActivityForResult(intentSet, 0x222);
                 break;
             case R.id.lin_playhistory:      // 播放历史
-                MineActivity.open(new PlayHistoryFragment());
+                PlayHistoryFragment historyFrag = new PlayHistoryFragment();
+                Bundle bundleHis = new Bundle();
+                bundleHis.putInt("fromType", 5);
+                historyFrag.setArguments(bundleHis);
+                MineActivity.open(historyFrag);
                 break;
             case R.id.text_denglu:          // 登陆
                 startActivity(new Intent(context, LoginActivity.class));
@@ -272,13 +276,21 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.lin_like:             // 我喜欢的
-                MineActivity.open(new FavoriteFragment());
+                FavoriteFragment favoriteFragment = new FavoriteFragment();
+                Bundle bundleFav = new Bundle();
+                bundleFav.putInt("fromType", 5);
+                favoriteFragment.setArguments(bundleFav);
+                MineActivity.open(favoriteFragment);
                 break;
             case R.id.lin_anchor:           // 我的主播  我关注的主播
                 ToastUtils.show_always(context, "我的主播!");
                 break;
             case R.id.lin_subscribe:        // 我的订阅
-                MineActivity.open(new SubscriberListFragment());
+                SubscriberListFragment subscriberListFragment = new SubscriberListFragment();
+                Bundle bundleSub = new Bundle();
+                bundleSub.putInt("fromType", 5);
+                subscriberListFragment.setArguments(bundleSub);
+                MineActivity.open(subscriberListFragment);
                 break;
             case R.id.lin_album:            // 我的专辑  我上传的专辑
                 startActivity(new Intent(context, MyUploadActivity.class));

@@ -388,6 +388,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 next();
                 break;
             case R.id.image_more:// 更多操作
+                if (GlobalConfig.playerObject == null) return ;
                 MainActivity.setViewSix();
                 break;
         }

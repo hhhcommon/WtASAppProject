@@ -52,7 +52,7 @@ import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.adapter.ImageAdapter;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
 import com.woting.ui.home.player.main.model.ShareModel;
-import com.woting.ui.home.player.main.play.PlayerActivity;
+import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
 import com.woting.ui.home.program.accuse.activity.AccuseFragment;
 import com.woting.ui.home.program.album.fragment.DetailsFragment;
 import com.woting.ui.home.program.album.fragment.ProgramFragment;
@@ -92,7 +92,7 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
     private Dialog dialog, shareDialog, dialog1;
     private UMImage image;
 
-    private int fromType;// == 1 PlayerActivity  == 2 HomeActivity  == 3 MineActivity
+    private int fromType;// == 1 HomeActivity  == 5 MineActivity  == 6 PlayMore
     public static int returnResult = -1;        // == 1 说明信息获取正常，returnType == 1001
     private int offset;                         // 图片移动的偏移量
     private boolean isCancelRequest;
@@ -387,11 +387,11 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_left_btn: // 左上角返回键
-                if (fromType == 1) {// Play
-                    PlayerActivity.close();
-                } else if (fromType == 2) {// Home
+                if (fromType == 6) {// Play
+                    PlayerMoreOperationActivity.close();
+                } else if (fromType == 1) {// Home
                     HomeActivity.close();
-                } else {// Mine
+                } else if (fromType == 5) {// Mine
                     MineActivity.close();
                 }
                 break;

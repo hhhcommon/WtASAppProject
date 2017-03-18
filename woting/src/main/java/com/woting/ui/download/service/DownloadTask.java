@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.woting.common.constant.BroadcastConstants;
-import com.woting.ui.download.activity.DownloadActivity;
+import com.woting.ui.download.activity.DownloadFragment;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.dao.ThreadDao;
 import com.woting.ui.download.model.FileInfo;
@@ -134,7 +134,7 @@ public class DownloadTask{
 	                //向fragment发送完成消息
 					intent.putExtra("fileInfo",mFileInfo);
 					FID.updataFileInfo(mFileInfo.getFileName());
-					if (DownloadActivity.isVisible==true){
+					if (DownloadFragment.isVisible==true){
 						intent.setAction(BroadcastConstants.ACTION_FINISHED);
 						mContext.sendBroadcast(intent);
 					}else{

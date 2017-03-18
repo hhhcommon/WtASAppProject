@@ -33,6 +33,7 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
+import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
 import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.home.search.adapter.SearchContentAdapter;
@@ -435,11 +436,15 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
                 } else if (mediaType.equals("SEQU")) {
                     AlbumFragment fragment = new AlbumFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putInt("fromType", 3);// Mine
+                    bundle.putInt("fromType", FavoriteFragment.type);
                     bundle.putString("type", "recommend");
                     bundle.putSerializable("list", list.get(groupPosition).getList().get(childPosition));
                     fragment.setArguments(bundle);
-                    MineActivity.open(fragment);
+                    if (FavoriteFragment.type == 5) {// Mine
+                        MineActivity.open(fragment);
+                    } else if (FavoriteFragment.type == 6) {// FlayMore
+                        PlayerMoreOperationActivity.open(fragment);
+                    }
                 }
                 return true;
             }

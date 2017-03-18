@@ -28,6 +28,7 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
+import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
 import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.album.model.SubscriberInfo;
 import com.woting.ui.home.program.radiolist.mode.ListInfo;
@@ -54,6 +55,7 @@ public class SubscriberListFragment extends Fragment implements OnClickListener,
 
     private int page = 1;
     private int refreshType = 1;// refreshType == 1 为下拉加载  == 2 为上拉加载更多
+    private int type;
 
     private String tag = "SUBSCRIBER_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
@@ -78,6 +80,9 @@ public class SubscriberListFragment extends Fragment implements OnClickListener,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
+
+        Bundle bundle = getArguments();
+        type = bundle.getInt("fromType");
     }
 
     @Nullable
@@ -146,7 +151,11 @@ public class SubscriberListFragment extends Fragment implements OnClickListener,
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_left_btn:// 返回
-                MineActivity.close();
+                if (type == 5) {// 我的
+                    MineActivity.close();
+                } else if (type == 6) {// 播放更多
+                    PlayerMoreOperationActivity.close();
+                }
                 break;
         }
     }
@@ -229,11 +238,15 @@ public class SubscriberListFragment extends Fragment implements OnClickListener,
                 // 跳往专辑界面
                 AlbumFragment fragment = new AlbumFragment();
                 Bundle bundle = new Bundle();
-                bundle.putInt("fromType", 3);
+                bundle.putInt("fromType", type);
                 bundle.putString("type", "radiolistactivity");
                 bundle.putSerializable("list", listInfo);
                 fragment.setArguments(bundle);
-                MineActivity.open(fragment);
+                if (type == 5) {
+                    MineActivity.open(fragment);
+                } else if (type == 6) {
+                    PlayerMoreOperationActivity.open(fragment);
+                }
             }
         });
     }

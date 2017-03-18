@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * 下载完成界面
  */
-public class DownLoadCompleted extends Fragment implements OnClickListener {
+public class DownLoadSequFragment extends Fragment implements OnClickListener {
     private FragmentActivity context;
     private MessageReceiver receiver;
     private FileInfoDao FID;

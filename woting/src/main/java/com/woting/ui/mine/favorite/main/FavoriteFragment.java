@@ -32,6 +32,7 @@ import com.woting.R;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
+import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
 import com.woting.ui.mine.favorite.fragment.RadioFragment;
 import com.woting.ui.mine.favorite.fragment.SequFragment;
 import com.woting.ui.mine.favorite.fragment.SoundFragment;
@@ -74,6 +75,7 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
     public static final String SET_NOT_ALL_IMAGE = "SET_NOT_ALL_IMAGE";// 非全选
     public static final String SET_NOT_LOAD_REFRESH = "SET_NOT_LOAD_REFRESH";// 禁止刷新加载
     public static final String SET_LOAD_REFRESH = "SET_LOAD_REFRESH";// 允许刷新加载
+    public static int type;
 
     private static int lastIndex = -1;
     private static int currentIndex = 0;// 标记当前viewpager显示的页面
@@ -94,6 +96,9 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
         intentFilter.addAction(FavoriteFragment.SET_ALL_IMAGE);
         intentFilter.addAction(FavoriteFragment.SET_NOT_ALL_IMAGE);
         context.registerReceiver(mBroadcast, intentFilter);
+
+        Bundle bundle = getArguments();
+        type = bundle.getInt("fromType");// 根据 TAB 标签传参
     }
 
     @Nullable
@@ -197,7 +202,11 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_left_btn:// 返回
-                MineActivity.close();
+                if (type == 5) {// Mine
+                    MineActivity.close();
+                } else if (type == 6) {
+                    PlayerMoreOperationActivity.close();
+                }
                 break;
             case R.id.tv_qingkong:// 清空
                 handleData(0);
