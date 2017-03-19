@@ -15,8 +15,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -30,7 +28,6 @@ import com.woting.ui.download.downloadlist.activity.DownLoadListActivity;
 import com.woting.ui.download.model.FileInfo;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,17 +42,12 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
     private Dialog confirmDialog;
     private View rootView;
     private View headView;
-    private LinearLayout linearAllCheck;
     private ListView mListView;
-    private ImageView imageAllCheck;
     private TipView tipView;// 没有数据提示
 
-    private List<FileInfo> fileSequList;// 专辑list
-    private List<FileInfo> fileDellList;// 删除list
+    private List<FileInfo> fileSequList;// 专辑 list
+    private int index = -1;
 
-    private String userId;
-    private boolean flag;// 删除按钮的处理框
-    private boolean allCheckFlag;// 全选flag
     private List<FileInfo> f;
 
     private void initDao() {
@@ -81,24 +73,13 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
     }
 
     private void setView() {
-        rootView.findViewById(R.id.lin_clear).setOnClickListener(this);
-        rootView.findViewById(R.id.lin_dinglan).setOnClickListener(this);
         tipView = (TipView) rootView.findViewById(R.id.tip_view);
         mListView = (ListView) rootView.findViewById(R.id.listView);
-
-        linearAllCheck = (LinearLayout) rootView.findViewById(R.id.lin_quanxuan);
-        linearAllCheck.setOnClickListener(this);
-
-        imageAllCheck = (ImageView) rootView.findViewById(R.id.img_quanxuan);
     }
 
     // 查询数据库当中已完成的数据，此数据传输到 adapter 中进行适配
     public void setDownLoadSource() {
-        userId = CommonUtils.getUserId(context);
-        flag = false;
-        linearAllCheck.setVisibility(View.INVISIBLE);
-        imageAllCheck.setImageResource(R.mipmap.wt_group_nochecked);
-        allCheckFlag = false;
+        String userId = CommonUtils.getUserId(context);
         f = FID.queryFileInfo("true", userId);
         if (f.size() > 0) {
             tipView.setVisibility(View.GONE);
@@ -130,13 +111,9 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
     private void setInterface() {
         adapter.setOnListener(new DownLoadSequAdapter.downloadSequCheck() {
             @Override
-            public void checkposition(int position) {
-                if (fileSequList.get(position).getChecktype() == 0) {
-                    fileSequList.get(position).setChecktype(1);
-                } else {
-                    fileSequList.get(position).setChecktype(0);
-                }
-                adapter.notifyDataSetChanged();
+            public void delPosition(int position) {
+                index = position;
+                deleteConfirmDialog();
             }
         });
     }
@@ -158,56 +135,6 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.lin_clear:    // 删除
-                if (!flag) {
-                    linearAllCheck.setVisibility(View.VISIBLE);
-                    for (int i = 0; i < fileSequList.size(); i++) {
-                        fileSequList.get(i).setViewtype(1);
-                    }
-                } else {
-                    // 隐藏删除框  检查当前的 list 当中是否有 checkType == 1 的
-                    // 隐藏删除框时设置所有项目的默认选定状态为 0  设置为未选中状态
-                    if (fileDellList != null) {
-                        fileDellList.clear();
-                    }
-                    for (int i = 0; i < fileSequList.size(); i++) {
-                        if (fileSequList.get(i).getChecktype() == 1) {
-                            if (fileDellList == null) {
-                                fileDellList = new ArrayList<>();
-                            }
-                            fileDellList.add(fileSequList.get(i));
-                        }
-                    }
-                    if (fileDellList != null && fileDellList.size() > 0) {
-                        deleteConfirmDialog();
-                    } else {
-                        linearAllCheck.setVisibility(View.INVISIBLE);
-                        for (int i = 0; i < fileSequList.size(); i++) {
-                            fileSequList.get(i).setViewtype(0);
-                            fileSequList.get(i).setChecktype(0);// 隐藏删除框时设置所有项目的默认选定状态为 0
-                        }
-                        imageAllCheck.setImageResource(R.mipmap.wt_group_nochecked);
-                        allCheckFlag = false;
-                    }
-                }
-                flag = !flag;
-                adapter.notifyDataSetChanged();
-                break;
-            case R.id.lin_quanxuan:
-                if (allCheckFlag) {
-                    imageAllCheck.setImageResource(R.mipmap.wt_group_nochecked);// 变更为非全部选中状态
-                    for (int i = 0; i < fileSequList.size(); i++) {
-                        fileSequList.get(i).setChecktype(0);
-                    }
-                } else {
-                    imageAllCheck.setImageResource(R.mipmap.wt_group_checked);// 变更为全部选中状态
-                    for (int i = 0; i < fileSequList.size(); i++) {
-                        fileSequList.get(i).setChecktype(1);
-                    }
-                }
-                allCheckFlag = !allCheckFlag;
-                adapter.notifyDataSetChanged();
-                break;
             case R.id.lin_download_single:
                 Intent intent = new Intent(context, DownLoadListActivity.class);
                 Bundle bundle = new Bundle();
@@ -216,46 +143,42 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
                 intent.putExtras(bundle);
                 context.startActivity(intent);
                 break;
-            case R.id.tv_confirm:
-                List<String> sequIdList=new ArrayList<>();
-                for (int i = 0; i < fileDellList.size(); i++) {
-                    FID.deleteSequ(fileDellList.get(i).getSequname(), userId);
-                    sequIdList.add(fileDellList.get(i).getSequid());
+            case R.id.tv_confirm:// 确定删除
+                File file = new File(f.get(index).getLocalurl());
+                if (file.exists()) {
+                    if (file.delete()) {
+                        FID.deleteSequ(fileSequList.get(index).getSequname(), CommonUtils.getUserId(context));
+                        fileSequList.remove(index);
+                        adapter.notifyDataSetChanged();
+                        index = -1;
+                    }
                 }
-                deleteLocal(sequIdList);
-                setDownLoadSource();// 重新适配界面操作
-                allCheckFlag = false;// 全选flag
-                flag = false;
-                linearAllCheck.setVisibility(View.INVISIBLE);
-            case R.id.tv_cancle:
+                confirmDialog.dismiss();
+            case R.id.tv_cancle:// 取消删除
                 confirmDialog.dismiss();
                 break;
         }
     }
 
+    // 删除
     private void deleteLocal(List<String> sequIdList) {
-        try{
-            for(int i=0;i<sequIdList.size();i++){
-                String Name=sequIdList.get(i);
-                for(int j=0;j<f.size();j++){
-                 if(f.get(j).getSequid()!=null&&f.get(j).getSequid().equals(sequIdList.get(i))){
-                     String adada=f.get(j).getSequid();
-                     if(f.get(j).getLocalurl()!=null){
-                         File file=new File(f.get(j).getLocalurl());
-                         if(file.exists()){
-                            file.delete();
-                         }
-                     }
-                 }
+        try {
+            for (int i = 0; i < sequIdList.size(); i++) {
+                for (int j = 0; j < f.size(); j++) {
+                    if (f.get(j).getSequid() != null && f.get(j).getSequid().equals(sequIdList.get(i))) {
+                        if (f.get(j).getLocalurl() != null) {
+                            File file = new File(f.get(j).getLocalurl());
+                            if (file.exists()) {
+                                file.delete();
+                            }
+                        }
+                    }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-
         }
-
     }
-
 
     // 删除对话框
     private void deleteConfirmDialog() {
@@ -263,7 +186,7 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
         dialog1.findViewById(R.id.tv_cancle).setOnClickListener(this);
         dialog1.findViewById(R.id.tv_confirm).setOnClickListener(this);
         TextView textTitle = (TextView) dialog1.findViewById(R.id.tv_title);
-        textTitle.setText("是否删除这" + fileDellList.size() + "条记录");
+        textTitle.setText("是否删除记录?");
 
         confirmDialog = new Dialog(context, R.style.MyDialog);
         confirmDialog.setContentView(dialog1);
@@ -277,7 +200,7 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(BroadcastConstants.PUSH_DOWN_COMPLETED)) {
                 setDownLoadSource();
-            }else if(intent.getAction().equals(BroadcastConstants.PUSH_ALLURL_CHANGE)){
+            } else if (intent.getAction().equals(BroadcastConstants.PUSH_ALLURL_CHANGE)) {
                 setDownLoadSource();
             }
         }

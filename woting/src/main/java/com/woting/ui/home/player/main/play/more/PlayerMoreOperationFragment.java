@@ -69,6 +69,9 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
     private TextView mPlayAudioTextLike;// 喜欢
     private TextView mPlayAudioTextDownLoad;// 下载
 
+    private View viewLinear1;
+    private View viewLinear2;
+
     private Dialog shareDialog;// 分享对话框
 
     @Override
@@ -94,17 +97,27 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
 
     // 初始化视图
     private void initView() {
+        textPlayName = (TextView) rootView.findViewById(R.id.text_play_name);// 正在播放的节目标题
+        mPlayAudioTextLike = (TextView) rootView.findViewById(R.id.text_like);// 喜欢
+        mPlayAudioTextDownLoad = (TextView) rootView.findViewById(R.id.text_down);// 下载
+
+        viewLinear1 = rootView.findViewById(R.id.view_linear_1);
+        viewLinear2 = rootView.findViewById(R.id.view_linear_2);
+        if (GlobalConfig.playerObject == null) {
+            viewLinear1.setVisibility(View.GONE);
+            viewLinear2.setVisibility(View.GONE);
+            return ;
+        }
+
+
         String type = GlobalConfig.playerObject.getMediaType();// 正在播放的节目类型
 
         // 正在播放的节目
-        textPlayName = (TextView) rootView.findViewById(R.id.text_play_name);
         String name = GlobalConfig.playerObject.getContentName();
         if (name == null) name = "未知";
         textPlayName.setText(name);
 
         // 喜欢
-        mPlayAudioTextLike = (TextView) rootView.findViewById(R.id.text_like);
-        mPlayAudioTextLike.setOnClickListener(this);
         String contentFavorite = GlobalConfig.playerObject.getContentFavorite();
         if (type != null && type.equals("TTS")) {// TTS 不支持喜欢
             mPlayAudioTextLike.setClickable(false);
@@ -126,8 +139,6 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
         }
 
         // 下载
-        mPlayAudioTextDownLoad = (TextView) rootView.findViewById(R.id.text_down);
-        mPlayAudioTextDownLoad.setOnClickListener(this);
         if (type != null && type.equals("AUDIO")) {// 可以下载
             if (!TextUtils.isEmpty(GlobalConfig.playerObject.getLocalurl())) {// 已下载
                 mPlayAudioTextDownLoad.setClickable(false);
@@ -159,6 +170,8 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
         rootView.findViewById(R.id.text_sequ).setOnClickListener(this);// 查看专辑
         rootView.findViewById(R.id.text_anchor).setOnClickListener(this);// 查看主播
         rootView.findViewById(R.id.text_timer).setOnClickListener(this);// 定时关闭
+        mPlayAudioTextLike.setOnClickListener(this);// 喜欢
+        mPlayAudioTextDownLoad.setOnClickListener(this);// 下载
 
         rootView.findViewById(R.id.text_history).setOnClickListener(this);// 播放历史
         rootView.findViewById(R.id.text_subscribe).setOnClickListener(this);// 我的订阅

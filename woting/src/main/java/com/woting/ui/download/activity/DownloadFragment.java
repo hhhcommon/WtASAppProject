@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.common.util.PhoneMessage;
+import com.woting.common.util.ToastUtils;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.download.fragment.DownLoadAudioFragment;
 import com.woting.ui.download.fragment.DownLoadSequFragment;
@@ -43,7 +44,9 @@ public class DownloadFragment extends Fragment implements OnClickListener {
     private ViewPager viewDownload;
 
     private ImageView image;
+    private TextView textClear;// 清空
 
+    private int currentIndex;// 当前所在界面  == 0 下载的专辑  == 1 下载的声音  == 2 正在下载的声音
     private int bmpW;
     private int offset;
 
@@ -51,7 +54,19 @@ public class DownloadFragment extends Fragment implements OnClickListener {
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.text_clear:// 清空
+                ToastUtils.show_always(context, "清空");
+                switch (currentIndex) {
+                    case 0:// 下载的专辑
 
+                        break;
+                    case 1:// 下载的声音
+
+                        break;
+                }
+                break;
+        }
     }
 
     @Override
@@ -104,6 +119,9 @@ public class DownloadFragment extends Fragment implements OnClickListener {
         textAudio = (TextView) rootView.findViewById(R.id.text_audio);// 下载的节目
         textDown = (TextView) rootView.findViewById(R.id.text_down);// 正在下载的节目
         viewDownload = (ViewPager) rootView.findViewById(R.id.viewpager);
+
+        textClear = (TextView) rootView.findViewById(R.id.text_clear);// 清空
+        textClear.setOnClickListener(this);
     }
 
     private void initViewPager() {
@@ -128,14 +146,21 @@ public class DownloadFragment extends Fragment implements OnClickListener {
             textSequ.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
             textAudio.setTextColor(context.getResources().getColor(R.color.wt_login_third));
             textDown.setTextColor(context.getResources().getColor(R.color.wt_login_third));
+
+            textClear.setVisibility(View.VISIBLE);
+
         } else if (index == 1) {// 下载的节目
             textSequ.setTextColor(context.getResources().getColor(R.color.wt_login_third));
             textAudio.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
             textDown.setTextColor(context.getResources().getColor(R.color.wt_login_third));
+
+            textClear.setVisibility(View.VISIBLE);
+
         } else if (index == 2) {// 正在下载的节目
             textDown.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
             textAudio.setTextColor(context.getResources().getColor(R.color.wt_login_third));
             textSequ.setTextColor(context.getResources().getColor(R.color.wt_login_third));
+            textClear.setVisibility(View.GONE);
         }
     }
 
@@ -171,7 +196,6 @@ public class DownloadFragment extends Fragment implements OnClickListener {
 
     class MyOnPageChangeListener implements OnPageChangeListener {
         private int one = offset * 2 + bmpW;    // 两个相邻页面的偏移量
-        private int currIndex;
 
         @Override
         public void onPageScrolled(int arg0, float arg1, int arg2) {
@@ -183,11 +207,11 @@ public class DownloadFragment extends Fragment implements OnClickListener {
 
         @Override
         public void onPageSelected(int arg0) {
-            Animation animation = new TranslateAnimation(currIndex * one, arg0 * one, 0, 0);// 平移动画
-            currIndex = arg0;
+            Animation animation = new TranslateAnimation(currentIndex * one, arg0 * one, 0, 0);// 平移动画
+            currentIndex = arg0;
             animation.setFillAfter(true);   // 动画终止时停留在最后一帧，不然会回到没有执行前的状态
-            animation.setDuration(200);     // 动画持续时间0.2秒
-            image.startAnimation(animation);// 是用ImageView来显示动画的
+            animation.setDuration(200);     // 动画持续时间 0.2 秒
+            image.startAnimation(animation);// 是用 ImageView 来显示动画的
             updateView(arg0);
         }
     }
