@@ -32,7 +32,7 @@ import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
-import com.woting.ui.home.search.main.SearchLikeFragment;
+import com.woting.ui.home.search.main.SearchLikeActivity;
 import com.woting.ui.home.search.adapter.SearchContentAdapter;
 import com.woting.ui.home.search.model.SuperRankInfo;
 import com.woting.ui.main.MainActivity;
@@ -284,7 +284,7 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
 
     @Override
     public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-        SearchLikeFragment.updateViewPage(list.get(groupPosition).getKey());
+        SearchLikeActivity.updateViewPage(list.get(groupPosition).getKey());
         return true;
     }
 

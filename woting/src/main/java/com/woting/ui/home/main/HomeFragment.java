@@ -1,10 +1,11 @@
 package com.woting.ui.home.main;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,12 +13,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.woting.R;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.home.program.diantai.main.OnLineFragment;
 import com.woting.ui.home.program.fenlei.fragment.FenLeiFragment;
 import com.woting.ui.home.program.tuijian.fragment.RecommendFragment;
-import com.woting.ui.home.search.main.SearchLikeFragment;
 import com.woting.ui.interphone.message.messagecenter.activity.MessageMainActivity;
+import com.woting.ui.main.MainActivity;
 
 import java.util.ArrayList;
 
@@ -26,7 +28,7 @@ import java.util.ArrayList;
  * Created by Administrator on 2017/3/4.
  */
 public class HomeFragment extends Fragment implements View.OnClickListener {
-    private Context context;
+    private FragmentActivity context;
 
     private View rootView;
     private static TextView view1;// 推荐
@@ -42,11 +44,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 startActivity(intentNews);
                 break;
             case R.id.lin_find:// 搜索
-                SearchLikeFragment fragment = new SearchLikeFragment();
-                Bundle bundle = new Bundle();
-                bundle.putInt("FROM_TYPE", 1);// == 1 HomeFragment
-                fragment.setArguments(bundle);
-                HomeActivity.open(fragment);
+                MainActivity.setViewSeven();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent();
+                        intent.putExtra("fromType", "HOME");
+                        intent.setAction(BroadcastConstants.FROM_ACTIVITY);
+                        context.getApplicationContext().sendBroadcast(intent);
+                    }
+                }, 500);
                 break;
         }
     }

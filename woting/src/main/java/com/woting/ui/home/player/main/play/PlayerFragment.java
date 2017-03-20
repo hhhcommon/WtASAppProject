@@ -57,7 +57,7 @@ import com.woting.ui.home.player.main.model.LanguageSearch;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
-import com.woting.ui.home.search.main.SearchLikeFragment;
+import com.woting.ui.home.search.main.SearchLikeActivity;
 import com.woting.ui.interphone.message.messagecenter.activity.MessageMainActivity;
 import com.woting.ui.main.MainActivity;
 import com.woting.video.IntegrationPlayer;
@@ -91,7 +91,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private VoiceRecognizer mVoiceRecognizer;// 讯飞
     private MessageReceiver mReceiver;// 广播接收
     private PlayerListAdapter adapter;
-    public static SearchLikeFragment frag;// 搜索
+    public static SearchLikeActivity frag;// 搜索
 
     private Dialog dialog;// 加载数据对话框
     private Dialog wifiDialog;// WIFI 提醒对话框
@@ -331,29 +331,21 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         });
     }
 
-    // 显示搜索界面
-    private void showSearch() {
-        if (frag != null && PlayerActivity.playerFragment != null) {
-            context.getSupportFragmentManager().beginTransaction()
-                    .hide(PlayerActivity.playerFragment).show(frag).commit();
-        }
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.lin_find:// 搜索
-                if (frag == null) {
-                    frag = new SearchLikeFragment();
-                    Bundle bun = new Bundle();
-                    bun.putInt("FROM_TYPE", 0);// == 0 PlayerFragment
-                    frag.setArguments(bun);
-                    PlayerActivity.open(frag);
-                } else {
-                    showSearch();
-                }
-                MainActivity.hideOrShowTab(false);
+                MainActivity.setViewSeven();
                 PlayerActivity.isVisible = false;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent();
+                        intent.putExtra("fromType", "PLAY");
+                        intent.setAction(BroadcastConstants.FROM_ACTIVITY);
+                        context.getApplicationContext().sendBroadcast(intent);
+                    }
+                }, 500);
                 break;
             case R.id.lin_news://
                 startActivity(new Intent(context, MessageMainActivity.class));

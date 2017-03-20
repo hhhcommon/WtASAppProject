@@ -130,4 +130,7 @@ public class BroadcastConstants {
 
     // 更新播放状态的图片
     public static final String UPDATE_PLAY_IMAGE = "UPDATE_PLAY_IMAGE";
+
+    // 标识来自哪个界面跳转到搜索界面
+    public static final String FROM_ACTIVITY = "FROM_ACTIVITY";
 }

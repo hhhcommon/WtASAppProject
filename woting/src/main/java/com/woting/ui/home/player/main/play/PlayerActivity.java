@@ -72,17 +72,6 @@ public class PlayerActivity extends FragmentActivity {
             MainActivity.hideOrShowTab(true);
             if (PlayerFragment.frag != null) PlayerFragment.frag = null;
             PlayerActivity.isVisible = true;
-            showPlayer();
-        }
-    }
-
-    // 显示播放界面
-    public static void showPlayer() {
-        if (playerFragment != null && PlayerFragment.frag != null) {
-            context.getSupportFragmentManager().beginTransaction()
-                    .hide(PlayerFragment.frag).show(playerFragment).commit();
-        } else {
-            context.getSupportFragmentManager().beginTransaction().show(playerFragment).commit();
         }
     }
 
