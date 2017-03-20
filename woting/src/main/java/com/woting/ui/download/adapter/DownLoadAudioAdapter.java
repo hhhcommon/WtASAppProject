@@ -24,13 +24,18 @@ import java.util.List;
 public class DownLoadAudioAdapter extends BaseAdapter {
     private List<FileInfo> list;
     private Context context;
-    private downloadSequCheck downloadCheck;
+    private DownloadAudioCheck downloadCheck;
     private DecimalFormat df;
 
     public DownLoadAudioAdapter(Context context, List<FileInfo> list) {
         this.context = context;
         this.list = list;
         df = new DecimalFormat("0.00");
+    }
+
+    public void setList(List<FileInfo> list) {
+        this.list = list;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -48,7 +53,7 @@ public class DownLoadAudioAdapter extends BaseAdapter {
         return position;
     }
 
-    public void setOnListener(downloadSequCheck downloadCheck) {
+    public void setOnListener(DownloadAudioCheck downloadCheck) {
         this.downloadCheck = downloadCheck;
     }
 
@@ -90,7 +95,7 @@ public class DownLoadAudioAdapter extends BaseAdapter {
         }
 
         // 专辑或节目名
-        String contentTitle = lists.getSequname();
+        String contentTitle = lists.getFileName();
         if (contentTitle == null || contentTitle.equals("")) {
             contentTitle = "未知";
         }
@@ -104,11 +109,17 @@ public class DownLoadAudioAdapter extends BaseAdapter {
         holder.textContent.setText(contentFrom);
 
         // 文件大小
-        int sum = lists.getSum();
-        if (sum == -1) {
-            sum = 0;
+        int end;
+        try {
+            end = lists.getEnd();
+            if (end <= 0) {
+                end = 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            end = 0;
         }
-        holder.textSum.setText(df.format(sum / 1000.0 / 1000.0) + "MB");
+        holder.textSum.setText(new DecimalFormat("0.00").format(end / 1000.0 / 1000.0) + "MB");
 
         // 删除
         holder.imageDel.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +131,7 @@ public class DownLoadAudioAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public interface downloadSequCheck {
+    public interface DownloadAudioCheck {
         void delPosition(int position);
     }
 

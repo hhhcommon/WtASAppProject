@@ -35,6 +35,7 @@ import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.home.program.radiolist.mode.Image;
 import com.woting.ui.home.program.tuijian.adapter.RecommendListAdapter;
+import com.woting.ui.main.MainActivity;
 import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
 
@@ -105,6 +106,8 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
 
             initListView();
             getImage();
+
+            dialog = DialogUtils.Dialogph(context, "数据加载中...");
             sendRequest();
         }
         return rootView;
@@ -303,6 +306,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                         bundle1.putString("text", newList.get(position - 2).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
+                        MainActivity.change();
                     } else if (MediaType.equals("SEQU")) {
                         AlbumFragment fragment = new AlbumFragment();
                         Bundle bundle = new Bundle();

@@ -22,12 +22,14 @@ import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.widgetui.TipView;
+import com.woting.ui.download.activity.DownloadFragment;
 import com.woting.ui.download.adapter.DownLoadSequAdapter;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.downloadlist.activity.DownLoadListActivity;
 import com.woting.ui.download.model.FileInfo;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,6 +64,7 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
             IntentFilter filter = new IntentFilter();
             filter.addAction(BroadcastConstants.PUSH_DOWN_COMPLETED);
             filter.addAction(BroadcastConstants.PUSH_ALLURL_CHANGE);
+            filter.addAction(BroadcastConstants.DOWNLOAD_CLEAR_EMPTY_SEQU);// 清空下载的全部专辑
             context.registerReceiver(receiver, filter);
         }
         rootView = inflater.inflate(R.layout.fragment_download_completed, container, false);
@@ -70,6 +73,18 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
         setView();
         setDownLoadSource();
         return rootView;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            if (fileSequList != null && fileSequList.size() > 0) {
+                DownloadFragment.setVisibleSequ(true);
+            } else {
+                DownloadFragment.setVisibleSequ(false);
+            }
+        }
     }
 
     private void setView() {
@@ -82,6 +97,7 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
         String userId = CommonUtils.getUserId(context);
         f = FID.queryFileInfo("true", userId);
         if (f.size() > 0) {
+            DownloadFragment.setVisibleSequ(true);
             tipView.setVisibility(View.GONE);
             fileSequList = FID.GroupFileInfoAll(userId);
             Log.e("f", fileSequList.size() + "");
@@ -104,6 +120,7 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
         } else {
             tipView.setVisibility(View.VISIBLE);
             tipView.setTipView(TipView.TipStatus.NO_DATA, "没有下载的内容\n快去把想听的内容下载下来吧");
+            DownloadFragment.setVisibleSequ(false);
         }
     }
 
@@ -144,15 +161,23 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
                 context.startActivity(intent);
                 break;
             case R.id.tv_confirm:// 确定删除
-                File file = new File(f.get(index).getLocalurl());
-                if (file.exists()) {
-                    if (file.delete()) {
-                        FID.deleteSequ(fileSequList.get(index).getSequname(), CommonUtils.getUserId(context));
-                        fileSequList.remove(index);
-                        adapter.notifyDataSetChanged();
-                        index = -1;
+                if (index != -1) {
+                    File file = new File(f.get(index).getLocalurl());
+                    if (file.exists()) {
+                        if (file.delete()) {
+                            FID.deleteSequ(fileSequList.get(index).getSequname(), CommonUtils.getUserId(context));
+                            index = -1;
+                        }
                     }
+                } else {
+                    List<String> list = new ArrayList<>();
+                    for (int i = 0; i <fileSequList .size(); i++) {
+                        FID.deleteSequ(fileSequList.get(i).getSequname(), CommonUtils.getUserId(context));
+                        list.add(fileSequList.get(i).getSequid());
+                    }
+                    deleteLocal(list);
                 }
+                context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));
                 confirmDialog.dismiss();
             case R.id.tv_cancle:// 取消删除
                 confirmDialog.dismiss();
@@ -198,10 +223,18 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
     class MessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(BroadcastConstants.PUSH_DOWN_COMPLETED)) {
-                setDownLoadSource();
-            } else if (intent.getAction().equals(BroadcastConstants.PUSH_ALLURL_CHANGE)) {
-                setDownLoadSource();
+            String action = intent.getAction();
+            switch (action) {
+                case BroadcastConstants.DOWNLOAD_CLEAR_EMPTY_SEQU:
+                    if (isVisible()) {
+                        index = -1;
+                        deleteConfirmDialog();
+                    }
+                    break;
+                case BroadcastConstants.PUSH_DOWN_COMPLETED:
+                case BroadcastConstants.PUSH_ALLURL_CHANGE:// 下载的内容需要更新
+                    setDownLoadSource();
+                    break;
             }
         }
     }

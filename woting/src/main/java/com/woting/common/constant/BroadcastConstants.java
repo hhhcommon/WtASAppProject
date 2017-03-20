@@ -133,4 +133,10 @@ public class BroadcastConstants {
 
     // 标识来自哪个界面跳转到搜索界面
     public static final String FROM_ACTIVITY = "FROM_ACTIVITY";
+
+    // 清空下载专辑的内容
+    public static final String DOWNLOAD_CLEAR_EMPTY_SEQU = "DOWNLOAD_CLEAR_EMPTY_SEQU";
+
+    // 清空下载声音的内容
+    public static final String DOWNLOAD_CLEAR_EMPTY_AUDIO = "DOWNLOAD_CLEAR_EMPTY_AUDIO";
 }

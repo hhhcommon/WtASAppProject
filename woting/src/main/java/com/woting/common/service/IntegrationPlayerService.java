@@ -342,10 +342,10 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
 
     // 播放节目
     private void playAudio(String contentPlay, final String localUrl) {
-        if(mTts != null && mTts.isSpeaking() && isTtsPlaying) stopTts();
-        if(mVV != null && mVV.isPlaying() && isBVVPlaying) stopRadio();
+        if(mTts != null && isTtsPlaying) stopTts();
+        if(mVV != null && isBVVPlaying) stopRadio();
         if(mVlc == null) initVlc();
-        else if(mVlc.isPlaying() && isVlcPlaying) mVlc.stop();
+        else if(isVlcPlaying) mVlc.stop();
 
         if(localUrl != null) {// 播放本地 URL 即使在流量环境下也不要提示
             mVlc.playMRL(localUrl);

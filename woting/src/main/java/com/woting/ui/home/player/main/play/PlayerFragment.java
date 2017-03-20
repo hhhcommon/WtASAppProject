@@ -589,7 +589,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         if (isNetPlay && !isPlaying) {
             mPlayer.startPlay(index);
         } else {
-            if (mPlayer.playStatus()) {// 正在播放
+            if (isPlaying || mPlayer.playStatus()) {// 正在播放
                 mPlayer.pausePlay();
                 mPlayImageStatus.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_play_stop));
                 isPlaying = false;
@@ -598,6 +598,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 mPlayImageStatus.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_play_play));
                 isPlaying = true;
             }
+
             mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST_VIEW, 0);
         }
         Intent intent = new Intent(BroadcastConstants.UPDATE_PLAY_IMAGE);
@@ -910,6 +911,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         }
         if (mTimer != null) {
             mTimer.cancel();
+            mTimer = null;
         }
         if (mPlayer != null) {
             mPlayer.unbindService(context);

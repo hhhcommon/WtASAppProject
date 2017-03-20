@@ -28,7 +28,7 @@
             android:layout_centerInParent="true"/>
 
         <TextView
-            android:id="@+id/text_clear"
+            android:id="@+id/text_clear_sequ"
             android:layout_width="48dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -36,6 +36,19 @@
             android:textColor="@color/WHITE"
             android:gravity="center"
             android:textSize="16sp"
+            android:visibility="gone"
+            android:layout_marginRight="10dp"/>
+
+        <TextView
+            android:id="@+id/text_clear_audio"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:text="清空"
+            android:textColor="@color/WHITE"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:visibility="gone"
             android:layout_marginRight="10dp"/>
 
     </RelativeLayout>

@@ -1,6 +1,10 @@
 package com.woting.ui.download.fragment;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,9 +20,11 @@ import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.common.application.BSApplication;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.widgetui.TipView;
+import com.woting.ui.download.activity.DownloadFragment;
 import com.woting.ui.download.adapter.DownLoadAudioAdapter;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.model.FileInfo;
@@ -39,6 +45,7 @@ public class DownLoadAudioFragment extends Fragment implements View.OnClickListe
     private SearchPlayerHistoryDao dbDao;
     private List<FileInfo> list;
     private DownLoadAudioAdapter adapter;
+    private MessageReceiver receiver;
 
     private TipView tipView;
     private Dialog confirmDialog;// 删除对话框
@@ -64,8 +71,28 @@ public class DownLoadAudioFragment extends Fragment implements View.OnClickListe
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_download_audio, container, false);
             initView();
+            if (receiver == null) {
+                receiver = new MessageReceiver();
+                IntentFilter filter = new IntentFilter();
+                filter.addAction(BroadcastConstants.PUSH_DOWN_COMPLETED);
+                filter.addAction(BroadcastConstants.PUSH_ALLURL_CHANGE);
+                filter.addAction(BroadcastConstants.DOWNLOAD_CLEAR_EMPTY_AUDIO);// 清空下载的全部声音
+                context.registerReceiver(receiver, filter);
+            }
         }
         return rootView;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            if (list != null && list.size() > 0) {
+                DownloadFragment.setVisibleAudio(true);
+            } else {
+                DownloadFragment.setVisibleAudio(false);
+            }
+        }
     }
 
     // 初始化视图
@@ -76,10 +103,14 @@ public class DownLoadAudioFragment extends Fragment implements View.OnClickListe
         tipView = (TipView) rootView.findViewById(R.id.tip_view);
         if (list == null || list.size() <= 0) {
             tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_DATA, "没有下载的内容\n快去把想听的内容下载下来吧");
+            DownloadFragment.setVisibleAudio(false);
+        } else {
+            DownloadFragment.setVisibleAudio(true);
         }
 
         // 删除
-        adapter.setOnListener(new DownLoadAudioAdapter.downloadSequCheck() {
+        adapter.setOnListener(new DownLoadAudioAdapter.DownloadAudioCheck() {
             @Override
             public void delPosition(int position) {
                 index = position;
@@ -166,20 +197,79 @@ public class DownLoadAudioFragment extends Fragment implements View.OnClickListe
                 confirmDialog.dismiss();
                 break;
             case R.id.tv_confirm:// 确定删除
-                File file = new File(list.get(index).getLocalurl());
-                if (file.exists()) {
-                    if (file.delete()) {
-                        FID.deleteSequ(list.get(index).getSequname(), CommonUtils.getUserId(context));
-                        list.remove(index);
-                        adapter.notifyDataSetChanged();
-                        index = -1;
+                if (index != -1) {
+                    FID.deleteFileInfo(list.get(index).getLocalurl(), CommonUtils.getUserId(context));
+                    try {
+                        File file = new File(list.get(index).getLocalurl());
+                        if(file.exists()){
+                            if (file.delete()) {
+                                context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));
+                                index = -1;
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("TAG","文件：" + list.get(index).getLocalurl() + "删除失败!");
                     }
+                } else {
+                    for (int i=0; i<list.size(); i++) {
+                        FID.deleteFileInfo(list.get(i).getLocalurl(), CommonUtils.getUserId(context));
+                        try {
+                            File file = new File(list.get(i).getLocalurl());
+                            if(file.exists()) {
+                                file.delete();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.e("TAG","文件：" + list.get(i).getLocalurl() + "删除失败!");
+                        }
+                    }
+                    context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));
                 }
+
                 confirmDialog.dismiss();
                 if (list.size() <= 0) {
                     tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.NO_DATA, "没有下载的内容\n快去把想听的内容下载下来吧");
+                    DownloadFragment.setVisibleAudio(false);
+                } else {
+                    DownloadFragment.setVisibleAudio(true);
                 }
                 break;
         }
+    }
+
+    class MessageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            switch (action) {
+                case BroadcastConstants.DOWNLOAD_CLEAR_EMPTY_AUDIO:// 下载界面需要更新
+                    if (isVisible()) {
+                        index = -1;
+                        deleteConfirmDialog();
+                    }
+                    break;
+                case BroadcastConstants.PUSH_DOWN_COMPLETED:
+                case BroadcastConstants.PUSH_ALLURL_CHANGE:
+                    list = FID.queryFileInfo("true", CommonUtils.getUserId(context));
+                    adapter.setList(list);
+                    if (list == null || list.size() <= 0) {
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.NO_DATA, "没有下载的内容\n快去把想听的内容下载下来吧");
+                        DownloadFragment.setVisibleAudio(false);
+                    } else {
+                        tipView.setVisibility(View.GONE);
+                        DownloadFragment.setVisibleAudio(true);
+                    }
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (receiver != null) context.unregisterReceiver(receiver);
     }
 }
