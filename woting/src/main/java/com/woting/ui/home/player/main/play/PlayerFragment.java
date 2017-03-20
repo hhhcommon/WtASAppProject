@@ -710,7 +710,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
                     for (int a = 0, s = playList.size(); a < s; a++) {
                         media = playList.get(a).getMediaType();
-                        if (media != null && !media.equals("TTS")) {
+                        if (media != null && !media.equals(StringConstant.TYPE_TTS)) {
                             contentPlay = playList.get(a).getContentPlay();
                             if (contentPlay != null && !contentPlay.trim().equals("") && !contentPlay.toUpperCase().equals("NULL")) {
                                 contentPlayList.add(contentPlay);
@@ -718,7 +718,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                         }
                     }
                     for (int i = 0, size = subList.size(); i < size; i++) {
-                        if (subList.get(i).getMediaType() != null && subList.get(i).getMediaType().equals("TTS")) continue;
+                        if (subList.get(i).getMediaType() != null && subList.get(i).getMediaType().equals(StringConstant.TYPE_TTS)) continue;
                         if (!contentPlayList.contains(subList.get(i).getContentPlay())) {
                             if (refreshType == -1) {
                                 playList.add(0, subList.get(i));
@@ -744,9 +744,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         ArrayList<LanguageSearchInside> playerList = new ArrayList<>();
         playerList.addAll(playList);
         if(refreshType == 1) {
-            mPlayer.updatePlayList(playerList);
-        } else {
             mPlayer.updatePlayList(playerList, index);
+        } else {
+            mPlayer.updatePlayList(playerList);
         }
 
         // 每次语音搜索结果出来之后应该自动播放第一个节目

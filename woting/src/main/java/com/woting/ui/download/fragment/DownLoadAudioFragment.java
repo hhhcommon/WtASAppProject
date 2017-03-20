@@ -54,6 +54,8 @@ public class DownLoadAudioFragment extends Fragment implements View.OnClickListe
         FID = new FileInfoDao(context);
         dbDao = new SearchPlayerHistoryDao(context);
         list = FID.queryFileInfo("true", CommonUtils.getUserId(context));
+
+        Log.v("TAG", "list.size  ->  " + list.size());
     }
 
     @Nullable
