@@ -45,6 +45,7 @@ import com.woting.ui.home.player.main.play.PlayerActivity;
 import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.album.model.ContentInfo;
 import com.woting.ui.home.program.comment.CommentActivity;
+import com.woting.ui.main.MainActivity;
 import com.woting.ui.mine.favorite.main.FavoriteFragment;
 import com.woting.ui.mine.playhistory.main.PlayHistoryFragment;
 import com.woting.ui.mine.subscriber.activity.SubscriberListFragment;
@@ -97,6 +98,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
 
     // 初始化视图
     private void initView() {
+        rootView.findViewById(R.id.image_left).setOnClickListener(this);// 返回
         textPlayName = (TextView) rootView.findViewById(R.id.text_play_name);// 正在播放的节目标题
         mPlayAudioTextLike = (TextView) rootView.findViewById(R.id.text_like);// 喜欢
         mPlayAudioTextDownLoad = (TextView) rootView.findViewById(R.id.text_down);// 下载
@@ -182,6 +184,9 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.image_left:// 返回
+                MainActivity.change();
+                break;
             case R.id.text_like:// 喜欢
                 sendFavorite();
                 break;

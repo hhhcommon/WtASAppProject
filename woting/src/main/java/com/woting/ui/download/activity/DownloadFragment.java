@@ -26,6 +26,7 @@ import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.download.fragment.DownLoadAudioFragment;
 import com.woting.ui.download.fragment.DownLoadSequFragment;
 import com.woting.ui.download.fragment.DownLoadUnCompletedFragment;
+import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
 
 import java.util.ArrayList;
 
@@ -55,6 +56,9 @@ public class DownloadFragment extends Fragment implements OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.image_left:// 返回
+                PlayerMoreOperationActivity.close();
+                break;
             case R.id.text_clear:// 清空
                 ToastUtils.show_always(context, "清空");
                 switch (currentIndex) {
@@ -115,6 +119,7 @@ public class DownloadFragment extends Fragment implements OnClickListener {
 
     // 设置界面
     private void setView() {
+        rootView.findViewById(R.id.image_left).setOnClickListener(this);// 返回
         textSequ = (TextView) rootView.findViewById(R.id.text_sequ);// 下载的专辑
         textAudio = (TextView) rootView.findViewById(R.id.text_audio);// 下载的节目
         textDown = (TextView) rootView.findViewById(R.id.text_down);// 正在下载的节目
