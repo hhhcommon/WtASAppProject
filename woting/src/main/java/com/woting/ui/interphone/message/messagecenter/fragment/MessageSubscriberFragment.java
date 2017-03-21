@@ -22,16 +22,12 @@ import com.woting.ui.interphone.linkman.model.DBNotifyHistory;
 import com.woting.ui.interphone.message.messagecenter.activity.MessageMainActivity;
 import com.woting.ui.interphone.message.messagecenter.adapter.NotifyNewsAdapter;
 import com.woting.ui.interphone.message.messagecenter.dao.MessageNotifyDao;
+import com.woting.ui.interphone.message.messagecenter.dao.MessageSubscriberDao;
 
 import java.util.List;
 
-/**
- * &#x7fa4;&#x901a;&#x77e5;&#x6d88;&#x606f;
- * &#x4f5c;&#x8005;&#xff1a;xinlong on 2016/5/5 21:18
- * &#x90ae;&#x7bb1;&#xff1a;645700751@qq.com
- */
 public class MessageSubscriberFragment extends Fragment implements OnClickListener {
-	private MessageNotifyDao dbDao;
+	private MessageSubscriberDao dbDao;
 	private MessageReceiver Receiver;
 
 	private List<DBNotifyHistory> list;
@@ -77,7 +73,7 @@ public class MessageSubscriberFragment extends Fragment implements OnClickListen
 
 	// 获取数据库的数据
 	private void getData() {
-		list = dbDao.queryNotifyMessage();
+		list = dbDao.querySubscriberMessage();
 		if (list == null || list.size() <= 0) {
 			tipView.setVisibility(View.VISIBLE);
 			tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有收到任何的通知消息");
@@ -90,7 +86,7 @@ public class MessageSubscriberFragment extends Fragment implements OnClickListen
 
 	// 初始化数据库命令执行对象
 	private void initDao() {
-		dbDao = new MessageNotifyDao(context);
+		dbDao = new MessageSubscriberDao(context);
 	}
 
 	private void setView() {

@@ -77,10 +77,7 @@ public class MessageFragment extends Fragment implements OnClickListener {
 				MessageMainActivity.open(fragment1);
 				break;
 			case R.id.lin_subscribe:
-				SubscriberListFragment fragment2 = new SubscriberListFragment();
-				Bundle b=new Bundle();
-				b.putInt("fromType",7);
-				fragment2.setArguments(b);
+				MessageSubscriberFragment fragment2 = new MessageSubscriberFragment();
 				MessageMainActivity.open(fragment2);
 				break;
 			case R.id.lin_group_messageN:
