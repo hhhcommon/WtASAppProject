@@ -58,6 +58,8 @@ import com.woting.ui.home.program.album.fragment.DetailsFragment;
 import com.woting.ui.home.program.album.fragment.ProgramFragment;
 import com.woting.ui.home.program.comment.CommentActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
+import com.woting.ui.home.program.radiolist.mode.ListInfo;
+import com.woting.ui.home.search.main.SearchLikeActivity;
 import com.woting.ui.mine.main.MineActivity;
 
 import org.json.JSONException;
@@ -91,7 +93,7 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
     private Dialog dialog, shareDialog, dialog1;
     private UMImage image;
 
-    private int fromType;// == 1 HomeActivity  == 5 MineActivity  == 6 PlayMore
+    private int fromType;// == 1 HomeActivity  == 5 MineActivity  == 6 PlayMore  == 7 SearchLike
     public static int returnResult = -1;        // == 1 说明信息获取正常，returnType == 1001
     private int offset;                         // 图片移动的偏移量
     private boolean isCancelRequest;
@@ -344,7 +346,7 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
         else viewBack.setVisibility(View.GONE);
         String type = bundle.getString("type");
         if (type != null && type.trim().equals("radiolistactivity")) {
-            RankInfo list = (RankInfo) bundle.getSerializable("list");
+            ListInfo list = (ListInfo) bundle.getSerializable("list");
             RadioName = list.getContentName();
             ContentDesc = list.getContentDescn();
             id = list.getContentId();
@@ -392,6 +394,8 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
                     HomeActivity.close();
                 } else if (fromType == 5) {// Mine
                     MineActivity.close();
+                } else if (fromType == 7) {
+                    SearchLikeActivity.close();
                 }
                 break;
             case R.id.lin_share: // 分享

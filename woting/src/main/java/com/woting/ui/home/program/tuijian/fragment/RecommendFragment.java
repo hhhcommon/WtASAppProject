@@ -48,16 +48,18 @@ import java.util.List;
 
 /**
  * 节目页----推荐页
- *
- * @author 辛龙
- *         2016年3月30日
+ * 辛龙
+ * 2016年3月30日
  */
 public class RecommendFragment extends Fragment implements TipView.WhiteViewClick {
     private SearchPlayerHistoryDao dbDao;
     private FragmentActivity context;
     private RecommendListAdapter adapter;
+    private Banner mLoopViewPager;
+
     private List<RankInfo> subList;
     private List<RankInfo> newList = new ArrayList<>();
+    private List<String> ImageStringList = new ArrayList<>();
 
     private Dialog dialog;// 加载数据对话框
     private View rootView;
@@ -70,8 +72,6 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
     private int refreshType = 1; // refreshType 1 为下拉加载 2 为上拉加载更多
     private boolean isCancelRequest;
     private String tag = "RECOMMEND_VOLLEY_REQUEST_CANCEL_TAG";
-    private Banner mLoopViewPager;
-    private List<String> ImageStringList=new ArrayList<>();
 
     @Override
     public void onWhiteViewClick() {
@@ -142,15 +142,13 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
     private void sendRequest() {
         // 以下操作需要网络支持 所以没有网络则直接提示用户设置网络
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
+            if (dialog != null) dialog.dismiss();
+            mListView.stopRefresh();
+            mListView.stopLoadMore();
             if (newList != null && newList.size() > 0) {
-                if (dialog != null) dialog.dismiss();
-                mListView.stopRefresh();
-                mListView.stopLoadMore();
+                ToastUtils.show_always(context, "网络连接失败，请检查网络设置!");
                 return;
             } else {
-                if (dialog != null) dialog.dismiss();
-                mListView.stopRefresh();
-                mListView.stopLoadMore();
                 if (refreshType == 1) {
                     tipView.setVisibility(View.VISIBLE);
                     tipView.setTipView(TipView.TipStatus.NO_NET);
@@ -166,7 +164,6 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
-                page++;
                 try {
                     returnType = result.getString("ReturnType");
                     Log.e("returnType", "returnType -- > > " + returnType);
@@ -174,10 +171,10 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                     e.printStackTrace();
                 }
                 if (returnType != null && returnType.equals("1001")) {
+                    page++;
                     try {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {
-                        }.getType());
+                        subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
 
                         try {
                             String pageSizeString = arg1.getString("PageSize");
@@ -200,9 +197,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        if (refreshType == 1) {
-                            newList.clear();
-                        }
+                        if (refreshType == 1) newList.clear();
                         newList.addAll(subList);
                         if (adapter == null) {
                             mListView.setAdapter(adapter = new RecommendListAdapter(context, newList, false));
@@ -211,15 +206,21 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                         }
                         setListener();
                         tipView.setVisibility(View.GONE);
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
-                        tipView.setVisibility(View.VISIBLE);
-                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        if (refreshType == 1) {
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        } else {
+                            ToastUtils.show_always(context, "数据加载错误");
+                        }
                     }
                 } else {
                     if (refreshType == 1) {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
+                    } else {
+                        ToastUtils.show_always(context, "没有更多数据了");
                     }
                 }
 
@@ -234,9 +235,12 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             @Override
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
-                ToastUtils.showVolleyError(context);
-                tipView.setVisibility(View.VISIBLE);
-                tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                if (refreshType == 1) {
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                } else {
+                    ToastUtils.showVolleyError(context);
+                }
             }
         });
     }
@@ -337,7 +341,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
         try {
             jsonObject.put("CatalogType","-1");
             jsonObject.put("CatalogId", "cn10");
-            jsonObject.put("Size", "10");// 此处需要改成-1
+            jsonObject.put("Size", "10");// 此处需要改成 -1
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -386,9 +390,6 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
         });
     }
 
-
-
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -406,24 +407,23 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             dbDao = null;
         }
     }
-  /*  public class PicassoImageLoader extends ImageLoader {
-        @Override
-        public void displayImage(Context context, Object path, ImageView imageView) {
-            *//**
-             注意：
-             1.图片加载器由自己选择，这里不限制，只是提供几种使用方法
-             2.返回的图片路径为Object类型，由于不能确定你到底使用的那种图片加载器，
-             传输的到的是什么格式，那么这种就使用Object接收和返回，你只需要强转成你传输的类型就行，
-             切记不要胡乱强转！
-             *//*
-                String contentImg=path.toString();
-                if (!contentImg.startsWith("http")) {
-                    contentImg = GlobalConfig.imageurl + contentImg;
-                }
-                contentImg = AssembleImageUrlUtils.assembleImageUrl150(contentImg);
-                Picasso.with(context).load(contentImg.replace("\\/", "/")).resize(50,50).centerCrop().into(imageView);
-        }
 
-
-    }*/
+//    public class PicassoImageLoader extends ImageLoader {
+//        @Override
+//        public void displayImage(Context context, Object path, ImageView imageView) {
+//            /**
+//             注意：
+//             1.图片加载器由自己选择，这里不限制，只是提供几种使用方法
+//             2.返回的图片路径为Object类型，由于不能确定你到底使用的那种图片加载器，
+//             传输的到的是什么格式，那么这种就使用Object接收和返回，你只需要强转成你传输的类型就行，
+//             切记不要胡乱强转！
+//             */
+//            String contentImg = path.toString();
+//            if (!contentImg.startsWith("http")) {
+//                contentImg = GlobalConfig.imageurl + contentImg;
+//            }
+//            contentImg = AssembleImageUrlUtils.assembleImageUrl150(contentImg);
+//            Picasso.with(context).load(contentImg.replace("\\/", "/")).resize(50,50).centerCrop().into(imageView);
+//        }
+//    }
 }

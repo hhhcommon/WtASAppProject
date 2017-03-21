@@ -27,13 +27,13 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
-import com.woting.ui.home.search.main.SearchLikeActivity;
 import com.woting.ui.home.search.adapter.SearchContentAdapter;
+import com.woting.ui.home.search.main.SearchLikeActivity;
+import com.woting.ui.home.search.main.SearchLikeFragment;
 import com.woting.ui.home.search.model.SuperRankInfo;
 import com.woting.ui.main.MainActivity;
 
@@ -269,11 +269,11 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                 } else if (MediaType != null && MediaType.equals("SEQU")) {
                     AlbumFragment fragment = new AlbumFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putInt("fromType", 2);
+                    bundle.putInt("fromType", 7);
                     bundle.putString("type", "search");
                     bundle.putSerializable("list", list.get(groupPosition).getList().get(childPosition));
                     fragment.setArguments(bundle);
-                    HomeActivity.open(fragment);
+                    SearchLikeActivity.open(fragment);
                 } else {
                     ToastUtils.show_always(context, "暂不支持的Type类型");
                 }
@@ -284,7 +284,7 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
 
     @Override
     public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-        SearchLikeActivity.updateViewPage(list.get(groupPosition).getKey());
+        SearchLikeFragment.updateViewPage(list.get(groupPosition).getKey());
         return true;
     }
 

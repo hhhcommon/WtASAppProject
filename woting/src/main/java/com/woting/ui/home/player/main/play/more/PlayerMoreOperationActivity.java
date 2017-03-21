@@ -13,7 +13,6 @@ import com.woting.ui.main.MainActivity;
  */
 public class PlayerMoreOperationActivity extends FragmentActivity {
     private static PlayerMoreOperationActivity context;
-    public static boolean isVisible = true;// 是否可见
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +31,6 @@ public class PlayerMoreOperationActivity extends FragmentActivity {
                 .commit();
         if (context.getSupportFragmentManager().getBackStackEntryCount() > 0) {
             MainActivity.hideOrShowTab(false);
-            isVisible = false;
         }
     }
 

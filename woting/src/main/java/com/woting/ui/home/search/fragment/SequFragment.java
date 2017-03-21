@@ -31,11 +31,11 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
-import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
+import com.woting.ui.home.search.main.SearchLikeActivity;
 import com.woting.ui.main.MainActivity;
 import com.woting.ui.mine.favorite.adapter.FavorListAdapter;
 
@@ -179,11 +179,11 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
                     } else if(MediaType.equals("SEQU")) {
                         AlbumFragment fragment = new AlbumFragment();
                         Bundle bundle = new Bundle();
-                        bundle.putInt("fromType", 2);
+                        bundle.putInt("fromType", 7);
                         bundle.putString("type", "search");
                         bundle.putSerializable("list", newList.get(position - 1));
                         fragment.setArguments(bundle);
-                        HomeActivity.open(fragment);
+                        SearchLikeActivity.open(fragment);
                     } else {
                         ToastUtils.show_always(context, "暂不支持的Type类型");
                     }

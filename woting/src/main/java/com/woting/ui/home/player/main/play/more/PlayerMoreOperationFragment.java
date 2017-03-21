@@ -226,7 +226,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                 shareDialog.show();
                 break;
             case R.id.text_details:// 节目详情
-                ToastUtils.show_always(context, "节目详情");
+                PlayerMoreOperationActivity.open(new PlayDetailsFragment());
                 break;
             case R.id.text_anchor:// 查看主播
                 if (!CommonHelper.checkNetwork(context)) return;
