@@ -194,6 +194,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
     private void registerReceiver() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(BroadcastConstants.UPDATE_PLAY_VIEW);
+        filter.addAction(BroadcastConstants.UPDATE_DOWN_LOAD_VIEW);
         context.registerReceiver(mReceiver, filter);
     }
 
@@ -202,10 +203,16 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action != null && action.equals(BroadcastConstants.UPDATE_PLAY_VIEW)) {// 播放节目发生改变时界面需要更新
-                resetView();
-            } else if (action != null && action.equals(BroadcastConstants.UPDATE_PLAY_IMAGE)) {
-                isPlaying = intent.getBooleanExtra(StringConstant.PLAY_IMAGE, false);
+            switch (action) {
+                case BroadcastConstants.UPDATE_PLAY_VIEW:
+                    resetView();
+                    break;
+                case BroadcastConstants.UPDATE_PLAY_IMAGE:
+                    isPlaying = intent.getBooleanExtra(StringConstant.PLAY_IMAGE, false);
+                    break;
+                case BroadcastConstants.UPDATE_DOWN_LOAD_VIEW:// 更新已下载
+                    resetView();
+                    break;
             }
         }
     };

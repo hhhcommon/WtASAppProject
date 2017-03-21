@@ -70,6 +70,7 @@ public class DownLoadAudioFragment extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_download_audio, container, false);
+            rootView.setOnClickListener(this);
             initView();
             if (receiver == null) {
                 receiver = new MessageReceiver();

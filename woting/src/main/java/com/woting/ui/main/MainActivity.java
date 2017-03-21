@@ -275,7 +275,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
             String a = android.os.Build.VERSION.RELEASE;
             Log.e("系统版本号", a + "");
             Log.e("系统版本号截取", a.substring(0, a.indexOf(".")) + "");
-            v = false;
             if (Integer.parseInt(a.substring(0, a.indexOf("."))) >= 5) {
                 v = true;
             }
@@ -841,6 +840,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_selected);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+        hideOrShowTab(true);
     }
 
     // 享讲
@@ -850,6 +850,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_selected);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+        hideOrShowTab(true);
     }
 
     // 我的
@@ -859,6 +860,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_selected);
+        hideOrShowTab(true);
     }
 
     // 更多

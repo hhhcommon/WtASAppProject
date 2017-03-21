@@ -298,6 +298,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             filter.addAction(BroadcastConstants.LK_TTS_PLAY_OVER);// 路况播放完了
 
             // 下载完成更新 LocalUrl
+            filter.addAction(BroadcastConstants.PUSH_DOWN_COMPLETED);
             filter.addAction(BroadcastConstants.ACTION_FINISHED);
             filter.addAction(BroadcastConstants.ACTION_FINISHED_NO_DOWNLOADVIEW);
 
@@ -477,6 +478,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     break;
                 case BroadcastConstants.ACTION_FINISHED:// 更新下载列表
                 case BroadcastConstants.ACTION_FINISHED_NO_DOWNLOADVIEW:
+                case BroadcastConstants.PUSH_DOWN_COMPLETED:
                     if (mPlayer != null) mPlayer.updateLocalList();
                     break;
                 case BroadcastConstants.PLAY_NO_NET:// 播放器没有网络

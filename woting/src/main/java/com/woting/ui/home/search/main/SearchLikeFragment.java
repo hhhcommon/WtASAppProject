@@ -168,6 +168,7 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_searchlike, container, false);
+            rootView.setOnClickListener(this);
 
             setView();// 初始化控件
             dialog();
