@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_bg"
@@ -12,17 +13,20 @@
         android:visibility="gone"/>
 
     <!--存在有下载数据时 显示此布局  -->
-    <LinearLayout
-        android:id="@+id/lin_status_yes"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="visible">
 
         <LinearLayout
+            android:id="@+id/view_linear"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="#f7f7f7"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/WHITE"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -34,15 +38,16 @@
 
                 <ImageView
                     android:id="@+id/img_start"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:src="@mipmap/wt_download_play"/>
 
                 <TextView
                     android:id="@+id/tv_start"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="16sp"
                     android:text="全部开始"/>
 
             </LinearLayout>
@@ -55,14 +60,15 @@
                 android:gravity="center">
 
                 <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:src="@mipmap/wt_download_clear"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="16sp"
                     android:text="全部清空"/>
 
             </LinearLayout>
@@ -73,10 +79,11 @@
             android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:dividerHeight="0.5dp"
+            android:layout_above="@id/view_linear"
             android:divider="@color/text_line_1"
+            android:dividerHeight="0.5dp"
             android:scrollbars="none"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>

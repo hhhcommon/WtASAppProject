@@ -70,6 +70,7 @@ import com.woting.ui.home.player.main.play.PlayerActivity;
 import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
 import com.woting.ui.home.program.citylist.dao.CityInfoDao;
+import com.woting.ui.home.search.main.SearchLikeActivity;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
 import com.woting.ui.interphone.chat.fragment.ChatFragment;
 import com.woting.ui.interphone.chat.model.DBTalkHistorary;
@@ -773,15 +774,17 @@ public class MainActivity extends TabActivity implements OnClickListener {
          * 主页跳转的4个界面
 		 */
         tabHost.addTab(tabHost.newTabSpec("zero").setIndicator("zero")
-                .setContent(new Intent(this, PlayerActivity.class)));
+                .setContent(new Intent(this, PlayerActivity.class)));// 播放
         tabHost.addTab(tabHost.newTabSpec("one").setIndicator("one")
-                .setContent(new Intent(this, HomeActivity.class)));
+                .setContent(new Intent(this, HomeActivity.class)));// 享听
         tabHost.addTab(tabHost.newTabSpec("two").setIndicator("two")
-                .setContent(new Intent(this, DuiJiangActivity.class)));
+                .setContent(new Intent(this, DuiJiangActivity.class)));// 享讲
         tabHost.addTab(tabHost.newTabSpec("five").setIndicator("five")
-                .setContent(new Intent(this, MineActivity.class)));
+                .setContent(new Intent(this, MineActivity.class)));// 我的
         tabHost.addTab(tabHost.newTabSpec("six").setIndicator("six")
-                .setContent(new Intent(this, PlayerMoreOperationActivity.class)));
+                .setContent(new Intent(this, PlayerMoreOperationActivity.class)));// 播放更多
+        tabHost.addTab(tabHost.newTabSpec("seven").setIndicator("seven")
+                .setContent(new Intent(this, SearchLikeActivity.class)));// 搜索
     }
 
     // 切换到播放界面
@@ -826,12 +829,11 @@ public class MainActivity extends TabActivity implements OnClickListener {
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
         hideOrShowTab(true);
-        PlayerActivity.showPlayer();
         PlayerActivity.isVisible = true;
     }
 
     // 享听
-    private static void setViewOne() {
+    public static void setViewOne() {
         tabHost.setCurrentTabByTag("one");
 //        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_selected);
@@ -870,6 +872,15 @@ public class MainActivity extends TabActivity implements OnClickListener {
     // 更多
     public static void setViewSix() {
         tabHost.setCurrentTabByTag("six");
+        image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
+        image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
+        image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
+        hideOrShowTab(false);
+    }
+
+    // 搜索
+    public static void setViewSeven() {
+        tabHost.setCurrentTabByTag("seven");
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);

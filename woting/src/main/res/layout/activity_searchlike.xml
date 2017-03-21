@@ -7,6 +7,12 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical" >
 
+    <View
+        android:id="@+id/tv_main"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:visibility="gone"/>
+
     <!-- 搜索状态第一种 -->
 
     <LinearLayout

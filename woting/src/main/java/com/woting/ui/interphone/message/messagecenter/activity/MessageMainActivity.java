@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.view.KeyEvent;
 import android.view.WindowManager;
 
 import com.woting.R;
@@ -39,8 +38,6 @@ public class MessageMainActivity extends FragmentActivity {
 
 	/**
 	 * 打开一个新的fragment
-	 *
-	 * @param frg
 	 */
 	public static void open(Fragment frg) {
 		context.getSupportFragmentManager().beginTransaction()
@@ -61,23 +58,16 @@ public class MessageMainActivity extends FragmentActivity {
 				hide(from).show(to).commit();
 	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
+    @Override
+    public void onBackPressed() {
+        if (context.getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            finish();
+        } else {
+            close();
+        }
+    }
 
-	/*
-     * 手机实体返回按键的处理,硬件不加入
-     */
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (event.getAction() == KeyEvent.ACTION_DOWN && KeyEvent.KEYCODE_BACK == keyCode) {
-			return true;
-		}
-		return super.onKeyDown(keyCode, event);
-	}
-
-	// 设置android app 的字体大小不受系统字体大小改变的影响
+    // 设置 android app 的字体大小不受系统字体大小改变的影响
 	@Override
 	public Resources getResources() {
 		Resources res = super.getResources();

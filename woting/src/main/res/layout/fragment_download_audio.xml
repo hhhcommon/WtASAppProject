@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_bg"
     android:orientation="vertical">
 
     <com.woting.common.widgetui.TipView
@@ -13,11 +12,9 @@
         android:visibility="gone"/>
 
     <ListView
-        android:id="@+id/listView"
+        android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@color/text_line_1"
-        android:dividerHeight="0.5dp"
         android:scrollbars="none"/>
 
 </LinearLayout>

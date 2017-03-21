@@ -1,7 +1,10 @@
 package com.woting.ui.home.player.main.play.more;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,6 +28,7 @@ import com.umeng.socialize.media.UMImage;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -42,9 +46,11 @@ import com.woting.ui.home.player.main.adapter.ImageAdapter;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
 import com.woting.ui.home.player.main.model.ShareModel;
 import com.woting.ui.home.player.main.play.PlayerActivity;
+import com.woting.ui.home.player.timeset.activity.TimerPowerOffActivity;
 import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.album.model.ContentInfo;
 import com.woting.ui.home.program.comment.CommentActivity;
+import com.woting.ui.main.MainActivity;
 import com.woting.ui.mine.favorite.main.FavoriteFragment;
 import com.woting.ui.mine.playhistory.main.PlayHistoryFragment;
 import com.woting.ui.mine.subscriber.activity.SubscriberListFragment;
@@ -63,19 +69,22 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
     private FragmentActivity context;
     private FileInfoDao mFileDao;// 文件相关数据库
 
+    private Dialog shareDialog;// 分享对话框
     private Dialog dialog;
     private View rootView;
     private TextView textPlayName;// 正在播放的节目
     private TextView mPlayAudioTextLike;// 喜欢
     private TextView mPlayAudioTextDownLoad;// 下载
+    private View viewLinear1;
+    private View viewLinear2;
 
-    private Dialog shareDialog;// 分享对话框
+    private boolean isPlaying;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-
+        registerReceiver();
         mFileDao = new FileInfoDao(context);
     }
 
@@ -94,17 +103,32 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
 
     // 初始化视图
     private void initView() {
+        rootView.findViewById(R.id.image_left).setOnClickListener(this);// 返回
+        textPlayName = (TextView) rootView.findViewById(R.id.text_play_name);// 正在播放的节目标题
+        mPlayAudioTextLike = (TextView) rootView.findViewById(R.id.text_like);// 喜欢
+        mPlayAudioTextDownLoad = (TextView) rootView.findViewById(R.id.text_down);// 下载
+
+        viewLinear1 = rootView.findViewById(R.id.view_linear_1);
+        viewLinear2 = rootView.findViewById(R.id.view_linear_2);
+        if (GlobalConfig.playerObject == null) {
+            viewLinear1.setVisibility(View.GONE);
+            viewLinear2.setVisibility(View.GONE);
+            return ;
+        }
+
+        resetView();
+    }
+
+    // 播放节目发生变化时需要更新的 View
+    private void resetView() {
         String type = GlobalConfig.playerObject.getMediaType();// 正在播放的节目类型
 
         // 正在播放的节目
-        textPlayName = (TextView) rootView.findViewById(R.id.text_play_name);
         String name = GlobalConfig.playerObject.getContentName();
         if (name == null) name = "未知";
         textPlayName.setText(name);
 
         // 喜欢
-        mPlayAudioTextLike = (TextView) rootView.findViewById(R.id.text_like);
-        mPlayAudioTextLike.setOnClickListener(this);
         String contentFavorite = GlobalConfig.playerObject.getContentFavorite();
         if (type != null && type.equals("TTS")) {// TTS 不支持喜欢
             mPlayAudioTextLike.setClickable(false);
@@ -126,8 +150,6 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
         }
 
         // 下载
-        mPlayAudioTextDownLoad = (TextView) rootView.findViewById(R.id.text_down);
-        mPlayAudioTextDownLoad.setOnClickListener(this);
         if (type != null && type.equals("AUDIO")) {// 可以下载
             if (!TextUtils.isEmpty(GlobalConfig.playerObject.getLocalurl())) {// 已下载
                 mPlayAudioTextDownLoad.setClickable(false);
@@ -159,6 +181,8 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
         rootView.findViewById(R.id.text_sequ).setOnClickListener(this);// 查看专辑
         rootView.findViewById(R.id.text_anchor).setOnClickListener(this);// 查看主播
         rootView.findViewById(R.id.text_timer).setOnClickListener(this);// 定时关闭
+        mPlayAudioTextLike.setOnClickListener(this);// 喜欢
+        mPlayAudioTextDownLoad.setOnClickListener(this);// 下载
 
         rootView.findViewById(R.id.text_history).setOnClickListener(this);// 播放历史
         rootView.findViewById(R.id.text_subscribe).setOnClickListener(this);// 我的订阅
@@ -166,9 +190,32 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
         rootView.findViewById(R.id.text_liked).setOnClickListener(this);// 我喜欢的
     }
 
+    // 注册广播
+    private void registerReceiver() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BroadcastConstants.UPDATE_PLAY_VIEW);
+        context.registerReceiver(mReceiver, filter);
+    }
+
+    // 广播
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action != null && action.equals(BroadcastConstants.UPDATE_PLAY_VIEW)) {// 播放节目发生改变时界面需要更新
+                resetView();
+            } else if (action != null && action.equals(BroadcastConstants.UPDATE_PLAY_IMAGE)) {
+                isPlaying = intent.getBooleanExtra(StringConstant.PLAY_IMAGE, false);
+            }
+        }
+    };
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.image_left:// 返回
+                MainActivity.change();
+                break;
             case R.id.text_like:// 喜欢
                 sendFavorite();
                 break;
@@ -186,13 +233,13 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                 ToastUtils.show_always(context, "查看主播");
                 break;
             case R.id.text_timer:// 定时关闭
-//                Intent intentTimeOff = new Intent(context, TimerPowerOffActivity.class);
-//                if (isPlaying) {
-//                    intentTimeOff.putExtra(StringConstant.IS_PLAYING, true);
-//                } else {
-//                    intentTimeOff.putExtra(StringConstant.IS_PLAYING, false);
-//                }
-//                startActivity(intentTimeOff);
+                Intent intentTimeOff = new Intent(context, TimerPowerOffActivity.class);
+                if (isPlaying) {
+                    intentTimeOff.putExtra(StringConstant.IS_PLAYING, true);
+                } else {
+                    intentTimeOff.putExtra(StringConstant.IS_PLAYING, false);
+                }
+                startActivity(intentTimeOff);
                 break;
             case R.id.text_sequ:// 查看专辑
                 if (!CommonHelper.checkNetwork(context)) return;
@@ -462,5 +509,11 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(context).onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        context.unregisterReceiver(mReceiver);
     }
 }

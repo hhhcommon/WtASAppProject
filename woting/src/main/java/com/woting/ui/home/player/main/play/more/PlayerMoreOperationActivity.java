@@ -39,10 +39,6 @@ public class PlayerMoreOperationActivity extends FragmentActivity {
     // 关闭已经打开的 Fragment
     public static void close() {
         context.getSupportFragmentManager().popBackStackImmediate();
-        if (context.getSupportFragmentManager().getBackStackEntryCount() == 1) {
-            MainActivity.hideOrShowTab(true);
-            isVisible = true;
-        }
     }
 
     @Override

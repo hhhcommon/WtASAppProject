@@ -19,18 +19,23 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 /**
- * 下载的专辑数据展示
+ * 下载的声音数据展示
  */
-public class DownLoadSequAdapter extends BaseAdapter {
+public class DownLoadAudioAdapter extends BaseAdapter {
     private List<FileInfo> list;
     private Context context;
-    private downloadSequCheck downloadCheck;
+    private DownloadAudioCheck downloadCheck;
     private DecimalFormat df;
 
-    public DownLoadSequAdapter(Context context, List<FileInfo> list) {
+    public DownLoadAudioAdapter(Context context, List<FileInfo> list) {
         this.context = context;
         this.list = list;
         df = new DecimalFormat("0.00");
+    }
+
+    public void setList(List<FileInfo> list) {
+        this.list = list;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -48,7 +53,7 @@ public class DownLoadSequAdapter extends BaseAdapter {
         return position;
     }
 
-    public void setOnListener(downloadSequCheck downloadCheck) {
+    public void setOnListener(DownloadAudioCheck downloadCheck) {
         this.downloadCheck = downloadCheck;
     }
 
@@ -67,6 +72,7 @@ public class DownLoadSequAdapter extends BaseAdapter {
             holder.textTitle = (TextView) convertView.findViewById(R.id.RankTitle);// 专辑或节目名
             holder.textContent = (TextView) convertView.findViewById(R.id.RankContent);// 来源
             holder.textCount = (TextView) convertView.findViewById(R.id.tv_count);// 专辑集数
+            holder.imageCount = (ImageView) convertView.findViewById(R.id.image_count);// 图标
             holder.textSum = (TextView) convertView.findViewById(R.id.tv_sum);// 文件大小
             holder.imageDel = (ImageView) convertView.findViewById(R.id.image_del);// 删除
             convertView.setTag(holder);
@@ -75,6 +81,8 @@ public class DownLoadSequAdapter extends BaseAdapter {
         }
 
         FileInfo lists = list.get(position);
+        holder.imageCount.setVisibility(View.GONE);
+        holder.textCount.setVisibility(View.GONE);
 
         // 封面图片
         String contentImage = lists.getSequimgurl();
@@ -87,7 +95,7 @@ public class DownLoadSequAdapter extends BaseAdapter {
         }
 
         // 专辑或节目名
-        String contentTitle = lists.getSequname();
+        String contentTitle = lists.getFileName();
         if (contentTitle == null || contentTitle.equals("")) {
             contentTitle = "未知";
         }
@@ -100,19 +108,18 @@ public class DownLoadSequAdapter extends BaseAdapter {
         }
         holder.textContent.setText(contentFrom);
 
-        // 专辑集数
-        long count = lists.getCount();
-        if (count == -1) {
-            count = 0;
-        }
-        holder.textCount.setText(count + "集");
-
         // 文件大小
-        int sum = lists.getSum();
-        if (sum == -1) {
-            sum = 0;
+        int end;
+        try {
+            end = lists.getEnd();
+            if (end <= 0) {
+                end = 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            end = 0;
         }
-        holder.textSum.setText(df.format(sum / 1000.0 / 1000.0) + "MB");
+        holder.textSum.setText(new DecimalFormat("0.00").format(end / 1000.0 / 1000.0) + "MB");
 
         // 删除
         holder.imageDel.setOnClickListener(new View.OnClickListener() {
@@ -124,7 +131,7 @@ public class DownLoadSequAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public interface downloadSequCheck {
+    public interface DownloadAudioCheck {
         void delPosition(int position);
     }
 
@@ -134,6 +141,7 @@ public class DownLoadSequAdapter extends BaseAdapter {
         public TextView textTitle;// 专辑或节目名
         public TextView textContent;// 来源
         public TextView textCount;// 专辑集数
+        public ImageView imageCount;// 图标
         public TextView textSum;// 文件大小
         public ImageView imageDel;// 删除
     }

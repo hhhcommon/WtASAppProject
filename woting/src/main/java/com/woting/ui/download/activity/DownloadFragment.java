@@ -1,5 +1,6 @@
 package com.woting.ui.download.activity;
 
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
@@ -20,11 +21,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.woting.R;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.PhoneMessage;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.download.fragment.DownLoadAudioFragment;
 import com.woting.ui.download.fragment.DownLoadSequFragment;
 import com.woting.ui.download.fragment.DownLoadUnCompletedFragment;
+import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
 
 import java.util.ArrayList;
 
@@ -43,7 +46,10 @@ public class DownloadFragment extends Fragment implements OnClickListener {
     private ViewPager viewDownload;
 
     private ImageView image;
+    private static TextView textClearSequ;// 清空已经下载的专辑
+    private static TextView textClearAudio;// 清空已经下载的专辑
 
+    private int currentIndex;// 当前所在界面  == 0 下载的专辑  == 1 下载的声音  == 2 正在下载的声音
     private int bmpW;
     private int offset;
 
@@ -51,7 +57,17 @@ public class DownloadFragment extends Fragment implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.image_left:// 返回
+                PlayerMoreOperationActivity.close();
+                break;
+            case R.id.text_clear_sequ:// 清空下载的专辑
+                context.sendBroadcast(new Intent(BroadcastConstants.DOWNLOAD_CLEAR_EMPTY_SEQU));
+                break;
+            case R.id.text_clear_audio:// 清空下载的声音
+                context.sendBroadcast(new Intent(BroadcastConstants.DOWNLOAD_CLEAR_EMPTY_AUDIO));
+                break;
+        }
     }
 
     @Override
@@ -81,6 +97,18 @@ public class DownloadFragment extends Fragment implements OnClickListener {
         isVisible = true;
     }
 
+    // 专辑 有数据时"清空"显示
+    public static void setVisibleSequ(boolean isVisible) {
+        if (isVisible) textClearSequ.setVisibility(View.VISIBLE);
+        else textClearSequ.setVisibility(View.GONE);
+    }
+
+    // 声音 有数据时"清空"显示
+    public static void setVisibleAudio(boolean isVisible) {
+        if (isVisible) textClearAudio.setVisibility(View.VISIBLE);
+        else textClearAudio.setVisibility(View.GONE);
+    }
+
     // 适配顶栏样式
     private void setType() {
         String a = android.os.Build.VERSION.RELEASE;
@@ -100,10 +128,17 @@ public class DownloadFragment extends Fragment implements OnClickListener {
 
     // 设置界面
     private void setView() {
+        rootView.findViewById(R.id.image_left).setOnClickListener(this);// 返回
         textSequ = (TextView) rootView.findViewById(R.id.text_sequ);// 下载的专辑
         textAudio = (TextView) rootView.findViewById(R.id.text_audio);// 下载的节目
         textDown = (TextView) rootView.findViewById(R.id.text_down);// 正在下载的节目
         viewDownload = (ViewPager) rootView.findViewById(R.id.viewpager);
+
+        textClearSequ = (TextView) rootView.findViewById(R.id.text_clear_sequ);// 清空已经下载的专辑
+        textClearSequ.setOnClickListener(this);
+
+        textClearAudio = (TextView) rootView.findViewById(R.id.text_clear_audio);// 清空下载的声音
+        textClearAudio.setOnClickListener(this);
     }
 
     private void initViewPager() {
@@ -128,14 +163,22 @@ public class DownloadFragment extends Fragment implements OnClickListener {
             textSequ.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
             textAudio.setTextColor(context.getResources().getColor(R.color.wt_login_third));
             textDown.setTextColor(context.getResources().getColor(R.color.wt_login_third));
+
+            textClearAudio.setVisibility(View.GONE);
+
         } else if (index == 1) {// 下载的节目
             textSequ.setTextColor(context.getResources().getColor(R.color.wt_login_third));
             textAudio.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
             textDown.setTextColor(context.getResources().getColor(R.color.wt_login_third));
+
+            textClearSequ.setVisibility(View.GONE);
+
         } else if (index == 2) {// 正在下载的节目
             textDown.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
             textAudio.setTextColor(context.getResources().getColor(R.color.wt_login_third));
             textSequ.setTextColor(context.getResources().getColor(R.color.wt_login_third));
+            textClearSequ.setVisibility(View.GONE);
+            textClearAudio.setVisibility(View.GONE);
         }
     }
 
@@ -171,7 +214,6 @@ public class DownloadFragment extends Fragment implements OnClickListener {
 
     class MyOnPageChangeListener implements OnPageChangeListener {
         private int one = offset * 2 + bmpW;    // 两个相邻页面的偏移量
-        private int currIndex;
 
         @Override
         public void onPageScrolled(int arg0, float arg1, int arg2) {
@@ -183,11 +225,11 @@ public class DownloadFragment extends Fragment implements OnClickListener {
 
         @Override
         public void onPageSelected(int arg0) {
-            Animation animation = new TranslateAnimation(currIndex * one, arg0 * one, 0, 0);// 平移动画
-            currIndex = arg0;
+            Animation animation = new TranslateAnimation(currentIndex * one, arg0 * one, 0, 0);// 平移动画
+            currentIndex = arg0;
             animation.setFillAfter(true);   // 动画终止时停留在最后一帧，不然会回到没有执行前的状态
-            animation.setDuration(200);     // 动画持续时间0.2秒
-            image.startAnimation(animation);// 是用ImageView来显示动画的
+            animation.setDuration(200);     // 动画持续时间 0.2 秒
+            image.startAnimation(animation);// 是用 ImageView 来显示动画的
             updateView(arg0);
         }
     }
