@@ -18,37 +18,15 @@ import com.woting.ui.main.MainActivity;
 public class PlayerActivity extends FragmentActivity {
     private static PlayerActivity context;
 
-    public static boolean isVisible = true;// 是否显示
-
-    public static PlayerFragment playerFragment;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
         context = this;
+        PlayerActivity.open(new PlayerFragment());
 
-        setType();
-
-        playerFragment = new PlayerFragment();
-        PlayerActivity.open(playerFragment);
-    }
-
-    // 适配顶栏样式
-    private void setType() {
-        String a = android.os.Build.VERSION.RELEASE;
-        Log.e("系统版本号", a + "");
-        Log.e("系统版本号截取", a.substring(0, a.indexOf(".")) + "");
-        boolean v = false;
-        if (Integer.parseInt(a.substring(0, a.indexOf("."))) >= 5) {
-            v = true;
-        }
-        View tv_main = findViewById(R.id.tv_main);
-        if (v) {
-            tv_main.setVisibility(View.VISIBLE);
-        } else {
-            tv_main.setVisibility(View.GONE);
-        }
+        View textMain = findViewById(R.id.tv_main);
+        if (MainActivity.v) textMain.setVisibility(View.VISIBLE);
     }
 
     // 打开新的 Fragment
@@ -59,7 +37,6 @@ public class PlayerActivity extends FragmentActivity {
                 .commitAllowingStateLoss();
         if (context.getSupportFragmentManager().getBackStackEntryCount() > 0) {
             MainActivity.hideOrShowTab(false);
-            PlayerActivity.isVisible = false;
         }
 
         Log.v("TAG", "Player open count -- > " + context.getSupportFragmentManager().getBackStackEntryCount());
@@ -70,8 +47,6 @@ public class PlayerActivity extends FragmentActivity {
         context.getSupportFragmentManager().popBackStackImmediate();
         if (context.getSupportFragmentManager().getBackStackEntryCount() == 1) {
             MainActivity.hideOrShowTab(true);
-            if (PlayerFragment.frag != null) PlayerFragment.frag = null;
-            PlayerActivity.isVisible = true;
         }
     }
 
@@ -79,7 +54,7 @@ public class PlayerActivity extends FragmentActivity {
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1 || PlayerActivity.isVisible) {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             MainActivity.hideOrShowTab(true);
             long time = System.currentTimeMillis();
             if (time - tempTime <= 2000) {

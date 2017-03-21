@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <View
-        android:id="@+id/view"
+        android:id="@+id/tv_main"
         android:layout_width="match_parent"
         android:layout_height="24dp"
         android:visibility="gone"/>

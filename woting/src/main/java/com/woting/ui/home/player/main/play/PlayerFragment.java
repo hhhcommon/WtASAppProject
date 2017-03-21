@@ -57,7 +57,6 @@ import com.woting.ui.home.player.main.model.LanguageSearch;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
-import com.woting.ui.home.search.main.SearchLikeActivity;
 import com.woting.ui.interphone.message.messagecenter.activity.MessageMainActivity;
 import com.woting.ui.main.MainActivity;
 import com.woting.video.IntegrationPlayer;
@@ -91,7 +90,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private VoiceRecognizer mVoiceRecognizer;// 讯飞
     private MessageReceiver mReceiver;// 广播接收
     private PlayerListAdapter adapter;
-    public static SearchLikeActivity frag;// 搜索
 
     private Dialog dialog;// 加载数据对话框
     private Dialog wifiDialog;// WIFI 提醒对话框
@@ -336,7 +334,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         switch (v.getId()) {
             case R.id.lin_find:// 搜索
                 MainActivity.setViewSeven();
-                PlayerActivity.isVisible = false;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

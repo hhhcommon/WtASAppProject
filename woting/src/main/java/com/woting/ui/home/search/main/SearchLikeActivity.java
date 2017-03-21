@@ -32,30 +32,14 @@ public class SearchLikeActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_searchlike);
         context = this;
-        setType();
+        View textMain = findViewById(R.id.tv_main);
+        if (MainActivity.v) textMain.setVisibility(View.VISIBLE);
 
         IntentFilter mFilter = new IntentFilter();
         mFilter.addAction(BroadcastConstants.FROM_ACTIVITY);
         registerReceiver(mReceiver, mFilter);
 
         open(new SearchLikeFragment());
-    }
-
-    // 适配顶栏样式
-    private void setType() {
-        String a = android.os.Build.VERSION.RELEASE;
-        Log.e("系统版本号", a + "");
-        Log.e("系统版本号截取", a.substring(0, a.indexOf(".")) + "");
-        boolean v = false;
-        if (Integer.parseInt(a.substring(0, a.indexOf("."))) >= 5) {
-            v = true;
-        }
-        View tv_main = findViewById(R.id.tv_main);
-        if (v) {
-            tv_main.setVisibility(View.VISIBLE);
-        } else {
-            tv_main.setVisibility(View.GONE);
-        }
     }
 
     // 打开新的 Fragment

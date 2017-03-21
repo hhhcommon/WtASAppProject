@@ -6,6 +6,12 @@
     android:background="@color/dinglan_orange"
     android:orientation="vertical">
 
+    <View
+        android:id="@+id/tv_main"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:visibility="gone"/>
+
     <FrameLayout
         android:id="@+id/fragment_content"
         android:layout_width="match_parent"

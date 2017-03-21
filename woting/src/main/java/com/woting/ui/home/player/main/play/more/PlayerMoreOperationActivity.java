@@ -3,6 +3,7 @@ package com.woting.ui.home.player.main.play.more;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
 
 import com.woting.R;
 import com.woting.common.util.SequenceUUID;
@@ -18,8 +19,9 @@ public class PlayerMoreOperationActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player_more_operation);
-
         context = this;
+        View textMain = findViewById(R.id.tv_main);
+        if (MainActivity.v) textMain.setVisibility(View.VISIBLE);
         open(new PlayerMoreOperationFragment());
     }
 

@@ -2,6 +2,7 @@ package com.woting.ui.main;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.TabActivity;
 import android.content.BroadcastReceiver;
@@ -11,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -124,6 +126,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private String tag = "MAIN_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
     private boolean isFirst = true;
+    public static boolean v;
 
     private List<CatalogName> list;
     private NetWorkChangeReceiver netWorkChangeReceiver = null;
@@ -178,7 +181,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wt_main);
-
+        setType();                        // 设置顶栏样式
         BVideoView videoView = (BVideoView) findViewById(R.id.video_view);
         videoView.setVideoPath(null);
         videoView.start();
@@ -201,7 +204,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         upDataType = 1;                   // 不需要强制升级
         update();                         // 获取版本数据
         InitTextView();                   // 设置界面
-        setType();                        // 设置顶栏样式
         InitDao();
         getTXL();
         tabHost.setCurrentTabByTag("zero");
@@ -267,12 +269,13 @@ public class MainActivity extends TabActivity implements OnClickListener {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     private void setType() {
         try {
             String a = android.os.Build.VERSION.RELEASE;
             Log.e("系统版本号", a + "");
             Log.e("系统版本号截取", a.substring(0, a.indexOf(".")) + "");
-            boolean v = false;
+            v = false;
             if (Integer.parseInt(a.substring(0, a.indexOf("."))) >= 5) {
                 v = true;
             }
@@ -829,7 +832,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
         hideOrShowTab(true);
-        PlayerActivity.isVisible = true;
     }
 
     // 享听
@@ -839,11 +841,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_selected);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
-        if (HomeActivity.isVisible) {
-            hideOrShowTab(true);
-        } else {
-            hideOrShowTab(false);
-        }
     }
 
     // 享讲
@@ -862,11 +859,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_selected);
-        if (MineActivity.isVisible) {
-            hideOrShowTab(true);
-        } else {
-            hideOrShowTab(false);
-        }
     }
 
     // 更多
