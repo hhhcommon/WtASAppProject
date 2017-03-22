@@ -174,7 +174,6 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                 }
             }
         });
-
     }
 
     // ListView 的 Item 的监听事件
@@ -250,6 +249,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
+                Log.v("专辑 Program", "数据 -- > " + result.toString());
                 try {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {

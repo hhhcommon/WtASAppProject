@@ -120,7 +120,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/WHITE"
-        android:layout_marginBottom="20dp"
         android:paddingTop="20dp"
         android:paddingBottom="10dp"
         android:gravity="center">
@@ -186,6 +185,47 @@
             android:gravity="center"
             android:drawablePadding="10dp"/>
 
+        <TextView
+            android:id="@+id/text_report_1"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="举报"
+            android:textSize="15sp"
+            android:textColor="@color/wt_login_third"
+            android:drawableTop="@mipmap/wt_play_ly_timeover"
+            android:gravity="center"
+            android:visibility="gone"
+            android:drawablePadding="10dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/view_linear_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/WHITE"
+        android:paddingTop="20dp"
+        android:paddingBottom="10dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/text_report_2"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="举报"
+            android:textSize="15sp"
+            android:textColor="@color/wt_login_third"
+            android:drawableTop="@mipmap/wt_play_ly_timeover"
+            android:gravity="center"
+            android:drawablePadding="10dp"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_weight="3"/>
+
     </LinearLayout>
 
     <TextView
@@ -195,6 +235,7 @@
         android:text="听其他"
         android:textColor="@color/dinglan_orange"
         android:gravity="center_vertical"
+        android:layout_marginTop="20dp"
         android:paddingLeft="14dp"
         android:textSize="16sp"/>
 
@@ -252,6 +293,20 @@
             android:drawablePadding="10dp"
             android:drawableTop="@mipmap/wt_dianzan_select"
             android:gravity="center"/>
+
+        <View
+            android:id="@+id/view_1"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:layout_width="0dp"
+            android:layout_height="10dp"/>
+
+        <View
+            android:id="@+id/view_2"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:layout_width="0dp"
+            android:layout_height="10dp"/>
 
     </LinearLayout>
 

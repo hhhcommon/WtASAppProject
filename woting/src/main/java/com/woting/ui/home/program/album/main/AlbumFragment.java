@@ -449,15 +449,16 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
                 }
                 break;
             case R.id.head_right_btn://  举报
-                if(!TextUtils.isEmpty(id)){
-                AccuseFragment fragment = new AccuseFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("ContentId", id);
-                bundle.putString("MediaType","SEQU");
-                fragment.setArguments(bundle);
-                HomeActivity.open(fragment);
-                }else{
-                    ToastUtils.show_always(context,"获取本专辑信息有误，请回退回上一级界面重试");
+                if (!TextUtils.isEmpty(id)) {
+                    AccuseFragment fragment = new AccuseFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_HOME);
+                    bundle.putString("ContentId", id);
+                    bundle.putString("MediaType", StringConstant.TYPE_SEQU);
+                    fragment.setArguments(bundle);
+                    HomeActivity.open(fragment);
+                } else {
+                    ToastUtils.show_always(context, "获取本专辑信息有误，请回退回上一级界面重试");
                 }
                 break;
         }
@@ -465,7 +466,7 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
 
     public static void setFlag(String contentSubscribe) {
         flag = Integer.valueOf(contentSubscribe);
-        if(flag == 0) {
+        if (flag == 0) {
             textSubscriber.setText("订阅");
 //            imageSubscriber
         } else {
