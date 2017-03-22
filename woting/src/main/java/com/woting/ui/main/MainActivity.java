@@ -840,7 +840,11 @@ public class MainActivity extends TabActivity implements OnClickListener {
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_selected);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_normal);
-        hideOrShowTab(true);
+        if (HomeActivity.isHide) {
+            hideOrShowTab(false);
+        } else {
+            hideOrShowTab(true);
+        }
     }
 
     // 享讲
@@ -860,7 +864,11 @@ public class MainActivity extends TabActivity implements OnClickListener {
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
         image2.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_discover_normal);
         image5.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_mine_selected);
-        hideOrShowTab(true);
+        if (MineActivity.isHide) {
+            hideOrShowTab(false);
+        } else {
+            hideOrShowTab(true);
+        }
     }
 
     // 更多

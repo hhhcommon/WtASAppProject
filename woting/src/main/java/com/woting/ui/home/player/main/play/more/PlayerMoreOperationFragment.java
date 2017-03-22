@@ -26,6 +26,7 @@ import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.woting.R;
+import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.IntegerConstant;
@@ -77,6 +78,9 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
     private View viewLinear1;
     private View viewLinear2;
 
+    private TextView textLiked;// 我喜欢的
+    private TextView textSubscribe;// 我的订阅
+
     private boolean isPlaying;
     private String contentFavorite;
 
@@ -108,19 +112,33 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
         mPlayAudioTextLike = (TextView) rootView.findViewById(R.id.text_like);// 喜欢
         mPlayAudioTextDownLoad = (TextView) rootView.findViewById(R.id.text_down);// 下载
 
+        textLiked = (TextView) rootView.findViewById(R.id.text_liked);// 我喜欢的
+        textSubscribe = (TextView) rootView.findViewById(R.id.text_subscribe);// 我的订阅
+
         viewLinear1 = rootView.findViewById(R.id.view_linear_1);
         viewLinear2 = rootView.findViewById(R.id.view_linear_2);
-        if (GlobalConfig.playerObject == null) {
-            viewLinear1.setVisibility(View.GONE);
-            viewLinear2.setVisibility(View.GONE);
-            return ;
-        }
 
         resetView();
     }
 
     // 播放节目发生变化时需要更新的 View
     private void resetView() {
+        String isLogin = BSApplication.SharedPreferences.getString(StringConstant.ISLOGIN, "false");
+        if (isLogin.equals("false")) {// 没有登录
+            textLiked.setVisibility(View.GONE);
+            textSubscribe.setVisibility(View.GONE);
+        } else {// 登录状态
+            textLiked.setVisibility(View.VISIBLE);
+            textSubscribe.setVisibility(View.VISIBLE);
+        }
+        if (GlobalConfig.playerObject == null) {
+            viewLinear1.setVisibility(View.GONE);
+            viewLinear2.setVisibility(View.GONE);
+            return ;
+        } else {
+            viewLinear1.setVisibility(View.VISIBLE);
+            viewLinear2.setVisibility(View.VISIBLE);
+        }
         String type = GlobalConfig.playerObject.getMediaType();// 正在播放的节目类型
         contentFavorite = GlobalConfig.playerObject.getContentFavorite();// == 0 还没喜欢  == 1 已经喜欢
         if (contentFavorite == null) contentFavorite = "0";
@@ -185,10 +203,11 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
         mPlayAudioTextLike.setOnClickListener(this);// 喜欢
         mPlayAudioTextDownLoad.setOnClickListener(this);// 下载
 
+        textLiked.setOnClickListener(this);// 我喜欢的
+        textSubscribe.setOnClickListener(this);// 我的订阅
+
         rootView.findViewById(R.id.text_history).setOnClickListener(this);// 播放历史
-        rootView.findViewById(R.id.text_subscribe).setOnClickListener(this);// 我的订阅
         rootView.findViewById(R.id.text_local).setOnClickListener(this);// 我的下载
-        rootView.findViewById(R.id.text_liked).setOnClickListener(this);// 我喜欢的
     }
 
     // 注册广播
@@ -196,6 +215,8 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
         IntentFilter filter = new IntentFilter();
         filter.addAction(BroadcastConstants.UPDATE_PLAY_VIEW);
         filter.addAction(BroadcastConstants.UPDATE_DOWN_LOAD_VIEW);
+        filter.addAction(BroadcastConstants.UPDATE_PLAY_IMAGE);
+        filter.addAction(BroadcastConstants.PUSH_ALLURL_CHANGE);
         context.registerReceiver(mReceiver, filter);
     }
 
@@ -212,6 +233,9 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                     isPlaying = intent.getBooleanExtra(StringConstant.PLAY_IMAGE, false);
                     break;
                 case BroadcastConstants.UPDATE_DOWN_LOAD_VIEW:// 更新已下载
+                    resetView();
+                    break;
+                case BroadcastConstants.PUSH_ALLURL_CHANGE:// 登录状态发生改变
                     resetView();
                     break;
             }

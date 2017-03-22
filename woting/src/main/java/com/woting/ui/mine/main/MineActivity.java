@@ -19,6 +19,8 @@ public class MineActivity extends FragmentActivity {
     private static MineActivity context;
     private static View textMain;
 
+    public static boolean isHide;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +40,7 @@ public class MineActivity extends FragmentActivity {
         if (context.getSupportFragmentManager().getBackStackEntryCount() > 0) {
             MainActivity.hideOrShowTab(false);
             if (MainActivity.v) textMain.setVisibility(View.VISIBLE);
+            isHide = true;
         }
     }
 
@@ -46,6 +49,7 @@ public class MineActivity extends FragmentActivity {
         context.getSupportFragmentManager().popBackStackImmediate();
         if (context.getSupportFragmentManager().getBackStackEntryCount() == 1) {
             MainActivity.hideOrShowTab(true);
+            isHide = false;
             textMain.setVisibility(View.GONE);
         }
     }

@@ -566,7 +566,6 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -632,12 +631,10 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -702,7 +699,6 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
             viewChange(index);
         } else {
             ToastUtils.show_always(context, "传进来的mediaType值为空");
-
         }
     }
 
