@@ -14,6 +14,8 @@ import android.view.View;
 
 import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.IntegerConstant;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.SequenceUUID;
 import com.woting.ui.main.MainActivity;
 
@@ -24,7 +26,7 @@ import com.woting.ui.main.MainActivity;
  */
 public class SearchLikeActivity extends FragmentActivity {
     private static SearchLikeActivity context;
-    public static String fromType = "-1";
+    public static int fromType = -1;
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
@@ -61,9 +63,9 @@ public class SearchLikeActivity extends FragmentActivity {
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-            if (fromType.equals("HOME")) {
+            if (fromType == IntegerConstant.TAG_HOME) {
                 MainActivity.setViewOne();
-            } else if (fromType.equals("PLAY")) {
+            } else if (fromType == IntegerConstant.TAG_PLAY) {
                 MainActivity.change();
             }
         } else {
@@ -77,7 +79,7 @@ public class SearchLikeActivity extends FragmentActivity {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(BroadcastConstants.FROM_ACTIVITY)) {
-                fromType = intent.getStringExtra("fromType");
+                fromType = intent.getIntExtra(StringConstant.FROM_TYPE, -1);
                 Log.v("TAG", "fromType -- > > " + fromType);
             }
         }

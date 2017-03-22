@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.widgetui.MyViewPager;
@@ -96,7 +97,7 @@ public class PlayHistoryFragment extends Fragment implements OnClickListener {
         dbDao = new SearchPlayerHistoryDao(context);// 初始化数据库
 
         Bundle bundle = getArguments();
-        fromType = bundle.getInt("fromType");
+        fromType = bundle.getInt(StringConstant.FROM_TYPE);
     }
 
     @Nullable

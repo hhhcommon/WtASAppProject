@@ -21,6 +21,8 @@ import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
@@ -302,7 +304,7 @@ public class AnchorDetailsFragment extends Fragment implements View.OnClickListe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 AlbumFragment fragment = new AlbumFragment();
                 Bundle bundle = new Bundle();
-                bundle.putInt("fromType", 2);
+                bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_HOME);
                 bundle.putString("type", "main");
                 bundle.putString("id", personInfoList.get(position).getContentId());
                 fragment.setArguments(bundle);

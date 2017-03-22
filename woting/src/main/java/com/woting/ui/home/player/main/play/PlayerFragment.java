@@ -339,7 +339,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     @Override
                     public void run() {
                         Intent intent = new Intent();
-                        intent.putExtra("fromType", "PLAY");
+                        intent.putExtra(StringConstant.FROM_TYPE, IntegerConstant.TAG_PLAY);
                         intent.setAction(BroadcastConstants.FROM_ACTIVITY);
                         context.getApplicationContext().sendBroadcast(intent);
                     }
@@ -757,6 +757,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     // 更新列表界面
     private void updateListView() {
         if (playList == null || playList.size() == 0) return ;
+        if (adapter == null) return ;
         for (int i = 0, size = playList.size(); i < size; i++) {
             if (i == index) {
                 if (isPlaying) playList.get(i).setType("2");

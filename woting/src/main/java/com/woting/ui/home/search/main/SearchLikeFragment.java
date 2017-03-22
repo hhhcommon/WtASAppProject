@@ -44,6 +44,7 @@ import com.android.volley.VolleyError;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -413,9 +414,9 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_left_btn:// 返回
-                if (SearchLikeActivity.fromType.equals("HOME")) {
+                if (SearchLikeActivity.fromType == IntegerConstant.TAG_HOME) {
                     MainActivity.setViewOne();
-                } else if (SearchLikeActivity.fromType.equals("PLAY")) {
+                } else if (SearchLikeActivity.fromType == IntegerConstant.TAG_PLAY) {
                     MainActivity.change();
                 }
                 break;

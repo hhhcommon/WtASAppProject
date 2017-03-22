@@ -28,6 +28,7 @@ import com.umeng.socialize.media.UMImage;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.CommonUtils;
@@ -45,7 +46,6 @@ import com.woting.ui.download.service.DownloadService;
 import com.woting.ui.home.player.main.adapter.ImageAdapter;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
 import com.woting.ui.home.player.main.model.ShareModel;
-import com.woting.ui.home.player.main.play.PlayerActivity;
 import com.woting.ui.home.player.timeset.activity.TimerPowerOffActivity;
 import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.album.model.ContentInfo;
@@ -55,7 +55,6 @@ import com.woting.ui.mine.favorite.main.FavoriteFragment;
 import com.woting.ui.mine.playhistory.main.PlayHistoryFragment;
 import com.woting.ui.mine.subscriber.activity.SubscriberListFragment;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -79,6 +78,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
     private View viewLinear2;
 
     private boolean isPlaying;
+    private String contentFavorite;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -122,6 +122,8 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
     // 播放节目发生变化时需要更新的 View
     private void resetView() {
         String type = GlobalConfig.playerObject.getMediaType();// 正在播放的节目类型
+        contentFavorite = GlobalConfig.playerObject.getContentFavorite();// == 0 还没喜欢  == 1 已经喜欢
+        if (contentFavorite == null) contentFavorite = "0";
 
         // 正在播放的节目
         String name = GlobalConfig.playerObject.getContentName();
@@ -129,7 +131,6 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
         textPlayName.setText(name);
 
         // 喜欢
-        String contentFavorite = GlobalConfig.playerObject.getContentFavorite();
         if (type != null && type.equals("TTS")) {// TTS 不支持喜欢
             mPlayAudioTextLike.setClickable(false);
             mPlayAudioTextLike.setText("喜欢");
@@ -138,7 +139,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                     null, context.getResources().getDrawable(R.mipmap.wt_dianzan_nomal_gray), null, null);
         } else {
             mPlayAudioTextLike.setClickable(true);
-            if (contentFavorite == null || contentFavorite.equals("0")) {
+            if (contentFavorite.equals("0")) {
                 mPlayAudioTextLike.setText("喜欢");
                 mPlayAudioTextLike.setCompoundDrawablesWithIntrinsicBounds(
                         null, context.getResources().getDrawable(R.mipmap.wt_dianzan_nomal), null, null);
@@ -254,11 +255,11 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                 if (GlobalConfig.playerObject.getSequId() != null) {
                     AlbumFragment fragment = new AlbumFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putInt("fromType", 1);
+                    bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_MORE);
                     bundle.putString("type", "player");
                     bundle.putSerializable("list", GlobalConfig.playerObject);
                     fragment.setArguments(bundle);
-                    PlayerActivity.open(fragment);
+                    PlayerMoreOperationActivity.open(fragment);
                 } else {
                     ToastUtils.show_always(context, "本节目没有所属专辑");
                 }
@@ -281,7 +282,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
             case R.id.text_history:// 播放历史
                 PlayHistoryFragment historyFrag = new PlayHistoryFragment();
                 Bundle bundleHis = new Bundle();
-                bundleHis.putInt("fromType", 6);
+                bundleHis.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_MORE);
                 historyFrag.setArguments(bundleHis);
                 PlayerMoreOperationActivity.open(historyFrag);
                 break;
@@ -298,7 +299,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
             case R.id.text_liked:// 我喜欢的
                 FavoriteFragment favoriteFragment = new FavoriteFragment();
                 Bundle bundle = new Bundle();
-                bundle.putInt("fromType", 6);
+                bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_MORE);
                 favoriteFragment.setArguments(bundle);
                 PlayerMoreOperationActivity.open(favoriteFragment);
                 break;
@@ -312,12 +313,12 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
         try {
             jsonObject.put("MediaType", GlobalConfig.playerObject.getMediaType());
             jsonObject.put("ContentId", GlobalConfig.playerObject.getContentId());
-            if (GlobalConfig.playerObject.getContentFavorite().equals("0")) {
+            if (contentFavorite.equals("0")) {
                 jsonObject.put("Flag", 1);
             } else {
                 jsonObject.put("Flag", 0);
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -330,17 +331,19 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                 try {
                     ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && (ReturnType.equals("1001") || ReturnType.equals("1005"))) {
-                        if (GlobalConfig.playerObject.getContentFavorite().equals("0")) {
+                        if (contentFavorite.equals("0")) {
                             mPlayAudioTextLike.setText("已喜欢");
                             mPlayAudioTextLike.setCompoundDrawablesWithIntrinsicBounds(
                                     null, context.getResources().getDrawable(R.mipmap.wt_dianzan_select), null, null);
-                            GlobalConfig.playerObject.setContentFavorite("1");
+                            contentFavorite = "1";
+                            GlobalConfig.playerObject.setContentFavorite(contentFavorite);
 //                            if (index > 0) playList.get(index).setContentFavorite("1");
                         } else {
                             mPlayAudioTextLike.setText("喜欢");
                             mPlayAudioTextLike.setCompoundDrawablesWithIntrinsicBounds(
                                     null, context.getResources().getDrawable(R.mipmap.wt_dianzan_nomal), null, null);
-                            GlobalConfig.playerObject.setContentFavorite("0");
+                            contentFavorite = "0";
+                            GlobalConfig.playerObject.setContentFavorite(contentFavorite);
 //                            if (index > 0) playList.get(index).setContentFavorite("0");
                         }
                     } else {

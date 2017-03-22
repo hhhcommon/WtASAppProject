@@ -23,6 +23,8 @@ import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.IntegerConstant;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
@@ -179,7 +181,7 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
                     } else if(MediaType.equals("SEQU")) {
                         AlbumFragment fragment = new AlbumFragment();
                         Bundle bundle = new Bundle();
-                        bundle.putInt("fromType", 7);
+                        bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_SEARCH);
                         bundle.putString("type", "search");
                         bundle.putSerializable("list", newList.get(position - 1));
                         fragment.setArguments(bundle);

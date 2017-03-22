@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.IntegerConstant;
+import com.woting.common.constant.StringConstant;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.home.program.diantai.main.OnLineFragment;
 import com.woting.ui.home.program.fenlei.fragment.FenLeiFragment;
@@ -49,7 +51,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void run() {
                         Intent intent = new Intent();
-                        intent.putExtra("fromType", "HOME");
+                        intent.putExtra(StringConstant.FROM_TYPE, IntegerConstant.TAG_HOME);
                         intent.setAction(BroadcastConstants.FROM_ACTIVITY);
                         context.getApplicationContext().sendBroadcast(intent);
                     }

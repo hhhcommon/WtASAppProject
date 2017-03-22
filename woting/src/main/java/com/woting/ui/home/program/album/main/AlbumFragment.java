@@ -37,6 +37,7 @@ import com.umeng.socialize.media.UMImage;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -80,34 +81,33 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
 
     public static TextView tv_album_name;
     public static TextView tv_favorite;
-    private static TextView textSubscriber;      // 订阅
-    private static ImageView imageSubscriber;    // 订阅小图标
-    private TextView textDetails;               // text_details
-    private TextView textProgram;               // text_program
+    private static TextView textSubscriber;// 订阅
+    private static ImageView imageSubscriber;// 订阅小图标
+    private TextView textDetails;// text_details
+    private TextView textProgram;// text_program
     public static ImageView img_album;
     public static ImageView imageFavorite;
-    private ImageView imageCursor;              // cursor
+    private ImageView imageCursor;// cursor
 
     private LinearLayout lin_share, lin_pinglun, lin_favorite, lin_subscriber;
     private ViewPager mPager;
     private Dialog dialog, shareDialog, dialog1;
     private UMImage image;
 
-    private int fromType;// == 1 HomeActivity  == 5 MineActivity  == 6 PlayMore  == 7 SearchLike
-    public static int returnResult = -1;        // == 1 说明信息获取正常，returnType == 1001
-    private int offset;                         // 图片移动的偏移量
+    private int fromType;// == 1 Home  == 5 Mine  == 6 PlayMore  == 7 SearchLike
+    public static int returnResult = -1;// == 1 说明信息获取正常  returnType == 1001
+    private int offset;// 图片移动的偏移量
     private boolean isCancelRequest;
 
     public static String ContentDesc, ContentImg, ContentShareURL, ContentName, id;
-    public static String ContentFavorite;       // 从网络获取的当前值，如果为空，表示页面并未获取到此值
+    public static String ContentFavorite;// 从网络获取的当前值，如果为空，表示页面并未获取到此值
     private String tag = "ALBUM_VOLLEY_REQUEST_CANCEL_TAG";
     private String RadioName;
-    private static int flag = 0;                       // == 0 还没有订阅  == 1 已经订阅
+    private static int flag = 0;// == 0 还没有订阅  == 1 已经订阅
 
     private View rootView;
-    private static TipView tipView;                    // 提示
+    private static TipView tipView;// 提示
     private FragmentActivity context;
-    private View viewBack;
 
     @Override
     public void onWhiteViewClick() {
@@ -142,8 +142,7 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
     }
 
     private void setView() {
-        rootView.findViewById(R.id.head_right_btn).setOnClickListener(this);// 播放专辑
-        viewBack = rootView.findViewById(R.id.view_back);
+        rootView.findViewById(R.id.head_right_btn).setOnClickListener(this);            // 播放专辑
 
         tv_album_name = (TextView) rootView.findViewById(R.id.head_name_tv);
         img_album = (ImageView) rootView.findViewById(R.id.img_album);
@@ -341,9 +340,7 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
             tipView.setTipView(TipView.TipStatus.IS_ERROR, "数据出错了\n请返回重试!");
             return;
         }
-        fromType = bundle.getInt("fromType");
-        if (fromType == 3) viewBack.setVisibility(View.VISIBLE);
-        else viewBack.setVisibility(View.GONE);
+        fromType = bundle.getInt(StringConstant.FROM_TYPE);
         String type = bundle.getString("type");
         if (type != null && type.trim().equals("radiolistactivity")) {
             ListInfo list = (ListInfo) bundle.getSerializable("list");
@@ -388,14 +385,19 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_left_btn: // 左上角返回键
-                if (fromType == 6) {// Play
-                    PlayerMoreOperationActivity.close();
-                } else if (fromType == 1) {// Home
-                    HomeActivity.close();
-                } else if (fromType == 5) {// Mine
-                    MineActivity.close();
-                } else if (fromType == 7) {
-                    SearchLikeActivity.close();
+                switch (fromType) {
+                    case IntegerConstant.TAG_HOME:
+                        HomeActivity.close();
+                        break;
+                    case IntegerConstant.TAG_MINE:
+                        MineActivity.close();
+                        break;
+                    case IntegerConstant.TAG_MORE:
+                        PlayerMoreOperationActivity.close();
+                        break;
+                    case IntegerConstant.TAG_SEARCH:
+                        SearchLikeActivity.close();
+                        break;
                 }
                 break;
             case R.id.lin_share: // 分享

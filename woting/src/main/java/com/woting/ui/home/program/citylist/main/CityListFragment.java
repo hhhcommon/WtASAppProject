@@ -2,6 +2,7 @@ package com.woting.ui.home.program.citylist.main;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.volley.VolleyCallback;
@@ -245,6 +247,8 @@ public class CityListFragment extends Fragment implements OnClickListener, TipVi
                         GlobalConfig.CityName = userList.get(position).getCatalogName();
                     }
                     et.commit();
+                    context.sendBroadcast(new Intent(BroadcastConstants.CITY_CHANGE));
+                    HomeActivity.close();
                 } else {
                     CityRadioFragment fragment = new CityRadioFragment();
                     Bundle bundle = new Bundle();

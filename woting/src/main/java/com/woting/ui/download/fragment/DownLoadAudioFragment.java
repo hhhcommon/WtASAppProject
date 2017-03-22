@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,9 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.common.application.BSApplication;
 import com.woting.common.constant.BroadcastConstants;
-import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.download.activity.DownloadFragment;
@@ -161,10 +158,11 @@ public class DownLoadAudioFragment extends Fragment implements View.OnClickListe
                                     ContentId, playlocalrurl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
                             dbDao.deleteHistory(playerurl);
                             dbDao.addHistory(history);
-                            SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
-                            et.putString(StringConstant.PLAYHISTORYENTER, "true");
-                            et.putString(StringConstant.PLAYHISTORYENTERNEWS, mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4));
-                            if (!et.commit()) Log.v("commit", "数据 commit 失败!");
+                            Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("text", list.get(position).getFileName());
+                            push.putExtras(bundle);
+                            context.sendBroadcast(push);
                             MainActivity.change();
                             dbDao.closedb();
                         } else {    // 此处要调对话框，点击同意删除对应的文件信息

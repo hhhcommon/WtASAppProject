@@ -20,6 +20,8 @@ import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.IntegerConstant;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.PicassoBannerLoader;
@@ -302,7 +304,7 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                     } else if (MediaType.equals("SEQU")) {
                         AlbumFragment fragment = new AlbumFragment();
                         Bundle bundle = new Bundle();
-                        bundle.putInt("fromType", 2);
+                        bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_HOME);
                         bundle.putString("type", "radiolistactivity");
                         bundle.putSerializable("list", newList.get(position - 2));
                         fragment.setArguments(bundle);
