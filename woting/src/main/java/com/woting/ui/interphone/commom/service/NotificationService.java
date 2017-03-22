@@ -33,6 +33,7 @@ import com.woting.ui.interphone.linkman.model.DBNotifyHistory;
 import com.woting.ui.interphone.message.messagecenter.dao.MessageSubscriberDao;
 import com.woting.ui.interphone.message.messagecenter.dao.MessageNotifyDao;
 import com.woting.ui.interphone.message.messagecenter.dao.MessageSystemDao;
+import com.woting.ui.interphone.message.messagecenter.model.DBSubscriberMessage;
 
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -96,12 +97,13 @@ public class NotificationService extends Service {
         dbDaoNotify.addNotifyMessage(history);
     }
 
-    public void addSubscriberMessage(String type, String imageUrl, String content, String title, String dealTime,
-                    String showType, int bizType, int cmdType, int command, String taskId) {
-        String addTime = Long.toString(System.currentTimeMillis());
+    public void addSubscriberMessage( String image_url, String seq_name, String seq_id,
+                                     String content_name, String content_id, String deal_time,
+                                     int biz_type, int cmd_type, int command, String message_id) {
+        String add_time = Long.toString(System.currentTimeMillis());
         String bjUserId = CommonUtils.getUserId(context);
-        DBNotifyHistory history = new DBNotifyHistory(bjUserId, type, imageUrl, content,
-                title, dealTime, addTime, showType, bizType, cmdType, command, taskId);
+        DBSubscriberMessage history = new DBSubscriberMessage(bjUserId, image_url, seq_name, seq_id,
+                content_name, content_id, deal_time, add_time, biz_type, cmd_type, command, message_id);
         dbDaoSubscriber.addSubscriberMessage(history);
     }
 
@@ -220,10 +222,12 @@ public class NotificationService extends Service {
                                         addNotifyMessage("Ub3", imageurl, news, "好友邀请信息", dealtime, "false", 0, 0, 0, "");
                                         context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
 
-                                    } else {
-                                        setNewMessageNotification(context, news, "我听");
-                                        addNotifyMessage("Ub3", imageurl, news, "好友邀请信息", dealtime, "false", 0, 0, 0, "");
                                     }
+                                    // 好友拒绝的消息不需要处理
+//                                    else {
+//                                        setNewMessageNotification(context, news, "我听");
+//                                        addNotifyMessage("Ub3", imageurl, news, "好友邀请信息", dealtime, "false", 0, 0, 0, "");
+//                                    }
                                 } else if (command == 5) {
                                     //A与B原为好友，A把B从自己的好友中删除后，向B发送A已删除自己为好友的信息。
                                     //										Data data = message.getData();
@@ -693,27 +697,42 @@ public class NotificationService extends Service {
                                 int command4 = message.getCommand();
                                 if (command4 == 1) {
                                     try {
+                                        String message_id = message.getMsgId();
+                                        
                                         MapContent data = (MapContent) message.getMsgContent();
                                         Map<String, Object> map = data.getContentMap();
                                         String msg = new Gson().toJson(map);
                                         JSONTokener jsonParser = new JSONTokener(msg);
                                         JSONObject arg1 = (JSONObject) jsonParser.nextValue();
+
+                                        String NewMediaList = arg1.getString("NewMediaList");
+                                        List<SeqMediaInfo>   MediaList = new Gson().fromJson(NewMediaList, new TypeToken<List<SeqMediaInfo>>() {}.getType());
+                                        SeqMediaInfo _media = MediaList.get(0);
+                                        String content_name = _media.getContentName();
+                                        String content_id = _media.getContentId();
+                                        String deal_time = _media.getContentPubTime();
+
                                         String seqMediaInfo = arg1.getString("SeqMediaInfo");
                                         SeqMediaInfo seqInfo = new Gson().fromJson(seqMediaInfo, new TypeToken<SeqMediaInfo>() {}.getType());
 
-                                        String contentName = seqInfo.getContentName();
-                                        if (contentName == null || contentName.equals("")) {
-                                            news = "您订阅的专辑有新的更新, 点击查看";
+
+                                        String image_url = seqInfo.getContentImg();
+                                        String seq_name = seqInfo.getContentName();
+                                        String seq_id = seqInfo.getContentId();
+
+
+                                        if (seq_name == null || seq_name.equals("")) {
+                                            news = "您订阅的专辑有新的更新了，快去查看吧";
                                         } else {
-                                            news = "您订阅的专辑" + contentName + "有新的更新，点击查看";
+                                            news = "您订阅的专辑《" + seq_name + "》有新的更新了，快去查看吧";
                                         }
 
-                                        String contentUrl = seqInfo.getContentImg();
 
                                         // 发送通知
-                                        setNewMessageNotification(context, news, "我听");
+                                        setNewMessageNotification(context, news, "订阅更新");
                                         // 加入数据库
-                                        addSubscriberMessage("Mb1", contentUrl, news, "订阅信息", String.valueOf(System.currentTimeMillis()), "true", 0, 0, 0, "");
+                                        addSubscriberMessage(image_url, seq_name, seq_id,
+                                                content_name, content_id, deal_time,4,4,1,message_id);
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中的异常", e.toString());
                                     }

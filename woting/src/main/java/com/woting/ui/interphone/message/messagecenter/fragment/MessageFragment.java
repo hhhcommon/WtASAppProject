@@ -20,6 +20,7 @@ import com.woting.ui.interphone.message.messagecenter.activity.MessageMainActivi
 import com.woting.ui.interphone.message.messagecenter.dao.MessageNotifyDao;
 import com.woting.ui.interphone.message.messagecenter.dao.MessageSubscriberDao;
 import com.woting.ui.interphone.message.messagecenter.dao.MessageSystemDao;
+import com.woting.ui.interphone.message.messagecenter.model.DBSubscriberMessage;
 import com.woting.ui.mine.subscriber.activity.SubscriberListFragment;
 
 import java.util.List;
@@ -30,69 +31,80 @@ import java.util.List;
  * 邮箱：645700751@qq.com
  */
 public class MessageFragment extends Fragment implements OnClickListener {
-	private MessageReceiver Receiver;
-	private MessageNotifyDao dbDaoNotify;
-	private MessageSubscriberDao dbDaoSubscriber;
-	private MessageSystemDao dbDaoSystem;
-    private List<DBNotifyHistory> list;
-	private TextView tv_system,tv_subscribe,tv_group_messageN,tv_group_messageR;
-	private View rootView;
-	private FragmentActivity context;
+    private MessageReceiver Receiver;
+    private MessageNotifyDao dbDaoNotify;
+    private MessageSubscriberDao dbDaoSubscriber;
+    private MessageSystemDao dbDaoSystem;
+    private TextView tv_system, tv_subscribe, tv_group_messageN, tv_group_messageR;
+    private View rootView;
+    private FragmentActivity context;
 
-	@Override
-	public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState) {
-		if (rootView == null) {
-			rootView = inflater.inflate(R.layout.activity_message, container, false);
-			context=getActivity();
-			setView();                             // 设置界面
-			initDao();                             // 初始化数据库命令执行对象
-			getData();                             // 获取数据
-		}
-		return rootView;
-	}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.activity_message, container, false);
+            context = getActivity();
+            setView();                             // 设置界面
+            initDao();                             // 初始化数据库命令执行对象
+            setDateForSystem();
+            setDateForNotify();
+            setDateForSubscriber();
+        }
+        return rootView;
+    }
 
-	private void setView() {
-		rootView.findViewById(R.id.head_left_btn).setOnClickListener(this);
+    private void setView() {
+        rootView.findViewById(R.id.head_left_btn).setOnClickListener(this);
 
-		rootView.findViewById(R.id.lin_system).setOnClickListener(this);
-		rootView.findViewById(R.id.lin_subscribe).setOnClickListener(this);
-		rootView.findViewById(R.id.lin_group_messageN).setOnClickListener(this);
-		rootView.findViewById(R.id.lin_group_messageR).setOnClickListener(this);
+        rootView.findViewById(R.id.lin_system).setOnClickListener(this);
+        rootView.findViewById(R.id.lin_subscribe).setOnClickListener(this);
+        rootView.findViewById(R.id.lin_group_messageN).setOnClickListener(this);
+        rootView.findViewById(R.id.lin_group_messageR).setOnClickListener(this);
 
-		tv_system=(TextView)rootView.findViewById(R.id.tv_system);
-		tv_subscribe=(TextView)rootView.findViewById(R.id.tv_subscribe);
-		tv_group_messageN=(TextView)rootView.findViewById(R.id.tv_group_messageN);
-		tv_group_messageR=(TextView)rootView.findViewById(R.id.tv_group_messageR);
+        tv_system = (TextView) rootView.findViewById(R.id.tv_system);
+        tv_subscribe = (TextView) rootView.findViewById(R.id.tv_subscribe);
+        tv_group_messageN = (TextView) rootView.findViewById(R.id.tv_group_messageN);
+        tv_group_messageR = (TextView) rootView.findViewById(R.id.tv_group_messageR);
 
-	}
+    }
 
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-			case R.id.head_left_btn:
-				context.finish();
-				break;
-			case R.id.lin_system:
-				MessageSystemFragment fragment1 = new MessageSystemFragment();
-				MessageMainActivity.open(fragment1);
-				break;
-			case R.id.lin_subscribe:
-				MessageSubscriberFragment fragment2 = new MessageSubscriberFragment();
-				MessageMainActivity.open(fragment2);
-				break;
-			case R.id.lin_group_messageN:
-				MessageNotifyFragment fragment3 = new MessageNotifyFragment();
-				MessageMainActivity.open(fragment3);
-				break;
-			case R.id.lin_group_messageR:
-				break;
-		}
-	}
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.head_left_btn:
+                context.finish();
+                break;
+            case R.id.lin_system:
+                MessageSystemFragment fragment1 = new MessageSystemFragment();
+                MessageMainActivity.open(fragment1);
+                break;
+            case R.id.lin_subscribe:
+                MessageSubscriberFragment fragment2 = new MessageSubscriberFragment();
+                fragment2.setTargetFragment(this, 1);
+                MessageMainActivity.open(fragment2);
+                break;
+            case R.id.lin_group_messageN:
+                MessageNotifyFragment fragment3 = new MessageNotifyFragment();
+                MessageMainActivity.open(fragment3);
+                break;
+            case R.id.lin_group_messageR:
+                break;
+        }
+    }
+
+    // 处理返回数据
+    public void setResult(int resultCode, int type) {
+        if (resultCode == 1) {
+            if (type == 1) {
+                setDateForSubscriber();
+            }
+        }
+    }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(Receiver == null) {		           // 注册广播
+        if (Receiver == null) {                   // 注册广播
             Receiver = new MessageReceiver();
             IntentFilter filter = new IntentFilter();
             filter.addAction(BroadcastConstants.PUSH_REFRESHNEWS);
@@ -101,38 +113,58 @@ public class MessageFragment extends Fragment implements OnClickListener {
     }
 
     // 广播接收  用于刷新界面
-	class MessageReceiver extends BroadcastReceiver{
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
-			if(action.equals(BroadcastConstants.PUSH_REFRESHNEWS)){
-				getData();
-			}
-		}
-	}
-
-	// 获取数据库的数据
-	private void getData() {
-		list = dbDaoNotify.queryNotifyMessage();
-
-	}
-
-	// 初始化数据库命令执行对象
-	private void initDao() {
-		dbDaoNotify = new MessageNotifyDao(context); // 通知消息
-		dbDaoSubscriber= new MessageSubscriberDao(context);// 订阅消息
-		dbDaoSystem= new MessageSystemDao(context);// 系统消息
-	}
+    class MessageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(BroadcastConstants.PUSH_REFRESHNEWS)) {
+                setDateForSystem();
+                setDateForNotify();
+                setDateForSubscriber();
+            }
+        }
+    }
 
 
+    private void setDateForSystem() {
+        List<DBNotifyHistory> sys_list = dbDaoSystem.querySystemNews();
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		if(Receiver != null){
-			context.unregisterReceiver(Receiver);
-			Receiver = null;
-		}
-		list = null;
-	}
+    }
+
+    private void setDateForNotify() {
+        List<DBNotifyHistory> n_list = dbDaoNotify.queryNotifyMessage();
+    }
+
+    // 设置订阅数据
+    private void setDateForSubscriber() {
+        List<DBSubscriberMessage> s_list = dbDaoSubscriber.querySubscriberMessage();
+        if (s_list != null && s_list.size() > 0) {
+            tv_subscribe.setVisibility(View.VISIBLE);
+            int num = s_list.size();
+            if (num >= 100) {
+                tv_subscribe.setText("…");
+            } else {
+                tv_subscribe.setText(String.valueOf(num));
+            }
+        } else {
+            tv_subscribe.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+    // 初始化数据库命令执行对象
+    private void initDao() {
+        dbDaoNotify = new MessageNotifyDao(context); // 通知消息
+        dbDaoSubscriber = new MessageSubscriberDao(context);// 订阅消息
+        dbDaoSystem = new MessageSystemDao(context);// 系统消息
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (Receiver != null) {
+            context.unregisterReceiver(Receiver);
+            Receiver = null;
+        }
+    }
 }
