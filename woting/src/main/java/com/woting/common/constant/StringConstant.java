@@ -106,4 +106,7 @@ public class StringConstant {
 
     // 数据传递 播放暂停状态
     public static final String PLAY_IMAGE = "PLAY_IMAGE";
+
+    // 数据传递 区别来自哪个界面的跳转
+    public static final String FROM_TYPE = "fromType";
 }

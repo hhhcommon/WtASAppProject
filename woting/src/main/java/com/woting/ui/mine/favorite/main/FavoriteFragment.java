@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.woting.R;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
@@ -98,7 +99,7 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
         context.registerReceiver(mBroadcast, intentFilter);
 
         Bundle bundle = getArguments();
-        type = bundle.getInt("fromType");// 根据 TAB 标签传参
+        type = bundle.getInt(StringConstant.FROM_TYPE);// 根据 TAB 标签传参
     }
 
     @Nullable

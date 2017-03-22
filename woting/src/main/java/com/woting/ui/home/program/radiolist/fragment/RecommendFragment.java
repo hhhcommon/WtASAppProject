@@ -19,6 +19,8 @@ import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.IntegerConstant;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.PicassoBannerLoader;
@@ -37,6 +39,7 @@ import com.woting.ui.home.program.radiolist.adapter.ForNullAdapter;
 import com.woting.ui.home.program.radiolist.adapter.RadioListAdapter;
 import com.woting.ui.home.program.radiolist.main.RadioListFragment;
 import com.woting.ui.home.program.radiolist.mode.Image;
+import com.woting.ui.main.MainActivity;
 import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
 
@@ -256,7 +259,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                 if (newList != null && position >= 2) {
                     if (newList.get(position - 2) != null && newList.get(position - 2).getMediaType() != null) {
                         String MediaType = newList.get(position - 2).getMediaType();
-                        if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
+                        if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
                             String playerName = newList.get(position - 2).getContentName();
                             String playerImage = newList.get(position - 2).getContentImg();
                             String playUrl = newList.get(position - 2).getContentPlay();
@@ -299,11 +302,12 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                             bundle1.putString("text", newList.get(position - 2).getContentName());
                             push.putExtras(bundle1);
                             context.sendBroadcast(push);
-                        } else if (MediaType.equals("SEQU")) {
+                            MainActivity.change();
+                        } else if (MediaType.equals(StringConstant.TYPE_SEQU)) {
                             AlbumFragment fragment = new AlbumFragment();
                             Bundle bundle = new Bundle();
-                            bundle.putInt("fromType", 2);
-                            bundle.putString("type", "radiolistactivity");
+                            bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_HOME);
+                            bundle.putString("type", "recommend");
                             bundle.putSerializable("list", newList.get(position - 2));
                             fragment.setArguments(bundle);
                             HomeActivity.open(fragment);

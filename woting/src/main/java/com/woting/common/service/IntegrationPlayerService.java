@@ -214,6 +214,9 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
                     break;
                 }
             }
+        } else {
+            GlobalConfig.playerObject.setLocalurl(null);
+            sendBroadcast(updateDownViewIntent);
         }
     }
 

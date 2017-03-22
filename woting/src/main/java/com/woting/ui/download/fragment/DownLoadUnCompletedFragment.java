@@ -36,7 +36,7 @@ import java.util.List;
  * 要注意删除事件和下载完毕事件后对数据库表的操作
  * PlayerFragment 里添加下载功能 将数据插入数据库 sequId 为空  修改 DownloadCompleteFragment 内获取 list 的方法
  */
-public class DownLoadUnCompletedFragment extends Fragment {
+public class DownLoadUnCompletedFragment extends Fragment implements OnClickListener {
     private FragmentActivity context;
     private DownloadAdapter adapter;
     private MessageReceivers receiver;
@@ -79,10 +79,13 @@ public class DownLoadUnCompletedFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_download_uncompleted, container, false);
-        setView();
-        initDao();// 初始化数据库对象
-        setListener();// 给控件设置监听
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_download_uncompleted, container, false);
+            rootView.setOnClickListener(this);
+            setView();
+            initDao();// 初始化数据库对象
+            setListener();// 给控件设置监听
+        }
         return rootView;
     }
 
@@ -297,6 +300,11 @@ public class DownLoadUnCompletedFragment extends Fragment {
         }
     };
 
+    @Override
+    public void onClick(View v) {
+
+    }
+
     class MessageReceivers extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -305,6 +313,14 @@ public class DownLoadUnCompletedFragment extends Fragment {
             }else if (intent.getAction().equals(BroadcastConstants.PUSH_ALLURL_CHANGE)) {
                 setDownLoadSource();
             }
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (rootView != null) {
+            ((ViewGroup) rootView.getParent()).removeView(rootView);
         }
     }
 

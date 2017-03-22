@@ -57,7 +57,6 @@ import com.woting.ui.home.player.main.model.LanguageSearch;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
-import com.woting.ui.home.search.main.SearchLikeActivity;
 import com.woting.ui.interphone.message.messagecenter.activity.MessageMainActivity;
 import com.woting.ui.main.MainActivity;
 import com.woting.video.IntegrationPlayer;
@@ -91,7 +90,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private VoiceRecognizer mVoiceRecognizer;// 讯飞
     private MessageReceiver mReceiver;// 广播接收
     private PlayerListAdapter adapter;
-    public static SearchLikeActivity frag;// 搜索
 
     private Dialog dialog;// 加载数据对话框
     private Dialog wifiDialog;// WIFI 提醒对话框
@@ -300,6 +298,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             filter.addAction(BroadcastConstants.LK_TTS_PLAY_OVER);// 路况播放完了
 
             // 下载完成更新 LocalUrl
+            filter.addAction(BroadcastConstants.PUSH_DOWN_COMPLETED);
             filter.addAction(BroadcastConstants.ACTION_FINISHED);
             filter.addAction(BroadcastConstants.ACTION_FINISHED_NO_DOWNLOADVIEW);
 
@@ -336,12 +335,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         switch (v.getId()) {
             case R.id.lin_find:// 搜索
                 MainActivity.setViewSeven();
-                PlayerActivity.isVisible = false;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         Intent intent = new Intent();
-                        intent.putExtra("fromType", "PLAY");
+                        intent.putExtra(StringConstant.FROM_TYPE, IntegerConstant.TAG_PLAY);
                         intent.setAction(BroadcastConstants.FROM_ACTIVITY);
                         context.getApplicationContext().sendBroadcast(intent);
                     }
@@ -480,6 +478,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     break;
                 case BroadcastConstants.ACTION_FINISHED:// 更新下载列表
                 case BroadcastConstants.ACTION_FINISHED_NO_DOWNLOADVIEW:
+                case BroadcastConstants.PUSH_DOWN_COMPLETED:
                     if (mPlayer != null) mPlayer.updateLocalList();
                     break;
                 case BroadcastConstants.PLAY_NO_NET:// 播放器没有网络
@@ -758,6 +757,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     // 更新列表界面
     private void updateListView() {
         if (playList == null || playList.size() == 0) return ;
+        if (adapter == null) return ;
         for (int i = 0, size = playList.size(); i < size; i++) {
             if (i == index) {
                 if (isPlaying) playList.get(i).setType("2");

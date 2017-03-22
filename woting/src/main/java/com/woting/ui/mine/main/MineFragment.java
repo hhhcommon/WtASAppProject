@@ -37,6 +37,7 @@ import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.http.MyHttp;
 import com.woting.common.manager.FileManager;
@@ -234,7 +235,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             case R.id.lin_playhistory:      // 播放历史
                 PlayHistoryFragment historyFrag = new PlayHistoryFragment();
                 Bundle bundleHis = new Bundle();
-                bundleHis.putInt("fromType", 5);
+                bundleHis.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_MINE);
                 historyFrag.setArguments(bundleHis);
                 MineActivity.open(historyFrag);
                 break;
@@ -278,7 +279,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             case R.id.lin_like:             // 我喜欢的
                 FavoriteFragment favoriteFragment = new FavoriteFragment();
                 Bundle bundleFav = new Bundle();
-                bundleFav.putInt("fromType", 5);
+                bundleFav.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_MINE);
                 favoriteFragment.setArguments(bundleFav);
                 MineActivity.open(favoriteFragment);
                 break;
@@ -288,7 +289,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             case R.id.lin_subscribe:        // 我的订阅
                 SubscriberListFragment subscriberListFragment = new SubscriberListFragment();
                 Bundle bundleSub = new Bundle();
-                bundleSub.putInt("fromType", 5);
+                bundleSub.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_MINE);
                 subscriberListFragment.setArguments(bundleSub);
                 MineActivity.open(subscriberListFragment);
                 break;

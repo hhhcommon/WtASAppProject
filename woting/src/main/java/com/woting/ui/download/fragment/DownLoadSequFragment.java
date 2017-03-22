@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -57,8 +58,10 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         context = getActivity();
+        initDao();
         if (receiver == null) {
             receiver = new MessageReceiver();
             IntentFilter filter = new IntentFilter();
@@ -67,11 +70,17 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
             filter.addAction(BroadcastConstants.DOWNLOAD_CLEAR_EMPTY_SEQU);// 清空下载的全部专辑
             context.registerReceiver(receiver, filter);
         }
-        rootView = inflater.inflate(R.layout.fragment_download_completed, container, false);
+    }
 
-        initDao();
-        setView();
-        setDownLoadSource();
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_download_completed, container, false);
+            rootView.setOnClickListener(this);
+
+            setView();
+            setDownLoadSource();
+        }
         return rootView;
     }
 
@@ -95,12 +104,15 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
     // 查询数据库当中已完成的数据，此数据传输到 adapter 中进行适配
     public void setDownLoadSource() {
         String userId = CommonUtils.getUserId(context);
+        if (f != null) f.clear();
+        if (fileSequList != null) fileSequList.clear();
         f = FID.queryFileInfo("true", userId);
+        Log.v("TAG", "fffffff -- > " + f.size());
         if (f.size() > 0) {
             DownloadFragment.setVisibleSequ(true);
             tipView.setVisibility(View.GONE);
             fileSequList = FID.GroupFileInfoAll(userId);
-            Log.e("f", fileSequList.size() + "");
+            Log.e("TAG", fileSequList.size() + "");
             if (fileSequList.size() > 0) {
                 for (int i = 0; i < fileSequList.size(); i++) {
                     if (fileSequList.get(i).getSequid().equals("woting")) {
@@ -236,6 +248,14 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
                     setDownLoadSource();
                     break;
             }
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (rootView != null) {
+            ((ViewGroup)rootView.getParent()).removeView(rootView);
         }
     }
 

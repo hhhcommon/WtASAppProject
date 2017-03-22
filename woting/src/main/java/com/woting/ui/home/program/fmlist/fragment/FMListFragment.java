@@ -40,6 +40,7 @@ import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.diantai.model.RadioPlay;
 import com.woting.ui.home.program.fmlist.adapter.RankInfoAdapter;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
+import com.woting.ui.main.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -284,6 +285,7 @@ public class FMListFragment extends Fragment implements OnClickListener, TipView
                         bundle1.putString("text", newList.get(position - 1).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
+                        MainActivity.change();
                     }
                 }
             }

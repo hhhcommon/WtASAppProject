@@ -2,7 +2,6 @@ package com.woting.ui.download.downloadlist.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,9 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.common.application.BSApplication;
 import com.woting.common.constant.BroadcastConstants;
-import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.ui.baseactivity.BaseActivity;
@@ -240,7 +237,7 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
                             String sequImg = mFileInfo.getSequimgurl();
                             String sequDesc = mFileInfo.getSequdesc();
                             String ContentPlayType = mFileInfo.getContentPlayType();
-                            String IsPlaying=mFileInfo.getIsPlaying();
+                            String IsPlaying = mFileInfo.getIsPlaying();
 
                             // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                             PlayerHistory history = new PlayerHistory(
@@ -250,13 +247,14 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
                                     ContentId, playlocalrurl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
                             dbDao.deleteHistory(playerurl);
                             dbDao.addHistory(history);
-                            SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
-                            et.putString(StringConstant.PLAYHISTORYENTER, "true");
-                            et.putString(StringConstant.PLAYHISTORYENTERNEWS, mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4));
-                            if (!et.commit()) Log.v("commit", "数据 commit 失败!");
+                            Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("text", fileInfoList.get(position).getFileName());
+                            push.putExtras(bundle);
+                            context.sendBroadcast(push);
                             MainActivity.change();
-                            finish();
                             dbDao.closedb();
+                            finish();
                         } else {    // 此处要调对话框，点击同意删除对应的文件信息
                             positionNow = position;
                             confirmDialog.show();

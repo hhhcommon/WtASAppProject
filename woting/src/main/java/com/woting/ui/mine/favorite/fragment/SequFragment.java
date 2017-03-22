@@ -22,6 +22,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
@@ -141,13 +143,13 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
 					if (newList != null && newList.get(position - 1) != null && newList.get(position - 1).getMediaType() != null) {
                         AlbumFragment fragment = new AlbumFragment();
 						Bundle bundle = new Bundle();
-                        bundle.putInt("fromType", FavoriteFragment.type);// Mine
+                        bundle.putInt(StringConstant.FROM_TYPE, FavoriteFragment.type);
 						bundle.putString("type", "recommend");
 						bundle.putSerializable("list", newList.get(position - 1));
                         fragment.setArguments(bundle);
-                        if (FavoriteFragment.type == 5) {// Mine
+                        if (FavoriteFragment.type == IntegerConstant.TAG_MINE) {// Mine
                             MineActivity.open(fragment);
-                        } else if (FavoriteFragment.type == 6) {// PlayMore
+                        } else if (FavoriteFragment.type == IntegerConstant.TAG_MORE) {// PlayMore
                             PlayerMoreOperationActivity.open(fragment);
                         }
 					}

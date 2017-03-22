@@ -20,6 +20,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
@@ -82,7 +84,7 @@ public class SubscriberListFragment extends Fragment implements OnClickListener,
         context = getActivity();
 
         Bundle bundle = getArguments();
-        type = bundle.getInt("fromType");
+        type = bundle.getInt(StringConstant.FROM_TYPE);
     }
 
     @Nullable
@@ -238,13 +240,13 @@ public class SubscriberListFragment extends Fragment implements OnClickListener,
                 // 跳往专辑界面
                 AlbumFragment fragment = new AlbumFragment();
                 Bundle bundle = new Bundle();
-                bundle.putInt("fromType", type);
+                bundle.putInt(StringConstant.FROM_TYPE, type);
                 bundle.putString("type", "radiolistactivity");
                 bundle.putSerializable("list", listInfo);
                 fragment.setArguments(bundle);
-                if (type == 5) {
+                if (type == IntegerConstant.TAG_MINE) {
                     MineActivity.open(fragment);
-                } else if (type == 6) {
+                } else if (type == IntegerConstant.TAG_MORE) {
                     PlayerMoreOperationActivity.open(fragment);
                 }
             }
