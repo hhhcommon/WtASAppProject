@@ -24,6 +24,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,6 +32,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -78,8 +80,9 @@ import java.util.List;
  * Search
  * Created by Administrator on 2017/3/21.
  */
-public class SearchLikeFragment extends Fragment implements View.OnClickListener, TipView.WhiteViewClick {
+public class SearchLikeFragment extends Fragment implements View.OnClickListener, TipView.WhiteViewClick, TextView.OnEditorActionListener {
     private static FragmentActivity context;
+    private InputMethodManager imm;
 
     private LinearLayout lin_head_left;
     private LinearLayout lin_head_right;
@@ -148,6 +151,7 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
         super.onCreate(savedInstanceState);
         context = getActivity();
 
+        imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         bmp = BitmapUtils.readBitMap(context, R.mipmap.talknormal);
         bmpPress = BitmapUtils.readBitMap(context, R.mipmap.wt_duijiang_button_pressed);
 
@@ -296,6 +300,9 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
         tipView.setWhiteClick(this);
 
         mEtSearchContent = (EditText) rootView.findViewById(R.id.et_searchlike);
+        mEtSearchContent.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        mEtSearchContent.setOnEditorActionListener(this);
+
         lin_head_left = (LinearLayout) rootView.findViewById(R.id.head_left_btn);
         lin_head_right = (LinearLayout) rootView.findViewById(R.id.lin_head_right);
         // 清理历史搜索数据库
@@ -419,6 +426,8 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
                 } else if (SearchLikeActivity.fromType == IntegerConstant.TAG_PLAY) {
                     MainActivity.change();
                 }
+                // 隐藏键盘
+                imm.hideSoftInputFromWindow(mEtSearchContent.getWindowToken(), 0);
                 break;
             case R.id.lin_head_right:
                 if (mEtSearchContent != null && mEtSearchContent.getText() != null && !mEtSearchContent.getText().toString().trim().equals("")) {
@@ -700,6 +709,27 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
         } else {
             ToastUtils.show_always(context, "传进来的mediaType值为空");
         }
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_SEND || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+            String temp = mEtSearchContent.getText().toString();
+
+            if (!temp.trim().equals("")) {
+                mEtSearchContent.setFocusable(true);
+                mEtSearchContent.setFocusableInTouchMode(true);
+                mEtSearchContent.requestFocus();
+
+                // 隐藏键盘
+                imm.hideSoftInputFromWindow(mEtSearchContent.getWindowToken(), 0);
+
+                // 然后再执行搜索操作
+                CheckEdit(temp);
+            }
+            return true;
+        }
+        return false;
     }
 
     public class txListener implements View.OnClickListener {
