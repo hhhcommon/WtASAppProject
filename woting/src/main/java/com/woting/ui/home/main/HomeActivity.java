@@ -20,6 +20,8 @@ import com.woting.ui.main.MainActivity;
 public class HomeActivity extends FragmentActivity {
     private static HomeActivity context;
 
+    public static boolean isHide;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +50,7 @@ public class HomeActivity extends FragmentActivity {
                 .commitAllowingStateLoss();
         if (context.getSupportFragmentManager().getBackStackEntryCount() > 0) {
             MainActivity.hideOrShowTab(false);
+            isHide = true;
         }
     }
 
@@ -56,6 +59,7 @@ public class HomeActivity extends FragmentActivity {
         context.getSupportFragmentManager().popBackStackImmediate();// 立即删除回退栈中的数据
         if (context.getSupportFragmentManager().getBackStackEntryCount() == 1) {
             MainActivity.hideOrShowTab(true);
+            isHide = false;
         }
     }
 

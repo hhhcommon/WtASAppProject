@@ -209,6 +209,7 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
             if (searchStr != null && !searchStr.equals("")) {
                 jsonObject.put("SearchStr", searchStr);
             }
+            jsonObject.put("ResultType", "2");
         } catch (JSONException e) {
             e.printStackTrace();
         }

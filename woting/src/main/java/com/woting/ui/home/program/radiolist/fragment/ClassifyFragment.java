@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,8 +58,12 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
     private Context context;
     private SearchPlayerHistoryDao dbDao;// 数据库
     private ListInfoAdapter adapter;
-    private List<ListInfo> newList = new ArrayList<>();
+    private Banner mLoopViewPager;
+
     private List<ListInfo> SubList;
+    private List<Image> imageList;
+    private List<ListInfo> newList = new ArrayList<>();
+    private List<String> ImageStringList = new ArrayList<>();
 
     private View rootView;
     private XListView mListView;// 列表
@@ -68,13 +71,9 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
     private TipView tipView;// 没有数据、没有网络提示
 
     private int page = 1;// 页码
-    private int pageSizeNum;
-    private int RefreshType;// refreshType 1为下拉加载 2为上拉加载更多
+    private int RefreshType;// == 1 为下拉加载  == 2 为上拉加载更多
     private String CatalogId;
     private String CatalogType;
-    private Banner mLoopViewPager;
-    private List<Image> imageList;
-    private List<String> ImageStringList=new ArrayList<>();
 
     @Override
     public void onWhiteViewClick() {
@@ -140,7 +139,7 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
             }
         }
         // 如果轮播图没有的话重新加载轮播图
-        if(imageList==null)getImage();
+        if (imageList == null) getImage();
         super.setUserVisibleHint(isVisibleToUser);
     }
 
@@ -157,11 +156,8 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
 
             @Override
             protected void requestSuccess(JSONObject result) {
-                long a = System.currentTimeMillis();
-                Log.e("返回值时间3", "--- > > >  " +a);
                 if (dialog != null) dialog.dismiss();
                 if (RadioListFragment.isCancelRequest) return;
-                page++;
                 try {
                     ReturnType = result.getString("ReturnType");
                 } catch (JSONException e) {
@@ -170,69 +166,53 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     try {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        try {
-                            String pageSizeString = arg1.getString("PageSize");
-                            String allCountString = arg1.getString("AllCount");
-                            if (allCountString != null && !allCountString.equals("") && pageSizeString != null && !pageSizeString.equals("")) {
-                                int allCountInt = Integer.valueOf(allCountString);
-                                int pageSizeInt = Integer.valueOf(pageSizeString);
-                                if (allCountInt < 10 || pageSizeInt < 10) {
-                                    mListView.stopLoadMore();
-                                    mListView.setPullLoadEnable(false);
-                                } else {
-                                    mListView.setPullLoadEnable(true);
-                                    if (allCountInt % pageSizeInt == 0) {
-                                        pageSizeNum = allCountInt / pageSizeInt;
-                                    } else {
-                                        pageSizeNum = allCountInt / pageSizeInt + 1;
-                                    }
-                                }
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
                         SubList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<ListInfo>>() {}.getType());
-                        if (RefreshType == 1) {
-                            mListView.stopRefresh();
-                            newList.clear();
-                        } else if (RefreshType == 2) {
-                            mListView.stopLoadMore();
+                        if (SubList != null && SubList.size() >= 9) {
+                            page++;
+                            mListView.setPullLoadEnable(true);
+                        } else {
+                            mListView.setPullLoadEnable(false);
                         }
+                        if (RefreshType == 1) newList.clear();
                         newList.addAll(SubList);
-                        if(adapter == null) {
+                        if (adapter == null) {
                             mListView.setAdapter(adapter = new ListInfoAdapter(context, newList));
                         } else {
                             adapter.notifyDataSetChanged();
                         }
                         setOnItem();
                         tipView.setVisibility(View.GONE);
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
-                        mListView.setAdapter( new ForNullAdapter(context));
-                        if (imageList == null) {
-                                tipView.setVisibility(View.VISIBLE);
-                                tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        mListView.setAdapter(new ForNullAdapter(context));
+                        if (newList == null || newList.size() <= 0) {
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.IS_ERROR);
                         }
-
-                        tipView.setVisibility(View.VISIBLE);
-                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
                     }
                 } else {
                     mListView.setAdapter(new ForNullAdapter(context));
-                    if (imageList == null) {
-                        if (RefreshType == 1) {
-                            tipView.setVisibility(View.VISIBLE);
-                            tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
-                        }
+                    if (newList == null || newList.size() <= 0) {
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
                     }
+                }
+                if (RefreshType == 1) {
+                    mListView.stopRefresh();
+                } else {
+                    mListView.stopLoadMore();
                 }
             }
 
             @Override
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
-                tipView.setVisibility(View.VISIBLE);
-                tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                if (newList == null || newList.size() <= 0) {
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                } else {
+                    ToastUtils.showVolleyError(context);
+                }
             }
         });
     }
@@ -258,7 +238,7 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (newList != null && newList.get(position - 2) != null && newList.get(position - 2).getMediaType() != null) {
                     String MediaType = newList.get(position - 2).getMediaType();
-                    if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
+                    if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
                         String playerName = newList.get(position - 2).getContentName();
                         String playerImage = newList.get(position - 2).getContentImg();
                         String playUrl = newList.get(position - 2).getContentPlay();
@@ -285,23 +265,23 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                         String sequImg = newList.get(position - 2).getSequImg();
 
                         String ContentPlayType = newList.get(position - 2).getContentPlayType();
-                        String IsPlaying=newList.get(position - 2).getIsPlaying();
+                        String IsPlaying = newList.get(position - 2).getIsPlaying();
 
                         //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playerName, playerImage, playUrl, playUrI, playMediaType,
                                 playAllTime, playInTime, playContentDesc, playNum,
                                 playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
+                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying);
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
-                        bundle1.putString("text", newList.get(position - 2).getContentName());
+                        bundle1.putString(StringConstant.TEXT_CONTENT, newList.get(position - 2).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
                         MainActivity.change();
-                    } else if (MediaType.equals("SEQU")) {
+                    } else if (MediaType.equals(StringConstant.TYPE_SEQU)) {
                         AlbumFragment fragment = new AlbumFragment();
                         Bundle bundle = new Bundle();
                         bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_HOME);
@@ -336,17 +316,11 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
 
             @Override
             public void onLoadMore() {
-                if (page <= pageSizeNum) {
-                    if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        RefreshType = 2;
-                        sendRequest();
-                    } else {
-                        ToastUtils.show_short(context, "网络失败，请检查网络");
-                    }
+                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                    RefreshType = 2;
+                    sendRequest();
                 } else {
-                    mListView.stopLoadMore();
-                    mListView.setPullLoadEnable(false);
-                    ToastUtils.show_short(context, "已经没有最新的数据了");
+                    ToastUtils.show_short(context, "网络失败，请检查网络");
                 }
             }
         });
@@ -371,7 +345,7 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
         try {
             jsonObject.put("CatalogType", CatalogType);
             jsonObject.put("CatalogId", CatalogId);
-            jsonObject.put("Size", "10");// 此处需要改成-1
+            jsonObject.put("Size", "10");// 此处需要改成 -1
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -389,13 +363,12 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     try {
-                        imageList = new Gson().fromJson(result.getString("LoopImgs"), new TypeToken<List<Image>>() {
-                        }.getType());
-                      /*  mLoopViewPager.setAdapter(new LoopAdapter(mLoopViewPager, context, imageList));
-                        mLoopViewPager.setHintView(new IconHintView(context, R.mipmap.indicators_now, R.mipmap.indicators_default));*/
+                        imageList = new Gson().fromJson(result.getString("LoopImgs"), new TypeToken<List<Image>>() {}.getType());
+//                        mLoopViewPager.setAdapter(new LoopAdapter(mLoopViewPager, context, imageList));
+//                        mLoopViewPager.setHintView(new IconHintView(context, R.mipmap.indicators_now, R.mipmap.indicators_default));
                         mLoopViewPager.setImageLoader(new PicassoBannerLoader());
 
-                        for(int i=0;i<imageList.size();i++){
+                        for (int i = 0; i < imageList.size(); i++) {
                             ImageStringList.add(imageList.get(i).getLoopImg());
                         }
                         mLoopViewPager.setImages(ImageStringList);
@@ -403,7 +376,7 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                         mLoopViewPager.setOnBannerListener(new OnBannerListener() {
                             @Override
                             public void OnBannerClick(int position) {
-                                ToastUtils.show_always(context,ImageStringList.get(position-1));
+                                ToastUtils.show_always(context, ImageStringList.get(position - 1));
                             }
                         });
                         mLoopViewPager.start();
@@ -419,26 +392,22 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
         });
     }
 
-   /* public class PicassoImageLoader extends ImageLoader {
-        @Override
-        public void displayImage(Context context, Object path, ImageView imageView) {
-            *//**
-             注意：
-             1.图片加载器由自己选择，这里不限制，只是提供几种使用方法
-             2.返回的图片路径为Object类型，由于不能确定你到底使用的那种图片加载器，
-             传输的到的是什么格式，那么这种就使用Object接收和返回，你只需要强转成你传输的类型就行，
-             切记不要胡乱强转！
-             *//*
-            String contentImg=path.toString();
-            if (!contentImg.startsWith("http")) {
-                contentImg = GlobalConfig.imageurl + contentImg;
-            }
-            contentImg = AssembleImageUrlUtils.assembleImageUrl150(contentImg);
-            Picasso.with(context).load(contentImg.replace("\\/", "/")).resize(50,50).centerCrop().into(imageView);
-        }
-
-
-    }*/
-
-
+//    public class PicassoImageLoader extends ImageLoader {
+//        @Override
+//        public void displayImage(Context context, Object path, ImageView imageView) {
+//            /**
+//             注意：
+//             1.图片加载器由自己选择，这里不限制，只是提供几种使用方法
+//             2.返回的图片路径为Object类型，由于不能确定你到底使用的那种图片加载器，
+//             传输的到的是什么格式，那么这种就使用Object接收和返回，你只需要强转成你传输的类型就行，
+//             切记不要胡乱强转！
+//             */
+//            String contentImg=path.toString();
+//            if (!contentImg.startsWith("http")) {
+//                contentImg = GlobalConfig.imageurl + contentImg;
+//            }
+//            contentImg = AssembleImageUrlUtils.assembleImageUrl150(contentImg);
+//            Picasso.with(context).load(contentImg.replace("\\/", "/")).resize(50,50).centerCrop().into(imageView);
+//        }
+//    }
 }

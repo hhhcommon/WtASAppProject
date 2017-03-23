@@ -20,6 +20,7 @@ import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
@@ -42,20 +43,19 @@ import java.util.List;
 
 public class RadioNationalFragment extends Fragment implements View.OnClickListener, TipView.WhiteViewClick {
     private Context context;
+    private SearchPlayerHistoryDao dbDao;
+    private RadioNationAdapter adapter;
+    private List<RadioPlay> newList = new ArrayList<>();
+    private List<RadioPlay> SubList;
 
     private TextView mTextView_Head;
     private Dialog dialog;
+    private ExpandableListView mListView;
+    private View rootView;
+    private TipView tipView;// 没有网络、没有数据提示
 
     private String tag = "RADIO_NATION_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
-    private ArrayList<RadioPlay> newList = new ArrayList<>();
-    protected List<RadioPlay> SubList;
-    private SearchPlayerHistoryDao dbDao;
-    private ExpandableListView mListView;
-    private RadioNationAdapter adapter;
-
-    private View rootView;
-    private TipView tipView;// 没有网络、没有数据提示
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -169,7 +169,7 @@ public class RadioNationalFragment extends Fragment implements View.OnClickListe
                 if (SubList != null && SubList.get(groupPosition).getList().get(childPosition) != null
                         && SubList.get(groupPosition).getList().get(childPosition).getMediaType() != null) {
                     String MediaType = SubList.get(groupPosition).getList().get(childPosition).getMediaType();
-                    if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
+                    if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
                         String playName = SubList.get(groupPosition).getList().get(childPosition).getContentName();
                         String playImage = SubList.get(groupPosition).getList().get(childPosition).getContentImg();
                         String playUrl = SubList.get(groupPosition).getList().get(childPosition).getContentPlay();
@@ -207,7 +207,7 @@ public class RadioNationalFragment extends Fragment implements View.OnClickListe
                         dbDao.addHistory(history);
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
-                        bundle1.putString("text", SubList.get(groupPosition).getList().get(childPosition).getContentName());
+                        bundle1.putString(StringConstant.TEXT_CONTENT, SubList.get(groupPosition).getList().get(childPosition).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
                         MainActivity.change();
@@ -219,7 +219,6 @@ public class RadioNationalFragment extends Fragment implements View.OnClickListe
             }
         });
     }
-
 
     private void setView() {
         tipView = (TipView) rootView.findViewById(R.id.tip_view);

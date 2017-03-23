@@ -351,11 +351,11 @@ public class PlayHistoryFragment extends Fragment implements OnClickListener {
     public static void updateViewPager(String mediaType) {
         int index = 0;
         if (mediaType != null && !mediaType.equals("")) {
-            if (mediaType.equals("AUDIO")) {
+            if (mediaType.equals(StringConstant.TYPE_AUDIO)) {
                 index = 1;
-            } else if (mediaType.equals("RADIO")) {
+            } else if (mediaType.equals(StringConstant.TYPE_RADIO)) {
                 index = 2;
-            } else if (mediaType.equals("TTS")) {
+            } else if (mediaType.equals(StringConstant.TYPE_TTS)) {
                 index = 3;
             }
             viewPager.setCurrentItem(index);

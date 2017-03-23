@@ -56,28 +56,27 @@ import java.util.List;
  */
 public class FMListFragment extends Fragment implements OnClickListener, TipView.WhiteViewClick {
     private Context context;
+    private SearchPlayerHistoryDao dbDao;
+    private RankInfoAdapter adapter;
+    private SharedPreferences shared = BSApplication.SharedPreferences;
+    private List<RankInfo> newList = new ArrayList<>();
+    private List<RankInfo> SubList;
 
+    private Dialog dialog;
+    private View rootView;
+    private TipView tipView;// 没有网络、没有数据、加载错误提示
     private XListView mListView;
     private TextView mTextView_Head;
-    private Dialog dialog;
-    protected RankInfoAdapter adapter;
 
     private int ViewType = 1;
     private int page = 1;
     private int RefreshType = 1;// refreshType 1为下拉加载 2为上拉加载更多
 
+    private String CatalogType;
     private String CatalogName;
     private String CatalogId;
     private String tag = "FMLIST_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
-    private ArrayList<RankInfo> newList = new ArrayList<>();
-    protected List<RankInfo> SubList;
-    private SharedPreferences shared = BSApplication.SharedPreferences;
-    private SearchPlayerHistoryDao dbDao;
-    private String CatalogType;
-
-    private View rootView;
-    private TipView tipView;// 没有网络、没有数据、加载错误提示
 
     @Override
     public void onWhiteViewClick() {
@@ -126,13 +125,13 @@ public class FMListFragment extends Fragment implements OnClickListener, TipView
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
-                page++;
                 try {
                     ReturnType = result.getString("ReturnType");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
+                    page++;
                     try {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         try {
@@ -244,7 +243,7 @@ public class FMListFragment extends Fragment implements OnClickListener, TipView
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (newList != null && newList.get(position - 1) != null && newList.get(position - 1).getMediaType() != null) {
                     String MediaType = newList.get(position - 1).getMediaType();
-                    if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
+                    if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
                         String playername = newList.get(position - 1).getContentName();
                         String playerimage = newList.get(position - 1).getContentImg();
                         String playerurl = newList.get(position - 1).getContentPlay();
@@ -282,7 +281,7 @@ public class FMListFragment extends Fragment implements OnClickListener, TipView
 
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
-                        bundle1.putString("text", newList.get(position - 1).getContentName());
+                        bundle1.putString(StringConstant.TEXT_CONTENT, newList.get(position - 1).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
                         MainActivity.change();

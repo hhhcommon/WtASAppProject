@@ -60,22 +60,23 @@ public class CityListFragment extends Fragment implements OnClickListener, TipVi
     private Context context;
     private CharacterParser characterParser;
     private PinyinComparator_d pinyinComparator;
+    private CityListAdapter adapter;
+    private List<CatalogName> srcList;
+    private List<CatalogName> userList = new ArrayList<>();
+
+    private View rootView;
+    private TipView tipView;// 出错、没有数据、没有网络提示
+    private TipView tipSearchNull;// 搜索为空
     private Dialog dialog;
     private SideBar sideBar;
     private TextView dialogs;
     private ListView listView;
     private EditText et_Search_content;
     private ImageView image_clear;
-    private List<CatalogName> userList = new ArrayList<>();
-    private CityListAdapter adapter;
-    private List<CatalogName> srcList;
-    private String tag = "CITY_LIST_REQUEST_CANCEL_TAG";
-    private boolean isCancelRequest;
-    private String type;
 
-    private View rootView;
-    private TipView tipView;// 出错、没有数据、没有网络提示
-    private TipView tipSearchNull;// 搜索为空
+    private boolean isCancelRequest;
+    private String tag = "CITY_LIST_REQUEST_CANCEL_TAG";
+    private String type;
 
     @Override
     public void onWhiteViewClick() {

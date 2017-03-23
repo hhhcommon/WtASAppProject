@@ -65,7 +65,6 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
     private boolean isCancelRequest;
     private int refreshType = 1;
     private int page = 1;
-    private int pageSizeNum;
 
     // 初始化数据库对象
     private void initDao() {
@@ -117,14 +116,8 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
 
             @Override
             public void onLoadMore() {
-                if (page <= pageSizeNum) {
-                    refreshType = 2;
-                    sendRequest();
-                } else {
-                    mListView.stopLoadMore();
-                    mListView.setPullLoadEnable(false);
-                    ToastUtils.show_always(context, "已经是最后一页了");
-                }
+                refreshType = 2;
+                sendRequest();
             }
         });
     }
@@ -216,7 +209,6 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
-                page++;
                 try {
                     ReturnType = result.getString("ReturnType");
                     Log.v("ReturnType", "ReturnType -- > > " + ReturnType);
@@ -226,35 +218,15 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     try {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        SubList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {
-                        }.getType());
-                        try {
-                            String allCountString = arg1.getString("AllCount");
-                            String pageSizeString = arg1.getString("pageSize");
-                            if (allCountString != null && !allCountString.equals("") && pageSizeString != null && !pageSizeString.equals("")) {
-                                int allCountInt = Integer.valueOf(allCountString);
-                                int pageSizeInt = Integer.valueOf(allCountString);
-                                if (allCountInt < 10 || pageSizeInt < 10) {
-                                    mListView.stopLoadMore();
-                                    mListView.setPullLoadEnable(false);
-                                } else {
-                                    mListView.setPullLoadEnable(true);
-                                    if (allCountInt % pageSizeInt == 0) {
-                                        pageSizeNum = allCountInt / pageSizeInt;
-                                    } else {
-                                        pageSizeNum = allCountInt / pageSizeInt + 1;
-                                    }
-                                }
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        SubList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
+                        if (SubList != null && SubList.size() >= 9) {
+                            page++;
+                            mListView.setPullLoadEnable(true);
+                        } else {
+                            mListView.setPullLoadEnable(false);
                         }
                         if (refreshType == 1) newList.clear();
-                        for (int i = 0; i < SubList.size(); i++) {
-                            if (SubList.get(i).getMediaType().equals("TTS")) {
-                                newList.add(SubList.get(i));
-                            }
-                        }
+                        newList.addAll(SubList);
                         if (newList.size() > 0) {
                             adapter.notifyDataSetChanged();
                             setListener();
@@ -267,8 +239,12 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        tipView.setVisibility(View.VISIBLE);
-                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        if (refreshType == 1) {
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        } else {
+                            ToastUtils.show_always(context, "数据加载错误");
+                        }
                     }
                 } else {
                     if (refreshType == 1) {
@@ -286,9 +262,12 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
             @Override
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
-                ToastUtils.showVolleyError(context);
-                tipView.setVisibility(View.VISIBLE);
-                tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                if (refreshType == 1) {
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                } else {
+                    ToastUtils.showVolleyError(context);
+                }
             }
         });
     }

@@ -174,7 +174,6 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                 }
             }
         });
-
     }
 
     // ListView 的 Item 的监听事件
@@ -493,8 +492,6 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                     dialog = DialogUtils.Dialogph(context, "正在获取数据...");
                     send();
 
-//                    Collections.reverse(SubListAll);            // 倒序
-//                    mainAdapter.notifyDataSetChanged();
                     imageSortDown.setVisibility(View.VISIBLE);
                     imageSort.setVisibility(View.GONE);
                 }
@@ -506,8 +503,6 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                     dialog = DialogUtils.Dialogph(context, "正在获取数据...");
                     send();
 
-//                    Collections.reverse(SubListAll);            // 倒序
-//                    mainAdapter.notifyDataSetChanged();
                     imageSortDown.setVisibility(View.GONE);
                     imageSort.setVisibility(View.VISIBLE);
                 }

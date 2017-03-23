@@ -25,7 +25,6 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
@@ -34,11 +33,9 @@ import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.home.search.main.SearchLikeActivity;
-import com.woting.ui.main.MainActivity;
 import com.woting.ui.mine.favorite.adapter.FavorListAdapter;
 
 import org.json.JSONException;
@@ -48,6 +45,9 @@ import org.json.JSONTokener;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 搜索专辑界面
+ */
 public class SequFragment extends Fragment implements TipView.WhiteViewClick {
     private FragmentActivity context;
     protected FavorListAdapter adapter;
@@ -65,7 +65,6 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
     private boolean isCancelRequest;
     private int refreshType = 1;
     private int page = 1;
-    private int pageSizeNum;
 
     // 初始化数据库
     private void initDao() {
@@ -117,14 +116,8 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
 
             @Override
             public void onLoadMore() {
-                if (page <= pageSizeNum) {
-                    refreshType = 2;
-                    sendRequest();
-                } else {
-                    mListView.stopLoadMore();
-                    mListView.setPullLoadEnable(false);
-                    ToastUtils.show_always(context, "已经是最后一页了");
-                }
+                refreshType = 2;
+                sendRequest();
             }
         });
     }
@@ -135,50 +128,7 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (newList != null && newList.get(position - 1) != null && newList.get(position - 1).getMediaType() != null) {
                     String MediaType = newList.get(position - 1).getMediaType();
-                    if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
-                        String playername = newList.get(position - 1).getContentName();
-                        String playerimage = newList.get(position - 1).getContentImg();
-                        String playerurl = newList.get(position - 1).getContentPlay();
-                        String playerurI = newList.get(position - 1).getContentURI();
-                        String playermediatype = newList.get(position - 1).getMediaType();
-                        String playcontentshareurl = newList.get(position - 1).getContentShareURL();
-                        String plaplayeralltime = "0";
-                        String playerintime = "0";
-                        String playercontentdesc = newList.get(position - 1).getCurrentContent();
-                        String playernum = newList.get(position - 1).getWatchPlayerNum();
-                        String playerzantype = "0";
-                        String playerfrom = newList.get(position - 1).getContentPub();
-                        String playerfromid = "";
-                        String playerfromurl = "";
-                        String playeraddtime = Long.toString(System.currentTimeMillis());
-                        String bjuserid = CommonUtils.getUserId(context);
-                        String ContentFavorite = newList.get(position - 1).getContentFavorite();
-                        String ContentId = newList.get(position - 1).getContentId();
-                        String localurl = newList.get(position - 1).getLocalurl();
-
-                        String sequName = newList.get(position - 1).getSequName();
-                        String sequId = newList.get(position - 1).getSequId();
-                        String sequDesc = newList.get(position - 1).getSequDesc();
-                        String sequImg = newList.get(position - 1).getSequImg();
-                        String ContentPlayType= newList.get(position-1).getContentPlayType();
-                        String IsPlaying=newList.get(position-1).getIsPlaying();
-
-                        // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-                        PlayerHistory history = new PlayerHistory(
-                                playername, playerimage, playerurl, playerurI, playermediatype,
-                                plaplayeralltime, playerintime, playercontentdesc, playernum,
-                                playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playcontentshareurl,
-                                ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg,ContentPlayType,IsPlaying);
-                        dbDao.deleteHistory(playerurl);
-                        dbDao.addHistory(history);
-
-                        MainActivity.change();
-                        Intent push=new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
-                        Bundle bundle1=new Bundle();
-                        bundle1.putString("text",newList.get(position - 1).getContentName());
-                        push.putExtras(bundle1);
-                        context.sendBroadcast(push);
-                    } else if(MediaType.equals("SEQU")) {
+                    if(MediaType.equals("SEQU")) {
                         AlbumFragment fragment = new AlbumFragment();
                         Bundle bundle = new Bundle();
                         bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_SEARCH);
@@ -186,8 +136,6 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
                         bundle.putSerializable("list", newList.get(position - 1));
                         fragment.setArguments(bundle);
                         SearchLikeActivity.open(fragment);
-                    } else {
-                        ToastUtils.show_always(context, "暂不支持的Type类型");
                     }
                 }
             }
@@ -213,7 +161,6 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
-                page++;
                 try {
                     ReturnType = result.getString("ReturnType");
                     Log.v("ReturnType", "ReturnType -- > > " + ReturnType);
@@ -224,33 +171,14 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
                     try {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         SubList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
-                        try {
-                            String allCountString = arg1.getString("AllCount");
-                            String pageSizeString = arg1.getString("PageSize");
-                            if (allCountString != null && !allCountString.equals("") && pageSizeString != null && !pageSizeString.equals("")) {
-                                int allCountInt = Integer.valueOf(allCountString);
-                                int pageSizeInt = Integer.valueOf(allCountString);
-                                if (allCountInt < 10 || pageSizeInt < 10) {
-                                    mListView.stopLoadMore();
-                                    mListView.setPullLoadEnable(false);
-                                } else {
-                                    mListView.setPullLoadEnable(true);
-                                    if (allCountInt % pageSizeInt == 0) {
-                                        pageSizeNum = allCountInt / pageSizeInt;
-                                    } else {
-                                        pageSizeNum = allCountInt / pageSizeInt + 1;
-                                    }
-                                }
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        if (SubList != null && SubList.size() >= 9) {
+                            page++;
+                            mListView.setPullLoadEnable(true);
+                        } else {
+                            mListView.setPullLoadEnable(false);
                         }
                         if (refreshType == 1) newList.clear();
-                        for(int i=0; i<SubList.size(); i++) {
-                            if(SubList.get(i).getMediaType().equals("SEQU")) {
-                                newList.add(SubList.get(i));
-                            }
-                        }
+                        newList.addAll(SubList);
                         if(newList.size() > 0) {
                             adapter.notifyDataSetChanged();
                             setListener();
