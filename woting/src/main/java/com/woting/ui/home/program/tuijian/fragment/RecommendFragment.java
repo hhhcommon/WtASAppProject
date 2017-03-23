@@ -104,8 +104,15 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 
             initListView();
-            getImage();
-            sendRequest();
+
+            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {// 发送网络请求
+                dialog = DialogUtils.Dialogph(context, "数据加载中....");
+                getImage();
+                sendRequest();
+            } else {
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_NET);
+            }
         }
         return rootView;
     }
@@ -333,7 +340,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
         try {
             jsonObject.put("CatalogType","-1");
             jsonObject.put("CatalogId", "cn10");
-            jsonObject.put("Size", "10");// 此处需要改成-1
+            jsonObject.put("Size", "4");// 此处需要改成-1
         } catch (JSONException e) {
             e.printStackTrace();
         }
