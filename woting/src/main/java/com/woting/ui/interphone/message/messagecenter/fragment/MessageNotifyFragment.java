@@ -26,9 +26,9 @@ import com.woting.ui.interphone.message.messagecenter.dao.MessageNotifyDao;
 import java.util.List;
 
 /**
- * &#x7fa4;&#x901a;&#x77e5;&#x6d88;&#x606f;
- * &#x4f5c;&#x8005;&#xff1a;xinlong on 2016/5/5 21:18
- * &#x90ae;&#x7bb1;&#xff1a;645700751@qq.com
+ * 通知消息
+ * xinlong on 2016/5/5 21:18
+ * 645700751@qq.com
  */
 public class MessageNotifyFragment extends Fragment implements OnClickListener {
 	private MessageNotifyDao dbDao;

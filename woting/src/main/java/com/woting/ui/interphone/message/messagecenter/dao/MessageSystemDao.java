@@ -30,16 +30,21 @@ public class MessageSystemDao {
     /**
      * 插入搜索历史表一条数据
      */
-    public void addSystemNews(DBNotifyHistory history) {
+    public void addSystemNews(DBNotifyHistory message) {
         //通过helper的实现对象获取可操作的数据库db
         SQLiteDatabase db = helper.getWritableDatabase();
-        db.execSQL("insert into message_system(bjuserid,type,imageurl,content,title,dealtime,addtime,showtype,biztype,cmdtype,command,taskid) values(?,?,?,?,?,?,?,?,?,?,?,?)",
+        db.execSQL("insert into message_system(user_id,image_url,person_name,person_id," +
+                        "group_name,group_id,operator_name,operator_id," +
+                        "show_type,message_type,deal_time,add_time," +
+                        "biz_type,cmd_type,command,message_id) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 new Object[]{
-                        history.getBJUserId(), history.getTyPe(),
-                        history.getImageUrl(), history.getContent(),
-                        history.getTitle(), history.getDealTime(), history.getAddTime(),
-                        history.getShowType(), history.getBizType(), history.getCmdType(),
-                        history.getCommand(), history.getTaskId()
+                        message.getUserId(), message.getImageUrl(),
+                        message.getPersonName(), message.getPersonId(),
+                        message.getGroupName(), message.getGroupId(),
+                        message.getOperatorName(), message.getOperatorId(),
+                        message.getShowType(), message.getMessageType(), message.getDealTime(),
+                        message.getAddTime(), message.getBizType(), message.getCmdType(),
+                        message.getCommand(), message.getMessageId(), message.getMessage()
                 });//sql语句
         db.close();//关闭数据库对象
     }
@@ -49,31 +54,39 @@ public class MessageSystemDao {
      * 查询数据库里的数据，无参查询语句 供特定使用
      */
     public List<DBNotifyHistory> querySystemNews() {
-        List<DBNotifyHistory> mylist = new ArrayList<DBNotifyHistory>();
+        List<DBNotifyHistory> my_list = new ArrayList<DBNotifyHistory>();
         SQLiteDatabase db = helper.getReadableDatabase();
-        String userid = CommonUtils.getUserId(context);
+        String _user_id = CommonUtils.getUserId(context);
         Cursor cursor = null;
         try {
-            cursor = db.rawQuery("Select * from message_system  where bjuserid=? and showtype=? order by addtime desc", new String[]{userid,"true"});
+//            cursor = db.rawQuery("Select * from message_notify  where bjuserid=? and showtype=? order by addtime desc", new String[]{userid,"true"});
+            cursor = db.rawQuery("Select * from message_system  where user_id=?  order by add_time desc", new String[]{_user_id});
             while (cursor.moveToNext()) {
-                String bjuserid = cursor.getString(1);
-                String type = cursor.getString(2);
-                String imageurl = cursor.getString(3);
-                String content = cursor.getString(4);
-                String title = cursor.getString(5);
-                String dealtime = cursor.getString(6);
-                String addtime = cursor.getString(7);
+                String user_id = cursor.getString(1);
+                String image_url = cursor.getString(2);
+                String person_name = cursor.getString(3);
+                String person_id = cursor.getString(4);
+                String group_name = cursor.getString(5);
+                String group_id = cursor.getString(6);
+                String operator_name = cursor.getString(7);
+                String operator_id = cursor.getString(8);
+                String show_type = cursor.getString(9);
+                String message_type = cursor.getString(10);
+                String deal_time = cursor.getString(11);
+                String add_time = cursor.getString(12);
 
-                String showtype = cursor.getString(8);
-                int biztype = cursor.getInt(9);
-                int cmdtype = cursor.getInt(10);
-                int command = cursor.getInt(11);
-                String taskid = cursor.getString(12);
+                int biz_type = cursor.getInt(13);
+                int cmd_type = cursor.getInt(14);
+                int command = cursor.getInt(15);
+                String message_id = cursor.getString(16);
+                String message= cursor.getString(17);
 
                 //把每个对象都放到history对象里
-                DBNotifyHistory h = new DBNotifyHistory(bjuserid, type, imageurl, content,
-                        title, dealtime, addtime, showtype,biztype,cmdtype,command,taskid);
-                mylist.add(h);
+                DBNotifyHistory h = new DBNotifyHistory(user_id, image_url,
+                        person_name, person_id, group_name, group_id, operator_name,
+                        operator_id, show_type, message_type, deal_time, add_time,
+                        biz_type, cmd_type, command, message_id, message);
+                my_list.add(h);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,18 +98,35 @@ public class MessageSystemDao {
                 db.close();
             }
         }
-        return mylist;
+        return my_list;
     }
 
     /**
-     * 删除数据库表中的数据,添加时间是唯一标示（addtime）
+     * 删除数据库表中的数据,
+     *
+     * @param MessageId 消息ID
      */
-    public void deleteSystemNews(String addtime) {
+    public void deleteSystemNews(String MessageId) {
         SQLiteDatabase db = helper.getReadableDatabase();
-        String userid = CommonUtils.getUserId(context);
-        String addtimes = addtime;
-        db.execSQL("Delete from message_system where addtime=? and bjuserid=?",
-                new String[]{addtimes, userid});
+        String user_id = CommonUtils.getUserId(context);
+        db.execSQL("Delete from message_system where message_id=? and user_id=?",
+                new String[]{MessageId, user_id});
+        db.close();
+    }
+
+    /**
+     * 更改展示状态，把true变成false
+     *
+     * @param MessageId 消息ID
+     */
+    public void updataSystemNews(String MessageId) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.execSQL("update message_system set show_type=? where message_id=?",
+                new Object[]{"false", MessageId});
         db.close();
     }
 }
+
+
+
+

@@ -70,36 +70,57 @@ public class NotificationService extends Service {
 
     private void initDao() {// 初始化数据库命令执行对象
         dbDaoNotify = new MessageNotifyDao(context); // 通知消息
-        dbDaoSubscriber= new MessageSubscriberDao(context);// 订阅消息
-        dbDaoSystem= new MessageSystemDao(context);// 系统消息
-
+        dbDaoSubscriber = new MessageSubscriberDao(context);// 订阅消息
+        dbDaoSystem = new MessageSystemDao(context);// 系统消息
     }
 
     /**
-     * 添加数据到数据库
-     * @param type      消息类型
-     * @param imageUrl  展示图片
-     * @param content   展示内容
-     * @param title     展示标题
-     * @param dealTime  展示消息处理时间
-     * @param showType  是否需要跳转
-     * @param bizType
-     * @param cmdType
+     * 添加通知消息到数据库
+     *
+     * @param image_url
+     * @param person_name
+     * @param person_id
+     * @param group_name
+     * @param group_id
+     * @param operator_name
+     * @param operator_id
+     * @param show_type
+     * @param message_type
+     * @param deal_time
+     * @param biz_type
+     * @param cmd_type
      * @param command
-     * @param taskId
+     * @param message_id
      */
-    public void addNotifyMessage(String type, String imageUrl, String content, String title, String dealTime,
-                    String showType, int bizType, int cmdType, int command, String taskId) {
+    private void addNotifyMessage(String image_url, String person_name, String person_id, String group_name, String group_id,
+                                  String operator_name, String operator_id, String show_type, String message_type, String deal_time,
+                                  int biz_type, int cmd_type, int command, String message_id, String message) {
         String addTime = Long.toString(System.currentTimeMillis());
         String bjUserId = CommonUtils.getUserId(context);
-        DBNotifyHistory history = new DBNotifyHistory(bjUserId, type, imageUrl, content,
-                title, dealTime, addTime, showType, bizType, cmdType, command, taskId);
+        DBNotifyHistory history = new DBNotifyHistory(bjUserId, image_url,
+                person_name, person_id, group_name, group_id, operator_name,
+                operator_id, show_type, message_type, deal_time, addTime,
+                biz_type, cmd_type, command, message_id, message);
         dbDaoNotify.addNotifyMessage(history);
     }
 
-    public void addSubscriberMessage( String image_url, String seq_name, String seq_id,
-                                     String content_name, String content_id, String deal_time,
-                                     int biz_type, int cmd_type, int command, String message_id) {
+    /**
+     * 添加订阅消息到数据库
+     *
+     * @param image_url
+     * @param seq_name
+     * @param seq_id
+     * @param content_name
+     * @param content_id
+     * @param deal_time
+     * @param biz_type
+     * @param cmd_type
+     * @param command
+     * @param message_id
+     */
+    private void addSubscriberMessage(String image_url, String seq_name, String seq_id,
+                                      String content_name, String content_id, String deal_time,
+                                      int biz_type, int cmd_type, int command, String message_id) {
         String add_time = Long.toString(System.currentTimeMillis());
         String bjUserId = CommonUtils.getUserId(context);
         DBSubscriberMessage history = new DBSubscriberMessage(bjUserId, image_url, seq_name, seq_id,
@@ -107,14 +128,36 @@ public class NotificationService extends Service {
         dbDaoSubscriber.addSubscriberMessage(history);
     }
 
-    public void addSystemMessage(String type, String imageUrl, String content, String title, String dealTime,
-                    String showType, int bizType, int cmdType, int command, String taskId) {
+    /**
+     * 添加系统消息到数据库
+     *
+     * @param image_url
+     * @param person_name
+     * @param person_id
+     * @param group_name
+     * @param group_id
+     * @param operator_name
+     * @param operator_id
+     * @param show_type
+     * @param message_type
+     * @param deal_time
+     * @param biz_type
+     * @param cmd_type
+     * @param command
+     * @param message_id
+     */
+    private void addSystemMessage(String image_url, String person_name, String person_id, String group_name, String group_id,
+                                  String operator_name, String operator_id, String show_type, String message_type, String deal_time,
+                                  int biz_type, int cmd_type, int command, String message_id, String message) {
         String addTime = Long.toString(System.currentTimeMillis());
         String bjUserId = CommonUtils.getUserId(context);
-        DBNotifyHistory history = new DBNotifyHistory(bjUserId, type, imageUrl, content,
-                title, dealTime, addTime, showType, bizType, cmdType, command, taskId);
+        DBNotifyHistory history = new DBNotifyHistory(bjUserId, image_url,
+                person_name, person_id, group_name, group_id, operator_name,
+                operator_id, show_type, message_type, deal_time, addTime,
+                biz_type, cmd_type, command, message_id, message);
         dbDaoSystem.addSystemNews(history);
     }
+
 
     /*
      * 接收socket的数据进行处理
@@ -141,9 +184,6 @@ public class NotificationService extends Service {
                                 int command = message.getCommand();
                                 if (command == 1) {
                                     //介绍：当某用户被另一用户邀请为好友后，服务器向被邀请用户发送的消息。
-                                    String news;
-                                    String dealtime = null;
-                                    String imageurl = null;
                                     try {
                                         MapContent data = (MapContent) message.getMsgContent();
                                         Map<String, Object> map = data.getContentMap();
@@ -151,87 +191,107 @@ public class NotificationService extends Service {
 
                                         JSONTokener jsonParser = new JSONTokener(msg);
                                         JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                                        String inviteuserinfo = arg1.getString("InviteUserInfo");
+                                        String invite_user_info = arg1.getString("InviteUserInfo");
+                                        InviteUserInfo user_info = new Gson().fromJson(invite_user_info, new TypeToken<InviteUserInfo>() {
+                                        }.getType());// 邀请者信息
 
-                                        InviteUserInfo userinfo = new Gson().fromJson(inviteuserinfo, new TypeToken<InviteUserInfo>() {
-                                        }.getType());
-                                        dealtime = data.get("InviteTime") + "";
-                                        String name = userinfo.getUserName();
-                                        imageurl = userinfo.getPortraitMini();
-                                        if (name == null || name.trim().equals("")) {
-                                            news = "有人申请添加您为好友,请查看";
+                                        String person_id = user_info.getUserId();// 邀请者ID
+                                        String person_name = user_info.getUserName();// 邀请者名称
+                                        String image_url = user_info.getPortraitMini();// 邀请者头像
+
+                                        String deal_time = data.get("InviteTime") + "";// 邀请时间
+                                        String message_id = message.getMsgId();// 消息ID
+
+                                        // 生成notification消息
+                                        String news;
+                                        String title;
+                                        if (person_name == null || person_name.trim().equals("")) {
+                                            title = "我听";
                                         } else {
-                                            news = name + "申请添加您为好友,请查看";
+                                            title = person_name;
                                         }
-                                    } catch (Exception e) {
-                                        news = "有人申请添加您为好友,请查看";
-                                    }
-                                    setNewMessageNotification(context, news, "我听");
+                                        news = "有人邀请你加为好友，快去看看吧~";
+                                        setNewMessageNotification(context, news, title);
 
-                                    //已经添加在通讯录
-                                    Intent p = new Intent(BroadcastConstants.PUSH_NEWPERSON);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putString("outMessage", news);
-                                    p.putExtras(bundle);
-                                    context.sendBroadcast(p);
-                                    addNotifyMessage("Ub1", imageurl, news, "好友邀请信息", dealtime, "true", 0, 0, 0, "");
+                                        // 更改通讯录新的朋友按钮展示
+                                        Intent p = new Intent(BroadcastConstants.PUSH_NEWPERSON);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("outMessage", "好友消息");
+                                        p.putExtras(bundle);
+                                        context.sendBroadcast(p);
+
+                                        // 加入到通知数据库
+                                        addNotifyMessage(image_url, person_name, person_id, "", "", "",
+                                                "", "true", "p1", deal_time, 4, 1, 1, message_id, news);
+                                    } catch (Exception e) {
+                                        Log.e("通知消息==", "添加好友消息解析出错了");
+                                    }
+
                                 } else if (command == 3) {
                                     //好友邀请被接受或拒绝(Server->App)
-                                    String news;
-                                    String imageurl = null;
-                                    String dealtime = null;
-                                    String dealtype = null;
                                     try {
-
                                         MapContent data = (MapContent) message.getMsgContent();
                                         Map<String, Object> map = data.getContentMap();
                                         String msg = new Gson().toJson(map);
 
                                         JSONTokener jsonParser = new JSONTokener(msg);
                                         JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                                        String beinviteduserinfo = arg1.getString("BeInvitedUserInfo");
-
-                                        BeInvitedUserInfo userinfo = new Gson().fromJson(beinviteduserinfo, new TypeToken<BeInvitedUserInfo>() {
+                                        String be_invited_user_info = arg1.getString("BeInvitedUserInfo");
+                                        BeInvitedUserInfo user_info = new Gson().fromJson(be_invited_user_info, new TypeToken<BeInvitedUserInfo>() {
                                         }.getType());
-                                        dealtime = data.get("DealTime") + "";
-                                        dealtype = data.get("DealType") + "";
-                                        String name = userinfo.getUserName();
-                                        imageurl = userinfo.getPortraitMini();
-                                        if (name == null || name.trim().equals("")) {
-                                            if (dealtype != null && dealtype.equals("1")) {
-                                                news = "有人成为您好友了";
-                                            } else {
-                                                news = "有人拒绝您添加为好友";
+
+                                        String message_id = message.getMsgId();// 消息ID
+                                        String deal_time = data.get("DealTime") + "";// 消息处理时间
+                                        String deal_type = data.get("DealType") + "";// 处理类型 1，接受 2，拒绝
+                                        String person_name = user_info.getUserName();// 邀请者名称
+                                        String person_id = user_info.getUserId();// 邀请者ID
+                                        String image_url = user_info.getPortraitMini();// 邀请者头像
+
+                                        if (deal_type != null) {
+                                            if (deal_type.equals("1")) {
+                                                // 生成notification消息
+                                                String news = null;
+                                                String title ;
+                                                if (person_name == null || person_name.trim().equals("")) {
+                                                    title = "我听";
+                                                    if (deal_type != null && deal_type.equals("1")) {
+                                                        news = "我们成为好友了";
+                                                    }
+                                                    // else {
+                                                    //    news = "有人拒绝您添加为好友";
+                                                    // }
+                                                } else {
+                                                    title = person_name;
+                                                    if (deal_type != null && deal_type.equals("1")) {
+                                                        news = "我们成为好友了";
+                                                    }
+                                                    // else {
+                                                    //    news = name + "拒绝添加您为好友";
+                                                    // }
+                                                }
+                                                setNewMessageNotification(context, news, title);
+
+                                                // 加入到通知数据库
+                                                addNotifyMessage(image_url, person_name, person_id, "", "", "",
+                                                        "", "false", "p2", deal_time, 4, 1, 3, message_id, news);
+                                                // 更新通讯录
+                                                context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                                             }
                                         } else {
-                                            if (dealtype != null && dealtype.equals("1")) {
-                                                news = name + "成为您好友了";
-                                            } else {
-                                                news = name + "拒绝添加您为好友";
-                                            }
+                                            Log.e("通知消息==", "好友邀请被接受或拒绝消息解析出错了==没有dealtype处理类型 ");
                                         }
                                     } catch (Exception e) {
-                                        if (dealtype != null && dealtype.equals("1")) {
-                                            news = "有人成为您好友了";
-                                        } else {
-                                            news = "有人拒绝您添加为好友";
-                                        }
-                                    }
-                                    if (dealtype != null && dealtype.equals("1")) {
-                                        setNewMessageNotification(context, news, "我听");
-                                        addNotifyMessage("Ub3", imageurl, news, "好友邀请信息", dealtime, "false", 0, 0, 0, "");
-                                        context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
-
+                                        Log.e("通知消息==", "好友邀请被接受或拒绝消息解析出错了");
                                     }
                                     // 好友拒绝的消息不需要处理
-//                                    else {
-//                                        setNewMessageNotification(context, news, "我听");
-//                                        addNotifyMessage("Ub3", imageurl, news, "好友邀请信息", dealtime, "false", 0, 0, 0, "");
-//                                    }
+                                    //  else {
+                                    //  setNewMessageNotification(context, news, "我听");
+                                    //  addNotifyMessage("Ub3", imageurl, news, "好友邀请信息", dealtime, "false", 0, 0, 0, "");
+                                    //  }
                                 } else if (command == 5) {
-                                    //A与B原为好友，A把B从自己的好友中删除后，向B发送A已删除自己为好友的信息。
-                                    //										Data data = message.getData();
-                                    setNewMessageNotification(context, "测试：《该提示不显示》删除好友通知", "我听");
+                                    // A与B原为好友，A把B从自己的好友中删除后，向B发送A已删除自己为好友的信息。
+                                    // Data data = message.getData();
+                                    // setNewMessageNotification(context, "测试：《该提示不显示》删除好友通知", "我听");
                                     context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                                 }
                                 break;
@@ -239,18 +299,19 @@ public class NotificationService extends Service {
                                 int command2 = message.getCommand();
                                 if (command2 == 1) {
                                     //当某用户被自己好友邀请进某个组时，服务器向某用户发送的消息。
-                                    String news;
-                                    String friendname = null;
-                                    String friendurl = null;
-                                    String dealtime = null;
                                     try {
                                         MapContent data = (MapContent) message.getMsgContent();
-                                        String friendid = data.get("FriendId") + "";
-                                        if (friendid != null && !friendid.trim().equals("") && GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
+                                        String person_id = data.get("FriendId") + "";
+                                        String person_name = null;
+                                        String image_url = null;
+                                        String operator_name = null;
+
+                                        // 通过id获取邀请者名称跟头像
+                                        if (person_id != null && !person_id.trim().equals("") && GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
                                             for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
-                                                if (GlobalConfig.list_person.get(i).getUserId().equals(friendid)) {
-                                                    friendname = GlobalConfig.list_person.get(i).getUserName();
-                                                    friendurl = GlobalConfig.list_person.get(i).getPortraitMini();
+                                                if (GlobalConfig.list_person.get(i).getUserId().equals(person_id)) {
+                                                    person_name = GlobalConfig.list_person.get(i).getUserName();
+                                                    image_url = GlobalConfig.list_person.get(i).getPortraitMini();
                                                 }
                                             }
                                         }
@@ -260,87 +321,123 @@ public class NotificationService extends Service {
 
                                         JSONTokener jsonParser = new JSONTokener(msg);
                                         JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                                        String grouiInfo = arg1.getString("GroupInfo");
-
-                                        GroupInfo userinfo = new Gson().fromJson(grouiInfo, new TypeToken<GroupInfo>() {
+                                        String groupInfo = arg1.getString("GroupInfo");
+                                        GroupInfo user_info = new Gson().fromJson(groupInfo, new TypeToken<GroupInfo>() {
                                         }.getType());
-                                        dealtime = data.get("InviteTime") + "";
-                                        String name = userinfo.getGroupName();
-                                        if (friendname == null || friendname.trim().equals("")) {
-                                            if (name == null || name.trim().equals("")) {
-                                                news = "有人邀请您加入对讲组";
-                                            } else {
-                                                news = "有人邀请您加入对讲组:" + name;
-                                            }
-                                        } else {
-                                            if (name == null || name.trim().equals("")) {
-                                                news = friendname + "邀请您加入对讲组";
-                                            } else {
-                                                news = friendname + "邀请您加入对讲组:" + name;
+
+                                        // 通过OperatorId获取操作者名称
+                                        String operator_id = arg1.getString("OperatorId");
+                                        if (operator_id != null && !operator_id.trim().equals("") && GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
+                                            for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
+                                                if (GlobalConfig.list_person.get(i).getUserId().equals(operator_id)) {
+                                                    operator_name = GlobalConfig.list_person.get(i).getUserName();
+                                                }
                                             }
                                         }
-                                        setNewMessageNotification(context, news, "我听");
-                                        //已经添加在通讯录
-                                        Intent pushintent = new Intent(BroadcastConstants.PUSH_NEWPERSON);
+
+                                        String message_id = message.getMsgId();// 消息ID
+                                        String deal_time = data.get("InviteTime") + "";// 消息处理时间
+                                        String group_name = user_info.getGroupName();
+                                        String group_id = user_info.getGroupId();
+
+                                        String news;
+                                        String title;
+                                        if (person_name == null || person_name.trim().equals("")) {
+                                            title = "我听";
+                                            if (group_name == null || group_name.trim().equals("")) {
+                                                news = "邀请您加入对讲组,快去看看吧~";
+                                            } else {
+                                                news = "有人邀请您加入对讲组:" + group_name + ",快去看看吧~";
+                                            }
+                                            setNewMessageNotification(context, news, "我听");
+                                        } else {
+                                            title = person_name;
+                                            if (group_name == null || group_name.trim().equals("")) {
+                                                news = "邀请您加入对讲组,快去看看吧~";
+                                            } else {
+                                                news = "邀请您加入对讲组:" + group_name + ",快去看看吧~";
+                                            }
+
+                                        }
+                                        setNewMessageNotification(context, news, title);
+
+                                        // 更改通讯录新的朋友按钮展示
+                                        Intent push_intent = new Intent(BroadcastConstants.PUSH_NEWPERSON);
                                         Bundle bundle = new Bundle();
-                                        bundle.putString("outMessage", news);
-                                        pushintent.putExtras(bundle);
-                                        context.sendBroadcast(pushintent);
-                                        addNotifyMessage("Gb1", friendurl, news, "组邀请信息", dealtime, "true", 0, 0, 0, "");
+                                        bundle.putString("outMessage", "群组消息");
+                                        push_intent.putExtras(bundle);
+                                        context.sendBroadcast(push_intent);
+
+                                        // 加入到通知数据库
+                                        addNotifyMessage(image_url, person_name, person_id, group_name, group_id, operator_name,
+                                                operator_id, "true", "g1", deal_time, 4, 2, 1, message_id, news);
                                     } catch (Exception e) {
-                                        Log.e("消息接收服务中Gb1的异常", e.toString());
+                                        Log.e("消息接收服务中G1的异常", e.toString());
                                     }
                                 } else if (command2 == 2) {
                                     //当某用户申请加入组后，向组管理员发送有用户申请的消息
-                                    String news;
-                                    String dealtime = null;
-                                    String username = null;
-                                    String imageurl = null;
                                     try {
                                         MapContent data = (MapContent) message.getMsgContent();
-
                                         Map<String, Object> map = data.getContentMap();
                                         String msg = new Gson().toJson(map);
-
                                         JSONTokener jsonParser = new JSONTokener(msg);
                                         JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                                        String grouiInfo = arg1.getString("GroupInfo");
-                                        String applyuserinfos = arg1.getString("ApplyUserInfo");
 
-                                        ApplyUserInfo applyuserinfo = new Gson().fromJson(applyuserinfos, new TypeToken<ApplyUserInfo>() {
-                                        }.getType());
-                                        GroupInfo userinfo = new Gson().fromJson(grouiInfo, new TypeToken<GroupInfo>() {
+                                        String group_info = arg1.getString("GroupInfo");
+                                        GroupInfo user_info = new Gson().fromJson(group_info, new TypeToken<GroupInfo>() {
                                         }.getType());
 
-                                        username = applyuserinfo.getUserName();
-                                        imageurl = applyuserinfo.getPortraitMini();
-                                        dealtime = data.get("ApplyTime") + "";
-                                        String name = userinfo.getGroupName();
-                                        if (username == null || username.trim().equals("")) {
-                                            if (name == null || name.trim().equals("")) {
-                                                news = "有人申请加入您的对讲组";
-                                            } else {
-                                                news = "有人申请加入您的对讲组:" + name;
-                                            }
-                                        } else {
-                                            if (name == null || name.trim().equals("")) {
-                                                news = username + "申请加入您的对讲组";
-                                            } else {
-                                                news = username + "申请加入您的对讲组:" + name;
+                                        String apply_user_info = arg1.getString("ApplyUserInfo");
+                                        ApplyUserInfo applyuserinfo = new Gson().fromJson(apply_user_info, new TypeToken<ApplyUserInfo>() {
+                                        }.getType());
+
+                                        String message_id = message.getMsgId();// 消息ID
+                                        String deal_time = data.get("ApplyTime") + "";
+                                        String group_name = user_info.getGroupName();
+                                        String group_id = user_info.getGroupId();
+
+                                        String person_name = applyuserinfo.getUserName();// 申请者名称
+                                        String person_id = applyuserinfo.getUserId();// 申请者ID
+                                        String image_url = null;// 申请者头像
+
+                                        // 通过person_id获取被邀请者头像
+                                        if (person_id != null && !person_id.trim().equals("") && GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
+                                            for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
+                                                if (GlobalConfig.list_person.get(i).getUserId().equals(person_id)) {
+                                                    image_url = GlobalConfig.list_person.get(i).getPortraitMini();
+                                                }
                                             }
                                         }
 
-                                        setNewMessageNotification(context, news, "我听");
-                                        //组信息管理
-                                        addNotifyMessage("Gb2", imageurl, news, "组邀请信息", dealtime, "true", 0, 0, 0, "");
+                                        // 生成notification消息
+                                        String news;
+                                        String title;
+                                        if (person_name == null || person_name.trim().equals("")) {
+                                            title = "我听";
+                                            if (group_name == null || group_name.trim().equals("")) {
+                                                news = "有人申请加入对讲组,快去看看吧~";
+                                            } else {
+                                                news = "有人申请加入对讲组:" + group_name + ",快去看看吧~";
+                                            }
+                                        } else {
+                                            title = person_name;
+                                            if (group_name == null || group_name.trim().equals("")) {
+                                                news = "申请加入对讲组,快去看看吧~";
+                                            } else {
+                                                news = "申请加入对讲组:" + group_name + ",快去看看吧~";
+                                            }
+                                        }
+                                        setNewMessageNotification(context, news, title);
+
+                                        // 加入到通知数据库
+                                        addNotifyMessage(image_url, person_name, person_id, group_name, group_id, "",
+                                                "", "false", "g2", deal_time, 4, 2, 2, message_id, news);
                                     } catch (Exception e) {
-                                        Log.e("消息接收服务中Gb2的异常", e.toString());
+                                        Log.e("消息接收服务中G2的异常", e.toString());
                                     }
                                 } else if (command2 == 3) {
                                     //当某用户被邀请入组或申请入组的请求
                                     //被管理员或其他有权限的人员处理（接受或拒绝）后，向该用户发送处理结果的消息。
-                                    String news;
-                                    String dealtime = null;
                                     try {
                                         MapContent data = (MapContent) message.getMsgContent();
                                         Map<String, Object> map = data.getContentMap();
@@ -348,90 +445,181 @@ public class NotificationService extends Service {
 
                                         JSONTokener jsonParser = new JSONTokener(msg);
                                         JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                                        String grouiInfo = arg1.getString("GroupInfo");
-
-                                        GroupInfo userinfo = new Gson().fromJson(grouiInfo, new TypeToken<GroupInfo>() {
+                                        String group_info = arg1.getString("GroupInfo");
+                                        GroupInfo user_info = new Gson().fromJson(group_info, new TypeToken<GroupInfo>() {
                                         }.getType());
 
-                                        dealtime = data.get("ApplyTime") + "";
-                                        String dealtype = data.get("DealType") + "";
-                                        String name = userinfo.getGroupName();
-                                        if (dealtype != null && !dealtype.trim().equals("")) {
-                                            if (dealtype.equals("1")) {//同意
-                                                if (name == null || name.trim().equals("")) {
-                                                    news = "有一个新的入组申请已经通过";
-                                                } else {
-                                                    news = "对讲组:" + name + "同意了您的入组请求";
-                                                }
-                                                Intent pushintent = new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN);
-                                                context.sendBroadcast(pushintent);
-                                            } else {//拒绝
-                                                if (name == null || name.trim().equals("")) {
-                                                    news = "有一个您的入组申请什么没有通过";
-                                                } else {
-                                                    news = "对讲组:" + name + "没有同意您的入组请求";
+                                        String message_id = message.getMsgId();// 消息ID
+                                        String group_name = user_info.getGroupName();
+                                        String group_id = user_info.getGroupId();
+                                        String deal_type = data.get("DealType") + "";// 处理类型 1，接受 2，拒绝
+                                        String deal_time = data.get("ApplyTime") + "";
+                                        String person_id = message.getUserId();
+                                        String image_url = null;
+                                        String operator_name = null;
+                                        String person_name = null;
+
+                                        // 通过id获取被邀请者名称跟头像
+                                        if (person_id != null && !person_id.trim().equals("") && GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
+                                            for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
+                                                if (GlobalConfig.list_person.get(i).getUserId().equals(person_id)) {
+                                                    person_name = GlobalConfig.list_person.get(i).getUserName();
+                                                    image_url = GlobalConfig.list_person.get(i).getPortraitMini();
                                                 }
                                             }
-                                            setNewMessageNotification(context, news, "我听");
-                                            addNotifyMessage("Gb3", "", news, "组邀请信息", dealtime, "false", 0, 0, 0, "");
+                                        }
+
+                                        // 通过OperatorId获取操作者名称
+                                        String operator_id = arg1.getString("OperatorId");
+                                        if (operator_id != null && !operator_id.trim().equals("") && GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
+                                            for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
+                                                if (GlobalConfig.list_person.get(i).getUserId().equals(operator_id)) {
+                                                    operator_name = GlobalConfig.list_person.get(i).getUserName();
+                                                }
+                                            }
+                                        }
+
+                                        String InType = data.get("InType") + "";// 消息类型 1被邀请入组 2主动申请入组
+                                        if (InType != null && !InType.trim().equals("")) {
+                                            if (InType.trim().equals("1")) {
+                                                // 被邀请入组
+                                                if (deal_type != null && !deal_type.trim().equals("")) {
+                                                    // 生成notification消息
+                                                    if (deal_type.equals("1")) {
+                                                        //同意
+                                                        String news;
+                                                        String title;
+                                                        if (person_name == null || person_name.trim().equals("")) {
+                                                            title = "我听";
+                                                            if (group_name == null || group_name.trim().equals("")) {
+                                                                news = "有一个新的入组邀请已经通过" + ",快去看看吧~";
+                                                            } else {
+                                                                news = "有人加入了对讲组:" + group_name + ",快去看看吧~";
+                                                            }
+                                                        } else {
+                                                            title = person_name;
+                                                            if (group_name == null || group_name.trim().equals("")) {
+                                                                news = "加入对讲组" + ",快去看看吧~";
+                                                            } else {
+                                                                news = "加入对讲组:" + group_name + ",快去看看吧~";
+                                                            }
+                                                        }
+                                                        setNewMessageNotification(context, news, title);
+
+                                                        // 更新通讯录
+                                                        Intent push_intent = new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN);
+                                                        context.sendBroadcast(push_intent);
+
+                                                        // 加入到通知数据库
+                                                        addNotifyMessage(image_url, person_name, person_id, group_name, group_id, operator_name,
+                                                                operator_id, "false", "g31", deal_time, 4, 2, 3, message_id, news);
+                                                    }
+                                                    // 拒绝消息不展示
+                                                    // else {
+                                                    //拒绝
+                                                    // }
+                                                } else {
+                                                    Log.e("组加入消息异常", "deal_type没有获取到");
+                                                }
+                                            } else if (InType.trim().equals("2")) {
+                                                // 主动申请入组
+                                                if (deal_type != null && !deal_type.trim().equals("")) {
+                                                    // 生成notification消息
+                                                    if (deal_type.equals("1")) {
+                                                        //同意
+                                                        String news;
+                                                        if (group_name == null || group_name.trim().equals("")) {
+                                                            news = "您入组成功";
+                                                            setNewMessageNotification(context, news, "我听");
+                                                        } else {
+                                                            news = "同意了您的入组申请";
+                                                            setNewMessageNotification(context, news, group_name);
+                                                        }
+
+                                                        // 更新通讯录
+                                                        Intent push_intent = new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN);
+                                                        context.sendBroadcast(push_intent);
+
+                                                        // 加入到通知数据库
+                                                        addNotifyMessage(image_url, person_name, person_id, group_name, group_id, operator_name,
+                                                                operator_id, "false", "g32", deal_time, 4, 2, 3, message_id, news);
+                                                    }
+                                                    // 拒绝消息不展示
+                                                    // else {
+                                                    //拒绝
+                                                    // }
+                                                } else {
+                                                    Log.e("组加入消息异常", "deal_type没有获取到");
+                                                }
+                                            }
+                                        } else {
+                                            Log.e("组加入消息异常", "InType没有获取到");
                                         }
                                     } catch (Exception e) {
-                                        Log.e("消息接收服务中Gb3的异常", e.toString());
+                                        Log.e("消息接收服务中G3的异常", e.toString());
                                     }
                                 } else if (command2 == 4) {
                                     //当有某人加入组后，向组内成员发送这个消息。
-                                    //注意：这个消息与1.3.1相同，今后要删除掉1.3.1
-                                    String news;
-                                    String groupid = null;
-                                    String groupname = null;
-                                    String groupurl = null;
                                     try {
                                         MapContent data = (MapContent) message.getMsgContent();
-
                                         Map<String, Object> map = data.getContentMap();
                                         String msg = new Gson().toJson(map);
-
                                         JSONTokener jsonParser = new JSONTokener(msg);
                                         JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                                        String userinfos = arg1.getString("UserInfo");
+                                        String user_info = arg1.getString("UserInfo");
 
-                                        UserInfo userinfo = new Gson().fromJson(userinfos, new TypeToken<UserInfo>() {
+                                        UserInfo userinfo = new Gson().fromJson(user_info, new TypeToken<UserInfo>() {
                                         }.getType());
-                                        groupid = data.get("GroupId") + "";
-                                        if (groupid != null && !groupid.trim().equals("") && GlobalConfig.list_group != null && GlobalConfig.list_group.size() > 0) {
+                                        String person_name = userinfo.getUserName();// 进入组的人的名称
+                                        String person_id = userinfo.getUserId();// 进入组的人的ID
+
+                                        String group_id = data.get("GroupId") + "";// 组ID
+                                        String group_name = null;
+                                        String image_url = null;
+                                        // 通过group_id获取组的名称跟头像
+                                        if (group_id != null && !group_id.trim().equals("") && GlobalConfig.list_group != null && GlobalConfig.list_group.size() > 0) {
                                             for (int i = 0; i < GlobalConfig.list_group.size(); i++) {
-                                                if (GlobalConfig.list_group.get(i).getGroupId().equals(groupid)) {
-                                                    groupname = GlobalConfig.list_group.get(i).getGroupName();
-                                                    groupurl = GlobalConfig.list_group.get(i).getGroupImg();
+                                                if (GlobalConfig.list_group.get(i).getGroupId().equals(group_id)) {
+                                                    group_name = GlobalConfig.list_group.get(i).getGroupName();
+                                                    image_url = GlobalConfig.list_group.get(i).getGroupImg();
                                                 }
                                             }
                                         }
-                                        String name = userinfo.getUserName();
-                                        if (name == null || name.trim().equals("")) {
-                                            if (groupname == null || groupname.trim().equals("")) {
-                                                news = "有一个人加入到您所在的对讲组";
+
+                                        String message_id = message.getMsgId();// 消息ID
+                                        String deal_time = String.valueOf(message.getSendTime());// 消息处理时间
+
+                                        String news;
+                                        if (person_name == null || person_name.trim().equals("")) {
+                                            if (group_name == null || group_name.trim().equals("")) {
+                                                news = "有一个人加入到您所在的对讲组" + ",快去看看吧~";
                                             } else {
-                                                news = "有一个人加入到您所在的对讲组:" + groupname;
+                                                news = "有一个人加入到对讲组:" + group_name + ",快去看看吧~";
                                             }
+                                            setNewMessageNotification(context, news, "我听");
                                         } else {
-                                            if (groupname == null || groupname.trim().equals("")) {
-                                                news = name + "加入到您所在的对讲组";
+                                            if (group_name == null || group_name.trim().equals("")) {
+                                                news = "加入到您所在的对讲组" + ",快去看看吧~";
                                             } else {
-                                                news = name + "加入到您所在的对讲组:" + groupname;
+                                                news = "加入到对讲组:" + group_name + ",快去看看吧~";
                                             }
+                                            setNewMessageNotification(context, news, person_name);
                                         }
-                                        setNewMessageNotification(context, news, "我听");
-                                        addNotifyMessage("Gb4", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()), "false", 0, 0, 0, "");
+
+                                        // 加入到通知数据库
+                                        addNotifyMessage(image_url, person_name, person_id, group_name, group_id, "",
+                                                "", "false", "g4", deal_time, 4, 2, 4, message_id, news);
                                     } catch (Exception e) {
-                                        Log.e("消息接收服务中Gb4的异常", e.toString());
+                                        Log.e("消息接收服务中G4的异常", e.toString());
                                     }
                                 } else if (command2 == 5) {
                                     //当有某人退出组后（包括主动退出和被管理员踢出），向组内成员发送这个消息。
-                                    String name = null;
-                                    String news = null;
-                                    String groupid = null;
-                                    String groupname = null;
-                                    String groupurl = null;
+                                    String person_name;
+                                    String person_id = null;
+                                    String news;
+                                    String group_id;
+                                    String group_name = null;
+                                    String image_url = null;
                                     try {
                                         MapContent data = (MapContent) message.getMsgContent();
                                         Map<String, Object> map = data.getContentMap();
@@ -441,238 +629,262 @@ public class NotificationService extends Service {
 
                                         UserInfo userinfo = null;
                                         try {
-                                            String userinfos = arg1.getString("UserInfo");
-                                            userinfo = new Gson().fromJson(userinfos, new TypeToken<UserInfo>() {
+                                            String user_info = arg1.getString("UserInfo");
+                                            userinfo = new Gson().fromJson(user_info, new TypeToken<UserInfo>() {
                                             }.getType());
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
 
-                                        List<UserInfo> userlist = null;
+                                        List<UserInfo> user_list = null;
                                         try {
-                                            String userlists = arg1.getString("UserList");
-                                            userlist = new Gson().fromJson(userlists, new TypeToken<List<UserInfo>>() {
+                                            String _user_list = arg1.getString("UserList");
+                                            user_list = new Gson().fromJson(_user_list, new TypeToken<List<UserInfo>>() {
                                             }.getType());
                                         } catch (Exception e) {
                                             e.printStackTrace();
-                                        }
-                                        groupid = data.get("GroupId") + "";
-                                        if (groupid != null && !groupid.trim().equals("") && GlobalConfig.list_group != null && GlobalConfig.list_group.size() > 0) {
-                                            for (int i = 0; i < GlobalConfig.list_group.size(); i++) {
-                                                if (GlobalConfig.list_group.get(i).getGroupId().equals(groupid)) {
-                                                    groupname = GlobalConfig.list_group.get(i).getGroupName();
-                                                    groupurl = GlobalConfig.list_group.get(i).getGroupImg();
-                                                }
-                                            }
                                         }
 
                                         if (userinfo != null && !userinfo.getUserName().equals("")) {
-                                            name = userinfo.getUserName();
-                                        } else if (userlist != null && userlist.size() > 0) {
-                                            StringBuffer loginname = new StringBuffer();
-                                            for (int i = 0; i < userlist.size(); i++) {
-                                                if (userlist.get(i).getUserName() != null && !userlist.get(i).getUserName().equals("")) {
-                                                    loginname.append(userlist.get(i).getUserName());
+                                            person_name = userinfo.getUserName();
+                                            person_id = userinfo.getUserId();
+
+                                        } else if (user_list != null && user_list.size() > 0) {
+                                            StringBuffer login_name = new StringBuffer();
+                                            for (int i = 0; i < user_list.size(); i++) {
+                                                if (user_list.get(i).getUserName() != null && !user_list.get(i).getUserName().equals("")) {
+                                                    login_name.append(user_list.get(i).getUserName());
                                                 }
                                             }
-                                            name = loginname.toString() + ",";
-                                            name = name.substring(0, name.length() - 1);
+                                            person_name = login_name.toString() + ",";
+                                            person_name = person_name.substring(0, person_name.length() - 1);
                                         } else {
-                                            name = "";
+                                            person_name = "";
                                         }
 
-                                        if (name == null || name.trim().equals("")) {
-                                            if (groupname == null || groupname.trim().equals("")) {
-                                                news = "有人退出您所在的对讲组";
-                                            } else {
-                                                news = "有人退出您所在的对讲组:" + groupname;
-                                            }
-                                        } else {
-                                            if (groupname == null || groupname.trim().equals("")) {
-                                                news = name + "退出您所在的对讲组";
-                                            } else {
-                                                news = name + "退出您所在的对讲组:" + groupname;
+                                        // 通过group_id获取组的名称跟头像
+                                        group_id = data.get("GroupId") + "";
+                                        if (group_id != null && !group_id.trim().equals("") && GlobalConfig.list_group != null && GlobalConfig.list_group.size() > 0) {
+                                            for (int i = 0; i < GlobalConfig.list_group.size(); i++) {
+                                                if (GlobalConfig.list_group.get(i).getGroupId().equals(group_id)) {
+                                                    group_name = GlobalConfig.list_group.get(i).getGroupName();
+                                                    image_url = GlobalConfig.list_group.get(i).getGroupImg();
+                                                }
                                             }
                                         }
 
-                                        setNewMessageNotification(context, news, "我听");
-                                        addNotifyMessage("Gb5", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()), "false", 0, 0, 0, "");
+                                        String message_id = message.getMsgId();// 消息ID
+                                        String deal_time = String.valueOf(message.getSendTime());// 消息处理时间
+
+                                        // 生成notification消息
+                                        if (person_name == null || person_name.trim().equals("")) {
+                                            if (group_name == null || group_name.trim().equals("")) {
+                                                news = "有人退出您所在的对讲组"+ ",快去看看吧~";
+                                            } else {
+                                                news = "有人退出对讲组:" + group_name+ ",快去看看吧~";
+                                            }
+                                            setNewMessageNotification(context, news, "我听");
+                                        } else {
+                                            if (group_name == null || group_name.trim().equals("")) {
+                                                news =   "退出您所在的对讲组"+ ",快去看看吧~";
+                                            } else {
+                                                news =  "退出对讲组:" + group_name+ ",快去看看吧~";
+                                            }
+                                            setNewMessageNotification(context, news, person_name);
+                                        }
+
+                                        // 加入到通知数据库
+                                        addNotifyMessage(image_url, person_name, person_id, group_name, group_id, "",
+                                                "", "false", "g5", deal_time, 4, 2, 5, message_id,news);
                                     } catch (Exception e) {
-                                        Log.e("消息接收服务中Gb5的异常", e.toString());
+                                        Log.e("消息接收服务中G5的异常", e.toString());
                                     }
                                 } else if (command2 == 6) {
                                     //当组被管理员解散后，发送此消息。
-                                    String news = null;
-                                    String groupname = null;
-                                    String groupurl = null;
                                     MapContent data = (MapContent) message.getMsgContent();
-                                    String groupid = data.get("GroupId") + "";
-
-                                    if (groupid != null && !groupid.trim().equals("") && GlobalConfig.list_group != null && GlobalConfig.list_group.size() > 0) {
+                                    String group_name = null;
+                                    String image_url = null;
+                                    String group_id = data.get("GroupId") + "";
+                                    if (group_id != null && !group_id.trim().equals("") && GlobalConfig.list_group != null && GlobalConfig.list_group.size() > 0) {
                                         for (int i = 0; i < GlobalConfig.list_group.size(); i++) {
-                                            if (GlobalConfig.list_group.get(i).getGroupId().equals(groupid)) {
-                                                groupname = GlobalConfig.list_group.get(i).getGroupName();
-                                                groupurl = GlobalConfig.list_group.get(i).getGroupImg();
+                                            if (GlobalConfig.list_group.get(i).getGroupId().equals(group_id)) {
+                                                group_name = GlobalConfig.list_group.get(i).getGroupName();
+                                                image_url = GlobalConfig.list_group.get(i).getGroupImg();
                                             }
                                         }
                                     }
 
-                                    if (groupname == null || groupname.trim().equals("")) {
+                                    String message_id = message.getMsgId();// 消息ID
+                                    String deal_time = String.valueOf(message.getSendTime());// 消息处理时间
+
+                                    String news;
+                                    if (group_name == null || group_name.trim().equals("")) {
                                         news = "有一个您所在的对讲组被解散";
                                     } else {
-                                        news = "您所在的对讲组:" + groupname + "被群主解散";
+                                        news = "您所在的对讲组:" + group_name + "被群主解散";
                                     }
-                                    //加入数据库
                                     setNewMessageNotification(context, news, "我听");
-                                    addNotifyMessage("Gb6", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()), "false", 0, 0, 0, "");
+
+                                    // 加入到通知数据库
+                                    addNotifyMessage(image_url, "", "", group_name, group_id, "",
+                                            "", "false", "g6", deal_time, 4, 2, 6, message_id,news);
+
                                     //刷新通讯录
                                     context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                                 } else if (command2 == 7) {
                                     //当管理员把某组的权限移交给另一个人时，向组内所有成员发送新管理员Id。
-                                    String news = null;
-                                    String groupid = null;
-                                    String groupname = null;
-                                    String groupurl = null;
+                                    String group_name = null;
+                                    String image_url = null;
                                     try {
                                         MapContent data = (MapContent) message.getMsgContent();
                                         Map<String, Object> map = data.getContentMap();
                                         String msg = new Gson().toJson(map);
                                         JSONTokener jsonParser = new JSONTokener(msg);
                                         JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                                        String grouiInfo = arg1.getString("GroupInfo");
-                                        String newadminInfo = arg1.getString("NewAdminInfo");
-
-                                        GroupInfo groupinfo = new Gson().fromJson(grouiInfo, new TypeToken<GroupInfo>() {
+                                        String new_admin_info = arg1.getString("NewAdminInfo");
+                                        UserInfo userinfo = new Gson().fromJson(new_admin_info, new TypeToken<UserInfo>() {
                                         }.getType());
-                                        UserInfo userinfo = new Gson().fromJson(newadminInfo, new TypeToken<UserInfo>() {
-                                        }.getType());
-                                        groupid = groupinfo.getGroupId();
 
-                                        if (groupid != null && !groupid.trim().equals("") && GlobalConfig.list_group != null && GlobalConfig.list_group.size() > 0) {
+                                        String group_id = arg1.getString("GroupId");
+                                        if (group_id != null && !group_id.trim().equals("") && GlobalConfig.list_group != null && GlobalConfig.list_group.size() > 0) {
                                             for (int i = 0; i < GlobalConfig.list_group.size(); i++) {
-                                                if (GlobalConfig.list_group.get(i).getGroupId().equals(groupid)) {
-                                                    groupname = GlobalConfig.list_group.get(i).getGroupName();
-                                                    groupurl = GlobalConfig.list_group.get(i).getGroupImg();
+                                                if (GlobalConfig.list_group.get(i).getGroupId().equals(group_id)) {
+                                                    group_name = GlobalConfig.list_group.get(i).getGroupName();
+                                                    image_url = GlobalConfig.list_group.get(i).getGroupImg();
                                                 }
                                             }
                                         }
-                                        String name = userinfo.getUserName();
-                                        String userid = userinfo.getUserId();
-
-                                        if (name == null || name.trim().equals("")) {
-                                            if (groupname == null || groupname.trim().equals("")) {
-                                                news = "有一个您所在的对讲组的管理权限移交了";
+                                        String message_id = message.getMsgId();// 消息ID
+                                        String deal_time = String.valueOf(message.getSendTime());// 消息处理时间
+                                        String user_name = userinfo.getUserName();
+                                        String user_id = userinfo.getUserId();
+                                        String news;
+                                        if (user_name == null || user_name.trim().equals("")) {
+                                            if (group_name == null || group_name.trim().equals("")) {
+                                                news = "有一个您所在的对讲组的群主改变了";
                                             } else {
-                                                news = groupname + "的管理权限移交了";
+                                                news = group_name + "的群主改变了";
                                             }
                                         } else {
-                                            if (groupname == null || groupname.trim().equals("")) {
-                                                news = "有一个您所在的对讲组的管理权限移交给" + name;
+                                            if (group_name == null || group_name.trim().equals("")) {
+                                                news = "有一个您所在的对讲组的群主变成" + user_name;
                                             } else {
-                                                news = groupname + "的管理权限移交给" + name;
+                                                news = user_name + "成为组：" + group_name + "的群主";
                                             }
                                         }
-                                        //加入数据库
                                         setNewMessageNotification(context, news, "我听");
-                                        addNotifyMessage("Gb7", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()), "false", 0, 0, 0, "");
+
+                                        // 加入到通知数据库
+                                        addNotifyMessage(image_url, user_name, user_id, group_name, group_id, "",
+                                                "", "false", "g7", deal_time, 4, 2, 7, message_id,news);
 
                                         //如果管理员权限移交给自己，则需要刷新通讯录
-                                        if (userid != null && !userid.equals("") && CommonUtils.getUserId(context) != null &&
-                                                CommonUtils.getUserId(context).equals(userid)) {
+                                        if (user_id != null && !user_id.equals("") && CommonUtils.getUserId(context) != null &&
+                                                CommonUtils.getUserId(context).equals(user_id)) {
                                             context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                                         }
                                     } catch (Exception e) {
-                                        Log.e("消息接收服务中Gb7的异常", e.toString());
+                                        Log.e("消息接收服务中G7的异常", e.toString());
                                     }
                                 } else if (command2 == 8) {
                                     //当管理员审核某个邀请后，只有当拒绝时，才把审核的消息发给邀请者。
                                     String news = null;
-                                    String groupid = null;
-                                    String groupname = null;
-                                    String groupurl = null;
+                                    String group_name = null;
+                                    String image_url = null;
                                     try {
                                         MapContent data = (MapContent) message.getMsgContent();
                                         Map<String, Object> map = data.getContentMap();
                                         String msg = new Gson().toJson(map);
                                         JSONTokener jsonParser = new JSONTokener(msg);
                                         JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                                        String grouiInfo = arg1.getString("GroupInfo");
-                                        //									String inviteuserinfos= arg1.getString("InviteUserInfo");
-                                        String beinviteuserinfos = arg1.getString("BeInvitedUserInfo");
-                                        String dealtime = data.get("InviteTime") + "";
 
-                                        //									UserInfo inviteuserinfo    = new Gson().fromJson(inviteuserinfos, new TypeToken<UserInfo>() {}.getType());
-                                        UserInfo beinviteuserinfo = new Gson().fromJson(beinviteuserinfos, new TypeToken<UserInfo>() {
+                                        String group_info = arg1.getString("GroupInfo");
+                                        GroupInfo user_info = new Gson().fromJson(group_info, new TypeToken<GroupInfo>() {
                                         }.getType());
 
-                                        GroupInfo userinfo = new Gson().fromJson(grouiInfo, new TypeToken<GroupInfo>() {
-                                        }.getType());
-                                        groupid = userinfo.getGroupId();
-
-                                        if (groupid != null && !groupid.trim().equals("") && GlobalConfig.list_group != null && GlobalConfig.list_group.size() > 0) {
+                                        String group_id = user_info.getGroupId();
+                                        if (group_id != null && !group_id.trim().equals("") && GlobalConfig.list_group != null && GlobalConfig.list_group.size() > 0) {
                                             for (int i = 0; i < GlobalConfig.list_group.size(); i++) {
-                                                if (GlobalConfig.list_group.get(i).getGroupId().equals(groupid)) {
-                                                    groupname = GlobalConfig.list_group.get(i).getGroupName();
-                                                    groupurl = GlobalConfig.list_group.get(i).getGroupImg();
+                                                if (GlobalConfig.list_group.get(i).getGroupId().equals(group_id)) {
+                                                    group_name = GlobalConfig.list_group.get(i).getGroupName();
+                                                    image_url = GlobalConfig.list_group.get(i).getGroupImg();
                                                 }
                                             }
                                         }
-                                        String name = beinviteuserinfo.getLoginName();
 
-                                        if (name == null || name.trim().equals("")) {
-                                            if (groupname == null || groupname.trim().equals("")) {
-                                                news = "有人退出您所在的对讲组";
+                                        //	String inviteuserinfos= arg1.getString("InviteUserInfo");
+                                        String be_invite_user_info = arg1.getString("BeInvitedUserInfo");
+                                        //	UserInfo inviteuserinfo    = new Gson().fromJson(inviteuserinfos, new TypeToken<UserInfo>() {}.getType());
+                                        UserInfo beinviteuserinfo = new Gson().fromJson(be_invite_user_info, new TypeToken<UserInfo>() {
+                                        }.getType());
+                                        String user_name = beinviteuserinfo.getLoginName();
+                                        String user_id = beinviteuserinfo.getUserId();
+
+                                        String deal_time = data.get("InviteTime") + "";
+                                        String message_id = message.getMsgId();// 消息ID
+
+                                        if (user_name == null || user_name.trim().equals("")) {
+                                            if (group_name == null || group_name.trim().equals("")) {
+                                                news = "您邀请别人进入对讲组的请求被群主拒绝";
                                             } else {
-                                                news = "您邀请别人进入" + groupname + "的请求被群主拒绝";
+                                                news = "您邀请别人进入" + group_name + "的请求被群主拒绝";
                                             }
                                         } else {
-                                            if (groupname == null || groupname.trim().equals("")) {
-                                                news = "您邀请" + name + "进入对讲组的请求被群主拒绝";
+                                            if (group_name == null || group_name.trim().equals("")) {
+                                                news = "您邀请" + user_name + "进入对讲组的请求被群主拒绝";
                                             } else {
-                                                news = "您邀请" + name + "进入" + groupname + "的请求被群主拒绝";
+                                                news = "您邀请" + user_name + "进入" + group_name + "的请求被群主拒绝";
                                             }
                                         }
-                                        //加入数据库
                                         setNewMessageNotification(context, news, "我听");
-                                        addNotifyMessage("Gb8", groupurl, news, "组信息", dealtime, "false", 0, 0, 0, "");
+
+                                        // 加入到通知数据库
+                                        addNotifyMessage(image_url, user_name, user_id, group_name, group_id, "",
+                                                "", "false", "g8", deal_time, 4, 2, 8, message_id,news);
                                     } catch (Exception e) {
-                                        Log.e("消息接收服务中Gb8的异常", e.toString());
+                                        Log.e("消息接收服务中G8的异常", e.toString());
                                     }
                                 } else if (command2 == 9) {
                                     //当组管理员修改组信息后，向组内所有成员发送更新消息。
                                     String news = null;
-                                    String groupid = null;
-                                    String groupname = null;
-                                    String groupurl = null;
+                                    String group_id = null;
+                                    String group_name = null;
+                                    String image_url = null;
                                     try {
                                         MapContent data = (MapContent) message.getMsgContent();
                                         Map<String, Object> map = data.getContentMap();
                                         String msg = new Gson().toJson(map);
                                         JSONTokener jsonParser = new JSONTokener(msg);
                                         JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                                        String grouiInfo = arg1.getString("GroupInfo");
 
-                                        GroupInfo userinfo = new Gson().fromJson(grouiInfo, new TypeToken<GroupInfo>() {
+                                        String group_info = arg1.getString("GroupInfo");
+                                        GroupInfo user_info = new Gson().fromJson(group_info, new TypeToken<GroupInfo>() {
                                         }.getType());
-                                        groupid = userinfo.getGroupId();
 
-                                        if (groupid != null && !groupid.trim().equals("") && GlobalConfig.list_group != null && GlobalConfig.list_group.size() > 0) {
+                                        group_id = user_info.getGroupId();
+                                        if (group_id != null && !group_id.trim().equals("") && GlobalConfig.list_group != null && GlobalConfig.list_group.size() > 0) {
                                             for (int i = 0; i < GlobalConfig.list_group.size(); i++) {
-                                                if (GlobalConfig.list_group.get(i).getGroupId().equals(groupid)) {
-                                                    groupname = GlobalConfig.list_group.get(i).getGroupName();
-                                                    groupurl = GlobalConfig.list_group.get(i).getGroupImg();
+                                                if (GlobalConfig.list_group.get(i).getGroupId().equals(group_id)) {
+                                                    group_name = GlobalConfig.list_group.get(i).getGroupName();
+                                                    image_url = GlobalConfig.list_group.get(i).getGroupImg();
                                                 }
                                             }
                                         }
 
-                                        if (groupname == null || groupname.trim().equals("")) {
+                                        String message_id = message.getMsgId();// 消息ID
+                                        String deal_time = String.valueOf(message.getSendTime());// 消息处理时间
+
+                                        if (group_name == null || group_name.trim().equals("")) {
                                             news = "有一个您所在的对讲组修改了组信息";
                                         } else {
-                                            news = "您所在的:" + groupname + "修改了组信息";
+                                            news = "您所在的:" + group_name + "修改了组信息";
                                         }
-                                        //加入数据库
                                         setNewMessageNotification(context, news, "我听");
-                                        addNotifyMessage("Gb9", groupurl, news, "组信息", String.valueOf(System.currentTimeMillis()), "false", 0, 0, 0, "");
+
+                                        // 加入到通知数据库
+                                        addNotifyMessage(image_url, "", "", group_name, group_id, "",
+                                                "", "false", "g9", deal_time, 4, 2, 8, message_id,news);
+
                                         //刷新通讯录
                                         context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                                     } catch (Exception e) {
@@ -698,7 +910,7 @@ public class NotificationService extends Service {
                                 if (command4 == 1) {
                                     try {
                                         String message_id = message.getMsgId();
-                                        
+
                                         MapContent data = (MapContent) message.getMsgContent();
                                         Map<String, Object> map = data.getContentMap();
                                         String msg = new Gson().toJson(map);
@@ -706,14 +918,16 @@ public class NotificationService extends Service {
                                         JSONObject arg1 = (JSONObject) jsonParser.nextValue();
 
                                         String NewMediaList = arg1.getString("NewMediaList");
-                                        List<SeqMediaInfo>   MediaList = new Gson().fromJson(NewMediaList, new TypeToken<List<SeqMediaInfo>>() {}.getType());
+                                        List<SeqMediaInfo> MediaList = new Gson().fromJson(NewMediaList, new TypeToken<List<SeqMediaInfo>>() {
+                                        }.getType());
                                         SeqMediaInfo _media = MediaList.get(0);
                                         String content_name = _media.getContentName();
                                         String content_id = _media.getContentId();
                                         String deal_time = _media.getContentPubTime();
 
                                         String seqMediaInfo = arg1.getString("SeqMediaInfo");
-                                        SeqMediaInfo seqInfo = new Gson().fromJson(seqMediaInfo, new TypeToken<SeqMediaInfo>() {}.getType());
+                                        SeqMediaInfo seqInfo = new Gson().fromJson(seqMediaInfo, new TypeToken<SeqMediaInfo>() {
+                                        }.getType());
 
 
                                         String image_url = seqInfo.getContentImg();
@@ -732,7 +946,7 @@ public class NotificationService extends Service {
                                         setNewMessageNotification(context, news, "订阅更新");
                                         // 加入数据库
                                         addSubscriberMessage(image_url, seq_name, seq_id,
-                                                content_name, content_id, deal_time,4,4,1,message_id);
+                                                content_name, content_id, deal_time, 4, 4, 1, message_id);
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中的异常", e.toString());
                                     }

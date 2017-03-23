@@ -18,7 +18,6 @@ public class MessageInFo implements Serializable {
 	public String GroupDescn;
 	public String GroupNum;
 	public String Email;
-	public String ProtraitMini;
 	public String GroupImg;
 	public String GroupId;
 	private String GroupCreator;
@@ -33,8 +32,7 @@ public class MessageInFo implements Serializable {
 	private String PortraitBig;		//
 	private String Portrait;		//
 	private String PortraitMini;	//
-	
-	
+
 	
 	public String getMSType() {
 		return MSType;
@@ -195,12 +193,7 @@ public class MessageInFo implements Serializable {
 	public void setEmail(String email) {
 		Email = email;
 	}
-	public String getProtraitMini() {
-		return ProtraitMini;
-	}
-	public void setProtraitMini(String protraitMini) {
-		ProtraitMini = protraitMini;
-	}
+
 	public String getGroupImg() {
 		return GroupImg;
 	}

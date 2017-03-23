@@ -23,7 +23,6 @@ import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.UserInfo;
 import com.woting.ui.interphone.message.groupapply.adapter.HandleGroupApplyAdapter;
-import com.woting.ui.interphone.message.groupapply.adapter.HandleGroupApplyAdapter.Callback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +35,7 @@ import java.util.List;
  * @author 辛龙
  * 2016年4月13日
  */
-public class HandleGroupApplyActivity extends AppBaseActivity implements OnClickListener, Callback, OnItemLongClickListener, TipView.WhiteViewClick {
+public class HandleGroupApplyActivity extends AppBaseActivity implements OnClickListener, TipView.WhiteViewClick {
     private HandleGroupApplyAdapter adapter;
     private List<UserInfo> userList = new ArrayList<>();// 存储服务器返回值的 list
 
@@ -82,7 +81,6 @@ public class HandleGroupApplyActivity extends AppBaseActivity implements OnClick
         tipView.setWhiteClick(this);
 
         listGroupMember = (ListView) findViewById(R.id.lv_groupmembers);
-        listGroupMember.setOnItemLongClickListener(this);
 
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
@@ -148,8 +146,9 @@ public class HandleGroupApplyActivity extends AppBaseActivity implements OnClick
 				if (ReturnType != null && ReturnType.equals("1001")) {
 					try {
                         userList = new Gson().fromJson(result.getString("UserList"), new TypeToken<List<UserInfo>>() {}.getType());
-                        adapter = new HandleGroupApplyAdapter(context, userList, HandleGroupApplyActivity.this);
+                        adapter = new HandleGroupApplyAdapter(context, userList);
                         listGroupMember.setAdapter(adapter);
+						setListener();
                         tipView.setVisibility(View.GONE);
 					} catch (Exception e1) {
 						e1.printStackTrace();
@@ -247,18 +246,20 @@ public class HandleGroupApplyActivity extends AppBaseActivity implements OnClick
 		});
 	}
 
-	@Override
-	public void click(View v) {
-        onClickIndex = (int) v.getTag();
-        sendRequest();
-	}
+	private void setListener() {
+		adapter.setOnListener(new HandleGroupApplyAdapter.OnListener() {
+			@Override
+			public void tongyi(int position) {
+				delDialog.show();
+				delPosition = position;
+			}
 
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        delDialog.show();
-        delPosition = position;
-        return false;
-    }
+			@Override
+			public void jujue(int position) {
+				sendRequest();
+			}
+		});
+	}
 
 	@Override
 	protected void onDestroy() {
