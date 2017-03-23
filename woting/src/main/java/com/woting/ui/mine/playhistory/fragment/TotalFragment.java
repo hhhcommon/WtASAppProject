@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
@@ -88,13 +89,13 @@ public class TotalFragment extends Fragment {
             for (int i = 0; i < subList.size(); i++) {
                 isData = true;
                 if (subList.get(i).getPlayerMediaType() != null && !subList.get(i).getPlayerMediaType().equals("")) {
-                    if (subList.get(i).getPlayerMediaType().equals("AUDIO")) {
+                    if (subList.get(i).getPlayerMediaType().equals(StringConstant.TYPE_AUDIO)) {
                         if (playList == null) playList = new ArrayList<>();
                         if (playList.size() < 3) playList.add(subList.get(i));
-                    } else if (subList.get(i).getPlayerMediaType().equals("RADIO")) {
+                    } else if (subList.get(i).getPlayerMediaType().equals(StringConstant.TYPE_RADIO)) {
                         if (radioList == null) radioList = new ArrayList<>();
                         if (radioList.size() < 3) radioList.add(subList.get(i));
-                    } else if (subList.get(i).getPlayerMediaType().equals("TTS")) {
+                    } else if (subList.get(i).getPlayerMediaType().equals(StringConstant.TYPE_TTS)) {
                         if (ttsList == null) ttsList = new ArrayList<>();
                         if (ttsList.size() < 3) ttsList.add(subList.get(i));
                     }
@@ -141,7 +142,7 @@ public class TotalFragment extends Fragment {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 String MediaType = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerMediaType();
-                if (MediaType != null && !MediaType.equals("SEQU")) {
+                if (MediaType != null && !MediaType.equals(StringConstant.TYPE_SEQU)) {
                     String playername = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerName();
                     String playerimage = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerImage();
                     String playerurl = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerUrl();
@@ -177,7 +178,7 @@ public class TotalFragment extends Fragment {
                             ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
 
                     // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-                    if (playermediatype != null && playermediatype.equals("TTS")) dbDao.deleteHistoryById(ContentId);
+                    if (playermediatype != null && playermediatype.equals(StringConstant.TYPE_TTS)) dbDao.deleteHistoryById(ContentId);
                     else dbDao.deleteHistory(playerurl);
                     dbDao.addHistory(history);
 
@@ -185,7 +186,7 @@ public class TotalFragment extends Fragment {
                     String s = list.get(groupPosition).getHistoryList().get(childPosition).getPlayerName();
                     Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                     Bundle bundle1 = new Bundle();
-                    bundle1.putString("text", s);
+                    bundle1.putString(StringConstant.TEXT_CONTENT, s);
                     push.putExtras(bundle1);
                     context.sendBroadcast(push);
                 }
@@ -195,7 +196,7 @@ public class TotalFragment extends Fragment {
     }
 
     /**
-     * 屏蔽group点击事件  点击更多跳转到对应的界面查看全部历史播放记录
+     * 屏蔽 group 点击事件  点击更多跳转到对应的界面查看全部历史播放记录
      * 长按删除	长按 ExpandableListView 的 Item 弹出删除对话框
      */
     private void setListener() {
@@ -247,15 +248,15 @@ public class TotalFragment extends Fragment {
                 String playType = list.get(delGroupPosition).getHistoryList().get(delChildPosition).getPlayerMediaType();
 
                 // "TTS" "AUDIO" 类型的删除条件为 ContentID, "RADIO" 类型为 url
-                if (playType != null && !playType.equals("") && playType.equals("TTS")) {
+                if (playType != null && !playType.equals("") && playType.equals(StringConstant.TYPE_TTS)) {
                     String contentId = list.get(delGroupPosition).getHistoryList().get(delChildPosition).getContentID();
                     dbDao.deleteHistoryById(contentId);
                     isDeleteTTS = true;
-                } else if (playType != null && !playType.equals("") && playType.equals("RADIO")) {
+                } else if (playType != null && !playType.equals("") && playType.equals(StringConstant.TYPE_RADIO)) {
                     String url = list.get(delGroupPosition).getHistoryList().get(delChildPosition).getPlayerUrl();
                     dbDao.deleteHistory(url);
                     isDeleteRadio = true;
-                } else if (playType != null && !playType.equals("") && playType.equals("AUDIO")) {
+                } else if (playType != null && !playType.equals("") && playType.equals(StringConstant.TYPE_AUDIO)) {
                     String id = list.get(delGroupPosition).getHistoryList().get(delChildPosition).getContentID();
                     dbDao.deleteHistoryById(id);
                     isDeleteSound = true;

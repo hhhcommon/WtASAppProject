@@ -10,7 +10,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +53,7 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
     private FavorListAdapter adapter;
     private List<RankInfo> subList;
     private List<String> delList;
-    private ArrayList<RankInfo> newList = new ArrayList<>();
+    private List<RankInfo> newList = new ArrayList<>();
     
 	private Dialog dialog;
     private View rootView;
@@ -64,7 +63,6 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
     
     private int page = 1;
     private int refreshType = 1;// refreshType == 1 为下拉加载  == 2 为上拉加载更多
-    private int pageSizeNum = -1;// 先求余 如果等于0 最后结果不加1 如果不等于0 结果加一
     private String tag = "SEQU_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
     private boolean isDel;
@@ -185,13 +183,8 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
 
             @Override
 			public void onLoadMore() {
-				if (page <= pageSizeNum) {
-                    refreshType = 2;
-                    send();
-				} else {
-					mListView.stopLoadMore();
-					mListView.setPullLoadEnable(false);
-				}
+                refreshType = 2;
+                send();
 			}
 		});
 	}
@@ -223,10 +216,8 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
 			protected void requestSuccess(JSONObject result) {
 				if (dialog != null) dialog.dismiss();
 				if(isCancelRequest) return ;
-				page++;
 				try {
                     String ReturnType = result.getString("ReturnType");
-                    Log.w("ReturnType", "ReturnType -- > > " + ReturnType);
                     if (ReturnType != null && ReturnType.equals("1001")) {
                         if(isDel){
                             ToastUtils.show_always(context, "已删除");
@@ -234,26 +225,11 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
                         }
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         subList = new Gson().fromJson(arg1.getString("FavoriteList"), new TypeToken<List<RankInfo>>() {}.getType());
-                        try {
-                            String allCountString = arg1.getString("AllCount");
-                            String pageSizeString = arg1.getString("PageSize");
-                            if (allCountString != null && !allCountString.equals("") && pageSizeString != null && !pageSizeString.equals("")) {
-                                int allCountInt = Integer.valueOf(allCountString);
-                                int pageSizeInt = Integer.valueOf(pageSizeString);
-                                if(pageSizeInt < 10 || allCountInt < 10){
-                                    mListView.stopLoadMore();
-                                    mListView.setPullLoadEnable(false);
-                                }else{
-                                    mListView.setPullLoadEnable(true);
-                                    if (allCountInt % pageSizeInt == 0) {
-                                        pageSizeNum = allCountInt / pageSizeInt;
-                                    } else {
-                                        pageSizeNum = allCountInt / pageSizeInt + 1;
-                                    }
-                                }
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        if (subList != null && subList.size() >= 9) {
+                            page++;
+                            mListView.setPullLoadEnable(true);
+                        } else {
+                            mListView.setPullLoadEnable(false);
                         }
                         if (refreshType == 1) newList.clear();
                         newList.addAll(subList);
@@ -272,7 +248,7 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
                             isData = false;
                         }
                     }
-				} catch (JSONException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
                     if(refreshType == 1) {
                         tipView.setVisibility(View.VISIBLE);
@@ -292,11 +268,12 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
 			@Override
 			protected void requestError(VolleyError error) {
 				if (dialog != null) dialog.dismiss();
-                ToastUtils.showVolleyError(context);
                 if(refreshType == 1) {
                     tipView.setVisibility(View.VISIBLE);
                     tipView.setTipView(TipView.TipStatus.IS_ERROR);
                     isData = false;
+                } else {
+                    ToastUtils.showVolleyError(context);
                 }
 			}
 		});
@@ -318,7 +295,6 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
 		} else {
 			return false;
 		}
-
 	}
 
 	// 点击全选时的方法

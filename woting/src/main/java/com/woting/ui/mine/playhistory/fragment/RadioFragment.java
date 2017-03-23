@@ -14,6 +14,7 @@ import android.widget.ListView;
 
 import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
@@ -34,18 +35,18 @@ public class RadioFragment extends Fragment {
     private Context context;
     private SearchPlayerHistoryDao dbdDao;
     private PlayHistoryAdapter adapter;
-    private ArrayList<PlayerHistory> playList;    // 节目list
+    private ArrayList<PlayerHistory> playList;  // 节目list
     private List<PlayerHistory> subList;        // 播放历史数据
-    private List<PlayerHistory> deleteList;        // 删除数据列表
-    private List<PlayerHistory> checkList;        // 选中数据列表
+    private List<PlayerHistory> deleteList;     // 删除数据列表
+    private List<PlayerHistory> checkList;      // 选中数据列表
 
     private View rootView;
     private ListView listView;
     private LinearLayout linearNull;            // linear_null
     private TipView tipView;                    // 没有数据提示
 
-    public static boolean isData;                // 是否有数据
-    public static boolean isLoad;                // 是否加载过
+    public static boolean isData;               // 是否有数据
+    public static boolean isLoad;               // 是否加载过
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,7 +82,7 @@ public class RadioFragment extends Fragment {
         if (subList != null && subList.size() > 0) {
             for (int i = 0; i < subList.size(); i++) {
                 if (subList.get(i).getPlayerMediaType() != null && !subList.get(i).getPlayerMediaType().equals("")) {
-                    if (subList.get(i).getPlayerMediaType().equals("RADIO")) {
+                    if (subList.get(i).getPlayerMediaType().equals(StringConstant.TYPE_RADIO)) {
                         if (playList == null) playList = new ArrayList<>();
                         playList.add(subList.get(i));
                         isData = true;
@@ -190,7 +191,7 @@ public class RadioFragment extends Fragment {
                         String s = playList.get(position).getPlayerName();
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
-                        bundle1.putString("text", s);
+                        bundle1.putString(StringConstant.TEXT_CONTENT, s);
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
                     }

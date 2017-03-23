@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.woting.R;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
@@ -119,29 +120,29 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
     // 初始化视图
     private void setView() {
         rootView.findViewById(R.id.head_left_btn).setOnClickListener(this);      // 返回按钮
-        
+
         tv_total = (TextView) rootView.findViewById(R.id.tv_total);              // 全部
         tv_total.setOnClickListener(new txListener(0));
-        
+
         tv_sequ = (TextView) rootView.findViewById(R.id.tv_sequ);                // 专辑
         tv_sequ.setOnClickListener(new txListener(1));
-        
+
         tv_sound = (TextView) rootView.findViewById(R.id.tv_sound);              // 声音
         tv_sound.setOnClickListener(new txListener(2));
-        
+
         tv_radio = (TextView) rootView.findViewById(R.id.tv_radio);              // 电台
         tv_radio.setOnClickListener(new txListener(3));
-        
+
         tv_tts = (TextView) rootView.findViewById(R.id.tv_tts);                  // TTS
         tv_tts.setOnClickListener(new txListener(4));
-        
+
         mPager = (ViewPager) rootView.findViewById(R.id.viewpager);
         mPager.setOffscreenPageLimit(1);
-        
-        tv_qingkong = (TextView) rootView.findViewById(R.id.tv_qingkong);
+
+        tv_qingkong = (TextView) rootView.findViewById(R.id.tv_qingkong);       // 清空
         tv_qingkong.setOnClickListener(this);
-        
-        tv_bianji = (TextView) rootView.findViewById(R.id.tv_bianji);
+
+        tv_bianji = (TextView) rootView.findViewById(R.id.tv_bianji);           // 编辑
         tv_bianji.setOnClickListener(this);
 
         initViewPager();
@@ -168,13 +169,13 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
     public static void updateViewPager(String mediaType) {
         int index = 0;
         if (mediaType != null && !mediaType.equals("")) {
-            if (mediaType.equals("SEQU")) {
+            if (mediaType.equals(StringConstant.TYPE_SEQU)) {
                 index = 1;
-            } else if (mediaType.equals("AUDIO")) {
+            } else if (mediaType.equals(StringConstant.TYPE_AUDIO)) {
                 index = 2;
-            } else if (mediaType.equals("RADIO")) {
+            } else if (mediaType.equals(StringConstant.TYPE_RADIO)) {
                 index = 3;
-            } else if (mediaType.equals("TTS")) {
+            } else if (mediaType.equals(StringConstant.TYPE_TTS)) {
                 index = 4;
             }
             mPager.setCurrentItem(index);
@@ -183,7 +184,7 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
         }
     }
 
-    // 动态设置cursor的宽
+    // 动态设置 cursor 的宽
     public void initImage() {
         image = (ImageView) rootView.findViewById(R.id.cursor);
         LayoutParams lp = image.getLayoutParams();
@@ -203,9 +204,9 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_left_btn:// 返回
-                if (type == 5) {// Mine
+                if (type == IntegerConstant.TAG_MINE) {// Mine
                     MineActivity.close();
-                } else if (type == 6) {
+                } else if (type == IntegerConstant.TAG_MORE) {// MORE
                     PlayerMoreOperationActivity.close();
                 }
                 break;
@@ -230,10 +231,10 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
         }
     }
 
-    // 四种参数 1为打开该界面的隐藏栏，0为收起隐藏栏，2为全选，3为取消全选
+    // 四种参数 1 为打开该界面的隐藏栏，0 为收起隐藏栏，2 为全选，3 为取消全选
     private void handleData(int type) {
         if (currentIndex == 0) {
-            // 全部 先调total的查询全部方法 返回是否有值的弹窗
+            // 全部 先调 total 的查询全部方法 返回是否有值的弹窗
             int sum = totalFragment.getdelitemsum();
             if (type == 0) {
                 if (sum != 0) {
@@ -243,7 +244,7 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
                 }
             }
         } else if (currentIndex == 1) {
-            if (type == 1) {// 打开view
+            if (type == 1) {// 打开 view
                 boolean flag = sequfragment.changeviewtype(1);
                 if (flag) {
                     isEdit = true;
@@ -258,7 +259,7 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
                 } else {
                     ToastUtils.show_always(context, "当前页无数据");
                 }
-            } else if (type == 2) {// 隐藏view
+            } else if (type == 2) {// 隐藏 view
                 sequfragment.changeviewtype(0);
                 sequfragment.setViewHint();
                 context.sendBroadcast(new Intent(FavoriteFragment.SET_LOAD_REFRESH));
@@ -285,7 +286,7 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
             }
         } else if (currentIndex == 2) {
             // 声音
-            if (type == 1) {// 打开view
+            if (type == 1) {// 打开 view
                 boolean flag = soundfragment.changeviewtype(1);
                 if (flag) {
                     isEdit = true;
@@ -325,7 +326,7 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
             }
         } else if (currentIndex == 3) {
             // 电台
-            if (type == 1) {// 打开view
+            if (type == 1) {// 打开 view
                 boolean flag = radiofragment.changeviewtype(1);
                 if (flag) {
                     isEdit = true;
@@ -339,7 +340,7 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
                 } else {
                     ToastUtils.show_always(context, "当前页无数据");
                 }
-            } else if (type == 2) {// 隐藏view
+            } else if (type == 2) {// 隐藏 view
                 radiofragment.changeviewtype(0);
                 radiofragment.setViewHint();
                 context.sendBroadcast(new Intent(FavoriteFragment.SET_LOAD_REFRESH));
@@ -379,7 +380,7 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
                 } else {
                     ToastUtils.show_always(context, "当前页无数据");
                 }
-            } else if (type == 2) {// 隐藏view
+            } else if (type == 2) {// 隐藏 view
                 ttsfragment.changeviewtype(0);
                 ttsfragment.setViewHint();
                 context.sendBroadcast(new Intent(FavoriteFragment.SET_LOAD_REFRESH));
@@ -415,7 +416,7 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
             tv_radio.setTextColor(context.getResources().getColor(R.color.group_item_text2));
             tv_tts.setTextColor(context.getResources().getColor(R.color.group_item_text2));
             tv_bianji.setVisibility(View.GONE);
-            if(TotalFragment.isData) {
+            if (TotalFragment.isData) {
                 tv_qingkong.setVisibility(View.VISIBLE);
             } else {
                 tv_qingkong.setVisibility(View.GONE);
@@ -427,9 +428,9 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
             tv_radio.setTextColor(context.getResources().getColor(R.color.group_item_text2));
             tv_tts.setTextColor(context.getResources().getColor(R.color.group_item_text2));
             tv_qingkong.setVisibility(View.GONE);
-            if(SequFragment.isData) {
+            if (SequFragment.isData) {
                 tv_bianji.setVisibility(View.VISIBLE);
-            } else{
+            } else {
                 tv_bianji.setVisibility(View.GONE);
             }
         } else if (index == 2) {
@@ -439,9 +440,9 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
             tv_radio.setTextColor(context.getResources().getColor(R.color.group_item_text2));
             tv_tts.setTextColor(context.getResources().getColor(R.color.group_item_text2));
             tv_qingkong.setVisibility(View.GONE);
-            if(SoundFragment.isData) {
+            if (SoundFragment.isData) {
                 tv_bianji.setVisibility(View.VISIBLE);
-            } else{
+            } else {
                 tv_bianji.setVisibility(View.GONE);
             }
         } else if (index == 3) {
@@ -451,7 +452,7 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
             tv_radio.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
             tv_tts.setTextColor(context.getResources().getColor(R.color.group_item_text2));
             tv_qingkong.setVisibility(View.GONE);
-            if(RadioFragment.isData) {
+            if (RadioFragment.isData) {
                 tv_bianji.setVisibility(View.VISIBLE);
             } else {
                 tv_bianji.setVisibility(View.GONE);
@@ -463,7 +464,7 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
             tv_radio.setTextColor(context.getResources().getColor(R.color.group_item_text2));
             tv_tts.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
             tv_qingkong.setVisibility(View.GONE);
-            if(TTSFragment.isData) {
+            if (TTSFragment.isData) {
                 tv_bianji.setVisibility(View.VISIBLE);
             } else {
                 tv_bianji.setVisibility(View.GONE);
@@ -473,7 +474,7 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
 
     // 设置清空可见或隐藏
     public static void setQkVisibleOrHide(boolean visible) {
-        if(visible) {
+        if (visible) {
             tv_qingkong.setVisibility(View.VISIBLE);
         } else {
             tv_qingkong.setVisibility(View.GONE);
@@ -642,7 +643,7 @@ public class FavoriteFragment extends Fragment implements OnClickListener {
     public void onDestroy() {
         super.onDestroy();
         context.unregisterReceiver(mBroadcast);
-        if(DelDialog != null) {
+        if (DelDialog != null) {
             DelDialog.dismiss();
             DelDialog = null;
         }
