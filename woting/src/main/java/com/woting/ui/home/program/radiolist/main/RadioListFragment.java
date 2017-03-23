@@ -44,26 +44,23 @@ import java.util.List;
  */
 public class RadioListFragment extends Fragment implements OnClickListener, TipView.WhiteViewClick {
     private Context context;
-
-    private View rootView;
-    private static Dialog dialog;// 加载对话框
-    private TextView mTextView_Head;
-    public static String catalogName;
-    public static String catalogType;
-    public static String id;
-
     private List<String> list;
     private List<Fragment> fragments;
-
-    private PagerSlidingTabStrip pageSlidingTab;
-    private ViewPager viewPager;
-
-    private int count = 1;
-    public static final String tag = "RADIO_LIST_VOLLEY_REQUEST_CANCEL_TAG";
-    public static boolean isCancelRequest = false;
     private RecommendFragment recommend;
 
     private TipView tipView;// 没有网络提示
+    private PagerSlidingTabStrip pageSlidingTab;
+    private ViewPager viewPager;
+    private View rootView;
+    private TextView mTextView_Head;
+    private static Dialog dialog;// 加载对话框
+
+    private int count = 1;
+    public static String catalogName;
+    public static String catalogType;
+    public static String id;
+    public static String tag = "RADIO_LIST_VOLLEY_REQUEST_CANCEL_TAG";
+    public static boolean isCancelRequest = false;
 
     @Override
     public void onWhiteViewClick() {
@@ -133,8 +130,8 @@ public class RadioListFragment extends Fragment implements OnClickListener, TipV
             return ;
         }
         VolleyRequest.requestPost(GlobalConfig.getCatalogUrl, tag, setParam(), new VolleyCallback() {
-            private String ReturnType;
             private List<SubCata> subDataList;
+            private String ReturnType;
             private String CatalogData;
 
             @Override
@@ -188,9 +185,7 @@ public class RadioListFragment extends Fragment implements OnClickListener, TipV
         return jsonObject;
     }
 
-    /**
-     * 关闭加载对话框
-     */
+    // 关闭加载对话框
     public static void closeDialog() {
         if (dialog != null) {
             dialog.dismiss();
@@ -216,7 +211,7 @@ public class RadioListFragment extends Fragment implements OnClickListener, TipV
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.head_left_btn:
+            case R.id.head_left_btn:// 返回
                 HomeActivity.close();
                 break;
         }

@@ -22,6 +22,7 @@ import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
@@ -232,7 +233,7 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
                 if (SubList != null && SubList.get(groupPosition).getList().get(childPosition) != null
                         && SubList.get(groupPosition).getList().get(childPosition).getMediaType() != null) {
                     String MediaType = SubList.get(groupPosition).getList().get(childPosition).getMediaType();
-                    if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
+                    if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
                         String playName = SubList.get(groupPosition).getList().get(childPosition).getContentName();
                         String playImage = SubList.get(groupPosition).getList().get(childPosition).getContentImg();
                         String playUrl = SubList.get(groupPosition).getList().get(childPosition).getContentPlay();
@@ -272,7 +273,7 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
 
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
-                        bundle1.putString("text", SubList.get(groupPosition).getList().get(childPosition).getContentName());
+                        bundle1.putString(StringConstant.TEXT_CONTENT, SubList.get(groupPosition).getList().get(childPosition).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
                         MainActivity.change();
@@ -313,9 +314,7 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
                             }.getType());
                             if (RefreshType == 1) {
                                 mlistView_main.stopRefresh();
-                                if (newList.size() > 0) {
-                                    newList.clear();
-                                }
+                                if (newList.size() > 0) newList.clear();
                                 if (SubListList != null && SubListList.size() > 0) {
                                     newList.addAll(SubListList);
                                     if (adapterList == null) {
@@ -427,7 +426,7 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (newList != null && newList.get(position - 1) != null && newList.get(position - 1).getMediaType() != null) {
                     String MediaType = newList.get(position - 1).getMediaType();
-                    if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
+                    if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
                         String playername = newList.get(position - 1).getContentName();
                         String playerimage = newList.get(position - 1).getContentImg();
                         String playerurl = newList.get(position - 1).getContentPlay();
@@ -465,7 +464,7 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
 
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
-                        bundle1.putString("text", newList.get(position - 1).getContentName());
+                        bundle1.putString(StringConstant.TEXT_CONTENT, newList.get(position - 1).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
                     }
@@ -524,7 +523,6 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
 
         mPullToRefreshLayout = (PullToRefreshLayout) rootView.findViewById(R.id.refresh_view);
         mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
-
             @Override
             public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {

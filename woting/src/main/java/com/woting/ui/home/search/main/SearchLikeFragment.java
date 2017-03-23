@@ -47,6 +47,7 @@ import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.IntegerConstant;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -373,7 +374,7 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
         });
     }
 
-    // 监控editText的当前输入状态 进行界面逻辑变更
+    // 监控 editText 的当前输入状态 进行界面逻辑变更
     private void initTextWatcher() {
         mEtSearchContent.addTextChangedListener(new TextWatcher() {
             @Override
@@ -525,7 +526,6 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
         }
 
         VolleyRequest.requestPost(GlobalConfig.searchHotKeysUrl, tag, jsonObject, new VolleyCallback() {
-
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
@@ -560,23 +560,13 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
                             setItemListener();
                         } else {
                             lv_mListView.setVisibility(View.GONE);
-                            ToastUtils.show_always(context, "数据异常");
                         }
                     } else if (ReturnType != null && ReturnType.equals("1002")) {
                         lv_mListView.setVisibility(View.GONE);
-                        ToastUtils.show_always(context, "没有查询到内容");
                     } else {
                         lv_mListView.setVisibility(View.GONE);
-                        try {
-                            String Message = result.getString("Message");
-                            if (Message != null && !Message.trim().equals("")) {
-                                ToastUtils.show_always(context, Message + "请稍后重试");
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -584,7 +574,6 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
             @Override
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
-                ToastUtils.showVolleyError(context);
             }
         });
     }
@@ -612,7 +601,7 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
                     for (int i = 0; i < s1.length; i++) {
                         topSearchList1.add(s1[i]);
                     }
-                } catch (JSONException e1) {
+                } catch (Exception e1) {
                     e1.printStackTrace();
                 }
 
@@ -693,16 +682,16 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
     public static void updateViewPage(String mediaType) {
         int index = 0;
         if (mediaType != null && !mediaType.equals("")) {
-            if (mediaType.equals("SEQU")) {
+            if (mediaType.equals(StringConstant.TYPE_SEQU)) {
                 index = 1;
-            } else if (mediaType.equals("AUDIO")) {
+            } else if (mediaType.equals(StringConstant.TYPE_AUDIO)) {
                 index = 2;
-            } else if (mediaType.equals("RADIO")) {
+            } else if (mediaType.equals(StringConstant.TYPE_RADIO)) {
                 index = 3;
-            } else if (mediaType.equals("TTS")) {
+            } else if (mediaType.equals(StringConstant.TYPE_TTS)) {
                 index = 4;
             } else {
-                ToastUtils.show_always(context, "mediaType不属于已经分类的四种类型");
+                ToastUtils.show_always(context, "mediaType 不属于已经分类的四种类型");
             }
             mPager.setCurrentItem(index);
             viewChange(index);
@@ -762,14 +751,14 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
         public void onPageSelected(int arg0) {
             Animation animation = new TranslateAnimation(currIndex * one, arg0 * one, 0, 0);// 平移动画
             currIndex = arg0;
-            animation.setFillAfter(true);    // 动画终止时停留在最后一帧，不然会回到没有执行前的状态
-            animation.setDuration(200);      // 动画持续时间0.2秒
-            image.startAnimation(animation);// 是用ImageView来显示动画的
+            animation.setFillAfter(true);// 动画终止时停留在最后一帧，不然会回到没有执行前的状态
+            animation.setDuration(200);// 动画持续时间 0.2 秒
+            image.startAnimation(animation);// 是用 ImageView 来显示动画的
             viewChange(currIndex);
         }
     }
 
-    //动态设置cursor的宽
+    // 动态设置 cursor 的宽
     public void InitImage() {
         image = (ImageView) rootView.findViewById(R.id.cursor);
         ViewGroup.LayoutParams lp = image.getLayoutParams();
@@ -780,7 +769,7 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
         context.getWindowManager().getDefaultDisplay().getMetrics(dm);
         int screenW = dm.widthPixels;
         offset = (screenW / 5 - bmpW) / 2;
-        // imageView设置平移，使下划线平移到初始位置（平移一个offset）
+        // imageView 设置平移，使下划线平移到初始位置（平移一个 offset）
         Matrix matrix = new Matrix();
         matrix.postTranslate(offset, 0);
         image.setImageMatrix(matrix);

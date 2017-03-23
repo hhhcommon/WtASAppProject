@@ -1,4 +1,4 @@
-package com.woting.ui.home.program.album.anchor.activity;
+package com.woting.ui.home.program.album.anchor.main;
 
 import android.app.Dialog;
 import android.graphics.Color;
@@ -148,14 +148,13 @@ public class AnchorListFragment extends Fragment implements View.OnClickListener
                 if (isCancelRequest) return;
                 try {
                     String ReturnType = result.getString("ReturnType");
-                    if (ReturnType != null) {// 根据返回值来对程序进行解析
+                    if (ReturnType != null) {
                         if (ReturnType.equals("1001")) {
                             try {
                                 Gson gson = new Gson();
                                 try {
                                     String MediaList = result.getString("ResultList");
-                                    List<PersonInfo> ResultList = gson.fromJson(MediaList, new TypeToken<List<PersonInfo>>() {
-                                    }.getType());
+                                    List<PersonInfo> ResultList = gson.fromJson(MediaList, new TypeToken<List<PersonInfo>>() {}.getType());
                                     if (RefreshType == 1) {
                                         if (MediaInfoList != null) {
                                             MediaInfoList.clear();
@@ -195,17 +194,7 @@ public class AnchorListFragment extends Fragment implements View.OnClickListener
                                 e.printStackTrace();
                             }
                         } else {
-                            if (ReturnType.equals("0000")) {
-                                ToastUtils.show_always(context, "出错了，请您稍后再试");
-                            } else if (ReturnType.equals("1002")) {
-                                ToastUtils.show_always(context, "出错了，请您稍后再试");
-                            } else if (ReturnType.equals("1003")) {
-                                ToastUtils.show_always(context, "出错了，请您稍后再试");
-                            } else if (ReturnType.equals("1011")) {
-                                ToastUtils.show_always(context, "出错了，请您稍后再试");
-                            } else if (ReturnType.equals("T")) {
-                                ToastUtils.show_always(context, "出错了，请您稍后再试");
-                            }
+                            ToastUtils.show_always(context, "出错了，请您稍后再试");
                             listAnchor.stopLoadMore();
                             listAnchor.setPullLoadEnable(false);
                             listAnchor.setPullRefreshEnable(true);
@@ -213,8 +202,9 @@ public class AnchorListFragment extends Fragment implements View.OnClickListener
                     } else {
                         ToastUtils.show_always(context, "出错了，请您稍后再试");
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
+                    ToastUtils.show_always(context, "出错了，请您稍后再试");
                 }
             }
 
