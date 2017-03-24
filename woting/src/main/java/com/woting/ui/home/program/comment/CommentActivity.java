@@ -2,6 +2,7 @@ package com.woting.ui.home.program.comment;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -12,6 +13,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -56,10 +58,11 @@ import java.util.regex.Pattern;
 /**
  * 评论界面
  */
-public class CommentActivity extends AppBaseActivity implements View.OnClickListener, TipView.WhiteViewClick {
+public class CommentActivity extends AppBaseActivity implements View.OnClickListener, TipView.WhiteViewClick, View.OnTouchListener {
     private List<View> views = new ArrayList<>();
     private List<String> faceList;
     private List<opinion> OM;
+    private InputMethodManager imm;
 
     private Dialog confirmDialog;
     private View chatFaceContainerView;// 表情布局
@@ -87,7 +90,7 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
-
+        imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         initData();
         initView();
         initEvent();
@@ -106,6 +109,7 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
     // 初始化视图
     private void initView() {
         commentList = (ListView) findViewById(R.id.lv_comment);
+        commentList.setOnTouchListener(this);
         commentList.setSelector(new ColorDrawable(Color.TRANSPARENT));// 取消默认 selector
 
         mViewPager = (ViewPager) findViewById(R.id.face_viewpager);
@@ -469,6 +473,18 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
             e.printStackTrace();
         }
         return stringBuilder;
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        // 点击空白处隐藏键盘
+        commentList.setFocusable(true);
+        commentList.setFocusableInTouchMode(true);
+        commentList.requestFocus();
+
+        // 隐藏键盘
+        imm.hideSoftInputFromWindow(commentList.getWindowToken(), 0);
+        return true;
     }
 
     // 表情 viewPage 的监听 ==== 表情页改变时，dots 效果也要跟着改变

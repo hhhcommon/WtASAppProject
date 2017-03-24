@@ -378,9 +378,6 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
                                     new HeightListView(context).setListViewHeightBasedOnChildren(listView_group);
                                 }
                                 setGroupListViewListener();
-                                lin_grouplist.setVisibility(View.VISIBLE);
-                            } else {
-                                lin_grouplist.setVisibility(View.GONE);
                             }
                             if (srclist_p == null || srclist_p.size() == 0) {
                                 TalkPersonNoAdapter adapters = new TalkPersonNoAdapter(context);
@@ -395,8 +392,10 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
                             if((srclist_g == null || srclist_g.size() <= 0) && (srclist_p == null || srclist_p.size() <= 0)) {
                                 headViewNoFriendTip.setVisibility(View.VISIBLE);
                                 headViewNoFriendTip.setTipView(TipView.TipStatus.NO_DATA, "您还没有聊天对象哟\n快去找好友们聊天吧");
+                                lin_grouplist.setVisibility(View.GONE);
                             } else {
                                 headViewNoFriendTip.setVisibility(View.GONE);
+                                lin_grouplist.setVisibility(View.VISIBLE);
                             }
                             setListViewListener();
                         }
@@ -411,12 +410,14 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
                     sortListView.setAdapter(new TalkPersonNoAdapter(context));
                     headViewNoFriendTip.setVisibility(View.VISIBLE);
                     headViewNoFriendTip.setTipView(TipView.TipStatus.IS_ERROR);
+                    lin_grouplist.setVisibility(View.GONE);
                 }
             });
         } else {
             sortListView.setAdapter(new TalkPersonNoAdapter(context));
             headViewNoFriendTip.setVisibility(View.VISIBLE);
             headViewNoFriendTip.setTipView(TipView.TipStatus.NO_NET);
+            lin_grouplist.setVisibility(View.GONE);
         }
     }
 
