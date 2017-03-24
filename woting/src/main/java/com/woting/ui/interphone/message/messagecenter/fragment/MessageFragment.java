@@ -20,7 +20,7 @@ import com.woting.ui.interphone.message.messagecenter.activity.MessageMainActivi
 import com.woting.ui.interphone.message.messagecenter.dao.MessageNotifyDao;
 import com.woting.ui.interphone.message.messagecenter.dao.MessageSubscriberDao;
 import com.woting.ui.interphone.message.messagecenter.dao.MessageSystemDao;
-import com.woting.ui.mine.subscriber.mai.SubscriberListFragment;
+import com.woting.ui.mine.subscriber.main.SubscriberListFragment;
 
 import java.util.List;
 
