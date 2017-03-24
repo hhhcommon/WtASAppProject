@@ -9,9 +9,11 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -32,6 +34,8 @@ import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
 import com.woting.ui.home.program.accuse.adapter.AccuseAdapter;
 import com.woting.ui.home.program.accuse.model.Accuse;
+import com.woting.ui.home.search.main.SearchLikeActivity;
+import com.woting.ui.mine.main.MineActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,10 +45,10 @@ import java.util.List;
 /**
  * 举报
  */
-public class AccuseFragment extends Fragment implements OnClickListener {
+public class AccuseFragment extends Fragment implements OnClickListener, View.OnTouchListener {
     private Context context;
     private Dialog dialog;
-
+    private InputMethodManager imm;
 
     private String tag = "FMLIST_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
@@ -62,27 +66,19 @@ public class AccuseFragment extends Fragment implements OnClickListener {
 
     private int fromType;
 
-  /*  @Override
-    public void onWhiteViewClick() {
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在获取数据");
-            sendRequest();
-        } else {
-           *//* tipView.setVisibility(View.VISIBLE);
-            tipView.setTipView(TipView.TipStatus.NO_NET);*//*
-        }
-    }*/
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
+
+        imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     private void setView() {
         rootView.findViewById(R.id.head_left_btn).setOnClickListener(this);                 //  返回
         rootView.findViewById(R.id.head_right_btn).setOnClickListener(this);                //  提交
         mListView = (ListView) rootView.findViewById(R.id.lv_main);                            //  主listView
+        mListView.setOnTouchListener(this);
         View footView = LayoutInflater.from(context).inflate(R.layout.accuse_footer, null);
         et_InputReason = (EditText) footView.findViewById(R.id.et_InputReason);               //  举报原因
         mListView.addFooterView(footView);
@@ -114,7 +110,6 @@ public class AccuseFragment extends Fragment implements OnClickListener {
         ContentId = bundle.getString("ContentId");
         MediaType = bundle.getString("MediaType");
     }
-
 
     //获取举报列表
     private void sendRequest() {
@@ -213,6 +208,10 @@ public class AccuseFragment extends Fragment implements OnClickListener {
                     HomeActivity.close();
                 } else if (fromType == IntegerConstant.TAG_MORE) {
                     PlayerMoreOperationActivity.close();
+                } else if (fromType == IntegerConstant.TAG_SEARCH) {
+                    SearchLikeActivity.close();
+                } else if (fromType == IntegerConstant.TAG_MINE) {
+                    MineActivity.close();
                 }
                 break;
             case R.id.head_right_btn:
@@ -293,6 +292,10 @@ public class AccuseFragment extends Fragment implements OnClickListener {
                                         HomeActivity.close();
                                     } else if (fromType == IntegerConstant.TAG_MORE) {
                                         PlayerMoreOperationActivity.close();
+                                    } else if (fromType == IntegerConstant.TAG_SEARCH) {
+                                        SearchLikeActivity.close();
+                                    } else if (fromType == IntegerConstant.TAG_MINE) {
+                                        MineActivity.close();
                                     }
                                 }
                             }, 1000);
@@ -327,5 +330,17 @@ public class AccuseFragment extends Fragment implements OnClickListener {
     public void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        // 点击空白处隐藏键盘
+        mListView.setFocusable(true);
+        mListView.setFocusableInTouchMode(true);
+        mListView.requestFocus();
+
+        // 隐藏键盘
+        imm.hideSoftInputFromWindow(mListView.getWindowToken(), 0);
+        return true;
     }
 }

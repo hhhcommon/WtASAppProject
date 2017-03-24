@@ -473,11 +473,19 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
                 if (!TextUtils.isEmpty(id)) {
                     AccuseFragment fragment = new AccuseFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_HOME);
+                    bundle.putInt(StringConstant.FROM_TYPE, fromType);
                     bundle.putString("ContentId", id);
                     bundle.putString("MediaType", StringConstant.TYPE_SEQU);
                     fragment.setArguments(bundle);
-                    HomeActivity.open(fragment);
+                    if (fromType == IntegerConstant.TAG_HOME) {// HOME
+                        HomeActivity.open(fragment);
+                    } else if (fromType == IntegerConstant.TAG_MINE) {// MINE
+                        MineActivity.open(fragment);
+                    } else if (fromType == IntegerConstant.TAG_MORE) {// MORE
+                        PlayerMoreOperationActivity.open(fragment);
+                    } else if (fromType == IntegerConstant.TAG_SEARCH) {// SEARCH
+                        SearchLikeActivity.open(fragment);
+                    }
                 } else {
                     ToastUtils.show_always(context, "获取本专辑信息有误，请回退回上一级界面重试");
                 }
