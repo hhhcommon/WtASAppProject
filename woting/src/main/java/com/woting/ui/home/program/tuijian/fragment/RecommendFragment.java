@@ -20,7 +20,6 @@ import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
-import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -169,7 +168,8 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                 if (returnType != null && returnType.equals("1001")) {
                     try {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
+                        subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {
+                        }.getType());
                         if (subList != null && subList.size() >= 9) {
                             page++;
                             mListView.setPullLoadEnable(true);
@@ -273,14 +273,14 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                         String sequDesc = newList.get(position - 2).getSequDesc();
                         String sequImg = newList.get(position - 2).getSequImg();
                         String ContentPlayType = newList.get(position - 2).getContentPlayType();
-                        String IsPlaying=newList.get(position - 2).getIsPlaying();
+                        String IsPlaying = newList.get(position - 2).getIsPlaying();
 
                         // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playername, playerimage, playerurl, playerurI, playermediatype,
                                 plaplayeralltime, playerintime, playercontentdesc, playernum,
                                 playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playerContentShareUrl,
-                                ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
+                                ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying);
                         dbDao.deleteHistory(playerurl);
                         dbDao.addHistory(history);
 
@@ -290,10 +290,10 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
                         MainActivity.change();
-                    } else if (MediaType.equals(StringConstant.TYPE_SEQU)) {
+                    } else if (MediaType.equals("SEQU")) {
                         AlbumFragment fragment = new AlbumFragment();
                         Bundle bundle = new Bundle();
-                        bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_HOME);
+                        bundle.putInt("fromType", 2);
                         bundle.putString("type", "recommend");
                         bundle.putSerializable("list", newList.get(position - 2));
                         fragment.setArguments(bundle);
@@ -318,9 +318,9 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
     private void getImage() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            jsonObject.put("CatalogType","-1");
+            jsonObject.put("CatalogType", "-1");
             jsonObject.put("CatalogId", "cn10");
-            jsonObject.put("Size", "10");// 此处需要改成 -1
+            jsonObject.put("Size", "4");// 此处需要改成-1
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -338,21 +338,21 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     try {
-                        List<Image>  imageList = new Gson().fromJson(result.getString("LoopImgs"), new TypeToken<List<Image>>() {
+                        List<Image> imageList = new Gson().fromJson(result.getString("LoopImgs"), new TypeToken<List<Image>>() {
                         }.getType());
-                       // mLoopViewPager.setAdapter(new LoopAdapter(mLoopViewPager, context, imageList));
-                       // mLoopViewPager.setHintView(new IconHintView(context, R.mipmap.indicators_now, R.mipmap.indicators_default));
+                        // mLoopViewPager.setAdapter(new LoopAdapter(mLoopViewPager, context, imageList));
+                        // mLoopViewPager.setHintView(new IconHintView(context, R.mipmap.indicators_now, R.mipmap.indicators_default));
                         mLoopViewPager.setImageLoader(new PicassoBannerLoader());
 
-                        for(int i=0;i<imageList.size();i++){
+                        for (int i = 0; i < imageList.size(); i++) {
                             ImageStringList.add(imageList.get(i).getLoopImg());
                         }
-                            mLoopViewPager.setImages(ImageStringList);
+                        mLoopViewPager.setImages(ImageStringList);
 
                         mLoopViewPager.setOnBannerListener(new OnBannerListener() {
                             @Override
                             public void OnBannerClick(int position) {
-                                ToastUtils.show_always(context,ImageStringList.get(position-1));
+                                ToastUtils.show_always(context, ImageStringList.get(position - 1));
                             }
                         });
                         mLoopViewPager.start();
@@ -386,23 +386,4 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             dbDao = null;
         }
     }
-
-//    public class PicassoImageLoader extends ImageLoader {
-//        @Override
-//        public void displayImage(Context context, Object path, ImageView imageView) {
-//            /**
-//             注意：
-//             1.图片加载器由自己选择，这里不限制，只是提供几种使用方法
-//             2.返回的图片路径为Object类型，由于不能确定你到底使用的那种图片加载器，
-//             传输的到的是什么格式，那么这种就使用Object接收和返回，你只需要强转成你传输的类型就行，
-//             切记不要胡乱强转！
-//             */
-//            String contentImg = path.toString();
-//            if (!contentImg.startsWith("http")) {
-//                contentImg = GlobalConfig.imageurl + contentImg;
-//            }
-//            contentImg = AssembleImageUrlUtils.assembleImageUrl150(contentImg);
-//            Picasso.with(context).load(contentImg.replace("\\/", "/")).resize(50,50).centerCrop().into(imageView);
-//        }
-//    }
 }

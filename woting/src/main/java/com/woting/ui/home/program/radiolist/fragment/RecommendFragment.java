@@ -115,6 +115,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                 if (!isFirst) dialog = DialogUtils.Dialogph(context, "正在获取数据");
                 sendRequest();
+                getImage();
                 isFirst = false;
             } else {
                 tipView.setVisibility(View.VISIBLE);
@@ -348,7 +349,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
         try {
             jsonObject.put("CatalogType", RadioListFragment.catalogType);
             jsonObject.put("CatalogId", RadioListFragment.id);
-            jsonObject.put("Size", "10");// 此处需要改成-1
+            jsonObject.put("Size", "4");
         } catch (JSONException e) {
             e.printStackTrace();
         }
