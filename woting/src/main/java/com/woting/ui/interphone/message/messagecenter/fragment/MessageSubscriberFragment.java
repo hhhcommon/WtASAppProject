@@ -221,7 +221,7 @@ public class MessageSubscriberFragment extends Fragment implements OnClickListen
     public void onDestroy() {
         super.onDestroy();
         Fragment targetFragment = getTargetFragment();
-        ((MessageFragment) targetFragment).setResult(1, 1);
+        ((MessageFragment) targetFragment).setResult(2, 1);
         if (Receiver != null) {
             context.unregisterReceiver(Receiver);
             Receiver = null;

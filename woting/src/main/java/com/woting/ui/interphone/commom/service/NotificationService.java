@@ -431,7 +431,7 @@ public class NotificationService extends Service {
 
                                         // 加入到通知数据库
                                         addNotifyMessage(image_url, person_name, person_id, group_name, group_id, "",
-                                                "", "false", "g2", deal_time, 4, 2, 2, message_id, news);
+                                                "", "true", "g2", deal_time, 4, 2, 2, message_id, news);
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中G2的异常", e.toString());
                                     }
@@ -452,7 +452,7 @@ public class NotificationService extends Service {
                                         String message_id = message.getMsgId();// 消息ID
                                         String group_name = user_info.getGroupName();
                                         String group_id = user_info.getGroupId();
-                                        String deal_type = data.get("DealType") + "";// 处理类型 1，接受 2，拒绝
+                                        String deal_type = data.get(" ") + "";// 处理类型 1，接受 2，拒绝
                                         String deal_time = data.get("ApplyTime") + "";
                                         String person_id = message.getUserId();
                                         String image_url = null;
@@ -462,6 +462,7 @@ public class NotificationService extends Service {
                                         // 通过id获取被邀请者名称跟头像
                                         if (person_id != null && !person_id.trim().equals("") && GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
                                             for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
+
                                                 if (GlobalConfig.list_person.get(i).getUserId().equals(person_id)) {
                                                     person_name = GlobalConfig.list_person.get(i).getUserName();
                                                     image_url = GlobalConfig.list_person.get(i).getPortraitMini();

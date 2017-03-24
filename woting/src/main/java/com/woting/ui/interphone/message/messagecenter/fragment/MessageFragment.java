@@ -21,8 +21,6 @@ import com.woting.ui.interphone.message.messagecenter.dao.MessageNotifyDao;
 import com.woting.ui.interphone.message.messagecenter.dao.MessageSubscriberDao;
 import com.woting.ui.interphone.message.messagecenter.dao.MessageSystemDao;
 import com.woting.ui.interphone.message.messagecenter.model.DBSubscriberMessage;
-import com.woting.ui.mine.subscriber.activity.SubscriberListFragment;
-import com.woting.ui.mine.subscriber.main.SubscriberListFragment;
 
 import java.util.List;
 
@@ -81,11 +79,12 @@ public class MessageFragment extends Fragment implements OnClickListener {
                 break;
             case R.id.lin_subscribe:
                 MessageSubscriberFragment fragment2 = new MessageSubscriberFragment();
-                fragment2.setTargetFragment(this, 1);
+                fragment2.setTargetFragment(this, 2);
                 MessageMainActivity.open(fragment2);
                 break;
             case R.id.lin_group_messageN:
                 MessageNotifyFragment fragment3 = new MessageNotifyFragment();
+                fragment3.setTargetFragment(this, 3);
                 MessageMainActivity.open(fragment3);
                 break;
             case R.id.lin_group_messageR:
@@ -97,7 +96,15 @@ public class MessageFragment extends Fragment implements OnClickListener {
     public void setResult(int resultCode, int type) {
         if (resultCode == 1) {
             if (type == 1) {
+                setDateForSystem();
+            }
+        } else if (resultCode == 2) {
+            if (type == 1) {
                 setDateForSubscriber();
+            }
+        } else if (resultCode == 3) {
+            if (type == 1) {
+                setDateForNotify();
             }
         }
     }
@@ -126,17 +133,39 @@ public class MessageFragment extends Fragment implements OnClickListener {
         }
     }
 
-
+    // 设置系统消息条数
     private void setDateForSystem() {
         List<DBNotifyHistory> sys_list = dbDaoSystem.querySystemNews();
-
+        if (sys_list != null && sys_list.size() > 0) {
+            tv_system.setVisibility(View.VISIBLE);
+            int num = sys_list.size();
+            if (num >= 100) {
+                tv_system.setText("…");
+            } else {
+                tv_system.setText(String.valueOf(num));
+            }
+        } else {
+            tv_system.setVisibility(View.INVISIBLE);
+        }
     }
 
+    // 设置通知消息条数
     private void setDateForNotify() {
         List<DBNotifyHistory> n_list = dbDaoNotify.queryNotifyMessage();
+        if (n_list != null && n_list.size() > 0) {
+            tv_group_messageN.setVisibility(View.VISIBLE);
+            int num = n_list.size();
+            if (num >= 100) {
+                tv_group_messageN.setText("…");
+            } else {
+                tv_group_messageN.setText(String.valueOf(num));
+            }
+        } else {
+            tv_group_messageN.setVisibility(View.INVISIBLE);
+        }
     }
 
-    // 设置订阅数据
+    // 设置订阅消息条数
     private void setDateForSubscriber() {
         List<DBSubscriberMessage> s_list = dbDaoSubscriber.querySubscriberMessage();
         if (s_list != null && s_list.size() > 0) {

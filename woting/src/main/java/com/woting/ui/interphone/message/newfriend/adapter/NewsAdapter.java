@@ -118,7 +118,7 @@ public class NewsAdapter extends BaseAdapter {
                 if (lists.getGroupName() == null || lists.getGroupName().equals("")) {
                     holder.tv_news.setText("未知");
                 } else {
-                    holder.tv_news.setText(lists.getUserName());
+                    holder.tv_news.setText(Html.fromHtml("<font  color=\"#ff6600\">" + lists.getUserName() + "</font>"));
                 }
                 if (lists.getUserName() == null || lists.getUserName().equals("")) {
                     holder.tv_jieshao.setText("无邀请信息");

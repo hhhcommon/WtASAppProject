@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -85,7 +86,27 @@ public class MessageNotifyFragment extends Fragment implements OnClickListener {
 			tipView.setVisibility(View.GONE);
 			adapter = new NotifyNewsAdapter(context, list);
 			mListView.setAdapter(adapter);
+			setListener();
 		}
+	}
+
+	private void setListener() {
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				if(list!=null&&list.size()>0){
+					String s_type=list.get(position).getShowType();
+					if(s_type!=null&&!s_type.trim().equals("")){
+						if(s_type.equals("true")){
+							String m_type=list.get(position).getMessageType();
+							if(m_type!=null&&!m_type .trim().equals("")){
+
+							}
+						}
+					}
+				}
+			}
+		});
 	}
 
 	// 初始化数据库命令执行对象

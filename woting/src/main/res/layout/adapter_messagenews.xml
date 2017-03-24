@@ -46,7 +46,6 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="消息标头"
-                android:textColor="@color/dinglan_orange"
                 android:textSize="17sp" />
 
             <TextView
