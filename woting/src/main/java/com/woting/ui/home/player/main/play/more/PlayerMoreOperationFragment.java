@@ -56,7 +56,7 @@ import com.woting.ui.home.program.comment.CommentActivity;
 import com.woting.ui.main.MainActivity;
 import com.woting.ui.mine.favorite.main.FavoriteFragment;
 import com.woting.ui.mine.playhistory.main.PlayHistoryFragment;
-import com.woting.ui.mine.subscriber.main.SubscriberListFragment;
+import com.woting.ui.mine.subscriber.mai.SubscriberListFragment;
 
 import org.json.JSONObject;
 

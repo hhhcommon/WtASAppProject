@@ -1,4 +1,4 @@
-package com.woting.ui.mine.subscriber.main;
+package com.woting.ui.mine.subscriber.mai;
 
 import android.app.Dialog;
 import android.graphics.Color;
