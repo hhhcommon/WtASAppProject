@@ -209,14 +209,18 @@ public class FenLeiFragment extends Fragment implements TipView.WhiteViewClick {
                         });
                         mLoopViewPager.start();
                         tipView.setVisibility(View.GONE);
+                        mLoopViewPager.setVisibility(View.VISIBLE);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                }else{
+                    mLoopViewPager.setVisibility(View.GONE);
                 }
             }
 
             @Override
             protected void requestError(VolleyError error) {
+                mLoopViewPager.setVisibility(View.GONE);
             }
         });
     }

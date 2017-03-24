@@ -62,19 +62,24 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
 		// 通知消息库表
 		db.execSQL("CREATE TABLE IF NOT EXISTS message_notify(_id Integer primary key autoincrement, "
-				+ "bjuserid varchar(50),type varchar(50),imageurl varchar(100),content varchar(100),"
-				+ "title varchar(50),dealtime varchar(50),addtime varchar(50)," +
-				"showtype varchar(10),biztype varchar(10),cmdtype varchar(10),command varchar(10),taskid varchar(50))");
+				+ "user_id varchar(50),image_url varchar(50),person_name varchar(50),person_id varchar(50),"
+				+ "group_name varchar(50),group_id varchar(50),operator_name varchar(50),operator_id varchar(50),"
+				+ "show_type varchar(50),message_type varchar(50),deal_time varchar(50),add_time varchar(50),"
+				+"biz_type varchar(10),cmd_type varchar(10),command varchar(10),message_id varchar(50),message varchar(50))");
+
 		// 系统消息库表
 		db.execSQL("CREATE TABLE IF NOT EXISTS message_system(_id Integer primary key autoincrement, "
-				+ "bjuserid varchar(50),type varchar(50),imageurl varchar(100),content varchar(100),"
-				+ "title varchar(50),dealtime varchar(50),addtime varchar(50)," +
-				"showtype varchar(10),biztype varchar(10),cmdtype varchar(10),command varchar(10),taskid varchar(50))");
+				+ "user_id varchar(50),image_url varchar(50),person_name varchar(50),person_id varchar(50),"
+				+ "group_name varchar(50),group_id varchar(50),operator_name varchar(50),operator_id varchar(50),"
+				+ "show_type varchar(50),message_type varchar(50),deal_time varchar(50),add_time varchar(50),"
+				+"biz_type varchar(10),cmd_type varchar(10),command varchar(10),message_id varchar(50),message varchar(50))");
+
 		// 订阅消息
 		db.execSQL("CREATE TABLE IF NOT EXISTS message_subscriber(_id Integer primary key autoincrement, "
-				+ "bjuserid varchar(50),type varchar(50),imageurl varchar(100),content varchar(100),"
-				+ "title varchar(50),dealtime varchar(50),addtime varchar(50)," +
-				"showtype varchar(10),biztype varchar(10),cmdtype varchar(10),command varchar(10),taskid varchar(50))");
+				+ "user_id varchar(50),image_url varchar(100),seq_name varchar(100),"
+				+ "seq_id varchar(50),content_name varchar(100),content_id varchar(50),"
+				+"deal_time varchar(50),add_time varchar(50)," +
+				"biz_type varchar(10),cmd_type varchar(10),command varchar(10),message_id varchar(50))");
 	}
 
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

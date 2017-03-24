@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,9 +22,7 @@ import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.interphone.message.reviewednews.adapter.JoinGroupAdapter;
-import com.woting.ui.interphone.message.reviewednews.adapter.JoinGroupAdapter.Callback;
 import com.woting.ui.interphone.message.reviewednews.model.CheckInfo;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,7 +34,7 @@ import java.util.List;
  * @author 辛龙
  * 2016年4月13日
  */
-public class JoinGroupListActivity extends AppBaseActivity implements OnClickListener, Callback, TipView.WhiteViewClick {
+public class JoinGroupListActivity extends AppBaseActivity implements OnClickListener, TipView.WhiteViewClick {
     protected JoinGroupAdapter adapter;
     private List<CheckInfo> userList;
     private List<GroupInfo> list;
@@ -169,16 +166,10 @@ public class JoinGroupListActivity extends AppBaseActivity implements OnClickLis
                             }
                         }
                         tipView.setVisibility(View.GONE);
-                        adapter = new JoinGroupAdapter(context, userList, JoinGroupListActivity.this);
+                        adapter = new JoinGroupAdapter(context, userList);
                         joinListView.setAdapter(adapter);
-                        joinListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                            @Override
-                            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                                delDialog.show();
-                                delPosition = position;
-                                return false;
-                            }
-                        });
+                        setListener();
+
                     } else {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.NO_DATA, "暂时没有加群消息需要处理~~");
@@ -198,6 +189,27 @@ public class JoinGroupListActivity extends AppBaseActivity implements OnClickLis
                 tipView.setTipView(TipView.TipStatus.IS_ERROR);
             }
         });
+    }
+
+    private void setListener() {
+        adapter.setOnListener(new JoinGroupAdapter.OnListener() {
+            @Override
+            public void tongyi(int position) {
+                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                    dialog = DialogUtils.Dialogph(context, "正在获取数据");
+                    sendRequest();
+                } else {
+                    ToastUtils.show_always(context, "网络连接失败，请稍后重试");
+                }
+            }
+
+            @Override
+            public void jujue(int position) {
+                delDialog.show();
+                delPosition = position;
+            }
+        });
+
     }
 
     @Override
@@ -278,17 +290,6 @@ public class JoinGroupListActivity extends AppBaseActivity implements OnClickLis
                 }
             }
         });
-    }
-
-    @Override
-    public void click(View v) {
-        onClickTv = (Integer) v.getTag();
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在获取数据");
-            sendRequest();
-        } else {
-            ToastUtils.show_always(context, "网络连接失败，请稍后重试");
-        }
     }
 
     @Override

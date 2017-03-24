@@ -62,6 +62,7 @@ public class NotifyNewsAdapter extends BaseAdapter {
             holder.time = (TextView) convertView.findViewById(R.id.time);
             holder.tile = (TextView) convertView.findViewById(R.id.title);
             holder.content = (TextView) convertView.findViewById(R.id.content);
+            holder.imageView = (ImageView) convertView.findViewById(R.id.imageView);
             holder.Image = (ImageView) convertView.findViewById(R.id.Image);
             holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
             Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
@@ -70,37 +71,116 @@ public class NotifyNewsAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+
         lists = list.get(position);
-        if (lists != null) {
-            if (lists.getTitle() == null || lists.getTitle().equals("")) {
-                holder.tile.setText("新信息");
+        if (lists != null && lists.getMessageType() != null && !lists.getMessageType().trim().equals("")) {
+            if (lists.getImageUrl() == null || lists.getImageUrl().equals("")|| lists.getImageUrl().equals("null") || lists.getImageUrl().trim().equals("")) {
+                Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_linkman_news);
+                holder.Image.setImageBitmap(bmp);
             } else {
-                holder.tile.setText(lists.getTitle());
+                String url;
+                if (lists.getImageUrl().startsWith("http:")) {
+                    url = lists.getImageUrl();
+                } else {
+                    url = GlobalConfig.imageurl + lists.getImageUrl();
+                }
+                url = AssembleImageUrlUtils.assembleImageUrl150(url);
+                Picasso.with(context).load(url.replace("\\/", "/")).into(holder.Image);
             }
-            if (lists.getContent() == null || lists.getContent().equals("")) {
-                holder.content.setText("未知消息");
+            if (lists.getMessageType().trim().equals("p1")) {
+                if (lists.getPersonName() == null || lists.getPersonName().equals("")) {
+                    holder.tile.setText("添加好友");
+                } else {
+                    holder.tile.setText(lists.getPersonName());
+                }
+            } else if (lists.getMessageType().trim().equals("p2")){
+                if (lists.getPersonName() == null || lists.getPersonName().equals("")) {
+                    holder.tile.setText("添加好友");
+                } else {
+                    holder.tile.setText(lists.getPersonName());
+                }
+            } else if (lists.getMessageType().trim().equals("g1")){
+                if (lists.getPersonName() == null || lists.getPersonName().equals("")) {
+                    holder.tile.setText("好友邀请");
+                } else {
+                    holder.tile.setText(lists.getPersonName());
+                }
+            } else if (lists.getMessageType().trim().equals("b2")){
+                if (lists.getPersonName() == null || lists.getPersonName().equals("")) {
+                    holder.tile.setText("用户申请");
+                } else {
+                    holder.tile.setText(lists.getPersonName());
+                }
+            } else if (lists.getMessageType().trim().equals("g31")){
+                if (lists.getPersonName() == null || lists.getPersonName().equals("")) {
+                    holder.tile.setText("处理消息");
+                } else {
+                    holder.tile.setText(lists.getPersonName());
+                }
+            } else if (lists.getMessageType().trim().equals("g32")){
+                if (lists.getGroupName() == null || lists.getGroupName().equals("")) {
+                    holder.tile.setText("处理消息");
+                } else {
+                    holder.tile.setText(lists.getGroupName());
+                }
+            } else if (lists.getMessageType().trim().equals("g4")){
+                if (lists.getPersonName() == null || lists.getPersonName().equals("")) {
+                    holder.tile.setText("处理消息");
+                } else {
+                    holder.tile.setText(lists.getPersonName());
+                }
+            } else if (lists.getMessageType().trim().equals("g5")){
+                if (lists.getPersonName() == null || lists.getPersonName().equals("")) {
+                    holder.tile.setText("处理消息");
+                } else {
+                    holder.tile.setText(lists.getPersonName());
+                }
+            } else if (lists.getMessageType().trim().equals("g6")){
+                if (lists.getGroupName() == null || lists.getGroupName().equals("")) {
+                    holder.tile.setText("群解散了");
+                } else {
+                    holder.tile.setText(lists.getGroupName());
+                }
+            } else if (lists.getMessageType().trim().equals("g7")){
+                if (lists.getGroupName() == null || lists.getGroupName().equals("")) {
+                    holder.tile.setText("移交群主");
+                } else {
+                    holder.tile.setText(lists.getGroupName());
+                }
+            } else if (lists.getMessageType().trim().equals("g8")){
+                if (lists.getGroupName() == null || lists.getGroupName().equals("")) {
+                    holder.tile.setText("审核消息");
+                } else {
+                    holder.tile.setText(lists.getGroupName());
+                }
+            } else if (lists.getMessageType().trim().equals("g9")){
+                if (lists.getGroupName() == null || lists.getGroupName().equals("")) {
+                    holder.tile.setText("群消息更改");
+                } else {
+                    holder.tile.setText(lists.getGroupName());
+                }
+            } else{
+                    holder.tile.setText("新的通知");
+            }
+
+            if (lists.getMessage() == null || lists.getMessage().equals("")) {
+                holder.content.setText("我听通知消息");
             } else {
-                holder.content.setText(lists.getContent());
+                holder.content.setText(lists.getMessage());
             }
+
             if (lists.getDealTime() == null || lists.getDealTime().equals("") || lists.getDealTime().equals("null")) {
                 holder.time.setText(format.format(new Date(System.currentTimeMillis())));
             } else {
                 holder.time.setText(format.format(new Date(Long.parseLong(lists.getDealTime()))));
             }
-            if (lists.getImageUrl() == null || lists.getImageUrl().equals("")
-                    || lists.getImageUrl().equals("null") || lists.getImageUrl().trim().equals("")) {
-                Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_linkman_news);
-                holder.Image.setImageBitmap(bmp);
+
+            if (lists.getShowType() != null && !lists.getShowType().trim().equals("") && lists.getShowType().trim().equals("true")) {
+                holder.imageView.setVisibility(View.VISIBLE);
             } else {
-                String url;
-                if(lists.getImageUrl().startsWith("http:")){
-                    url=lists.getImageUrl();
-                }else{
-                    url = GlobalConfig.imageurl+lists.getImageUrl();
-                }
-                url= AssembleImageUrlUtils.assembleImageUrl150(url);
-                Picasso.with(context).load(url.replace("\\/", "/")).into(holder.Image);
+                holder.imageView.setVisibility(View.INVISIBLE);
             }
+
         }
         return convertView;
     }
@@ -111,5 +191,6 @@ public class NotifyNewsAdapter extends BaseAdapter {
         public TextView tile;
         public TextView time;
         public ImageView img_zhezhao;
+        public ImageView imageView;
     }
 }

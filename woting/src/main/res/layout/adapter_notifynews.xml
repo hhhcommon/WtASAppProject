@@ -3,11 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/WHITE"
+    android:gravity="center"
     android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="81dp"
+        android:layout_height="wrap_content"
         android:background="@color/WHITE"
         android:orientation="horizontal"
         android:gravity="center">
@@ -15,6 +16,8 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="18dp">
 
             <ImageView
@@ -33,9 +36,11 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="13dp"
             android:layout_weight="2"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:gravity="left|center"
             android:orientation="vertical" >
 
@@ -45,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="朋友"
+                android:text="标题展示数据"
                 android:textColor="@color/dinglan_orange"
                 android:textSize="16sp"/>
 
@@ -54,9 +59,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:text="朋 友"
+                android:text="消息展示数据"
+                android:maxLines="3"
                 android:layout_marginBottom="7dp"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/gray"
@@ -73,7 +77,14 @@
                 android:textSize="11sp"/>
             
         </LinearLayout>
-        
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView"
+            android:visibility="invisible"
+            android:src="@mipmap/live_more" />
+
     </LinearLayout>
 
 </LinearLayout>

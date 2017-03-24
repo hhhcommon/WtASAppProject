@@ -10,8 +10,8 @@ public class SeqMediaInfo {
 
     private String ContentPub;// 来源
 
+    private String ContentPubTime;//**节目发布时间，此处代表单体数据
     private String ContentURI;
-
     private String CTime;// 发布时间
 
     private String MediaType;// 媒体类型
@@ -19,6 +19,14 @@ public class SeqMediaInfo {
     private String ContentId;
 
     private String ContentImg;
+
+    public String getContentPubTime() {
+        return ContentPubTime;
+    }
+
+    public void setContentPubTime(String contentPubTime) {
+        ContentPubTime = contentPubTime;
+    }
 
     public String getContentName() {
         return ContentName;

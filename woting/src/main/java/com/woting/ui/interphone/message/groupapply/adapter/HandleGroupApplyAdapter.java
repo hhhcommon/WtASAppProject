@@ -16,34 +16,29 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.common.model.UserInfo;
+import com.woting.ui.interphone.message.reviewednews.model.CheckInfo;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class HandleGroupApplyAdapter extends BaseAdapter implements OnClickListener{
+public class HandleGroupApplyAdapter extends BaseAdapter {
 	private List<UserInfo> list;
 	private Context context;
-	private UserInfo Inviter;
-	private Callback mCallback;
 	private SimpleDateFormat format;
-	public interface Callback {
-		public void click(View v);
-	}
+	protected OnListener onListener;
 
-	public HandleGroupApplyAdapter(Context context, List<UserInfo> list,
-			Callback callback) {
+	public HandleGroupApplyAdapter(Context context, List<UserInfo> list) {
 		super();
 		this.list = list;
 		this.context = context;
-		this.mCallback = callback;
 		format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	}
 
-	public void ChangeData(List<UserInfo> list) {
-		this.list = list;
-		this.notifyDataSetChanged();
+	public void setOnListener(OnListener onListener) {
+		this.onListener = onListener;
 	}
+
 	@Override
 	public int getCount() {
 		return list.size();
@@ -61,15 +56,16 @@ public class HandleGroupApplyAdapter extends BaseAdapter implements OnClickListe
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		ViewHolder holder ;
+		ViewHolder holder;
 		if (convertView == null) {
 			holder = new ViewHolder();
-			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_userinviteme, null);
-			holder.textview_invitename = (TextView) convertView.findViewById(R.id.tv_invitemeusername);// 邀请我的人名
-			holder.textview_invitemessage = (TextView) convertView.findViewById(R.id.tv_invitemeusermessage);// 申请消息
-			holder.imageview_inviteimage = (ImageView) convertView.findViewById(R.id.imageView_inviter);// 该人头像
-			holder.textview_invitestauswait = (TextView) convertView.findViewById(R.id.textView_repeatstatus2);
-			holder.textview_invitestausyes = (TextView) convertView.findViewById(R.id.textView_repeatstatus);
+			convertView = LayoutInflater.from(context).inflate(R.layout.adapter_messagenews, null);
+			holder.Image = (ImageView) convertView.findViewById(R.id.image);
+			holder.tv_news = (TextView) convertView.findViewById(R.id.tv_news);
+			holder.tv_jieshao = (TextView) convertView.findViewById(R.id.tv_jieshao);
+			holder.time = (TextView) convertView.findViewById(R.id.tv_time);
+			holder.tv_res = (TextView) convertView.findViewById(R.id.tv_res);
+			holder.tv_acc = (TextView) convertView.findViewById(R.id.tv_acc);
 			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
 			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
 			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
@@ -77,56 +73,62 @@ public class HandleGroupApplyAdapter extends BaseAdapter implements OnClickListe
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		Inviter = list.get(position);
+		UserInfo lists = list.get(position);
 
-		if (Inviter.getUserName() == null || Inviter.getUserName().equals("")) {
-			holder.textview_invitename.setText("未知");
+		if (lists.getUserName() == null || lists.getUserName().equals("")) {
+			holder.tv_news.setText("未知");
 		} else {
-			holder.textview_invitename.setText(Inviter.getUserName());
+			holder.tv_news.setText(lists.getUserName());
 		}
-		if (Inviter.getApplyTime() == null || Inviter.getApplyTime().equals("")) {
-			holder.textview_invitemessage.setText("申请进入该群");
+		if (lists.getApplyTime() == null || lists.getApplyTime().equals("")) {
+			holder.tv_jieshao.setText("申请进入该群");
 		} else {
-			String time = format.format(new Date(Long.parseLong(Inviter.getApplyTime())));
-			
-			holder.textview_invitemessage.setText("于"+time+"申请进入该群");
+			String time = format.format(new Date(Long.parseLong(lists.getApplyTime())));
+
+			holder.tv_jieshao.setText("于" + time + "申请进入该群");
 		}
-		if (Inviter.getPortraitMini() == null || Inviter.getPortraitMini().equals("")
-				|| Inviter.getPortraitMini().equals("null") || Inviter.getPortraitMini().trim().equals("")) {
-			holder.imageview_inviteimage.setImageResource(R.mipmap.wt_image_tx_hy);
+		if (lists.getPortraitMini() == null || lists.getPortraitMini().equals("")
+				|| lists.getPortraitMini().equals("null") || lists.getPortraitMini().trim().equals("")) {
+			Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_qz);
+			holder.Image.setImageBitmap(bmp);
 		} else {
 			String url;
-			if(Inviter.getPortraitMini().startsWith("http:")){
-				url=Inviter.getPortraitMini();
-			}else{
-				url = GlobalConfig.imageurl+Inviter.getPortraitMini();
+			if (lists.getPortraitMini().startsWith("http:")) {
+				url = lists.getPortraitMini();
+			} else {
+				url = GlobalConfig.imageurl + lists.getPortraitMini();
 			}
-			url=AssembleImageUrlUtils.assembleImageUrl150(url);
-			Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageview_inviteimage);
+			url = AssembleImageUrlUtils.assembleImageUrl150(url);
+			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.Image);
 		}
-		if (Inviter.getType() == 1) {
-			holder.textview_invitestauswait.setVisibility(View.VISIBLE);
-			holder.textview_invitestausyes.setVisibility(View.GONE);
-			holder.textview_invitestauswait.setOnClickListener(this);
-			holder.textview_invitestauswait.setTag(position);
-		} else if (Inviter.getType() == 2) {
-			holder.textview_invitestauswait.setVisibility(View.GONE);
-			holder.textview_invitestausyes.setVisibility(View.VISIBLE);
-		}
+
+
+		holder.tv_acc.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				onListener.tongyi(position);
+			}
+		});
+		holder.tv_res.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				onListener.jujue(position);
+			}
+		});
 		return convertView;
 	}
 
 	class ViewHolder {
-		public TextView textview_invitename;
-		public TextView textview_invitemessage;
-		public ImageView imageview_inviteimage;
-		public TextView textview_invitestauswait;
-		public TextView textview_invitestausyes;
+		public TextView tv_jieshao;
+		public TextView tv_acc;
+		public TextView tv_res;
+		public TextView time;
+		public TextView tv_news;
+		public ImageView Image;
 		public ImageView img_zhezhao;
 	}
 
-	@Override
-	public void onClick(View v) {
-		mCallback.click(v);
+	public interface OnListener {
+		public void tongyi(int position);
+
+		public void jujue(int position);
 	}
 }

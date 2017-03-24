@@ -61,11 +61,10 @@ public class CommonUtils {
      * =====专门为socket使用=====
      * 获取USERID，没有则返回null
      *
-     * @param context
      * @return
      */
 
-    public static String getSocketUserId(Context context) {
+    public static String getSocketUserId() {
         try {
             SharedPreferences sp =BSApplication.SharedPreferences;
             String UserId = sp.getString(StringConstant.USERID, "userid");
@@ -79,7 +78,6 @@ public class CommonUtils {
             return null;
         }
     }
-
     /**
      * 获取City 没有返回null
      *

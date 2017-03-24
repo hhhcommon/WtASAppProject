@@ -3,11 +3,9 @@ package com.woting.ui.interphone.message.messagecenter.dao;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
 import com.woting.common.database.SQLiteHelper;
 import com.woting.common.util.CommonUtils;
-import com.woting.ui.interphone.linkman.model.DBNotifyHistory;
-
+import com.woting.ui.interphone.message.messagecenter.model.DBSubscriberMessage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,16 +28,16 @@ public class MessageSubscriberDao {
     /**
      * 插入搜索历史表一条数据
      */
-    public void addSubscriberMessage(DBNotifyHistory message) {
+    public void addSubscriberMessage(DBSubscriberMessage message) {
         //通过helper的实现对象获取可操作的数据库db
         SQLiteDatabase db = helper.getWritableDatabase();
-        db.execSQL("insert into message_subscriber(bjuserid,type,imageurl,content,title,dealtime,addtime,showtype,biztype,cmdtype,command,taskid) values(?,?,?,?,?,?,?,?,?,?,?,?)",
+        db.execSQL("insert into message_subscriber(user_id,image_url,seq_name,seq_id,content_name,content_id,deal_time,add_time,biz_type,cmd_type,command,message_id) values(?,?,?,?,?,?,?,?,?,?,?,?)",
                 new Object[]{
-                        message.getBJUserId(), message.getTyPe(),
-                        message.getImageUrl(), message.getContent(),
-                        message.getTitle(), message.getDealTime(), message.getAddTime(),
-                        message.getShowType(), message.getBizType(), message.getCmdType(),
-                        message.getCommand(), message.getTaskId()
+                        message.getUserId(), message.getImageUrl(),
+                        message.getSeqName(), message.getSeqId(),
+                        message.getContentName(), message.getContentId(), message.getDealTime(),
+                        message.getAddTime(), message.getBizType(), message.getCmdType(),
+                        message.getCommand(), message.getMessageId()
                 });//sql语句
         db.close();//关闭数据库对象
     }
@@ -48,32 +46,31 @@ public class MessageSubscriberDao {
     /**
      * 查询数据库里的数据，无参查询语句 供特定使用
      */
-    public List<DBNotifyHistory> querySubscriberMessage() {
-        List<DBNotifyHistory> mylist = new ArrayList<DBNotifyHistory>();
+    public List<DBSubscriberMessage> querySubscriberMessage() {
+        List<DBSubscriberMessage> _list = new ArrayList<DBSubscriberMessage>();
         SQLiteDatabase db = helper.getReadableDatabase();
-        String userid = CommonUtils.getUserId(context);
+        String _user_id = CommonUtils.getUserId(context);// 本机的ID
         Cursor cursor = null;
         try {
-            cursor = db.rawQuery("Select * from message_subscriber  where bjuserid=? and showtype=? order by addtime desc", new String[]{userid,"true"});
+            cursor = db.rawQuery("Select * from message_subscriber  where user_id=? order by add_time desc", new String[]{_user_id});
             while (cursor.moveToNext()) {
-                String bjuserid = cursor.getString(1);
-                String type = cursor.getString(2);
-                String imageurl = cursor.getString(3);
-                String content = cursor.getString(4);
-                String title = cursor.getString(5);
-                String dealtime = cursor.getString(6);
-                String addtime = cursor.getString(7);
-
-                String showtype = cursor.getString(8);
-                int biztype = cursor.getInt(9);
-                int cmdtype = cursor.getInt(10);
+                String user_id = cursor.getString(1);
+                String image_url = cursor.getString(2);
+                String seq_name = cursor.getString(3);
+                String seq_id = cursor.getString(4);
+                String content_name = cursor.getString(5);
+                String content_id = cursor.getString(6);
+                String deal_time = cursor.getString(7);
+                String add_time = cursor.getString(8);
+                int biz_type = cursor.getInt(9);
+                int cmd_type = cursor.getInt(10);
                 int command = cursor.getInt(11);
-                String taskid = cursor.getString(12);
+                String message_id = cursor.getString(12);
 
                 //把每个对象都放到history对象里
-                DBNotifyHistory h = new DBNotifyHistory(bjuserid, type, imageurl, content,
-                        title, dealtime, addtime, showtype,biztype,cmdtype,command,taskid);
-                mylist.add(h);
+                DBSubscriberMessage h = new DBSubscriberMessage(user_id, image_url, seq_name, seq_id,
+                        content_name, content_id, deal_time, add_time,biz_type,cmd_type,command,message_id);
+                _list.add(h);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,18 +82,17 @@ public class MessageSubscriberDao {
                 db.close();
             }
         }
-        return mylist;
+        return _list;
     }
 
     /**
-     * 删除数据库表中的数据,添加时间是唯一标示（addtime）
+     * 删除数据库表中的数据,专辑ID是唯一标示（seq_id）
      */
-    public void deleteSubscriberMessage(String addtime) {
+    public void deleteSubscriberMessage(String seq_id) {
         SQLiteDatabase db = helper.getReadableDatabase();
-        String userid = CommonUtils.getUserId(context);
-        String addtimes = addtime;
-        db.execSQL("Delete from message_subscriber where addtime=? and bjuserid=?",
-                new String[]{addtimes, userid});
+        String userId = CommonUtils.getUserId(context);
+        db.execSQL("Delete from message_subscriber where seq_id=? and user_id=?",
+                new String[]{seq_id, userId});
         db.close();
     }
 }

@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Matrix;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -59,6 +58,10 @@ import com.woting.ui.home.program.album.fragment.DetailsFragment;
 import com.woting.ui.home.program.album.fragment.ProgramFragment;
 import com.woting.ui.home.program.comment.CommentActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
+import com.woting.ui.interphone.commom.message.Message;
+import com.woting.ui.interphone.commom.service.InterPhoneControl;
+import com.woting.ui.interphone.message.messagecenter.dao.MessageSubscriberDao;
+import com.woting.ui.interphone.message.messagecenter.model.DBSubscriberMessage;
 import com.woting.ui.home.program.radiolist.mode.ListInfo;
 import com.woting.ui.home.search.main.SearchLikeActivity;
 import com.woting.ui.mine.main.MineActivity;
@@ -125,9 +128,8 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
         context = getActivity();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.activity_album, container, false);
             rootView.setOnClickListener(this);
@@ -378,7 +380,26 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
         } else {
             tv_album_name.setText("未知");
         }
+        // 处理与该专辑相关的订阅消息
+        deleteMessageForNotify(id);
         Log.e("本节目的专辑ID为", id + "");
+    }
+
+    // 处理与该专辑相关的订阅消息
+    private void deleteMessageForNotify(String id) {
+        MessageSubscriberDao dbDaoSubscriber = new MessageSubscriberDao(context);// 订阅消息
+        // 发送业务回复
+        List<DBSubscriberMessage> s_list = dbDaoSubscriber.querySubscriberMessage();
+        if (s_list != null && s_list.size() > 0) {
+            for(int i=0;i<s_list.size();i++){
+                if(id.trim().equals(s_list.get(i).getSeqId())){
+                    String message_id = s_list.get(i).getMessageId();
+                    InterPhoneControl.universalControlReply(context,message_id,4,4,1);
+                }
+            }
+        }
+        // 删除数据库中存在的与该专辑相关的订阅消息
+        dbDaoSubscriber.deleteSubscriberMessage(id);
     }
 
     @Override

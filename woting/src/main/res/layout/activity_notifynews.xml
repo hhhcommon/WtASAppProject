@@ -26,12 +26,14 @@
         <TextView
             android:id="@+id/tv_delete"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="删除"
+            android:gravity="center"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:textColor="@color/WHITE"
-            android:padding="15dp"
             android:textSize="@dimen/activity_head_center_s" />
     </RelativeLayout>
 
