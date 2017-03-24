@@ -20,7 +20,6 @@ import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
-import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -169,7 +168,8 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                 if (returnType != null && returnType.equals("1001")) {
                     try {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
+                        subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {
+                        }.getType());
                         if (subList != null && subList.size() >= 9) {
                             page++;
                             mListView.setPullLoadEnable(true);
@@ -273,14 +273,14 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                         String sequDesc = newList.get(position - 2).getSequDesc();
                         String sequImg = newList.get(position - 2).getSequImg();
                         String ContentPlayType = newList.get(position - 2).getContentPlayType();
-                        String IsPlaying=newList.get(position - 2).getIsPlaying();
+                        String IsPlaying = newList.get(position - 2).getIsPlaying();
 
                         // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playername, playerimage, playerurl, playerurI, playermediatype,
                                 plaplayeralltime, playerintime, playercontentdesc, playernum,
                                 playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playerContentShareUrl,
-                                ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
+                                ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying);
                         dbDao.deleteHistory(playerurl);
                         dbDao.addHistory(history);
 
@@ -318,7 +318,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
     private void getImage() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            jsonObject.put("CatalogType","-1");
+            jsonObject.put("CatalogType", "-1");
             jsonObject.put("CatalogId", "cn10");
             jsonObject.put("Size", "4");// 此处需要改成-1
         } catch (JSONException e) {
@@ -338,21 +338,21 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     try {
-                        List<Image>  imageList = new Gson().fromJson(result.getString("LoopImgs"), new TypeToken<List<Image>>() {
+                        List<Image> imageList = new Gson().fromJson(result.getString("LoopImgs"), new TypeToken<List<Image>>() {
                         }.getType());
-                       // mLoopViewPager.setAdapter(new LoopAdapter(mLoopViewPager, context, imageList));
-                       // mLoopViewPager.setHintView(new IconHintView(context, R.mipmap.indicators_now, R.mipmap.indicators_default));
+                        // mLoopViewPager.setAdapter(new LoopAdapter(mLoopViewPager, context, imageList));
+                        // mLoopViewPager.setHintView(new IconHintView(context, R.mipmap.indicators_now, R.mipmap.indicators_default));
                         mLoopViewPager.setImageLoader(new PicassoBannerLoader());
 
-                        for(int i=0;i<imageList.size();i++){
+                        for (int i = 0; i < imageList.size(); i++) {
                             ImageStringList.add(imageList.get(i).getLoopImg());
                         }
-                            mLoopViewPager.setImages(ImageStringList);
+                        mLoopViewPager.setImages(ImageStringList);
 
                         mLoopViewPager.setOnBannerListener(new OnBannerListener() {
                             @Override
                             public void OnBannerClick(int position) {
-                                ToastUtils.show_always(context,ImageStringList.get(position-1));
+                                ToastUtils.show_always(context, ImageStringList.get(position - 1));
                             }
                         });
                         mLoopViewPager.start();
@@ -386,4 +386,4 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             dbDao = null;
         }
     }
-
+}
