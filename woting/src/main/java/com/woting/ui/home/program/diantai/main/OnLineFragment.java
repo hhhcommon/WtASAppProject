@@ -54,6 +54,7 @@ import com.woting.ui.home.program.diantai.fragment.RadioNationalFragment;
 import com.woting.ui.home.program.diantai.model.RadioPlay;
 import com.woting.ui.home.program.fmlist.fragment.FMListFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
+import com.woting.ui.main.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -180,7 +181,6 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                 if (!et.commit()) Log.w("TAG", "数据 commit 失败!");
             }
         }
-
     }
 
     @Override
@@ -434,6 +434,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                         bundle1.putString("text", mainLists.get(position).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
+                        MainActivity.change();
                     }
                 }
             }
@@ -560,6 +561,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                         bundle1.putString("text", newList.get(groupPosition).getList().get(childPosition).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
+                        MainActivity.change();
                     } else {
                         ToastUtils.show_short(context, "暂不支持的Type类型");
                     }
@@ -567,26 +569,6 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                 return false;
             }
         });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        String cityType = shared.getString(StringConstant.CITYTYPE, "false");
-        cityName = shared.getString(StringConstant.CITYNAME, "北京");
-        cityId = shared.getString(StringConstant.CITYID, "110000");
-        if (GlobalConfig.CityName != null) cityName = GlobalConfig.CityName;
-        if (cityType.equals("true")) {
-            textName.setText(cityName);
-            page = 1;
-            beginCatalogId = "";
-            RefreshType = 1;
-            getCity();
-            send();
-            Editor et = shared.edit();
-            et.putString(StringConstant.CITYTYPE, "false");
-            if (!et.commit()) Log.w("TAG", "数据 commit 失败!");
-        }
     }
 
     @Override

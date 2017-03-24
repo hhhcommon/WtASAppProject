@@ -57,8 +57,7 @@ import com.woting.ui.home.player.main.model.LanguageSearch;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.player.timeset.service.timeroffservice;
-import com.woting.ui.home.search.main.SearchLikeFragment;
-import com.woting.ui.interphone.notify.activity.MessageFragment;
+import com.woting.ui.interphone.message.messagecenter.activity.MessageMainActivity;
 import com.woting.ui.main.MainActivity;
 import com.woting.video.IntegrationPlayer;
 import com.woting.video.VoiceRecognizer;
@@ -91,7 +90,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private VoiceRecognizer mVoiceRecognizer;// 讯飞
     private MessageReceiver mReceiver;// 广播接收
     private PlayerListAdapter adapter;
-    public static SearchLikeFragment frag;// 搜索
 
     private Dialog dialog;// 加载数据对话框
     private Dialog wifiDialog;// WIFI 提醒对话框
@@ -300,6 +298,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             filter.addAction(BroadcastConstants.LK_TTS_PLAY_OVER);// 路况播放完了
 
             // 下载完成更新 LocalUrl
+            filter.addAction(BroadcastConstants.PUSH_DOWN_COMPLETED);
             filter.addAction(BroadcastConstants.ACTION_FINISHED);
             filter.addAction(BroadcastConstants.ACTION_FINISHED_NO_DOWNLOADVIEW);
 
@@ -331,32 +330,23 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         });
     }
 
-    // 显示搜索界面
-    private void showSearch() {
-        if (frag != null && PlayerActivity.playerFragment != null) {
-            context.getSupportFragmentManager().beginTransaction()
-                    .hide(PlayerActivity.playerFragment).show(frag).commit();
-        }
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.lin_find:// 搜索
-                if (frag == null) {
-                    frag = new SearchLikeFragment();
-                    Bundle bun = new Bundle();
-                    bun.putInt("FROM_TYPE", 0);// == 0 PlayerFragment
-                    frag.setArguments(bun);
-                    PlayerActivity.open(frag);
-                } else {
-                    showSearch();
-                }
-                MainActivity.hideOrShowTab(false);
-                PlayerActivity.isVisible = false;
+                MainActivity.setViewSeven();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent();
+                        intent.putExtra(StringConstant.FROM_TYPE, IntegerConstant.TAG_PLAY);
+                        intent.setAction(BroadcastConstants.FROM_ACTIVITY);
+                        context.getApplicationContext().sendBroadcast(intent);
+                    }
+                }, 500);
                 break;
             case R.id.lin_news://
-                PlayerActivity.open(new MessageFragment());
+                startActivity(new Intent(context, MessageMainActivity.class));
                 break;
             case R.id.lin_lukuangtts:// 获取路况
                 TTSPlay();
@@ -488,6 +478,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     break;
                 case BroadcastConstants.ACTION_FINISHED:// 更新下载列表
                 case BroadcastConstants.ACTION_FINISHED_NO_DOWNLOADVIEW:
+                case BroadcastConstants.PUSH_DOWN_COMPLETED:
                     if (mPlayer != null) mPlayer.updateLocalList();
                     break;
                 case BroadcastConstants.PLAY_NO_NET:// 播放器没有网络
@@ -597,7 +588,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         if (isNetPlay && !isPlaying) {
             mPlayer.startPlay(index);
         } else {
-            if (mPlayer.playStatus()) {// 正在播放
+            if (isPlaying || mPlayer.playStatus()) {// 正在播放
                 mPlayer.pausePlay();
                 mPlayImageStatus.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_play_stop));
                 isPlaying = false;
@@ -606,6 +597,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 mPlayImageStatus.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_play_play));
                 isPlaying = true;
             }
+
             mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST_VIEW, 0);
         }
         Intent intent = new Intent(BroadcastConstants.UPDATE_PLAY_IMAGE);
@@ -710,7 +702,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
                     for (int a = 0, s = playList.size(); a < s; a++) {
                         media = playList.get(a).getMediaType();
-                        if (media != null && !media.equals("TTS")) {
+                        if (media != null && !media.equals(StringConstant.TYPE_TTS)) {
                             contentPlay = playList.get(a).getContentPlay();
                             if (contentPlay != null && !contentPlay.trim().equals("") && !contentPlay.toUpperCase().equals("NULL")) {
                                 contentPlayList.add(contentPlay);
@@ -718,7 +710,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                         }
                     }
                     for (int i = 0, size = subList.size(); i < size; i++) {
-                        if (subList.get(i).getMediaType() != null && subList.get(i).getMediaType().equals("TTS")) continue;
+                        if (subList.get(i).getMediaType() != null && subList.get(i).getMediaType().equals(StringConstant.TYPE_TTS)) continue;
                         if (!contentPlayList.contains(subList.get(i).getContentPlay())) {
                             if (refreshType == -1) {
                                 playList.add(0, subList.get(i));
@@ -744,9 +736,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         ArrayList<LanguageSearchInside> playerList = new ArrayList<>();
         playerList.addAll(playList);
         if(refreshType == 1) {
-            mPlayer.updatePlayList(playerList);
-        } else {
             mPlayer.updatePlayList(playerList, index);
+        } else {
+            mPlayer.updatePlayList(playerList);
         }
 
         // 每次语音搜索结果出来之后应该自动播放第一个节目
@@ -764,6 +756,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
     // 更新列表界面
     private void updateListView() {
+        if (playList == null || playList.size() == 0) return ;
+        if (adapter == null) return ;
         for (int i = 0, size = playList.size(); i < size; i++) {
             if (i == index) {
                 if (isPlaying) playList.get(i).setType("2");
@@ -917,6 +911,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         }
         if (mTimer != null) {
             mTimer.cancel();
+            mTimer = null;
         }
         if (mPlayer != null) {
             mPlayer.unbindService(context);
@@ -1216,12 +1211,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                             list = lists.getList();
                         }
                         if (requestType.equals(StringConstant.PLAY_REQUEST_TYPE_SEARCH_VOICE) && refreshType == 0) playList.clear();
-                        if (list != null && list.size() >= 10) {
-                            page++;
-                            setPullAndLoad(true, true);
-                        } else {
-                            setPullAndLoad(true, false);
-                        }
+                        page++;
+                        setPullAndLoad(true, true);
                         subList = clearContentPlayNull(list);// 去空
                         mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
                     } else {

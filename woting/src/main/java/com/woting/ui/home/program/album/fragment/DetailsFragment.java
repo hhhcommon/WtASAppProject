@@ -147,6 +147,7 @@ public class DetailsFragment extends Fragment implements OnClickListener {
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
+                Log.v("专辑 Details", "数据 -- > " + result.toString());
                 try {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {

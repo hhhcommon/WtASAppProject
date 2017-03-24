@@ -1,7 +1,6 @@
 package com.woting.ui.home.program.diantai.fragment.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,6 +19,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.ToastUtils;
+import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.program.diantai.model.RadioPlay;
 import com.woting.ui.home.program.fmlist.fragment.FMListFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
@@ -99,15 +99,15 @@ public class OnLinesRadioAdapter extends BaseExpandableListAdapter  {
 		holder.lin_more.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(context, FMListFragment.class);
+                FMListFragment fmListFragment = new FMListFragment();
 				Bundle bundle = new Bundle();
 				bundle.putString("fromtype", "cityRadio");
 				bundle.putSerializable("list", lists);
 				bundle.putString("name", lists.getCatalogName());
 				bundle.putString("type", "2");
 				bundle.putString("id", lists.getCatalogId());
-				intent.putExtras(bundle);
-				context.startActivity(intent);
+                fmListFragment.setArguments(bundle);
+                HomeActivity.open(fmListFragment);
 			}
 		});
 		return convertView;

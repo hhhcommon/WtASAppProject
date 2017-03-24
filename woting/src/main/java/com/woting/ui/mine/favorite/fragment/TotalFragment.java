@@ -25,6 +25,8 @@ import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.IntegerConstant;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
@@ -33,6 +35,7 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
+import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
 import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.home.search.adapter.SearchContentAdapter;
@@ -435,11 +438,15 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
                 } else if (mediaType.equals("SEQU")) {
                     AlbumFragment fragment = new AlbumFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putInt("fromType", 3);// Mine
+                    bundle.putInt(StringConstant.FROM_TYPE, FavoriteFragment.type);
                     bundle.putString("type", "recommend");
                     bundle.putSerializable("list", list.get(groupPosition).getList().get(childPosition));
                     fragment.setArguments(bundle);
-                    MineActivity.open(fragment);
+                    if (FavoriteFragment.type == IntegerConstant.TAG_MINE) {// Mine
+                        MineActivity.open(fragment);
+                    } else if (FavoriteFragment.type == IntegerConstant.TAG_MORE) {// FlayMore
+                        PlayerMoreOperationActivity.open(fragment);
+                    }
                 }
                 return true;
             }

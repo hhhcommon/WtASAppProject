@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 
 import com.woting.R;
@@ -19,36 +18,18 @@ import com.woting.ui.main.MainActivity;
  * 邮箱：645700751@qq.com
  */
 public class HomeActivity extends FragmentActivity {
-
     private static HomeActivity context;
-    public static boolean isVisible = true;// 是否可见
+
+    public static boolean isHide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wt_home);
-
         context = this;
-        setType();
-
+        View textMain = findViewById(R.id.tv_main);
+        if (MainActivity.v) textMain.setVisibility(View.VISIBLE);
         open(new HomeFragment());
-    }
-
-    // 适配顶栏样式
-    private void setType() {
-        String a = android.os.Build.VERSION.RELEASE;
-        Log.e("系统版本号", a + "");
-        Log.e("系统版本号截取", a.substring(0, a.indexOf(".")) + "");
-        boolean v = false;
-        if (Integer.parseInt(a.substring(0, a.indexOf("."))) >= 5) {
-            v = true;
-        }
-        View tv_main = findViewById(R.id.tv_main);
-        if (v) {
-            tv_main.setVisibility(View.VISIBLE);
-        } else {
-            tv_main.setVisibility(View.GONE);
-        }
     }
 
     // 设置android app 的字体大小不受系统字体大小改变的影响
@@ -69,7 +50,7 @@ public class HomeActivity extends FragmentActivity {
                 .commitAllowingStateLoss();
         if (context.getSupportFragmentManager().getBackStackEntryCount() > 0) {
             MainActivity.hideOrShowTab(false);
-            isVisible = false;
+            isHide = true;
         }
     }
 
@@ -78,7 +59,7 @@ public class HomeActivity extends FragmentActivity {
         context.getSupportFragmentManager().popBackStackImmediate();// 立即删除回退栈中的数据
         if (context.getSupportFragmentManager().getBackStackEntryCount() == 1) {
             MainActivity.hideOrShowTab(true);
-            isVisible = true;
+            isHide = false;
         }
     }
 

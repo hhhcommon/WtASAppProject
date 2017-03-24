@@ -35,10 +35,12 @@ import android.widget.Toast;
 
 import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.widgetui.MyViewPager;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
+import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
 import com.woting.ui.mine.main.MineActivity;
 import com.woting.ui.mine.playhistory.fragment.RadioFragment;
 import com.woting.ui.mine.playhistory.fragment.SoundFragment;
@@ -76,6 +78,7 @@ public class PlayHistoryFragment extends Fragment implements OnClickListener {
     private int bmpW;// 横线图片宽度
     private int offset;// 图片移动的偏移量
     private int dialogFlag = 0;// 编辑全选状态的变量 0为未选中，1为选中
+    private int fromType = 5;// 默认从我的界面进来的  == 6 时从播放中的更多进来的
 
     private boolean isDelete = false;
     public static boolean isEdit = true;// 是否为编辑状态
@@ -92,6 +95,9 @@ public class PlayHistoryFragment extends Fragment implements OnClickListener {
         intentFilter.addAction(BroadcastConstants.UPDATE_ACTION_CHECK);
         context.registerReceiver(myBroadcast, intentFilter);
         dbDao = new SearchPlayerHistoryDao(context);// 初始化数据库
+
+        Bundle bundle = getArguments();
+        fromType = bundle.getInt(StringConstant.FROM_TYPE);
     }
 
     @Nullable
@@ -229,7 +235,11 @@ public class PlayHistoryFragment extends Fragment implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_left_btn:    // 左上角返回键
-                MineActivity.close();
+                if (fromType == 5) {
+                    MineActivity.close();
+                } else if (fromType == 6) {
+                    PlayerMoreOperationActivity.close();
+                }
                 break;
             case R.id.clear_empty:        // 清空数据
                 if (TotalFragment.isData) {

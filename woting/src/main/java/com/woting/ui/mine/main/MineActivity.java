@@ -1,12 +1,9 @@
 package com.woting.ui.mine.main;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
-import android.view.WindowManager;
+import android.view.View;
 
 import com.woting.R;
 import com.woting.common.util.SequenceUUID;
@@ -20,33 +17,19 @@ import com.woting.ui.main.MainActivity;
  */
 public class MineActivity extends FragmentActivity {
     private static MineActivity context;
-    public static boolean isVisible = true;// 是否可见
+    private static View textMain;
+
+    public static boolean isHide;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mine);
         context = this;
-        setType();
 
+        textMain = findViewById(R.id.tv_main);
         MineActivity.open(new MineFragment());
     }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    private void setType() {
-        String a = android.os.Build.VERSION.RELEASE;
-        Log.e("系统版本号", a + "");
-        Log.e("系统版本号截取", a.substring(0, a.indexOf(".")) + "");
-        boolean v = false;
-        if (Integer.parseInt(a.substring(0, a.indexOf("."))) >= 5) {
-            v = true;
-        }
-        if (v) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        // 透明状态栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    // 透明导航栏
-        }
-    }
-
 
     // 打开新的 Fragment
     public static void open(Fragment frg) {
@@ -56,7 +39,8 @@ public class MineActivity extends FragmentActivity {
                 .commit();
         if (context.getSupportFragmentManager().getBackStackEntryCount() > 0) {
             MainActivity.hideOrShowTab(false);
-            isVisible = false;
+            if (MainActivity.v) textMain.setVisibility(View.VISIBLE);
+            isHide = true;
         }
     }
 
@@ -65,7 +49,8 @@ public class MineActivity extends FragmentActivity {
         context.getSupportFragmentManager().popBackStackImmediate();
         if (context.getSupportFragmentManager().getBackStackEntryCount() == 1) {
             MainActivity.hideOrShowTab(true);
-            isVisible = true;
+            isHide = false;
+            textMain.setVisibility(View.GONE);
         }
     }
 

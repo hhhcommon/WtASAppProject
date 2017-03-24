@@ -31,6 +31,7 @@ import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.diantai.fragment.adapter.RadioNationAdapter;
 import com.woting.ui.home.program.diantai.model.RadioPlay;
+import com.woting.ui.main.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -209,6 +210,7 @@ public class RadioNationalFragment extends Fragment implements View.OnClickListe
                         bundle1.putString("text", SubList.get(groupPosition).getList().get(childPosition).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
+                        MainActivity.change();
                     } else {
                         ToastUtils.show_short(context, "暂不支持的Type类型");
                     }

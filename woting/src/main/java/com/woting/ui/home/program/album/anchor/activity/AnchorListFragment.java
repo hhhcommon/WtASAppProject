@@ -19,6 +19,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
@@ -234,7 +236,7 @@ public class AnchorListFragment extends Fragment implements View.OnClickListener
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 AlbumFragment fragment = new AlbumFragment();
                 Bundle bundle = new Bundle();
-                bundle.putInt("fromType", 2);
+                bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_HOME);
                 bundle.putString("type", "main");
                 bundle.putString("id", MediaInfoList.get(position - 1).getContentId());
                 fragment.setArguments(bundle);

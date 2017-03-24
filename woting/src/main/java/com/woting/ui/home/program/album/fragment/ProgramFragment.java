@@ -33,9 +33,9 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
-import com.woting.ui.download.activity.DownloadActivity;
+import com.woting.ui.download.activity.DownloadFragment;
 import com.woting.ui.download.dao.FileInfoDao;
-import com.woting.ui.download.fragment.DownLoadUnCompleted;
+import com.woting.ui.download.fragment.DownLoadUnCompletedFragment;
 import com.woting.ui.download.model.FileInfo;
 import com.woting.ui.download.service.DownloadService;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
@@ -174,7 +174,6 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                 }
             }
         });
-
     }
 
     // ListView 的 Item 的监听事件
@@ -250,6 +249,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
+                Log.v("专辑 Program", "数据 -- > " + result.toString());
                 try {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {
@@ -473,8 +473,8 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                     FID.updataDownloadStatus(tempList.get(0).getUrl(), "1");
                     Log.e("数据库内数据", tempList.toString());
                     DownloadService.workStart(tempList.get(0));
-                    if(DownloadActivity.isVisible){
-                        DownLoadUnCompleted.dwType=true;
+                    if(DownloadFragment.isVisible){
+                        DownLoadUnCompletedFragment.dwType=true;
                     }
                     ToastUtils.show_always(context,"已经开始下载您所选择的数据");
                     // 发送更新界面数据广播

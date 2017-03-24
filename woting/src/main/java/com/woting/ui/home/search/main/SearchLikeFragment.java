@@ -20,24 +20,21 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -49,6 +46,7 @@ import com.android.volley.VolleyError;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -59,8 +57,6 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.MyLinearLayout;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
-import com.woting.ui.home.main.HomeActivity;
-import com.woting.ui.home.player.main.play.PlayerActivity;
 import com.woting.ui.home.search.adapter.SearchHistoryAdapter;
 import com.woting.ui.home.search.adapter.SearchHotAdapter;
 import com.woting.ui.home.search.adapter.SearchLikeAdapter;
@@ -71,6 +67,7 @@ import com.woting.ui.home.search.fragment.SoundFragment;
 import com.woting.ui.home.search.fragment.TTSFragment;
 import com.woting.ui.home.search.fragment.TotalFragment;
 import com.woting.ui.home.search.model.History;
+import com.woting.ui.main.MainActivity;
 import com.woting.video.VoiceRecognizer;
 
 import org.json.JSONException;
@@ -80,12 +77,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 界面搜索界面
- * @author 辛龙
- * 2016年4月16日
+ * Search
+ * Created by Administrator on 2017/3/21.
  */
-public class SearchLikeFragment extends Fragment implements OnClickListener, TipView.WhiteViewClick {
+public class SearchLikeFragment extends Fragment implements View.OnClickListener, TipView.WhiteViewClick, TextView.OnEditorActionListener {
     private static FragmentActivity context;
+    private InputMethodManager imm;
 
     private LinearLayout lin_head_left;
     private LinearLayout lin_head_right;
@@ -134,10 +131,8 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
     private boolean isCancelRequest;
     private VoiceRecognizer mVoiceRecognizer;
 
-    private View rootView;
     private TipView tipView;// 没有网络提示
-
-    private int from;// == 0 PlayerFragment  == 1 HomeFragment
+    private View rootView;
 
     @Override
     public void onWhiteViewClick() {
@@ -156,9 +151,7 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
         super.onCreate(savedInstanceState);
         context = getActivity();
 
-        Bundle bundle = getArguments();
-        from = bundle.getInt("FROM_TYPE");
-
+        imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         bmp = BitmapUtils.readBitMap(context, R.mipmap.talknormal);
         bmpPress = BitmapUtils.readBitMap(context, R.mipmap.wt_duijiang_button_pressed);
 
@@ -179,7 +172,7 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (rootView == null) {
-            rootView = inflater.inflate(R.layout.activity_searchlike, container, false);
+            rootView = inflater.inflate(R.layout.fragment_searchlike, container, false);
             rootView.setOnClickListener(this);
 
             setView();// 初始化控件
@@ -207,7 +200,7 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
     // 广播接收器
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, final Intent intent) {
+        public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(BroadcastConstants.SEARCHVOICE)) {
                 String str = intent.getStringExtra("VoiceContent");
@@ -245,13 +238,13 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
         DisplayMetrics dm = new DisplayMetrics();
         context.getWindowManager().getDefaultDisplay().getMetrics(dm);
         int scrEnw = dm.widthPixels;
-        LayoutParams params = dialog.getLayoutParams();
+        ViewGroup.LayoutParams params = dialog.getLayoutParams();
         params.width = scrEnw;
         dialog.setLayoutParams(params);
         window.setGravity(Gravity.BOTTOM);
         window.setWindowAnimations(R.style.sharestyle);
         // 定义 view 的监听
-        tv_cancel.setOnClickListener(new OnClickListener() {
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 yuyinDialog.dismiss();
@@ -259,7 +252,7 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
             }
         });
 
-        imageView_voice.setOnTouchListener(new OnTouchListener() {
+        imageView_voice.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
@@ -307,6 +300,9 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
         tipView.setWhiteClick(this);
 
         mEtSearchContent = (EditText) rootView.findViewById(R.id.et_searchlike);
+        mEtSearchContent.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        mEtSearchContent.setOnEditorActionListener(this);
+
         lin_head_left = (LinearLayout) rootView.findViewById(R.id.head_left_btn);
         lin_head_right = (LinearLayout) rootView.findViewById(R.id.lin_head_right);
         // 清理历史搜索数据库
@@ -356,7 +352,7 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
     }
 
     private void setListView() {
-        gv_history.setOnItemClickListener(new OnItemClickListener() {
+        gv_history.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // 跳转到第三页的结果当中 并且默认打开第一页
@@ -366,7 +362,7 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
             }
         });
 
-        gv_TopSearch.setOnItemClickListener(new OnItemClickListener() {
+        gv_TopSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // 跳转到第三页的结果当中 并且默认打开第一页
@@ -410,7 +406,7 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
     }
 
     protected void setItemListener() {
-        lv_mListView.setOnItemClickListener(new OnItemClickListener() {
+        lv_mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String s = topSearchList.get(position);
@@ -425,11 +421,13 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_left_btn:// 返回
-                if (from == 0) {
-                    PlayerActivity.close();
-                } else {
-                    HomeActivity.close();
+                if (SearchLikeActivity.fromType == IntegerConstant.TAG_HOME) {
+                    MainActivity.setViewOne();
+                } else if (SearchLikeActivity.fromType == IntegerConstant.TAG_PLAY) {
+                    MainActivity.change();
                 }
+                // 隐藏键盘
+                imm.hideSoftInputFromWindow(mEtSearchContent.getWindowToken(), 0);
                 break;
             case R.id.lin_head_right:
                 if (mEtSearchContent != null && mEtSearchContent.getText() != null && !mEtSearchContent.getText().toString().trim().equals("")) {
@@ -577,7 +575,6 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -643,12 +640,10 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -713,11 +708,31 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
             viewChange(index);
         } else {
             ToastUtils.show_always(context, "传进来的mediaType值为空");
-
         }
     }
 
-    public class txListener implements OnClickListener {
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_SEND || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+            String temp = mEtSearchContent.getText().toString();
+
+            if (!temp.trim().equals("")) {
+                mEtSearchContent.setFocusable(true);
+                mEtSearchContent.setFocusableInTouchMode(true);
+                mEtSearchContent.requestFocus();
+
+                // 隐藏键盘
+                imm.hideSoftInputFromWindow(mEtSearchContent.getWindowToken(), 0);
+
+                // 然后再执行搜索操作
+                CheckEdit(temp);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public class txListener implements View.OnClickListener {
         private int index = 0;
 
         public txListener(int i) {
@@ -731,7 +746,7 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
         }
     }
 
-    public class MyOnPageChangeListener implements OnPageChangeListener {
+    public class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
         private int one = offset * 2 + bmpW;// 两个相邻页面的偏移量
         private int currIndex;
 
@@ -748,7 +763,7 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
             Animation animation = new TranslateAnimation(currIndex * one, arg0 * one, 0, 0);// 平移动画
             currIndex = arg0;
             animation.setFillAfter(true);    // 动画终止时停留在最后一帧，不然会回到没有执行前的状态
-            animation.setDuration(200);        // 动画持续时间0.2秒
+            animation.setDuration(200);      // 动画持续时间0.2秒
             image.startAnimation(animation);// 是用ImageView来显示动画的
             viewChange(currIndex);
         }
@@ -757,7 +772,7 @@ public class SearchLikeFragment extends Fragment implements OnClickListener, Tip
     //动态设置cursor的宽
     public void InitImage() {
         image = (ImageView) rootView.findViewById(R.id.cursor);
-        LayoutParams lp = image.getLayoutParams();
+        ViewGroup.LayoutParams lp = image.getLayoutParams();
         lp.width = (PhoneMessage.ScreenWidth / 5);
         image.setLayoutParams(lp);
         bmpW = BitmapFactory.decodeResource(getResources(), R.mipmap.left_personal_bg).getWidth();

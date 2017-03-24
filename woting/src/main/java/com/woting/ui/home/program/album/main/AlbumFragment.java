@@ -37,6 +37,7 @@ import com.umeng.socialize.media.UMImage;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -52,13 +53,14 @@ import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.player.main.adapter.ImageAdapter;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
 import com.woting.ui.home.player.main.model.ShareModel;
-import com.woting.ui.home.player.main.play.PlayerActivity;
+import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
 import com.woting.ui.home.program.accuse.activity.AccuseFragment;
 import com.woting.ui.home.program.album.fragment.DetailsFragment;
 import com.woting.ui.home.program.album.fragment.ProgramFragment;
 import com.woting.ui.home.program.comment.CommentActivity;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.home.program.radiolist.mode.ListInfo;
+import com.woting.ui.home.search.main.SearchLikeActivity;
 import com.woting.ui.mine.main.MineActivity;
 
 import org.json.JSONException;
@@ -79,34 +81,33 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
 
     public static TextView tv_album_name;
     public static TextView tv_favorite;
-    private static TextView textSubscriber;      // 订阅
-    private static ImageView imageSubscriber;    // 订阅小图标
-    private TextView textDetails;               // text_details
-    private TextView textProgram;               // text_program
+    private static TextView textSubscriber;// 订阅
+    private static ImageView imageSubscriber;// 订阅小图标
+    private TextView textDetails;// text_details
+    private TextView textProgram;// text_program
     public static ImageView img_album;
     public static ImageView imageFavorite;
-    private ImageView imageCursor;              // cursor
+    private ImageView imageCursor;// cursor
 
     private LinearLayout lin_share, lin_pinglun, lin_favorite, lin_subscriber;
     private ViewPager mPager;
     private Dialog dialog, shareDialog, dialog1;
     private UMImage image;
 
-    private int fromType;// == 1 PlayerActivity  == 2 HomeActivity  == 3 MineActivity
-    public static int returnResult = -1;        // == 1 说明信息获取正常，returnType == 1001
-    private int offset;                         // 图片移动的偏移量
+    private int fromType;// == 1 Home  == 5 Mine  == 6 PlayMore  == 7 SearchLike
+    public static int returnResult = -1;// == 1 说明信息获取正常  returnType == 1001
+    private int offset;// 图片移动的偏移量
     private boolean isCancelRequest;
 
     public static String ContentDesc, ContentImg, ContentShareURL, ContentName, id;
-    public static String ContentFavorite;       // 从网络获取的当前值，如果为空，表示页面并未获取到此值
+    public static String ContentFavorite;// 从网络获取的当前值，如果为空，表示页面并未获取到此值
     private String tag = "ALBUM_VOLLEY_REQUEST_CANCEL_TAG";
     private String RadioName;
-    private static int flag = 0;                       // == 0 还没有订阅  == 1 已经订阅
+    private static int flag = 0;// == 0 还没有订阅  == 1 已经订阅
 
     private View rootView;
-    private static TipView tipView;                    // 提示
+    private static TipView tipView;// 提示
     private FragmentActivity context;
-    private View viewBack;
 
     @Override
     public void onWhiteViewClick() {
@@ -141,8 +142,7 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
     }
 
     private void setView() {
-        rootView.findViewById(R.id.head_right_btn).setOnClickListener(this);// 播放专辑
-        viewBack = rootView.findViewById(R.id.view_back);
+        rootView.findViewById(R.id.head_right_btn).setOnClickListener(this);            // 播放专辑
 
         tv_album_name = (TextView) rootView.findViewById(R.id.head_name_tv);
         img_album = (ImageView) rootView.findViewById(R.id.img_album);
@@ -340,9 +340,7 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
             tipView.setTipView(TipView.TipStatus.IS_ERROR, "数据出错了\n请返回重试!");
             return;
         }
-        fromType = bundle.getInt("fromType");
-        if (fromType == 3) viewBack.setVisibility(View.VISIBLE);
-        else viewBack.setVisibility(View.GONE);
+        fromType = bundle.getInt(StringConstant.FROM_TYPE);
         String type = bundle.getString("type");
         if (type != null && type.trim().equals("radiolistactivity")) {
             ListInfo list = (ListInfo) bundle.getSerializable("list");
@@ -387,12 +385,19 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_left_btn: // 左上角返回键
-                if (fromType == 1) {// Play
-                    PlayerActivity.close();
-                } else if (fromType == 2) {// Home
-                    HomeActivity.close();
-                } else {// Mine
-                    MineActivity.close();
+                switch (fromType) {
+                    case IntegerConstant.TAG_HOME:
+                        HomeActivity.close();
+                        break;
+                    case IntegerConstant.TAG_MINE:
+                        MineActivity.close();
+                        break;
+                    case IntegerConstant.TAG_MORE:
+                        PlayerMoreOperationActivity.close();
+                        break;
+                    case IntegerConstant.TAG_SEARCH:
+                        SearchLikeActivity.close();
+                        break;
                 }
                 break;
             case R.id.lin_share: // 分享
@@ -444,15 +449,16 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
                 }
                 break;
             case R.id.head_right_btn://  举报
-                if(!TextUtils.isEmpty(id)){
-                AccuseFragment fragment = new AccuseFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("ContentId", id);
-                bundle.putString("MediaType","SEQU");
-                fragment.setArguments(bundle);
-                HomeActivity.open(fragment);
-                }else{
-                    ToastUtils.show_always(context,"获取本专辑信息有误，请回退回上一级界面重试");
+                if (!TextUtils.isEmpty(id)) {
+                    AccuseFragment fragment = new AccuseFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_HOME);
+                    bundle.putString("ContentId", id);
+                    bundle.putString("MediaType", StringConstant.TYPE_SEQU);
+                    fragment.setArguments(bundle);
+                    HomeActivity.open(fragment);
+                } else {
+                    ToastUtils.show_always(context, "获取本专辑信息有误，请回退回上一级界面重试");
                 }
                 break;
         }
@@ -460,7 +466,7 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
 
     public static void setFlag(String contentSubscribe) {
         flag = Integer.valueOf(contentSubscribe);
-        if(flag == 0) {
+        if (flag == 0) {
             textSubscriber.setText("订阅");
 //            imageSubscriber
         } else {

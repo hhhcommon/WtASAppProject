@@ -156,14 +156,14 @@
 
         <!--  -->
         <activity
-            android:name=".ui.interphone.notify.activity.NotifyNewsActivity"
+            android:name=".ui.interphone.message.messagecenter.activity.MessageMainActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan"/>
 
         <!--  -->
         <activity
-            android:name=".ui.download.activity.DownloadActivity"
+            android:name=".ui.download.activity.DownloadFragment"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan"/>
@@ -196,7 +196,7 @@
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
         <activity
-            android:name=".ui.interphone.message.activity.NewsActivity"
+            android:name=".ui.interphone.message.newfriend.activity.NewsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan"/>
@@ -419,14 +419,14 @@
 
         <!--  -->
         <activity
-            android:name=".ui.interphone.group.groupcontrol.handlegroupapply.HandleGroupApplyActivity"
+            android:name=".ui.interphone.message.groupapply.HandleGroupApplyActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
         <!--  -->
         <activity
-            android:name=".ui.interphone.group.groupcontrol.joingrouplist.JoinGroupListActivity"
+            android:name=".ui.interphone.message.reviewednews.JoinGroupListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
@@ -535,8 +535,16 @@
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
+        <!--播放界面更多的操作-->
         <activity
             android:name=".ui.home.player.main.play.more.PlayerMoreOperationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+
+        <!--搜索-->
+        <activity
+            android:name=".ui.home.search.main.SearchLikeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>

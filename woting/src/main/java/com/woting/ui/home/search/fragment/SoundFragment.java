@@ -47,22 +47,21 @@ import java.util.List;
  */
 public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
     private FragmentActivity context;
-    protected FavorListAdapter adapter;
+    private FavorListAdapter adapter;
     private SearchPlayerHistoryDao dbDao;
     private List<RankInfo> SubList;
-    private ArrayList<RankInfo> newList = new ArrayList<>();
+    private List<RankInfo> newList = new ArrayList<>();
 
     private Dialog dialog;
     private View rootView;
     private XListView mListView;
     private TipView tipView;// 没有网络、没有数据提示
 
-    protected String searchStr;
+    private String searchStr;
     private String tag = "SOUND_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
     private int refreshType = 1;
     private int page = 1;
-    private int pageSizeNum;
 
     // 初始化数据库对象
     private void initDao() {
@@ -114,14 +113,8 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
 
             @Override
             public void onLoadMore() {
-                if (page <= pageSizeNum) {
-                    refreshType = 2;
-                    sendRequest();
-                } else {
-                    mListView.stopLoadMore();
-                    mListView.setPullLoadEnable(false);
-                    ToastUtils.show_always(context, "已经是最后一页了");
-                }
+                refreshType = 2;
+                sendRequest();
             }
         });
     }
@@ -220,36 +213,18 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                page++;
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     try {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         SubList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
-                        try {
-                            String allCountString = arg1.getString("AllCount");
-                                            String pageSizeString = arg1.getString("pageSize");
-                            if (allCountString != null && !allCountString.equals("") && pageSizeString != null && !pageSizeString.equals("")) {
-                                int allCountInt = Integer.valueOf(allCountString);
-                                int pageSizeInt = Integer.valueOf(allCountString);
-                                if (allCountInt < 10 || pageSizeInt < 10) {
-                                    mListView.stopLoadMore();
-                                    mListView.setPullLoadEnable(false);
-                                } else {
-                                    mListView.setPullLoadEnable(true);
-                                    if (allCountInt % pageSizeInt == 0) {
-                                        pageSizeNum = allCountInt / pageSizeInt;
-                                    } else {
-                                        pageSizeNum = allCountInt / pageSizeInt + 1;
-                                    }
-                                }
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        if (SubList != null && SubList.size() >= 9) {
+                            mListView.setPullLoadEnable(true);
+                            page++;
+                        } else {
+                            mListView.setPullLoadEnable(false);
                         }
                         if (refreshType == 1) newList.clear();
-                        for (int i = 0; i < SubList.size(); i++) {
-                            if (SubList.get(i).getMediaType().equals("AUDIO")) newList.add(SubList.get(i));
-                        }
+                        newList.addAll(SubList);
                         if(newList.size() > 0) {
                             adapter.notifyDataSetChanged();
                             setListener();
@@ -260,15 +235,21 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
                                 tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关结果\n试试其他词，不要太逆天哟");
                             }
                         }
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
-                        tipView.setVisibility(View.VISIBLE);
-                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        if (refreshType == 1) {
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        } else {
+                            ToastUtils.show_always(context, "数据加载错误");
+                        }
                     }
                 } else {
                     if(refreshType == 1) {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关结果\n试试其他词，不要太逆天哟");
+                    } else {
+                        ToastUtils.show_always(context, "没有相关数据了");
                     }
                 }
                 if (refreshType == 1) {
@@ -281,9 +262,12 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
             @Override
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
-                ToastUtils.showVolleyError(context);
-                tipView.setVisibility(View.VISIBLE);
-                tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                if (refreshType == 1) {
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                } else {
+                    ToastUtils.showVolleyError(context);
+                }
             }
         });
     }
