@@ -35,7 +35,7 @@ import com.woting.common.widgetui.RoundImageView;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.home.main.HomeActivity;
-import com.woting.ui.home.program.album.anchor.activity.AnchorListFragment;
+import com.woting.ui.home.program.album.anchor.main.AnchorListFragment;
 import com.woting.ui.home.program.album.anchor.adapter.AnchorMainAdapter;
 import com.woting.ui.home.program.album.anchor.adapter.AnchorSequAdapter;
 import com.woting.ui.home.program.album.anchor.model.PersonInfo;
@@ -168,7 +168,6 @@ public class AnchorDetailsFragment extends Fragment implements View.OnClickListe
 
     private void handleIntent() {
         Bundle bundle = getArguments();
-
         PersonId = bundle.getString("PersonId");
         ContentPub = bundle.getString("ContentPub");
         if (!TextUtils.isEmpty(PersonId)) {

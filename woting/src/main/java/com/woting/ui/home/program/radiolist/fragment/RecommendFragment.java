@@ -52,14 +52,18 @@ import java.util.List;
 
 /**
  * 分类推荐列表
+ *
  * @author woting11
  */
 public class RecommendFragment extends Fragment implements TipView.WhiteViewClick {
     private Context context;
     private SearchPlayerHistoryDao dbDao;// 数据库
     private RadioListAdapter adapter;
+    private Banner mLoopViewPager;
 
-    private ArrayList<RankInfo> newList = new ArrayList<>();
+    private List<Image> imageList;
+    private List<String> ImageStringList = new ArrayList<>();
+    private List<RankInfo> newList = new ArrayList<>();
 
     private View rootView;
     private Dialog dialog;// 加载对话框
@@ -68,11 +72,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
 
     private boolean isFirst = true;
     private int page = 1;// 页码
-    private int pageSizeNum;
-    private int refreshType = 1;// refreshType 1 为下拉加载 2 为上拉加载更多
-    private Banner mLoopViewPager;
-    private List<Image> imageList;
-    private List<String> ImageStringList=new ArrayList<>();
+    private int refreshType = 1;// refreshType == 1 为下拉加载  == 2 为上拉加载更多
 
     @Override
     public void onWhiteViewClick() {
@@ -123,7 +123,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             }
         }
         // 如果轮播图没有的话重新加载轮播图
-        if(imageList==null)getImage();
+        if (imageList == null) getImage();
         super.setUserVisibleHint(isVisibleToUser);
     }
 
@@ -159,35 +159,13 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                     ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                         List<RankInfo>    subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {
-                        }.getType());
-                        if (subList != null && subList.size() >= 10) {
+                        List<RankInfo> subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
+                        if (subList != null && subList.size() >= 9) {
                             page++;
+                            mListView.setPullLoadEnable(true);
                         } else {
                             mListView.setPullLoadEnable(false);
                         }
-
-//                        try {
-//                            String pageSizeString = arg1.getString("PageSize");
-//                            String allCountString = arg1.getString("AllCount");
-//                            if (allCountString != null && !allCountString.equals("") && pageSizeString != null && !pageSizeString.equals("")) {
-//                                int allCountInt = Integer.valueOf(allCountString);
-//                                int pageSizeInt = Integer.valueOf(pageSizeString);
-//                                if(allCountInt < 10 || pageSizeInt < 10){
-//                                    mListView.stopLoadMore();
-//                                    mListView.setPullLoadEnable(false);
-//                                }else{
-//                                    mListView.setPullLoadEnable(true);
-//                                    if (allCountInt  % pageSizeInt == 0) {
-//                                        pageSizeNum = allCountInt  / pageSizeInt;
-//                                    } else {
-//                                        pageSizeNum = allCountInt  / pageSizeInt + 1;
-//                                    }
-//                                }
-//                            }
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
                         if (refreshType == 1) newList.clear();
                         newList.addAll(subList);
                         if (adapter == null) {
@@ -199,21 +177,21 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                         tipView.setVisibility(View.GONE);
                     } else {
                         mListView.setAdapter(new ForNullAdapter(context));
-                        if (imageList == null) {
-                            if (refreshType == 1) {
-                                tipView.setVisibility(View.VISIBLE);
-                                tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
-                            }
+                        if (refreshType == 1) {
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
+                        } else {
+                            ToastUtils.show_always(context, "没有更多的数据了");
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    mListView.setAdapter( new ForNullAdapter(context));
-                    if (imageList == null) {
-                        if (refreshType == 1) {
-                            tipView.setVisibility(View.VISIBLE);
-                            tipView.setTipView(TipView.TipStatus.IS_ERROR);
-                        }
+                    mListView.setAdapter(new ForNullAdapter(context));
+                    if (refreshType == 1) {
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                    } else {
+                        ToastUtils.show_always(context, "数据加载错误");
                     }
                 }
 
@@ -228,10 +206,11 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
                 RadioListFragment.closeDialog();
-                ToastUtils.showVolleyError(context);
                 if (refreshType == 1) {
                     tipView.setVisibility(View.VISIBLE);
                     tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                } else {
+                    ToastUtils.showVolleyError(context);
                 }
             }
         });
@@ -287,20 +266,20 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                             String sequImg = newList.get(position - 2).getSequImg();
 
                             String ContentPlayType = newList.get(position - 2).getContentPlayType();
-                            String IsPlaying=newList.get(position - 2).getIsPlaying();
+                            String IsPlaying = newList.get(position - 2).getIsPlaying();
 
                             // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                             PlayerHistory history = new PlayerHistory(
                                     playerName, playerImage, playUrl, playUrI, playMediaType,
                                     playAllTime, playInTime, playContentDesc, playNum,
                                     playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                    ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
+                                    ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying);
                             dbDao.deleteHistory(playUrl);
                             dbDao.addHistory(history);
 
                             Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                             Bundle bundle1 = new Bundle();
-                            bundle1.putString("text", newList.get(position - 2).getContentName());
+                            bundle1.putString(StringConstant.TEXT_CONTENT, newList.get(position - 2).getContentName());
                             push.putExtras(bundle1);
                             context.sendBroadcast(push);
                             MainActivity.change();
@@ -341,17 +320,11 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
 
             @Override
             public void onLoadMore() {
-                if (page <= pageSizeNum) {
-                    if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        refreshType = 2;
-                        sendRequest();
-                    } else {
-                        ToastUtils.show_always(context, "网络失败，请检查网络");
-                    }
+                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                    refreshType = 2;
+                    sendRequest();
                 } else {
-                    mListView.stopLoadMore();
-                    mListView.setPullLoadEnable(false);
-                    ToastUtils.show_always(context, "已经没有最新的数据了");
+                    ToastUtils.show_always(context, "网络失败，请检查网络");
                 }
             }
         });
@@ -396,11 +369,11 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                     try {
                         imageList = new Gson().fromJson(result.getString("LoopImgs"), new TypeToken<List<Image>>() {
                         }.getType());
-                      //  mLoopViewPager.setAdapter(new LoopAdapter(mLoopViewPager, context, imageList));
-                      //  mLoopViewPager.setHintView(new IconHintView(context, R.mipmap.indicators_now, R.mipmap.indicators_default));
+                        //  mLoopViewPager.setAdapter(new LoopAdapter(mLoopViewPager, context, imageList));
+                        //  mLoopViewPager.setHintView(new IconHintView(context, R.mipmap.indicators_now, R.mipmap.indicators_default));
                         mLoopViewPager.setImageLoader(new PicassoBannerLoader());
 
-                        for(int i=0;i<imageList.size();i++){
+                        for (int i = 0; i < imageList.size(); i++) {
                             ImageStringList.add(imageList.get(i).getLoopImg());
                         }
                         mLoopViewPager.setImages(ImageStringList);
@@ -408,16 +381,14 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                         mLoopViewPager.setOnBannerListener(new OnBannerListener() {
                             @Override
                             public void OnBannerClick(int position) {
-                                ToastUtils.show_always(context,ImageStringList.get(position-1));
+                                ToastUtils.show_always(context, ImageStringList.get(position - 1));
                             }
                         });
                         mLoopViewPager.start();
 
 
-
                         tipView.setVisibility(View.GONE);
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -433,12 +404,12 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
         @Override
         public void displayImage(Context context, Object path, ImageView imageView) {
             *//**
-             注意：
-             1.图片加载器由自己选择，这里不限制，只是提供几种使用方法
-             2.返回的图片路径为Object类型，由于不能确定你到底使用的那种图片加载器，
-             传输的到的是什么格式，那么这种就使用Object接收和返回，你只需要强转成你传输的类型就行，
-             切记不要胡乱强转！
-             *//*
+     注意：
+     1.图片加载器由自己选择，这里不限制，只是提供几种使用方法
+     2.返回的图片路径为Object类型，由于不能确定你到底使用的那种图片加载器，
+     传输的到的是什么格式，那么这种就使用Object接收和返回，你只需要强转成你传输的类型就行，
+     切记不要胡乱强转！
+     *//*
             String contentImg=path.toString();
             if (!contentImg.startsWith("http")) {
                 contentImg = GlobalConfig.imageurl + contentImg;

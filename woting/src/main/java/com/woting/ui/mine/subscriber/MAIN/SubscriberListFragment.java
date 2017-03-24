@@ -1,4 +1,4 @@
-package com.woting.ui.mine.subscriber.activity;
+package com.woting.ui.mine.subscriber.main;
 
 import android.app.Dialog;
 import android.graphics.Color;
@@ -51,21 +51,20 @@ import java.util.List;
  */
 public class SubscriberListFragment extends Fragment implements OnClickListener, TipView.WhiteViewClick {
     private FragmentActivity context;
-    private XListView mListView;
-    private Dialog dialog;
     private SubscriberAdapter adapter;
+    private List<SubscriberInfo> newList = new ArrayList<>();
+    private List<SubscriberInfo> subList;
 
+    private String tag = "SUBSCRIBER_VOLLEY_REQUEST_CANCEL_TAG";
+    private boolean isCancelRequest;
     private int page = 1;
     private int refreshType = 1;// refreshType == 1 为下拉加载  == 2 为上拉加载更多
     private int type;
 
-    private String tag = "SUBSCRIBER_VOLLEY_REQUEST_CANCEL_TAG";
-    private boolean isCancelRequest;
-    private ArrayList<SubscriberInfo> newList = new ArrayList<>();
-    protected List<SubscriberInfo> subList;
-
     private View rootView;
     private TipView tipView;// 没有网络、没有数据、加载错误提示
+    private XListView mListView;
+    private Dialog dialog;
 
     @Override
     public void onWhiteViewClick() {
@@ -153,9 +152,9 @@ public class SubscriberListFragment extends Fragment implements OnClickListener,
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_left_btn:// 返回
-                if (type == 5) {// 我的
+                if (type == IntegerConstant.TAG_MINE) {// MINE
                     MineActivity.close();
-                } else if (type == 6) {// 播放更多
+                } else if (type == IntegerConstant.TAG_MORE) {// MORE
                     PlayerMoreOperationActivity.close();
                 }
                 break;
@@ -176,12 +175,16 @@ public class SubscriberListFragment extends Fragment implements OnClickListener,
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
-                page++;
                 try {
                     String returnType = result.getString("ReturnType");
                     if (returnType != null && returnType.equals("1001")) {
                         subList = new Gson().fromJson(result.getString("ResultList"), new TypeToken<List<SubscriberInfo>>() {}.getType());
-                        if (subList != null && subList.size() < 10) mListView.setPullLoadEnable(false);
+                        if (subList != null && subList.size() >= 9) {
+                            mListView.setPullLoadEnable(true);
+                            page++;
+                        } else {
+                            mListView.setPullLoadEnable(false);
+                        }
                         if (refreshType == 1) newList.clear();
                         newList.addAll(subList);
                         if (adapter == null) {

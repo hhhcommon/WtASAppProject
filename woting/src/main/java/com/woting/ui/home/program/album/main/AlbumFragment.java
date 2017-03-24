@@ -54,7 +54,7 @@ import com.woting.ui.home.player.main.adapter.ImageAdapter;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
 import com.woting.ui.home.player.main.model.ShareModel;
 import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
-import com.woting.ui.home.program.accuse.activity.AccuseFragment;
+import com.woting.ui.home.program.accuse.main.AccuseFragment;
 import com.woting.ui.home.program.album.fragment.DetailsFragment;
 import com.woting.ui.home.program.album.fragment.ProgramFragment;
 import com.woting.ui.home.program.comment.CommentActivity;
@@ -617,7 +617,5 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
         imageCursor = null;
         detailsFragment = null;
         programFragment = null;
-
-        Log.e("TAG", "onDestroy album");
     }
 }

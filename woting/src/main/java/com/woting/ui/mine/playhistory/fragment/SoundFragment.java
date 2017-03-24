@@ -14,6 +14,7 @@ import android.widget.ListView;
 
 import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
@@ -81,7 +82,7 @@ public class SoundFragment extends Fragment {
         if (subList != null && subList.size() > 0) {
             for (int i = 0; i < subList.size(); i++) {
                 if (subList.get(i).getPlayerMediaType() != null && !subList.get(i).getPlayerMediaType().equals("")) {
-                    if (subList.get(i).getPlayerMediaType().equals("AUDIO")) {
+                    if (subList.get(i).getPlayerMediaType().equals(StringConstant.TYPE_AUDIO)) {
                         if (playList == null) playList = new ArrayList<>();
                         playList.add(subList.get(i));
                         isData = true;
@@ -211,7 +212,7 @@ public class SoundFragment extends Fragment {
                         String s = playList.get(position).getPlayerName();
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
-                        bundle1.putString("text", s);
+                        bundle1.putString(StringConstant.TEXT_CONTENT, s);
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
                     }

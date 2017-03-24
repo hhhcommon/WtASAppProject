@@ -97,7 +97,7 @@
             android:text="分享"
             android:textSize="15sp"
             android:textColor="@color/wt_login_third"
-            android:drawableTop="@mipmap/wt_share"
+            android:drawableTop="@mipmap/wt_image_play_more_share"
             android:gravity="center"
             android:drawablePadding="10dp"/>
 
@@ -109,7 +109,7 @@
             android:text="评论"
             android:textSize="15sp"
             android:textColor="@color/wt_login_third"
-            android:drawableTop="@mipmap/wt_comment_image"
+            android:drawableTop="@mipmap/wt_image_play_more_comment"
             android:gravity="center"
             android:drawablePadding="10dp"/>
 
@@ -169,7 +169,7 @@
             android:textSize="15sp"
             android:visibility="gone"
             android:textColor="@color/wt_login_third"
-            android:drawableTop="@mipmap/wt_image_play_more_anchor"
+            android:drawableTop="@mipmap/wt_play_xiangqing"
             android:gravity="center"
             android:drawablePadding="10dp"/>
 
@@ -193,7 +193,7 @@
             android:text="举报"
             android:textSize="15sp"
             android:textColor="@color/wt_login_third"
-            android:drawableTop="@mipmap/wt_play_ly_timeover"
+            android:drawableTop="@mipmap/wt_image_play_more_report"
             android:gravity="center"
             android:visibility="gone"
             android:drawablePadding="10dp"/>
@@ -217,7 +217,7 @@
             android:text="举报"
             android:textSize="15sp"
             android:textColor="@color/wt_login_third"
-            android:drawableTop="@mipmap/wt_play_ly_timeover"
+            android:drawableTop="@mipmap/wt_image_play_more_report"
             android:gravity="center"
             android:drawablePadding="10dp"/>
 
@@ -291,7 +291,7 @@
             android:textSize="15sp"
             android:textColor="@color/wt_login_third"
             android:drawablePadding="10dp"
-            android:drawableTop="@mipmap/wt_dianzan_select"
+            android:drawableTop="@mipmap/wt_image_my_like"
             android:gravity="center"/>
 
         <View

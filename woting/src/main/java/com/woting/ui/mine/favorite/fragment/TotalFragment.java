@@ -59,11 +59,11 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
     private SearchContentAdapter searchAdapter;
     private SearchPlayerHistoryDao dbDao;
 
-    private ArrayList<RankInfo> playList;    // 节目list
-    private ArrayList<RankInfo> sequList;    // 专辑list
-    private ArrayList<RankInfo> ttsList;    // tts
+    private ArrayList<RankInfo> playList;    // 节目 list
+    private ArrayList<RankInfo> sequList;    // 专辑 list
+    private ArrayList<RankInfo> ttsList;     // tts
     private ArrayList<RankInfo> radioList;    // radio
-    private ArrayList<SuperRankInfo> list = new ArrayList<>();// 返回的节目list，拆分之前的list
+    private ArrayList<SuperRankInfo> list = new ArrayList<>();// 返回的节目 list，拆分之前的 list
     private List<RankInfo> subList;
     private List<String> delList;
 
@@ -181,9 +181,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
             case R.id.tv_confirm:
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                     dialog = DialogUtils.Dialogph(context, "正在删除");
-                    if (delList == null) {
-                        delList = new ArrayList<>();
-                    }
+                    if (delList == null) delList = new ArrayList<>();
                     String type = list.get(delGroupPosition).getList().get(delChildPosition).getMediaType();
                     String contentId = list.get(delGroupPosition).getList().get(delChildPosition).getContentId();
                     delList.add(type + "::" + contentId);
@@ -273,7 +271,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
                     if (subList != null && subList.size() > 0) {
                         for (int i = 0; i < subList.size(); i++) {
                             if (subList.get(i).getMediaType() != null && !subList.get(i).getMediaType().equals("")) {
-                                if (subList.get(i).getMediaType().equals("AUDIO")) {
+                                if (subList.get(i).getMediaType().equals(StringConstant.TYPE_AUDIO)) {
                                     if (playList == null) {
                                         playList = new ArrayList<>();
                                         playList.add(subList.get(i));
@@ -282,7 +280,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
                                             playList.add(subList.get(i));
                                         }
                                     }
-                                } else if (subList.get(i).getMediaType().equals("SEQU")) {
+                                } else if (subList.get(i).getMediaType().equals(StringConstant.TYPE_SEQU)) {
                                     if (sequList == null) {
                                         sequList = new ArrayList<>();
                                         sequList.add(subList.get(i));
@@ -291,7 +289,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
                                             sequList.add(subList.get(i));
                                         }
                                     }
-                                } else if (subList.get(i).getMediaType().equals("TTS")) {
+                                } else if (subList.get(i).getMediaType().equals(StringConstant.TYPE_TTS)) {
                                     if (ttsList == null) {
                                         ttsList = new ArrayList<>();
                                         ttsList.add(subList.get(i));
@@ -300,7 +298,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
                                             ttsList.add(subList.get(i));
                                         }
                                     }
-                                } else if (subList.get(i).getMediaType().equals("RADIO")) {
+                                } else if (subList.get(i).getMediaType().equals(StringConstant.TYPE_RADIO)) {
                                     if (radioList == null) {
                                         radioList = new ArrayList<>();
                                         radioList.add(subList.get(i));
@@ -385,10 +383,10 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (mediaType == null) {
-                    return true;
-                }
-                if (mediaType.equals("RADIO") || mediaType.equals("AUDIO") || mediaType.equals("TTS")) {
+                if (mediaType == null) return true;
+                if (mediaType.equals(StringConstant.TYPE_RADIO) ||
+                        mediaType.equals(StringConstant.TYPE_AUDIO) || mediaType.equals(StringConstant.TYPE_TTS)) {
+
                     String playername = list.get(groupPosition).getList().get(childPosition).getContentName();
                     String playerimage = list.get(groupPosition).getList().get(childPosition).getContentImg();
                     String playerurl = list.get(groupPosition).getList().get(childPosition).getContentPlay();
@@ -422,7 +420,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
                             plaplayeralltime, playerintime, playercontentdesc, playernum,
                             playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playcontentshareurl,
                             ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying);
-                    if (mediaType.equals("TTS")) {
+                    if (mediaType.equals(StringConstant.TYPE_TTS)) {
                         dbDao.deleteHistoryById(ContentId);
                     } else {
                         dbDao.deleteHistory(playerurl);
@@ -432,10 +430,10 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
                     MainActivity.change();
                     Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                     Bundle bundle1 = new Bundle();
-                    bundle1.putString("text", list.get(groupPosition).getList().get(childPosition).getContentName());
+                    bundle1.putString(StringConstant.TEXT_CONTENT, list.get(groupPosition).getList().get(childPosition).getContentName());
                     push.putExtras(bundle1);
                     context.sendBroadcast(push);
-                } else if (mediaType.equals("SEQU")) {
+                } else if (mediaType.equals(StringConstant.TYPE_SEQU)) {
                     AlbumFragment fragment = new AlbumFragment();
                     Bundle bundle = new Bundle();
                     bundle.putInt(StringConstant.FROM_TYPE, FavoriteFragment.type);

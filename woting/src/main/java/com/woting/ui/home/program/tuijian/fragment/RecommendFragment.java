@@ -20,6 +20,8 @@ import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.IntegerConstant;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.PicassoBannerLoader;
@@ -35,6 +37,7 @@ import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.home.program.radiolist.mode.Image;
 import com.woting.ui.home.program.tuijian.adapter.RecommendListAdapter;
+import com.woting.ui.main.MainActivity;
 import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
 
@@ -47,16 +50,18 @@ import java.util.List;
 
 /**
  * 节目页----推荐页
- *
- * @author 辛龙
- *         2016年3月30日
+ * 辛龙
+ * 2016年3月30日
  */
 public class RecommendFragment extends Fragment implements TipView.WhiteViewClick {
     private SearchPlayerHistoryDao dbDao;
     private FragmentActivity context;
     private RecommendListAdapter adapter;
+    private Banner mLoopViewPager;
+
     private List<RankInfo> subList;
     private List<RankInfo> newList = new ArrayList<>();
+    private List<String> ImageStringList = new ArrayList<>();
 
     private Dialog dialog;// 加载数据对话框
     private View rootView;
@@ -64,13 +69,10 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
     private XListView mListView;
     private TipView tipView;// 没有网络、没有数据提示
 
-    private int pageSizeNum;
     private int page = 1;
     private int refreshType = 1; // refreshType 1 为下拉加载 2 为上拉加载更多
     private boolean isCancelRequest;
     private String tag = "RECOMMEND_VOLLEY_REQUEST_CANCEL_TAG";
-    private Banner mLoopViewPager;
-    private List<String> ImageStringList=new ArrayList<>();
 
     @Override
     public void onWhiteViewClick() {
@@ -105,6 +107,8 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
 
             initListView();
             getImage();
+
+            dialog = DialogUtils.Dialogph(context, "数据加载中...");
             sendRequest();
         }
         return rootView;
@@ -124,13 +128,8 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
 
             @Override
             public void onLoadMore() {
-                if (page <= pageSizeNum) {
-                    refreshType = 2;
-                    sendRequest();
-                } else {
-                    mListView.stopLoadMore();
-                    ToastUtils.show_always(context, "已经没有最新的数据了");
-                }
+                refreshType = 2;
+                sendRequest();
             }
         });
     }
@@ -168,31 +167,14 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                     e.printStackTrace();
                 }
                 if (returnType != null && returnType.equals("1001")) {
-                    page++;
                     try {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
-
-                        try {
-                            String pageSizeString = arg1.getString("PageSize");
-                            String allCountString = arg1.getString("AllCount");
-                            if (allCountString != null && !allCountString.equals("") && pageSizeString != null && !pageSizeString.equals("")) {
-                                int allCountInt = Integer.valueOf(allCountString);
-                                int pageSizeInt = Integer.valueOf(pageSizeString);
-                                if (allCountInt < 10 || pageSizeInt < 10) {
-                                    mListView.stopLoadMore();
-                                    mListView.setPullLoadEnable(false);
-                                } else {
-                                    mListView.setPullLoadEnable(true);
-                                    if (allCountInt % pageSizeInt == 0) {
-                                        pageSizeNum = allCountInt / pageSizeInt;
-                                    } else {
-                                        pageSizeNum = allCountInt / pageSizeInt + 1;
-                                    }
-                                }
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        if (subList != null && subList.size() >= 9) {
+                            page++;
+                            mListView.setPullLoadEnable(true);
+                        } else {
+                            mListView.setPullLoadEnable(false);
                         }
                         if (refreshType == 1) newList.clear();
                         newList.addAll(subList);
@@ -265,7 +247,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (newList != null && newList.get(position - 2) != null && newList.get(position - 2).getMediaType() != null) {
                     String MediaType = newList.get(position - 2).getMediaType();
-                    if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
+                    if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
                         String playername = newList.get(position - 2).getContentName();
                         String playerimage = newList.get(position - 2).getContentImg();
                         String playerurl = newList.get(position - 2).getContentPlay();
@@ -304,9 +286,10 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
 
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
-                        bundle1.putString("text", newList.get(position - 2).getContentName());
+                        bundle1.putString(StringConstant.TEXT_CONTENT, newList.get(position - 2).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
+                        MainActivity.change();
                     } else if (MediaType.equals("SEQU")) {
                         AlbumFragment fragment = new AlbumFragment();
                         Bundle bundle = new Bundle();
@@ -337,7 +320,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
         try {
             jsonObject.put("CatalogType","-1");
             jsonObject.put("CatalogId", "cn10");
-            jsonObject.put("Size", "10");// 此处需要改成-1
+            jsonObject.put("Size", "4");// 此处需要改成-1
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -386,9 +369,6 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
         });
     }
 
-
-
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -407,4 +387,3 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
         }
     }
 
-}

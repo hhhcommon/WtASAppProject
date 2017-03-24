@@ -376,7 +376,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                             gridView.setVisibility(View.GONE);
                         }
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -394,7 +394,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (mainLists != null && mainLists.get(position) != null && mainLists.get(position).getMediaType() != null) {
                     String MediaType = mainLists.get(position).getMediaType();
-                    if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
+                    if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
                         String playName = mainLists.get(position).getContentName();
                         String playImage = mainLists.get(position).getContentImg();
                         String playUrl = mainLists.get(position).getContentPlay();
@@ -431,7 +431,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                         dbDao.addHistory(history);
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
-                        bundle1.putString("text", mainLists.get(position).getContentName());
+                        bundle1.putString(StringConstant.TEXT_CONTENT, mainLists.get(position).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
                         MainActivity.change();
@@ -518,7 +518,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                 if (newList != null && newList.get(groupPosition).getList().get(childPosition) != null
                         && newList.get(groupPosition).getList().get(childPosition).getMediaType() != null) {
                     String MediaType = newList.get(groupPosition).getList().get(childPosition).getMediaType();
-                    if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
+                    if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
                         String playName = newList.get(groupPosition).getList().get(childPosition).getContentName();
                         String playImage = newList.get(groupPosition).getList().get(childPosition).getContentImg();
                         String playUrl = newList.get(groupPosition).getList().get(childPosition).getContentPlay();
@@ -558,7 +558,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                         dbDao.addHistory(history);
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
-                        bundle1.putString("text", newList.get(groupPosition).getList().get(childPosition).getContentName());
+                        bundle1.putString(StringConstant.TEXT_CONTENT, newList.get(groupPosition).getList().get(childPosition).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
                         MainActivity.change();

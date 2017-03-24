@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -147,7 +146,6 @@ public class DetailsFragment extends Fragment implements OnClickListener {
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
-                Log.v("专辑 Details", "数据 -- > " + result.toString());
                 try {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {
@@ -156,8 +154,7 @@ public class DetailsFragment extends Fragment implements OnClickListener {
 
                         try {
                             String s = arg1.getString("ContentCatalogs");
-                            contentCatalogsList = new Gson().fromJson(s, new TypeToken<List<ContentCatalogs>>() {
-                            }.getType());
+                            contentCatalogsList = new Gson().fromJson(s, new TypeToken<List<ContentCatalogs>>() {}.getType());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -173,7 +170,6 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                         }
                         try {
                             AlbumFragment.ContentImg = arg1.getString("ContentImg");
-                            Log.w("TAG", "AlbumFragment.ContentImg -> " + AlbumFragment.ContentImg);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -207,10 +203,8 @@ public class DetailsFragment extends Fragment implements OnClickListener {
 
                         try {
                             String ContentPersons = arg1.getString("ContentPersons");
-                            List<PersonInfo> mPersonInfoList = new Gson().fromJson(ContentPersons, new TypeToken<List<com.woting.ui.home.program.album.model.PersonInfo>>() {
-                            }.getType());
+                            List<PersonInfo> mPersonInfoList = new Gson().fromJson(ContentPersons, new TypeToken<List<com.woting.ui.home.program.album.model.PersonInfo>>() {}.getType());
                             if (mPersonInfoList != null && mPersonInfoList.size() > 0) {
-
                                 if (mPersonInfoList.get(0).getPerId() != null) {
                                     PersonId = mPersonInfoList.get(0).getPerId();
                                 } else {
@@ -219,7 +213,6 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                             } else {
                                 PersonId = "";
                             }
-
                             AlbumFragment.setInfo(contentId, AlbumFragment.ContentImg, AlbumFragment.ContentName, contentDesc);
                         } catch (Exception e) {
                             e.printStackTrace();

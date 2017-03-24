@@ -1,4 +1,4 @@
-package com.woting.ui.home.program.accuse.activity;
+package com.woting.ui.home.program.accuse.main;
 
 import android.app.Dialog;
 import android.content.Context;

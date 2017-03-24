@@ -63,7 +63,7 @@ import com.woting.ui.mine.person.updatepersonnews.model.UpdatePerson;
 import com.woting.ui.mine.playhistory.main.PlayHistoryFragment;
 import com.woting.ui.mine.set.SetActivity;
 import com.woting.ui.mine.shapeapp.ShapeAppActivity;
-import com.woting.ui.mine.subscriber.activity.SubscriberListFragment;
+import com.woting.ui.mine.subscriber.main.SubscriberListFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
