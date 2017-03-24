@@ -131,7 +131,7 @@
 
     <RelativeLayout
         android:id="@+id/main_lin_0"
-        android:layout_width="wrap_content"
+        android:layout_width="67dp"
         android:layout_height="51dp"
         android:layout_alignParentBottom="true">
 
@@ -140,24 +140,32 @@
             android:layout_height="wrap_content"
             android:src="@mipmap/wt_image_play_btn_back_white"/>
 
-        <com.woting.common.widgetui.RoundImageView
-            android:id="@+id/main_image_0"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerInParent="true"/>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp">
 
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@mipmap/wt_image_play_back_mask"
-            android:layout_centerInParent="true"/>
+            <com.woting.common.widgetui.RoundImageView
+                android:id="@+id/main_image_0"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"/>
 
-        <ImageView
-            android:id="@+id/image_play"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:src="@mipmap/wt_image_play_player"
-            android:layout_centerInParent="true"/>
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@mipmap/wt_image_play_back_mask"
+                android:layout_centerInParent="true"/>
+
+            <ImageView
+                android:id="@+id/image_play"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@mipmap/wt_image_play_player"
+                android:layout_centerInParent="true"/>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
