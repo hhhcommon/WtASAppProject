@@ -380,7 +380,7 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                             }
                         });
                         mLoopViewPager.start();
-                        mLoopViewPager.setVisibility(View.GONE);
+                        mLoopViewPager.setVisibility(View.VISIBLE);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
