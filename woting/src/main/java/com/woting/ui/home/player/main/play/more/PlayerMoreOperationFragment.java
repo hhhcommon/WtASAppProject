@@ -94,6 +94,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
 
     private boolean isPlaying;
     private String contentFavorite;
+    private SubscriberListFragment subscriberListFragment;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -360,7 +361,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                 PlayerMoreOperationActivity.open(historyFrag);
                 break;
             case R.id.text_subscribe:// 我的订阅
-                SubscriberListFragment subscriberListFragment = new SubscriberListFragment();
+                subscriberListFragment = new com.woting.ui.mine.subscriber.main.SubscriberListFragment();
                 Bundle bundleSub = new Bundle();
                 bundleSub.putInt("fromType", 6);
                 subscriberListFragment.setArguments(bundleSub);
