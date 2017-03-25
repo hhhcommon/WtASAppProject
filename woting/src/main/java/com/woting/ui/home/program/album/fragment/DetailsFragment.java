@@ -20,6 +20,7 @@ import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.DialogUtils;
@@ -29,10 +30,13 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.RoundImageView;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.main.HomeActivity;
+import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
 import com.woting.ui.home.program.album.anchor.AnchorDetailsFragment;
 import com.woting.ui.home.program.album.main.AlbumFragment;
 import com.woting.ui.home.program.album.model.ContentCatalogs;
 import com.woting.ui.home.program.album.model.PersonInfo;
+import com.woting.ui.home.search.main.SearchLikeActivity;
+import com.woting.ui.mine.main.MineActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -118,10 +122,19 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                 if (!TextUtils.isEmpty(PersonId)) {
                     AnchorDetailsFragment fragment = new AnchorDetailsFragment();
                     Bundle bundle = new Bundle();
+                    bundle.putInt(StringConstant.FROM_TYPE, AlbumFragment.fromType);
                     bundle.putString("PersonId", PersonId);
                     bundle.putString("ContentPub", ContentPub);
                     fragment.setArguments(bundle);
-                    HomeActivity.open(fragment);
+                    if (AlbumFragment.fromType == IntegerConstant.TAG_HOME) {
+                        HomeActivity.open(fragment);
+                    } else if (AlbumFragment.fromType == IntegerConstant.TAG_MINE) {
+                        MineActivity.open(fragment);
+                    } else if (AlbumFragment.fromType == IntegerConstant.TAG_SEARCH) {
+                        SearchLikeActivity.open(fragment);
+                    } else if (AlbumFragment.fromType == IntegerConstant.TAG_MORE) {
+                        PlayerMoreOperationActivity.open(fragment);
+                    }
                 } else {
                     ToastUtils.show_always(context, "此专辑还没有主播哦");
                 }

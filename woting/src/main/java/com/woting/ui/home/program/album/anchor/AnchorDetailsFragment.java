@@ -35,11 +35,14 @@ import com.woting.common.widgetui.RoundImageView;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.home.main.HomeActivity;
+import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
 import com.woting.ui.home.program.album.anchor.main.AnchorListFragment;
 import com.woting.ui.home.program.album.anchor.adapter.AnchorMainAdapter;
 import com.woting.ui.home.program.album.anchor.adapter.AnchorSequAdapter;
 import com.woting.ui.home.program.album.anchor.model.PersonInfo;
 import com.woting.ui.home.program.album.main.AlbumFragment;
+import com.woting.ui.home.search.main.SearchLikeActivity;
+import com.woting.ui.mine.main.MineActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -69,6 +72,7 @@ public class AnchorDetailsFragment extends Fragment implements View.OnClickListe
     private TextView textAnchorName;
     private TipView tipView;// 没有网络、没有数据、数据出错提示
 
+    private int fromType;
     private int page = 1;
     private String ContentPub;
     private String PersonId;
@@ -168,6 +172,7 @@ public class AnchorDetailsFragment extends Fragment implements View.OnClickListe
 
     private void handleIntent() {
         Bundle bundle = getArguments();
+        fromType = bundle.getInt(StringConstant.FROM_TYPE);
         PersonId = bundle.getString("PersonId");
         ContentPub = bundle.getString("ContentPub");
         if (!TextUtils.isEmpty(PersonId)) {
@@ -427,7 +432,15 @@ public class AnchorDetailsFragment extends Fragment implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_left_btn:// 返回
-                HomeActivity.close();
+                if (fromType == IntegerConstant.TAG_HOME) {
+                    HomeActivity.close();
+                } else if (fromType == IntegerConstant.TAG_MINE) {
+                    MineActivity.close();
+                } else if (fromType == IntegerConstant.TAG_MORE) {
+                    PlayerMoreOperationActivity.close();
+                } else if (fromType == IntegerConstant.TAG_SEARCH) {
+                    SearchLikeActivity.close();
+                }
                 break;
             case R.id.tv_more:// 查看主播的更多专辑列表
                 if (!TextUtils.isEmpty(PersonId)) {

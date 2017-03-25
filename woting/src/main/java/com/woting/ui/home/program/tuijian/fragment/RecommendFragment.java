@@ -291,7 +291,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
                         MainActivity.change();
-                    } else if (MediaType.equals("SEQU")) {
+                    } else if (MediaType.equals(StringConstant.TYPE_SEQU)) {
                         AlbumFragment fragment = new AlbumFragment();
                         Bundle bundle = new Bundle();
                         bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_HOME);
