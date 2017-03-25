@@ -22,6 +22,7 @@ import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
@@ -137,7 +138,7 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (newList != null && newList.get(position - 1) != null && newList.get(position - 1).getMediaType() != null) {
                     String MediaType = newList.get(position - 1).getMediaType();
-                    if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
+                    if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
                         String playername = newList.get(position - 1).getContentName();
                         String playerimage = newList.get(position - 1).getContentImg();
                         String playerurl = newList.get(position - 1).getContentPlay();
@@ -177,7 +178,7 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
                         MainActivity.change();
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
-                        bundle1.putString("text", newList.get(position - 1).getContentName());
+                        bundle1.putString(StringConstant.TEXT_CONTENT, newList.get(position - 1).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
                     } else {
@@ -215,14 +216,9 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     try {
+                        page++;
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         SubList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
-                        if (SubList != null && SubList.size() >= 9) {
-                            mListView.setPullLoadEnable(true);
-                            page++;
-                        } else {
-                            mListView.setPullLoadEnable(false);
-                        }
                         if (refreshType == 1) newList.clear();
                         newList.addAll(SubList);
                         if(newList.size() > 0) {
@@ -241,15 +237,20 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.IS_ERROR);
                         } else {
-                            ToastUtils.show_always(context, "数据加载错误");
+                            ToastUtils.show_always(context, getString(R.string.error_data));
                         }
+                    }
+                } else if (ReturnType != null && ReturnType.equals("1011")) {
+                    mListView.setPullLoadEnable(false);
+                    if (isVisible()) {
+                        ToastUtils.show_always(context, getString(R.string.no_data));
                     }
                 } else {
                     if(refreshType == 1) {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关结果\n试试其他词，不要太逆天哟");
                     } else {
-                        ToastUtils.show_always(context, "没有相关数据了");
+                        ToastUtils.show_always(context, getString(R.string.error_data));
                     }
                 }
                 if (refreshType == 1) {
@@ -275,7 +276,7 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
     private JSONObject setParam() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            jsonObject.put("MediaType", "AUDIO");
+            jsonObject.put("MediaType", StringConstant.TYPE_AUDIO);
             if (searchStr != null && !searchStr.equals("")) {
                 jsonObject.put("SearchStr", searchStr);
                 jsonObject.put("Page", String.valueOf(page));
