@@ -299,6 +299,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                     RefreshType = 1;
                     page = 1;
                     beginCatalogId = "";
+                    getCity();
                     send();
                 } else {
                     if (mainLists != null && mainLists.size() > 0) {
