@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
@@ -29,6 +30,7 @@ import java.util.Locale;
 public class SubscriberAdapter extends BaseAdapter {
     private List<SubscriberInfo> list;
     private Context context;
+    private boolean flag;
 
     public SubscriberAdapter(Context context, List<SubscriberInfo> list) {
         this.list = list;
@@ -52,7 +54,7 @@ public class SubscriberAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+        final ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.adapter_rankinfo, null);
@@ -87,16 +89,29 @@ public class SubscriberAdapter extends BaseAdapter {
         SubscriberInfo lists = list.get(position);
 
         // 封面图片
-        String contentImg = lists.getContentSeqImg();
-        if (contentImg == null || contentImg.equals("null") || contentImg.trim().equals("")) {
+        String _contentImg = lists.getContentSeqImg();
+        if (_contentImg == null || _contentImg.equals("null") || _contentImg.trim().equals("")) {
             Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
             holder.imageCover.setImageBitmap(bmp);
         } else {
-            if (!contentImg.startsWith("http")) {
-                contentImg = GlobalConfig.imageurl + contentImg;
+            if (!_contentImg.startsWith("http")) {
+                _contentImg = GlobalConfig.imageurl + _contentImg;
             }
-            contentImg = AssembleImageUrlUtils.assembleImageUrl150(contentImg);
-            Picasso.with(context).load(contentImg.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageCover);
+           final String contentImg = AssembleImageUrlUtils.assembleImageUrl180(_contentImg);
+            final String c_contentImg=_contentImg;
+            Picasso.with(context).load(contentImg.replace("\\/", "/")).fetch(new Callback() {
+                @Override
+                public void onSuccess() {
+                    Picasso.with(context).load(contentImg.replace("\\/", "/")).error(R.mipmap.wt_image_playertx).resize(100, 100).centerCrop().into(holder.imageCover);
+                }
+
+                @Override
+                public void onError() {
+                    Picasso.with(context).load(c_contentImg.replace("\\/", "/")).error(R.mipmap.wt_image_playertx).resize(100, 100).centerCrop().into(holder.imageCover);
+                }
+            });
+
+
         }
 
         // 订阅的专辑名
