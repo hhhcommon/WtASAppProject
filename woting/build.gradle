@@ -8,10 +8,10 @@ android {
 
     defaultConfig {
         applicationId "com.woting"
-        minSdkVersion 11
+        minSdkVersion 19
         targetSdkVersion 21
-        versionCode 28
-        versionName "0.1.0.X.028"
+        versionCode 29
+        versionName "0.1.0.X.029"
     }
 
     buildTypes {

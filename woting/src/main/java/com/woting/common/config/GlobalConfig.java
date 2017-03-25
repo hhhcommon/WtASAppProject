@@ -43,7 +43,7 @@ public class GlobalConfig {
     public static String playCacheDirI = Environment.getRootDirectory().getAbsolutePath(); // 获取手机根目录
     public static String playCacheDirO = Environment.getExternalStorageDirectory().getAbsolutePath(); // 获取 SD 卡根目录
     public static String ksyPlayCache = "/WTFM/playCache/";// 金山云缓存地址
-    public static String upLoadCache = "/WTFM/APP/";// app更新下载地址
+    public static String upLoadCache = "/WTFM/APP/";// app安装地址
 
     //缓存的城市列表
     public static List<CatalogName> CityCatalogList;
@@ -51,7 +51,7 @@ public class GlobalConfig {
     /**
      * 数据库版本号
      */
-    public static final int dbVersionCode = 42;
+    public static final int dbVersionCode = 50;
     /**
      * 是否活跃状态，有活跃状态才能播放声音，否则即使收到音频包也不播放
      */
