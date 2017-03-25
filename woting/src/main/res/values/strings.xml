@@ -606,4 +606,7 @@
     <item name="tag_childname" type="id"></item>
     <string name="title_activity_programme">ProgrammeActivity</string>
 
+    <string name="no_data">没有更多的数据了</string>
+    <string name="error_data">数据加载错误</string>
+
 </resources>

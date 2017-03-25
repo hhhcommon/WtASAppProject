@@ -1122,15 +1122,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 try {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {
+                        page++;
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultInfo")).nextValue();
                         List<LanguageSearchInside> list = new Gson().fromJson(arg1.getString("SubList"), new TypeToken<List<LanguageSearchInside>>() {}.getType());
                         if (page == 1) playList.clear();
-                        if (list != null && list.size() >= sequListSize) {
-                            page++;
-                            setPullAndLoad(false, true);
-                        } else {
-                            setPullAndLoad(false, false);
-                        }
                         subList = clearContentPlayNull(list);// 去空
                         mUIHandler.sendEmptyMessage(IntegerConstant.PLAY_UPDATE_LIST);
                     } else {
@@ -1212,9 +1207,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                         }
                         if (requestType.equals(StringConstant.PLAY_REQUEST_TYPE_SEARCH_VOICE) && refreshType == 0) playList.clear();
                         page++;
-                        setPullAndLoad(true, true);
+//                        setPullAndLoad(true, true);
                         subList = clearContentPlayNull(list);// 去空
-                        mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
+                        mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 100);
                     } else {
                         setPullAndLoad(false, false);
                         if (!requestType.equals(StringConstant.PLAY_REQUEST_TYPE_MAIN_PAGE) && refreshType == 0) {
@@ -1222,13 +1217,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                         } else if (!requestType.equals(StringConstant.PLAY_REQUEST_TYPE_SEARCH_VOICE) && refreshType != 0) {
                             ToastUtils.show_always(context, "没有更多推荐了~~");
                         } else if (refreshType == 0) {
-                            mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
+                            mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 100);
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     setPullAndLoad(true, false);
-                    mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
+                    mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 100);
                 }
             }
 
@@ -1237,7 +1232,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
                 setPullAndLoad(true, false);
-                mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 200);
+                mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 100);
             }
         });
     }

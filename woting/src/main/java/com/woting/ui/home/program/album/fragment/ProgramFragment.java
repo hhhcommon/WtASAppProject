@@ -183,7 +183,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (SubListAll != null && SubListAll.get(position - 1) != null && SubListAll.get(position - 1).getMediaType() != null) {
                     String MediaType = SubListAll.get(position - 1).getMediaType();
-                    if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
+                    if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
                         String playerName = SubListAll.get(position - 1).getContentName();
                         String playerImage = SubListAll.get(position - 1).getContentImg();
                         String playUrl = SubListAll.get(position - 1).getContentPlay();
@@ -220,7 +220,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                         MainActivity.change();
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
-                        bundle1.putString("text", SubListAll.get(position - 1).getContentName());
+                        bundle1.putString(StringConstant.TEXT_CONTENT, SubListAll.get(position - 1).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
                     } else {
@@ -269,8 +269,6 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                                 SubList = new Gson().fromJson(subList, new TypeToken<List<ContentInfo>>() {}.getType());
                                 if (SubList != null && SubList.size() > 0) {
                                     if (page == 1) SubListAll.clear();
-                                    if (SubList.size() >= 20) page++;
-                                    else lv_album.setPullLoadEnable(false);
                                     SubListAll.addAll(SubList);
                                     lv_album.setAdapter(mainAdapter = new AlbumMainAdapter(context, SubListAll));
                                     setListener();
@@ -288,6 +286,9 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.NO_DATA, "专辑中没有节目\n换个专辑看看吧");
                         }
+                    } else if (ReturnType != null && ReturnType.equals("1011")) {
+                        lv_album.setPullLoadEnable(false);
+                        ToastUtils.show_always(context, getString(R.string.no_data));
                     } else {
                         lv_album.stopLoadMore();
                         tipView.setVisibility(View.VISIBLE);

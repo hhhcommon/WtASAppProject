@@ -165,14 +165,9 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     try {
+                        page++;
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         SubList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<ListInfo>>() {}.getType());
-                        if (SubList != null && SubList.size() >= 9) {
-                            page++;
-                            mListView.setPullLoadEnable(true);
-                        } else {
-                            mListView.setPullLoadEnable(false);
-                        }
                         if (RefreshType == 1) newList.clear();
                         newList.addAll(SubList);
                         if (adapter == null) {
@@ -191,6 +186,7 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                         }
                     }
                 } else {
+                    mListView.setPullLoadEnable(false);
                     mListView.setAdapter(new ForNullAdapter(context));
                     if (newList == null || newList.size() <= 0) {
                         tipView.setVisibility(View.VISIBLE);

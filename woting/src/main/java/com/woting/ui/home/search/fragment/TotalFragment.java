@@ -65,7 +65,7 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
     private ExpandableListView expandListView;
     private TipView tipView;// 没有网络、没有数据提示
 
-    protected String searchStr;
+    private String searchStr;
     private String tag = "TOTAL_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
 
@@ -128,16 +128,16 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                     if (subList != null && subList.size() > 0) {
                         for (int i = 0; i < subList.size(); i++) {
                             if (subList.get(i).getMediaType() != null && !subList.get(i).getMediaType().equals("")) {
-                                if (subList.get(i).getMediaType().equals("AUDIO")) {
+                                if (subList.get(i).getMediaType().equals(StringConstant.TYPE_AUDIO)) {
                                     if (playList == null) playList = new ArrayList<>();
                                     if (playList.size() < 3) playList.add(subList.get(i));
-                                } else if (subList.get(i).getMediaType().equals("SEQU")) {
+                                } else if (subList.get(i).getMediaType().equals(StringConstant.TYPE_SEQU)) {
                                     if (sequList == null) sequList = new ArrayList<>();
                                     if (sequList.size() < 3) sequList.add(subList.get(i));
-                                } else if (subList.get(i).getMediaType().equals("TTS")) {
+                                } else if (subList.get(i).getMediaType().equals(StringConstant.TYPE_TTS)) {
                                     if (ttsList == null) ttsList = new ArrayList<>();
                                     if (ttsList.size() < 3) ttsList.add(subList.get(i));
-                                } else if (subList.get(i).getMediaType().equals("RADIO")) {
+                                } else if (subList.get(i).getMediaType().equals(StringConstant.TYPE_RADIO)) {
                                     if (radioList == null) radioList = new ArrayList<>();
                                     if (radioList.size() < 3) radioList.add(subList.get(i));
                                 }
@@ -226,7 +226,7 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (MediaType != null && MediaType.equals("RADIO") || MediaType != null && MediaType.equals("AUDIO")) {
+                if (MediaType != null && MediaType.equals(StringConstant.TYPE_RADIO) || MediaType != null && MediaType.equals(StringConstant.TYPE_AUDIO)) {
                     String playName = list.get(groupPosition).getList().get(childPosition).getContentName();
                     String playImage = list.get(groupPosition).getList().get(childPosition).getContentImg();
                     String playUrl = list.get(groupPosition).getList().get(childPosition).getContentPlay();
@@ -269,7 +269,7 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                     bundle1.putString("text", list.get(groupPosition).getList().get(childPosition).getContentName());
                     push.putExtras(bundle1);
                     context.sendBroadcast(push);
-                } else if (MediaType != null && MediaType.equals("SEQU")) {
+                } else if (MediaType != null && MediaType.equals(StringConstant.TYPE_SEQU)) {
                     AlbumFragment fragment = new AlbumFragment();
                     Bundle bundle = new Bundle();
                     bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_SEARCH);

@@ -20,6 +20,7 @@ import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
@@ -132,7 +133,7 @@ public class DetailsFragment extends Fragment implements OnClickListener {
     public void send() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            jsonObject.put("MediaType", "SEQU");
+            jsonObject.put("MediaType", StringConstant.TYPE_SEQU);
             jsonObject.put("ContentId", AlbumFragment.id);
             jsonObject.put("Page", "1");
         } catch (JSONException e) {

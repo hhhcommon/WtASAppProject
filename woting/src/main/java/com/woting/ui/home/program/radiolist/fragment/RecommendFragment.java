@@ -158,14 +158,9 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                 try {
                     ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {
+                        page++;
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         List<RankInfo> subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
-                        if (subList != null && subList.size() >= 9) {
-                            page++;
-                            mListView.setPullLoadEnable(true);
-                        } else {
-                            mListView.setPullLoadEnable(false);
-                        }
                         if (refreshType == 1) newList.clear();
                         newList.addAll(subList);
                         if (adapter == null) {
@@ -176,6 +171,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                         setOnItem();
                         tipView.setVisibility(View.GONE);
                     } else {
+                        mListView.setPullLoadEnable(false);
                         mListView.setAdapter(new ForNullAdapter(context));
                         if (refreshType == 1) {
                             tipView.setVisibility(View.VISIBLE);
