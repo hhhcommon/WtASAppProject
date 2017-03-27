@@ -80,7 +80,6 @@ public class FavorListAdapter extends BaseAdapter {
         }
         RankInfo lists = list.get(position);
         if (lists.getMediaType().equals("RADIO")) {
-//            holder.imagePlaying.setVisibility(View.GONE);
             holder.imageLast.setVisibility(View.GONE);
             holder.tvLast.setVisibility(View.GONE);
             holder.imageNum.setVisibility(View.GONE);
@@ -116,10 +115,12 @@ public class FavorListAdapter extends BaseAdapter {
             } else {
                 holder.textview_ranktitle.setText(lists.getContentName());
             }
-            if (lists.getCurrentContent() == null || lists.getCurrentContent().equals("")) {
+
+            String contentPer = lists.getContentPersons().get(0).getPerName();
+            if (contentPer == null || contentPer.equals("")) {
                 holder.textview_rankplaying.setText("未知");
             } else {
-                holder.textview_rankplaying.setText(lists.getCurrentContent());
+                holder.textview_rankplaying.setText(contentPer);
             }
             if (lists.getContentImg() == null || lists.getContentImg().equals("") || lists.getContentImg().equals("null")
                     || lists.getContentImg().trim().equals("")) {
@@ -177,10 +178,10 @@ public class FavorListAdapter extends BaseAdapter {
                 Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
             }
 
-            if (lists.getContentPub() == null || lists.getContentPub().equals("") || lists.getContentPub().equals("null")) {
+            if (lists.getContentName() == null || lists.getContentName().equals("") || lists.getContentName().equals("null")) {
                 holder.textview_rankplaying.setText("未知");
             } else {
-                holder.textview_rankplaying.setText(lists.getContentPub());
+                holder.textview_rankplaying.setText(lists.getContentName());
             }
 
             if (lists.getContentSubCount() == null || lists.getContentSubCount().equals("")

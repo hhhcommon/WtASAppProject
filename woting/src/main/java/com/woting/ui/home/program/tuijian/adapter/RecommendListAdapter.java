@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
@@ -25,12 +26,10 @@ public class RecommendListAdapter extends BaseAdapter {
     private List<RankInfo> list;
     private Context context;
     private Bitmap bmp;
-    private boolean isHintVisibility;
 
-    public RecommendListAdapter(Context context, List<RankInfo> list, boolean isHintVisibility) {
+    public RecommendListAdapter(Context context, List<RankInfo> list) {
         this.context = context;
         this.list = list;
-        this.isHintVisibility = isHintVisibility;
     }
 
     @Override
@@ -62,17 +61,11 @@ public class RecommendListAdapter extends BaseAdapter {
 
             holder.imageCover = (ImageView) convertView.findViewById(R.id.RankImageUrl);// 封面图片
             holder.textTitle = (TextView) convertView.findViewById(R.id.RankTitle);// 标题
-            holder.mTv_number = (TextView) convertView.findViewById(R.id.tv_num);
-            holder.textRankContent = (TextView) convertView.findViewById(R.id.RankContent);
-            holder.textTotal = (TextView) convertView.findViewById(R.id.tv_total);
-            holder.imageNumberTime = (ImageView) convertView.findViewById(R.id.image_number_time);
+            holder.textContent = (TextView) convertView.findViewById(R.id.RankContent);// 专辑或主播
+            holder.textCount = (TextView) convertView.findViewById(R.id.tv_num);// 收听次数
+            holder.imageNumberTime = (ImageView) convertView.findViewById(R.id.image_number_time);// 时间或集数图标
+            holder.textTotal = (TextView) convertView.findViewById(R.id.tv_total);// 时间或集数
 
-            holder.imageHintVisibility = (ImageView) convertView.findViewById(R.id.image_hint_visibility);
-            if (isHintVisibility) {
-                holder.imageHintVisibility.setVisibility(View.GONE);
-            } else {
-                holder.imageHintVisibility.setVisibility(View.VISIBLE);
-            }
             bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
             convertView.setTag(holder);
         } else {
@@ -80,6 +73,7 @@ public class RecommendListAdapter extends BaseAdapter {
         }
 
         RankInfo lists = list.get(position);
+        String mediaType = lists.getMediaType();// 媒体类型
 
         // 封面图片
         String contentImg = lists.getContentImg();
@@ -100,40 +94,63 @@ public class RecommendListAdapter extends BaseAdapter {
         }
         holder.textTitle.setText(contentName);
 
-        if (lists != null || lists.getMediaType() != null) {
-            if (lists.getMediaType().equals("SEQU")) {
-                holder.imageNumberTime.setImageResource(R.mipmap.image_program_number);
-                if (lists.getContentSubCount() == null || lists.getContentSubCount().equals("")
-                        || lists.getContentSubCount().equals("null")) {
-                    holder.textTotal.setText("0" + "集");
-                } else {
-                    holder.textTotal.setText(lists.getContentSubCount() + "集");
+        // 专辑或主播
+        String name;
+        if (mediaType != null && mediaType.equals(StringConstant.TYPE_SEQU)) {
+            name = lists.getContentName();
+            if (name == null || name.trim().equals("")) {
+                name = "未知";
+            }
+        } else {
+            try {
+                name = lists.getContentPersons().get(0).getPerName();
+                if (name == null || name.equals("")) {
+                    name = "未知";
                 }
-            } else if (lists.getMediaType().equals("RADIO") || lists.getMediaType().equals("AUDIO")) {
-                holder.imageNumberTime.setImageResource(R.mipmap.image_program_time);
-                // 节目时长
-                if (lists.getContentTimes() == null || lists.getContentTimes().equals("") || lists.getContentTimes().equals("null")) {
-                    holder.textTotal.setText(context.getString(R.string.play_time));
-                } else {
-                    long minute = Long.valueOf(lists.getContentTimes()) / (1000 * 60);
-                    long second = (Long.valueOf(lists.getContentTimes()) / 1000) % 60;
-                    if (second < 10) {
-                        holder.textTotal.setText(minute + "\'" + " " + "0" + second + "\"");
-                    } else {
-                        holder.textTotal.setText(minute + "\'" + " " + second + "\"");
-                    }
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                name = "未知";
             }
         }
-        if (lists.getPlayCount() == null || lists.getPlayCount().equals("") || lists.getPlayCount().equals("null")) {
-            holder.mTv_number.setText("0");
-        } else {
-            holder.mTv_number.setText(lists.getPlayCount());
+        holder.textContent.setText(name);
+
+        // 收听次数
+        String playCount = lists.getPlayCount();
+        if (playCount == null || playCount.equals("") || playCount.equals("null")) {
+            playCount = "0";
         }
-        if (lists.getContentPub() == null || lists.getContentPub().equals("") || lists.getContentPub().equals("null")) {
-            holder.textRankContent.setText("未知");
-        } else {
-            holder.textRankContent.setText(lists.getContentPub());
+        holder.textCount.setText(playCount);
+
+        // 时间或集数
+        if (mediaType != null) {
+            switch (mediaType) {
+                case StringConstant.TYPE_SEQU:// 专辑  显示集数
+                    holder.imageNumberTime.setImageResource(R.mipmap.image_program_number);
+                    String contentCount = lists.getContentSubCount();
+                    if (contentCount == null || contentCount.equals("") || contentCount.equals("null")) {
+                        contentCount = "0";
+                    }
+                    contentCount = contentCount + "集";
+                    holder.textTotal.setText(contentCount);
+                    break;
+                case StringConstant.TYPE_AUDIO:// 单体节目  显示时长
+                case StringConstant.TYPE_RADIO:
+                    holder.imageNumberTime.setImageResource(R.mipmap.image_program_time);
+                    String contentTime = lists.getContentTimes();
+                    if (contentTime == null || contentTime.equals("") || contentTime.equals("null")) {
+                        contentTime = context.getString(R.string.play_time);
+                    } else {
+                        long minute = Long.valueOf(lists.getContentTimes()) / (1000 * 60);
+                        long second = (Long.valueOf(lists.getContentTimes()) / 1000) % 60;
+                        if (second < 10) {
+                            contentTime = minute + "\'" + " " + "0" + second + "\"";
+                        } else {
+                            contentTime = minute + "\'" + " " + second + "\"";
+                        }
+                    }
+                    holder.textTotal.setText(contentTime);
+                    break;
+            }
         }
 
         return convertView;
@@ -143,11 +160,10 @@ public class RecommendListAdapter extends BaseAdapter {
         public ImageView imageMask;// 六边形封面图片遮罩
         public ImageView imageCover;// 封面图片
         public TextView textTitle;// 标题
-        public TextView mTv_number;
-        public TextView textRankContent;
-        public TextView textTotal;
-        public ImageView imageHintVisibility;
-        public ImageView imageNumberTime;
+        public TextView textContent;// 专辑或主播
+        public TextView textCount;// 收听次数
+        public ImageView imageNumberTime;// 时间或集数图标
+        public TextView textTotal;// 时间或集数
     }
 
 }

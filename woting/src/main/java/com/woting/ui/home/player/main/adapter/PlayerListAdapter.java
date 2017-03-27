@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
@@ -77,7 +78,7 @@ public class PlayerListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         LanguageSearchInside searchList = list.get(position);
-        if(searchList == null) return convertView;
+        if (searchList == null) return convertView;
         String contentType = searchList.getMediaType();// 播放的节目 TYPE
 
         // 节目封面图片
@@ -98,21 +99,26 @@ public class PlayerListAdapter extends BaseAdapter {
             holder.textview_ranktitle.setText(contentName);
         }
 
-        // 来源
-        String IsPlaying = searchList.getIsPlaying();
-        String contentPub= searchList.getContentPub();
-        if(contentType!= null && contentType.equals("RADIO")) {
-            if (IsPlaying != null && !IsPlaying.equals("")) {
-                IsPlaying = "正在直播: " + IsPlaying;
+        // 单体节目显示主播
+        try {
+            String IsPlaying = searchList.getIsPlaying();
+            String contentPub = searchList.getContentPersons().get(0).getPerName();
+            if (contentType != null && contentType.equals(StringConstant.TYPE_RADIO)) {
+                if (IsPlaying != null && !IsPlaying.equals("")) {
+                    IsPlaying = "正在直播: " + IsPlaying;
+                } else {
+                    IsPlaying = "正在直播: 未知";
+                }
+                holder.RankContent.setText(IsPlaying);
             } else {
-                IsPlaying = "正在直播: 未知";
+                if (contentPub == null || contentPub.equals("")) {
+                    contentPub = "未知";
+                }
+                holder.RankContent.setText(contentPub);
             }
-            holder.RankContent.setText(IsPlaying);
-        } else {
-            if (contentPub == null || contentPub.equals("")) {
-                contentPub = "未知";
-            }
-            holder.RankContent.setText(contentPub);
+        } catch (Exception e) {
+            e.printStackTrace();
+            holder.RankContent.setText("未知");
         }
 
         // 节目收听次数
@@ -122,7 +128,7 @@ public class PlayerListAdapter extends BaseAdapter {
         }
 
         // 节目时长
-        if(contentType != null && contentType.equals("RADIO")) {
+        if (contentType != null && contentType.equals(StringConstant.TYPE_RADIO)) {
             holder.imageLast.setVisibility(View.GONE);
             holder.textPlayTime.setVisibility(View.GONE);
         } else {

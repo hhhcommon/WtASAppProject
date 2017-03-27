@@ -12,6 +12,9 @@ import com.woting.ui.home.search.model.History;
 
 import java.util.List;
 
+/**
+ * 搜索历史数据展示
+ */
 public class SearchHistoryAdapter extends BaseAdapter{
 	private Context context;
 	private List<History> list;

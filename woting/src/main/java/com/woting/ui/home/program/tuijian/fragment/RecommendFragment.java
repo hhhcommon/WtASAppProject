@@ -174,7 +174,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                         if (refreshType == 1) newList.clear();
                         newList.addAll(subList);
                         if (adapter == null) {
-                            mListView.setAdapter(adapter = new RecommendListAdapter(context, newList, false));
+                            mListView.setAdapter(adapter = new RecommendListAdapter(context, newList));
                         } else {
                             adapter.notifyDataSetChanged();
                         }

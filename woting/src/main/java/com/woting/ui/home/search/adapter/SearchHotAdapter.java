@@ -11,6 +11,9 @@ import com.woting.R;
 
 import java.util.List;
 
+/**
+ * 热门搜索数据展示
+ */
 public class SearchHotAdapter extends BaseAdapter {
 	private Context context;
 	private List<String> list;

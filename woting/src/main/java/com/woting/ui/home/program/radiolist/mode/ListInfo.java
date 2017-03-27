@@ -1,5 +1,7 @@
 package com.woting.ui.home.program.radiolist.mode;
 
+import com.woting.ui.home.program.fmlist.model.ContentPersons;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -23,6 +25,16 @@ public class ListInfo implements Serializable{
 	private String ContentDescn;
 	private String ContentImg;
 	private String ContentFavorite;
+
+    private List<com.woting.ui.home.program.fmlist.model.ContentPersons> ContentPersons;// 主播信息
+
+    public List<ContentPersons> getContentPersons() {
+        return ContentPersons;
+    }
+
+    public void setContentPersons(List<ContentPersons> contentPersons) {
+        ContentPersons = contentPersons;
+    }
 
     public String getContentSubCount() {
         return ContentSubCount;
