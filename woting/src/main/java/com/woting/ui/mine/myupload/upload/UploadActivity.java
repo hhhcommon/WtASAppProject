@@ -200,7 +200,7 @@ public class UploadActivity extends AppBaseActivity implements View.OnClickListe
                 } else {
                     imageUrl = GlobalConfig.imageurl + miniUri;
                 }
-                imageUrl = AssembleImageUrlUtils.assembleImageUrl150(imageUrl);
+                imageUrl = AssembleImageUrlUtils.assembleImageUrl180(imageUrl);
                 Picasso.with(context).load(imageUrl.replace("\\/", "/")).into(imageCover);
             } else {// 上传音频文件
                 finishUpload(filePath);

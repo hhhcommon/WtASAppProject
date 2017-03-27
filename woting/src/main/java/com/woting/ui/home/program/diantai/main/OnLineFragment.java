@@ -73,9 +73,8 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
     private SharedPreferences shared = BSApplication.SharedPreferences;
     private SearchPlayerHistoryDao dbDao;
     private MessageReceiver Receiver;
-    private OnLinesAdapter adapter;
     private List<RadioPlay> mainList;
-    private List<RankInfo> mainLists;
+    private List<RankInfo> mainLists = new ArrayList<>();
     private List<RadioPlay> newList = new ArrayList<>();
 
     private Dialog dialog;
@@ -98,6 +97,8 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
     private String cityId;
     private String tag = "ONLINE_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
+    private CityNewAdapter adapters;
+    private OnLinesAdapter adapter;
 
     @Override
     public void onWhiteViewClick() {
@@ -155,6 +156,10 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                 filter.addAction(BroadcastConstants.CITY_CHANGE);
                 context.registerReceiver(Receiver, filter);
             }
+            adapters = new CityNewAdapter(context, mainLists);
+            gridView.setAdapter(adapters);
+            adapter = new OnLinesAdapter(context, newList);
+            expandableListMain.setAdapter(adapter);
         }
         return relativeLayout;
     }
@@ -297,6 +302,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                     RefreshType = 1;
                     page = 1;
                     beginCatalogId = "";
+                    getCity();
                     send();
                 } else {
                     if (mainLists != null && mainLists.size() > 0) {
@@ -342,8 +348,6 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
         }
 
         VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, jsonObject, new VolleyCallback() {
-            private CityNewAdapter adapters;
-
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (isCancelRequest) return;
@@ -363,11 +367,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                                 mainLists.clear();
                                 mainLists.addAll(tempList);
                             }
-                            if (adapters == null) {
-                                gridView.setAdapter(adapters = new CityNewAdapter(context, mainLists));
-                            } else {
-                                adapters.notifyDataSetChanged();
-                            }
+                            adapters.notifyDataSetChanged();
                             gridListener();
                             new HeightListView(context).setListViewHeightBasedOnChildren(gridView);
                         } else {
@@ -440,6 +440,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
     }
 
     private void send() {
+        cityId = shared.getString(StringConstant.CITYID, "110000");
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("MediaType", "RADIO");
@@ -477,11 +478,8 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                             mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
                         }
                         newList.addAll(mainList);
-                        if (adapter == null) {
-                            expandableListMain.setAdapter(adapter = new OnLinesAdapter(context, newList));
-                        } else {
-                            adapter.notifyDataSetChanged();
-                        }
+                        adapter.notifyDataSetChanged();
+
                         for (int i = 0; i < newList.size(); i++) {
                             expandableListMain.expandGroup(i);
                         }

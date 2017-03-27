@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
@@ -167,8 +168,19 @@ public class OnLinesAdapter extends BaseExpandableListAdapter {
                         } else {
                             url = GlobalConfig.imageurl + lists.getContentImg();
                         }
-                        url = AssembleImageUrlUtils.assembleImageUrl180(url);
-                        Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageview_rankimage);
+                        final String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
+                        final String c_url = url;
+                        Picasso.with(context).load(_url.replace("\\/", "/")).fetch(new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                Picasso.with(context).load(_url.replace("\\/", "/")).placeholder(R.mipmap.wt_image_playertx).error(R.mipmap.wt_image_playertx).into(holder.imageview_rankimage);
+                            }
+
+                            @Override
+                            public void onError() {
+                                Picasso.with(context).load(c_url.replace("\\/", "/")).placeholder(R.mipmap.wt_image_playertx).error(R.mipmap.wt_image_playertx).into(holder.imageview_rankimage);
+                            }
+                        });
                     }
                 } else {
                     // 判断mediatype==AUDIO的情况
@@ -190,8 +202,19 @@ public class OnLinesAdapter extends BaseExpandableListAdapter {
                         } else {
                             url = GlobalConfig.imageurl + lists.getContentImg();
                         }
-                        url = AssembleImageUrlUtils.assembleImageUrl180(url);
-                        Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageview_rankimage);
+                        final String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
+                        final String c_url = url;
+                        Picasso.with(context).load(_url.replace("\\/", "/")).fetch(new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                Picasso.with(context).load(_url.replace("\\/", "/")).placeholder(R.mipmap.wt_image_playertx).error(R.mipmap.wt_image_playertx).into(holder.imageview_rankimage);
+                            }
+
+                            @Override
+                            public void onError() {
+                                Picasso.with(context).load(c_url.replace("\\/", "/")).placeholder(R.mipmap.wt_image_playertx).error(R.mipmap.wt_image_playertx).into(holder.imageview_rankimage);
+                            }
+                        });
                     }
                     holder.lin_CurrentPlay.setVisibility(View.INVISIBLE);
                 }

@@ -11,6 +11,7 @@ import com.android.volley.toolbox.Volley;
 import com.kingsoft.media.httpcache.KSYProxyService;
 import com.kingsoft.media.httpcache.OnErrorListener;
 import com.kingsoft.media.httpcache.stats.OnLogEventListener;
+import com.squareup.picasso.Picasso;
 import com.umeng.socialize.PlatformConfig;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.config.SocketClientConfig;
@@ -43,7 +44,6 @@ public class BSApplication extends Application implements OnErrorListener, OnLog
     public void onCreate() {
         super.onCreate();
         instance = this;
-
 //        CrashHandler handler = CrashHandler.getInstance();
 //        handler.init(getApplicationContext());
 

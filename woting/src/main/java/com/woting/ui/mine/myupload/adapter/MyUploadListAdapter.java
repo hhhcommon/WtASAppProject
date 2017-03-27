@@ -102,7 +102,7 @@ public class MyUploadListAdapter extends BaseAdapter {
             if (!coverUrl.startsWith("http")) {
                 coverUrl = GlobalConfig.imageurl + coverUrl;
             }
-            coverUrl = AssembleImageUrlUtils.assembleImageUrl150(coverUrl);
+            coverUrl = AssembleImageUrlUtils.assembleImageUrl180(coverUrl);
             Picasso.with(context).load(coverUrl.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.rankImageCover);
         } else {
             Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);

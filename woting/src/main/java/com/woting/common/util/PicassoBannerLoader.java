@@ -17,7 +17,7 @@ public class PicassoBannerLoader extends ImageLoader {
         if (!contentImg.startsWith("http")) {
             contentImg = GlobalConfig.imageurl + contentImg;
         }
-        contentImg = AssembleImageUrlUtils.assembleImageUrl150(contentImg);
-        Picasso.with(context).load(contentImg.replace("\\/", "/")).resize(50,50).centerCrop().into(imageView);
+        contentImg = AssembleImageUrlUtils.assembleImageUrl(contentImg,"1080_450");
+        Picasso.with(context).load(contentImg.replace("\\/", "/")).into(imageView);
     }
 }

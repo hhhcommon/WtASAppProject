@@ -55,7 +55,7 @@ public class PlayDetailsFragment extends Fragment implements View.OnClickListene
             if(!playImage.startsWith("http")) {
                 playImage = GlobalConfig.imageurl + playImage;
             }
-            playImage = AssembleImageUrlUtils.assembleImageUrl150(playImage);
+            playImage = AssembleImageUrlUtils.assembleImageUrl180(playImage);
             Picasso.with(context).load(playImage.replace("\\/", "/")).resize(100, 100).centerCrop().into(imageCover);
         }
 

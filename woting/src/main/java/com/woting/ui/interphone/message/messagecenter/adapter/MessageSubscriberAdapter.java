@@ -91,7 +91,7 @@ public class MessageSubscriberAdapter extends BaseAdapter {
             if (!contentImg.startsWith("http")) {
                 contentImg = GlobalConfig.imageurl + contentImg;
             }
-            contentImg = AssembleImageUrlUtils.assembleImageUrl150(contentImg);
+            contentImg = AssembleImageUrlUtils.assembleImageUrl180(contentImg);
             Picasso.with(context).load(contentImg.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageCover);
         }
 

@@ -462,7 +462,7 @@ public class SocketService extends Service {
     class sendBeatTimer extends TimerTask {
         public void run() {
             try {
-                Log.e("心跳线程", "toBeStop"+toBeStop );
+                Log.e("心跳线程", "toBeStop" + toBeStop);
                 if (toBeStop) {
                     if (sendBeat != null) {
                         sendBeat.cancel();
@@ -538,25 +538,23 @@ public class SocketService extends Service {
 
         public void run() {
             System.out.println("<" + (new Date()).toString() + ">" + this.getName() + "线程启动");
-            while (true) {
-                try {
+            try {
+                while (true) {
                     Log.e("接收消息线程toBeStop", toBeStop + "");
                     if (toBeStop) break;
                     if (socketOk()) {
-                        synchronized (socketRecvLock) {
                             Log.e("接收消息线程====", "接收消息线程正在干活");
                             int r;
                             while ((r = in.read()) != -1) {
                                 receiveByteQueue.add((byte) r);
                             }
-                        }
                     } else {
                         break;
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    break;
                 }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -587,27 +585,27 @@ public class SocketService extends Service {
                             endMsgFlag[1] = endMsgFlag[2];
                             endMsgFlag[2] = (byte) r;
                             if (!hasBeginMsg) {
-                                if (endMsgFlag[0]=='B'&&endMsgFlag[1]=='^'&&endMsgFlag[2]=='^') {
+                                if (endMsgFlag[0] == 'B' && endMsgFlag[1] == '^' && endMsgFlag[2] == '^') {
                                     break;//是心跳消息
-                                } else if ((endMsgFlag[0]=='|'&&endMsgFlag[1]=='^')||(endMsgFlag[0]=='^'&&endMsgFlag[1]=='|')) {
-                                    hasBeginMsg=true;
-                                    ba[0]=endMsgFlag[0];
-                                    ba[1]=endMsgFlag[1];
-                                    ba[2]=endMsgFlag[2];
-                                    i=3;
+                                } else if ((endMsgFlag[0] == '|' && endMsgFlag[1] == '^') || (endMsgFlag[0] == '^' && endMsgFlag[1] == '|')) {
+                                    hasBeginMsg = true;
+                                    ba[0] = endMsgFlag[0];
+                                    ba[1] = endMsgFlag[1];
+                                    ba[2] = endMsgFlag[2];
+                                    i = 3;
                                     continue;
-                                } else if ((endMsgFlag[1]=='|'&&endMsgFlag[2]=='^')||(endMsgFlag[1]=='^'&&endMsgFlag[2]=='|')) {
-                                    hasBeginMsg=true;
-                                    ba[0]=endMsgFlag[1];
-                                    ba[1]=endMsgFlag[2];
-                                    i=2;
+                                } else if ((endMsgFlag[1] == '|' && endMsgFlag[2] == '^') || (endMsgFlag[1] == '^' && endMsgFlag[2] == '|')) {
+                                    hasBeginMsg = true;
+                                    ba[0] = endMsgFlag[1];
+                                    ba[1] = endMsgFlag[2];
+                                    i = 2;
                                     continue;
                                 }
-                                if (i>2) {
-                                    for (int n=1;n<=i;n++) ba[n-1]=ba[n];
+                                if (i > 2) {
+                                    for (int n = 1; n <= i; n++) ba[n - 1] = ba[n];
                                     --i;
                                 }
-                            } else if (endMsgFlag[1]=='^'&&endMsgFlag[2]=='^') break;
+                            } else if (endMsgFlag[1] == '^' && endMsgFlag[2] == '^') break;
 //                            if (!hasBeginMsg) {
 //                                if (endMsgFlag[0] == 'B' && endMsgFlag[1] == '^' && endMsgFlag[2] == '^') {
 //                                    break;
@@ -872,7 +870,7 @@ public class SocketService extends Service {
                                             context.sendOrderedBroadcast(push_back, null);
                                         } else if (command == 0x10) {
                                     /*
-									 * 接收该广播的地方
+                                     * 接收该广播的地方
 									 */
                                             Intent push_service = new Intent(BroadcastConstants.PUSH_SERVICE);
                                             Bundle bundle213 = new Bundle();

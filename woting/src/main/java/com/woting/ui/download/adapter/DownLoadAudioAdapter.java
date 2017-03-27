@@ -90,7 +90,7 @@ public class DownLoadAudioAdapter extends BaseAdapter {
             Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
             holder.imageCover.setImageBitmap(bmp);
         } else {
-            contentImage = AssembleImageUrlUtils.assembleImageUrl150(contentImage);
+            contentImage = AssembleImageUrlUtils.assembleImageUrl180(contentImage);
             Picasso.with(context).load(contentImage.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageCover);
         }
 

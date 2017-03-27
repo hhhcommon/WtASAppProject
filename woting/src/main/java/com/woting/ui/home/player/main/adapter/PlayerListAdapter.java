@@ -86,7 +86,7 @@ public class PlayerListAdapter extends BaseAdapter {
             if (!searchList.getContentImg().startsWith("http")) {
                 contentImg = GlobalConfig.imageurl + contentImg;
             }
-            contentImg = AssembleImageUrlUtils.assembleImageUrl150(contentImg);
+            contentImg = AssembleImageUrlUtils.assembleImageUrl180(contentImg);
             Picasso.with(context).load(contentImg.replace("\\/", "/")).into(holder.imageview_rankimage);
         } else {
             holder.imageview_rankimage.setImageBitmap(bmp);

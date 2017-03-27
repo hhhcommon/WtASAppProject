@@ -13,8 +13,8 @@ public class AssembleImageUrlUtils {
      */
     public static String assembleImageUrl150(String srcUrl) {
         String result = srcUrl.substring(0, srcUrl.lastIndexOf("."));
-//        return result + "." + "150_150.png";
-        return srcUrl;
+        return result + "." + "150_150.png";
+//        return srcUrl;
     }
 
     /**
@@ -22,8 +22,8 @@ public class AssembleImageUrlUtils {
      */
     public static String assembleImageUrl180(String srcUrl) {
         String result = srcUrl.substring(0, srcUrl.lastIndexOf("."));
-//        return result + "." + "180_180.png";
-        return srcUrl;
+        return result + "." + "180_180.png";
+//        return srcUrl;
     }
 
     /**
@@ -31,8 +31,8 @@ public class AssembleImageUrlUtils {
      */
     public static String assembleImageUrl300(String srcUrl) {
         String result = srcUrl.substring(0, srcUrl.lastIndexOf("."));
-//        return result + "." + "300_300.png";
-        return srcUrl;
+        return result + "." + "300_300.png";
+//        return srcUrl;
     }
 
     /**
@@ -40,8 +40,8 @@ public class AssembleImageUrlUtils {
      */
     public static String assembleImageUrl450(String srcUrl) {
         String result = srcUrl.substring(0, srcUrl.lastIndexOf("."));
-//        return result + "." + "450_450.png";
-        return srcUrl;
+        return result + "." + "450_450.png";
+//        return srcUrl;
     }
 
     /**
@@ -49,8 +49,8 @@ public class AssembleImageUrlUtils {
      */
     public static String assembleImageUrl(String srcUrl, String size) {
         String result = srcUrl.substring(0, srcUrl.lastIndexOf("."));
-//        return result + "." + size + ".png";
-        return srcUrl;
+        return result + "." + size + ".png";
+//        return srcUrl;
     }
 
 }

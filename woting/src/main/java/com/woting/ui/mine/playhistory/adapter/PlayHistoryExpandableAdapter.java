@@ -182,7 +182,7 @@ public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
                 } else {
                     url = GlobalConfig.imageurl + lists.getPlayerImage();
                 }
-                url = AssembleImageUrlUtils.assembleImageUrl150(url);
+                url = AssembleImageUrlUtils.assembleImageUrl180(url);
                 Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageView_playImage);
             }
         } else if (lists.getPlayerMediaType().equals("AUDIO")) {
@@ -227,7 +227,7 @@ public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
                 } else {
                     url = GlobalConfig.imageurl + lists.getPlayerImage();
                 }
-                url = AssembleImageUrlUtils.assembleImageUrl150(url);
+                url = AssembleImageUrlUtils.assembleImageUrl180(url);
                 Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageView_playImage);
             }
         } else if (lists.getPlayerMediaType().equals("TTS")) {
@@ -266,7 +266,7 @@ public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
                 } else {
                     url = GlobalConfig.imageurl + lists.getPlayerImage();
                 }
-                url = AssembleImageUrlUtils.assembleImageUrl150(url);
+                url = AssembleImageUrlUtils.assembleImageUrl180(url);
                 Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageView_playImage);
             }
         }

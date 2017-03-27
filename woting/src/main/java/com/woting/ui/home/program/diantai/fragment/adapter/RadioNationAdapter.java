@@ -147,7 +147,7 @@ public class RadioNationAdapter extends BaseExpandableListAdapter  {
 						}else{
 							url = GlobalConfig.imageurl + lists.getContentImg();
 						}
-						url=AssembleImageUrlUtils.assembleImageUrl150(url);
+						url=AssembleImageUrlUtils.assembleImageUrl180(url);
 						Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 					}
 				} else {
@@ -170,7 +170,7 @@ public class RadioNationAdapter extends BaseExpandableListAdapter  {
 						}else{
 							url = GlobalConfig.imageurl + lists.getContentImg();
 						}
-						url= AssembleImageUrlUtils.assembleImageUrl150(url);
+						url= AssembleImageUrlUtils.assembleImageUrl180(url);
 						Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
 					}
 					holder.lin_CurrentPlay.setVisibility(View.INVISIBLE);

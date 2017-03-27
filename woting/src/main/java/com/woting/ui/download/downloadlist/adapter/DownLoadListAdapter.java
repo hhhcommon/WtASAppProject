@@ -85,11 +85,11 @@ public class DownLoadListAdapter extends BaseAdapter {
                 Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
                 holder.imageview_rankimage.setImageBitmap(bmp);
             } else {
-                String url = AssembleImageUrlUtils.assembleImageUrl150(lists.getSequimgurl());
+                String url = AssembleImageUrlUtils.assembleImageUrl180(lists.getSequimgurl());
                 Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
             }
         } else {
-            String url = AssembleImageUrlUtils.assembleImageUrl150(lists.getImageurl());
+            String url = AssembleImageUrlUtils.assembleImageUrl180(lists.getImageurl());
             Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
         }
 
