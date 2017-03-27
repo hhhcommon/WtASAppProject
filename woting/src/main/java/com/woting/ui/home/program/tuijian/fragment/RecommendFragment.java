@@ -143,14 +143,13 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             mListView.stopLoadMore();
             if (newList != null && newList.size() > 0) {
                 ToastUtils.show_always(context, "网络连接失败，请检查网络设置!");
-                return;
             } else {
                 if (refreshType == 1) {
                     tipView.setVisibility(View.VISIBLE);
                     tipView.setTipView(TipView.TipStatus.NO_NET);
                 }
-                return;
             }
+            return;
         }
 
         VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, setParam(), new VolleyCallback() {
@@ -168,15 +167,10 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                 }
                 if (returnType != null && returnType.equals("1001")) {
                     try {
+                        page++;
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {
                         }.getType());
-                        if (subList != null && subList.size() >= 9) {
-                            page++;
-                            mListView.setPullLoadEnable(true);
-                        } else {
-                            mListView.setPullLoadEnable(false);
-                        }
                         if (refreshType == 1) newList.clear();
                         newList.addAll(subList);
                         if (adapter == null) {
@@ -192,15 +186,16 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.IS_ERROR);
                         } else {
-                            ToastUtils.show_always(context, "数据加载错误");
+                            ToastUtils.show_always(context, getString(R.string.error_data));
                         }
                     }
                 } else {
+                    mListView.setPullLoadEnable(false);
                     if (refreshType == 1) {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
                     } else {
-                        ToastUtils.show_always(context, "没有更多数据了");
+                        ToastUtils.show_always(context, getString(R.string.no_data));
                     }
                 }
 

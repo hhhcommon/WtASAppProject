@@ -183,6 +183,8 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                         if (newList == null || newList.size() <= 0) {
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        } else {
+                            ToastUtils.show_always(context, getString(R.string.error_data));
                         }
                     }
                 } else {
@@ -191,6 +193,8 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                     if (newList == null || newList.size() <= 0) {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
+                    } else {
+                        ToastUtils.show_always(context, getString(R.string.no_data));
                     }
                 }
                 if (RefreshType == 1) {

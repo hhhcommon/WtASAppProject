@@ -75,7 +75,7 @@ public class FMListFragment extends Fragment implements OnClickListener, TipView
     private String CatalogType;
     private String CatalogName;
     private String CatalogId;
-    private String tag = "FMLIST_VOLLEY_REQUEST_CANCEL_TAG";
+    private String tag = "FM_LIST_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
 
     @Override
@@ -141,15 +141,11 @@ public class FMListFragment extends Fragment implements OnClickListener, TipView
                         }
                         try {
                             SubList = new Gson().fromJson(StringSubList, new TypeToken<List<RankInfo>>() {}.getType());
-                            if (RefreshType == 1) {
-                                mListView.stopRefresh();
-                                newList.clear();
-                                newList.addAll(SubList);
-                                adapter = new RankInfoAdapter(context, newList);
-                                mListView.setAdapter(adapter);
-                            } else if (RefreshType == 2) {
-                                mListView.stopLoadMore();
-                                newList.addAll(SubList);
+                            if (RefreshType == 1) newList.clear();
+                            newList.addAll(SubList);
+                            if (adapter == null) {
+                                mListView.setAdapter(adapter = new RankInfoAdapter(context, newList));
+                            } else {
                                 adapter.notifyDataSetChanged();
                             }
                             tipView.setVisibility(View.GONE);
@@ -158,33 +154,46 @@ public class FMListFragment extends Fragment implements OnClickListener, TipView
                             if(RefreshType == 1) {
                                 tipView.setVisibility(View.VISIBLE);
                                 tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                            } else {
+                                ToastUtils.show_always(context, getString(R.string.error_data));
                             }
                         }
                         setListView();
                     } catch (Exception e) {
                         e.printStackTrace();
+                        mListView.setPullLoadEnable(false);
                         if(RefreshType == 1) {
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        } else {
+                            ToastUtils.show_always(context, getString(R.string.error_data));
                         }
                     }
                 } else {
-                    mListView.stopLoadMore();
                     mListView.setPullLoadEnable(false);
                     if(RefreshType == 1) {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关结果\n换个电台试试吧");
+                    } else {
+                        ToastUtils.show_always(context, getString(R.string.no_data));
                     }
+                }
+
+                if (RefreshType == 1) {
+                    mListView.stopRefresh();
+                } else {
+                    mListView.stopLoadMore();
                 }
             }
 
             @Override
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
-                ToastUtils.showVolleyError(context);
                 if(RefreshType == 1) {
                     tipView.setVisibility(View.VISIBLE);
                     tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                } else {
+                    ToastUtils.showVolleyError(context);
                 }
             }
         });
@@ -380,8 +389,11 @@ public class FMListFragment extends Fragment implements OnClickListener, TipView
             dbDao.closedb();
             dbDao = null;
         }
-        newList.clear();
-        newList = null;
+
+        if (newList != null) {
+            newList.clear();
+            newList = null;
+        }
         if (SubList != null) {
             SubList.clear();
             SubList = null;

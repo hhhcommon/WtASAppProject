@@ -126,12 +126,8 @@ public class AccuseFragment extends Fragment implements OnClickListener, View.On
             @Override
             protected void requestSuccess(JSONObject result) {
                 Log.e("获取举报列表", "" + result.toString());
-                if (isCancelRequest) {
-                    return;
-                }
-                if (dialog != null && dialog.isShowing()) {
-                    dialog.dismiss();
-                }
+                if (isCancelRequest) return;
+                if (dialog != null && dialog.isShowing()) dialog.dismiss();
                 try {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null) {
@@ -223,7 +219,6 @@ public class AccuseFragment extends Fragment implements OnClickListener, View.On
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                         dialog = DialogUtils.Dialogph(context, "正在提交您的举报意见~");
                         sendAccuse();
-                        // ToastUtils.show_always(context,"Accuse List is ok");
                     }
                 } else {
                     ToastUtils.show_always(context, "发生错误啦，请返回上一界面重试");
@@ -267,13 +262,9 @@ public class AccuseFragment extends Fragment implements OnClickListener, View.On
             @Override
             protected void requestSuccess(JSONObject result) {
                 Log.e("获取举报列表", "" + result.toString());
-                if (isCancelRequest) {
-                    return;
-                }
+                if (isCancelRequest) return;
                 IsDataOk = false;
-                if (dialog != null && dialog.isShowing()) {
-                    dialog.dismiss();
-                }
+                if (dialog != null && dialog.isShowing()) dialog.dismiss();
                 try {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null) {

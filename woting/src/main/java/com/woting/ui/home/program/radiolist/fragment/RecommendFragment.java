@@ -160,7 +160,8 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                     if (ReturnType != null && ReturnType.equals("1001")) {
                         page++;
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        List<RankInfo> subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {}.getType());
+                        List<RankInfo> subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RankInfo>>() {
+                        }.getType());
                         if (refreshType == 1) newList.clear();
                         newList.addAll(subList);
                         if (adapter == null) {
@@ -177,7 +178,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
                         } else {
-                            ToastUtils.show_always(context, "没有更多的数据了");
+                            ToastUtils.show_always(context, getString(R.string.no_data));
                         }
                     }
                 } catch (Exception e) {
@@ -187,7 +188,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.IS_ERROR);
                     } else {
-                        ToastUtils.show_always(context, "数据加载错误");
+                        ToastUtils.show_always(context, getString(R.string.error_data));
                     }
                 }
 
@@ -387,7 +388,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                         e.printStackTrace();
                         mLoopViewPager.setVisibility(View.GONE);
                     }
-                }else{
+                } else {
                     mLoopViewPager.setVisibility(View.GONE);
                 }
             }
@@ -399,25 +400,22 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
         });
     }
 
-  /*  public class PicassoImageLoader extends ImageLoader {
-        @Override
-        public void displayImage(Context context, Object path, ImageView imageView) {
-            *//**
-     注意：
-     1.图片加载器由自己选择，这里不限制，只是提供几种使用方法
-     2.返回的图片路径为Object类型，由于不能确定你到底使用的那种图片加载器，
-     传输的到的是什么格式，那么这种就使用Object接收和返回，你只需要强转成你传输的类型就行，
-     切记不要胡乱强转！
-     *//*
-            String contentImg=path.toString();
-            if (!contentImg.startsWith("http")) {
-                contentImg = GlobalConfig.imageurl + contentImg;
-            }
-            contentImg = AssembleImageUrlUtils.assembleImageUrl150(contentImg);
-            Picasso.with(context).load(contentImg.replace("\\/", "/")).resize(50,50).centerCrop().into(imageView);
-        }
-
-
-    }*/
-
+//    public class PicassoImageLoader extends ImageLoader {
+//        @Override
+//        public void displayImage(Context context, Object path, ImageView imageView) {
+//            /**
+//             注意：
+//             1.图片加载器由自己选择，这里不限制，只是提供几种使用方法
+//             2.返回的图片路径为Object类型，由于不能确定你到底使用的那种图片加载器，
+//             传输的到的是什么格式，那么这种就使用Object接收和返回，你只需要强转成你传输的类型就行，
+//             切记不要胡乱强转！
+//             */
+//            String contentImg = path.toString();
+//            if (!contentImg.startsWith("http")) {
+//                contentImg = GlobalConfig.imageurl + contentImg;
+//            }
+//            contentImg = AssembleImageUrlUtils.assembleImageUrl150(contentImg);
+//            Picasso.with(context).load(contentImg.replace("\\/", "/")).resize(50, 50).centerCrop().into(imageView);
+//        }
+//    }
 }

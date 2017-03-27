@@ -189,15 +189,13 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.IS_ERROR);
                     }
-                } else if (ReturnType != null && ReturnType.equals("1011")) {
-                    if (isVisible()) {
-                        ToastUtils.show_always(context, getString(R.string.no_data));
-                    }
-                    mListView.setPullLoadEnable(false);
                 } else {
+                    mListView.setPullLoadEnable(false);
                     if(refreshType == 1) {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关结果\n试试其他词，不要太逆天哟");
+                    } else if (isVisible()) {
+                        ToastUtils.show_always(context, getString(R.string.no_data));
                     }
                 }
 
@@ -211,9 +209,12 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
             @Override
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
-                ToastUtils.showVolleyError(context);
-                tipView.setVisibility(View.VISIBLE);
-                tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                if (refreshType == 1) {
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                } else {
+                    ToastUtils.showVolleyError(context);
+                }
             }
         });
     }
