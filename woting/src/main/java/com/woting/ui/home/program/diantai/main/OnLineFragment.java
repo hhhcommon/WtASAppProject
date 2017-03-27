@@ -207,9 +207,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
         }
     }
 
-    /**
-     * 初始化数据库命令执行对象
-     */
+    // 初始化数据库命令执行对象
     private void initDao() {
         dbDao = new SearchPlayerHistoryDao(context);
     }
@@ -464,10 +462,10 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
-                page++;
                 try {
                     returnType = result.getString("ReturnType");
                     if (returnType != null && returnType.equals("1001")) {
+                        page++;
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         beginCatalogId = arg1.getString("BeginCatalogId");
                         mainList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RadioPlay>>() {

@@ -178,13 +178,8 @@ public class SubscriberListFragment extends Fragment implements OnClickListener,
                 try {
                     String returnType = result.getString("ReturnType");
                     if (returnType != null && returnType.equals("1001")) {
+                        page++;
                         subList = new Gson().fromJson(result.getString("ResultList"), new TypeToken<List<SubscriberInfo>>() {}.getType());
-                        if (subList != null && subList.size() >= 9) {
-                            mListView.setPullLoadEnable(true);
-                            page++;
-                        } else {
-                            mListView.setPullLoadEnable(false);
-                        }
                         if (refreshType == 1) newList.clear();
                         newList.addAll(subList);
                         if (adapter == null) {
@@ -198,12 +193,16 @@ public class SubscriberListFragment extends Fragment implements OnClickListener,
                         if (refreshType == 1) {
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.NO_DATA, "你还没有订阅哦\n赶紧去订阅一些精彩的节目吧~");
+                        } else {
+                            ToastUtils.show_always(context, getString(R.string.no_data));
                         }
                     }
                 } catch (Exception e) {
                     if (refreshType == 1) {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                    } else {
+                        ToastUtils.show_always(context, getString(R.string.error_data));
                     }
                 }
                 if (refreshType == 1) {
@@ -216,13 +215,14 @@ public class SubscriberListFragment extends Fragment implements OnClickListener,
             @Override
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
-                ToastUtils.showVolleyError(context);
                 if (refreshType == 1) {
                     mListView.stopRefresh();
                     tipView.setVisibility(View.VISIBLE);
                     tipView.setTipView(TipView.TipStatus.IS_ERROR);
                 } else {
+                    ToastUtils.showVolleyError(context);
                     mListView.stopLoadMore();
+                    mListView.setPullLoadEnable(false);
                 }
             }
         });

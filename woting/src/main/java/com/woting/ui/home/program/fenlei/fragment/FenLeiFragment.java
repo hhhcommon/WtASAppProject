@@ -196,7 +196,7 @@ public class FenLeiFragment extends Fragment implements TipView.WhiteViewClick {
                         // mLoopViewPager.setHintView(new IconHintView(context, R.mipmap.indicators_now, R.mipmap.indicators_default));
                         mLoopViewPager.setImageLoader(new PicassoBannerLoader());
 
-                        for(int i=0;i<imageList.size();i++){
+                        for(int i=0; i<imageList.size(); i++){
                             ImageStringList.add(imageList.get(i).getLoopImg());
                         }
                         mLoopViewPager.setImages(ImageStringList);

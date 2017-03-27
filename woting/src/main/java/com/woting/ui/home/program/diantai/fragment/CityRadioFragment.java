@@ -378,6 +378,7 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
                     mlistView_main.stopRefresh();
                 } else {
                     mlistView_main.stopLoadMore();
+                    mlistView_main.setPullLoadEnable(false);
                 }
             }
         });

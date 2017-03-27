@@ -241,15 +241,13 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
                             ToastUtils.show_always(context, getString(R.string.error_data));
                         }
                     }
-                } else if (ReturnType != null && ReturnType.equals("1011")) {
-                    if (isVisible()) {
-                        ToastUtils.show_always(context, getString(R.string.no_data));
-                    }
-                    mListView.setPullLoadEnable(false);
                 } else {
+                    mListView.setPullLoadEnable(false);
                     if (refreshType == 1) {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关结果\n试试其他词，不要太逆天哟");
+                    } else if (isVisible()) {
+                        ToastUtils.show_always(context, getString(R.string.no_data));
                     }
                 }
 
