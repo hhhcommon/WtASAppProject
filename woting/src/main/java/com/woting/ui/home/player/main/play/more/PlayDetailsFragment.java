@@ -3,6 +3,7 @@ package com.woting.ui.home.player.main.play.more;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,7 +130,7 @@ public class PlayDetailsFragment extends Fragment implements View.OnClickListene
             linearContent.setVisibility(View.GONE);
         } else {
             linearContent.setVisibility(View.VISIBLE);
-            textDescn.setText(contentDescn);
+            textDescn.setText(Html.fromHtml("<font size='26'>" + contentDescn + "</font>"));
         }
     }
 
