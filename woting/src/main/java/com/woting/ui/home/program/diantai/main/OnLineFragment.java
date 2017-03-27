@@ -367,7 +367,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                                 mainLists.clear();
                                 mainLists.addAll(tempList);
                             }
-                            adapters.notifyDataSetChanged();
+                            adapters.changeData(mainLists);
                             gridListener();
                             new HeightListView(context).setListViewHeightBasedOnChildren(gridView);
                         } else {
@@ -478,7 +478,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                             mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
                         }
                         newList.addAll(mainList);
-                        adapter.notifyDataSetChanged();
+                        adapter.changeData(newList);
 
                         for (int i = 0; i < newList.size(); i++) {
                             expandableListMain.expandGroup(i);
