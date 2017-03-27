@@ -1,14 +1,19 @@
 package com.woting.ui.home.search.adapter;
 
-import java.util.List;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import com.woting.R;
 
+import java.util.List;
+
+/**
+ * 关键字匹配数据展示
+ */
 public class SearchLikeAdapter extends BaseAdapter {
 	private Context context;
 	private List<String> list;

@@ -535,18 +535,25 @@
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
-        <!--播放界面更多的操作-->
+        <!-- 播放界面更多的操作 -->
         <activity
             android:name=".ui.home.player.main.play.more.PlayerMoreOperationActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
-        <!--搜索-->
+        <!-- 搜索 -->
         <activity
             android:name=".ui.home.search.main.SearchLikeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+
+        <!--查看大图-->
+        <activity
+            android:name=".ui.picture.ViewBigPictureActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
         <!-- 配置文件界面 -->

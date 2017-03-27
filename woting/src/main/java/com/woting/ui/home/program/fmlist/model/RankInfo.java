@@ -1,6 +1,7 @@
 package com.woting.ui.home.program.fmlist.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class RankInfo implements Serializable {
 	private String MediaType;
@@ -22,6 +23,16 @@ public class RankInfo implements Serializable {
 	private String ContentPub;
 	private String ContentSubCount;
     private String ContentSeqId;
+
+    private List<ContentPersons> ContentPersons;// 主播信息
+
+    public List<ContentPersons> getContentPersons() {
+        return ContentPersons;
+    }
+
+    public void setContentPersons(List<ContentPersons> contentPersons) {
+        ContentPersons = contentPersons;
+    }
 
     public String getContentSeqId() {
         return ContentSeqId;

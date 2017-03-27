@@ -108,5 +108,7 @@ public class StringConstant {
     public static final String PLAY_IMAGE = "PLAY_IMAGE";
 
     // 数据传递 区别来自哪个界面的跳转
-    public static final String FROM_TYPE = "fromType";
+    public static final String FROM_TYPE = "FROM_TYPE";
+
+    public static final String PICTURE_URL = "PICTURE_URL";
 }
