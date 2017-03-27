@@ -194,7 +194,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                 dialog = DialogUtils.Dialogph(context, "通讯中...");
-                mainPageRequest();
+                queryData();
             } else {
                 mListView.setAdapter(adapter = new PlayerListAdapter(context, playList));
                 setPullAndLoad(true, false);
