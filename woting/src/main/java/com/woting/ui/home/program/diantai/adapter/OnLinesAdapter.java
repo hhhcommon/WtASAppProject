@@ -39,6 +39,11 @@ public class OnLinesAdapter extends BaseExpandableListAdapter {
         this.group = group;
     }
 
+    public void changeData( List<RadioPlay> group) {
+        this.group = group;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getGroupCount() {
         return group.size();
