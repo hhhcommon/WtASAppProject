@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/BLACK"
@@ -9,15 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <RelativeLayout
             android:layout_width="match_parent"
-            android:background="@color/dinglan_orange"
-            android:layout_height="48dp">
+            android:layout_height="48dp"
+            android:background="@color/dinglan_orange">
 
             <ImageView
                 android:id="@+id/head_left_btn"
-                style="@style/LeftImageStyle" />
+                style="@style/LeftImageStyle"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -25,7 +25,7 @@
                 android:layout_centerInParent="true"
                 android:text="图片"
                 android:textColor="@color/WHITE_1"
-                android:textSize="18sp" />
+                android:textSize="18sp"/>
 
         </RelativeLayout>
 
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dip"
                 android:text="1/5"
-                android:textColor="@color/WHITE" />
+                android:textColor="@color/WHITE"/>
         </LinearLayout>
 
         <android.support.v4.view.ViewPager
@@ -51,7 +51,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="48dp"
             android:flipInterval="30"
-            android:persistentDrawingCache="animation"></android.support.v4.view.ViewPager>
+            android:persistentDrawingCache="animation"/>
     </RelativeLayout>
 
 </LinearLayout>
