@@ -509,12 +509,12 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                 }
                 break;
             case R.id.img_play_all:
-                if(!TextUtils.isEmpty(AlbumFragment.id)){
-                Intent intent = new Intent(BroadcastConstants.PLAY_SEQU_LIST);
-                intent.putExtra(StringConstant.ID_CONTENT, AlbumFragment.id);
-                intent.putExtra(StringConstant.SEQU_LIST_SIZE, getListSize());
-                context.sendBroadcast(intent);
-                MainActivity.change();
+                if(!TextUtils.isEmpty(AlbumFragment.id)) {
+                    Intent intent = new Intent(BroadcastConstants.PLAY_SEQU_LIST);
+                    intent.putExtra(StringConstant.ID_CONTENT, AlbumFragment.id);
+                    intent.putExtra(StringConstant.SEQU_LIST_SIZE, getListSize());
+                    context.sendBroadcast(intent);
+                    MainActivity.change();
                 }
                 break;
         }
