@@ -1,10 +1,13 @@
 package com.woting.ui.picture;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -31,6 +34,19 @@ public class ViewBigPictureActivity extends Activity implements View.OnClickList
 
         handlerIntent();
         initView();
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private void setType() {
+        try {
+            String a = android.os.Build.VERSION.RELEASE;
+            if (Integer.parseInt(a.substring(0, a.indexOf("."))) >= 5) {
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        // 透明状态栏
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    // 透明导航栏
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // 接收上个界面传递过来的数据

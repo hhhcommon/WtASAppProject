@@ -163,13 +163,6 @@
 
         <!--  -->
         <activity
-            android:name=".ui.download.activity.DownloadFragment"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"/>
-
-        <!--  -->
-        <activity
             android:name=".ui.mine.set.preference.activity.PreferenceActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
@@ -553,7 +546,7 @@
         <activity
             android:name=".ui.picture.ViewBigPictureActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
         <!-- 配置文件界面 -->
