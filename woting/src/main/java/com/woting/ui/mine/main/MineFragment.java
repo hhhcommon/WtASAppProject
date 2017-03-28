@@ -178,7 +178,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         viewPicture.setVisibility(View.VISIBLE);
         viewPicture.setOnClickListener(this);
 
-
         imageDialog = new Dialog(context, R.style.MyDialog);
         imageDialog.setContentView(dialog);
         imageDialog.setCanceledOnTouchOutside(true);
@@ -385,7 +384,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             if (region.equals("")) {
                 if (GlobalConfig.CityName != null && !GlobalConfig.CityName.equals("null")
                         && GlobalConfig.District != null && !GlobalConfig.District.equals("null")) {
-
                     region = GlobalConfig.CityName + GlobalConfig.District;
                 } else {
                     region = "您还没有填写地址";

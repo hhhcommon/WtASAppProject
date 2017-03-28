@@ -1,9 +1,7 @@
 package com.woting.ui.picture;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
@@ -12,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -49,19 +46,6 @@ public class ViewBigPictureActivity extends Activity implements View.OnClickList
 
         handlerIntent();
         initView();
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    private void setType() {
-        try {
-            String a = android.os.Build.VERSION.RELEASE;
-            if (Integer.parseInt(a.substring(0, a.indexOf("."))) >= 5) {
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        // 透明状态栏
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    // 透明导航栏
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     // 接收上个界面传递过来的数据
@@ -111,7 +95,6 @@ public class ViewBigPictureActivity extends Activity implements View.OnClickList
                 v.getParent().requestDisallowInterceptTouchEvent(true);
                 return false;
             }
-
         });
 
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
