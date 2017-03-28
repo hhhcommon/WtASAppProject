@@ -110,5 +110,9 @@ public class StringConstant {
     // 数据传递 区别来自哪个界面的跳转
     public static final String FROM_TYPE = "FROM_TYPE";
 
+    // 数据传递 传递图片地址
     public static final String PICTURE_URL = "PICTURE_URL";
+
+    // 数据传递 传递图片所在总图片中的位置
+    public static final String PICTURE_INDEX = "PICTURE_INDEX";
 }
