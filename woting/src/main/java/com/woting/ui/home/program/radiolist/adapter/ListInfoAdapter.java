@@ -9,9 +9,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
@@ -82,8 +82,10 @@ public class ListInfoAdapter extends BaseAdapter {
             if (!contentImg.startsWith("http")) {
                 contentImg = GlobalConfig.imageurl + contentImg;
             }
-            contentImg = AssembleImageUrlUtils.assembleImageUrl180(contentImg);
-            Picasso.with(context).load(contentImg.replace("\\/", "/")).into(holder.imageRank);
+            String _url = AssembleImageUrlUtils.assembleImageUrl180(contentImg);
+
+            // 加载图片
+            AssembleImageUrlUtils.loadImage(_url, contentImg, holder.imageRank, IntegerConstant.TYPE_LIST);
         }
 
         // 标题

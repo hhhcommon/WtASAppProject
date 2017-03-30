@@ -87,11 +87,10 @@ public class PlayerListAdapter extends BaseAdapter {
             if (!searchList.getContentImg().startsWith("http")) {
                 contentImg = GlobalConfig.imageurl + contentImg;
             }
-            final String _url = AssembleImageUrlUtils.assembleImageUrl180(contentImg);
-            final String c_url = contentImg;
+            String _url = AssembleImageUrlUtils.assembleImageUrl180(contentImg);
 
             // 加载图片
-            AssembleImageUrlUtils.loadImage(_url, c_url, holder.imageview_rankimage, IntegerConstant.TYPE_LIST);
+            AssembleImageUrlUtils.loadImage(_url, contentImg, holder.imageview_rankimage, IntegerConstant.TYPE_LIST);
         } else {
             holder.imageview_rankimage.setImageBitmap(bmp);
         }

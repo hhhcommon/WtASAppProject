@@ -38,7 +38,7 @@ public class OnLinesAdapter extends BaseExpandableListAdapter {
         this.group = group;
     }
 
-    public void changeData( List<RadioPlay> group) {
+    public void changeData(List<RadioPlay> group) {
         this.group = group;
         notifyDataSetChanged();
     }
@@ -172,11 +172,10 @@ public class OnLinesAdapter extends BaseExpandableListAdapter {
                         } else {
                             url = GlobalConfig.imageurl + lists.getContentImg();
                         }
-                        final String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
-                        final String c_url = url;
+                        String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
 
                         // 加载图片
-                        AssembleImageUrlUtils.loadImage(_url, c_url, holder.imageview_rankimage, IntegerConstant.TYPE_LIST);
+                        AssembleImageUrlUtils.loadImage(_url, url, holder.imageview_rankimage, IntegerConstant.TYPE_LIST);
                     }
                 } else {
                     // 判断mediatype==AUDIO的情况
@@ -198,11 +197,10 @@ public class OnLinesAdapter extends BaseExpandableListAdapter {
                         } else {
                             url = GlobalConfig.imageurl + lists.getContentImg();
                         }
-                        final String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
-                        final String c_url = url;
+                        String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
 
                         // 加载图片
-                        AssembleImageUrlUtils.loadImage(_url, c_url, holder.imageview_rankimage, IntegerConstant.TYPE_LIST);
+                        AssembleImageUrlUtils.loadImage(_url, url, holder.imageview_rankimage, IntegerConstant.TYPE_LIST);
                     }
                     holder.lin_CurrentPlay.setVisibility(View.INVISIBLE);
                 }

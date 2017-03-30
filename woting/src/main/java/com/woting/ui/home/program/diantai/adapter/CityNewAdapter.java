@@ -101,12 +101,10 @@ public class CityNewAdapter extends BaseAdapter {
 					}else{
 						url = GlobalConfig.imageurl + lists.getContentImg();
 					}
-
-                    final String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
-                    final String c_url = url;
+                    String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
 
                     // 加载图片
-                    AssembleImageUrlUtils.loadImage(_url, c_url, holder.imageview_rankimage, IntegerConstant.TYPE_LIST);
+                    AssembleImageUrlUtils.loadImage(_url, url, holder.imageview_rankimage, IntegerConstant.TYPE_LIST);
 				}
 			} else {
 				// 判断mediatype==AUDIO的情况

@@ -9,10 +9,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.home.program.album.model.SubscriberInfo;
@@ -89,28 +88,18 @@ public class SubscriberAdapter extends BaseAdapter {
         SubscriberInfo lists = list.get(position);
 
         // 封面图片
-        String _contentImg = lists.getContentSeqImg();
-        if (_contentImg == null || _contentImg.equals("null") || _contentImg.trim().equals("")) {
+        String contentImg = lists.getContentSeqImg();
+        if (contentImg == null || contentImg.equals("null") || contentImg.trim().equals("")) {
             Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
             holder.imageCover.setImageBitmap(bmp);
         } else {
-            if (!_contentImg.startsWith("http")) {
-                _contentImg = GlobalConfig.imageurl + _contentImg;
+            if (!contentImg.startsWith("http")) {
+                contentImg = GlobalConfig.imageurl + contentImg;
             }
-           final String contentImg = AssembleImageUrlUtils.assembleImageUrl180(_contentImg);
-            final String c_contentImg=_contentImg;
-            Picasso.with(context).load(contentImg.replace("\\/", "/")).fetch(new Callback() {
-                @Override
-                public void onSuccess() {
-                    Picasso.with(context).load(contentImg.replace("\\/", "/")).error(R.mipmap.wt_image_playertx).resize(100, 100).centerCrop().into(holder.imageCover);
-                }
+            String _url = AssembleImageUrlUtils.assembleImageUrl180(contentImg);
 
-                @Override
-                public void onError() {
-                    Picasso.with(context).load(c_contentImg.replace("\\/", "/")).error(R.mipmap.wt_image_playertx).resize(100, 100).centerCrop().into(holder.imageCover);
-                }
-            });
-
+            // 加载图片
+            AssembleImageUrlUtils.loadImage(_url, contentImg, holder.imageCover, IntegerConstant.TYPE_LIST);
 
         }
 

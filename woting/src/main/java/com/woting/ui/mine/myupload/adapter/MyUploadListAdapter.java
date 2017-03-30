@@ -9,9 +9,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
@@ -102,8 +102,10 @@ public class MyUploadListAdapter extends BaseAdapter {
             if (!coverUrl.startsWith("http")) {
                 coverUrl = GlobalConfig.imageurl + coverUrl;
             }
-            coverUrl = AssembleImageUrlUtils.assembleImageUrl180(coverUrl);
-            Picasso.with(context).load(coverUrl.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.rankImageCover);
+            String _url = AssembleImageUrlUtils.assembleImageUrl180(coverUrl);
+
+            // 加载图片
+            AssembleImageUrlUtils.loadImage(_url, coverUrl, holder.rankImageCover, IntegerConstant.TYPE_LIST);
         } else {
             Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
             holder.rankImageCover.setImageBitmap(bmp);
