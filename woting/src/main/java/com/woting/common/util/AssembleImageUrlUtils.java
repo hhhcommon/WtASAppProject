@@ -63,6 +63,15 @@ public class AssembleImageUrlUtils {
 
     /**
      * 加载图片
+     * @param url 图片地址
+     * @param imageView 显示图片的 View
+     */
+    public static void loadImage(String url, ImageView imageView) {
+        Picasso.with(BSApplication.getAppContext()).load(url.replace("\\/", "/")).into(imageView);
+    }
+
+    /**
+     * 加载图片
      * @param _url 大小适配之后的图片
      * @param imageView 显示图片的 View
      */

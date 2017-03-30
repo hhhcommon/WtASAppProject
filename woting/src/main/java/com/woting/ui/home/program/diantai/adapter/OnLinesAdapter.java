@@ -176,6 +176,7 @@ public class OnLinesAdapter extends BaseExpandableListAdapter {
 
                         // 加载图片
                         AssembleImageUrlUtils.loadImage(_url, url, holder.imageview_rankimage, IntegerConstant.TYPE_LIST);
+//                        AssembleImageUrlUtils.loadImage(_url, holder.imageview_rankimage);
                     }
                 } else {
                     // 判断mediatype==AUDIO的情况

@@ -15,11 +15,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.helper.CreateQRImageHelper;
 import com.woting.common.util.AssembleImageUrlUtils;
@@ -243,8 +243,8 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             } else {
                 url = GlobalConfig.imageurl + imageUrl;
             }
-            url = AssembleImageUrlUtils.assembleImageUrl150(url);
-            Picasso.with(context).load(url.replace("\\/", "/")).into(image_touxiang);
+            String _url = AssembleImageUrlUtils.assembleImageUrl300(url);
+            AssembleImageUrlUtils.loadImage(_url, url, image_touxiang, IntegerConstant.TYPE_PERSON);
         }
         news = new UserInviteMeInside();
         news.setPortraitMini(imageUrl);
