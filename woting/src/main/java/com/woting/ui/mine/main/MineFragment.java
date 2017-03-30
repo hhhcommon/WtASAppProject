@@ -404,10 +404,9 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 } else {
                     url = AssembleImageUrlUtils.assembleImageUrl150(url);
                 }
-                final String _url = url;
 
                 // 加载图片
-                AssembleImageUrlUtils.loadImage(_url, c_url, imageHead, IntegerConstant.TYPE_MINE);
+                AssembleImageUrlUtils.loadImage(url, c_url, imageHead, IntegerConstant.TYPE_MINE);
             } else {
                 Bitmap bitmap = BitmapUtils.readBitMap(context, R.mipmap.wt_image_default_head);
                 imageHead.setImageBitmap(bitmap);
