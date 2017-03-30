@@ -32,7 +32,6 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
@@ -399,12 +398,16 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 textUserId.setText(userNum);
             }
             if (!url.equals("")) {
+                final String c_url = url;
                 if (!url.startsWith("http:")) {
-                    url = AssembleImageUrlUtils.assembleImageUrl180(GlobalConfig.imageurl + url);
+                    url = AssembleImageUrlUtils.assembleImageUrl150(GlobalConfig.imageurl + url);
                 } else {
-                    url = AssembleImageUrlUtils.assembleImageUrl180(url);
+                    url = AssembleImageUrlUtils.assembleImageUrl150(url);
                 }
-                Picasso.with(context).load(url.replace("\\/", "/")).into(imageHead);
+                final String _url = url;
+
+                // 加载图片
+                AssembleImageUrlUtils.loadImage(_url, c_url, imageHead, IntegerConstant.TYPE_MINE);
             } else {
                 Bitmap bitmap = BitmapUtils.readBitMap(context, R.mipmap.wt_image_default_head);
                 imageHead.setImageBitmap(bitmap);
@@ -539,7 +542,12 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                         Log.v("commit", "数据 commit 失败!");
                     }
                     // 正常切可用代码 已从服务器获得返回值，但是无法正常显示
-                    Picasso.with(context).load(imageUrl.replace("\\/", "/")).into(imageHead);
+                    final String _url = imageUrl = AssembleImageUrlUtils.assembleImageUrl150(imageUrl);
+                    final String c_url = imageUrl;
+
+                    // 加载图片
+                    AssembleImageUrlUtils.loadImage(_url, c_url, imageHead, IntegerConstant.TYPE_MINE);
+
                 } else if (msg.what == 0) {
                     ToastUtils.show_always(context, "头像保存失败，请稍后再试");
                 } else if (msg.what == -1) {

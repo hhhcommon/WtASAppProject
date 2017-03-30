@@ -10,9 +10,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.common.model.GroupInfo;
@@ -109,9 +109,11 @@ public class TalkGroupAdapter extends BaseAdapter {
             } else {
                 url = GlobalConfig.imageurl + lists.getGroupImg();
             }
-            url = AssembleImageUrlUtils.assembleImageUrl150(url);
-            Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageView_touxiang);
+            final String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
+            final String c_url = url;
 
+            // 加载图片
+            AssembleImageUrlUtils.loadImage(_url, c_url, holder.imageView_touxiang, IntegerConstant.TYPE_GROUP);
         }
 
         holder.lin_add.setOnClickListener(new View.OnClickListener() {

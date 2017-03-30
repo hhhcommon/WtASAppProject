@@ -35,4 +35,19 @@ public class IntegerConstant {
 
     // 搜索
     public static final int TAG_SEARCH = 7;
+
+    // 默认图片
+    public static final int TYPE_DEFAULT = 0x000;
+
+    // 列表默认图片
+    public static final int TYPE_LIST = 0x004;
+
+    // 用户默认头像
+    public static final int TYPE_MINE = 0x001;
+
+    // 群组默认头像
+    public static final int TYPE_GROUP = 0x002;
+
+    // 好友默认头像
+    public static final int TYPE_PERSON = 0x003;
 }
