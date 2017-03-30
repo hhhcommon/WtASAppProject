@@ -108,11 +108,10 @@ public class CreateGroupMembersAdapter extends BaseAdapter  implements SectionIn
 			}else{
 				url = GlobalConfig.imageurl+lists.getPortraitMini();
 			}
-            final String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
-            final String c_url = url;
+            String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
 
             // 加载图片
-            AssembleImageUrlUtils.loadImage(_url, c_url, holder.image, IntegerConstant.TYPE_PERSON);
+            AssembleImageUrlUtils.loadImage(_url, url, holder.image, IntegerConstant.TYPE_PERSON);
 		}
 		return convertView;
 	}

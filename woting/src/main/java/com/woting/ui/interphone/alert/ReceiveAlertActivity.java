@@ -12,9 +12,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.manager.MyActivityManager;
 import com.woting.common.service.SubclassService;
 import com.woting.common.util.AssembleImageUrlUtils;
@@ -80,8 +80,10 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
             imageview.setImageResource(R.mipmap.wt_image_tx_hy);
         } else {
             String url = GlobalConfig.imageurl + image;
-            url = AssembleImageUrlUtils.assembleImageUrl300(url);
-            Picasso.with(instance).load(url.replace("\\/", "/")).into(imageview);
+            final String _url = AssembleImageUrlUtils.assembleImageUrl300(url);
+
+            // 加载图片
+            AssembleImageUrlUtils.loadImage(_url, url, imageview, IntegerConstant.TYPE_LIST);
         }
     }
 

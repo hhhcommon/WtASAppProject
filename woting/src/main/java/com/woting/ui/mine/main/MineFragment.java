@@ -542,7 +542,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                         Log.v("commit", "数据 commit 失败!");
                     }
                     // 正常切可用代码 已从服务器获得返回值，但是无法正常显示
-                    final String _url = imageUrl = AssembleImageUrlUtils.assembleImageUrl150(imageUrl);
+                    final String _url = AssembleImageUrlUtils.assembleImageUrl150(imageUrl);
                     final String c_url = imageUrl;
 
                     // 加载图片

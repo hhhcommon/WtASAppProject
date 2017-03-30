@@ -107,11 +107,10 @@ public class CreateGroupMembersAddAdapter extends BaseAdapter  implements Sectio
 				}else{
 					 url = GlobalConfig.imageurl+lists.getPortraitMini();
 				}
-                final String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
-                final String c_url = url;
+                String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
 
                 // 加载图片
-                AssembleImageUrlUtils.loadImage(_url, c_url, holder.imageView_touxiang, IntegerConstant.TYPE_GROUP);
+                AssembleImageUrlUtils.loadImage(_url, url, holder.imageView_touxiang, IntegerConstant.TYPE_GROUP);
 			}
 			if (lists.getCheckType() == 2) {
 				holder.imageView_check.setImageResource(R.mipmap.image_all_check);

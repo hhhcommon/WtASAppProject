@@ -11,10 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.CommonUtils;
@@ -146,8 +146,10 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
             } else {
                 url = GlobalConfig.imageurl + imageUrl;
             }
-            url = AssembleImageUrlUtils.assembleImageUrl150(url);
-            Picasso.with(context).load(url.replace("\\/", "/")).into(image_touxiang);
+            String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
+
+            // 加载图片
+            AssembleImageUrlUtils.loadImage(_url, url, image_touxiang, IntegerConstant.TYPE_PERSON);
         }
         if (username == null || username.equals("")) {
             et_news.setText("");

@@ -40,6 +40,7 @@ import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.helper.CreateQRImageHelper;
 import com.woting.common.http.MyHttp;
@@ -357,8 +358,10 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
             if (!headUrl.startsWith("http:")) {
                 headUrl = GlobalConfig.imageurl + headUrl;
             }
-            headUrl = AssembleImageUrlUtils.assembleImageUrl150(headUrl);
-            Picasso.with(context).load(headUrl.replace("\\/", "/")).into(imageHead);
+            String _url = AssembleImageUrlUtils.assembleImageUrl150(headUrl);
+
+            // 加载图片
+            AssembleImageUrlUtils.loadImage(_url, headUrl, imageHead, IntegerConstant.TYPE_PERSON);
         }
 
         news = new GroupInfo();
