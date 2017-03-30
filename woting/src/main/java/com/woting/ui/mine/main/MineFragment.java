@@ -64,11 +64,13 @@ import com.woting.ui.mine.playhistory.main.PlayHistoryFragment;
 import com.woting.ui.mine.set.SetActivity;
 import com.woting.ui.mine.shapeapp.ShapeAppActivity;
 import com.woting.ui.mine.subscriber.main.SubscriberListFragment;
+import com.woting.ui.picture.ViewBigPictureActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -95,6 +97,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     private String outputFilePath;
     private String filePath;
     private String url;                         // 完整用户头像地址
+    private String urlBigPicture;               // 大图
     private String photoCutAfterImagePath;
     private String userNum;
     private String userSign;
@@ -171,6 +174,9 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         final View dialog = LayoutInflater.from(context).inflate(R.layout.dialog_imageupload, null);
         dialog.findViewById(R.id.tv_gallery).setOnClickListener(this);      // 从手机相册选择
         dialog.findViewById(R.id.tv_camera).setOnClickListener(this);       // 拍照
+        View viewPicture = dialog.findViewById(R.id.view_picture);          // 查看大图
+        viewPicture.setVisibility(View.VISIBLE);
+        viewPicture.setOnClickListener(this);
 
         imageDialog = new Dialog(context, R.style.MyDialog);
         imageDialog.setContentView(dialog);
@@ -305,6 +311,16 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             case R.id.image_nodenglu:       // 没有登录的默认头像
                 startActivity(new Intent(context, LoginActivity.class));
                 break;
+            case R.id.view_picture:         // 查看大图
+                ArrayList<String> listUrl = new ArrayList<>();
+//                listUrl.add(urlBigPicture);
+                listUrl.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1490690384432&di=7d4dddbf5ec3a415a2abfda9b0c771e3&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D600%252C800%2Fsign%3Df8ab0485a964034f0f98ca009ff35509%2Fa71ea8d3fd1f4134245acf26271f95cad1c85e7d.jpg");
+                Intent intentPicture = new Intent(context, ViewBigPictureActivity.class);
+                intentPicture.putExtra(StringConstant.PICTURE_INDEX, 0);
+                intentPicture.putStringArrayListExtra(StringConstant.PICTURE_URL, listUrl);
+                context.startActivity(intentPicture);
+                imageDialog.dismiss();
+                break;
             case R.id.tv_gallery:           // 从图库选择
                 doDialogClick(0);
                 imageDialog.dismiss();
@@ -349,6 +365,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
             userId = sharedPreferences.getString(StringConstant.USERID, "");    // 用户 ID
             url = sharedPreferences.getString(StringConstant.IMAGEURL, "");     // 用户头像
+            urlBigPicture = url;
             userNum = sharedPreferences.getString(StringConstant.USER_NUM, "");// 用户号
             userSign = sharedPreferences.getString(StringConstant.USER_SIGN, "");// 签名
             region = sharedPreferences.getString(StringConstant.REGION, "");// 区域
@@ -367,7 +384,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             if (region.equals("")) {
                 if (GlobalConfig.CityName != null && !GlobalConfig.CityName.equals("null")
                         && GlobalConfig.District != null && !GlobalConfig.District.equals("null")) {
-
                     region = GlobalConfig.CityName + GlobalConfig.District;
                 } else {
                     region = "您还没有填写地址";
@@ -384,9 +400,9 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             }
             if (!url.equals("")) {
                 if (!url.startsWith("http:")) {
-                    url = AssembleImageUrlUtils.assembleImageUrl150(GlobalConfig.imageurl + url);
+                    url = AssembleImageUrlUtils.assembleImageUrl180(GlobalConfig.imageurl + url);
                 } else {
-                    url = AssembleImageUrlUtils.assembleImageUrl150(url);
+                    url = AssembleImageUrlUtils.assembleImageUrl180(url);
                 }
                 Picasso.with(context).load(url.replace("\\/", "/")).into(imageHead);
             } else {

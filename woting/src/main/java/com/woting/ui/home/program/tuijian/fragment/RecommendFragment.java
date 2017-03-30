@@ -241,35 +241,43 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
         mListView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (newList != null && newList.get(position - 2) != null && newList.get(position - 2).getMediaType() != null) {
-                    String MediaType = newList.get(position - 2).getMediaType();
+                position = position - 2;
+                Log.v("TAG", "position -- > " + position);
+
+                if (position < 0) {
+                    Log.v("TAG", "position error -- > " + position);
+                    return ;
+                }
+
+                if (newList != null && newList.get(position) != null && newList.get(position).getMediaType() != null) {
+                    String MediaType = newList.get(position).getMediaType();
                     if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
-                        String playername = newList.get(position - 2).getContentName();
-                        String playerimage = newList.get(position - 2).getContentImg();
-                        String playerurl = newList.get(position - 2).getContentPlay();
-                        String playerurI = newList.get(position - 2).getContentURI();
-                        String playermediatype = newList.get(position - 2).getMediaType();
-                        String playerContentShareUrl = newList.get(position - 2).getContentShareURL();
-                        String plaplayeralltime = newList.get(position - 2).getContentTimes();
+                        String playername = newList.get(position).getContentName();
+                        String playerimage = newList.get(position).getContentImg();
+                        String playerurl = newList.get(position).getContentPlay();
+                        String playerurI = newList.get(position).getContentURI();
+                        String playermediatype = newList.get(position).getMediaType();
+                        String playerContentShareUrl = newList.get(position).getContentShareURL();
+                        String plaplayeralltime = newList.get(position).getContentTimes();
                         String playerintime = "0";
-                        String playercontentdesc = newList.get(position - 2).getContentDescn();
-                        String playernum = newList.get(position - 2).getPlayCount();
+                        String playercontentdesc = newList.get(position).getContentDescn();
+                        String playernum = newList.get(position).getPlayCount();
                         String playerzantype = "0";
-                        String playerfrom = newList.get(position - 2).getContentPub();
+                        String playerfrom = newList.get(position).getContentPub();
                         String playerfromid = "";
                         String playerfromurl = "";
                         String playeraddtime = Long.toString(System.currentTimeMillis());
                         String bjuserid = CommonUtils.getUserId(context);
-                        String ContentFavorite = newList.get(position - 2).getContentFavorite();
-                        String ContentId = newList.get(position - 2).getContentId();
-                        String localurl = newList.get(position - 2).getLocalurl();
+                        String ContentFavorite = newList.get(position).getContentFavorite();
+                        String ContentId = newList.get(position).getContentId();
+                        String localurl = newList.get(position).getLocalurl();
 
-                        String sequName = newList.get(position - 2).getSequName();
-                        String sequId = newList.get(position - 2).getSequId();
-                        String sequDesc = newList.get(position - 2).getSequDesc();
-                        String sequImg = newList.get(position - 2).getSequImg();
-                        String ContentPlayType = newList.get(position - 2).getContentPlayType();
-                        String IsPlaying = newList.get(position - 2).getIsPlaying();
+                        String sequName = newList.get(position).getSequName();
+                        String sequId = newList.get(position).getSequId();
+                        String sequDesc = newList.get(position).getSequDesc();
+                        String sequImg = newList.get(position).getSequImg();
+                        String ContentPlayType = newList.get(position).getContentPlayType();
+                        String IsPlaying = newList.get(position).getIsPlaying();
 
                         // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
@@ -282,7 +290,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
 
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
-                        bundle1.putString(StringConstant.TEXT_CONTENT, newList.get(position - 2).getContentName());
+                        bundle1.putString(StringConstant.TEXT_CONTENT, newList.get(position).getContentName());
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
                         MainActivity.change();
@@ -291,7 +299,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                         Bundle bundle = new Bundle();
                         bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_HOME);
                         bundle.putString("type", "recommend");
-                        bundle.putSerializable("list", newList.get(position - 2));
+                        bundle.putSerializable("list", newList.get(position));
                         fragment.setArguments(bundle);
                         HomeActivity.open(fragment);
                     } else {
