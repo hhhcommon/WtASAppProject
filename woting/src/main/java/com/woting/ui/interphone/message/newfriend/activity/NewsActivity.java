@@ -24,6 +24,8 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.GroupInfo;
+import com.woting.ui.interphone.commom.service.InterPhoneControl;
+import com.woting.ui.interphone.message.messagecenter.dao.MessageNotifyDao;
 import com.woting.ui.interphone.message.newfriend.adapter.NewsAdapter;
 import com.woting.ui.interphone.message.newfriend.model.MessageInFo;
 import com.woting.ui.interphone.model.UserInviteMeInside;
@@ -32,6 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -68,7 +71,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
         context.sendBroadcast(push);
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             dialog = DialogUtils.Dialogph(context, "通讯中");
-            sendPerson();
+            sendForGetPerson();
         } else {
             tipView.setVisibility(View.VISIBLE);
             tipView.setTipView(TipView.TipStatus.NO_NET);
@@ -125,7 +128,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
         }
     }
 
-    private void sendPerson() {
+    private void sendForGetPerson() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         VolleyRequest.requestPost(GlobalConfig.getInvitedMeListUrl, tag, jsonObject, new VolleyCallback() {
             @Override
@@ -140,27 +143,28 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                         } catch (JSONException e1) {
                             e1.printStackTrace();
                         }
-                        UserList = new Gson().fromJson(ContactMeString, new TypeToken<List<UserInviteMeInside>>() {}.getType());
-                        sendGroup();
+                        UserList = new Gson().fromJson(ContactMeString, new TypeToken<List<UserInviteMeInside>>() {
+                        }.getType());
+                        sendForGetGroup();
                     } else if (ReturnType != null && ReturnType.equals("1002")) {
                         try {
                             String Message = result.getString("Message");
                             if (Message != null && !Message.trim().equals("")) {
                                 Log.e("邀请信息", "页面加载失败，失败原因" + Message);
-                                sendGroup();
+                                sendForGetGroup();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     } else if (ReturnType != null && ReturnType.equals("1011")) {
                         Log.e("邀请信息", "所有的邀请信息都已经处理完毕");
-                        sendGroup();
+                        sendForGetGroup();
                     } else {
                         try {
                             String Message = result.getString("Message");
                             if (Message != null && !Message.trim().equals("")) {
                                 Log.e("邀请信息", "页面加载失败，失败原因" + Message);
-                                sendGroup();
+                                sendForGetGroup();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -173,12 +177,12 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
 
             @Override
             protected void requestError(VolleyError error) {
-                sendGroup();
+                sendForGetGroup();
             }
         });
     }
 
-    private void sendGroup() {
+    private void sendForGetGroup() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 
         VolleyRequest.requestPost(GlobalConfig.getInvitedMeGroupListUrl, tag, jsonObject, new VolleyCallback() {
@@ -195,7 +199,8 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                         } catch (JSONException e1) {
                             e1.printStackTrace();
                         }
-                        GroupList = new Gson().fromJson(ContactMeString, new TypeToken<List<GroupInfo>>() {}.getType());
+                        GroupList = new Gson().fromJson(ContactMeString, new TypeToken<List<GroupInfo>>() {
+                        }.getType());
                     } else if (ReturnType != null && ReturnType.equals("1002")) {
                         try {
                             String Message = result.getString("Message");
@@ -228,7 +233,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
             @Override
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
-                ToastUtils.showVolleyError(context);
+                setData();
             }
         });
     }
@@ -360,6 +365,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                             mes.remove(Position);// 此处删除该条数据
                             adapter.notifyDataSetChanged();
                             context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
+                            setControlMessage("person", "true", "", messageInFo.getUserId());
                         } else if (ReturnType != null && ReturnType.equals("1002")) {
                             ToastUtils.show_always(context, "添加失败，" + Message);
                         } else {
@@ -377,6 +383,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                         ToastUtils.show_always(context, "已拒绝");
                         mes.remove(Position);
                         adapter.notifyDataSetChanged();
+                        setControlMessage("person", "false", "", messageInFo.getUserId());
                     }
                 } else {
                     if (type == 1) {
@@ -385,6 +392,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                             mes.remove(Position);// 此处删除该条数据
                             adapter.notifyDataSetChanged();
                             context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
+                            setControlMessage("group", "true", messageInFo.getGroupId(), "");
                         } else if (ReturnType != null && ReturnType.equals("1002")) {
                             ToastUtils.show_always(context, "添加失败，" + Message);
                         } else if (ReturnType != null && ReturnType.equals("10011")) {
@@ -398,12 +406,13 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                         }
                     } else {
                         /*
-						 * 不管拒绝结果如何此条数据需要删除
+                         * 不管拒绝结果如何此条数据需要删除
 						 * 此处删除该条数据
 						 */
                         ToastUtils.show_always(context, "已拒绝");
                         mes.remove(Position);
                         adapter.notifyDataSetChanged();
+                        setControlMessage("group", "false", messageInFo.getGroupId(), "");
                     }
                 }
             }
@@ -413,6 +422,104 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                 if (dialog != null) dialog.dismiss();
             }
         });
+    }
+
+    /*
+     * 发送业务控制回复
+     */
+    private void setControlMessage(String messageType, String replyType, String GroupId, String PersonId) {
+        messageType = messageType != null && !messageType.equals("") ? messageType : "other";
+        replyType = replyType != null && !replyType.equals("") ? replyType : "other";
+        if (messageType.equals("person")) {
+            // 好友邀请
+            MessageNotifyDao dbDao = new MessageNotifyDao(context);
+            List<String> message_list = dbDao.queryNotifyMessageId("p1", "", PersonId);
+            if (replyType.equals("true")) {
+                // 同意邀请
+                // 以下为测试消息
+                boolean test = false;
+                if (test) {
+                    //方法1
+                    Iterator it1 = message_list.iterator();
+                    while (it1.hasNext()) {
+                        System.out.println(it1.next());
+                    }
+
+                    //方法2
+                    for (Iterator it2 = message_list.iterator(); it2.hasNext(); ) {
+                        System.out.println(it2.next());
+                    }
+
+                    //方法3
+                    for (String tmp : message_list) {
+                        System.out.println(tmp);
+                    }
+                }
+                //方法4
+                for (int i = 0; i < message_list.size(); i++) {
+                    try {
+                        dbDao.upDataNotifyMessage(message_list.get(i), "您同意了他的好友邀请");
+                        Thread.sleep(10);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            } else if (replyType.equals("false")) {
+                // 拒绝邀请
+                for (int i = 0; i < message_list.size(); i++) {
+                    try {
+                        dbDao.upDataNotifyMessage(message_list.get(i), "您拒绝了他的好友邀请");
+                        Thread.sleep(10);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            // 发送业务回复
+            for (int i = 0; i < message_list.size(); i++) {
+                try {
+                    InterPhoneControl.universalControlReply(message_list.get(i), 4, 1, 1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } else if (messageType.equals("group")) {
+            // 群组邀请
+            MessageNotifyDao dbDao = new MessageNotifyDao(context);
+            List<String> message_list = dbDao.queryNotifyMessageId("g1", GroupId, "");
+            if (replyType.equals("true")) {
+                // 同意邀请
+                for (int i = 0; i < message_list.size(); i++) {
+                    try {
+                        dbDao.upDataNotifyMessage(message_list.get(i), "您同意了他的邀请");
+                        Thread.sleep(10);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else if (replyType.equals("false")) {
+                // 拒绝邀请
+                for (int i = 0; i < message_list.size(); i++) {
+                    try {
+                        dbDao.upDataNotifyMessage(message_list.get(i), "您拒绝了他的邀请");
+                        Thread.sleep(10);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            // 发送业务回复
+            for (int i = 0; i < message_list.size(); i++) {
+                try {
+                    InterPhoneControl.universalControlReply(message_list.get(i), 4, 2, 1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
     }
 
     @Override

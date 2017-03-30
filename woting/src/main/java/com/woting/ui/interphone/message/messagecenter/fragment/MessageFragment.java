@@ -151,7 +151,7 @@ public class MessageFragment extends Fragment implements OnClickListener {
 
     // 设置通知消息条数
     private void setDateForNotify() {
-        List<DBNotifyHistory> n_list = dbDaoNotify.queryNotifyMessage();
+        List<DBNotifyHistory> n_list = dbDaoNotify.queryNotifyMessageNoOther();
         if (n_list != null && n_list.size() > 0) {
             tv_group_messageN.setVisibility(View.VISIBLE);
             int num = n_list.size();

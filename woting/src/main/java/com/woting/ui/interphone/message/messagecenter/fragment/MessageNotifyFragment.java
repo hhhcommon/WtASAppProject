@@ -78,7 +78,7 @@ public class MessageNotifyFragment extends Fragment implements OnClickListener {
 
 	// 获取数据库的数据
 	private void getData() {
-		list = dbDao.queryNotifyMessage();
+		list = dbDao.queryNotifyMessageNoOther();
 		if (list == null || list.size() <= 0) {
 			tipView.setVisibility(View.VISIBLE);
 			tipView.setTipView(TipView.TipStatus.NO_DATA, "您还没有收到任何的通知消息");

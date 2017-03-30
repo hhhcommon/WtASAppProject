@@ -220,6 +220,9 @@ public class NotificationService extends Service {
                                         p.putExtras(bundle);
                                         context.sendBroadcast(p);
 
+                                        // 删除本地相同的业务数据，不管收到多少条数据都以最新的为主
+                                        dbDaoNotify.upDataNotifyForDuplicate("p1",person_id,"");
+
                                         // 加入到通知数据库
                                         addNotifyMessage(image_url, person_name, person_id, "", "", "",
                                                 "", "true", "p1", deal_time, 4, 1, 1, message_id, news);
@@ -250,6 +253,7 @@ public class NotificationService extends Service {
                                         if (deal_type != null) {
                                             if (deal_type.equals("1")) {
                                                 // 生成notification消息
+
                                                 String news = null;
                                                 String title ;
                                                 if (person_name == null || person_name.trim().equals("")) {
@@ -368,6 +372,9 @@ public class NotificationService extends Service {
                                         push_intent.putExtras(bundle);
                                         context.sendBroadcast(push_intent);
 
+                                        // 更改重复数据为不可见状态
+                                        dbDaoNotify.upDataNotifyForDuplicate("g1",group_id,person_id);
+
                                         // 加入到通知数据库
                                         addNotifyMessage(image_url, person_name, person_id, group_name, group_id, operator_name,
                                                 operator_id, "true", "g1", deal_time, 4, 2, 1, message_id, news);
@@ -428,6 +435,9 @@ public class NotificationService extends Service {
                                             }
                                         }
                                         setNewMessageNotification(context, news, title);
+
+                                        // 更改重复数据为不可见状态
+                                        dbDaoNotify.upDataNotifyForDuplicate("g2",group_id,person_id);
 
                                         // 加入到通知数据库
                                         addNotifyMessage(image_url, person_name, person_id, group_name, group_id, "",
