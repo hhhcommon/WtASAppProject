@@ -11,7 +11,7 @@ import com.android.volley.toolbox.Volley;
 import com.kingsoft.media.httpcache.KSYProxyService;
 import com.kingsoft.media.httpcache.OnErrorListener;
 import com.kingsoft.media.httpcache.stats.OnLogEventListener;
-import com.squareup.picasso.Picasso;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.PlatformConfig;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.config.SocketClientConfig;
@@ -50,8 +50,9 @@ public class BSApplication extends Application implements OnErrorListener, OnLog
         SharedPreferences = this.getSharedPreferences("wotingfm", Context.MODE_PRIVATE);
         CollocationHelper.setCollocation();  //设置配置文件
         queues = Volley.newRequestQueue(this);
-        InitThird();                        //第三方使用的相关方法
-        PhoneMessage.getPhoneInfo(instance);//获取手机信息
+        InitThird();                        // 第三方使用的相关方法
+        initAnalytic();                     // u孟
+        PhoneMessage.getPhoneInfo(instance);// 获取手机信息
 
         List<String> _l = new ArrayList<String>();//其中每个间隔要是0.5秒的倍数
         _l.add("INTE::500");                 //第1次检测到未连接成功，隔0.5秒重连
@@ -103,6 +104,11 @@ public class BSApplication extends Application implements OnErrorListener, OnLog
 //        proxyService.setMaxFilesCount(500);
         proxyService.setMaxCacheSize(500 * 1024 * 1024);// 缓存大小 500MB
         proxyService.startServer();
+    }
+
+
+    private void initAnalytic() {
+        MobclickAgent.startWithConfigure(new MobclickAgent.UMAnalyticsConfig(instance,"5715cf1e67e58e5955000896","wt_origin"));
     }
 
     private void initStaticFaces() {
