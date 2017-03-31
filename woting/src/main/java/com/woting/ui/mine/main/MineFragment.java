@@ -796,10 +796,16 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 isUpdate = true;
             }
 
-            birthday = pM.getBirthday();
-            if (!birthday.equals(sharedPreferences.getString(StringConstant.BIRTHDAY, " "))) {
-                jsonObject.put("Birthday", Long.valueOf(birthday));
-                isUpdate = true;
+            try {
+                birthday = pM.getBirthday();
+                if (!birthday.equals(sharedPreferences.getString(StringConstant.BIRTHDAY, " "))) {
+                    if (!birthday.trim().equals("")) {
+                        jsonObject.put("Birthday", Long.valueOf(birthday));
+                        isUpdate = true;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             starSign = pM.getStarSign();

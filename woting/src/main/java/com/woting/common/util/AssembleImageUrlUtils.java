@@ -103,19 +103,19 @@ public class AssembleImageUrlUtils {
                 Log.v("TAG", "c_url -- > " + c_url);
                 switch (type) {
                     case IntegerConstant.TYPE_LIST:
-                        Picasso.with(BSApplication.getAppContext()).load(_url.replace("\\/", "/")).placeholder(R.mipmap.wt_image_playertx).error(R.mipmap.wt_image_playertx).into(imageView);
+                        Picasso.with(BSApplication.getAppContext()).load(c_url.replace("\\/", "/")).placeholder(R.mipmap.wt_image_playertx).error(R.mipmap.wt_image_playertx).into(imageView);
                         break;
                     case IntegerConstant.TYPE_GROUP:
-                        Picasso.with(BSApplication.getAppContext()).load(_url.replace("\\/", "/")).placeholder(R.mipmap.wt_image_tx_qz).error(R.mipmap.wt_image_tx_qz).into(imageView);
+                        Picasso.with(BSApplication.getAppContext()).load(c_url.replace("\\/", "/")).placeholder(R.mipmap.wt_image_tx_qz).error(R.mipmap.wt_image_tx_qz).into(imageView);
                         break;
                     case IntegerConstant.TYPE_MINE:
-                        Picasso.with(BSApplication.getAppContext()).load(_url.replace("\\/", "/")).placeholder(R.mipmap.wt_image_default_head).error(R.mipmap.wt_image_default_head).into(imageView);
+                        Picasso.with(BSApplication.getAppContext()).load(c_url.replace("\\/", "/")).placeholder(R.mipmap.wt_image_default_head).error(R.mipmap.wt_image_default_head).into(imageView);
                         break;
                     case IntegerConstant.TYPE_PERSON:
-                        Picasso.with(BSApplication.getAppContext()).load(_url.replace("\\/", "/")).placeholder(R.mipmap.wt_image_tx_hy).error(R.mipmap.wt_image_tx_hy).into(imageView);
+                        Picasso.with(BSApplication.getAppContext()).load(c_url.replace("\\/", "/")).placeholder(R.mipmap.wt_image_tx_hy).error(R.mipmap.wt_image_tx_hy).into(imageView);
                         break;
                     case IntegerConstant.TYPE_DEFAULT:
-                        Picasso.with(BSApplication.getAppContext()).load(_url.replace("\\/", "/")).into(imageView);
+                        Picasso.with(BSApplication.getAppContext()).load(c_url.replace("\\/", "/")).into(imageView);
                         break;
                 }
             }
