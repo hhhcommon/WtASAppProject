@@ -39,7 +39,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="81dp"
+                android:layout_height="wrap_content"
+                android:minHeight="81dp"
                 android:background="@color/WHITE"
                 android:layout_marginBottom="20dp">
 
@@ -62,9 +63,8 @@
                     android:id="@+id/text_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="异次元的治愈系少女"
+                    android:text="异次元的治愈系少女 "
                     android:textSize="15sp"
-                    android:singleLine="true"
                     android:layout_toRightOf="@id/image_mask"
                     android:layout_marginLeft="6dp"
                     android:layout_marginRight="6dp"
@@ -77,8 +77,9 @@
                     android:layout_height="12dp"
                     android:src="@mipmap/image_program_album"
                     android:layout_toRightOf="@id/image_mask"
+                    android:layout_below="@id/text_title"
+                    android:layout_marginTop="8dp"
                     android:layout_marginLeft="6dp"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="6dp"/>
 
                 <TextView
@@ -86,7 +87,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/image_pub"
-                    android:layout_centerVertical="true"
+                    android:layout_alignTop="@id/image_pub"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="我听科技"
@@ -100,7 +101,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_toRightOf="@id/image_mask"
                     android:layout_marginLeft="6dp"
-                    android:layout_marginBottom="11dp">
+                    android:paddingBottom="11dp">
 
                     <ImageView
                         android:layout_width="12dp"

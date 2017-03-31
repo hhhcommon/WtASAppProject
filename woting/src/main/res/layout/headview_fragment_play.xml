@@ -117,7 +117,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="18dp"
-            android:layout_marginRight="18dp"
+            android:layout_marginRight="10dp"
             android:layout_marginBottom="12dp"
             android:gravity="center"
             android:orientation="horizontal">
@@ -161,7 +161,7 @@
                 android:padding="5dp"
                 android:src="@mipmap/wt_image_player_mode"
                 android:textColor="@color/dinglan_orange"
-                android:layout_marginLeft="10dp"/>
+                android:layout_marginLeft="5dp"/>
 
         </LinearLayout>
 
