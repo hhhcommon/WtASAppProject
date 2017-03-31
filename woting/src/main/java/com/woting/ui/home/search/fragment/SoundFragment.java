@@ -294,7 +294,6 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
                 if (searchStr != null && !searchStr.equals("")) {
                     refreshType = 1;
                     page = 1;
-                    mListView.setPullLoadEnable(false);
                     newList.clear();
                     if (adapter == null) {
                         mListView.setAdapter(adapter = new FavorListAdapter(context, newList));
