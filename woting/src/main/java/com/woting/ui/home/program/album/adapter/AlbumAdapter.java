@@ -19,7 +19,6 @@ public class AlbumAdapter extends BaseAdapter {
 	private ContentInfo lists;
 
 	public AlbumAdapter(Context context, List<ContentInfo> list) {
-		super();
 		this.list = list;
 		this.context = context;
 	}

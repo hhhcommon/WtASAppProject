@@ -11,12 +11,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.woting.R;
-import com.woting.common.util.AssembleImageUrlUtils;
-import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
+import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
+import com.woting.ui.home.program.fmlist.model.RankInfo;
 
 import java.util.List;
 
@@ -98,14 +98,17 @@ public class FavorListAdapter extends BaseAdapter {
                 Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
                 holder.imageview_rankimage.setImageBitmap(bmp);
             } else {
-                String url1;
+                String url;
                 if (lists.getContentImg().startsWith("http")) {
-                    url1 = lists.getContentImg();
+                    url = lists.getContentImg();
                 } else {
-                    url1 = GlobalConfig.imageurl + lists.getContentImg();
+                    url = GlobalConfig.imageurl + lists.getContentImg();
                 }
-                url1 = AssembleImageUrlUtils.assembleImageUrl180(url1);
-                Picasso.with(context).load(url1.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
+                final String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
+                final String c_url = url;
+
+                // 加载图片
+                AssembleImageUrlUtils.loadImage(_url, c_url, holder.imageview_rankimage, IntegerConstant.TYPE_LIST);
             }
         } else if (lists.getMediaType().equals("AUDIO")) {
             holder.textPlaying.setVisibility(View.GONE);
@@ -127,14 +130,16 @@ public class FavorListAdapter extends BaseAdapter {
                 Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
                 holder.imageview_rankimage.setImageBitmap(bmp);
             } else {
-                String url1;
+                String url;
                 if (lists.getContentImg().startsWith("http")) {
-                    url1 = lists.getContentImg();
+                    url = lists.getContentImg();
                 } else {
-                    url1 = GlobalConfig.imageurl + lists.getContentImg();
+                    url = GlobalConfig.imageurl + lists.getContentImg();
                 }
-                url1 = AssembleImageUrlUtils.assembleImageUrl180(url1);
-                Picasso.with(context).load(url1.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
+                String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
+
+                // 加载图片
+                AssembleImageUrlUtils.loadImage(_url, url, holder.imageview_rankimage, IntegerConstant.TYPE_LIST);
             }
 
             if (lists.getContentPub() == null || lists.getContentPub().equals("") || lists.getContentPub().equals("null")) {
@@ -174,8 +179,11 @@ public class FavorListAdapter extends BaseAdapter {
                 } else {
                     url = GlobalConfig.imageurl + lists.getContentImg();
                 }
-                url = AssembleImageUrlUtils.assembleImageUrl180(url);
-                Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
+                final String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
+                final String c_url = url;
+
+                // 加载图片
+                AssembleImageUrlUtils.loadImage(_url, c_url, holder.imageview_rankimage, IntegerConstant.TYPE_LIST);
             }
 
             if (lists.getContentName() == null || lists.getContentName().equals("") || lists.getContentName().equals("null")) {
@@ -211,8 +219,11 @@ public class FavorListAdapter extends BaseAdapter {
                 } else {
                     url = GlobalConfig.imageurl + lists.getContentImg();
                 }
-                url = AssembleImageUrlUtils.assembleImageUrl180(url);
-                Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_rankimage);
+                final String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
+                final String c_url = url;
+
+                // 加载图片
+                AssembleImageUrlUtils.loadImage(_url, c_url, holder.imageview_rankimage, IntegerConstant.TYPE_LIST);
             }
 
             if (lists.getContentPub() == null || lists.getContentPub().equals("") || lists.getContentPub().equals("null")) {

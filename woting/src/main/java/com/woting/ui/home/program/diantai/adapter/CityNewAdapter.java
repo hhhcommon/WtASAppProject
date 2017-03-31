@@ -11,10 +11,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.home.program.fmlist.model.RankInfo;
@@ -102,19 +101,10 @@ public class CityNewAdapter extends BaseAdapter {
 					}else{
 						url = GlobalConfig.imageurl + lists.getContentImg();
 					}
-					final String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
-					final String c_url = url;
-					Picasso.with(context).load(_url.replace("\\/", "/")).fetch(new Callback() {
-						@Override
-						public void onSuccess() {
-							Picasso.with(context).load(_url.replace("\\/", "/")).error(R.mipmap.wt_image_playertx).resize(100, 100).into(holder.imageview_rankimage);
-						}
+                    String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
 
-						@Override
-						public void onError() {
-							Picasso.with(context).load(c_url.replace("\\/", "/")).error(R.mipmap.wt_image_playertx).resize(100, 100).into(holder.imageview_rankimage);
-						}
-					});
+                    // 加载图片
+                    AssembleImageUrlUtils.loadImage(_url, url, holder.imageview_rankimage, IntegerConstant.TYPE_LIST);
 				}
 			} else {
 				// 判断mediatype==AUDIO的情况
@@ -136,19 +126,12 @@ public class CityNewAdapter extends BaseAdapter {
 					}else{
 						url = GlobalConfig.imageurl + lists.getContentImg();
 					}
-					final String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
-					final String c_url = url;
-					Picasso.with(context).load(_url.replace("\\/", "/")).fetch(new Callback() {
-						@Override
-						public void onSuccess() {
-							Picasso.with(context).load(_url.replace("\\/", "/")).error(R.mipmap.wt_image_playertx).resize(100, 100).into(holder.imageview_rankimage);
-						}
 
-						@Override
-						public void onError() {
-							Picasso.with(context).load(c_url.replace("\\/", "/")).error(R.mipmap.wt_image_playertx).resize(100, 100).into(holder.imageview_rankimage);
-						}
-					});
+                    final String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
+                    final String c_url = url;
+
+                    // 加载图片
+                    AssembleImageUrlUtils.loadImage(_url, c_url, holder.imageview_rankimage, IntegerConstant.TYPE_LIST);
 				}
 				holder.lin_CurrentPlay.setVisibility(View.INVISIBLE);
 			}

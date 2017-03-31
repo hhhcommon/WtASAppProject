@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.home.player.main.model.PlayerHistory;
@@ -182,8 +183,10 @@ public class PlayHistoryExpandableAdapter extends BaseExpandableListAdapter {
                 } else {
                     url = GlobalConfig.imageurl + lists.getPlayerImage();
                 }
-                url = AssembleImageUrlUtils.assembleImageUrl180(url);
-                Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageView_playImage);
+                String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
+
+                // 加载图片
+                AssembleImageUrlUtils.loadImage(_url, url, holder.imageView_playImage, IntegerConstant.TYPE_LIST);
             }
         } else if (lists.getPlayerMediaType().equals("AUDIO")) {
             if (lists.getPlayerName() == null || lists.getPlayerName().equals("")) {

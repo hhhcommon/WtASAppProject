@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.IntegerConstant;
@@ -257,9 +256,11 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                             } else {
                                 url = GlobalConfig.imageurl + AlbumFragment.ContentImg;
                             }
-                            url = AssembleImageUrlUtils.assembleImageUrl150(url);
-                            Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(AlbumFragment.img_album);
-                            Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(imageHead);
+                            String _url1 = AssembleImageUrlUtils.assembleImageUrl300(url);
+                            String _url2 = AssembleImageUrlUtils.assembleImageUrl180(url);
+
+                            AssembleImageUrlUtils.loadImage(_url1, url, AlbumFragment.img_album, IntegerConstant.TYPE_MINE);
+                            AssembleImageUrlUtils.loadImage(_url2, url, imageHead, IntegerConstant.TYPE_MINE);
                         }
                         if (contentDesc != null && !contentDesc.equals("") && !contentDesc.equals("null")) {
                             textContent.setText(Html.fromHtml("<font size='28'>" + contentDesc + "</font>"));

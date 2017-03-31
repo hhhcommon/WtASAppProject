@@ -13,6 +13,7 @@ import com.woting.ui.home.program.album.model.ContentInfo;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class AlbumMainAdapter extends BaseAdapter {
 	private List<ContentInfo> list;
@@ -21,10 +22,9 @@ public class AlbumMainAdapter extends BaseAdapter {
 	private SimpleDateFormat format;
 
 	public AlbumMainAdapter(Context context, List<ContentInfo> subList) {
-		super();
 		this.list = subList;
 		this.context = context;
-		 format = new SimpleDateFormat("yyyy-MM-dd");
+		 format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
 	}
 
 	public void ChangeDate(List<ContentInfo> list) {
@@ -78,7 +78,7 @@ public class AlbumMainAdapter extends BaseAdapter {
 			holder.tv_time.setText(format.format(new Date(Long.parseLong(lists.getCTime()))));
 		}
 		
-		//节目时长
+		// 节目时长
 		if (lists.getContentTimes() == null
 				|| lists.getContentTimes().equals("")
 				|| lists.getContentTimes().equals("null")) {

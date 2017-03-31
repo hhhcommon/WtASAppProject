@@ -2,7 +2,6 @@ package com.woting.ui.interphone.group.groupcontrol.membershow.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.common.model.UserInfo;
@@ -109,9 +108,10 @@ public class CreateGroupMembersAdapter extends BaseAdapter  implements SectionIn
 			}else{
 				url = GlobalConfig.imageurl+lists.getPortraitMini();
 			}
-			url=AssembleImageUrlUtils.assembleImageUrl150(url);
-			Log.e("url==================", url);
-			Picasso.with(context).load(url.replace("\\/", "/")).into(holder.image);
+            String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
+
+            // 加载图片
+            AssembleImageUrlUtils.loadImage(_url, url, holder.image, IntegerConstant.TYPE_PERSON);
 		}
 		return convertView;
 	}

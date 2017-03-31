@@ -12,9 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.common.model.UserInfo;
@@ -108,8 +108,10 @@ public class TransferAuthorityAdapter extends BaseAdapter implements SectionInde
 			}else{
 				url = GlobalConfig.imageurl+lists.getPortraitMini();
 			}
-			url=AssembleImageUrlUtils.assembleImageUrl150(url);
-			Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageView_touxiang);
+            String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
+
+            // 加载图片
+            AssembleImageUrlUtils.loadImage(_url, url, holder.imageView_touxiang, IntegerConstant.TYPE_PERSON);
 		}
 		if (lists.getCheckType() == 2) {
 			holder.imageView_check.setImageResource(R.mipmap.image_all_check);

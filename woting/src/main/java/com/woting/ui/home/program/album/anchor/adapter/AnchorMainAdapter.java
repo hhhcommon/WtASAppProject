@@ -13,8 +13,10 @@ import com.woting.ui.home.program.album.anchor.model.PersonInfo;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
+ *
  * Created by Administrator on 2016/12/27 0027.
  */
 public class AnchorMainAdapter extends BaseAdapter {
@@ -27,7 +29,7 @@ public class AnchorMainAdapter extends BaseAdapter {
         super();
         this.list = subList;
         this.context = context;
-        format = new SimpleDateFormat("yyyy-MM-dd");
+        format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
     }
 
     public void ChangeDate(List<PersonInfo> list) {

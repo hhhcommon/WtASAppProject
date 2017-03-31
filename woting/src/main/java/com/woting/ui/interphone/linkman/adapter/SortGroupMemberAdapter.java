@@ -11,9 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.common.model.UserInfo;
@@ -119,8 +119,10 @@ public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexe
             } else {
                 url = GlobalConfig.imageurl + lists.getPortraitMini();
             }
-            url = AssembleImageUrlUtils.assembleImageUrl150(url);
-            Picasso.with(mContext).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageView_touxiang);
+            String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
+
+            // 加载图片
+            AssembleImageUrlUtils.loadImage(_url, url, holder.imageView_touxiang, IntegerConstant.TYPE_PERSON);
         }
 
         holder.lin_add.setOnClickListener(new View.OnClickListener() {
