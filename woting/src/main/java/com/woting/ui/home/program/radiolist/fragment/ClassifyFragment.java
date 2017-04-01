@@ -343,9 +343,12 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
     private void getImage() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            jsonObject.put("CatalogType", CatalogType);
+          /*  jsonObject.put("CatalogType", CatalogType);
             jsonObject.put("CatalogId", CatalogId);
-            jsonObject.put("Size", "10");// 此处需要改成 -1
+            jsonObject.put("Size", "10");// 此处需要改成 -1*/
+            jsonObject.put("CatalogType", "-1");
+            jsonObject.put("CatalogId", "cn17");
+            jsonObject.put("Size", "4");// 此处需要改成-1
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -376,7 +379,7 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                         mLoopViewPager.setOnBannerListener(new OnBannerListener() {
                             @Override
                             public void OnBannerClick(int position) {
-                                ToastUtils.show_always(context, ImageStringList.get(position - 1));
+                                ToastUtils.show_always(context, ImageStringList.get(position));
                             }
                         });
                         mLoopViewPager.start();

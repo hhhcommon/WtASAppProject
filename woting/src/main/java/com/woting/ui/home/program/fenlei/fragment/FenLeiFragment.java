@@ -170,8 +170,8 @@ public class FenLeiFragment extends Fragment implements TipView.WhiteViewClick {
     private void getImage() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            jsonObject.put("CatalogType","-1");
-            jsonObject.put("CatalogId", "cn10");
+            jsonObject.put("CatalogType", "-1");
+            jsonObject.put("CatalogId", "cn17");
             jsonObject.put("Size", "4");// 此处需要改成-1
         } catch (JSONException e) {
             e.printStackTrace();
@@ -204,7 +204,7 @@ public class FenLeiFragment extends Fragment implements TipView.WhiteViewClick {
                         mLoopViewPager.setOnBannerListener(new OnBannerListener() {
                             @Override
                             public void OnBannerClick(int position) {
-                                ToastUtils.show_always(context,ImageStringList.get(position-1));
+                                ToastUtils.show_always(context,ImageStringList.get(position));
                             }
                         });
                         mLoopViewPager.start();
