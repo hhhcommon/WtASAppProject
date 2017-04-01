@@ -61,7 +61,7 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
     private Banner mLoopViewPager;
 
     private List<ListInfo> SubList;
-    private List<Image> imageList;
+    private List<Image> imageList=new ArrayList<>();
     private List<ListInfo> newList = new ArrayList<>();
     private List<String> ImageStringList = new ArrayList<>();
 
@@ -133,13 +133,17 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                 dialog = DialogUtils.Dialogph(context, "正在获取数据");
                 sendRequest();
+                getImage();
             } else {
                 tipView.setVisibility(View.VISIBLE);
                 tipView.setTipView(TipView.TipStatus.NO_NET);
             }
         }
         // 如果轮播图没有的话重新加载轮播图
-        if (imageList == null) getImage();
+        if (imageList == null)
+        {
+            getImage();
+        }
         super.setUserVisibleHint(isVisibleToUser);
     }
 

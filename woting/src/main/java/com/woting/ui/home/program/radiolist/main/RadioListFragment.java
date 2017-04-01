@@ -26,7 +26,6 @@ import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.program.fenlei.model.FenLeiName;
 import com.woting.ui.home.program.radiolist.adapter.MyPagerAdapter;
-import com.woting.ui.home.program.radiolist.fragment.ClassifyFragment;
 import com.woting.ui.home.program.radiolist.fragment.RecommendFragment;
 import com.woting.ui.home.program.radiolist.mode.CatalogData;
 import com.woting.ui.home.program.radiolist.mode.SubCata;
@@ -145,18 +144,21 @@ public class RadioListFragment extends Fragment implements OnClickListener, TipV
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     CatalogData catalogData = new Gson().fromJson(CatalogData, new TypeToken<CatalogData>() {}.getType());
-                    subDataList = catalogData.getSubCata();
+                /*    subDataList = catalogData.getSubCata();
                     if (subDataList != null && subDataList.size() > 0) {
                         for (int i = 0; i < subDataList.size(); i++) {
                             list.add(subDataList.get(i).getCatalogName());
                             fragments.add(ClassifyFragment.instance(subDataList.get(i).getCatalogId(), subDataList.get(i).getCatalogType()));
                             count++;
                         }
-                    }
+                    }*/
                     viewPager.setAdapter(new MyPagerAdapter(getChildFragmentManager(), list, fragments));
                     pageSlidingTab.setViewPager(viewPager);
-
-                    if (count == 1) pageSlidingTab.setVisibility(View.GONE);
+                    if (count == 1) {
+                        pageSlidingTab.setVisibility(View.GONE);
+                    }else{
+                        pageSlidingTab.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     ToastUtils.show_always(context, "暂没有该分类数据");
                 }

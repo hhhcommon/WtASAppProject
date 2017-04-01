@@ -89,8 +89,6 @@ public class FenLeiFragment extends Fragment implements TipView.WhiteViewClick {
 
             // 轮播图
             mLoopViewPager = (Banner) headView.findViewById(R.id.slideshowView);
-
-
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {// 发送网络请求
                 sendRequest();
                 getImage();
