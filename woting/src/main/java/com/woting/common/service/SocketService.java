@@ -641,7 +641,7 @@ public class SocketService extends Service {
                     if (msg != null) {
                         if (msg instanceof MsgNormal) {
                             newsMsgQueue.add(msg);
-//                            ControlReceiptMsgQueue.add(msg);
+                            ControlReceiptMsgQueue.add(msg);
                             Log.i("数据放进消息数据队列", "消息数据已处理");
                         } else if (msg instanceof MsgMedia) {
                             audioMsgQueue.add(msg);

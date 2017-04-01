@@ -34,11 +34,11 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.CommonUtils;
@@ -421,8 +421,11 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
             } else {
                 url = GlobalConfig.imageurl + firstdate.getPortrait();
             }
-            url = AssembleImageUrlUtils.assembleImageUrl150(url);
-            Picasso.with(context).load(url.replace("\\/", "/")).into(image_grouptx);
+            final String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
+            final String c_url = url;
+
+            // 加载图片
+            AssembleImageUrlUtils.loadImage(_url, c_url,image_grouptx, IntegerConstant.TYPE_GROUP);
         }
         if (allList.size() == 0) {
             if (adapter == null) {
@@ -594,8 +597,11 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
             } else {
                 url = GlobalConfig.imageurl + firstdate.getPortrait();
             }
-            url = AssembleImageUrlUtils.assembleImageUrl150(url);
-            Picasso.with(context).load(url.replace("\\/", "/")).into(image_grouptx);
+            final String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
+            final String c_url = url;
+
+            // 加载图片
+            AssembleImageUrlUtils.loadImage(_url, c_url,image_grouptx, IntegerConstant.TYPE_GROUP);
         }
         if (allList.size() == 0) {
             if (adapter == null) {
@@ -969,8 +975,11 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                 } else {
                     urls = GlobalConfig.imageurl + url;
                 }
-                urls = AssembleImageUrlUtils.assembleImageUrl150(urls);
-                Picasso.with(context).load(urls.replace("\\/", "/")).into(image_group_persontx);
+                final String _url = AssembleImageUrlUtils.assembleImageUrl150(urls);
+                final String c_url = url;
+
+                // 加载图片
+                AssembleImageUrlUtils.loadImage(_url, c_url,image_group_persontx, IntegerConstant.TYPE_PERSON);
             }
             if (draw_group.isRunning()) {
             } else {
@@ -1013,8 +1022,11 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                 } else {
                     urls = GlobalConfig.imageurl + url;
                 }
-                urls = AssembleImageUrlUtils.assembleImageUrl150(urls);
-                Picasso.with(context).load(urls.replace("\\/", "/")).into(image_persontx);
+                final String _url = AssembleImageUrlUtils.assembleImageUrl150(urls);
+                final String c_url = url;
+
+                // 加载图片
+                AssembleImageUrlUtils.loadImage(_url, c_url,image_persontx, IntegerConstant.TYPE_PERSON);
             }
         } else {
             image_personvoice.setVisibility(View.INVISIBLE);
