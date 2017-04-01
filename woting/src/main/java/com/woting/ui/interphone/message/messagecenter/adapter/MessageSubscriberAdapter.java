@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.home.program.album.model.SubscriberInfo;
@@ -91,8 +92,9 @@ public class MessageSubscriberAdapter extends BaseAdapter {
             if (!contentImg.startsWith("http")) {
                 contentImg = GlobalConfig.imageurl + contentImg;
             }
-            contentImg = AssembleImageUrlUtils.assembleImageUrl180(contentImg);
-            Picasso.with(context).load(contentImg.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageCover);
+            String _url = AssembleImageUrlUtils.assembleImageUrl180(contentImg);
+            // 加载图片
+            AssembleImageUrlUtils.loadImage(_url, contentImg, holder.imageCover, IntegerConstant.TYPE_LIST);
         }
 
         // 专辑名
@@ -111,11 +113,11 @@ public class MessageSubscriberAdapter extends BaseAdapter {
 
         // 更新时间
         String _time = lists.getDealTime();
-if(_time!=null&&!_time.trim().equals("")){
-    holder.tv_time.setText(format.format(new Date(Long.parseLong(lists.getDealTime()))));
-    } else{
-    holder.tv_time.setText(format.format(new Date(System.currentTimeMillis())));
-    }
+        if (_time != null && !_time.trim().equals("")) {
+            holder.tv_time.setText(format.format(new Date(Long.parseLong(lists.getDealTime()))));
+        } else {
+            holder.tv_time.setText(format.format(new Date(System.currentTimeMillis())));
+        }
 
         // 更新数量
         String count = lists.getNum();

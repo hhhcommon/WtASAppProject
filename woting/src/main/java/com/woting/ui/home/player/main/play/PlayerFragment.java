@@ -31,7 +31,6 @@ import com.android.volley.VolleyError;
 import com.baidu.cyberplayer.core.BVideoView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.Picasso;
 import com.umeng.socialize.UMShareAPI;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
@@ -503,8 +502,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                         if (!url.startsWith("http")) {
                             url = GlobalConfig.imageurl + url;
                         }
-                        url = AssembleImageUrlUtils.assembleImageUrl180(url);
-                        Picasso.with(context).load(url.replace("\\/", "/")).into(mPlayAudioImageCover);
+                        String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
+
+                        // 加载图片
+                        AssembleImageUrlUtils.loadImage(_url, url, mPlayAudioImageCover, IntegerConstant.TYPE_LIST);
                     } else {// 没有封面图片设置默认图片
                         mPlayAudioImageCover.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx));
                     }
@@ -1254,8 +1255,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 if (!url.startsWith("http")) {
                     url = GlobalConfig.imageurl + url;
                 }
-                url = AssembleImageUrlUtils.assembleImageUrl180(url);
-                Picasso.with(context).load(url.replace("\\/", "/")).into(mPlayAudioImageCover);
+                String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
+
+                // 加载图片
+                AssembleImageUrlUtils.loadImage(_url, url, mPlayAudioImageCover, IntegerConstant.TYPE_LIST);
             } else {// 没有封面图片设置默认图片
                 mPlayAudioImageCover.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx));
             }

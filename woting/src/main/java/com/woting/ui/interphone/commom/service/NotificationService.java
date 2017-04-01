@@ -210,7 +210,7 @@ public class NotificationService extends Service {
                                         } else {
                                             title = person_name;
                                         }
-                                        news = "有人邀请你加为好友，快去看看吧~";
+                                        news = "邀请你加为好友，快去看看吧~";
                                         setNewMessageNotification(context, news, title);
 
                                         // 更改通讯录新的朋友按钮展示
