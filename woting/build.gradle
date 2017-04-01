@@ -10,8 +10,8 @@ android {
         applicationId "com.woting"
         minSdkVersion 11
         targetSdkVersion 21
-        versionCode 29
-        versionName "0.1.0.X.029"
+        versionCode 30
+        versionName "0.1.0.X.030"
     }
 
     buildTypes {
@@ -33,5 +33,4 @@ dependencies {
     compile files('libs/libksystat.jar')
     compile files('libs/cyberplayer-sdk.jar')
     compile 'com.youth.banner:banner:1.4.9'
-    compile 'com.umeng.analytics:analytics:latest.integration'
 }
