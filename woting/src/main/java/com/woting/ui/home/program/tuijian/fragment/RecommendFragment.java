@@ -356,7 +356,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                         mLoopViewPager.setOnBannerListener(new OnBannerListener() {
                             @Override
                             public void OnBannerClick(int position) {
-                                ToastUtils.show_always(context, ImageStringList.get(position - 1));
+                                ToastUtils.show_always(context, ImageStringList.get(position));
                             }
                         });
                         mLoopViewPager.start();
