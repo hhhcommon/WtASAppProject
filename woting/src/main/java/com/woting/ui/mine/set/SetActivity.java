@@ -38,6 +38,7 @@ import com.woting.ui.mine.set.about.AboutActivity;
 import com.woting.ui.mine.set.collocation.CollocationActivity;
 import com.woting.ui.mine.set.downloadposition.DownloadPositionActivity;
 import com.woting.ui.mine.set.help.HelpActivity;
+import com.woting.ui.mine.set.messageset.MessageSetActivity;
 import com.woting.ui.mine.set.preference.activity.PreferenceActivity;
 import com.woting.ui.mine.set.updateusernum.updateUserNumActivity;
 
@@ -49,8 +50,9 @@ import java.io.File;
 
 /**
  * 设置
+ *
  * @author 辛龙
- * 2016年2月26日
+ *         2016年2月26日
  */
 public class SetActivity extends BaseActivity implements OnClickListener {
     private Dialog updateDialog;        // 版本更新对话框
@@ -91,18 +93,19 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         findViewById(R.id.lin_feedback).setOnClickListener(this);           // 意见反馈
         findViewById(R.id.lin_downloadposition).setOnClickListener(this);   // 下载位置
         findViewById(R.id.lin_preference).setOnClickListener(this);         // 偏好设置
-        lin_collocation=(RelativeLayout)findViewById(R.id.lin_p_set);
+        findViewById(R.id.lin_message_set).setOnClickListener(this);        // 通知设置
+        lin_collocation = (RelativeLayout) findViewById(R.id.lin_p_set);
         lin_collocation.setOnClickListener(this);                           // 配置设置
 
         findViewById(R.id.lin_id_name).setOnClickListener(this);            // ID号
 
-        lin_IsLogin= findViewById(R.id.lin_IsLogin);                        // 未登录时需要隐藏的绑定手机号和重置密码布局
+        lin_IsLogin = findViewById(R.id.lin_IsLogin);                        // 未登录时需要隐藏的绑定手机号和重置密码布局
         linearIdName = findViewById(R.id.lin_id_name);                      // 用户可以且仅可以设置一次的唯一标识 ID
         linearIdName.setOnClickListener(this);
 
         logOut = (Button) findViewById(R.id.lin_zhuxiao);                   // 注销
         logOut.setOnClickListener(this);
-        if(getIntent() != null) {
+        if (getIntent() != null) {
             if (!getIntent().getStringExtra("LOGIN_STATE").equals("true")) {
                 logOut.setVisibility(View.GONE);
                 lin_IsLogin.setVisibility(View.GONE);
@@ -117,11 +120,11 @@ public class SetActivity extends BaseActivity implements OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-        if(!BSApplication.SharedPreferences.getString(StringConstant.USER_NUM, "").equals("")) {
+        if (!BSApplication.SharedPreferences.getString(StringConstant.USER_NUM, "").equals("")) {
             linearIdName.setVisibility(View.GONE);
         }
         // 配置设置按钮是否显示
-        if(GlobalConfig.isCollocation){
+        if (GlobalConfig.isCollocation) {
             lin_collocation.setVisibility(View.VISIBLE);
         }
     }
@@ -145,6 +148,9 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 break;
             case R.id.lin_about:            // 关于
                 startActivity(new Intent(context, AboutActivity.class));
+                break;
+            case R.id.lin_message_set:      // 通知设置
+                startActivity(new Intent(context, MessageSetActivity.class));
                 break;
             case R.id.lin_preference:       // 偏好设置
                 Intent p = new Intent(context, PreferenceActivity.class);
@@ -188,11 +194,11 @@ public class SetActivity extends BaseActivity implements OnClickListener {
             case R.id.lin_bindPhone:        // 绑定手机号
                 String phoneNumber = BSApplication.SharedPreferences.getString(StringConstant.PHONENUMBER, ""); // 用户手机号
                 Intent intent = new Intent(context, PhoneCheckActivity.class);
-                if(!phoneNumber.equals("") || !phoneNumber.equals("null")){// 已经有存在的手机号
-                    intent.putExtra("PhoneType","1");
-                    intent.putExtra("PhoneNumber",phoneNumber);
-                }else{// 手机号为空
-                    intent.putExtra("PhoneType","2");
+                if (!phoneNumber.equals("") || !phoneNumber.equals("null")) {// 已经有存在的手机号
+                    intent.putExtra("PhoneType", "1");
+                    intent.putExtra("PhoneNumber", phoneNumber);
+                } else {// 手机号为空
+                    intent.putExtra("PhoneType", "2");
                 }
                 startActivity(intent);
                 break;
@@ -203,7 +209,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 startActivityForResult(new Intent(context, updateUserNumActivity.class), 0x111);
                 break;
             case R.id.lin_p_set:
-                startActivityForResult(new Intent(context, CollocationActivity.class), 0x111);
+                startActivity(new Intent(context, CollocationActivity.class));
                 break;
         }
     }
@@ -369,7 +375,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 }
             } else if (versionNew == versionOld) {
                 ToastUtils.show_always(context, "已经是最新版本");
-            }else{
+            } else {
                 ToastUtils.show_always(context, "已经是最新版本");
             }
         } catch (Exception e) {
@@ -397,8 +403,6 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 }
             }
         }).start();
-
-
     }
 
     // 清除缓存异步任务
@@ -433,15 +437,13 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         }
     }
 
+    // 设置id号
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 0x111) {
-            if(resultCode == 1) {
-                Intent intent = new Intent();
-                intent.putExtra("SET_USER_NUM_SUCCESS", true);
+        if (requestCode == 0x111) {
+            if (resultCode == 1) {
                 setResult(RESULT_OK);
-                finish();
             }
         }
     }

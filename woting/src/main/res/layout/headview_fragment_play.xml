@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/WHITE"
@@ -13,6 +12,7 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -20,13 +20,13 @@
                 android:id="@+id/lin_lukuangtts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
                 android:layout_marginLeft="12dp"
+                android:layout_marginTop="15dp"
                 android:paddingLeft="9dp"
                 android:paddingRight="9dp"
-                android:src="@mipmap/wt_icon_lktts"/>
+                android:src="@mipmap/wt_icon_lktts" />
 
-            <com.woting.common.widgetui.MarqueeTextView
+            <com.woting.common.widgetui.AutoScrollTextView
                 android:id="@+id/tv_name"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -34,24 +34,21 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="18dp"
                 android:layout_weight="1"
-                android:ellipsize="marquee"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:singleLine="true"
                 android:gravity="center"
+                android:singleLine="true"
+                android:text="未知"
                 android:textColor="@color/wt_login_third"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <ImageView
                 android:id="@+id/lin_voicesearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
                 android:layout_marginRight="9dp"
+                android:layout_marginTop="15dp"
                 android:paddingLeft="9dp"
                 android:paddingRight="9dp"
-                android:src="@mipmap/wt_talk_orange"/>
+                android:src="@mipmap/wt_talk_orange" />
 
         </LinearLayout>
 
@@ -64,11 +61,11 @@
                 android:id="@+id/lin_left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="60dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/wt_play_left"/>
+                android:src="@mipmap/wt_play_left" />
 
             <RelativeLayout
                 android:id="@+id/lin_center"
@@ -82,20 +79,20 @@
                     android:layout_height="80dp"
                     android:layout_centerInParent="true"
                     android:scaleType="centerCrop"
-                    android:src="@mipmap/wt_image_playertx"/>
+                    android:src="@mipmap/wt_image_playertx" />
 
                 <ImageView
                     android:id="@+id/image_liu"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:layout_centerInParent="true"/>
+                    android:layout_centerInParent="true" />
 
                 <ImageView
                     android:id="@+id/img_play"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_centerInParent="true"
-                    android:src="@mipmap/wt_play_stop"/>
+                    android:src="@mipmap/wt_play_stop" />
 
             </RelativeLayout>
 
@@ -103,22 +100,22 @@
                 android:id="@+id/lin_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:layout_marginRight="60dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/wt_play_right"/>
+                android:src="@mipmap/wt_play_right" />
 
         </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginBottom="12dp"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="10dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginTop="5dp"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -130,7 +127,7 @@
                 android:gravity="center"
                 android:text="00:00:00"
                 android:textColor="@color/dinglan_orange"
-                android:textSize="11sp"/>
+                android:textSize="11sp" />
 
             <SeekBar
                 android:id="@+id/seekBar"
@@ -142,26 +139,26 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:progressDrawable="@drawable/bg_seekbar"
-                android:thumb="@mipmap/wt_seekbar_thumb"/>
+                android:thumb="@mipmap/wt_seekbar_thumb" />
 
             <TextView
                 android:id="@+id/time_end"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_marginLeft="6dp"
+                android:gravity="center"
                 android:text="00:00:00"
                 android:textColor="@color/dinglan_orange"
-                android:textSize="11sp"/>
+                android:textSize="11sp" />
 
             <ImageView
                 android:id="@+id/image_more"
                 android:layout_width="34dp"
                 android:layout_height="34dp"
+                android:layout_marginLeft="5dp"
                 android:padding="5dp"
                 android:src="@mipmap/wt_image_player_mode"
-                android:textColor="@color/dinglan_orange"
-                android:layout_marginLeft="5dp"/>
+                android:textColor="@color/dinglan_orange" />
 
         </LinearLayout>
 
@@ -170,11 +167,11 @@
             android:layout_width="match_parent"
             android:layout_height="34dp"
             android:background="@color/setting_bg_color"
-            android:paddingLeft="15dp"
             android:gravity="center_vertical"
+            android:paddingLeft="15dp"
             android:text="相关推荐"
             android:textColor="@color/s_green"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
     </LinearLayout>
 

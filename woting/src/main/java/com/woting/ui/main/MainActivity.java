@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -58,6 +59,7 @@ import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.AutoScrollTextView;
 import com.woting.common.widgetui.RoundImageView;
 import com.woting.ui.common.favoritetype.FavoriteProgramTypeActivity;
 import com.woting.ui.common.login.LoginActivity;
@@ -217,6 +219,11 @@ public class MainActivity extends TabActivity implements OnClickListener {
         if (!BSApplication.SharedPreferences.getBoolean(StringConstant.FAVORITE_PROGRAM_TYPE, false)) {
             startActivity(new Intent(context, FavoriteProgramTypeActivity.class));
         }
+
+//        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+//        AutoScrollTextView dd = (AutoScrollTextView)findViewById(R.id.tv_notify);
+//        dd.init(windowManager);
+//        dd.startScroll();
     }
 
     private void createService() {
@@ -234,6 +241,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         startService(download);
         Notification = new Intent(this, NotificationService.class);
         startService(Notification);
+
     }
 
     public void getTXL() {

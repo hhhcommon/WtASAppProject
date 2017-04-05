@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -48,6 +49,7 @@ import com.woting.common.util.TimeUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.AutoScrollTextView;
 import com.woting.common.widgetui.MarqueeTextView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.home.player.main.adapter.PlayerListAdapter;
@@ -93,7 +95,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private Dialog dialog;// 加载数据对话框
     private Dialog wifiDialog;// WIFI 提醒对话框
 
-    private MarqueeTextView mPlayAudioTitleName;// 正在播放的节目的标题
+    private AutoScrollTextView mPlayAudioTitleName;// 正在播放的节目的标题
     private View mViewVoice;// 语音搜索 点击右上角"语音"显示
     private TextView mVoiceTextSpeakStatus;// 语音搜索状态
     private ImageView mVoiceImageSpeak;// 按下说话 抬起开始搜索
@@ -126,6 +128,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private boolean isNetPlay;// 播放网络地址
     private boolean isPlayLK;// 正在播放路况
 
+    private WindowManager windowManager;
     /**
      * 1.== "MAIN_PAGE"  ->  mainPageRequest;
      * 2.== "SEARCH_TEXT"  ->  searchByTextRequest;
@@ -186,8 +189,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_play, container, false);
-
             View headView = LayoutInflater.from(context).inflate(R.layout.headview_fragment_play, null);
+            windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             initView(headView);// 设置界面
             initEvent(headView);// 设置控件点击事件
 
@@ -213,7 +216,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         ImageView mPlayAudioImageCoverMask = (ImageView) view.findViewById(R.id.image_liu);// 封面图片的六边形遮罩
         mPlayAudioImageCoverMask.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_bd));
 
-        mPlayAudioTitleName = (MarqueeTextView) view.findViewById(R.id.tv_name);// 正在播放的节目的标题
+        mPlayAudioTitleName = (AutoScrollTextView) view.findViewById(R.id.tv_name);// 正在播放的节目的标题
+        mPlayAudioTitleName.init(windowManager);
+        mPlayAudioTitleName.startScroll();
+
+
         mPlayAudioImageCover = (ImageView) view.findViewById(R.id.img_news);// 播放节目的封面
 
         mPlayImageStatus = (ImageView) view.findViewById(R.id.img_play);// 播放状态图片  播放 OR 暂停
@@ -1248,7 +1255,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             } else {
                 mPlayAudioTitleName.setText("未知");
             }
-
+            mPlayAudioTitleName.init(windowManager);
+            mPlayAudioTitleName.startScroll();
             // 播放的节目封面图片
             String url = GlobalConfig.playerObject.getContentImg();
             if (url != null) {// 有封面图片
