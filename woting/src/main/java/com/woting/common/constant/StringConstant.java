@@ -83,6 +83,10 @@ public class StringConstant {
      */
     public static final String WIFISET = "WIFI_SET";                                  // 默认为开启状态
     public static final String WIFISHOW = "WIFI_SHOW";                                // 是否提醒
+    // 个人中心中消息通知的设置以及语音播报的设置
+    public static final String MESSAGE_SET = "MESSAGE_SET";
+    public static final String VOICE_SET = "VOICE_SET";
+
     /*
      * 从播放历史进入播放界面的数据
      */
