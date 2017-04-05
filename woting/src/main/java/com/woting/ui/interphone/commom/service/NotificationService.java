@@ -34,6 +34,7 @@ import com.woting.ui.interphone.message.messagecenter.dao.MessageSubscriberDao;
 import com.woting.ui.interphone.message.messagecenter.dao.MessageNotifyDao;
 import com.woting.ui.interphone.message.messagecenter.dao.MessageSystemDao;
 import com.woting.ui.interphone.message.messagecenter.model.DBSubscriberMessage;
+import com.woting.ui.main.MainActivity;
 
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -212,7 +213,7 @@ public class NotificationService extends Service {
                                         }
                                         news = "邀请你加为好友，快去看看吧~";
                                         setNewMessageNotification(context, news, title);
-
+                                        setNewMessageForMain(news,"","p1");
                                         // 更改通讯录新的朋友按钮展示
                                         Intent p = new Intent(BroadcastConstants.PUSH_NEWPERSON);
                                         Bundle bundle = new Bundle();
@@ -221,7 +222,7 @@ public class NotificationService extends Service {
                                         context.sendBroadcast(p);
 
                                         // 删除本地相同的业务数据，不管收到多少条数据都以最新的为主
-                                        dbDaoNotify.upDataNotifyForDuplicate("p1",person_id,"");
+                                        dbDaoNotify.upDataNotifyForDuplicate("p1", person_id, "");
 
                                         // 加入到通知数据库
                                         addNotifyMessage(image_url, person_name, person_id, "", "", "",
@@ -255,7 +256,7 @@ public class NotificationService extends Service {
                                                 // 生成notification消息
 
                                                 String news = null;
-                                                String title ;
+                                                String title;
                                                 if (person_name == null || person_name.trim().equals("")) {
                                                     title = "我听";
                                                     if (deal_type != null && deal_type.equals("1")) {
@@ -274,7 +275,7 @@ public class NotificationService extends Service {
                                                     // }
                                                 }
                                                 setNewMessageNotification(context, news, title);
-
+                                                setNewMessageForMain(news,"","p2");
                                                 // 加入到通知数据库
                                                 addNotifyMessage(image_url, person_name, person_id, "", "", "",
                                                         "", "false", "p2", deal_time, 4, 1, 3, message_id, news);
@@ -364,7 +365,7 @@ public class NotificationService extends Service {
 
                                         }
                                         setNewMessageNotification(context, news, title);
-
+                                        setNewMessageForMain(news,"","g1");
                                         // 更改通讯录新的朋友按钮展示
                                         Intent push_intent = new Intent(BroadcastConstants.PUSH_NEWPERSON);
                                         Bundle bundle = new Bundle();
@@ -373,7 +374,7 @@ public class NotificationService extends Service {
                                         context.sendBroadcast(push_intent);
 
                                         // 更改重复数据为不可见状态
-                                        dbDaoNotify.upDataNotifyForDuplicate("g1",group_id,person_id);
+                                        dbDaoNotify.upDataNotifyForDuplicate("g1", group_id, person_id);
 
                                         // 加入到通知数据库
                                         addNotifyMessage(image_url, person_name, person_id, group_name, group_id, operator_name,
@@ -435,9 +436,9 @@ public class NotificationService extends Service {
                                             }
                                         }
                                         setNewMessageNotification(context, news, title);
-
+                                        setNewMessageForMain(news,"","g2");
                                         // 更改重复数据为不可见状态
-                                        dbDaoNotify.upDataNotifyForDuplicate("g2",group_id,person_id);
+                                        dbDaoNotify.upDataNotifyForDuplicate("g2", group_id, person_id);
 
                                         // 加入到通知数据库
                                         addNotifyMessage(image_url, person_name, person_id, group_name, group_id, "",
@@ -516,7 +517,7 @@ public class NotificationService extends Service {
                                                             }
                                                         }
                                                         setNewMessageNotification(context, news, title);
-
+                                                        setNewMessageForMain(news,"","g31");
                                                         // 更新通讯录
                                                         Intent push_intent = new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN);
                                                         context.sendBroadcast(push_intent);
@@ -546,7 +547,7 @@ public class NotificationService extends Service {
                                                             news = "同意了您的入组申请";
                                                             setNewMessageNotification(context, news, group_name);
                                                         }
-
+                                                        setNewMessageForMain(news,"","g32");
                                                         // 更新通讯录
                                                         Intent push_intent = new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN);
                                                         context.sendBroadcast(push_intent);
@@ -616,7 +617,7 @@ public class NotificationService extends Service {
                                             }
                                             setNewMessageNotification(context, news, person_name);
                                         }
-
+                                        setNewMessageForMain(news,"","g4");
                                         // 加入到通知数据库
                                         addNotifyMessage(image_url, person_name, person_id, group_name, group_id, "",
                                                 "", "false", "g4", deal_time, 4, 2, 4, message_id, news);
@@ -690,23 +691,23 @@ public class NotificationService extends Service {
                                         // 生成notification消息
                                         if (person_name == null || person_name.trim().equals("")) {
                                             if (group_name == null || group_name.trim().equals("")) {
-                                                news = "有人退出您所在的对讲组"+ ",快去看看吧~";
+                                                news = "有人退出您所在的对讲组" + ",快去看看吧~";
                                             } else {
-                                                news = "有人退出对讲组:" + group_name+ ",快去看看吧~";
+                                                news = "有人退出对讲组:" + group_name + ",快去看看吧~";
                                             }
                                             setNewMessageNotification(context, news, "我听");
                                         } else {
                                             if (group_name == null || group_name.trim().equals("")) {
-                                                news =   "退出您所在的对讲组"+ ",快去看看吧~";
+                                                news = "退出您所在的对讲组" + ",快去看看吧~";
                                             } else {
-                                                news =  "退出对讲组:" + group_name+ ",快去看看吧~";
+                                                news = "退出对讲组:" + group_name + ",快去看看吧~";
                                             }
                                             setNewMessageNotification(context, news, person_name);
                                         }
-
+                                        setNewMessageForMain(news,"","g5");
                                         // 加入到通知数据库
                                         addNotifyMessage(image_url, person_name, person_id, group_name, group_id, "",
-                                                "", "false", "g5", deal_time, 4, 2, 5, message_id,news);
+                                                "", "false", "g5", deal_time, 4, 2, 5, message_id, news);
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中G5的异常", e.toString());
                                     }
@@ -735,10 +736,10 @@ public class NotificationService extends Service {
                                         news = "您所在的对讲组:" + group_name + "被群主解散";
                                     }
                                     setNewMessageNotification(context, news, "我听");
-
+                                    setNewMessageForMain(news,"","g6");
                                     // 加入到通知数据库
                                     addNotifyMessage(image_url, "", "", group_name, group_id, "",
-                                            "", "false", "g6", deal_time, 4, 2, 6, message_id,news);
+                                            "", "false", "g6", deal_time, 4, 2, 6, message_id, news);
 
                                     //刷新通讯录
                                     context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
@@ -784,10 +785,10 @@ public class NotificationService extends Service {
                                             }
                                         }
                                         setNewMessageNotification(context, news, "我听");
-
+                                        setNewMessageForMain(news,"","g7");
                                         // 加入到通知数据库
                                         addNotifyMessage(image_url, user_name, user_id, group_name, group_id, "",
-                                                "", "false", "g7", deal_time, 4, 2, 7, message_id,news);
+                                                "", "false", "g7", deal_time, 4, 2, 7, message_id, news);
 
                                         //如果管理员权限移交给自己，则需要刷新通讯录
                                         if (user_id != null && !user_id.equals("") && CommonUtils.getUserId(context) != null &&
@@ -848,10 +849,10 @@ public class NotificationService extends Service {
                                             }
                                         }
                                         setNewMessageNotification(context, news, "我听");
-
+                                        setNewMessageForMain(news,"","g8");
                                         // 加入到通知数据库
                                         addNotifyMessage(image_url, user_name, user_id, group_name, group_id, "",
-                                                "", "false", "g8", deal_time, 4, 2, 8, message_id,news);
+                                                "", "false", "g8", deal_time, 4, 2, 8, message_id, news);
                                     } catch (Exception e) {
                                         Log.e("消息接收服务中G8的异常", e.toString());
                                     }
@@ -891,10 +892,10 @@ public class NotificationService extends Service {
                                             news = "您所在的:" + group_name + "修改了组信息";
                                         }
                                         setNewMessageNotification(context, news, "我听");
-
+                                        setNewMessageForMain(news,"","g9");
                                         // 加入到通知数据库
                                         addNotifyMessage(image_url, "", "", group_name, group_id, "",
-                                                "", "false", "g9", deal_time, 4, 2, 8, message_id,news);
+                                                "", "false", "g9", deal_time, 4, 2, 8, message_id, news);
 
                                         //刷新通讯录
                                         context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
@@ -952,7 +953,6 @@ public class NotificationService extends Service {
                                             news = "您订阅的专辑《" + seq_name + "》有新的更新了，快去查看吧";
                                         }
 
-
                                         // 发送通知
                                         setNewMessageNotification(context, news, "订阅更新");
                                         // 加入数据库
@@ -974,7 +974,7 @@ public class NotificationService extends Service {
         }
     }
 
-//	private void setNewMessageNotification(Context ctx, String msg,String title) {
+    //	private void setNewMessageNotification(Context ctx, String msg,String title) {
 //		String ns = Context.NOTIFICATION_SERVICE;
 //		NotificationManager nm = (NotificationManager) ctx.getSystemService(ns);
 //		Intent pushaintent=new Intent("pushnnn");
@@ -992,6 +992,12 @@ public class NotificationService extends Service {
 //		notification.setLatestEventInfo(ctx,title , msg, in);
 //		nm.notify(0, notification);
 //	}
+
+    // 设置应用内的消息提醒
+    private void setNewMessageForMain(String src, String url, String type) {
+        MainActivity.setMessage(src, url, type);
+    }
+
 
     private void setNewMessageNotification(Context mContext, String message, String title) {
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
