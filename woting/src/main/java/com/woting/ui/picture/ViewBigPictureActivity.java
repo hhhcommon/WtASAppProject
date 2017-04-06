@@ -57,6 +57,22 @@ public class ViewBigPictureActivity extends Activity implements View.OnClickList
         }
         pictureUrlList = intent.getStringArrayListExtra(StringConstant.PICTURE_URL);
         num = intent.getIntExtra(StringConstant.PICTURE_INDEX, 0);
+
+        if (pictureUrlList == null) {
+            pictureUrlList = new ArrayList<>();
+        } else {
+            int i = 0;
+            while (i < pictureUrlList.size()) {
+                if (pictureUrlList.get(i).trim().equals("")) {
+                    pictureUrlList.remove(i);
+                } else {
+                    i++;
+                }
+            }
+        }
+        if (pictureUrlList.size() <= 0) {
+            pictureUrlList.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1490690384432&di=7d4dddbf5ec3a415a2abfda9b0c771e3&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D600%252C800%2Fsign%3Df8ab0485a964034f0f98ca009ff35509%2Fa71ea8d3fd1f4134245acf26271f95cad1c85e7d.jpg");
+        }
     }
 
     // 初始化视图
