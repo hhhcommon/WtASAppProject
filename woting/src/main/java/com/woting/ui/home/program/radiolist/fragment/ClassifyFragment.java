@@ -122,6 +122,14 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
             mLoopViewPager = (Banner) headView.findViewById(R.id.slideshowView);
             mListView.addHeaderView(headView);
             setListener();
+            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                dialog = DialogUtils.Dialogph(context, "正在获取数据");
+                sendRequest();
+                getImage();
+            } else {
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_NET);
+            }
         }
         if (dialog != null) dialog.dismiss();
         return rootView;
@@ -129,7 +137,7 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
-        if (isVisibleToUser && adapter == null && getActivity() != null) {
+   /*     if (isVisibleToUser && adapter == null && getActivity() != null) {
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                 dialog = DialogUtils.Dialogph(context, "正在获取数据");
                 sendRequest();
@@ -143,7 +151,7 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
         if (imageList == null)
         {
             getImage();
-        }
+        }*/
         super.setUserVisibleHint(isVisibleToUser);
     }
 
