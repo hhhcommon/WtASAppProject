@@ -39,9 +39,8 @@ import java.util.List;
 
 /**
  * 搜索结果页面
- *
- * @author 辛龙
- *         2016年1月20日
+ * 辛龙
+ * 2016年1月20日
  */
 public class FindNewsResultActivity extends AppBaseActivity implements OnClickListener, TipView.WhiteViewClick {
     private XListView mxlistview;
