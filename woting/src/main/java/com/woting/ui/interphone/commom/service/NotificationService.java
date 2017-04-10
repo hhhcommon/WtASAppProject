@@ -252,7 +252,7 @@ public class NotificationService extends Service {
                                         String message_id = message.getMsgId();// 消息ID
                                         String deal_time = data.get("DealTime") + "";// 消息处理时间
                                         String deal_type = data.get("DealType") + "";// 处理类型 1，接受 2，拒绝
-                                        String person_name = user_info.getUserName();// 邀请者名称
+                                        String person_name = user_info.getNickName();// 邀请者名称
                                         String person_id = user_info.getUserId();// 邀请者ID
                                         String image_url = user_info.getPortraitMini();// 邀请者头像
 
@@ -409,7 +409,7 @@ public class NotificationService extends Service {
                                         String group_name = user_info.getGroupName();
                                         String group_id = user_info.getGroupId();
 
-                                        String person_name = applyuserinfo.getUserName();// 申请者名称
+                                        String person_name = applyuserinfo.getNickName();// 申请者名称
                                         String person_id = applyuserinfo.getUserId();// 申请者ID
                                         String image_url = null;// 申请者头像
 
@@ -589,7 +589,7 @@ public class NotificationService extends Service {
 
                                         UserInfo userinfo = new Gson().fromJson(user_info, new TypeToken<UserInfo>() {
                                         }.getType());
-                                        String person_name = userinfo.getUserName();// 进入组的人的名称
+                                        String person_name = userinfo.getNickName();// 进入组的人的名称
                                         String person_id = userinfo.getUserId();// 进入组的人的ID
 
                                         String group_id = data.get("GroupId") + "";// 组ID
@@ -666,15 +666,15 @@ public class NotificationService extends Service {
                                             e.printStackTrace();
                                         }
 
-                                        if (userinfo != null && !userinfo.getUserName().equals("")) {
-                                            person_name = userinfo.getUserName();
+                                        if (userinfo != null && !userinfo.getNickName().equals("")) {
+                                            person_name = userinfo.getNickName();
                                             person_id = userinfo.getUserId();
 
                                         } else if (user_list != null && user_list.size() > 0) {
                                             StringBuffer login_name = new StringBuffer();
                                             for (int i = 0; i < user_list.size(); i++) {
-                                                if (user_list.get(i).getUserName() != null && !user_list.get(i).getUserName().equals("")) {
-                                                    login_name.append(user_list.get(i).getUserName());
+                                                if (user_list.get(i).getNickName() != null && !user_list.get(i).getNickName().equals("")) {
+                                                    login_name.append(user_list.get(i).getNickName());
                                                 }
                                             }
                                             person_name = login_name.toString() + ",";
@@ -779,7 +779,7 @@ public class NotificationService extends Service {
                                         }
                                         String message_id = message.getMsgId();// 消息ID
                                         String deal_time = String.valueOf(message.getSendTime());// 消息处理时间
-                                        String user_name = userinfo.getUserName();
+                                        String user_name = userinfo.getNickName();
                                         String user_id = userinfo.getUserId();
                                         String news;
                                         if (user_name == null || user_name.trim().equals("")) {

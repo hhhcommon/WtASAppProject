@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 public class UpdatePerson implements Serializable {
 
-    private String nickName;
+    private String NickName;
     private String birthday;
     private String starSign;
     private String region;
@@ -18,7 +18,7 @@ public class UpdatePerson implements Serializable {
     private String Email;
 
     public UpdatePerson(String nickName, String birthday, String starSign, String region, String userSign, String gender, String email) {
-        this.nickName = nickName;
+        this.NickName = nickName;
         this.birthday = birthday;
         this.starSign = starSign;
         this.region = region;
@@ -76,10 +76,10 @@ public class UpdatePerson implements Serializable {
     }
 
     public String getNickName() {
-        return nickName;
+        return NickName;
     }
 
     public void setNickName(String nickName) {
-        this.nickName = nickName;
+        this.NickName = nickName;
     }
 }

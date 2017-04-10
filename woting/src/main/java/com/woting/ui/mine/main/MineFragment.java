@@ -52,7 +52,6 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.photocut.PhotoCutActivity;
 import com.woting.ui.common.qrcodes.EWMShowActivity;
-import com.woting.ui.interphone.commom.service.InterPhoneControl;
 import com.woting.ui.interphone.model.UserInviteMeInside;
 import com.woting.ui.mine.favorite.main.FavoriteFragment;
 import com.woting.ui.mine.hardware.HardwareIntroduceActivity;

@@ -102,6 +102,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import Test.ReqParam;
+import Test.TestMessage;
+
 /**
  * 主页
  * author：辛龙 (xinLong)
@@ -1150,7 +1153,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                                             callerId = userInfo.getCallerId();
                                                             try {
                                                                 CallerInfo caller = userInfo.getCallerInfo();
-                                                                String name = caller.getUserName();
+                                                                String name = caller.getNickName();
                                                                 showPerson(name); // 展示上次存在的单对单对讲
 
                                                             } catch (Exception e) {
@@ -1161,7 +1164,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                                             callerId = userInfo.getCallederId();
                                                             try {
                                                                 CallerInfo calleder = userInfo.getCallederInfo();
-                                                                String name = calleder.getUserName();
+                                                                String name = calleder.getNickName();
                                                                 showPerson(name); // 展示上次存在的单对单对讲
                                                             } catch (Exception e) {
                                                                 e.printStackTrace();
@@ -1396,4 +1399,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
         MainActivity.changeTwo();
         DuiJiangActivity.update();
     }
+
+
 }
