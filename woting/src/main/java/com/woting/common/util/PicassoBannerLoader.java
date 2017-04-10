@@ -8,6 +8,7 @@ import com.woting.common.config.GlobalConfig;
 import com.youth.banner.loader.ImageLoader;
 
 /**
+ * 轮播图
  * Created by Administrator on 2017/3/17 0017.
  */
 public class PicassoBannerLoader extends ImageLoader {
@@ -18,6 +19,6 @@ public class PicassoBannerLoader extends ImageLoader {
             contentImg = GlobalConfig.imageurl + contentImg;
         }
         //contentImg = AssembleImageUrlUtils.assembleImageUrl(contentImg,"1080_450");
-        Picasso.with(context).load(contentImg.replace("\\/", "/")).into(imageView);
+        Picasso.with(context).load(contentImg.replace("\\/", "/")).resize(1080,450).into(imageView);
     }
 }
