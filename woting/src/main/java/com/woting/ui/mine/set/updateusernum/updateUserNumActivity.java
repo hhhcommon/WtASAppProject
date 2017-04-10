@@ -66,13 +66,13 @@ public class updateUserNumActivity extends AppActivity implements View.OnClickLi
         confirmDialog = new Dialog(context, R.style.MyDialog);
         confirmDialog.setContentView(dialog1);
         confirmDialog.setCanceledOnTouchOutside(true);
-        confirmDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
+        confirmDialog.getWindow().setBackgroundDrawableResource(R.color.white);
     }
 
     // 判断数据是否填写完整
     private boolean isComplete() {
         userNum = et_UsrNum.getText().toString().trim();
-        return !"".equalsIgnoreCase(userNum);
+        return !"".equalsIgnoreCase(userNum)&&userNum.length()>5&&userNum.length()<21;
     }
 
     @Override
@@ -80,8 +80,16 @@ public class updateUserNumActivity extends AppActivity implements View.OnClickLi
         switch (v.getId()) {
             case R.id.btn_confirm:      // 确定修改
                 if (isComplete()) {
-                    tv_desc.setText("用户号是账号的唯一凭证,只能修改一次.\n\n请再次确认,用户号:" + userNum);
-                    confirmDialog.show();
+                    String fName=userNum.substring(0,1);
+                    String regex = "^[a-zA-Z]*$"; //以字母开头
+                    if(fName.matches(regex)){
+                        tv_desc.setText("用户号是账号的唯一凭证,只能修改一次.\n\n请再次确认,用户号:" + userNum);
+                        confirmDialog.show();
+                    }else{
+                        ToastUtils.show_always(context, "用户号必须以字母开头！");
+                    }
+                }else{
+                    ToastUtils.show_always(context, "用户号不能为空！");
                 }
                 break;
             case R.id.tv_cancel:

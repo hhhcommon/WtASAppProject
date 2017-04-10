@@ -75,10 +75,10 @@ public class HandleGroupApplyAdapter extends BaseAdapter {
 		}
 		UserInfo lists = list.get(position);
 
-		if (lists.getUserName() == null || lists.getUserName().equals("")) {
+		if (lists.getNickName() == null || lists.getNickName().equals("")) {
 			holder.tv_news.setText("未知");
 		} else {
-			holder.tv_news.setText(lists.getUserName());
+			holder.tv_news.setText(lists.getNickName());
 		}
 		if (lists.getApplyTime() == null || lists.getApplyTime().equals("")) {
 			holder.tv_jieshao.setText("申请进入该群");

@@ -192,7 +192,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 clearCacheDialog.dismiss();
                 break;
             case R.id.lin_bindPhone:        // 绑定手机号
-                String phoneNumber = BSApplication.SharedPreferences.getString(StringConstant.PHONENUMBER, ""); // 用户手机号
+                String phoneNumber = BSApplication.SharedPreferences.getString(StringConstant.USER_PHONE_NUMBER, ""); // 用户手机号
                 Intent intent = new Intent(context, PhoneCheckActivity.class);
                 if (!phoneNumber.equals("") || !phoneNumber.equals("null")) {// 已经有存在的手机号
                     intent.putExtra("PhoneType", "1");
@@ -264,7 +264,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 et.putString(StringConstant.USERID, "");
                 et.putString(StringConstant.USER_NUM, "");
                 et.putString(StringConstant.IMAGEURL, "");
-                et.putString(StringConstant.PHONENUMBER, "");
+                et.putString(StringConstant.USER_PHONE_NUMBER, "");
                 et.putString(StringConstant.USER_NUM, "");
                 et.putString(StringConstant.GENDERUSR, "");
                 et.putString(StringConstant.EMAIL, "");

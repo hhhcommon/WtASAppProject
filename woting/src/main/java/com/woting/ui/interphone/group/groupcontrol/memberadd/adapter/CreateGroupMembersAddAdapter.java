@@ -90,10 +90,10 @@ public class CreateGroupMembersAddAdapter extends BaseAdapter  implements Sectio
 			holder.indexLayut.setVisibility(View.GONE);
 		}
 		
-			if (lists.getUserName() == null || lists.getUserName().equals("")) {
+			if (lists.getNickName() == null || lists.getNickName().equals("")) {
 				holder.tv_name.setText("未知");// 名
 			} else {
-				holder.tv_name.setText(lists.getUserName());// 名
+				holder.tv_name.setText(lists.getNickName());// 名
 			}
 			if (lists.getPortraitMini() == null
 					|| lists.getPortraitMini().equals("")

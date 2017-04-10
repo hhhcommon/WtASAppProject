@@ -63,7 +63,7 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_groupadds);
 		context = this;
-		username = sharedPreferences.getString(StringConstant.USERNAME, "");			// 当前登录账号的姓名
+		username = sharedPreferences.getString(StringConstant.NICK_NAME, "");			// 当前登录账号的姓名
 		contact = (GroupInfo) this.getIntent().getSerializableExtra("contact");
 		GroupType = contact.getGroupType();	// 当前组的类型
 		setView();							// 设置界面

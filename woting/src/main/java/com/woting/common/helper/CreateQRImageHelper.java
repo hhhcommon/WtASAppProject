@@ -65,7 +65,7 @@ public class CreateQRImageHelper {
                 map.put("Type", type);
                 Map<String, Object> DataMap = new HashMap<>();
                 DataMap.put("UserId", newss.getUserId());
-                DataMap.put("UserName", newss.getUserName());
+                DataMap.put("UserName", newss.getNickName());
                 DataMap.put("PortraitMini", newss.getPortraitMini());
                 map.put("UserInviteMeInside", DataMap);
                 url = jsonEnclose(map).toString();

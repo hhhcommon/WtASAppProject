@@ -100,7 +100,7 @@
                     android:background="@color/WHITE"
                     android:ems="10"
                     android:gravity="left|center"
-                    android:hint="用户名"
+                    android:hint="昵称"
                     android:maxLength="100"
                     android:maxLines="1"
                     android:singleLine="true"

@@ -3,16 +3,19 @@ package com.woting.ui.interphone.commom.model;
 import java.io.Serializable;
 
 public class InviteUserInfo implements Serializable{
-    public String UserName;
+    public String NickName;
     public String UserId;
     public String PortraitMini;
     public String PortraitBig;
-	public String getUserName() {
-		return UserName;
+
+	public String getNickName() {
+		return NickName;
 	}
-	public void setUserName(String userName) {
-		UserName = userName;
+
+	public void setNickName(String nickName) {
+		NickName = nickName;
 	}
+
 	public String getUserId() {
 		return UserId;
 	}

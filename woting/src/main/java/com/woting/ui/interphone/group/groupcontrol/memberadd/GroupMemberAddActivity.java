@@ -185,8 +185,8 @@ public class GroupMemberAddActivity extends AppBaseActivity implements
 
     private void filledData(List<UserInfo> person) {
         for (int i = 0; i < person.size(); i++) {
-            person.get(i).setName(person.get(i).getUserName());
-            String pinyin = characterParser.getSelling(person.get(i).getUserName());
+            person.get(i).setName(person.get(i).getNickName());
+            String pinyin = characterParser.getSelling(person.get(i).getNickName());
             String sortString = pinyin.substring(0, 1).toUpperCase();
             if (sortString.matches("[A-Z]")) {// 判断首字母是否是英文字母
                 person.get(i).setSortLetters(sortString.toUpperCase());

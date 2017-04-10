@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class UserInviteMeInside implements Serializable {
 	public String InviteTime;
 	public String InviteMesage;
-	public String UserName;
+	public String NickName;
 	public String UserId;
 	public int type=1;				//判断已接受状态的type 1=接受 2=已接受
 	private String UserAliasName;
@@ -18,6 +18,14 @@ public class UserInviteMeInside implements Serializable {
 	private String Portrait;		//
 	private String PortraitMini;	//
 	private String UserSign;	    // 签名
+
+	public String getNickName() {
+		return NickName;
+	}
+
+	public void setNickName(String nickName) {
+		NickName = nickName;
+	}
 
 	public String getUserSign() {
 		return UserSign;
@@ -99,12 +107,7 @@ public class UserInviteMeInside implements Serializable {
 	public void setInviteMesage(String inviteMesage) {
 		InviteMesage = inviteMesage;
 	}
-	public String getUserName() {
-		return UserName;
-	}
-	public void setUserName(String userName) {
-		UserName = userName;
-	}
+
 	public String getUserId() {
 		return UserId;
 	}

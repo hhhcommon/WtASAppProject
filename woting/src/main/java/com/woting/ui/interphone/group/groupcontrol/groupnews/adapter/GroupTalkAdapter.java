@@ -68,10 +68,10 @@ public class GroupTalkAdapter extends BaseAdapter {
             if (lists.getUserAliasName() != null) {
                 holder.tv_name.setText(lists.getUserAliasName());
             } else {
-                if (lists.getUserName() == null || lists.getUserName().equals("")) {
+                if (lists.getNickName() == null || lists.getNickName().equals("")) {
                     holder.tv_name.setText("未知");//名
                 } else {
-                    holder.tv_name.setText(lists.getUserName());//名
+                    holder.tv_name.setText(lists.getNickName());//名
                 }
             }
             if (lists.getPortraitBig() == null || lists.getPortraitBig().equals("") || lists.getPortraitBig().equals("null") || lists.getPortraitBig().trim().equals("")) {

@@ -357,7 +357,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 startActivity(new Intent(context, MessageMainActivity.class));
                 break;
             case R.id.lin_lukuangtts:// 获取路况
-                MainActivity.setMessage("获取路况", "", "");
                 TTSPlay();
                 break;
             case R.id.tv_cancel:// 取消 点击隐藏语音对话框

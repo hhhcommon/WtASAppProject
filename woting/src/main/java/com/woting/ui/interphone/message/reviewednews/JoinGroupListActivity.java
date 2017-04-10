@@ -161,7 +161,7 @@ public class JoinGroupListActivity extends AppBaseActivity implements OnClickLis
                         for (int i = 0; i < userList.size(); i++) {
                             for (int j = 0; j < list.size(); j++) {
                                 if (userList.get(i).getInviteUserId() != null && userList.get(i).getInviteUserId().equals(list.get(j).getUserId())) {
-                                    userList.get(i).setInvitedUserName(list.get(j).getUserName());
+                                    userList.get(i).setInvitedUserName(list.get(j).getNickName());
                                 }
                             }
                         }

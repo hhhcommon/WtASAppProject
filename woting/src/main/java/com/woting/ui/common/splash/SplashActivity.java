@@ -37,10 +37,6 @@ public class SplashActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_splash);
-//        ImageView imageView = (ImageView) findViewById(R.id.imageView1);
-//        Bitmap bmp = BitmapUtils.readBitMap(SplashActivity.this, R.mipmap.splash);
-//        imageView.setImageBitmap(bmp);
 
         first = sharedPreferences.getString(StringConstant.FIRST, "0");// 是否是第一次登录
         Editor et = sharedPreferences.edit();
@@ -65,105 +61,207 @@ public class SplashActivity extends Activity {
                 try {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {
-                        Editor et = sharedPreferences.edit();
-                        String UserInfo = result.getString("UserInfo");
-                        if (UserInfo != null && !UserInfo.trim().equals("")) {
-                            UserInfo list = new Gson().fromJson(UserInfo, new TypeToken<UserInfo>() {
-                            }.getType());
-                            String userId = list.getUserId();// ID
-                            String userName = list.getUserName();// 用户名
-                            String userNum = list.getUserNum();// 用户号
-                            String imageUrl = list.getPortraitMini();// 用户头像
-                            String imageUrlBig = list.getPortraitBig();// 用户大头像
-                            String gender = list.getSex();// 性别
-                            String region = list.getRegion();// 区域
-                            String birthday = list.getBirthday();// 生日
-                            String age = list.getAge();// 年龄
-                            String starSign = list.getStarSign();// 星座
-                            String email = list.getEmail();// 邮箱
-                            String userSign = list.getUserSign();// 签名
-                            String nickName = list.getNickName();
+                        try {
+                            String UserInfo = result.getString("UserInfo");
+                            if (UserInfo != null && !UserInfo.trim().equals("")) {
+                                try {
+                                    UserInfo list = new Gson().fromJson(UserInfo, new TypeToken<UserInfo>() {
+                                    }.getType());
+                                    Editor et = sharedPreferences.edit();
 
-                            if (userId != null && !userId.equals("")) {
-                                et.putString(StringConstant.USERID, userId);
-                            }
-                            if (userName != null && !userName.equals("")) {
-                                et.putString(StringConstant.USERNAME, userName);
-                            }
-                            if (imageUrl != null && !imageUrl.equals("")) {
-                                et.putString(StringConstant.IMAGEURL, imageUrl);
-                            }
-                            if (imageUrlBig != null && !imageUrlBig.equals("")) {
-                                et.putString(StringConstant.IMAGEURBIG, imageUrlBig);
-                            }
-                            if (userNum != null && !userNum.equals("")) {
-                                et.putString(StringConstant.USER_NUM, userNum);
-                            }
-                            if (gender != null && !gender.equals("")) {
-                                if (gender.equals("男")) {
-                                    et.putString(StringConstant.GENDERUSR, "xb001");
-                                } else if (gender.equals("女")) {
-                                    et.putString(StringConstant.GENDERUSR, "xb002");
+                                    try {
+                                        String userId = list.getUserId();// ID
+                                        if (userId != null && !userId.equals("")) {
+                                            et.putString(StringConstant.USERID, userId);
+                                        } else {
+                                            et.putString(StringConstant.USERID, "");
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        et.putString(StringConstant.USERID, "");
+                                    }
+                                    // 没有这个字段
+//                                    try {
+//                                        String userName = list.getUserName();// 用户名
+//                                        if (userName != null && !userName.equals("")) {
+//                                            et.putString(StringConstant.USERNAME, userName);
+//                                        } else {
+//                                            et.putString(StringConstant.USERNAME, "");
+//                                        }
+//                                    } catch (Exception e) {
+//                                        e.printStackTrace();
+//                                        et.putString(StringConstant.USERNAME, "");
+//                                    }
+                                    try {
+                                        String imageUrl = list.getPortraitMini();// 用户头像
+                                        if (imageUrl != null && !imageUrl.equals("")) {
+                                            et.putString(StringConstant.IMAGEURL, imageUrl);
+                                        } else {
+                                            et.putString(StringConstant.IMAGEURL, "");
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        et.putString(StringConstant.IMAGEURL, "");
+                                    }
+                                    try {
+                                        String imageUrlBig = list.getPortraitBig();// 用户大头像
+                                        if (imageUrlBig != null && !imageUrlBig.equals("")) {
+                                            et.putString(StringConstant.IMAGEURBIG, imageUrlBig);
+                                        } else {
+                                            et.putString(StringConstant.IMAGEURBIG, "");
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        et.putString(StringConstant.IMAGEURBIG, "");
+                                    }
+                                    try {
+                                        String userNum = list.getUserNum();// 用户号
+                                        if (userNum != null && !userNum.equals("")) {
+                                            et.putString(StringConstant.USER_NUM, userNum);
+                                        } else {
+                                            et.putString(StringConstant.USER_NUM, "");
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        et.putString(StringConstant.USER_NUM, "");
+                                    }
+                                    try {
+                                        String gender = list.getSex();// 性别
+                                        if (gender != null && !gender.equals("")) {
+                                            if (gender.equals("男")) {
+                                                et.putString(StringConstant.GENDERUSR, "xb001");
+                                            } else if (gender.equals("女")) {
+                                                et.putString(StringConstant.GENDERUSR, "xb002");
+                                            }
+                                        } else {
+                                            et.putString(StringConstant.REGION, "");
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        et.putString(StringConstant.REGION, "");
+                                    }
+                                    try {
+                                        String region = list.getRegion();// 区域
+                                        /**
+                                         * 地区的三种格式
+                                         * 1、行政区划\/**市\/市辖区\/**区
+                                         * 2、行政区划\/**特别行政区  港澳台三地区
+                                         * 3、行政区划\/**自治区\/通辽市  自治区地区
+                                         */
+                                        if (region != null && !region.equals("")) {
+                                            String[] subRegion = region.split("/");
+                                            if (subRegion.length > 3) {
+                                                region = subRegion[1] + " " + subRegion[3];
+                                            } else if (subRegion.length == 3) {
+                                                region = subRegion[1] + " " + subRegion[2];
+                                            } else {
+                                                region = subRegion[1].substring(0, 2);
+                                            }
+                                            et.putString(StringConstant.REGION, region);
+                                        } else {
+                                            et.putString(StringConstant.REGION, "");
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        et.putString(StringConstant.REGION, "");
+                                    }
+                                    try {
+                                        String birthday = list.getBirthday();// 生日
+                                        if (birthday != null && !birthday.equals("")) {
+                                            et.putString(StringConstant.BIRTHDAY, birthday);
+                                        } else {
+                                            et.putString(StringConstant.BIRTHDAY, "");
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        et.putString(StringConstant.BIRTHDAY, "");
+                                    }
+                                    try {
+                                        String age = list.getAge();// 年龄
+                                        if (age != null && !age.equals("")) {
+                                            et.putString(StringConstant.AGE, age);
+                                        } else {
+                                            et.putString(StringConstant.AGE, "");
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        et.putString(StringConstant.AGE, "");
+                                    }
+                                    try {
+                                        String starSign = list.getStarSign();// 星座
+                                        if (starSign != null && !starSign.equals("")) {
+                                            et.putString(StringConstant.STAR_SIGN, starSign);
+                                        } else {
+                                            et.putString(StringConstant.STAR_SIGN, "");
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        et.putString(StringConstant.STAR_SIGN, "");
+                                    }
+                                    try {
+                                        String email = list.getEmail();// 邮箱
+                                        if (email != null && !email.equals("")) {
+                                            if (email.equals("&null")) {
+                                                et.putString(StringConstant.EMAIL, "");
+                                            } else {
+                                                et.putString(StringConstant.EMAIL, email);
+                                            }
+                                        } else {
+                                            et.putString(StringConstant.EMAIL, "");
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        et.putString(StringConstant.EMAIL, "");
+                                    }
+                                    try {
+                                        String userSign = list.getUserSign();// 签名
+                                        if (userSign != null && !userSign.equals("")) {
+                                            if (userSign.equals("&null")) {
+                                                et.putString(StringConstant.USER_SIGN, "");
+                                            } else {
+                                                et.putString(StringConstant.USER_SIGN, userSign);
+                                            }
+                                        } else {
+                                            et.putString(StringConstant.USER_SIGN, "");
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        et.putString(StringConstant.USER_SIGN, "");
+                                    }
+                                    try {
+                                        String nickName = list.getNickName();
+                                        if (nickName != null && !nickName.equals("")) {
+                                            if (nickName.equals("&null")) {
+                                                et.putString(StringConstant.NICK_NAME, "");
+                                            } else {
+                                                et.putString(StringConstant.NICK_NAME, nickName);
+                                            }
+                                        } else {
+                                            et.putString(StringConstant.NICK_NAME, "");
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        et.putString(StringConstant.NICK_NAME, "");
+                                    }
+                                    et.putString(StringConstant.ISLOGIN, "true");
+                                    if (!et.commit()) {
+                                        Log.v("commit", "数据 commit 失败!");
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    unRegisterLogin();
                                 }
                             }
-
-                            /**
-                             * 地区的三种格式
-                             * 1、行政区划\/**市\/市辖区\/**区
-                             * 2、行政区划\/**特别行政区  港澳台三地区
-                             * 3、行政区划\/**自治区\/通辽市  自治区地区
-                             */
-                            if (region != null && !region.equals("")) {
-                                String[] subRegion = region.split("/");
-                                if (subRegion.length > 3) {
-                                    region = subRegion[1] + " " + subRegion[3];
-                                } else if (subRegion.length == 3) {
-                                    region = subRegion[1] + " " + subRegion[2];
-                                } else {
-                                    region = subRegion[1].substring(0, 2);
-                                }
-                                et.putString(StringConstant.REGION, region);
-                            }
-                            if (birthday != null && !birthday.equals("")) {
-                                et.putString(StringConstant.BIRTHDAY, birthday);
-                            }
-                            if (age != null && !age.equals("")) {
-                                et.putString(StringConstant.AGE, age);
-                            }
-                            if (starSign != null && !starSign.equals("")) {
-                                et.putString(StringConstant.STAR_SIGN, starSign);
-                            }
-                            if (email != null && !email.equals("")) {
-                                if (email.equals("&null")) {
-                                    et.putString(StringConstant.EMAIL, "");
-                                } else {
-                                    et.putString(StringConstant.EMAIL, email);
-                                }
-                            }
-                            if (userSign != null && !userSign.equals("")) {
-                                if (userSign.equals("&null")) {
-                                    et.putString(StringConstant.USER_SIGN, "");
-                                } else {
-                                    et.putString(StringConstant.USER_SIGN, userSign);
-                                }
-                            }
-                            if (nickName != null && !nickName.equals("")) {
-                                if (nickName.equals("&null")) {
-                                    et.putString(StringConstant.NICK_NAME, "");
-                                } else {
-                                    et.putString(StringConstant.NICK_NAME, nickName);
-                                }
-                            }
-                            et.putString(StringConstant.ISLOGIN, "true");
-                            if (!et.commit()) {
-                                Log.v("commit", "数据 commit 失败!");
-                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            unRegisterLogin();
                         }
                     } else {
                         unRegisterLogin();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    unRegisterLogin();
                 }
 
                 if (first != null && first.equals("1")) {
@@ -195,7 +293,7 @@ public class SplashActivity extends Activity {
         et.putString(StringConstant.USERID, "");
         et.putString(StringConstant.USER_NUM, "");
         et.putString(StringConstant.IMAGEURL, "");
-        et.putString(StringConstant.PHONENUMBER, "");
+        et.putString(StringConstant.USER_PHONE_NUMBER, "");
         et.putString(StringConstant.USER_NUM, "");
         et.putString(StringConstant.GENDERUSR, "");
         et.putString(StringConstant.EMAIL, "");

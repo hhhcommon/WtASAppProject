@@ -28,9 +28,13 @@ public class VibratorUtils {
 		vib.vibrate(pattern, isRepeat ? 0: -1);
 	}
 	public static void cancel(final Activity activity) {
-		Vibrator vib = (Vibrator) activity.getSystemService(Service.VIBRATOR_SERVICE);
-		vib.cancel();
-		Log.e("停止震动","停止震动");
+		try {
+			Vibrator vib = (Vibrator) activity.getSystemService(Service.VIBRATOR_SERVICE);
+			vib.cancel();
+			Log.e("停止震动","停止震动");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }  

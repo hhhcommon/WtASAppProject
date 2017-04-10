@@ -67,10 +67,10 @@ public class FindFriendResultAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         UserInviteMeInside Inviter = list.get(position);
-        if (Inviter.getUserName() == null || Inviter.getUserName().equals("")) {
+        if (Inviter.getNickName()== null || Inviter.getNickName().equals("")) {
             holder.textview_invitename.setText("未知");
         } else {
-            holder.textview_invitename.setText(Inviter.getUserName());
+            holder.textview_invitename.setText(Inviter.getNickName());
         }
 
         if (Inviter.getUserNum() == null || Inviter.getUserNum().equals("")) {
