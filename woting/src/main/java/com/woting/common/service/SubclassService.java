@@ -154,7 +154,7 @@ public class SubclassService extends Service {
 
                                                 CallerInfo callerinfo = new Gson().fromJson(callerinfos, new TypeToken<CallerInfo>() {
                                                 }.getType());
-                                                callerinfo_username = callerinfo.getUserName();
+                                                callerinfo_username = callerinfo.getNickName();
                                                 callerinfo_portrait = callerinfo.getPortrait();
                                                 isallow = false;//对应答消息是否处理
                                                 if (run != null) {

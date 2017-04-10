@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class ListInfo implements Serializable{
 	
     public String UserId;
-    public String UserName;
+    public String NickName;
     public String Portrait;
     public String InnerPhoneNum;
 	public String getUserId() {
@@ -14,12 +14,15 @@ public class ListInfo implements Serializable{
 	public void setUserId(String userId) {
 		UserId = userId;
 	}
-	public String getUserName() {
-		return UserName;
+
+	public String getNickName() {
+		return NickName;
 	}
-	public void setUserName(String userName) {
-		UserName = userName;
+
+	public void setNickName(String nickName) {
+		NickName = nickName;
 	}
+
 	public String getPortrait() {
 		return Portrait;
 	}

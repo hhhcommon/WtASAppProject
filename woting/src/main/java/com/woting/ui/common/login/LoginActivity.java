@@ -167,7 +167,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         userName = editUserName.getText().toString().trim();
         password = editPassword.getText().toString().trim();
         if (userName == null || userName.trim().equals("")) {
-            ToastUtils.show_always(context, "用户名不能为空");
+            ToastUtils.show_always(context, "登录账号不能为空");
             return;
         }
         if (password == null || password.trim().equals("")) {
