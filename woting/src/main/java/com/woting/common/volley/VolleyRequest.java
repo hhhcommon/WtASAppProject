@@ -125,4 +125,10 @@ public class VolleyRequest {
         return jsonObject;
     }
 
+    /**
+     * 收集用户数据
+     */
+    public static void gatherData() {
+        
+    }
 }
