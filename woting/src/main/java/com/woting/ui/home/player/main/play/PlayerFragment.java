@@ -50,7 +50,6 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.AutoScrollTextView;
-import com.woting.common.widgetui.MarqueeTextView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.home.player.main.adapter.PlayerListAdapter;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
@@ -97,7 +96,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
     private WindowManager windowManager;
     private AutoScrollTextView mAutoScrollTextView;
-    private MarqueeTextView mPlayAudioTitleName;// 正在播放的节目的标题
+//    private MarqueeTextView mPlayAudioTitleName;// 正在播放的节目的标题
     private View mViewVoice;// 语音搜索 点击右上角"语音"显示
     private TextView mVoiceTextSpeakStatus;// 语音搜索状态
     private ImageView mVoiceImageSpeak;// 按下说话 抬起开始搜索
@@ -119,7 +118,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     private int stepVolume;
     private int curVolume;// 当前音量
     private int index = 0;// 记录当前播放在列表中的位置
-    private int sequListSize;// 播放专辑 获取在专辑列表已经获取的列表数量
+//    private int sequListSize;// 播放专辑 获取在专辑列表已经获取的列表数量
 
     private Bitmap bmpPress;// 语音搜索按钮按下的状态图片
     private Bitmap bmp;// 语音搜索按钮未按下的状态图片
@@ -222,7 +221,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         mAutoScrollTextView.init(windowManager);
         mAutoScrollTextView.startScroll();
 
-        mPlayAudioTitleName = (MarqueeTextView) view.findViewById(R.id.tv_name);// 正在播放的节目的标题
+//        mPlayAudioTitleName = (MarqueeTextView) view.findViewById(R.id.tv_name);// 正在播放的节目的标题
         mPlayAudioImageCover = (ImageView) view.findViewById(R.id.img_news);// 播放节目的封面
 
         mPlayImageStatus = (ImageView) view.findViewById(R.id.img_play);// 播放状态图片  播放 OR 暂停
@@ -523,10 +522,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     break;
                 case BroadcastConstants.PLAY_SEQU_LIST:// 播放专辑列表
                     contentId = intent.getStringExtra(StringConstant.ID_CONTENT);
-                    sequListSize = intent.getIntExtra(StringConstant.SEQU_LIST_SIZE, 0);
+//                    sequListSize = intent.getIntExtra(StringConstant.SEQU_LIST_SIZE, 0);
                     requestType = StringConstant.PLAY_REQUEST_TYPE_SEARCH_SEQU;
 
-                    sequListSize = 10;
+//                    sequListSize = 10;
                     page = 1;
                     refreshType = 0;
                     sequListRequest();
@@ -598,7 +597,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         if (isNetPlay && !isPlaying) {
             mPlayer.startPlay(index);
         } else {
-            if (isPlaying || mPlayer.playStatus()) {// 正在播放
+            if (isPlaying) {// 正在播放
                 mPlayer.pausePlay();
                 mPlayImageStatus.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_play_stop));
                 isPlaying = false;
@@ -841,6 +840,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 mPlayImageStatus.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_play_stop));
                 isPlaying = false;
                 mUIHandler.sendEmptyMessage(IntegerConstant.PLAY_UPDATE_LIST_VIEW);
+
+                Intent intent = new Intent(BroadcastConstants.UPDATE_PLAY_IMAGE);
+                intent.putExtra(StringConstant.PLAY_IMAGE, isPlaying);
+                context.sendBroadcast(intent);
             }
         });
         // 允许本次播放
