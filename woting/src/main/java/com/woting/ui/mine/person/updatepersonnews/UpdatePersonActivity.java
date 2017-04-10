@@ -120,9 +120,9 @@ public class UpdatePersonActivity extends AppBaseActivity implements
 
     private void setValueByPrefer() {
         // 账号
-        String userCount = BSApplication.SharedPreferences.getString(StringConstant.PHONENUMBER, "");
+        String userCount = BSApplication.SharedPreferences.getString(StringConstant.USER_PHONE_NUMBER, "");
         if (userCount.equals("")) {
-            userCount = BSApplication.SharedPreferences.getString(StringConstant.USERNAME, "");
+            userCount = BSApplication.SharedPreferences.getString(StringConstant.NICK_NAME, "");
         } else {
             userCount = userCount.replaceAll("(\\d{3})\\d{6}(\\d{2})", "$1 * * * * * * $2");
         }

@@ -97,10 +97,10 @@ public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexe
             holder.tv_b_id.setText("ID: "+lists.getUserNum());//id
         }
 
-        if (lists.getUserName() == null || lists.getUserName().equals("")) {
+        if (lists.getNickName() == null || lists.getNickName().equals("")) {
             holder.tv_name.setText("未知");//名
         } else {
-            holder.tv_name.setText(lists.getUserName());//名
+            holder.tv_name.setText(lists.getNickName());//名
         }
         if (lists.getUserAliasName() == null || lists.getUserAliasName().equals("")) {
             holder.tv_b_name.setVisibility(View.GONE);

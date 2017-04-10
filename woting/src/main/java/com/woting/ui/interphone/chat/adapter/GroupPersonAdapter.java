@@ -75,10 +75,10 @@ public class GroupPersonAdapter extends BaseAdapter{
 			holder=(ViewHolder) convertView.getTag();
 		}
 		lists=list.get(position);
-		if(lists.getUserName()==null||lists.getUserName().equals("")){
+		if(lists.getNickName()==null||lists.getNickName().equals("")){
 			holder.tv_name.setText("未知");
 		}else{
-			holder.tv_name.setText(lists.getUserName());
+			holder.tv_name.setText(lists.getNickName());
 		}
 		if(lists.getPortraitBig()==null||lists.getPortraitBig().equals("")||lists.getPortraitBig().equals("null")||lists.getPortraitBig().trim().equals("")){
 			if(lists.getOnLine()==2){

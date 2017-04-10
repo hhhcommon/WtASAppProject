@@ -11,7 +11,7 @@ public class MessageInFo implements Serializable {
 	public String GroupSignature;
 	public String GroupName;
 	public String InviteMessage;
-	public String UserName;
+	public String NickName;
 	public String UserId;
 	public String PhoneNum;
 	public String UserDescn;
@@ -151,12 +151,15 @@ public class MessageInFo implements Serializable {
 	public void setInviteMessage(String inviteMessage) {
 		InviteMessage = inviteMessage;
 	}
-	public String getUserName() {
-		return UserName;
+
+	public String getNickName() {
+		return NickName;
 	}
-	public void setUserName(String userName) {
-		UserName = userName;
+
+	public void setNickName(String nickName) {
+		NickName = nickName;
 	}
+
 	public String getUserId() {
 		return UserId;
 	}

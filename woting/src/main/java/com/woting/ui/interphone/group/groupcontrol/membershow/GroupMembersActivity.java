@@ -46,8 +46,9 @@ import java.util.List;
 
 /**
  * 展示全部群成员
+ *
  * @author 辛龙
- * 2016年4月13日
+ *         2016年4月13日
  */
 public class GroupMembersActivity extends AppBaseActivity implements
         OnClickListener, TextWatcher, OnItemClickListener, OnTouchingLetterChangedListener, TipView.WhiteViewClick {
@@ -149,47 +150,45 @@ public class GroupMembersActivity extends AppBaseActivity implements
         }
 
         VolleyRequest.requestPost(GlobalConfig.grouptalkUrl, tag, jsonObject, new VolleyCallback() {
-            private String ReturnType;
-            private String Message;
 
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 try {
-                    ReturnType = result.getString("ReturnType");
-                    Message = result.getString("Message");
-                    Log.v("ReturnType", "ReturnType > > " + ReturnType + " == Message > > " + Message);
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                }
-                if(ReturnType == null || ReturnType.equals("")) {
-                    tipView.setVisibility(View.VISIBLE);
-                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
-                    return ;
-                }
-                if (ReturnType.equals("1001") || ReturnType.equals("1002")) {
-                    try {
-                        srcList = new Gson().fromJson(result.getString("UserList"), new TypeToken<List<UserInfo>>() {}.getType());
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType == null || ReturnType.equals("")) {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.IS_ERROR);
-                    }
-                    if (srcList != null && srcList.size() != 0) {
-                        tipView.setVisibility(View.GONE);
-                        int sum = srcList.size();
-                        textHeadName.setText("全部成员(" + sum + ")");
-                        userList.clear();
-                        userList.addAll(srcList);
-                        filledData(userList);
-                        Collections.sort(userList, pinyinComparator);
-                        listView.setAdapter(adapter = new CreateGroupMembersAdapter(context, userList));
+                    } else if (ReturnType.equals("1001") || ReturnType.equals("1002")) {
+                        try {
+                            srcList = new Gson().fromJson(result.getString("UserList"), new TypeToken<List<UserInfo>>() {
+                            }.getType());
+                            if (srcList != null && srcList.size() != 0) {
+                                tipView.setVisibility(View.GONE);
+                                int sum = srcList.size();
+                                textHeadName.setText("全部成员(" + sum + ")");
+                                userList.clear();
+                                userList.addAll(srcList);
+                                filledData(userList);
+                                Collections.sort(userList, pinyinComparator);
+                                listView.setAdapter(adapter = new CreateGroupMembersAdapter(context, userList));
+                            } else {
+                                tipView.setVisibility(View.VISIBLE);
+                                tipView.setTipView(TipView.TipStatus.NO_DATA, "群组中没有成员!");
+                            }
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        }
+
                     } else {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.NO_DATA, "群组中没有成员!");
                     }
-                } else {
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
                     tipView.setVisibility(View.VISIBLE);
                     tipView.setTipView(TipView.TipStatus.NO_DATA, "群组中没有成员!");
                 }
@@ -205,13 +204,17 @@ public class GroupMembersActivity extends AppBaseActivity implements
 
     private void filledData(List<UserInfo> person) {
         for (int i = 0; i < person.size(); i++) {
-            person.get(i).setName(person.get(i).getUserName());
-            String pinyin = characterParser.getSelling(person.get(i).getUserName());
-            String sortString = pinyin.substring(0, 1).toUpperCase();
-            if (sortString.matches("[A-Z]")) {// 判断首字母是否是英文字母
-                person.get(i).setSortLetters(sortString.toUpperCase());
-            } else {
-                person.get(i).setSortLetters("#");
+            try {
+                person.get(i).setName(person.get(i).getNickName());
+                String pinyin = characterParser.getSelling(person.get(i).getNickName());
+                String sortString = pinyin.substring(0, 1).toUpperCase();
+                if (sortString.matches("[A-Z]")) {// 判断首字母是否是英文字母
+                    person.get(i).setSortLetters(sortString.toUpperCase());
+                } else {
+                    person.get(i).setSortLetters("#");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -273,7 +276,7 @@ public class GroupMembersActivity extends AppBaseActivity implements
                 UserInfo tp = new UserInfo();
                 tp.setPortraitBig(userList.get(position).getPortraitBig());
                 tp.setPortraitMini(userList.get(position).getPortraitMini());
-                tp.setUserName(userList.get(position).getUserName());
+                tp.setNickName(userList.get(position).getNickName());
                 tp.setUserId(userList.get(position).getUserId());
                 tp.setUserAliasName(userList.get(position).getUserAliasName());
                 Intent intent = new Intent(context, TalkPersonNewsActivity.class);

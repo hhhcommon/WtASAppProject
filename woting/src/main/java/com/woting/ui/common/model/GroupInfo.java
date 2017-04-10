@@ -6,7 +6,7 @@ public class GroupInfo implements Serializable {
     private String InviteTime;
     private String InviteCount;
     private String InviteMessage;
-    private String UserName;
+    private String NickName;
     private String UserId;
     private String PhoneNum;
     private String UserDescn;
@@ -170,12 +170,12 @@ public class GroupInfo implements Serializable {
         InviteMessage = inviteMessage;
     }
 
-    public String getUserName() {
-        return UserName;
+    public String getNickName() {
+        return NickName;
     }
 
-    public void setUserName(String userName) {
-        UserName = userName;
+    public void setNickName(String nickName) {
+        NickName = nickName;
     }
 
     public String getUserId() {

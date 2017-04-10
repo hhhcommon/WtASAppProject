@@ -11,11 +11,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings;
 import android.text.Html;
 import android.text.TextUtils;
@@ -100,6 +100,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * 主页
@@ -113,17 +114,14 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private static Intent Socket, record, voicePlayer, Subclass, download, Location, Notification;
 
     private static RoundImageView image0;// 播放
-    private static ImageView image1;
-    private static ImageView image2;
-    private static ImageView image5;
+    private static ImageView image1,image2,image5;
     private Dialog upDataDialog;
-    private ImageView imagePlay;
+    private ImageView imagePlay,image_delete;
 
     private static View tabNavigation;// 底部导航菜单
 
-    private int upDataType;//1,不需要强制升级2，需要强制升级
-    private String upDataNews;
-    private String contentId;
+    private int upDataType = 1;//1,不需要强制升级2，需要强制升级
+    private String upDataNews,contentId, callId, callerId;
     private String mPageName = "MainActivity";
     private String tag = "MAIN_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
@@ -139,11 +137,119 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private SearchTalkHistoryDao talkDao;
     // 消息通知
     public static GroupInfo groupInfo;
-    private String callId, callerId;
+
     public static DBTalkHistorary talkdb;
     public static String groupEntryNum;
 
     private ObjectAnimator animator;
+    private WindowManager windowManager;
+    private AutoScrollTextView tv_notify;
+    private LinearLayout lin_notify;
+    public static ArrayBlockingQueue<com.woting.ui.interphone.model.Message> MsgQueue = new ArrayBlockingQueue<com.woting.ui.interphone.model.Message>(100);             // 消息队列
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_wt_main);
+        context = this;
+        tabHost = extracted();
+        MobclickAgent.openActivityDurationTrack(false);                                             // 友盟统计功能
+        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=56275014");                      // 初始化语音配置对象
+        setType();                                                                                  // 设置顶栏样式
+        setVideo();                                                                                 //  解决加载播放器闪屏问题，需要看sdk是否解决此问题
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                createService();
+                registerReceiver();                                                                 // 注册广播
+            }
+        }, 0);
+        update();                                                                                   // 获取版本数据
+        InitTextView();                                                                             // 设置界面
+        InitDao();                                                                                  // 初始化数据库并且发送获取地理位置的请求
+        getTXL();                                                                                   // 第一次获取群成员跟组
+        handleIntent();                                                                             // 从 html 页面启动当前页面的 intent
+        tabHost.setCurrentTabByTag("zero");                                                         //  加载第一个界面
+        if (!BSApplication.SharedPreferences.getBoolean(StringConstant.FAVORITE_PROGRAM_TYPE, false)) {
+            startActivity(new Intent(context, FavoriteProgramTypeActivity.class));                  //  设置偏好
+        }
+        messageDeal mDeal = new messageDeal();                                                      // 处理通知消息的线程
+        mDeal.start();
+    }
+
+    // 设置顶栏样式
+    private void setType() {
+        try {
+            String a = android.os.Build.VERSION.RELEASE;
+            Log.e("系统版本号截取", a.substring(0, a.indexOf(".")) + "");
+            if (Integer.parseInt(a.substring(0, a.indexOf("."))) >= 5) {
+                v = true;
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);           // 透明状态栏
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);       // 透明导航栏
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //  解决加载播放器闪屏问题，需要看sdk是否解决此问题
+    private void setVideo() {
+        BVideoView videoView = (BVideoView) findViewById(R.id.video_view);
+        videoView.setVideoPath(null);
+        videoView.start();
+        videoView.stopPlayback();
+        videoView.setVisibility(View.GONE);
+    }
+
+    // 创建服务
+    private void createService() {
+        Socket = new Intent(this, SocketService.class);                                             // socket服务
+        startService(Socket);
+        record = new Intent(this, VoiceStreamRecordService.class);                                  // 录音服务
+        startService(record);
+        voicePlayer = new Intent(this, VoiceStreamPlayerService.class);                             // 播放服务
+        startService(voicePlayer);
+        Location = new Intent(this, LocationService.class);                                         // 定位服务
+        startService(Location);
+        Subclass = new Intent(this, SubclassService.class);                                         // 单对单接听控制服务
+        startService(Subclass);
+        download = new Intent(this, DownloadService.class);
+        startService(download);
+        Notification = new Intent(this, NotificationService.class);
+        startService(Notification);
+    }
+
+    // 更改wifi连接状态
+//    public void WifiNeverDormancy() {
+//        int value = Settings.System.getInt(getContentResolver(), Settings.Global.WIFI_SLEEP_POLICY, Settings.Global.WIFI_SLEEP_POLICY_DEFAULT);
+//        Log.e("wifi状态:", "默认状态" + value);
+//        SharedPreferences.Editor editor = BSApplication.SharedPreferences.edit();
+//        editor.putInt(StringConstant.WIFI_SLEEP_POLICY_DEFAULT, value);
+//        editor.commit();
+//        if (Settings.Global.WIFI_SLEEP_POLICY_NEVER != value) {
+//            Settings.System.putInt(getContentResolver(), Settings.Global.WIFI_SLEEP_POLICY, Settings.Global.WIFI_SLEEP_POLICY_NEVER);
+//        }
+//        int values = Settings.System.getInt(getContentResolver(), Settings.Global.WIFI_SLEEP_POLICY, Settings.Global.WIFI_SLEEP_POLICY_DEFAULT);
+//        Log.e("wifi状态:", "更改后状态" + values);
+//    }
+
+    // 还原wifi连接状态
+//    private void restoreWifiDormancy() {
+//        int defaultPolicy = BSApplication.SharedPreferences.getInt(StringConstant.WIFI_SLEEP_POLICY_DEFAULT, Settings.System.WIFI_SLEEP_POLICY_DEFAULT);
+//        Settings.System.putInt(getContentResolver(), Settings.Global.WIFI_SLEEP_POLICY, defaultPolicy);
+//    }
+
+    // 初始化数据库并且发送获取地理位置的请求
+    private void InitDao() {
+        CID = new CityInfoDao(context);
+        dbDao = new SearchPlayerHistoryDao(context);
+        talkDao = new SearchTalkHistoryDao(context);
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            sendRequest();
+        } else {
+            ToastUtils.show_always(context, "网络失败，请检查网络");
+        }
+    }
 
     // 开始动画
     private void playStartAnimation() {
@@ -184,68 +290,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
             }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wt_main);
-        setType();                        // 设置顶栏样式
-        BVideoView videoView = (BVideoView) findViewById(R.id.video_view);
-        videoView.setVideoPath(null);
-        videoView.start();
-        videoView.stopPlayback();
-        videoView.setVisibility(View.GONE);
-
-        context = this;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                createService();
-                registerReceiver();        // 注册广播
-            }
-        }, 0);
-
-        tabHost = extracted();
-        WifiNeverDormancy();              // 更改wifi连接状态
-        MobclickAgent.openActivityDurationTrack(false);
-        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=56275014");// 初始化语音配置对象
-        upDataType = 1;                   // 不需要强制升级
-        update();                         // 获取版本数据
-        InitTextView();                   // 设置界面
-        InitDao();
-        getTXL();
-        tabHost.setCurrentTabByTag("zero");
-        handleIntent();
-
-        if (!BSApplication.SharedPreferences.getBoolean(StringConstant.FAVORITE_PROGRAM_TYPE, false)) {
-            startActivity(new Intent(context, FavoriteProgramTypeActivity.class));
-        }
-
-//        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-//        AutoScrollTextView dd = (AutoScrollTextView)findViewById(R.id.tv_notify);
-//        dd.init(windowManager);
-//        dd.startScroll();
-    }
-
-    private void createService() {
-        Socket = new Intent(this, SocketService.class);                // socket服务
-        startService(Socket);
-        record = new Intent(this, VoiceStreamRecordService.class);     // 录音服务
-        startService(record);
-        voicePlayer = new Intent(this, VoiceStreamPlayerService.class);// 播放服务
-        startService(voicePlayer);
-        Location = new Intent(this, LocationService.class);            // 定位服务
-        startService(Location);
-        Subclass = new Intent(this, SubclassService.class);            // 单对单接听控制服务
-        startService(Subclass);
-        download = new Intent(this, DownloadService.class);
-        startService(download);
-        Notification = new Intent(this, NotificationService.class);
-        startService(Notification);
-
-    }
-
+    //第一次获取群成员跟组
     public void getTXL() {
-        //第一次获取群成员跟组
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             JSONObject jsonObject = VolleyRequest.getJsonObject(context);
             VolleyRequest.requestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
@@ -282,35 +328,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    private void setType() {
-        try {
-            String a = android.os.Build.VERSION.RELEASE;
-            Log.e("系统版本号", a + "");
-            Log.e("系统版本号截取", a.substring(0, a.indexOf(".")) + "");
-            if (Integer.parseInt(a.substring(0, a.indexOf("."))) >= 5) {
-                v = true;
-            }
-            if (v) {
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        // 透明状态栏
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    // 透明导航栏
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
-    // 初始化数据库并且发送获取地理位置的请求
-    private void InitDao() {
-        CID = new CityInfoDao(context);
-        dbDao = new SearchPlayerHistoryDao(context);
-        talkDao = new SearchTalkHistoryDao(context);
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            sendRequest();
-        } else {
-            ToastUtils.show_always(context, "网络失败，请检查网络");
-        }
-    }
+
 
     // 获取地理位置
     private void sendRequest() {
@@ -403,9 +422,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         MobclickAgent.onPause(context);
     }
 
-    /**
-     * 从 html 页面启动当前页面的 intent
-     */
+    //从 html 页面启动当前页面的 intent
     private void handleIntent() {
         Intent intent = getIntent();
         if (intent != null) {
@@ -765,8 +782,76 @@ public class MainActivity extends TabActivity implements OnClickListener {
         updateManager.checkUpdateInfo1();
     }
 
+    // 处理通知消息的线程
+    private class messageDeal extends Thread {
+        public void run() {
+            while (true) {
+                try {
+                    com.woting.ui.interphone.model.Message _msg = MsgQueue.take();
+                    if (_msg != null) {
+                        Message msg = new Message();
+                        msg.what = 1;
+                        msg.obj = _msg;
+                        mUIHandler.sendMessage(msg);
+                        sleep(15000);
+                        mUIHandler.sendEmptyMessage(2);
+//                        if (mCountDownTimer != null) mCountDownTimer.cancel();
+//                        mCountDownTimer = new CountDownTimer(15000, 1000) {
+//                            @Override
+//                            public void onTick(long millisUntilFinished) {
+//                                // 此处不需要处理
+//                            }
+//
+//                            @Override
+//                            public void onFinish() {
+//                                mUIHandler.sendEmptyMessage(2);
+//                                Log.e("定时器","定时器结束");
+//                            }
+//                        }.start();
+                    }
+                } catch (Exception e) {
+                    Log.e("messageDeal线程:::", e.toString());
+                }
+            }
+        }
+    }
+
+    // 通知消息更新界面展示
+    private Handler mUIHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:// 更新界面-展示
+                    com.woting.ui.interphone.model.Message _msg = (com.woting.ui.interphone.model.Message) msg.obj;
+                    setMessage(_msg.getSrc(), _msg.getUrl(), _msg.getType());
+                    break;
+                case 2:// 更新界面-关闭
+                    lin_notify.setVisibility(View.GONE);
+                    break;
+            }
+        }
+    };
+
+    //设置界面数据
+    private void setMessage(String src, String url, String type) {
+        if (src != null && !src.trim().equals("")) {
+            lin_notify.setVisibility(View.VISIBLE);
+            tv_notify.setText(src);
+            tv_notify.init(windowManager);
+            tv_notify.startScroll();
+            // 此处处理关闭逻辑
+            // 如果是语音播报开启，则语音播报完毕则关闭界面提醒
+        }
+    }
+
     // 初始化视图
     private void InitTextView() {
+        windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        tv_notify = (AutoScrollTextView) findViewById(R.id.tv_notify);   //
+        image_delete = (ImageView) findViewById(R.id.image_delete);      //
+        lin_notify = (LinearLayout) findViewById(R.id.lin_notify);       //
+        image_delete.setOnClickListener(this);
+        lin_notify.setOnClickListener(this);
+
         imagePlay = (ImageView) findViewById(R.id.image_play);// 暂停显示  播放隐藏
         tabNavigation = findViewById(R.id.tab_navigation);// 底部导航菜单
 
@@ -832,6 +917,12 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 break;
             case R.id.main_lin_5:// 我的
                 setViewFive();
+                break;
+            case R.id.image_delete:// 关闭消息提示
+                lin_notify.setVisibility(View.GONE);
+                break;
+            case R.id.lin_notify:// 点击进入消息界面
+                ToastUtils.show_short(context, "进入消息界面");
                 break;
         }
     }
@@ -1171,7 +1262,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         et.putString(StringConstant.USERID, "");
         et.putString(StringConstant.USER_NUM, "");
         et.putString(StringConstant.IMAGEURL, "");
-        et.putString(StringConstant.PHONENUMBER, "");
+        et.putString(StringConstant.USER_PHONE_NUMBER, "");
         et.putString(StringConstant.USER_NUM, "");
         et.putString(StringConstant.GENDERUSR, "");
         et.putString(StringConstant.EMAIL, "");
@@ -1186,28 +1277,11 @@ public class MainActivity extends TabActivity implements OnClickListener {
         }
     }
 
-    public void WifiNeverDormancy() {
-        int value = Settings.System.getInt(getContentResolver(), Settings.Global.WIFI_SLEEP_POLICY, Settings.Global.WIFI_SLEEP_POLICY_DEFAULT);
-        Log.e("wifi状态:", "默认状态"+value);
-        SharedPreferences.Editor editor = BSApplication.SharedPreferences.edit();
-        editor.putInt(StringConstant.WIFI_SLEEP_POLICY_DEFAULT, value);
-        editor.commit();
-        if (Settings.Global.WIFI_SLEEP_POLICY_NEVER != value) {
-            Settings.System.putInt(getContentResolver(), Settings.Global.WIFI_SLEEP_POLICY, Settings.Global.WIFI_SLEEP_POLICY_NEVER);
-        }
-        int values = Settings.System.getInt(getContentResolver(),Settings.Global.WIFI_SLEEP_POLICY, Settings.Global.WIFI_SLEEP_POLICY_DEFAULT);
-        Log.e("wifi状态:", "更改后状态"+values);
-    }
-
-    private void restoreWifiDormancy() {
-        int defaultPolicy = BSApplication.SharedPreferences.getInt(StringConstant.WIFI_SLEEP_POLICY_DEFAULT, Settings.System.WIFI_SLEEP_POLICY_DEFAULT);
-        Settings.System.putInt(getContentResolver(), Settings.Global.WIFI_SLEEP_POLICY, defaultPolicy);
-    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        restoreWifiDormancy();
+//        restoreWifiDormancy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
         unregisterReceiver(netWorkChangeReceiver);
         unregisterReceiver(phoneStatReceiver);

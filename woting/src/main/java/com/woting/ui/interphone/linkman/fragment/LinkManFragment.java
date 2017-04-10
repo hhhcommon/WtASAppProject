@@ -201,9 +201,9 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
     // 为 ListView 填充数据
     private void filledData(List<UserInfo> person) {
         for (int i = 0; i < person.size(); i++) {
-            person.get(i).setName(person.get(i).getUserName());
+            person.get(i).setName(person.get(i).getNickName());
             // 汉字转换成拼音
-            String pinyin = characterParser.getSelling(person.get(i).getUserName());
+            String pinyin = characterParser.getSelling(person.get(i).getNickName());
             String sortString = pinyin.substring(0, 1).toUpperCase();
             // 正则表达式，判断首字母是否是英文字母
             if (sortString.matches("[A-Z]")) {
