@@ -22,9 +22,7 @@ import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
-import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.gatherdata.GatherData;
 import com.woting.common.manager.CacheManager;
 import com.woting.common.manager.UpdateManager;
 import com.woting.common.util.DialogUtils;
@@ -118,7 +116,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         initCache();
         proxy = BSApplication.getKSYProxy();                         // 播放缓存
 
-        GatherData.collectData(IntegerConstant.DATA_UPLOAD_TYPE_GIVEN, IntegerConstant.DATA_TYPE_OPEN);
+//        GatherData.collectData(IntegerConstant.DATA_UPLOAD_TYPE_GIVEN, IntegerConstant.DATA_TYPE_OPEN);
     }
 
     @Override
