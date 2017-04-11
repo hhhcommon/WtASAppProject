@@ -34,7 +34,6 @@ public class GatherData {
      * 初始化 开启上传数据的线程
      */
     public GatherData() {
-
         isRun = true;
 
         // 定量上传数据线程
@@ -57,7 +56,7 @@ public class GatherData {
         data.setScreenSize(PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);// 手机屏幕大小
         data.setLongitude(PhoneMessage.longitude);// 经度
         data.setLatitude(PhoneMessage.latitude);// 纬度
-//        data.setRegion();// 行政区划
+        data.setRegion("北京朝阳");// 行政区划
         return data;
     }
 
@@ -111,19 +110,13 @@ public class GatherData {
     }
 
     /**
-     * 销毁线程
-     */
-    public static void destroyThread() {
-        GatherData.isRun = false;
-
-        Log.v("TAG", "GatherData Thread interrupt");
-    }
-
-    /**
      * 收集打开新界面数据
      */
     private static DataModel collectOpenData() {
         DataModel data = setData();
+
+        // 其他数据
+        // ...
 
         return data;
     }
@@ -134,6 +127,18 @@ public class GatherData {
     private static DataModel collectPlayData() {
         DataModel data = setData();
 
+        // 其他数据
+        // ...
+
         return data;
+    }
+
+    /**
+     * 销毁线程
+     */
+    public static void destroyThread() {
+        GatherData.isRun = false;
+
+        Log.v("TAG", "GatherData Thread interrupt");
     }
 }
