@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,9 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
+import com.woting.common.gatherdata.GatherData;
+import com.woting.common.gatherdata.model.DataModel;
+import com.woting.common.gatherdata.model.ReqParam;
 import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -96,6 +100,8 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
     private String contentFavorite;
     private SubscriberListFragment subscriberListFragment;
 
+    private String ObjType;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,12 +115,48 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_player_more_operation, container, false);
-
             initView();
             initEvent();
             shareDialog();
+            initGatherData();
         }
         return rootView;
+    }
+
+
+    private void initGatherData() {
+        if(GlobalConfig.playerObject!=null&&GlobalConfig.playerObject.getMediaType()!=null&&GlobalConfig.playerObject.getContentId()!=null){
+            try{
+            String beginTime=String.valueOf(System.currentTimeMillis());
+                String apiType=StringConstant.APINAME_OPEN;
+                if(GlobalConfig.playerObject.getMediaType().equals("AUDIO")){
+
+                    ObjType=StringConstant.OBJTYPE_AUDIO;
+
+                }else if(GlobalConfig.playerObject.getMediaType().equals("RADIO")){
+
+                    ObjType=StringConstant.OBJTYPE_RADIO;
+
+                }else{
+                    return;
+                }
+                ReqParam mReqParam= new ReqParam();
+
+                String objId=GlobalConfig.playerObject.getContentId();
+
+                DataModel mdataModel=new DataModel(beginTime,apiType,ObjType,mReqParam,objId);
+
+                if(mdataModel!=null){
+                    GatherData.collectData(IntegerConstant.DATA_UPLOAD_TYPE_GIVEN,mdataModel);
+                }
+
+            }catch (Exception e){
+
+                e.printStackTrace();
+            }
+        }else{
+            Log.e("节目详情页的TAG","GlobalConfig.playerObject是个空");
+        }
     }
 
     // 初始化视图

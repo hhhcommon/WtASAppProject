@@ -147,7 +147,7 @@ public class RadioNationalFragment extends Fragment implements View.OnClickListe
         try {
             jsonObject.put("MediaType", "RADIO");
             jsonObject.put("CatalogId", "dtfl2001");
-            jsonObject.put("CatalogType", "9");
+            jsonObject.put("CatalogType", "-1");
             jsonObject.put("PerSize", "20");
             jsonObject.put("ResultType", "1");
             jsonObject.put("PageSize", "50");

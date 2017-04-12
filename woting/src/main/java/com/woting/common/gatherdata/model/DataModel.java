@@ -90,6 +90,11 @@ public class DataModel {
 
     /**
      * 打开新界面
+     * @param beginTime 事件发生时系统时间
+     * @param objType   等同于页码标签有固定值ReqParam
+     * @param reqParam  页面收集参数 index等
+     * @param objId     文档未说明 暂定为contentId
+     *
      */
     public DataModel(String beginTime, String apiName, String objType, ReqParam reqParam, String objId) {
         this.BeginTime = beginTime;
@@ -105,7 +110,7 @@ public class DataModel {
         this.ScreenSize = PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight;
         this.longitude = PhoneMessage.longitude;
         this.latitude = PhoneMessage.latitude;
-        this.Region = "北京朝阳";
+        this.Region = GlobalConfig.Region;
     }
 
     /**
@@ -124,7 +129,7 @@ public class DataModel {
         this.ScreenSize = PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight;
         this.longitude = PhoneMessage.longitude;
         this.latitude = PhoneMessage.latitude;
-        this.Region = "北京朝阳";
+        this.Region = GlobalConfig.Region;
     }
 
     public ReqParam getReqParam() {

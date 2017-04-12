@@ -63,7 +63,7 @@ public class GatherData {
         data.setScreenSize(PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);// 手机屏幕大小
         data.setLongitude(PhoneMessage.longitude);// 经度
         data.setLatitude(PhoneMessage.latitude);// 纬度
-        data.setRegion("北京朝阳");// 行政区划
+        data.setRegion(GlobalConfig.Region);// 行政区划
         return data;
     }
 
