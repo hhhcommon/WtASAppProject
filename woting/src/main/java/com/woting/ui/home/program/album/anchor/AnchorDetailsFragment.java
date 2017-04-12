@@ -23,6 +23,9 @@ import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
+import com.woting.common.gatherdata.GatherData;
+import com.woting.common.gatherdata.model.DataModel;
+import com.woting.common.gatherdata.model.ReqParam;
 import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
@@ -112,6 +115,7 @@ public class AnchorDetailsFragment extends Fragment implements View.OnClickListe
 
             initView();
             handleIntent();
+
         }
         return rootView;
     }
@@ -187,8 +191,28 @@ public class AnchorDetailsFragment extends Fragment implements View.OnClickListe
             tipView.setVisibility(View.VISIBLE);
             tipView.setTipView(TipView.TipStatus.IS_ERROR);
         }
+        if(!TextUtils.isEmpty(PersonId)){
+            initGatherData();
+        }
     }
 
+    private void initGatherData() {
+        try {
+            String beginTime = String.valueOf(System.currentTimeMillis());
+            String apiType = StringConstant.APINAME_OPEN;
+            String ObjType = StringConstant.OBJTYPE_ANCHOR;
+            ReqParam mReqParam = new ReqParam();
+            String objId = PersonId;
+            DataModel mdataModel = new DataModel(beginTime, apiType, ObjType, mReqParam, objId);
+            if (mdataModel != null) {
+                GatherData.collectData(IntegerConstant.DATA_UPLOAD_TYPE_GIVEN, mdataModel);
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
     private void send() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {

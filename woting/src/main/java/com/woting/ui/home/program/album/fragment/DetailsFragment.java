@@ -85,7 +85,7 @@ public class DetailsFragment extends Fragment implements OnClickListener {
             } else {
                 AlbumFragment.setTip(TipView.TipStatus.NO_NET);
             }
-            if(AlbumFragment.id!=null){
+            if(!TextUtils.isEmpty(AlbumFragment.id)){
 
                initGatherData();
 
