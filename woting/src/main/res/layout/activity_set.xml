@@ -223,6 +223,27 @@
 
                 <ImageView style="@style/PersonAndSetRightStyle"/>
 
+
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/lin_secret_set"
+                style="@style/PersonAndSetRelativeStyle" >
+
+                <View style="@style/LineStyle"/>
+
+                <ImageView
+                    android:id="@+id/image_secret_set"
+                    style="@style/PersonAndSetLeftStyle"
+                    android:src="@mipmap/wt_person_update" />
+
+                <TextView
+                    style="@style/PersonAndSetTextStyle"
+                    android:text="隐私设置"
+                    android:layout_toRightOf="@id/image_secret_set" />
+
+                <ImageView style="@style/PersonAndSetRightStyle"/>
+
                 <View
                     style="@style/ViewStyle"
                     android:layout_alignParentBottom="true"/>

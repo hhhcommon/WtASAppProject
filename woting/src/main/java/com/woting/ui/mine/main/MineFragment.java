@@ -233,7 +233,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.lin_set:              // 设置
                 Intent intentSet = new Intent(context, SetActivity.class);
-                intentSet.putExtra("LOGIN_STATE", isLogin);
                 startActivityForResult(intentSet, 0x222);
                 break;
             case R.id.lin_playhistory:      // 播放历史

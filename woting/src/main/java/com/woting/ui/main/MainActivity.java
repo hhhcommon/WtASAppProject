@@ -297,6 +297,12 @@ public class MainActivity extends TabActivity implements OnClickListener {
     public void getTXL() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+            try {
+                jsonObject.put("Page", "1");
+                jsonObject.put("PageSize", "10000");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             VolleyRequest.requestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
                 @Override
                 protected void requestSuccess(JSONObject result) {

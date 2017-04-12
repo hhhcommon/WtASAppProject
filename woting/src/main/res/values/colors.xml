@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 透明色值 -->
+    <!-- 00%=FF（不透明）    5%=F2    10%=E5    15%=D8    20%=CC    25%=BF    30%=B2    35%=A5    40%=99    45%=8c    50%=7F
+         55%=72    60%=66    65%=59    70%=4c    75%=3F    80%=33    85%=21    90%=19    95%=0c    100%=00（全透明）-->
+    <color name="translucent50_black">#7f000000</color>
+    <color name="translucent70_black">#4c000000</color>
+
+    <color name="translucent15_dinglan_orange">#D8ff6600</color>
+    <color name="transparent_gray">#A000</color>
+    <color name="ab_text_color_transparent">#80f1f9ff</color>
+    <drawable name="translucent_background">#e0000000</drawable>
+    <drawable name="transparent_background">#00000000</drawable>
+    <drawable name="translucent_background_80">#66000000</drawable>
+    <drawable name="light_translucent_background">#80000000</drawable>
+    <drawable name="aa_translucent_background">#b0000000</drawable>
+    <drawable name="translucent_whilte_background">#50000000</drawable>
 
     <color name="dinglan_orange_z">#de6300</color>
     <color name="dinglan_orange">#ff6600</color>
@@ -9,7 +24,7 @@
     <color name="main_tab_bg">#fff5ef</color>
     <color name="item_1">#F222</color>
     <color name="item_2">#F000</color>
-    <color name="transparent_gray">#A000</color>
+
     <color name="main_app_color">#ffcf4c29</color>
     <color name="text_selected">#ffcf4c29</color>
     <color name="text_over">#ffb9c4cb</color>
@@ -28,7 +43,7 @@
     <color name="missed_calls_background">#ffcf4c29</color>
     <color name="landscape_background">#CCCCCC</color>
     <color name="text_color_gray_deep">#ff666666</color>
-    <color name="ab_text_color_transparent">#80f1f9ff</color>
+
     <color name="ab_text_color">#fff1f9ff</color>
     <color name="background">#FF1D2E5A</color>
     <color name="guide_start_background">@color/background</color>
@@ -37,12 +52,7 @@
     <color name="list_item_name_color">#de6408</color>
     <color name="city_list_item_text_color">#6a6a6a</color>
 
-    <drawable name="translucent_background">#e0000000</drawable>
-    <drawable name="transparent_background">#00000000</drawable>
-    <drawable name="translucent_background_80">#66000000</drawable>
-    <drawable name="light_translucent_background">#80000000</drawable>
-    <drawable name="aa_translucent_background">#b0000000</drawable>
-    <drawable name="translucent_whilte_background">#50000000</drawable>
+
     <drawable name="mutisearchbnt_lightbrue_textbackground">#99ccff</drawable>
     <drawable name="WHITE2">#ffffffff</drawable>
     <drawable name="title_bg">#1Affffff</drawable>
@@ -427,6 +437,7 @@
     <color name="yellow_s">#FEDB43</color>
     <color name="s_hongbao">#E55025</color>
     <color name="WHITE">#ffffffff</color>
+    <color name="translucent15_WHITE">#D8ffffff</color>
     <color name="wt_appbg">#fefbec</color>
     <color name="wt_green">#4eb3ab</color>
     <color name="shen_hui">#D7000000</color>

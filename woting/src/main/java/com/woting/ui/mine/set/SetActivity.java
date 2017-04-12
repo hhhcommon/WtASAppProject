@@ -40,6 +40,7 @@ import com.woting.ui.mine.set.downloadposition.DownloadPositionActivity;
 import com.woting.ui.mine.set.help.HelpActivity;
 import com.woting.ui.mine.set.messageset.MessageSetActivity;
 import com.woting.ui.mine.set.preference.activity.PreferenceActivity;
+import com.woting.ui.mine.set.secretset.SecretSetActivity;
 import com.woting.ui.mine.set.updateusernum.updateUserNumActivity;
 
 import org.json.JSONException;
@@ -70,7 +71,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
     private String tag = "SET_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
     private KSYProxyService proxy;
-    private RelativeLayout lin_collocation;
+    private RelativeLayout lin_collocation, lin_secret_set;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         cachePath = Environment.getExternalStorageDirectory() + "/woting/image";// 缓存路径
         initDialog();
         initViews();
+        setView();
     }
 
     // 初始化控件
@@ -94,27 +96,30 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         findViewById(R.id.lin_downloadposition).setOnClickListener(this);   // 下载位置
         findViewById(R.id.lin_preference).setOnClickListener(this);         // 偏好设置
         findViewById(R.id.lin_message_set).setOnClickListener(this);        // 通知设置
-        lin_collocation = (RelativeLayout) findViewById(R.id.lin_p_set);
-        lin_collocation.setOnClickListener(this);                           // 配置设置
 
-        findViewById(R.id.lin_id_name).setOnClickListener(this);            // ID号
-
-        lin_IsLogin = findViewById(R.id.lin_IsLogin);                        // 未登录时需要隐藏的绑定手机号和重置密码布局
+        lin_secret_set = (RelativeLayout) findViewById(R.id.lin_secret_set);// 隐私设置
+        lin_secret_set.setOnClickListener(this);
+        lin_collocation = (RelativeLayout) findViewById(R.id.lin_p_set);    // 配置设置
+        lin_collocation.setOnClickListener(this);
         linearIdName = findViewById(R.id.lin_id_name);                      // 用户可以且仅可以设置一次的唯一标识 ID
         linearIdName.setOnClickListener(this);
-
         logOut = (Button) findViewById(R.id.lin_zhuxiao);                   // 注销
         logOut.setOnClickListener(this);
-        if (getIntent() != null) {
-            if (!getIntent().getStringExtra("LOGIN_STATE").equals("true")) {
-                logOut.setVisibility(View.GONE);
-                lin_IsLogin.setVisibility(View.GONE);
-            }
-        }
+
+        lin_IsLogin = findViewById(R.id.lin_IsLogin);                       // 未登录时需要隐藏的绑定手机号和重置密码布局
 
         textCache = (TextView) findViewById(R.id.text_cache);               // 缓存
         initCache();
-        proxy = BSApplication.getKSYProxy();                         // 播放缓存
+        proxy = BSApplication.getKSYProxy();                                // 播放缓存
+    }
+
+    private void setView() {
+        String isLogin = BSApplication.SharedPreferences.getString(StringConstant.ISLOGIN, "false");
+        if (!isLogin.equals("true")) {
+            logOut.setVisibility(View.GONE);
+            lin_IsLogin.setVisibility(View.GONE);
+            lin_secret_set.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -156,6 +161,9 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 Intent p = new Intent(context, PreferenceActivity.class);
                 p.putExtra("type", 2);
                 startActivity(p);
+                break;
+            case R.id.lin_secret_set:       // 隐私设置
+                startActivity(new Intent(context, SecretSetActivity.class));
                 break;
             case R.id.lin_feedback:         // 意见反馈
                 startActivity(new Intent(context, FeedbackActivity.class));
@@ -268,6 +276,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 et.putString(StringConstant.USER_NUM, "");
                 et.putString(StringConstant.GENDERUSR, "");
                 et.putString(StringConstant.EMAIL, "");
+                et.putString(StringConstant.PHONE_NUMBER_FIND, "0");
                 et.putString(StringConstant.REGION, "");
                 et.putString(StringConstant.BIRTHDAY, "");
                 et.putString(StringConstant.USER_SIGN, "");
@@ -279,6 +288,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 }
                 logOut.setVisibility(View.GONE);
                 lin_IsLogin.setVisibility(View.GONE);
+                lin_secret_set.setVisibility(View.GONE);
                 sendBroadcast(new Intent(BroadcastConstants.PUSH_ALLURL_CHANGE));// 发送广播 更新已下载和未下载界面
                 Toast.makeText(context, "注销成功", Toast.LENGTH_SHORT).show();
             }

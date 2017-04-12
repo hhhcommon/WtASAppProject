@@ -116,15 +116,24 @@ public class CallAlertActivity extends Activity implements OnClickListener {
      *设置界面，以及界面数据
      */
     private void setView() {
+        findViewById(R.id.image_close).setOnClickListener(this);
         tv_news = (TextView) findViewById(R.id.tv_news);
         imageview = (ImageView) findViewById(R.id.image);
         tv_name = (TextView) findViewById(R.id.tv_name);
-
         lin_call = (LinearLayout) findViewById(R.id.lin_call);
         lin_call.setOnClickListener(this);
-
         lin_guaduan = (LinearLayout) findViewById(R.id.lin_guaduan);
         lin_guaduan.setOnClickListener(this);
+        // 第二次呼叫的界面
+        lin_two_call = (LinearLayout) findViewById(R.id.lin_two_call);
+        small_tv_news = (TextView) findViewById(R.id.small_tv_news);
+        small_imageview = (ImageView) findViewById(R.id.small_image);
+        small_tv_name = (TextView) findViewById(R.id.small_tv_name);
+        small_lin_call = (LinearLayout) findViewById(R.id.small_lin_call);
+        small_lin_call.setOnClickListener(this);
+        small_lin_guaduan = (LinearLayout) findViewById(R.id.small_lin_guaduan);
+        small_lin_guaduan.setOnClickListener(this);
+
 
         ImageView img_zhezhao = (ImageView) findViewById(R.id.img_zhezhao);
         Bitmap bmp_zhezhao = BitmapUtils.readBitMap(instance, R.mipmap.liubianxing_orange_big);
@@ -136,7 +145,6 @@ public class CallAlertActivity extends Activity implements OnClickListener {
         } else {
             String url = GlobalConfig.imageurl + image;
             String _url = AssembleImageUrlUtils.assembleImageUrl300(url);
-
             // 加载图片
             AssembleImageUrlUtils.loadImage(_url, url, imageview, IntegerConstant.TYPE_MINE);
         }
@@ -229,6 +237,24 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                     musicPlayer = null;
                 }
                 InterPhoneControl.PersonTalkHangUp(instance, InterPhoneControl.bdcallid);
+                break;
+            case R.id.image_close:
+                tv_news.setText("重新呼叫");
+                lin_call.setVisibility(View.VISIBLE);
+                lin_guaduan.setVisibility(View.GONE);
+                isCall = false;
+                if (musicPlayer != null) {
+                    musicPlayer.stop();
+                    musicPlayer = null;
+                }
+                InterPhoneControl.PersonTalkHangUp(instance, InterPhoneControl.bdcallid);
+                finish();
+                break;
+            case R.id.small_lin_call:
+
+                break;
+            case R.id.small_lin_guaduan:
+
                 break;
         }
     }
@@ -449,8 +475,15 @@ public class CallAlertActivity extends Activity implements OnClickListener {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN && KeyEvent.KEYCODE_BACK == keyCode) {
             if (isCall) {
+                tv_news.setText("重新呼叫");
+                lin_call.setVisibility(View.VISIBLE);
+                lin_guaduan.setVisibility(View.GONE);
+                isCall = false;
+                if (musicPlayer != null) {
+                    musicPlayer.stop();
+                    musicPlayer = null;
+                }
                 InterPhoneControl.PersonTalkHangUp(instance, InterPhoneControl.bdcallid);
-                finish();
             } else {
                 finish();
             }

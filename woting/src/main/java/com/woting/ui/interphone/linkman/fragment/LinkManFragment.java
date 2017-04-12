@@ -61,6 +61,7 @@ import com.woting.ui.interphone.linkman.view.SideBar.OnTouchingLetterChangedList
 import com.woting.ui.interphone.main.DuiJiangActivity;
 import com.woting.ui.interphone.message.newfriend.activity.NewsActivity;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -345,7 +346,12 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
                 dialogs = DialogUtils.Dialogph(context, "正在获取数据");
             }
             JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-
+            try {
+                jsonObject.put("Page", "1");
+                jsonObject.put("PageSize", "10000");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             VolleyRequest.requestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
                 @Override
                 protected void requestSuccess(JSONObject result) {

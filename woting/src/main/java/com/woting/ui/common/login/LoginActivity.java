@@ -248,6 +248,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                                 et.putString(StringConstant.USER_PHONE_NUMBER, "");
                             }
                             try {
+                                String isPub = ui.getString("PhoneNumIsPub");
+                                et.putString(StringConstant.PHONE_NUMBER_FIND, isPub);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                et.putString(StringConstant.PHONE_NUMBER_FIND, "0");
+                            }
+                            try {
                                 String gender = ui.getString("Sex");// 性别
                                 et.putString(StringConstant.GENDERUSR, gender);
                             } catch (Exception e) {
@@ -475,6 +482,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                                 e.printStackTrace();
                                 et.putString(StringConstant.USER_PHONE_NUMBER, "");
                             }
+                            try {
+                                String isPub = ui.getString("PhoneNumIsPub");
+                                et.putString(StringConstant.PHONE_NUMBER_FIND, isPub);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                et.putString(StringConstant.PHONE_NUMBER_FIND, "0");
+                            }
+
                             try {
                                 String gender = ui.getString("Sex");
                                 if (gender.equals("男")) {

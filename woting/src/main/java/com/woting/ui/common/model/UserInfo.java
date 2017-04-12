@@ -33,6 +33,15 @@ public class UserInfo implements Serializable {
     private String Birthday;        // 生日
     private String Age;             // 年龄
     private String NickName;        // 昵称
+    private String PhoneNumIsPub;   // 是否允许手机号查找
+
+    public String getPhoneNumIsPub() {
+        return PhoneNumIsPub;
+    }
+
+    public void setPhoneNumIsPub(String phoneNumIsPub) {
+        PhoneNumIsPub = phoneNumIsPub;
+    }
 
     public String getNickName() {
         return NickName;
