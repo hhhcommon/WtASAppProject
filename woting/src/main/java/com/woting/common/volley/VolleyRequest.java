@@ -125,4 +125,24 @@ public class VolleyRequest {
         return jsonObject;
     }
 
+    /**
+     * 上传数据
+     */
+    public static void updateData(String data) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("data", data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Method.POST, GlobalConfig.gatherData, jsonObject, null, null);
+
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(GlobalConfig.HTTP_CONNECTION_TIMEOUT, 1, 1.0f));
+        BSApplication.getHttpQueues().add(jsonObjectRequest);// 加入队列
+
+        Log.i("请求服务器地址", "--- > > >  " + GlobalConfig.gatherData);
+        Log.v("请求服务器提交的参数", "--- > > >  " + jsonObject.toString());
+    }
 }
