@@ -115,6 +115,13 @@ public class SplashActivity extends Activity {
                                         et.putString(StringConstant.IMAGEURBIG, "");
                                     }
                                     try {
+                                        String isPub = list.getPhoneNumIsPub();
+                                        et.putString(StringConstant.PHONE_NUMBER_FIND, isPub);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        et.putString(StringConstant.PHONE_NUMBER_FIND, "0");
+                                    }
+                                    try {
                                         String userNum = list.getUserNum();// 用户号
                                         if (userNum != null && !userNum.equals("")) {
                                             et.putString(StringConstant.USER_NUM, userNum);
@@ -296,6 +303,7 @@ public class SplashActivity extends Activity {
         et.putString(StringConstant.USER_PHONE_NUMBER, "");
         et.putString(StringConstant.USER_NUM, "");
         et.putString(StringConstant.GENDERUSR, "");
+        et.putString(StringConstant.PHONE_NUMBER_FIND, "0");
         et.putString(StringConstant.EMAIL, "");
         et.putString(StringConstant.REGION, "");
         et.putString(StringConstant.BIRTHDAY, "");

@@ -10,20 +10,20 @@
         android:id="@+id/tip_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/Relative_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible" >
+        android:visibility="visible">
 
         <LinearLayout
             android:id="@+id/linear_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/beige"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/lin_notalk"
@@ -31,13 +31,13 @@
                 android:layout_height="140dp"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="gone" >
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="70dp"
@@ -48,7 +48,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:orientation="vertical" >
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -66,18 +66,18 @@
                 android:layout_height="140dp"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="gone" >
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical" >
+                        android:orientation="vertical">
 
                         <ImageView
                             android:id="@+id/image_persontx"
@@ -97,15 +97,15 @@
                             android:id="@+id/image_personvoice"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
-                            android:visibility="invisible"
-                            android:layout_toRightOf="@id/image_persontx" />
+                            android:layout_toRightOf="@id/image_persontx"
+                            android:visibility="invisible" />
                     </RelativeLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:orientation="vertical" >
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/tv_personname"
@@ -127,30 +127,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="140dp"
                 android:orientation="vertical"
-                android:visibility="gone" >
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center" >
+                    android:gravity="center">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="left|center"
-                        android:orientation="vertical" >
+                        android:orientation="vertical">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="59dp"
                             android:gravity="center"
-                            android:orientation="vertical" >
+                            android:orientation="vertical">
 
                             <RelativeLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="center" >
+                                android:gravity="center">
 
                                 <ImageView
                                     android:id="@+id/image_grouptx"
@@ -187,7 +187,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="30dp"
                         android:gravity="center"
-                        android:orientation="vertical" >
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/tv_grouptype"
@@ -201,7 +201,7 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="top" >
+                            android:gravity="top">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -239,24 +239,24 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="left|center"
-                        android:orientation="vertical" >
+                        android:orientation="vertical">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:paddingLeft="30dp" >
+                            android:paddingLeft="30dp">
 
                             <RelativeLayout
                                 android:layout_width="62dp"
                                 android:layout_height="62dp"
-                                android:orientation="vertical" >
+                                android:orientation="vertical">
 
                                 <RelativeLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignParentBottom="true" >
+                                    android:layout_alignParentBottom="true">
 
                                     <ImageView
                                         android:id="@+id/image_group_persontx"
@@ -277,7 +277,7 @@
                                     android:id="@+id/image_voice"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"/>
+                                    android:layout_alignParentRight="true" />
                             </RelativeLayout>
 
                             <LinearLayout
@@ -286,7 +286,7 @@
                                 android:layout_marginTop="8dp"
                                 android:gravity="center"
                                 android:orientation="vertical"
-                                android:paddingRight="20dp" >
+                                android:paddingRight="20dp">
 
                                 <TextView
                                     android:id="@+id/talkingname"
@@ -322,9 +322,9 @@
                 android:layout_height="wrap_content"
                 android:background="@color/WHITE"
                 android:gravity="center"
+                android:numColumns="4"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:numColumns="4"
                 android:scrollbars="none"
                 android:verticalSpacing="10dp"
                 android:visibility="gone" />
@@ -339,8 +339,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:animationCache="false"
-                android:scrollbars="none"
                 android:divider="@color/WHITE"
+                android:scrollbars="none"
                 android:scrollingCache="false" />
 
         </LinearLayout>
@@ -348,64 +348,198 @@
         <com.woting.common.widgetui.MyLinearLayout
             android:id="@+id/lin_foot"
             android:layout_width="match_parent"
-            android:layout_height="136dp"
-            android:layout_alignParentBottom="true"
+            android:layout_height="match_parent"
             android:background="@color/transparentt"
             android:orientation="vertical"
-            android:visibility="gone" >
+            android:visibility="visible">
 
-            <View
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/view_color" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="0dp"
+                android:background="@color/translucent50_black"
+                android:layout_weight="1"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="16dp"
-                    android:orientation="vertical" >
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"></LinearLayout>
 
-                    <Button
-                        android:id="@+id/image_button"
-                        android:layout_width="99dp"
-                        android:layout_height="99dp"
-                        android:background="@drawable/d_duijiang_button_background" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:background="@color/translucent15_dinglan_orange"
+                            android:layout_height="200dp"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <ImageView
+                                    android:id="@+id/image"
+                                    android:layout_width="75dp"
+                                    android:layout_height="75dp"
+                                    android:scaleType="centerCrop" />
+
+                                <ImageView
+                                    android:id="@+id/img_zhezhao"
+                                    android:layout_width="75dp"
+                                    android:src="@mipmap/liubianxing_orange_big_call"
+                                    android:layout_height="75dp" />
+                            </RelativeLayout>
+
+                            <TextView
+                                android:id="@+id/tv_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:text="茉莉"
+                                android:textColor="@color/WHITE"
+                                android:textSize="20sp" />
+
+                            <TextView
+                                android:id="@+id/tv_news"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:text="邀请你对讲"
+                                android:textColor="@color/WHITE"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="100dp"
+                                android:background="@color/translucent15_WHITE"
+                                android:orientation="horizontal">
+
+
+                                <LinearLayout
+                                    android:id="@+id/lin_guaduan"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <ImageView
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:src="@mipmap/wt_image_guaduan" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:text="挂断"
+                                        android:textColor="#FF3000" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:id="@+id/lin_call"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <ImageView
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:src="@mipmap/wt_image_call" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:text="接听"
+                                        android:textColor="@color/green_call_text" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:orientation="vertical" >
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"></LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="136dp"
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/view_color" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="13dp"
-                        android:layout_marginTop="10dp"
-                        android:gravity="center"
-                        android:orientation="vertical" >
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="16dp"
+                        android:orientation="vertical">
 
-                        <ImageView
-                            android:id="@+id/imageView_answer"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/d_duijiang_callback_background" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:text="挂断"
-                            android:textColor="@color/red" />
+                        <Button
+                            android:id="@+id/image_button"
+                            android:layout_width="99dp"
+                            android:layout_height="99dp"
+                            android:background="@drawable/d_duijiang_button_background" />
                     </LinearLayout>
-                </LinearLayout>
-            </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="13dp"
+                            android:layout_marginTop="10dp"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/imageView_answer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/d_duijiang_callback_background" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:text="挂断"
+                                android:textColor="@color/red" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
         </com.woting.common.widgetui.MyLinearLayout>
     </RelativeLayout>
 </LinearLayout>

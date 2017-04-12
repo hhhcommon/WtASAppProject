@@ -22,7 +22,7 @@ public class GatherData {
 
     public static int uploadType;
 
-    public static boolean isRun;
+    public static boolean isRun = false;
 
     public static int uploadCount = IntegerConstant.DATA_UPLOAD_COUNT;// 指定上传的数量
 
@@ -34,15 +34,18 @@ public class GatherData {
      * 初始化 开启上传数据的线程
      */
     public GatherData() {
-        isRun = true;
+        // 防止application创建多次
+        if (!isRun) {
+            isRun = true;
 
-        // 定量上传数据线程
-        GivenUploadDataThread givenUploadDataThread = new GivenUploadDataThread();
-        givenUploadDataThread.start();
+            // 定量上传数据线程
+            GivenUploadDataThread givenUploadDataThread = new GivenUploadDataThread();
+            givenUploadDataThread.start();
 
-        // 定时上传数据线程
-        ImmUploadDataThread immUploadDataThread = new ImmUploadDataThread();
-        immUploadDataThread.start();
+            // 定时上传数据线程
+            ImmUploadDataThread immUploadDataThread = new ImmUploadDataThread();
+            immUploadDataThread.start();
+        }
     }
 
     /**
@@ -62,7 +65,7 @@ public class GatherData {
 
     /**
      * 收集数据
-     *
+     * <p>
      * uploadType == -1 定量上传
      * uploadType == 0 实时上传
      * uploadType == 时间 定时上传

@@ -151,6 +151,11 @@
             android:name="com.woting.ui.mine.set.messageset.MessageSetActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"/>
+        <!--  -->
+        <activity
+            android:name="com.woting.ui.mine.set.secretset.SecretSetActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"/>
 
         <!--  -->
         <activity
