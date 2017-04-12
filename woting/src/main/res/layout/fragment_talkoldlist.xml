@@ -356,74 +356,81 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:background="@color/translucent50_black"
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:id="@+id/lin_two_call"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical"></LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:orientation="vertical">
+                    android:visibility="gone"
+                    android:background="@color/translucent50_black"
+                    android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:orientation="vertical"></LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
                         android:orientation="vertical">
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:background="@color/translucent15_dinglan_orange"
-                            android:layout_height="200dp"
+                            android:layout_height="match_parent"
                             android:gravity="center"
                             android:orientation="vertical">
 
-                            <RelativeLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="160dp"
+                                android:background="@color/translucent15_dinglan_orange"
+                                android:gravity="center"
+                                android:orientation="vertical">
 
-                                <ImageView
-                                    android:id="@+id/image"
-                                    android:layout_width="75dp"
-                                    android:layout_height="75dp"
-                                    android:scaleType="centerCrop" />
+                                <RelativeLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content">
 
-                                <ImageView
-                                    android:id="@+id/img_zhezhao"
-                                    android:layout_width="75dp"
-                                    android:src="@mipmap/liubianxing_orange_big_call"
-                                    android:layout_height="75dp" />
-                            </RelativeLayout>
+                                    <ImageView
+                                        android:id="@+id/image"
+                                        android:layout_width="75dp"
+                                        android:layout_height="75dp"
+                                        android:scaleType="centerCrop" />
 
-                            <TextView
-                                android:id="@+id/tv_name"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:text="茉莉"
-                                android:textColor="@color/WHITE"
-                                android:textSize="20sp" />
+                                    <ImageView
+                                        android:id="@+id/img_zhezhao"
+                                        android:layout_width="75dp"
+                                        android:layout_height="75dp"
+                                        android:src="@mipmap/liubianxing_orange_big_call" />
+                                </RelativeLayout>
 
-                            <TextView
-                                android:id="@+id/tv_news"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:text="邀请你对讲"
-                                android:textColor="@color/WHITE"
-                                android:textSize="14sp" />
-                        </LinearLayout>
+                                <TextView
+                                    android:id="@+id/tv_name"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="10dp"
+                                    android:text="茉莉"
+                                    android:textColor="@color/WHITE"
+                                    android:textSize="20sp" />
+
+                                <TextView
+                                    android:id="@+id/tv_news"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="5dp"
+                                    android:text="邀请你对讲"
+                                    android:textColor="@color/WHITE"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="100dp"
+                                android:layout_height="80dp"
                                 android:background="@color/translucent15_WHITE"
                                 android:orientation="horizontal">
 
@@ -471,14 +478,15 @@
                                 </LinearLayout>
                             </LinearLayout>
 
+                        </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical"></LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical"></LinearLayout>
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout

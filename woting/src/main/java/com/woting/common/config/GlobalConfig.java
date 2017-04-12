@@ -25,6 +25,7 @@ public class GlobalConfig {
     public static String AdCode;
 
     public static String oldBCCallId;// 上次存在的对讲ID
+    public static int interPhoneType=0;// 此时的对讲状态
 
     public static ArrayList<String> staticFacesList;   //从Asset中取出的表情list
     // 网络情况 1为成功WiFi已连接，2为cmnet，3为cmwap，4为ctwap， -1为网络未连接

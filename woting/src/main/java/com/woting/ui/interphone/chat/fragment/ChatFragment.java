@@ -40,6 +40,8 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
+import com.woting.common.manager.MyActivityManager;
+import com.woting.common.service.SubclassService;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -140,6 +142,13 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
     private String oldTalkId;
     private Handler handler;
     private Runnable run;
+    private ImageView imageview;
+    private TextView tv_name;
+    private LinearLayout lin_call;
+    private LinearLayout lin_guaduan;
+    private LinearLayout lin_two_call;
+    private String callId;
+    private String callerId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -228,6 +237,12 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
     }
 
     private void setView() {
+        lin_two_call = (LinearLayout) rootView.findViewById(R.id.lin_two_call);                 //
+        imageview = (ImageView) rootView.findViewById(R.id.image);                              //
+        tv_name = (TextView) rootView.findViewById(R.id.tv_name);                               //
+        lin_call = (LinearLayout) rootView.findViewById(R.id.lin_call);                         //
+        lin_guaduan = (LinearLayout) rootView.findViewById(R.id.lin_guaduan);
+        // 以上为被呼叫界面
         lin_notalk = (LinearLayout) rootView.findViewById(R.id.lin_notalk);                     // 没有对讲时候的界面
         lin_personhead = (LinearLayout) rootView.findViewById(R.id.lin_personhead);             // 有个人对讲时候的界面
         tv_personname = (TextView) rootView.findViewById(R.id.tv_personname);                   // 个人对讲时候的好友名字
@@ -266,6 +281,33 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
     }
 
     private void listener() {
+        lin_call.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SubclassService.isallow = true;
+                InterPhoneControl.PersonTalkAllow(context, callId, callerId);//接收应答
+                if (SubclassService.musicPlayer != null) {
+                    SubclassService.musicPlayer.stop();
+                    SubclassService.musicPlayer = null;
+                }
+                isCallingForUser = true;
+                addUser(callerId);
+            }
+        });
+        lin_guaduan.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SubclassService.isallow = true;
+                InterPhoneControl.PersonTalkOver(context, callId, callerId);//拒绝应答
+                if (SubclassService.musicPlayer != null) {
+                    SubclassService.musicPlayer.stop();
+                    SubclassService.musicPlayer = null;
+                }
+                if (lin_two_call.getVisibility() == View.VISIBLE) {
+                    lin_two_call.setVisibility(View.GONE);
+                }
+            }
+        });
         image_grouptx.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -301,6 +343,15 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                 return false;
             }
         });
+    }
+
+    private void addUser(String id) {
+        String addTime = Long.toString(System.currentTimeMillis());    // 获取最新激活状态的数据
+        String bjuserid = CommonUtils.getUserId(context);
+        dbDao.deleteHistory(id);                                       // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+        DBTalkHistorary history = new DBTalkHistorary(bjuserid, "user", id, addTime);
+        dbDao.addTalkHistory(history);
+        zhiDingPerson();
     }
 
     /**
@@ -461,7 +512,8 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
             JSONObject jsonObject = VolleyRequest.getJsonObject(context);
             try {
                 jsonObject.put("Page", "1");
-                jsonObject.put("PageSize", "10000");            } catch (JSONException e) {
+                jsonObject.put("PageSize", "10000");
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
             VolleyRequest.requestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
@@ -1733,6 +1785,55 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                     }
                 } catch (Exception e1) {
                     e1.printStackTrace();
+                }
+            } else if (action.equals(BroadcastConstants.PUSH_CALL_CHAT)) {
+                // 收到新的别人呼叫
+                String type = intent.getStringExtra("type");
+                callId = intent.getStringExtra("callId");
+                callerId = intent.getStringExtra("callerId");
+                if (type != null && !type.trim().equals("") && type.trim().equals("call")) {
+                    if (lin_two_call.getVisibility() == View.VISIBLE) {
+                        //  此时已经有人在通话了，再次收到会拒接
+                        InterPhoneControl.PersonTalkOver(context, callId, callerId);//拒绝应答
+                    } else {
+                        String _name = null;
+                        String _image = null;
+                        try {
+                            if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
+                                for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
+                                    if (callerId.equals(GlobalConfig.list_person.get(i).getUserId())) {
+                                        _image = GlobalConfig.list_person.get(i).getPortraitBig();
+                                        _name = GlobalConfig.list_person.get(i).getNickName();
+                                        break;
+                                    }
+                                }
+                            } else {
+                                _image = null;
+                                _name = "我听科技";
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            _image = null;
+                            _name = "我听科技";
+                        }
+
+                        //适配好友展示信息
+                        tv_name.setText(_name);
+                        if (_image == null || _image.equals("") || _image.equals("null") || _image.trim().equals("")) {
+                            imageview.setImageResource(R.mipmap.wt_image_tx_hy);
+                        } else {
+                            String url = GlobalConfig.imageurl + _image;
+                            final String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
+                            // 加载图片
+                            AssembleImageUrlUtils.loadImage(_url, url, imageview, IntegerConstant.TYPE_LIST);
+                        }
+
+                    }
+                } else {
+                    // 超时拒接后隐藏界面
+                    if (lin_two_call.getVisibility() == View.VISIBLE) {
+                        lin_two_call.setVisibility(View.GONE);
+                    }
                 }
             }
         }
