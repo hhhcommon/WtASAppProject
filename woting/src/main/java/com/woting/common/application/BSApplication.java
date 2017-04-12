@@ -15,6 +15,7 @@ import com.umeng.socialize.PlatformConfig;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.config.SocketClientConfig;
 import com.woting.common.constant.KeyConstant;
+import com.woting.common.gatherdata.GatherData;
 import com.woting.common.helper.CollocationHelper;
 import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.PhoneMessage;
@@ -73,6 +74,8 @@ public class BSApplication extends Application implements OnErrorListener, OnLog
                 initStaticFaces();                 // 读取assets里的图片资源
             }
         }, 0);
+
+        new GatherData();
     }
 
     public static Context getAppContext() {

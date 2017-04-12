@@ -314,5 +314,6 @@ public class GlobalConfig {
     // 新增节目
     public static final String addMediaInfo = "content/media/addMediaInfo.do";
 
-
+    // 用户数据收集接口
+    public static final String gatherData = "http://345.67.8.9:708/sendGatherData.do";
 }

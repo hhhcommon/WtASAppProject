@@ -54,7 +54,7 @@ public class FriendAddActivity extends AppBaseActivity implements OnClickListene
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friendadds);
-		username = sharedPreferences.getString(StringConstant.USERNAME, "");// 当前登录账号的姓名
+		username = sharedPreferences.getString(StringConstant.NICK_NAME, "");// 当前登录账号的姓名
 		contact = (UserInviteMeInside) getIntent().getSerializableExtra("contact");
 		setView();		// 设置界面
 		setListener();	// 设置监听
@@ -80,10 +80,10 @@ public class FriendAddActivity extends AppBaseActivity implements OnClickListene
 
 	private void setValue() {
 		// 数据适配
-		if(contact.getUserName()==null||contact.getUserName().equals("")){
+		if(contact.getNickName()==null||contact.getNickName().equals("")){
 			tv_name.setText("未知");
 		}else{
-			tv_name.setText(contact.getUserName());
+			tv_name.setText(contact.getNickName());
 		}
 		if(contact.getUserNum()==null||contact.getUserNum().equals("")){
 			tv_id.setVisibility(View.GONE);

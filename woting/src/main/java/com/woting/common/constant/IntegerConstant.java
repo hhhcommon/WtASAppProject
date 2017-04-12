@@ -38,6 +38,7 @@ public class IntegerConstant {
 
     // 默认图片
     public static final int TYPE_DEFAULT = 0x000;
+
     // 用户默认头像
     public static final int TYPE_MINE = 0x001;
 
@@ -46,8 +47,25 @@ public class IntegerConstant {
 
     // 好友默认头像
     public static final int TYPE_PERSON = 0x003;
+
     // 列表默认图片
     public static final int TYPE_LIST = 0x004;
+
     // 通知消息默认头像
     public static final int TYPE_NOTIFY = 0x005;
+
+    // 数据收集类型 播放事件
+    public static final int DATA_TYPE_PLAY = 0x006;
+
+    // 数据收集类型 打开界面
+    public static final int DATA_TYPE_OPEN = 0x007;
+
+    // 数据上传方式 即时上传
+    public static final int DATA_UPLOAD_TYPE_IMM = 0;
+
+    // 数据上传方式 定制时间上传
+    public static final int DATA_UPLOAD_TYPE_GIVEN = -1;
+
+    public static final int DATA_UPLOAD_COUNT = 100;
+
 }

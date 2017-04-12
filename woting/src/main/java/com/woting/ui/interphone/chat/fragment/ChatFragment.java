@@ -425,7 +425,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
             final String c_url = url;
 
             // 加载图片
-            AssembleImageUrlUtils.loadImage(_url, c_url,image_grouptx, IntegerConstant.TYPE_GROUP);
+            AssembleImageUrlUtils.loadImage(_url, c_url, image_grouptx, IntegerConstant.TYPE_GROUP);
         }
         if (allList.size() == 0) {
             if (adapter == null) {
@@ -459,6 +459,11 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             dialog = DialogUtils.Dialogph(context, "正在获取数据");
             JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+            try {
+                jsonObject.put("Page", "1");
+                jsonObject.put("PageSize", "10000");            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             VolleyRequest.requestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
                 @Override
                 protected void requestSuccess(JSONObject result) {
@@ -536,14 +541,14 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
             String id = MainActivity.groupInfo.getGroupId();
             dbDao.deleteHistory(id);
             groupId = id;
-            if(MainActivity.groupEntryNum!=null&&!MainActivity.groupEntryNum.trim().equals("")){
+            if (MainActivity.groupEntryNum != null && !MainActivity.groupEntryNum.trim().equals("")) {
                 tv_num.setText(MainActivity.groupEntryNum + "");
-            }else{
+            } else {
                 tv_num.setText("1");
             }
             isCallingForGroup = true;
-            interPhoneType="group";
-            MainActivity.groupEntryNum="";
+            interPhoneType = "group";
+            MainActivity.groupEntryNum = "";
             addGroup(id);//加入到数据库
             setDateGroup();
             getGridViewPerson(id);
@@ -601,7 +606,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
             final String c_url = url;
 
             // 加载图片
-            AssembleImageUrlUtils.loadImage(_url, c_url,image_grouptx, IntegerConstant.TYPE_GROUP);
+            AssembleImageUrlUtils.loadImage(_url, c_url, image_grouptx, IntegerConstant.TYPE_GROUP);
         }
         if (allList.size() == 0) {
             if (adapter == null) {
@@ -756,7 +761,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
     // 重置界面
     private void setOnResumeView() {
         //此处在splashActivity中refreshB设置成true
-        UserName = shared.getString(StringConstant.USERNAME, "");
+        UserName = shared.getString(StringConstant.NICK_NAME, "");
         String p = shared.getString(StringConstant.PERSONREFRESHB, "false");
         String l = shared.getString(StringConstant.ISLOGIN, "false");
         if (l.equals("true")) {
@@ -838,7 +843,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                     GroupInfo ListGP = new GroupInfo();
                                     ListGP.setTruename(GlobalConfig.list_person.get(j).getTruename());
                                     ListGP.setId(GlobalConfig.list_person.get(j).getUserId());
-                                    ListGP.setName(GlobalConfig.list_person.get(j).getUserName());
+                                    ListGP.setName(GlobalConfig.list_person.get(j).getNickName());
                                     ListGP.setUserAliasName(GlobalConfig.list_person.get(j).getUserAliasName());
                                     ListGP.setPortrait(GlobalConfig.list_person.get(j).getPortraitBig());
                                     ListGP.setAddTime(historyDataBaseList.get(i).getAddTime());
@@ -979,7 +984,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                 final String c_url = url;
 
                 // 加载图片
-                AssembleImageUrlUtils.loadImage(_url, c_url,image_group_persontx, IntegerConstant.TYPE_PERSON);
+                AssembleImageUrlUtils.loadImage(_url, c_url, image_group_persontx, IntegerConstant.TYPE_PERSON);
             }
             if (draw_group.isRunning()) {
             } else {
@@ -1026,7 +1031,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                 final String c_url = url;
 
                 // 加载图片
-                AssembleImageUrlUtils.loadImage(_url, c_url,image_persontx, IntegerConstant.TYPE_PERSON);
+                AssembleImageUrlUtils.loadImage(_url, c_url, image_persontx, IntegerConstant.TYPE_PERSON);
             }
         } else {
             image_personvoice.setVisibility(View.INVISIBLE);
@@ -1573,7 +1578,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                             if (groupPersonListS != null && groupPersonListS.size() > 0) {
                                 for (int i = 0; i < groupPersonListS.size(); i++) {
                                     if (groupPersonListS.get(i).getUserId().trim().equals(talkId)) {
-                                        userName = groupPersonListS.get(i).getUserName();
+                                        userName = groupPersonListS.get(i).getNickName();
                                         imageUrl = groupPersonListS.get(i).getPortraitBig();
                                         break;
                                     }
@@ -1583,7 +1588,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                             if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
                                 for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
                                     if (GlobalConfig.list_person.get(i).getUserId().trim().equals(talkId)) {
-                                        userName = GlobalConfig.list_person.get(i).getUserName();
+                                        userName = GlobalConfig.list_person.get(i).getNickName();
                                         imageUrl = GlobalConfig.list_person.get(i).getPortraitBig();
                                         break;
                                     }
@@ -1596,7 +1601,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                 if (groupPersonListS != null && groupPersonListS.size() > 0) {
                                     for (int i = 0; i < groupPersonListS.size(); i++) {
                                         if (groupPersonListS.get(i).getUserId().trim().equals(talkId)) {
-                                            userName = groupPersonListS.get(i).getUserName();
+                                            userName = groupPersonListS.get(i).getNickName();
                                             imageUrl = groupPersonListS.get(i).getPortraitBig();
                                             break;
                                         }
@@ -1606,7 +1611,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                 if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
                                     for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
                                         if (GlobalConfig.list_person.get(i).getUserId().trim().equals(talkId)) {
-                                            userName = GlobalConfig.list_person.get(i).getUserName();
+                                            userName = GlobalConfig.list_person.get(i).getNickName();
                                             imageUrl = GlobalConfig.list_person.get(i).getPortraitBig();
                                             break;
                                         }

@@ -61,6 +61,7 @@ import com.woting.ui.interphone.linkman.view.SideBar.OnTouchingLetterChangedList
 import com.woting.ui.interphone.main.DuiJiangActivity;
 import com.woting.ui.interphone.message.newfriend.activity.NewsActivity;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -201,9 +202,9 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
     // 为 ListView 填充数据
     private void filledData(List<UserInfo> person) {
         for (int i = 0; i < person.size(); i++) {
-            person.get(i).setName(person.get(i).getUserName());
+            person.get(i).setName(person.get(i).getNickName());
             // 汉字转换成拼音
-            String pinyin = characterParser.getSelling(person.get(i).getUserName());
+            String pinyin = characterParser.getSelling(person.get(i).getNickName());
             String sortString = pinyin.substring(0, 1).toUpperCase();
             // 正则表达式，判断首字母是否是英文字母
             if (sortString.matches("[A-Z]")) {
@@ -345,7 +346,12 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
                 dialogs = DialogUtils.Dialogph(context, "正在获取数据");
             }
             JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-
+            try {
+                jsonObject.put("Page", "1");
+                jsonObject.put("PageSize", "10000");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             VolleyRequest.requestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
                 @Override
                 protected void requestSuccess(JSONObject result) {

@@ -133,7 +133,7 @@ public class FeedBackExpandAdapter extends BaseExpandableListAdapter {
             long time = Long.parseLong(opinion.getOpinionTime());
             holder.opiniontime.setText(sdf.format(new Date(time)));
         }
-        username = BSApplication.SharedPreferences.getString(StringConstant.USERNAME, "");
+        username = BSApplication.SharedPreferences.getString(StringConstant.NICK_NAME, "");
         userImg = BSApplication.SharedPreferences.getString(StringConstant.IMAGEURL, "");
         if (username != null && !username.equals("")) {
             holder.opinionname.setText(username);

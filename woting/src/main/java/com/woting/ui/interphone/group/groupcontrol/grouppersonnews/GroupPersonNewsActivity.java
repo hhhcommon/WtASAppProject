@@ -63,7 +63,7 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_personnews);
         update = false;    // 此时修改的状态
-        username = sharedPreferences.getString(StringConstant.USERNAME, "");            //当前登录账号的姓名
+        username = sharedPreferences.getString(StringConstant.NICK_NAME, "");            //当前登录账号的姓名
         setView();
         handleIntent();
         setData();
@@ -90,7 +90,7 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
         }
         if (type.equals("talkoldlistfragment_p")) {
             UserInfo data = (UserInfo) getIntent().getSerializableExtra("data");
-            name = data.getUserName();
+            name = data.getNickName();
             imageUrl = data.getPortraitBig();
             id = data.getUserId();
             descN = data.getDescn();
@@ -98,7 +98,7 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
             b_name = data.getUserAliasName();
         } else if (type.equals("TalkGroupNewsActivity_p")) {
             GroupInfo data = (GroupInfo) getIntent().getSerializableExtra("data");
-            name = data.getUserName();
+            name = data.getNickName();
             imageUrl = data.getPortraitBig();
             id = data.getUserId();
             descN = data.getDescn();
@@ -106,7 +106,7 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
             b_name = data.getUserAliasName();
         } else if (type.equals("GroupMemers")) {
             UserInfo data = (UserInfo) getIntent().getSerializableExtra("data");
-            name = data.getUserName();
+            name = data.getNickName();
             imageUrl = data.getPortraitBig();
             id = data.getUserId();
             descN = data.getDescn();

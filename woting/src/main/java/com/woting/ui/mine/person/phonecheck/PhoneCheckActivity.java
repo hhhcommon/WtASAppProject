@@ -254,7 +254,7 @@ public class PhoneCheckActivity extends AppActivity implements OnClickListener {
                     if (returnType != null && returnType.equals("1001")) {
                         ToastUtils.show_always(context, "手机号修改成功!");
                         SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
-                        et.putString(StringConstant.PHONENUMBER, phoneNumber);
+                        et.putString(StringConstant.USER_PHONE_NUMBER, phoneNumber);
                         if (!et.commit()) Log.w("commit", " 数据 commit 失败!");
                         setResult(1);
                         finish();

@@ -9,9 +9,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.interphone.model.UserInviteMeInside;
@@ -24,7 +24,6 @@ public class FindFriendResultAdapter extends BaseAdapter {
     private String url;
 
     public FindFriendResultAdapter(Context context, List<UserInviteMeInside> list) {
-        super();
         this.list = list;
         this.context = context;
     }
@@ -67,10 +66,10 @@ public class FindFriendResultAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         UserInviteMeInside Inviter = list.get(position);
-        if (Inviter.getUserName() == null || Inviter.getUserName().equals("")) {
+        if (Inviter.getNickName()== null || Inviter.getNickName().equals("")) {
             holder.textview_invitename.setText("未知");
         } else {
-            holder.textview_invitename.setText(Inviter.getUserName());
+            holder.textview_invitename.setText(Inviter.getNickName());
         }
 
         if (Inviter.getUserNum() == null || Inviter.getUserNum().equals("")) {
@@ -98,8 +97,10 @@ public class FindFriendResultAdapter extends BaseAdapter {
             } else {
                 url = GlobalConfig.imageurl + Inviter.getPortraitMini();
             }
-            url = AssembleImageUrlUtils.assembleImageUrl150(url);
-            Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageview_inviteimage);
+            String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
+
+            // 加载图片
+            AssembleImageUrlUtils.loadImage(url, _url, holder.imageview_inviteimage, IntegerConstant.TYPE_PERSON);
         }
         return convertView;
     }

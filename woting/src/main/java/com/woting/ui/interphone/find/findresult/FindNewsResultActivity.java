@@ -24,6 +24,7 @@ import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.GroupInfo;
+import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.interphone.find.findresult.adapter.FindFriendResultAdapter;
 import com.woting.ui.interphone.find.findresult.adapter.FindGroupResultAdapter;
 import com.woting.ui.interphone.find.friendadd.FriendAddActivity;
@@ -39,17 +40,17 @@ import java.util.List;
 
 /**
  * 搜索结果页面
- *
- * @author 辛龙
- *         2016年1月20日
+ * 辛龙
+ * 2016年1月20日
  */
 public class FindNewsResultActivity extends AppBaseActivity implements OnClickListener, TipView.WhiteViewClick {
     private XListView mxlistview;
     private int RefreshType;// 1，下拉刷新 2，加载更多
     private Dialog dialog;
     private String searchstr;
-    private ArrayList<UserInviteMeInside> UserList;
-    private ArrayList<GroupInfo> GroupList;
+
+    private List<UserInviteMeInside> newList = new ArrayList<>();
+    private List<GroupInfo> GroupList = new ArrayList<>();
     private String type;
     private int PageNum;
     private FindFriendResultAdapter adapter;
@@ -125,8 +126,8 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
     // 设置对应的点击事件
     private void setListener() {
         findViewById(R.id.head_left_btn).setOnClickListener(this);
-        mxlistview.setPullRefreshEnable(false);
-        mxlistview.setPullLoadEnable(false);
+        mxlistview.setPullRefreshEnable(true);
+        mxlistview.setPullLoadEnable(true);
         mxlistview.setXListViewListener(new IXListViewListener() {
             @Override
             public void onRefresh() {
@@ -179,10 +180,10 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                 if (!type.trim().equals("")) {
                     if (type.equals("friend")) {
                         if (position > 0) {
-                            if (UserList != null && UserList.size() > 0) {
+                            if (newList != null && newList.size() > 0) {
                                 Intent intent = new Intent(FindNewsResultActivity.this, FriendAddActivity.class);
                                 Bundle bundle = new Bundle();
-                                bundle.putSerializable("contact", UserList.get(position - 1));
+                                bundle.putSerializable("contact", newList.get(position - 1));
                                 intent.putExtras(bundle);
                                 startActivity(intent);
                             } else {
@@ -250,53 +251,54 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("Page", PageNum);
+            jsonObject.put("PageSize", "20");
             jsonObject.put("SearchStr", searchstr);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         VolleyRequest.requestPost(GlobalConfig.searchStrangerUrl, tag, jsonObject, new VolleyCallback() {
-            private String ReturnType;
-            private String ContactMeString;
-
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 try {
-                    ReturnType = result.getString("ReturnType");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    ContactMeString = result.getString("UserList");
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                }
-                if (ReturnType != null && ReturnType.equals("1001")) {
-                    UserList = new Gson().fromJson(ContactMeString, new TypeToken<List<UserInviteMeInside>>() {
-                    }.getType());
-                    if (UserList != null && UserList.size() > 0) {
-                        tipView.setVisibility(View.GONE);
-                        if (RefreshType == 1) {
-                            mxlistview.setAdapter(adapter = new FindFriendResultAdapter(context, UserList));
-                            mxlistview.stopRefresh();
-                        } else {
-                            adapter.ChangeData(UserList);
-                            mxlistview.stopLoadMore();
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        try {
+                            String ContactMeString = result.getString("UserList");
+                            PageNum++;
+                            ArrayList<UserInviteMeInside> UserList = new Gson().fromJson(ContactMeString, new TypeToken<List<UserInviteMeInside>>() {
+                            }.getType());
+                            if (UserList != null && UserList.size() > 0) {
+                                tipView.setVisibility(View.GONE);
+                                if (RefreshType == 1) {
+                                    newList.clear();
+                                    newList.addAll(UserList);
+                                    mxlistview.setAdapter(adapter = new FindFriendResultAdapter(context, newList));
+                                } else {
+                                    newList.addAll(UserList);
+                                    adapter.ChangeData(newList);
+                                }
+                                setItemListener();    // 设置 item 的点击事件
+                            } else {
+                                if (RefreshType == 1) {
+                                    tipView.setVisibility(View.VISIBLE);
+                                    tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到该好友哟\n换个好友再试一次吧");
+                                }
+                            }
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
                         }
-                        setItemListener();    // 设置 item 的点击事件
                     } else {
                         if (RefreshType == 1) {
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到该好友哟\n换个好友再试一次吧");
                         }
                     }
-                } else {
-                    if (RefreshType == 1) {
-                        tipView.setVisibility(View.VISIBLE);
-                        tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到该好友哟\n换个好友再试一次吧");
-                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
                 if (RefreshType == 1) {
                     mxlistview.stopRefresh();
@@ -322,49 +324,48 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("Page", PageNum);
+            jsonObject.put("PageSize", "20");
             jsonObject.put("SearchStr", searchstr);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         VolleyRequest.requestPost(GlobalConfig.searchStrangerGroupUrl, tag, jsonObject, new VolleyCallback() {
-            private String ReturnType;
-            private String GroupMeString;
-
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 try {
-                    ReturnType = result.getString("ReturnType");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    GroupMeString = result.getString("GroupList");
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                }
-                if (ReturnType != null && ReturnType.equals("1001")) {
-                    GroupList = new Gson().fromJson(GroupMeString, new TypeToken<List<GroupInfo>>() {
-                    }.getType());
-                    if (GroupList != null && GroupList.size() > 0) {
-                        tipView.setVisibility(View.GONE);
-                        if (RefreshType == 1) {
-                            mxlistview.setAdapter(adapters = new FindGroupResultAdapter(context, GroupList));
-                            mxlistview.stopRefresh();
-                        } else {
-                            adapters.ChangeData(GroupList);
-                            mxlistview.stopLoadMore();
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        try {
+                            String GroupMeString = result.getString("GroupList");
+                            PageNum++;
+                            ArrayList<GroupInfo> _groupList = new Gson().fromJson(GroupMeString, new TypeToken<List<GroupInfo>>() {
+                            }.getType());
+                            if (_groupList != null && _groupList.size() > 0) {
+                                tipView.setVisibility(View.GONE);
+                                if (RefreshType == 1) {
+                                    GroupList.clear();
+                                    GroupList.addAll(_groupList);
+                                    mxlistview.setAdapter(adapters = new FindGroupResultAdapter(context, GroupList));
+                                } else {
+                                    adapters.ChangeData(GroupList);
+                                }
+                                setItemListener();    // 设置 item 的点击事件
+                            } else {
+                                tipView.setVisibility(View.VISIBLE);
+                                tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到该群组哟\n换个群组再试一次吧");
+                            }
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
                         }
-                        setItemListener();    // 设置 item 的点击事件
                     } else {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到该群组哟\n换个群组再试一次吧");
                     }
-                } else {
-                    tipView.setVisibility(View.VISIBLE);
-                    tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到该群组哟\n换个群组再试一次吧");
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
                 if (RefreshType == 1) {
                     mxlistview.stopRefresh();
@@ -387,7 +388,7 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
     protected void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
-        UserList = null;
+        newList = null;
         GroupList = null;
         mxlistview = null;
         adapter = null;

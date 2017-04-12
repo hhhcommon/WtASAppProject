@@ -9,7 +9,6 @@ public class UserInfo implements Serializable {
     private String name;            // 显示的数据
     private String sortLetters;     // 显示数据拼音的首字母
     private String InnerPhoneNum;
-    private String UserName;
     private String UserId;
     private String Email;
     private String PortraitBig;
@@ -34,6 +33,15 @@ public class UserInfo implements Serializable {
     private String Birthday;        // 生日
     private String Age;             // 年龄
     private String NickName;        // 昵称
+    private String PhoneNumIsPub;   // 是否允许手机号查找
+
+    public String getPhoneNumIsPub() {
+        return PhoneNumIsPub;
+    }
+
+    public void setPhoneNumIsPub(String phoneNumIsPub) {
+        PhoneNumIsPub = phoneNumIsPub;
+    }
 
     public String getNickName() {
         return NickName;
@@ -233,14 +241,6 @@ public class UserInfo implements Serializable {
 
     public void setInnerPhoneNum(String innerPhoneNum) {
         InnerPhoneNum = innerPhoneNum;
-    }
-
-    public String getUserName() {
-        return UserName;
-    }
-
-    public void setUserName(String userName) {
-        UserName = userName;
     }
 
     public String getUserId() {

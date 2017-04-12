@@ -64,7 +64,7 @@
                 android:background="@null"
                 android:digits="0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
                 android:gravity="left|center"
-                android:hint="仅支持6-20个数字、字母、下划线"
+                android:hint="字母开头的6-20个数字、字母、下划线"
                 android:maxLength="20"
                 android:singleLine="true"
                 android:textColor="@color/wt_login_third"

@@ -47,7 +47,7 @@ public class SubclassService extends Service {
     public static String callerinfo_username;
     public static String callerinfo_portrait;
     private Handler handler;
-
+    private volatile Object Lock = new Object();//锁
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -81,41 +81,43 @@ public class SubclassService extends Service {
             if (action.equals(BroadcastConstants.PUSH_BACK)) {////////////////////////////////////////////////////////////////////////////////
                 if (ReceiveAlertActivity.instance == null) {
                 } else {
-                    //  abortBroadcast();//中断广播传递
-                    //	MsgNormal message = (MsgNormal) intent.getSerializableExtra("outMessage");
-                    byte[] bt = intent.getByteArrayExtra("outMessage");
-                    Log.e("push_back接收器中数据", Arrays.toString(bt) + "");
-                    try {
-                        MsgNormal message = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
-                        if (message != null) {
-                            int cmdType = message.getCmdType();
-                            switch (cmdType) {
-                                case 1:
-                                    int command = message.getCommand();
-                                    if (command == 0x30) {
+                    synchronized (Lock) {
+                        //  abortBroadcast();//中断广播传递
+                        //	MsgNormal message = (MsgNormal) intent.getSerializableExtra("outMessage");
+                        byte[] bt = intent.getByteArrayExtra("outMessage");
+                        Log.e("push_back接收器中数据", Arrays.toString(bt) + "");
+                        try {
+                            MsgNormal message = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
+                            if (message != null) {
+                                int cmdType = message.getCmdType();
+                                switch (cmdType) {
+                                    case 1:
+                                        int command = message.getCommand();
+                                        if (command == 0x30) {
 
-                                        MapContent data = (MapContent) message.getMsgContent();
-                                        Map<String, Object> map = data.getContentMap();
-                                        Log.e("push_back接收器中数据的CallId", map.get("CallId")+"");
+                                            MapContent data = (MapContent) message.getMsgContent();
+                                            Map<String, Object> map = data.getContentMap();
+                                            Log.e("push_back接收器中数据的CallId", map.get("CallId") + "");
 
-                                        isallow = true;
-                                        handler.removeCallbacks(run);
-                                        if (musicPlayer != null) {
-                                            musicPlayer.stop();
+                                            isallow = true;
+                                            handler.removeCallbacks(run);
+                                            if (musicPlayer != null) {
+                                                musicPlayer.stop();
 
-                                            musicPlayer = null;
+                                                musicPlayer = null;
+                                            }
+                                            if (ReceiveAlertActivity.instance != null) {
+                                                ReceiveAlertActivity.instance.finish();
+                                            }
                                         }
-                                        if (ReceiveAlertActivity.instance != null) {
-                                            ReceiveAlertActivity.instance.finish();
-                                        }
-                                    }
-                                    break;
-                                default:
-                                    break;
+                                        break;
+                                    default:
+                                        break;
+                                }
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
                 }
             } else if (action.equals(BroadcastConstants.PUSH_SERVICE)) {///////////////////////////////////////////////////////////////////////
@@ -125,94 +127,96 @@ public class SubclassService extends Service {
                 Log.e("push_service接收器中数据", Arrays.toString(bt) + "");
                 try {
                     MsgNormal message = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
-                    if (message != null) {
-                        int cmdType = message.getCmdType();
-                        switch (cmdType) {
-                            case 1:
-                                int command = message.getCommand();
-                                if (command == 0x10) {
-                                    MapContent data = (MapContent) message.getMsgContent();
-                                    String dialtype = data.get("DialType") + "";
-                                    if (dialtype != null && !dialtype.equals("") && dialtype.equals("1")) {
-                                        //应答消息：若Data.DialType=1必须要发送回执信息，否则不需要回执
-                                        //	callid=data.getCallId();
-                                        callid = data.get("CallId") + "";
-                                        GlobalConfig.oldBCCallId=InterPhoneControl.bdcallid;
-                                        //	callerId=data.getCallerId();
-                                        callerId = data.get("CallerId") + "";
+                    synchronized (Lock) {
+                        if (message != null) {
+                            int cmdType = message.getCmdType();
+                            switch (cmdType) {
+                                case 1:
+                                    int command = message.getCommand();
+                                    if (command == 0x10) {
+                                        MapContent data = (MapContent) message.getMsgContent();
+                                        String dialtype = data.get("DialType") + "";
+                                        if (dialtype != null && !dialtype.equals("") && dialtype.equals("1")) {
+                                            //应答消息：若Data.DialType=1必须要发送回执信息，否则不需要回执
+                                            //	callid=data.getCallId();
+                                            callid = data.get("CallId") + "";
+                                            GlobalConfig.oldBCCallId = InterPhoneControl.bdcallid;
+                                            //	callerId=data.getCallerId();
+                                            callerId = data.get("CallerId") + "";
 
-                                        try {
-                                            Map<String, Object> map = data.getContentMap();
-                                            String news = new Gson().toJson(map);
+                                            try {
+                                                Map<String, Object> map = data.getContentMap();
+                                                String news = new Gson().toJson(map);
 
-                                            JSONTokener jsonParser = new JSONTokener(news);
-                                            JSONObject arg1 = (JSONObject) jsonParser.nextValue();
-                                            String callerinfos = arg1.getString("CallerInfo");
+                                                JSONTokener jsonParser = new JSONTokener(news);
+                                                JSONObject arg1 = (JSONObject) jsonParser.nextValue();
+                                                String callerinfos = arg1.getString("CallerInfo");
 
-                                            CallerInfo callerinfo = new Gson().fromJson(callerinfos, new TypeToken<CallerInfo>() {
-                                            }.getType());
-                                            callerinfo_username = callerinfo.getUserName();
-                                            callerinfo_portrait = callerinfo.getPortrait();
-                                            isallow = false;//对应答消息是否处理
-                                            if (run != null) {
-                                                handler.removeCallbacks(run);
-                                            }
-                                            InterPhoneControl.PersonTalkHJCDYD(context, callid, message.getMsgId().trim(), callerId);//呼叫传递应答
-                                            if (CallAlertActivity.instance != null) {
-                                                CallAlertActivity.instance.finish();
-                                            }
-                                            if (ReceiveAlertActivity.instance == null) {
-                                                Intent it = new Intent(context, ReceiveAlertActivity.class);
-                                                it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                startActivity(it);
-                                            }
-                                            run = new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    if (!isallow) {
-                                                        //如果60s后没有没有对应答消息进行处理，则发送拒绝应答的消息已经弹出框消失
-                                                        InterPhoneControl.PersonTalkTimeOver(getApplicationContext(), callid, callerId);//拒绝应答
-                                                        if (musicPlayer != null) {
-                                                            musicPlayer.stop();
-                                                            musicPlayer = null;
-                                                        }
-                                                        if (ReceiveAlertActivity.instance != null) {
-                                                            ReceiveAlertActivity.instance.finish();
-                                                        }
-                                                        handler.removeCallbacks(run);
-                                                    }
+                                                CallerInfo callerinfo = new Gson().fromJson(callerinfos, new TypeToken<CallerInfo>() {
+                                                }.getType());
+                                                callerinfo_username = callerinfo.getNickName();
+                                                callerinfo_portrait = callerinfo.getPortrait();
+                                                isallow = false;//对应答消息是否处理
+                                                if (run != null) {
+                                                    handler.removeCallbacks(run);
                                                 }
-                                            };
-                                            handler.postDelayed(run, 60000);
-                                            musicPlayer = MediaPlayer.create(context, getSystemDefultRingtoneUri());
-                                            if(musicPlayer==null){
-                                                musicPlayer = MediaPlayer.create(context, R.raw.toy_mono);
-                                            }
-                                            if (musicPlayer != null) {
-                                                musicPlayer.start();
-
-                                                //监听音频播放完的代码，实现音频的自动循环播放
-                                                musicPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                                InterPhoneControl.PersonTalkHJCDYD(context, callid, message.getMsgId().trim(), callerId);//呼叫传递应答
+                                                if (CallAlertActivity.instance != null) {
+                                                    CallAlertActivity.instance.finish();
+                                                }
+                                                if (ReceiveAlertActivity.instance == null) {
+                                                    Intent it = new Intent(context, ReceiveAlertActivity.class);
+                                                    it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    startActivity(it);
+                                                }
+                                                run = new Runnable() {
                                                     @Override
-                                                    public void onCompletion(MediaPlayer arg0) {
-                                                        if (musicPlayer != null) {
-                                                            musicPlayer.start();
-                                                            musicPlayer.setLooping(true);
+                                                    public void run() {
+                                                        if (!isallow) {
+                                                            //如果60s后没有没有对应答消息进行处理，则发送拒绝应答的消息已经弹出框消失
+                                                            InterPhoneControl.PersonTalkTimeOver(getApplicationContext(), callid, callerId);//拒绝应答
+                                                            if (musicPlayer != null) {
+                                                                musicPlayer.stop();
+                                                                musicPlayer = null;
+                                                            }
+                                                            if (ReceiveAlertActivity.instance != null) {
+                                                                ReceiveAlertActivity.instance.finish();
+                                                            }
+                                                            handler.removeCallbacks(run);
                                                         }
                                                     }
-                                                });
-                                            } else {
-                                                // 播放器初始化失败
-                                                ToastUtils.show_short(context, "播放器初始化失败");
+                                                };
+                                                handler.postDelayed(run, 60000);
+                                                musicPlayer = MediaPlayer.create(context, getSystemDefultRingtoneUri());
+                                                if (musicPlayer == null) {
+                                                    musicPlayer = MediaPlayer.create(context, R.raw.toy_mono);
+                                                }
+                                                if (musicPlayer != null) {
+                                                    musicPlayer.start();
+
+                                                    //监听音频播放完的代码，实现音频的自动循环播放
+                                                    musicPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                                        @Override
+                                                        public void onCompletion(MediaPlayer arg0) {
+                                                            if (musicPlayer != null) {
+                                                                musicPlayer.start();
+                                                                musicPlayer.setLooping(true);
+                                                            }
+                                                        }
+                                                    });
+                                                } else {
+                                                    // 播放器初始化失败
+                                                    ToastUtils.show_short(context, "播放器初始化失败");
+                                                }
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
                                             }
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
                                         }
                                     }
-                                }
-                                break;
-                            default:
-                                break;
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
                     }
                 } catch (Exception e1) {

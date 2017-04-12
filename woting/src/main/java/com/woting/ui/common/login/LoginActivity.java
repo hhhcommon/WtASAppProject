@@ -24,7 +24,6 @@ import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.common.manager.SharePreferenceManager;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 
@@ -45,14 +44,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
     private Dialog dialog;// 加载数据对话框
     private EditText editUserName;// 输入 用户名
     private EditText editPassword;// 输入密码
-
     private String userName;// 用户名
     private String password;// 密码
-    private String userId;// 用户 ID
-    private String imageUrl;
-    private String imageUrlBig;
-    private String returnUserName;
-
     // 三方登录信息
     private String thirdNickName;
     private String thirdUserId;
@@ -63,33 +56,35 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
     private String thirdType;
     private String description;
     private String tag = "LOGIN_VOLLEY_REQUEST_CANCEL_TAG";
+    private String viewTag = "LoginActivity";
     private boolean isCancelRequest;
-    private String nickName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        mShareAPI = UMShareAPI.get(context);// 初始化友盟
+        mShareAPI = UMShareAPI.get(context);                      // 初始化友盟
         setView();
     }
 
     // 初始化视图
     private void setView() {
         findViewById(R.id.head_left_btn).setOnClickListener(this);// 返回按钮
-        findViewById(R.id.tv_wjmm).setOnClickListener(this);// 忘记密码
-        findViewById(R.id.btn_login).setOnClickListener(this);// 登录按钮
-        findViewById(R.id.btn_register).setOnClickListener(this);// 注册按钮
-        findViewById(R.id.lin_login_wx).setOnClickListener(this);// 微信
-        findViewById(R.id.lin_login_qq).setOnClickListener(this);// qq登录
-        findViewById(R.id.lin_login_wb).setOnClickListener(this);// 微博登录
+        findViewById(R.id.tv_wjmm).setOnClickListener(this);      // 忘记密码
+        findViewById(R.id.btn_login).setOnClickListener(this);    // 登录按钮
+        findViewById(R.id.btn_register).setOnClickListener(this); // 注册按钮
+        findViewById(R.id.lin_login_wx).setOnClickListener(this); // 微信
+        findViewById(R.id.lin_login_qq).setOnClickListener(this); // qq登录
+        findViewById(R.id.lin_login_wb).setOnClickListener(this); // 微博登录
 
         editUserName = (EditText) findViewById(R.id.edittext_username);    // 输入用户名
         editPassword = (EditText) findViewById(R.id.edittext_password);    // 输入密码按钮
 
-        String phoneName = (String) SharePreferenceManager.getSharePreferenceValue(context, "USER_NAME", "USER_NAME", "");
-        editUserName.setText(phoneName);
-        editUserName.setSelection(editUserName.getText().length());
+        // 设置上次登录的手机号,此方法已经失效，注销后手机号等就会置为空
+//        String phoneName = BSApplication.SharedPreferences.getString(StringConstant.USER_PHONE_NUMBER, "");
+//        editUserName.setText(phoneName);
+//        editUserName.setSelection(editUserName.getText().length());// 移动光标到最后
     }
 
     @Override
@@ -172,7 +167,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         userName = editUserName.getText().toString().trim();
         password = editPassword.getText().toString().trim();
         if (userName == null || userName.trim().equals("")) {
-            ToastUtils.show_always(context, "用户名不能为空");
+            ToastUtils.show_always(context, "登录账号不能为空");
             return;
         }
         if (password == null || password.trim().equals("")) {
@@ -183,7 +178,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
             dialog = DialogUtils.Dialogph(context, "登录中");
             send();
         } else {
-            ToastUtils.show_always(context, "网络失败，请检查网络");
+            ToastUtils.show_always(context, "网络连接失败，请检查网络");
         }
     }
 
@@ -198,16 +193,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         }
 
         VolleyRequest.requestPost(GlobalConfig.loginUrl, tag, jsonObject, new VolleyCallback() {
-            private String UserNum;
-            private String phoneNumber;
-            private String gender;   // 性别
-            private String region;   // 区域
-            private String birthday; // 生日
-            private String age;      // 年龄
-            private String starSign; // 星座
-            private String email;    // 邮箱
-            private String userSign; // 签名
-
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
@@ -215,61 +200,76 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                 try {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {
-                        Editor et = BSApplication.SharedPreferences.edit();
-                        et.putString(StringConstant.ISLOGIN, "true");
-                        et.putString(StringConstant.PERSONREFRESHB, "true");
                         try {
                             JSONObject ui = (JSONObject) new JSONTokener(result.getString("UserInfo")).nextValue();
+                            Editor et = BSApplication.SharedPreferences.edit();
+                            et.putString(StringConstant.ISLOGIN, "true");
+                            et.putString(StringConstant.PERSONREFRESHB, "true");
                             try {
-                                imageUrl = ui.getString("PortraitMini");
+                                String imageUrl = ui.getString("PortraitMini");
                                 et.putString(StringConstant.IMAGEURL, imageUrl);
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                et.putString(StringConstant.IMAGEURL, "");
                             }
+//                            try {
+//                                String returnUserName = ui.getString("UserName");
+//                                et.putString(StringConstant.USERNAME, returnUserName);
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                                et.putString(StringConstant.USERNAME, "");
+//                            }
                             try {
-                                returnUserName = ui.getString("UserName");
-                                et.putString(StringConstant.USERNAME, returnUserName);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                UserNum = ui.getString("UserNum");
+                                String UserNum = ui.getString("UserNum");
                                 et.putString(StringConstant.USER_NUM, UserNum);
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                et.putString(StringConstant.USER_NUM, "");
                             }
                             try {
-                                imageUrlBig = ui.getString("PortraitBig");
+                                String imageUrlBig = ui.getString("PortraitBig");
                                 et.putString(StringConstant.IMAGEURBIG, imageUrlBig);
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                et.putString(StringConstant.IMAGEURBIG, "");
                             }
                             try {
-                                userId = ui.getString("UserId");
+                                String userId = ui.getString("UserId");// 用户 ID
                                 et.putString(StringConstant.USERID, userId);
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                et.putString(StringConstant.USERID, "");
                             }
                             try {
-                                phoneNumber = ui.getString("PhoneNum");
-                                et.putString(StringConstant.PHONENUMBER, phoneNumber);
+                                String phoneNumber = ui.getString("PhoneNum");
+                                et.putString(StringConstant.USER_PHONE_NUMBER, phoneNumber);
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                et.putString(StringConstant.USER_PHONE_NUMBER, "");
                             }
                             try {
-                                gender = ui.getString("Sex");
+                                String isPub = ui.getString("PhoneNumIsPub");
+                                et.putString(StringConstant.PHONE_NUMBER_FIND, isPub);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                et.putString(StringConstant.PHONE_NUMBER_FIND, "0");
+                            }
+                            try {
+                                String gender = ui.getString("Sex");// 性别
                                 et.putString(StringConstant.GENDERUSR, gender);
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                et.putString(StringConstant.GENDERUSR, "");
                             }
                             try {
-                                birthday = ui.getString("Birthday");
+                                String birthday = ui.getString("Birthday");// 生日
                                 et.putString(StringConstant.BIRTHDAY, birthday);
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                et.putString(StringConstant.BIRTHDAY, "");
                             }
                             try {
-                                region = ui.getString("Region");
+                                String region = ui.getString("Region");  // 区域
 
                                 /**
                                  * 地区的三种格式
@@ -290,73 +290,98 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                et.putString(StringConstant.REGION, "");
                             }
                             try {
-                                age = ui.getString("Age");
+                                String age = ui.getString("Age");   // 年龄
                                 et.putString(StringConstant.AGE, age);
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                et.putString(StringConstant.AGE, "");
                             }
                             try {
-                                starSign = ui.getString("StarSign");
+                                String starSign = ui.getString("StarSign");// 星座
                                 et.putString(StringConstant.STAR_SIGN, starSign);
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                et.putString(StringConstant.STAR_SIGN, "");
                             }
                             try {
-                                email = ui.getString("Email");
-                                if (email.equals("&null")) {
+                                String email = ui.getString("Email");// 邮箱
+                                if (email != null && !email.equals("")) {
+                                    if (email.equals("&null")) {
+                                        et.putString(StringConstant.EMAIL, "");
+                                    } else {
+                                        et.putString(StringConstant.EMAIL, email);
+                                    }
+                                } else {
                                     et.putString(StringConstant.EMAIL, "");
-                                } else {
-                                    et.putString(StringConstant.EMAIL, email);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                et.putString(StringConstant.EMAIL, "");
                             }
                             try {
-                                userSign = ui.getString("UserSign");
-                                if (userSign.equals("&null")) {
+                                String userSign = ui.getString("UserSign");// 签名
+                                if (userSign != null && !userSign.equals("")) {
+                                    if (userSign.equals("&null")) {
+                                        et.putString(StringConstant.USER_SIGN, "");
+                                    } else {
+                                        et.putString(StringConstant.USER_SIGN, userSign);
+                                    }
+                                } else {
                                     et.putString(StringConstant.USER_SIGN, "");
-                                } else {
-                                    et.putString(StringConstant.USER_SIGN, userSign);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                et.putString(StringConstant.USER_SIGN, "");
                             }
                             try {
-                                nickName = ui.getString("NickName");
-                                if (nickName.equals("&null")) {
-                                    et.putString(StringConstant.NICK_NAME, "");
+                                String nickName = ui.getString("NickName");
+                                if (nickName != null && !nickName.equals("")) {
+                                    if (nickName.equals("&null")) {
+                                        et.putString(StringConstant.NICK_NAME, "");
+                                    } else {
+                                        et.putString(StringConstant.NICK_NAME, nickName);
+                                    }
                                 } else {
-                                    et.putString(StringConstant.NICK_NAME, nickName);
+                                    et.putString(StringConstant.NICK_NAME, "");
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                et.putString(StringConstant.NICK_NAME, "");
                             }
 
                             if (!et.commit()) {
                                 Log.v("commit", "数据 commit 失败!");
                             }
+                            // 更新通讯录
                             context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
+                            // 更改所有界面的登录状态
                             context.sendBroadcast(new Intent(BroadcastConstants.PUSH_ALLURL_CHANGE));
-                            String phoneName = editUserName.getText().toString().trim();
-                            SharePreferenceManager.saveBatchSharedPreference(context, "USER_NAME", "USER_NAME", phoneName);
+                            // socket重新连接
                             InterPhoneControl.sendEntryMessage(context);
                             setResult(1);
                             finish();
                         } catch (Exception e) {
                             e.printStackTrace();
+                            ToastUtils.show_always(context, "登录失败，请您稍后再试");
                         }
 
                     } else if (ReturnType != null && ReturnType.equals("1002")) {
+                        Log.i(viewTag, "1002");
                         ToastUtils.show_always(context, "您输入的用户暂未注册!");
                     } else if (ReturnType != null && ReturnType.equals("1003")) {
+                        Log.i(viewTag, "1003");
                         ToastUtils.show_always(context, "您输入的密码错误!");
                     } else if (ReturnType != null && ReturnType.equals("0000")) {
-                        ToastUtils.show_always(context, "发生未知错误，请稍后重试!");
+                        Log.i(viewTag, "0000");
+                        ToastUtils.show_always(context, "登录失败，请稍后重试!");
                     } else if (ReturnType != null && ReturnType.equals("T")) {
-                        ToastUtils.show_always(context, "发生未知错误，请稍后重试!");
+                        Log.i(viewTag, "T");
+                        ToastUtils.show_always(context, "登录失败，请稍后重试!");
                     } else {
+                        Log.i(viewTag, "Message");
                         try {
                             String Message = result.getString("Message");
                             if (Message != null && !Message.trim().equals("")) {
@@ -364,6 +389,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                             }
                         } catch (JSONException e1) {
                             e1.printStackTrace();
+                            ToastUtils.show_always(context, "登录失败，请稍后重试!");
                         }
                     }
                 } catch (Exception e1) {
@@ -401,176 +427,210 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         }
 
         VolleyRequest.requestPost(GlobalConfig.afterThirdAuthUrl, tag, jsonObject, new VolleyCallback() {
-            private String ReturnType;
-            private String Message;
-            private String UserNum;
-            private String phoneNumber;
-            private String gender;// 性别
-            private String region;// 区域
-            private String birthday;// 生日
-            private String age;// 年龄
-            private String starSign;// 星座
-            private String email;// 邮箱
-            private String userSign;// 签名
-
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 try {
-                    ReturnType = result.getString("ReturnType");
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+
+                        try {
+                            JSONObject ui = (JSONObject) new JSONTokener(result.getString("UserInfo")).nextValue();
+                            Editor et = BSApplication.SharedPreferences.edit();
+                            et.putString(StringConstant.ISLOGIN, "true");
+                            et.putString(StringConstant.PERSONREFRESHB, "true");
+                            try {
+                                String imageUrl = ui.getString("PortraitMini");
+                                et.putString(StringConstant.IMAGEURL, imageUrl);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                et.putString(StringConstant.IMAGEURL, "");
+                            }
+//                            try {
+//                                String returnUserName = ui.getString("UserName");
+//                                et.putString(StringConstant.USERNAME, returnUserName);
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                                et.putString(StringConstant.USERNAME, "");
+//                            }
+                            try {
+                                String UserNum = ui.getString("UserNum");
+                                et.putString(StringConstant.USER_NUM, UserNum);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                et.putString(StringConstant.USER_NUM, "");
+                            }
+                            try {
+                                String imageUrlBig = ui.getString("PortraitBig");
+                                et.putString(StringConstant.IMAGEURBIG, imageUrlBig);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                et.putString(StringConstant.IMAGEURBIG, "");
+                            }
+                            try {
+                                String userId = ui.getString("UserId");
+                                et.putString(StringConstant.USERID, userId);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                et.putString(StringConstant.USERID, "");
+                            }
+                            try {
+                                String phoneNumber = ui.getString("PhoneNum");
+                                et.putString(StringConstant.USER_PHONE_NUMBER, phoneNumber);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                et.putString(StringConstant.USER_PHONE_NUMBER, "");
+                            }
+                            try {
+                                String isPub = ui.getString("PhoneNumIsPub");
+                                et.putString(StringConstant.PHONE_NUMBER_FIND, isPub);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                et.putString(StringConstant.PHONE_NUMBER_FIND, "0");
+                            }
+
+                            try {
+                                String gender = ui.getString("Sex");
+                                if (gender.equals("男")) {
+                                    et.putString(StringConstant.GENDERUSR, "xb001");
+                                } else if (gender.equals("女")) {
+                                    et.putString(StringConstant.GENDERUSR, "xb002");
+                                } else {
+                                    et.putString(StringConstant.GENDERUSR, "");
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                et.putString(StringConstant.GENDERUSR, "");
+                            }
+                            try {
+                                String region = ui.getString("Region");
+                                /**
+                                 * 地区的三种格式
+                                 * 1、行政区划\/**市\/市辖区\/**区
+                                 * 2、行政区划\/**特别行政区  港澳台三地区
+                                 * 3、行政区划\/**自治区\/通辽市  自治区地区
+                                 */
+                                if (region != null && !region.equals("")) {
+                                    String[] subRegion = region.split("/");
+                                    if (subRegion.length > 3) {
+                                        region = subRegion[1] + " " + subRegion[3];
+                                    } else if (subRegion.length == 3) {
+                                        region = subRegion[1] + " " + subRegion[2];
+                                    } else {
+                                        region = subRegion[1].substring(0, 2);
+                                    }
+                                    et.putString(StringConstant.REGION, region);
+                                } else {
+                                    et.putString(StringConstant.REGION, "");
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                et.putString(StringConstant.REGION, "");
+                            }
+                            try {
+                                String birthday = ui.getString("Birthday");
+                                et.putString(StringConstant.BIRTHDAY, birthday);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                et.putString(StringConstant.BIRTHDAY, "");
+                            }
+                            try {
+                                String age = ui.getString("Age");
+                                et.putString(StringConstant.AGE, age);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                et.putString(StringConstant.AGE, "");
+                            }
+                            try {
+                                String starSign = ui.getString("StarSign");
+                                et.putString(StringConstant.STAR_SIGN, starSign);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                et.putString(StringConstant.STAR_SIGN, "");
+                            }
+                            try {
+                                String email = ui.getString("Email");
+                                if (email != null && !email.equals("")) {
+                                    if (email.equals("&null")) {
+                                        et.putString(StringConstant.EMAIL, "");
+                                    } else {
+                                        et.putString(StringConstant.EMAIL, email);
+                                    }
+                                } else {
+                                    et.putString(StringConstant.EMAIL, "");
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                String userSign = ui.getString("UserSign");
+                                if (userSign != null && !userSign.equals("")) {
+                                    if (userSign.equals("&null")) {
+                                        et.putString(StringConstant.USER_SIGN, "");
+                                    } else {
+                                        et.putString(StringConstant.USER_SIGN, userSign);
+                                    }
+                                } else {
+                                    et.putString(StringConstant.USER_SIGN, "");
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                String nickName = ui.getString("NickName");
+                                if (nickName != null && !nickName.equals("")) {
+                                    if (nickName.equals("&null")) {
+                                        et.putString(StringConstant.NICK_NAME, "");
+                                    } else {
+                                        et.putString(StringConstant.NICK_NAME, nickName);
+                                    }
+                                } else {
+                                    et.putString(StringConstant.NICK_NAME, "");
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if (!et.commit()) {
+                                Log.v("commit", "数据 commit 失败!");
+                            }
+                            // 更新通讯录
+                            context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
+                            // 更改所有界面的登录状态
+                            context.sendBroadcast(new Intent(BroadcastConstants.PUSH_ALLURL_CHANGE));
+                            // socket重新连接
+                            InterPhoneControl.sendEntryMessage(context);
+                            setResult(1);
+                            finish();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else if (ReturnType != null && ReturnType.equals("1002")) {
+                        Log.i(viewTag, "1002");
+                        ToastUtils.show_always(context, "登录失败,请稍后再试!");
+                    } else if (ReturnType != null && ReturnType.equals("T")) {
+                        Log.i(viewTag, "T");
+                        ToastUtils.show_always(context, "登录失败,请稍后再试!");
+                    } else if (ReturnType != null && ReturnType.equals("1011")) {
+                        Log.i(viewTag, "1011");
+                        ToastUtils.show_always(context, "登录失败,请稍后再试!");
+                    } else {
+                        Log.i(viewTag, "Message");
+                        try {
+                            String Message = result.getString("Message");
+                            if (Message != null && !Message.trim().equals("")) {
+                                ToastUtils.show_always(context, Message + "");
+                            } else {
+                                ToastUtils.show_always(context, "登录失败,请稍后再试!");
+                            }
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                            ToastUtils.show_always(context, "登录失败,请稍后再试!");
+                        }
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }
-                try {
-                    Message = result.getString("Message");
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                }
-                if (ReturnType != null && ReturnType.equals("1001")) {
-                    Editor et = BSApplication.SharedPreferences.edit();
-                    et.putString(StringConstant.ISLOGIN, "true");
-                    et.putString(StringConstant.PERSONREFRESHB, "true");
-                    try {
-                        JSONObject ui = (JSONObject) new JSONTokener(result.getString("UserInfo")).nextValue();
-                        try {
-                            imageUrl = ui.getString("PortraitMini");
-                            et.putString(StringConstant.IMAGEURL, imageUrl);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            returnUserName = ui.getString("UserName");
-                            et.putString(StringConstant.USERNAME, returnUserName);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            UserNum = ui.getString("UserNum");
-                            et.putString(StringConstant.USER_NUM, UserNum);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            imageUrlBig = ui.getString("PortraitBig");
-                            et.putString(StringConstant.IMAGEURBIG, imageUrlBig);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            userId = ui.getString("UserId");
-                            et.putString(StringConstant.USERID, userId);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            phoneNumber = ui.getString("PhoneNum");
-                            et.putString(StringConstant.PHONENUMBER, phoneNumber);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            gender = ui.getString("Sex");
-                            if (gender.equals("男")) {
-                                et.putString(StringConstant.GENDERUSR, "xb001");
-                            } else if (gender.equals("女")) {
-                                et.putString(StringConstant.GENDERUSR, "xb002");
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            region = ui.getString("Region");
-                            /**
-                             * 地区的三种格式
-                             * 1、行政区划\/**市\/市辖区\/**区
-                             * 2、行政区划\/**特别行政区  港澳台三地区
-                             * 3、行政区划\/**自治区\/通辽市  自治区地区
-                             */
-                            if (region != null && !region.equals("")) {
-                                String[] subRegion = region.split("/");
-                                if (subRegion.length > 3) {
-                                    region = subRegion[1] + " " + subRegion[3];
-                                } else if (subRegion.length == 3) {
-                                    region = subRegion[1] + " " + subRegion[2];
-                                } else {
-                                    region = subRegion[1].substring(0, 2);
-                                }
-                                et.putString(StringConstant.REGION, region);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            birthday = ui.getString("Birthday");
-                            et.putString(StringConstant.BIRTHDAY, birthday);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            age = ui.getString("Age");
-                            et.putString(StringConstant.AGE, age);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            starSign = ui.getString("StarSign");
-                            et.putString(StringConstant.STAR_SIGN, starSign);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            email = ui.getString("Email");
-                            if (email.equals("&null")) {
-                                et.putString(StringConstant.EMAIL, "");
-                            } else {
-                                et.putString(StringConstant.EMAIL, email);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            userSign = ui.getString("UserSign");
-                            if (userSign.equals("&null")) {
-                                et.putString(StringConstant.USER_SIGN, "");
-                            } else {
-                                et.putString(StringConstant.USER_SIGN, userSign);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            nickName = ui.getString("NickName");
-                            if (nickName.equals("&null")) {
-                                et.putString(StringConstant.NICK_NAME, "");
-                            } else {
-                                et.putString(StringConstant.NICK_NAME, nickName);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        if (!et.commit()) {
-                            Log.v("commit", "数据 commit 失败!");
-                        }
-                        context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
-                        context.sendBroadcast(new Intent(BroadcastConstants.PUSH_ALLURL_CHANGE));
-                        InterPhoneControl.sendEntryMessage(context);
-                        setResult(1);
-                        finish();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                } else if (ReturnType != null && ReturnType.equals("1002")) {
                     ToastUtils.show_always(context, "登录失败,请稍后再试!");
-                } else if (ReturnType != null && ReturnType.equals("T")) {
-                    ToastUtils.show_always(context, "异常返回值");
-                } else if (ReturnType != null && ReturnType.equals("1011")) {
-                    ToastUtils.show_always(context, "没有好友");
-                } else {
-                    if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_always(context, Message + "");
-                    }
                 }
             }
 
@@ -589,7 +649,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         switch (requestCode) {
             case 0: // 从注册界面返回数据，注册成功
                 if (resultCode == 1) {
-                    ToastUtils.show_always(context, "账号注册成功，已进行自动登录!");
                     setResult(1);
                     finish();
                 }
@@ -614,15 +673,17 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         city = arg1.getString("city");
                         description = arg1.getString("description");
                         county = arg1.getString("country");
+                        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                            dialog = DialogUtils.Dialogph(context, "正在用新浪信息注册");
+                            sendThird();
+                        } else {
+                            ToastUtils.show_always(context, "网络失败，请检查网络");
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        ToastUtils.show_always(context, "登录失败，请稍后再试！");
                     }
-                    if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(context, "正在用新浪信息注册");
-                        sendThird();
-                    } else {
-                        ToastUtils.show_always(context, "网络失败，请检查网络");
-                    }
+
                 } else if (platform.equals(SHARE_MEDIA.WEIXIN)) {
                     thirdNickName = data.get("nickname");
                     thirdUserId = data.get("unionid");
@@ -653,13 +714,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                     }
                 }
             } else {
-                ToastUtils.show_always(context, "个人信息获取异常!");
+                ToastUtils.show_always(context, "登录失败，请稍后再试！");
             }
         }
 
         @Override
         public void onError(SHARE_MEDIA platform, int action, Throwable t) {
-            ToastUtils.show_always(context, "个人信息获取异常!");
+            ToastUtils.show_always(context, "登录失败，请稍后再试！");
         }
 
         @Override
@@ -677,11 +738,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         userName = null;
         password = null;
         dialog = null;
-        userId = null;
-        imageUrl = null;
-        imageUrlBig = null;
         mShareAPI = null;
-        returnUserName = null;
         thirdNickName = null;
         thirdUserId = null;
         thirdUserImg = null;
