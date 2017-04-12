@@ -119,7 +119,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
       /*  if (isVisibleToUser && adapter == null && getActivity() != null) {
-            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+  rh,          if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                 if (!isFirst) dialog = DialogUtils.Dialogph(context, "正在获取数据");
                 sendRequest();
                 getImage();

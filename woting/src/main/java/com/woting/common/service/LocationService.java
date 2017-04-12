@@ -25,6 +25,7 @@ import java.util.List;
 public class LocationService extends Service implements GDLocation.Location {
     private CityInfoDao CID;
     private GDLocation mGDLocation;
+    private String LocationInformation;
 
     @Override
     public void onCreate() {
@@ -42,6 +43,16 @@ public class LocationService extends Service implements GDLocation.Location {
         String AdCode = amapLocation.getAdCode();//地区编码
         String Latitude = String.valueOf(amapLocation.getLatitude());
         String Longitude = String.valueOf(amapLocation.getLongitude());
+/*
+
+        if(!TextUtils.isEmpty(City)){
+            LocationInformation
+        }
+*/
+
+
+
+
         if (GlobalConfig.District == null) {
             GlobalConfig.District = District;
         } else {
