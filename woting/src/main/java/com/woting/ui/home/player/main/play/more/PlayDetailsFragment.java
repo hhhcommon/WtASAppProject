@@ -24,6 +24,7 @@ import com.woting.common.widgetui.RoundImageView;
 public class PlayDetailsFragment extends Fragment implements View.OnClickListener {
     private FragmentActivity context;
     private View rootView;
+    private static final String GATHER_DATA_TAG="";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

@@ -128,6 +128,7 @@ public class GDLocation {
 									+ amapLocation.getAddress() + "\n 纬度:" + amapLocation.getLatitude() + "\n 经度:"
 									+ amapLocation.getLongitude() + "\n 定位时间:" + df.format(date));*/
 
+
 					if(locations!= null){
 						locations.locationSuccess(amapLocation);
 					}

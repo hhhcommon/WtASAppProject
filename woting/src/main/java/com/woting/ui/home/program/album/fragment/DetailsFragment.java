@@ -21,6 +21,9 @@ import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
+import com.woting.common.gatherdata.GatherData;
+import com.woting.common.gatherdata.model.DataModel;
+import com.woting.common.gatherdata.model.ReqParam;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
@@ -63,6 +66,7 @@ public class DetailsFragment extends Fragment implements OnClickListener {
     private boolean isConcern;
     private String PersonId;
     private String ContentPub;
+    private String ObjType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,8 +85,31 @@ public class DetailsFragment extends Fragment implements OnClickListener {
             } else {
                 AlbumFragment.setTip(TipView.TipStatus.NO_NET);
             }
+            if(AlbumFragment.id!=null){
+
+               initGatherData();
+
+            }
         }
         return rootView;
+    }
+
+    private void initGatherData() {
+        try {
+            String beginTime = String.valueOf(System.currentTimeMillis());
+            String apiType = StringConstant.APINAME_OPEN;
+            ObjType = StringConstant.OBJTYPE_SEQU;
+            ReqParam mReqParam = new ReqParam();
+            String objId = AlbumFragment.id;
+            DataModel mdataModel = new DataModel(beginTime, apiType, ObjType, mReqParam, objId);
+            if (mdataModel != null) {
+                GatherData.collectData(IntegerConstant.DATA_UPLOAD_TYPE_GIVEN, mdataModel);
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
     }
 
     // 初始化控件

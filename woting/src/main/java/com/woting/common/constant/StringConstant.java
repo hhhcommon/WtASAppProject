@@ -120,4 +120,22 @@ public class StringConstant {
 
     // 数据传递 传递图片所在总图片中的位置
     public static final String PICTURE_INDEX = "PICTURE_INDEX";
+
+    // 数据收集相关
+    public static final String APINAME_OPEN = "L-open";         //ApiName Open
+
+    public static final String OBJTYPE_AUDIO= "AUDIO";          //AUDIO
+
+    public static final String OBJTYPE_SEQU=  "SEQU";           //SEQU
+
+    public static final String OBJTYPE_RADIO= "RADIO";          //RADIO
+
+    public static final String OBJTYPE_USER= "USER";            //USER
+
+    public static final String OBJTYPE_GROUP= "GROUP";          //GROUP
+
+    public static final String OBJTYPE_ANCHOR= "ANCHOR";        //ANCHOR
+
+
+
 }
