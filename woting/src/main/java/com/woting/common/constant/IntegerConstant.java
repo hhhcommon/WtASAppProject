@@ -38,10 +38,6 @@ public class IntegerConstant {
 
     // 默认图片
     public static final int TYPE_DEFAULT = 0x000;
-
-    // 列表默认图片
-    public static final int TYPE_LIST = 0x004;
-
     // 用户默认头像
     public static final int TYPE_MINE = 0x001;
 
@@ -50,4 +46,8 @@ public class IntegerConstant {
 
     // 好友默认头像
     public static final int TYPE_PERSON = 0x003;
+    // 列表默认图片
+    public static final int TYPE_LIST = 0x004;
+    // 通知消息默认头像
+    public static final int TYPE_NOTIFY = 0x005;
 }

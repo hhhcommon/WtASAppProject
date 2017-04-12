@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dinglan_orange"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <ImageView
+            android:id="@+id/head_left_btn"
+            style="@style/LeftImageStyle" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="通知设置"
+            android:textColor="@color/WHITE"
+            android:textSize="@dimen/activity_head_center_s" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/app_bg"
+        android:orientation="vertical">
+
+
+
+        <LinearLayout
+            style="@style/PersonAndSetRelativeStyle"
+            android:layout_marginTop="10dp"
+            android:gravity="left|center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/PersonAndSetTextStyle"
+                    android:text="通知消息" />
+
+                <TextView
+                    style="@style/PersonAndSetTextStyle"
+                    android:layout_marginTop="2dp"
+                    android:text="此处显示提醒的内容"
+                    android:textColor="@color/gray"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/image_message_set"
+                style="@style/PersonAndSetRightStyle"
+                android:src="@mipmap/wt_person_on" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/PersonAndSetRelativeStyle"
+            android:layout_marginTop="10dp"
+            android:gravity="left|center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/PersonAndSetTextStyle"
+                    android:text="语音播报" />
+
+                <TextView
+                    style="@style/PersonAndSetTextStyle"
+                    android:layout_marginTop="2dp"
+                    android:text="此处显示提醒的内容"
+                    android:textColor="@color/gray"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/image_voice_set"
+                style="@style/PersonAndSetRightStyle"
+                android:src="@mipmap/wt_person_on" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

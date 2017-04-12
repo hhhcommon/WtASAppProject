@@ -103,9 +103,8 @@ public class PlayerListAdapter extends BaseAdapter {
 
         // 单体节目显示主播
         try {
-            String IsPlaying = searchList.getIsPlaying();
-            String contentPub = searchList.getContentPersons().get(0).getPerName();
             if (contentType != null && contentType.equals(StringConstant.TYPE_RADIO)) {
+                String IsPlaying = searchList.getIsPlaying();
                 if (IsPlaying != null && !IsPlaying.equals("")) {
                     IsPlaying = "正在直播: " + IsPlaying;
                 } else {
@@ -113,6 +112,7 @@ public class PlayerListAdapter extends BaseAdapter {
                 }
                 holder.RankContent.setText(IsPlaying);
             } else {
+                String contentPub = searchList.getContentPersons().get(0).getPerName();
                 if (contentPub == null || contentPub.equals("")) {
                     contentPub = "未知";
                 }

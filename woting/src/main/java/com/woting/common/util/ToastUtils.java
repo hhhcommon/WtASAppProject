@@ -9,13 +9,13 @@ import com.woting.common.config.GlobalConfig;
 public class ToastUtils {
 	/**长时间提示*/
 	public static void show_long(Context context, String content){
-		if(GlobalConfig.isToast==true){
+		if(GlobalConfig.isToast){
 			Toast.makeText(context, content, Toast.LENGTH_LONG).show();
 		}
 	}
 	/**短时间提示*/
 	public static void show_short(Context context, String content){
-		if(GlobalConfig.isToast==true){
+		if(GlobalConfig.isToast){
 			Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
 		}
 	}

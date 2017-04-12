@@ -98,7 +98,10 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
                     for (int i = 0; i < tempList.size(); i++) {
                         for (int j = 0; j < tempList.get(i).getChildren().size(); j++) {
                             if (tempList.get(i).getChildren().get(j).getchecked().equals("true")) {
-                                String s = tempList.get(i).getChildren().get(j).getAttributes().getmId() + "::"
+                                String _s= (tempList.get(i).getChildren().get(j).getAttributes().getmId()!=null&&
+                                        !tempList.get(i).getChildren().get(j).getAttributes().getmId().trim().equals(""))?
+                                        tempList.get(i).getChildren().get(j).getAttributes().getmId():"-1";
+                                String s = _s + "::"
                                         + tempList.get(i).getChildren().get(j).getAttributes().getId();
                                 preferenceList.add(s);
                             }

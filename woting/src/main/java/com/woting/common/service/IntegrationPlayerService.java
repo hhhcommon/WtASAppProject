@@ -288,7 +288,7 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
         if(isVlcPlaying && mVlc.isPlaying()) mVlc.pause();
         else if(isBVVPlaying && mVV.isPlaying()) mVV.pause();
         else if(isTtsPlaying && mTts.isSpeaking()) mTts.stopSpeaking();
-        if(mediaType.equals(StringConstant.TYPE_AUDIO)) {
+        if(mediaType != null && mediaType.equals(StringConstant.TYPE_AUDIO)) {
             if(mUpdatePlayTimeRunnable != null) mHandler.removeCallbacks(mUpdatePlayTimeRunnable);
         }
     }

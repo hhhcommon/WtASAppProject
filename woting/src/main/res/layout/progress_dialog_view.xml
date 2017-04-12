@@ -25,7 +25,6 @@
             android:id="@+id/text_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="正在上传"
             android:textSize="14sp"
             android:textColor="@color/WHITE"/>
 

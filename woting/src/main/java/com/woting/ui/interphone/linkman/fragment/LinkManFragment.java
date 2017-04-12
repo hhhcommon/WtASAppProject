@@ -69,8 +69,9 @@ import java.util.List;
 
 /**
  * 最新联系人排序
+ *
  * @author 辛龙
- * 2016年5月12日
+ *         2016年5月12日
  */
 public class LinkManFragment extends Fragment implements SectionIndexer, OnClickListener, TipView.TipViewClick {
     private SortGroupMemberAdapter adapter;
@@ -351,20 +352,27 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
                     if (dialogs != null) dialogs.dismiss();
                     if (isCancelRequest) return;
                     try {
-                        LinkMan list = new Gson().fromJson(result.toString(), new TypeToken<LinkMan>() {}.getType());
-                        try {
-                            GlobalConfig.list_group = srclist_g = list.getGroupList().getGroups();
-                        } catch (Exception e1) {
-                            e1.printStackTrace();
-                        }
-                        try {
-                            GlobalConfig.list_person = srclist_p = list.getFriendList().getFriends();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        LinkMan list = new Gson().fromJson(result.toString(), new TypeToken<LinkMan>() {
+                        }.getType());
                         if (list == null) {
                             relative.setVisibility(View.GONE);
+                            GlobalConfig.list_group.clear();
+                            GlobalConfig.list_person.clear();
                         } else {
+                            try {
+                                GlobalConfig.list_group = srclist_g = list.getGroupList().getGroups();
+                            } catch (Exception e1) {
+                                e1.printStackTrace();
+                                GlobalConfig.list_group.clear();
+                                srclist_g.clear();
+                            }
+                            try {
+                                GlobalConfig.list_person = srclist_p = list.getFriendList().getFriends();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                GlobalConfig.list_person.clear();
+                                srclist_p.clear();
+                            }
                             relative.setVisibility(View.VISIBLE);
                             if (srclist_g != null && srclist_g.size() != 0) {
                                 groupList.clear();
@@ -378,6 +386,10 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
                                     new HeightListView(context).setListViewHeightBasedOnChildren(listView_group);
                                 }
                                 setGroupListViewListener();
+                            } else {
+                                TalkPersonNoAdapter adapters = new TalkPersonNoAdapter(context);
+                                listView_group.setAdapter(adapters);
+                                new HeightListView(context).setListViewHeightBasedOnChildren(listView_group);
                             }
                             if (srclist_p == null || srclist_p.size() == 0) {
                                 TalkPersonNoAdapter adapters = new TalkPersonNoAdapter(context);
@@ -389,7 +401,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
                                 adapter = new SortGroupMemberAdapter(context, srclist_p);
                                 sortListView.setAdapter(adapter);
                             }
-                            if((srclist_g == null || srclist_g.size() <= 0) && (srclist_p == null || srclist_p.size() <= 0)) {
+                            if ((srclist_g == null || srclist_g.size() <= 0) && (srclist_p == null || srclist_p.size() <= 0)) {
                                 headViewNoFriendTip.setVisibility(View.VISIBLE);
                                 headViewNoFriendTip.setTipView(TipView.TipStatus.NO_DATA, "您还没有聊天对象哟\n快去找好友们聊天吧");
                                 lin_grouplist.setVisibility(View.GONE);
@@ -623,7 +635,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
             public void add(int position) {
                 id = ((UserInfo) adapter.getItem(position)).getUserId();
                 // 此时的对讲状态
-                if ((ChatFragment.isCallingForGroup||ChatFragment.isCallingForUser)) {
+                if ((ChatFragment.isCallingForGroup || ChatFragment.isCallingForUser)) {
                     if (ChatFragment.interPhoneType.equals("user")) {
                         type = 1;
                         confirmDialog.show();
@@ -669,7 +681,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
             public void add(int position) {
                 group = groupList.get(position);
                 Log.e("组名称", group.getGroupName());
-                if ((ChatFragment.isCallingForGroup||ChatFragment.isCallingForUser)) {
+                if ((ChatFragment.isCallingForGroup || ChatFragment.isCallingForUser)) {
                     if (ChatFragment.interPhoneType.equals("user")) {
                         type = 2;
                         confirmDialog.show();

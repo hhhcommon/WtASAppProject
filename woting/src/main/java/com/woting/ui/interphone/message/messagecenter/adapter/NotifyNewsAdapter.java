@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.ui.interphone.linkman.model.DBNotifyHistory;
 import com.woting.common.config.GlobalConfig;
@@ -74,7 +75,7 @@ public class NotifyNewsAdapter extends BaseAdapter {
 
         lists = list.get(position);
         if (lists != null && lists.getMessageType() != null && !lists.getMessageType().trim().equals("")) {
-            if (lists.getImageUrl() == null || lists.getImageUrl().equals("")|| lists.getImageUrl().equals("null") || lists.getImageUrl().trim().equals("")) {
+            if (lists.getImageUrl() == null || lists.getImageUrl().equals("") || lists.getImageUrl().equals("null") || lists.getImageUrl().trim().equals("")) {
                 Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_linkman_news);
                 holder.Image.setImageBitmap(bmp);
             } else {
@@ -84,8 +85,9 @@ public class NotifyNewsAdapter extends BaseAdapter {
                 } else {
                     url = GlobalConfig.imageurl + lists.getImageUrl();
                 }
-                url = AssembleImageUrlUtils.assembleImageUrl150(url);
-                Picasso.with(context).load(url.replace("\\/", "/")).into(holder.Image);
+                String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
+                // 加载图片
+                AssembleImageUrlUtils.loadImage(_url, url, holder.Image, IntegerConstant.TYPE_NOTIFY);
             }
             if (lists.getMessageType().trim().equals("p1")) {
                 if (lists.getPersonName() == null || lists.getPersonName().equals("")) {
@@ -93,74 +95,74 @@ public class NotifyNewsAdapter extends BaseAdapter {
                 } else {
                     holder.tile.setText(lists.getPersonName());
                 }
-            } else if (lists.getMessageType().trim().equals("p2")){
+            } else if (lists.getMessageType().trim().equals("p2")) {
                 if (lists.getPersonName() == null || lists.getPersonName().equals("")) {
                     holder.tile.setText("添加好友");
                 } else {
                     holder.tile.setText(lists.getPersonName());
                 }
-            } else if (lists.getMessageType().trim().equals("g1")){
+            } else if (lists.getMessageType().trim().equals("g1")) {
                 if (lists.getPersonName() == null || lists.getPersonName().equals("")) {
                     holder.tile.setText("好友邀请");
                 } else {
                     holder.tile.setText(lists.getPersonName());
                 }
-            } else if (lists.getMessageType().trim().equals("b2")){
+            } else if (lists.getMessageType().trim().equals("b2")) {
                 if (lists.getPersonName() == null || lists.getPersonName().equals("")) {
                     holder.tile.setText("用户申请");
                 } else {
                     holder.tile.setText(lists.getPersonName());
                 }
-            } else if (lists.getMessageType().trim().equals("g31")){
+            } else if (lists.getMessageType().trim().equals("g31")) {
                 if (lists.getPersonName() == null || lists.getPersonName().equals("")) {
                     holder.tile.setText("处理消息");
                 } else {
                     holder.tile.setText(lists.getPersonName());
                 }
-            } else if (lists.getMessageType().trim().equals("g32")){
+            } else if (lists.getMessageType().trim().equals("g32")) {
                 if (lists.getGroupName() == null || lists.getGroupName().equals("")) {
                     holder.tile.setText("处理消息");
                 } else {
                     holder.tile.setText(lists.getGroupName());
                 }
-            } else if (lists.getMessageType().trim().equals("g4")){
+            } else if (lists.getMessageType().trim().equals("g4")) {
                 if (lists.getPersonName() == null || lists.getPersonName().equals("")) {
                     holder.tile.setText("处理消息");
                 } else {
                     holder.tile.setText(lists.getPersonName());
                 }
-            } else if (lists.getMessageType().trim().equals("g5")){
+            } else if (lists.getMessageType().trim().equals("g5")) {
                 if (lists.getPersonName() == null || lists.getPersonName().equals("")) {
                     holder.tile.setText("处理消息");
                 } else {
                     holder.tile.setText(lists.getPersonName());
                 }
-            } else if (lists.getMessageType().trim().equals("g6")){
+            } else if (lists.getMessageType().trim().equals("g6")) {
                 if (lists.getGroupName() == null || lists.getGroupName().equals("")) {
                     holder.tile.setText("群解散了");
                 } else {
                     holder.tile.setText(lists.getGroupName());
                 }
-            } else if (lists.getMessageType().trim().equals("g7")){
+            } else if (lists.getMessageType().trim().equals("g7")) {
                 if (lists.getGroupName() == null || lists.getGroupName().equals("")) {
                     holder.tile.setText("移交群主");
                 } else {
                     holder.tile.setText(lists.getGroupName());
                 }
-            } else if (lists.getMessageType().trim().equals("g8")){
+            } else if (lists.getMessageType().trim().equals("g8")) {
                 if (lists.getGroupName() == null || lists.getGroupName().equals("")) {
                     holder.tile.setText("审核消息");
                 } else {
                     holder.tile.setText(lists.getGroupName());
                 }
-            } else if (lists.getMessageType().trim().equals("g9")){
+            } else if (lists.getMessageType().trim().equals("g9")) {
                 if (lists.getGroupName() == null || lists.getGroupName().equals("")) {
                     holder.tile.setText("群消息更改");
                 } else {
                     holder.tile.setText(lists.getGroupName());
                 }
-            } else{
-                    holder.tile.setText("新的通知");
+            } else {
+                holder.tile.setText("新的通知");
             }
 
             if (lists.getMessage() == null || lists.getMessage().equals("")) {

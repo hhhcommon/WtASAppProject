@@ -393,7 +393,7 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
             for(int i=0;i<s_list.size();i++){
                 if(id.trim().equals(s_list.get(i).getSeqId())){
                     String message_id = s_list.get(i).getMessageId();
-                    InterPhoneControl.universalControlReply(context,message_id,4,4,1);
+                    InterPhoneControl.universalControlReply(message_id,4,4,1);
                 }
             }
         }

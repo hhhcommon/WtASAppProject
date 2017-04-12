@@ -711,14 +711,13 @@ public class InterPhoneControl {
     /**
      * 通用业务控制回复
      *
-     * @param context
      * @param ReMsgId
      * @param BizType
      * @param CmdType
      * @param Command
 
      */
-    public static void universalControlReply(Context context,String ReMsgId,int BizType, int CmdType, int Command ) {
+    public static void universalControlReply(String ReMsgId,int BizType, int CmdType, int Command ) {
         MsgNormal msg = new MsgNormal();
         // 消息分类：MsgType 原始数据：1主动发出的消息；-1应答消息；	最新数据：0000主动发送；1000应答消息
         //16进制编码：0000=0；1000=8

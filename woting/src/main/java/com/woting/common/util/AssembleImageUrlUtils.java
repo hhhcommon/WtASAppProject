@@ -92,6 +92,9 @@ public class AssembleImageUrlUtils {
                     case IntegerConstant.TYPE_PERSON:
                         Picasso.with(BSApplication.getAppContext()).load(_url.replace("\\/", "/")).placeholder(R.mipmap.wt_image_tx_hy).error(R.mipmap.wt_image_tx_hy).into(imageView);
                         break;
+                    case IntegerConstant.TYPE_NOTIFY:
+                        Picasso.with(BSApplication.getAppContext()).load(_url.replace("\\/", "/")).placeholder(R.mipmap.wt_linkman_news).error(R.mipmap.wt_linkman_news).into(imageView);
+                        break;
                     case IntegerConstant.TYPE_DEFAULT:
                         Picasso.with(BSApplication.getAppContext()).load(_url.replace("\\/", "/")).into(imageView);
                         break;

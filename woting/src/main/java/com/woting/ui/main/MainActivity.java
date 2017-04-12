@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,12 +38,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
-import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.manager.UpdateManager;
 import com.woting.common.receiver.NetWorkChangeReceiver;
@@ -58,6 +59,7 @@ import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.AutoScrollTextView;
 import com.woting.common.widgetui.RoundImageView;
 import com.woting.ui.common.favoritetype.FavoriteProgramTypeActivity;
 import com.woting.ui.common.login.LoginActivity;
@@ -161,7 +163,9 @@ public class MainActivity extends TabActivity implements OnClickListener {
             animator.start();// 开始动画
         } else {
             // 此方法 API 需要 >= 19
-            animator.resume();// 恢复动画
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                animator.resume();// 恢复动画
+            }
         }
 
 //        Animation rotateAnimation = AnimationUtils.loadAnimation(context, R.anim.running_circle);
@@ -174,7 +178,10 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private void playStopAnimation() {
 //        image0.clearAnimation();
         // 此方法 API 需要 >= 19
-        if (animator != null) animator.pause();// 暂停动画
+        if (animator != null)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                animator.pause();// 暂停动画
+            }
     }
 
     @Override
@@ -212,6 +219,11 @@ public class MainActivity extends TabActivity implements OnClickListener {
         if (!BSApplication.SharedPreferences.getBoolean(StringConstant.FAVORITE_PROGRAM_TYPE, false)) {
             startActivity(new Intent(context, FavoriteProgramTypeActivity.class));
         }
+
+//        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+//        AutoScrollTextView dd = (AutoScrollTextView)findViewById(R.id.tv_notify);
+//        dd.init(windowManager);
+//        dd.startScroll();
     }
 
     private void createService() {
@@ -229,6 +241,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         startService(download);
         Notification = new Intent(this, NotificationService.class);
         startService(Notification);
+
     }
 
     public void getTXL() {
@@ -934,8 +947,10 @@ public class MainActivity extends TabActivity implements OnClickListener {
                     if (!contentImage.startsWith("http")) {
                         contentImage = GlobalConfig.imageurl + contentImage;
                     }
-                    contentImage = AssembleImageUrlUtils.assembleImageUrl180(contentImage);
-                    Picasso.with(context).load(contentImage.replace("\\/", "/")).into(image0);
+                    String _url = AssembleImageUrlUtils.assembleImageUrl180(contentImage);
+
+                    // 加载图片
+                    AssembleImageUrlUtils.loadImage(_url, contentImage, image0, IntegerConstant.TYPE_LIST);
                     if (isFirst) {// 第一次进应用时暂停状态
                         imagePlay.setVisibility(View.VISIBLE);
                         playStopAnimation();

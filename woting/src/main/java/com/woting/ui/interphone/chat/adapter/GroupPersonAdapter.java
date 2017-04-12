@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.common.model.UserInfo;
@@ -92,8 +93,9 @@ public class GroupPersonAdapter extends BaseAdapter{
 			}else{
 				url = GlobalConfig.imageurl + lists.getPortraitBig();
 			}
-			url= AssembleImageUrlUtils.assembleImageUrl150(url);
-			Picasso.with(context).load(url.replace("\\/", "/")).into(holder.imageView_touxiang);
+			final String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
+			final String c_url = url;
+			AssembleImageUrlUtils.loadImage(_url, c_url, holder.imageView_touxiang, IntegerConstant.TYPE_PERSON);
 		}
 		if(lists.getOnLine()==2){
 			holder.tv_name.setTextColor(context.getResources().getColor(R.color.dinglan_orange) );
