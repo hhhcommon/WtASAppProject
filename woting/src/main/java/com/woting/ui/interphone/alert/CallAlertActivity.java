@@ -125,14 +125,14 @@ public class CallAlertActivity extends Activity implements OnClickListener {
         lin_guaduan = (LinearLayout) findViewById(R.id.lin_guaduan);
         lin_guaduan.setOnClickListener(this);
         // 第二次呼叫的界面
-        lin_two_call = (LinearLayout) findViewById(R.id.lin_two_call);
-        small_tv_news = (TextView) findViewById(R.id.small_tv_news);
-        small_imageview = (ImageView) findViewById(R.id.small_image);
-        small_tv_name = (TextView) findViewById(R.id.small_tv_name);
-        small_lin_call = (LinearLayout) findViewById(R.id.small_lin_call);
-        small_lin_call.setOnClickListener(this);
-        small_lin_guaduan = (LinearLayout) findViewById(R.id.small_lin_guaduan);
-        small_lin_guaduan.setOnClickListener(this);
+//        lin_two_call = (LinearLayout) findViewById(R.id.lin_two_call);
+//        small_tv_news = (TextView) findViewById(R.id.small_tv_news);
+//        small_imageview = (ImageView) findViewById(R.id.small_image);
+//        small_tv_name = (TextView) findViewById(R.id.small_tv_name);
+//        small_lin_call = (LinearLayout) findViewById(R.id.small_lin_call);
+//        small_lin_call.setOnClickListener(this);
+//        small_lin_guaduan = (LinearLayout) findViewById(R.id.small_lin_guaduan);
+//        small_lin_guaduan.setOnClickListener(this);
 
 
         ImageView img_zhezhao = (ImageView) findViewById(R.id.img_zhezhao);
