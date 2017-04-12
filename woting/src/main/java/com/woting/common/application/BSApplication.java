@@ -76,7 +76,7 @@ public class BSApplication extends Application implements OnErrorListener, OnLog
             }
         }, 0);
 
-        new GatherData();
+        GatherData.initThread();// 初始化收集用户数据线程
     }
 
     public static Context getAppContext() {
