@@ -652,7 +652,6 @@
         </receiver>
         -->
 
-        <service android:name=".ui.interphone.commom.service.NotificationClient"/>
         <service android:name=".ui.home.player.timeset.service.TimerService"/>
         <service android:name=".common.service.CoreService"/>
         <service android:name=".common.service.FloatingWindowService"/>
