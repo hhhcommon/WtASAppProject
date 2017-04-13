@@ -154,6 +154,10 @@ public class SubclassService extends Service {
                                                         }
                                                         InterPhoneControl.PersonTalkHJCDYD(context, _callId, message.getMsgId().trim(), _callerId);//呼叫传递应答
 
+                                                        if (CallAlertActivity.instance != null) {
+                                                            CallAlertActivity.instance.finish();
+                                                        }
+
                                                         if (ReceiveAlertActivity.instance == null) {
                                                             Intent it = new Intent(context, ReceiveAlertActivity.class);
                                                             Bundle b = new Bundle();
