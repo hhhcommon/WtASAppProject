@@ -23,7 +23,7 @@ package Test;
 //
 //import com.wotingfm.activity.interphone.commom.control.InterPhoneControlService;
 //import com.wotingfm.config.GlobalConfig;
-//import com.wotingfm.service.SocketService;
+//import com.wotingfm.service.SocketClient;
 //import com.wotingfm.utils.PhoneMessage;
 //import com.wotingfm.utils.SequenceUUID;
 //import com.wotingfm.utils.Utils;
@@ -228,7 +228,7 @@ package Test;
 //	// 数据传输到socket
 //	public void  bcMsg(String message) {
 ////		GlobalConfig.Socket.addSendMsg(message);
-//		SocketService.addSendMsg(message);
+//		SocketClient.addSendMsg(message);
 ////		Intent pushintent=new Intent("push_voicerecord");
 ////		Bundle bundle=new Bundle();
 ////		bundle.putString("message",message);

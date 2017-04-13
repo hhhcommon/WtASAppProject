@@ -1,6 +1,6 @@
 package com.woting.common.receiver;//package com.wotingfm.receiver;
 //
-//import com.wotingfm.service.SocketService;
+//import com.wotingfm.service.SocketClient;
 //import com.wotingfm.utils.DDPushUtil;
 //
 //import android.content.BroadcastReceiver;
@@ -19,7 +19,7 @@ package com.woting.common.receiver;//package com.wotingfm.receiver;
 //		if(DDPushUtil.hasNetwork(context) == false){
 //			return;
 //		}
-//		Intent startSrv = new Intent(context, SocketService.class);
+//		Intent startSrv = new Intent(context, SocketClient.class);
 //		startSrv.putExtra("CMD", "TICK");
 //		context.startService(startSrv);
 //	}

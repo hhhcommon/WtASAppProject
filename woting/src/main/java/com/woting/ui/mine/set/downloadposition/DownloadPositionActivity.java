@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.download.service.DownloadService;
+import com.woting.ui.download.service.DownloadClient;
 
 /**
  * 下载位置
@@ -26,9 +26,9 @@ public class DownloadPositionActivity extends AppBaseActivity {
     // 初始化视图
     private void setView() {
         // 设置下载位置的路径 当前只能看
-        if (!DownloadService.DOWNLOAD_PATH.equals("") && DownloadService.DOWNLOAD_PATH != null) {
+        if (!DownloadClient.DOWNLOAD_PATH.equals("") && DownloadClient.DOWNLOAD_PATH != null) {
             TextView textDownloadPosition = (TextView) findViewById(R.id.tv_downloadposition);
-            textDownloadPosition.setText(DownloadService.DOWNLOAD_PATH);
+            textDownloadPosition.setText(DownloadClient.DOWNLOAD_PATH);
         }
 
         findViewById(R.id.head_left_btn).setOnClickListener(new OnClickListener() {

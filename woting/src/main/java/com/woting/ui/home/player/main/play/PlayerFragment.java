@@ -56,7 +56,7 @@ import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.LanguageSearch;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
 import com.woting.ui.home.player.main.model.PlayerHistory;
-import com.woting.ui.home.player.timeset.service.timeroffservice;
+import com.woting.ui.home.player.timeset.service.TimerService;
 import com.woting.ui.interphone.message.messagecenter.activity.MessageMainActivity;
 import com.woting.ui.main.MainActivity;
 import com.woting.video.IntegrationPlayer;
@@ -1035,7 +1035,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
     // 开启定时服务中的当前播放完后关闭的关闭服务方法 点击暂停播放、下一首、上一首以及播放路况信息时都将自动关闭此服务
     private void stopCurrentTimer() {
         if (PlayerFragment.isCurrentPlay) {
-            Intent intent = new Intent(context, timeroffservice.class);
+            Intent intent = new Intent(context, TimerService.class);
             intent.setAction(BroadcastConstants.TIMER_STOP);
             context.startService(intent);
             PlayerFragment.isCurrentPlay = false;

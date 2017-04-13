@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.woting.ui.download.model.FileInfo;
-import com.woting.ui.download.service.DownloadService;
+import com.woting.ui.download.service.DownloadClient;
 import com.woting.ui.home.program.album.model.ContentInfo;
 import com.woting.common.database.SQLiteHelper;
 import com.woting.common.util.SequenceUUID;
@@ -238,7 +238,7 @@ public class FileInfoDao {
 	// 改
 	public void updataFileInfo(String filename) {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String localUrl= DownloadService.DOWNLOAD_PATH+filename;
+		String localUrl= DownloadClient.DOWNLOAD_PATH+filename;
 		db.execSQL("update fileinfo set finished=?,localurl=? where filename=?",
 				new Object[] {"true",localUrl,filename});
 		db.close();

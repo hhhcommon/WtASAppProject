@@ -22,7 +22,7 @@ package Test;//package Test;
 //import android.util.Log;
 //
 //import com.wotingfm.activity.interphone.commom.base64.Base64;
-//import com.wotingfm.service.SocketService;
+//import com.wotingfm.service.SocketClient;
 //import com.wotingfm.utils.PhoneMessage;
 //import com.wotingfm.utils.SequenceUUID;
 //import com.wotingfm.utils.Utils;
@@ -31,7 +31,7 @@ package Test;//package Test;
 // *  录音----流媒体
 // *  辛龙
 // */
-//public  class VoiceStreamRecordService   extends  Service{
+//public  class VoiceStreamRecord   extends  Service{
 //	private static Context context;
 //	private static String groupId;
 //	private static List<byte[]> audioStream=new ArrayList<byte[]>();
@@ -286,7 +286,7 @@ package Test;//package Test;
 //	// 数据传输到socket
 //	public static void  bcMsg(String message) {
 //		//		GlobalConfig.Socket.addSendMsg(message);
-//		SocketService.addSendMsg(message);
+//		SocketClient.addSendMsg(message);
 //	}
 //
 //	/*
