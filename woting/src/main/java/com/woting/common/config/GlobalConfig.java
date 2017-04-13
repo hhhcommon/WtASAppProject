@@ -23,6 +23,7 @@ public class GlobalConfig {
     public static String CityName;
     public static String District;
     public static String AdCode;
+    public static String Region;
 
     public static String oldBCCallId;// 上次存在的对讲ID
     public static int interPhoneType=0;// 此时的对讲状态

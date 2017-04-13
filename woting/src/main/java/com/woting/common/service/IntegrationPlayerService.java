@@ -26,7 +26,10 @@ import com.kingsoft.media.httpcache.OnCacheStatusListener;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
+import com.woting.common.gatherdata.GatherData;
+import com.woting.common.gatherdata.model.DataModel;
 import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.ResourceUtil;
@@ -291,6 +294,15 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
         if(mediaType != null && mediaType.equals(StringConstant.TYPE_AUDIO)) {
             if(mUpdatePlayTimeRunnable != null) mHandler.removeCallbacks(mUpdatePlayTimeRunnable);
         }
+
+        // 暂停播放需要收集数据
+        String beginTime = String.valueOf(System.currentTimeMillis() / 1000);// 事件开始时间  单位 s
+        String endTime = String.valueOf(getCurrentTime() / 1000);// 节目播放时间  单位 s
+        String apiName = "E-pause";
+        String objType = mediaType;
+        String objId = GlobalConfig.playerObject.getContentId();// ID
+        DataModel data = new DataModel(beginTime, endTime, apiName, objType, objId);
+        GatherData.collectData(IntegerConstant.DATA_UPLOAD_TYPE_GIVEN, data);
     }
 
     // 继续播放
@@ -305,6 +317,15 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
                 mHandler.postDelayed(mUpdatePlayTimeRunnable, 1000);
             }
         }
+
+        // 继续播放需要收集数据
+        String beginTime = String.valueOf(System.currentTimeMillis() / 1000);// 事件开始时间  单位 s
+        String endTime = String.valueOf(getCurrentTime() / 1000);// 节目播放时间  单位 s
+        String apiName = "E-play";
+        String objType = mediaType;
+        String objId = GlobalConfig.playerObject.getContentId();// ID
+        DataModel data = new DataModel(beginTime, endTime, apiName, objType, objId);
+        GatherData.collectData(IntegerConstant.DATA_UPLOAD_TYPE_GIVEN, data);
     }
 
     // 指定播放位置
@@ -339,6 +360,15 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
         localUrl = GlobalConfig.playerObject.getLocalurl();
 
         Log.v("TAG", "httpUrl -- > > " + httpUrl);
+
+        // 开始播放时需要收集数据
+        String beginTime = String.valueOf(System.currentTimeMillis() / 1000);// 事件开始时间  单位 s
+        String endTime = String.valueOf(getCurrentTime() / 1000);// 节目播放时间  单位 s
+        String apiName = "E-play";
+        String objType = mediaType;
+        String objId = GlobalConfig.playerObject.getContentId();// ID
+        DataModel data = new DataModel(beginTime, endTime, apiName, objType, objId);
+        GatherData.collectData(IntegerConstant.DATA_UPLOAD_TYPE_GIVEN, data);
 
         return mediaType != null && (httpUrl != null || localUrl != null);
     }
@@ -617,6 +647,16 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
                     Log.e("TAG", "========= MediaPlayerEncounteredError =========");
                     break;
                 case EventHandler.MediaPlayerEndReached:// 播放完成播下一首
+
+                    // 播放完成需要收集数据
+                    String beginTime = String.valueOf(System.currentTimeMillis() / 1000);// 事件开始时间  单位 s
+                    String endTime = String.valueOf(getCurrentTime() / 1000);// 节目播放时间  单位 s
+                    String apiName = "E-close";
+                    String objType = mediaType;
+                    String objId = GlobalConfig.playerObject.getContentId();// ID
+                    DataModel data = new DataModel(beginTime, endTime, apiName, objType, objId);
+                    GatherData.collectData(IntegerConstant.DATA_UPLOAD_TYPE_GIVEN, data);
+
                     if(mUpdatePlayTimeRunnable != null) {
                         mHandler.removeCallbacks(mUpdatePlayTimeRunnable);
                     }

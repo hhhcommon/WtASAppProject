@@ -66,6 +66,6 @@ public class IntegerConstant {
     // 数据上传方式 定制时间上传
     public static final int DATA_UPLOAD_TYPE_GIVEN = -1;
 
-    public static final int DATA_UPLOAD_COUNT = 100;
+    public static final int DATA_UPLOAD_COUNT = 10;
 
 }

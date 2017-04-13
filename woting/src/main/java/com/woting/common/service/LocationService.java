@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.text.TextUtils;
 
 import com.amap.api.location.AMapLocation;
 import com.woting.common.application.BSApplication;
@@ -25,6 +26,7 @@ import java.util.List;
 public class LocationService extends Service implements GDLocation.Location {
     private CityInfoDao CID;
     private GDLocation mGDLocation;
+    private String Region;
 
     @Override
     public void onCreate() {
@@ -42,6 +44,43 @@ public class LocationService extends Service implements GDLocation.Location {
         String AdCode = amapLocation.getAdCode();//地区编码
         String Latitude = String.valueOf(amapLocation.getLatitude());
         String Longitude = String.valueOf(amapLocation.getLongitude());
+/*
+        if(!TextUtils.isEmpty(City)){
+            LocationInformation
+        }
+*/
+        if(!TextUtils.isEmpty(amapLocation.getCity())){
+            Region=amapLocation.getCity();
+        }
+
+        if(!TextUtils.isEmpty(amapLocation.getDistrict())){
+            if(Region==null){
+                Region=amapLocation.getDistrict();
+            }else{
+                Region+=amapLocation.getDistrict();
+            }
+        }
+
+        if(!TextUtils.isEmpty(amapLocation.getStreet())){
+            if(Region==null){
+                Region=amapLocation.getStreet();
+            }else{
+                Region+=amapLocation.getStreet();
+            }
+        }
+
+        if(!TextUtils.isEmpty(amapLocation.getAddress())){
+            if(Region==null){
+                Region=amapLocation.getAddress();
+            }else{
+                Region+=amapLocation.getAddress();
+            }
+        }
+        if(!TextUtils.isEmpty(Region)){
+            GlobalConfig.Region=Region;
+        }else{
+            GlobalConfig.Region="未获取到本次地理位置信息";
+        }
         if (GlobalConfig.District == null) {
             GlobalConfig.District = District;
         } else {

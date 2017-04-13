@@ -11,7 +11,6 @@ import com.android.volley.toolbox.Volley;
 import com.kingsoft.media.httpcache.KSYProxyService;
 import com.kingsoft.media.httpcache.OnErrorListener;
 import com.kingsoft.media.httpcache.stats.OnLogEventListener;
-import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.PlatformConfig;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.config.SocketClientConfig;
@@ -76,7 +75,7 @@ public class BSApplication extends Application implements OnErrorListener, OnLog
             }
         }, 0);
 
-        new GatherData();
+        GatherData.initThread();// 初始化收集用户数据线程
     }
 
     public static Context getAppContext() {
@@ -111,7 +110,7 @@ public class BSApplication extends Application implements OnErrorListener, OnLog
 
 
     private void initAnalytic() {
-        MobclickAgent.startWithConfigure(new MobclickAgent.UMAnalyticsConfig(instance,"5715cf1e67e58e5955000896","wt_origin"));
+       /* MobclickAgent.startWithConfigure(new MobclickAgent.UMAnalyticsConfig(instance,"5715cf1e67e58e5955000896","wt_origin"));*/
     }
 
     private void initStaticFaces() {

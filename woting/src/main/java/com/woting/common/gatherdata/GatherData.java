@@ -30,11 +30,15 @@ public class GatherData {
 
     public static List<DataModel> givenList = new ArrayList<>();// 保存定时或定量上传的数据
 
+    private GatherData() {
+
+    }
+
     /**
      * 初始化 开启上传数据的线程
      */
-    public GatherData() {
-        // 防止application创建多次
+    public static void initThread() {
+        // 防止 application 创建多次
         if (!isRun) {
             isRun = true;
 
@@ -59,7 +63,7 @@ public class GatherData {
         data.setScreenSize(PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);// 手机屏幕大小
         data.setLongitude(PhoneMessage.longitude);// 经度
         data.setLatitude(PhoneMessage.latitude);// 纬度
-        data.setRegion("北京朝阳");// 行政区划
+        data.setRegion(GlobalConfig.Region);// 行政区划
         return data;
     }
 

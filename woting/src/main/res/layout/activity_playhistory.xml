@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dinglan_orange"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="48dp"
+        android:id="@+id/relativeLayout3">
 
         <ImageView
             android:id="@+id/head_left_btn"
@@ -48,79 +49,19 @@
 
     </RelativeLayout>
 
-    <LinearLayout
+    <com.woting.common.widgetui.TipView
+        android:id="@+id/tip_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/WHITE"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:layout_below="@+id/relativeLayout3" />
 
-        <LinearLayout
-            android:id="@+id/lin_clear"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@color/WHITE"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/text_all"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="全部"
-                android:textColor="@color/dinglan_orange"
-                android:textSize="@dimen/wt_edittext_default_text"/>
-
-            <TextView
-                android:id="@+id/text_sound"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="声音"
-                android:textColor="@color/group_item_text2"
-                android:textSize="@dimen/wt_edittext_default_text"/>
-
-            <TextView
-                android:id="@+id/text_radio"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="电台"
-                android:textColor="@color/group_item_text2"
-                android:textSize="@dimen/wt_edittext_default_text"/>
-
-            <TextView
-                android:id="@+id/text_tts"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="TTS"
-                android:textColor="@color/group_item_text2"
-                android:textSize="@dimen/wt_edittext_default_text"/>
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/cursor"
-            android:layout_width="wrap_content"
-            android:layout_height="3dp"
-            android:scaleType="matrix"
-            android:src="@mipmap/left_personal_bg"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/view_color"/>
-
-    </LinearLayout>
-
-    <com.woting.common.widgetui.MyViewPager
-        android:id="@+id/viewpager"
+    <ListView
+        android:id="@+id/lv_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/app_bg"
-        android:persistentDrawingCache="animation"/>
+        android:layout_below="@+id/relativeLayout3" />
 
-</LinearLayout>
+
+</RelativeLayout>
