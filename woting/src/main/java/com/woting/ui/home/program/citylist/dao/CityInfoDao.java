@@ -29,10 +29,10 @@ public class CityInfoDao {
 		String author = cursor.getColumnName(cursor.getColumnIndex("author"));*/
 
         try {
-            cursor = db.rawQuery("Select * from cityinfo", new String[]{});
+            cursor = db.rawQuery("Select * from cityInfo", new String[]{});
             while (cursor.moveToNext()) {
-                String Adcode = cursor.getString(cursor.getColumnIndex("adcode"));
-                String CityName = cursor.getString(cursor.getColumnIndex("cityname"));
+                String Adcode = cursor.getString(cursor.getColumnIndex("adCode"));
+                String CityName = cursor.getString(cursor.getColumnIndex("cityName"));
                 CatalogName mfFenleiname = new CatalogName();
                 mfFenleiname.setCatalogId(Adcode);
                 mfFenleiname.setCatalogName(CityName);
@@ -57,7 +57,7 @@ public class CityInfoDao {
         for (int i = 0; i < list.size(); i++) {
             String adcode = list.get(i).getCatalogId();
             String cityName = list.get(i).getCatalogName();
-            db.execSQL("insert into cityinfo(adcode,cityname)values(?,?)", new Object[]{adcode, cityName});
+            db.execSQL("insert into cityInfo(adCode,cityName)values(?,?)", new Object[]{adcode, cityName});
         }
         if (db != null) {
             db.close();
@@ -67,7 +67,7 @@ public class CityInfoDao {
     //
     public void DelCityInfo() {
         SQLiteDatabase db = helper.getWritableDatabase();
-        db.execSQL("delete  from cityinfo");
+        db.execSQL("delete  from cityInfo");
         db.close();
     }
 

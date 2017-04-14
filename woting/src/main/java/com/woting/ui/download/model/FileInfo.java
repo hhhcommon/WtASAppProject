@@ -42,6 +42,15 @@ public class FileInfo implements Serializable {
 	private String playTag;         // 标签<预留>
 	private String ContentPlayType; // 内容后缀
 	private String IsPlaying;       // 正在播放
+	private String ColumnNum;
+
+	public String getColumnNum() {
+		return ColumnNum;
+	}
+
+	public void setColumnNum(String columnNum) {
+		ColumnNum = columnNum;
+	}
 
 	public String getIsPlaying() {
 		return IsPlaying;

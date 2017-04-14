@@ -25,8 +25,17 @@ public class ListInfo implements Serializable{
 	private String ContentDescn;
 	private String ContentImg;
 	private String ContentFavorite;
+	private String ColumnNum;
 
-    private List<com.woting.ui.home.program.fmlist.model.ContentPersons> ContentPersons;// 主播信息
+	public String getColumnNum() {
+		return ColumnNum;
+	}
+
+	public void setColumnNum(String columnNum) {
+		ColumnNum = columnNum;
+	}
+
+	private List<com.woting.ui.home.program.fmlist.model.ContentPersons> ContentPersons;// 主播信息
 
     public List<ContentPersons> getContentPersons() {
         return ContentPersons;

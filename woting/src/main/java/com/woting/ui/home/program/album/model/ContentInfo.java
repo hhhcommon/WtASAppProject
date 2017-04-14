@@ -42,6 +42,7 @@ public class ContentInfo implements Serializable {
 	private String CataTitle;
 	private String CataMId;
 	private String IsPlaying;
+	private String ColumnNum;
 
 	public String getIsPlaying() {
 		return IsPlaying;
@@ -208,7 +209,15 @@ public class ContentInfo implements Serializable {
 		ContentURI = contentURI;
 	}
 
-//	public String getContentPersons() {
+	public String getColumnNum() {
+		return ColumnNum;
+	}
+
+	public void setColumnNum(String columnNum) {
+		ColumnNum = columnNum;
+	}
+
+	//	public String getContentPersons() {
 //		return ContentPersons;
 //	}
 //

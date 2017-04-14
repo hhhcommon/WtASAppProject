@@ -1015,12 +1015,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         String sequImg = languageSearchInside.getSequImg();
         String ContentPlayType = languageSearchInside.getContentPlayType();
         String IsPlaying = languageSearchInside.getIsPlaying();
+        String ColumnNum=languageSearchInside.getColumnNum();
 
         PlayerHistory history = new PlayerHistory(playerName, playerImage,
                 playerUrl, playerUrI, playerMediaType, playerAllTime,
                 playerInTime, playerContentDesc, playerNum, playerZanType,
                 playerFrom, playerFromId, playerFromUrl, playerAddTime,
-                bjUserId, playContentShareUrl, contentFavorite, ContentID, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying);
+                bjUserId, playContentShareUrl, contentFavorite, ContentID, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying,ColumnNum);
 
         if (mSearchHistoryDao == null)
             mSearchHistoryDao = new SearchPlayerHistoryDao(context);// 如果数据库没有初始化，则初始化 db

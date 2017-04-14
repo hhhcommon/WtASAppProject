@@ -601,7 +601,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                         ContentName, ContentImg, ContentPlay, "", mediatype,
                                         ContentTimes, "0", ContentDescn, PlayCount,
                                         "0", ContentPub, "", "", CTime, CommonUtils.getUserId(context), ContentShareURL,
-                                        ContentFavorite, contentid, "", "", "", "", "", ContentPlayType, IsPlaying);
+                                        ContentFavorite, contentid, "", "", "", "", "", ContentPlayType, IsPlaying,"");
                                 dbDao.deleteHistory(ContentPlay);
                                 dbDao.addHistory(history);
                                 Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);

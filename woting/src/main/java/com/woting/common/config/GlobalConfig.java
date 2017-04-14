@@ -52,7 +52,7 @@ public class GlobalConfig {
     /**
      * 数据库版本号
      */
-    public static final int dbVersionCode = 51;
+    public static final int dbVersionCode = 54;
     /**
      * 是否活跃状态，有活跃状态才能播放声音，否则即使收到音频包也不播放
      */

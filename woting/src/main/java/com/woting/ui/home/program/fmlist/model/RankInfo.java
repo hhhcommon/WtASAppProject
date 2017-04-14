@@ -23,8 +23,17 @@ public class RankInfo implements Serializable {
 	private String ContentPub;
 	private String ContentSubCount;
     private String ContentSeqId;
+	private String ColumnNum;
 
-    private List<ContentPersons> ContentPersons;// 主播信息
+	public String getColumnNum() {
+		return ColumnNum;
+	}
+
+	public void setColumnNum(String columnNum) {
+		ColumnNum = columnNum;
+	}
+
+	private List<ContentPersons> ContentPersons;// 主播信息
 
     public List<ContentPersons> getContentPersons() {
         return ContentPersons;
