@@ -3,6 +3,7 @@ package com.woting.ui.mine.playhistory.main;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -15,13 +16,15 @@ import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
-import com.woting.ui.home.player.main.play.PlayerActivity;
+import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
 import com.woting.ui.main.MainActivity;
+import com.woting.ui.mine.main.MineActivity;
 import com.woting.ui.mine.playhistory.adapter.PlayHistoryAdapter;
 
 import java.util.List;
@@ -36,12 +39,21 @@ public class PlayHistoryFragment extends Fragment implements OnClickListener, Ad
 
     private Dialog confirmDialog;
     private Dialog delDialog;// 长按删除数据确认对话框
-    private TextView clearEmpty, openEdit;
+    private TextView clearEmpty;
 
     private ListView listView;// 数据列表
     private TipView tipView;// 没有数据的提示
     private FragmentActivity context;
     private View rootView;
+
+    private int fromType;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        fromType = bundle.getInt(StringConstant.FROM_TYPE);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -85,7 +97,11 @@ public class PlayHistoryFragment extends Fragment implements OnClickListener, Ad
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.head_left_btn:// 左上角返回键
-                PlayerActivity.close();
+                if (fromType == IntegerConstant.TAG_MORE) {
+                    PlayerMoreOperationActivity.close();
+                } else if (fromType == IntegerConstant.TAG_MINE) {
+                    MineActivity.close();
+                }
                 break;
             case R.id.clear_empty:// 清空数据
                 if (confirmDialog != null && !confirmDialog.isShowing()) {
@@ -181,6 +197,5 @@ public class PlayHistoryFragment extends Fragment implements OnClickListener, Ad
         super.onDestroy();
         context = null;
         clearEmpty = null;
-        openEdit = null;
     }
 }
