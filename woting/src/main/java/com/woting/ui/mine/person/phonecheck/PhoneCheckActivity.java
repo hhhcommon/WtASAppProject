@@ -60,31 +60,78 @@ public class PhoneCheckActivity extends AppActivity implements OnClickListener {
     @Override
     protected void init() {
         setTitle("绑定手机号");
+        tv_Phone_Desc = (TextView) findViewById(R.id.tv_Phone_Desc);
         editPhoneNumber = (EditText) findViewById(R.id.edit_phone_number);                  // 新手机号码
         editVerificationCode = (EditText) findViewById(R.id.edit_verification_code);        // 验证码
-        editPhoneNumber.addTextChangedListener(new MyEditListener());
-        editVerificationCode.addTextChangedListener(new MyEditListener());
+
         textGetVerificationCode = (TextView) findViewById(R.id.text_get_verification_code); // 获取验证码
         textGetVerificationCode.setOnClickListener(this);
-
         textResend = (TextView) findViewById(R.id.text_resend);                             // 重新发送验证码
         textResend.setOnClickListener(this);
+
         btUpdate = (Button) findViewById(R.id.btn_confirm);                                 // 确定修改
         btUpdate.setOnClickListener(this);
 
-        tv_Phone_Desc=(TextView) findViewById(R.id.tv_Phone_Desc);
+
         handleIntent();
+        setEditListener();                                                                  // 输入框的监听
+    }
+
+    // 输入框的监听
+    private void setEditListener() {
+        editPhoneNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                setBtView();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+        editVerificationCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                setBtView();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    private void setBtView() {
+        String phoneNumber = editPhoneNumber.getText().toString().trim();
+        String verificationCode = editVerificationCode.getText().toString().trim();
+        if (phoneNumber != null && !phoneNumber.equals("") && phoneNumber.length() == 11) {
+            if (verificationCode != null && !verificationCode.equals("") && verificationCode.length() == 6) {
+                btUpdate.setBackgroundResource(R.drawable.zhuxiao_press);
+            } else {
+                btUpdate.setBackgroundResource(R.drawable.bg_graybutton);
+            }
+        } else {
+            btUpdate.setBackgroundResource(R.drawable.bg_graybutton);
+        }
     }
 
     private void handleIntent() {
         String phoneType = getIntent().getStringExtra("PhoneType");
-        if(!TextUtils.isEmpty(phoneType)){
-           if(phoneType.equals("1")){
-               phoneNumber = getIntent().getStringExtra("PhoneNumber");// 有手机号
-               tv_Phone_Desc.setText("当前绑定的手机号码为："+phoneNumber.replaceAll("(\\d{3})\\d{6}(\\d{2})","$1******$2")
-                       + "\n更换手机号后，下次登录可以使用新手机号码登录。");
-               editPhoneNumber.setHint("请输入新的手机号码");
-           }
+        if (!TextUtils.isEmpty(phoneType)) {
+            if (phoneType.equals("1")) {
+                phoneNumber = getIntent().getStringExtra("PhoneNumber");// 有手机号
+                tv_Phone_Desc.setText("当前绑定的手机号码为：" + phoneNumber.replaceAll("(\\d{3})\\d{6}(\\d{2})", "$1******$2")
+                        + "\n更换手机号后，下次登录可以使用新手机号码登录。");
+                editPhoneNumber.setHint("请输入新的手机号码");
+            }
         }
     }
 
@@ -122,10 +169,19 @@ public class PhoneCheckActivity extends AppActivity implements OnClickListener {
 
     // 检查数据的正确性
     private void checkValue() {
-        if (isComplete(1)) {
-            dialog = DialogUtils.Dialogph(context, "正在验证手机号");
-            sendRequest();
+         phoneNumber = editPhoneNumber.getText().toString().trim();
+         verificationCode = editVerificationCode.getText().toString().trim();
+        if (phoneNumber != null && !phoneNumber.equals("") && phoneNumber.length() == 11) {
+            if (verificationCode != null && !verificationCode.equals("") && verificationCode.length() == 6) {
+                dialog = DialogUtils.Dialogph(context, "正在验证手机号");
+                sendRequest();
+            } else {
+                ToastUtils.show_always(context, "请输入正确的验证码!");
+            }
+        } else {
+            ToastUtils.show_always(context, "请输入正确的手机号码!");
         }
+
     }
 
     // 请求网络获取验证码
@@ -288,42 +344,6 @@ public class PhoneCheckActivity extends AppActivity implements OnClickListener {
                 textGetVerificationCode.setVisibility(View.VISIBLE);
             }
         }.start();
-    }
-
-    // 判断数据是否填写完整
-    private boolean isComplete(int type) {
-        verificationCode = editVerificationCode.getText().toString().trim();
-        phoneNumber = editPhoneNumber.getText().toString().trim();
-
-        if ("".equalsIgnoreCase(phoneNumber) || phoneNumber.length() != 11) {// 检查输入数字是否为手机号
-            if(type == 1) ToastUtils.show_always(context, "请输入新的正确的手机号码!");
-            return false;
-        } else if ("".equalsIgnoreCase(verificationCode) || verificationCode.length() != 6) {
-            if(type == 1) ToastUtils.show_always(context, "验证码不正确!");
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    // 输入框监听
-    class MyEditListener implements TextWatcher {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (isComplete(2)) {
-                btUpdate.setBackgroundResource(R.drawable.wt_commit_button_background);
-            } else {
-                btUpdate.setBackgroundResource(R.drawable.bg_graybutton);
-            }
-        }
     }
 
     @Override

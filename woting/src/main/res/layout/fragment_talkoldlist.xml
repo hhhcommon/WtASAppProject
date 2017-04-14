@@ -348,22 +348,22 @@
         <com.woting.common.widgetui.MyLinearLayout
             android:id="@+id/lin_foot"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/transparentt"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:gravity="bottom"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone">
 
             <LinearLayout
+                android:id="@+id/lin_two_call"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="500dp"
+                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:id="@+id/lin_two_call"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone"
                     android:background="@color/translucent50_black"
                     android:orientation="horizontal">
 
@@ -382,7 +382,8 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:gravity="center"
+                            android:gravity="bottom"
+                            android:paddingBottom="50dp"
                             android:orientation="vertical">
 
                             <LinearLayout
@@ -490,6 +491,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/lin_press"
                 android:layout_width="match_parent"
                 android:layout_height="136dp"
                 android:layout_alignParentBottom="true"
@@ -502,6 +504,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
+                    android:background="@color/transparentt"
                     android:layout_height="match_parent">
 
                     <LinearLayout

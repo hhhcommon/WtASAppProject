@@ -47,6 +47,7 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_receivecall);
+        GlobalConfig.interPhoneType=1;
         instance = this;
         VibratorUtils.Vibrate(instance, Vibrate, true);
         if (DuiJiangActivity.context == null) {
@@ -182,6 +183,7 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        GlobalConfig.interPhoneType=0;
         VibratorUtils.cancel(instance);
         Log.e("停止震动", "停止震动");
         instance = null;

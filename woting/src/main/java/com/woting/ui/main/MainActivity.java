@@ -934,6 +934,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     // 播放
     private static void setViewZero() {
+        GlobalConfig.interPhoneType=0;
         tabHost.setCurrentTabByTag("zero");
 //        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_selected);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
@@ -944,6 +945,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     // 享听
     public static void setViewOne() {
+        GlobalConfig.interPhoneType=0;
         tabHost.setCurrentTabByTag("one");
 //        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_selected);
@@ -958,6 +960,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     // 享讲
     private static void setViewTwo() {
+        GlobalConfig.interPhoneType=0;
         tabHost.setCurrentTabByTag("two");
 //        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
@@ -968,6 +971,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     // 我的
     private void setViewFive() {
+        GlobalConfig.interPhoneType=0;
         tabHost.setCurrentTabByTag("five");
 //        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);

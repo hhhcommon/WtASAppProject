@@ -75,10 +75,7 @@ public class SubclassService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(BroadcastConstants.PUSH_BACK)) {////////////////////////////////////////////////////////////////////////////////
-                if (ReceiveAlertActivity.instance == null) {
-                } else {
-                    synchronized (Lock) {
+            if (action.equals(BroadcastConstants.PUSH_BACK)) {
                         //  abortBroadcast();//中断广播传递
                         //	MsgNormal message = (MsgNormal) intent.getSerializableExtra("outMessage");
                         byte[] bt = intent.getByteArrayExtra("outMessage");
@@ -106,6 +103,14 @@ public class SubclassService extends Service {
                                             if (ReceiveAlertActivity.instance != null) {
                                                 ReceiveAlertActivity.instance.finish();
                                             }
+                                            Intent it2 = new Intent(BroadcastConstants.PUSH_CALL_CHAT);
+                                            Intent it3 = new Intent(BroadcastConstants.PUSH_CALL_CALLALERT);
+                                            Bundle b2 = new Bundle();
+                                            b2.putString("type", "back");
+                                            it2.putExtras(b2);
+                                            it3.putExtras(b2);
+                                            sendBroadcast(it2);
+                                            sendBroadcast(it3);
                                         }
                                         break;
                                     default:
@@ -115,14 +120,12 @@ public class SubclassService extends Service {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    }
-                }
+
             } else if (action.equals(BroadcastConstants.PUSH_SERVICE)) {
                 byte[] bt = intent.getByteArrayExtra("outMessage");
                 Log.e("push_service接收器中数据", Arrays.toString(bt) + "");
                 try {
                     MsgNormal message = (MsgNormal) MessageUtils.buildMsgByBytes(bt);
-                    synchronized (Lock) {
                         if (message != null) {
                             int cmdType = message.getCmdType();
                             switch (cmdType) {
@@ -137,6 +140,7 @@ public class SubclassService extends Service {
                                           * 4.此时在对讲页对讲，则在对讲页展示被呼叫
                                           *
                                          */
+                                        Log.e("interPhoneType",""+GlobalConfig.interPhoneType);
                                         switch (GlobalConfig.interPhoneType) {
                                             case 0:// 此时没有任何操作，则打开被呼叫页
                                                 MapContent data = (MapContent) message.getMsgContent();
@@ -236,7 +240,7 @@ public class SubclassService extends Service {
                                                             handler.removeCallbacks(run);
                                                         }
                                                         InterPhoneControl.PersonTalkHJCDYD(context, _callId, message.getMsgId().trim(), _callerId);//呼叫传递应答
-                                                        Intent it2 = new Intent(BroadcastConstants.PUSH_CALL_CHAT);
+                                                        Intent it2 = new Intent(BroadcastConstants.PUSH_CALL_CALLALERT);
                                                         Bundle b2 = new Bundle();
                                                         b2.putString("type", "call");
                                                         b2.putString("callId", _callId);
@@ -249,10 +253,6 @@ public class SubclassService extends Service {
                                                                 if (!isallow) {
                                                                     //如果60s后没有没有对应答消息进行处理，则发送拒绝应答的消息已经弹出框消失
                                                                     InterPhoneControl.PersonTalkTimeOver(getApplicationContext(), _callId, _callerId);//拒绝应答
-                                                                    if (musicPlayer != null) {
-                                                                        musicPlayer.stop();
-                                                                        musicPlayer = null;
-                                                                    }
 
                                                                     Intent it2 = new Intent(BroadcastConstants.PUSH_CALL_CHAT);
                                                                     Bundle b2 = new Bundle();
@@ -265,27 +265,6 @@ public class SubclassService extends Service {
                                                             }
                                                         };
                                                         handler.postDelayed(run, 60000);
-                                                        musicPlayer = MediaPlayer.create(context, getSystemDefaultRingtoneUri());
-                                                        if (musicPlayer == null) {
-                                                            musicPlayer = MediaPlayer.create(context, R.raw.toy_mono);
-                                                        }
-                                                        if (musicPlayer != null) {
-                                                            musicPlayer.start();
-
-                                                            //监听音频播放完的代码，实现音频的自动循环播放
-                                                            musicPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                                                                @Override
-                                                                public void onCompletion(MediaPlayer arg0) {
-                                                                    if (musicPlayer != null) {
-                                                                        musicPlayer.start();
-                                                                        musicPlayer.setLooping(true);
-                                                                    }
-                                                                }
-                                                            });
-                                                        } else {
-                                                            // 播放器初始化失败
-                                                            ToastUtils.show_short(context, "播放器初始化失败");
-                                                        }
                                                     } catch (Exception e) {
                                                         e.printStackTrace();
                                                     }
@@ -307,7 +286,7 @@ public class SubclassService extends Service {
                                                         }
                                                         InterPhoneControl.PersonTalkHJCDYD(context, _callId, message.getMsgId().trim(), _callerId);//呼叫传递应答
 
-                                                        Intent it3 = new Intent(BroadcastConstants.PUSH_CALL_CALLALERT);
+                                                        Intent it3 = new Intent(BroadcastConstants.PUSH_CALL_CHAT);
                                                         Bundle b3 = new Bundle();
                                                         b3.putString("type", "call");
                                                         b3.putString("callId", _callId);
@@ -370,7 +349,6 @@ public class SubclassService extends Service {
                                     break;
                             }
                         }
-                    }
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }

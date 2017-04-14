@@ -60,6 +60,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_calling);
+        GlobalConfig.interPhoneType=2;
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        //透明状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    //透明导航栏
 
@@ -198,6 +199,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.lin_call:
+                GlobalConfig.interPhoneType=2;
                 tv_news.setText("呼叫中..");
                 lin_call.setVisibility(View.GONE);
                 lin_guaduan.setVisibility(View.VISIBLE);
@@ -225,6 +227,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                 }
                 break;
             case R.id.lin_guaduan:
+                GlobalConfig.interPhoneType=0;
                 tv_news.setText("重新呼叫");
                 lin_call.setVisibility(View.VISIBLE);
                 lin_guaduan.setVisibility(View.GONE);
@@ -246,6 +249,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                 }
                 InterPhoneControl.PersonTalkHangUp(instance, InterPhoneControl.bdcallid);
                 finish();
+                GlobalConfig.interPhoneType=0;
                 break;
             case R.id.small_lin_call:
                 SubclassService.isallow = true;
@@ -320,6 +324,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             lin_call.setVisibility(View.VISIBLE);
                                             isCall = false;
                                             Log.e("服务端拨号状态", "呼叫用户不在线");
+                                            GlobalConfig.interPhoneType=0;
                                             break;
                                         case 3:
                                             if (musicPlayer != null) {
@@ -331,6 +336,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             lin_call.setVisibility(View.VISIBLE);
                                             isCall = false;
                                             Log.e("服务端拨号状态", "被叫用户不在线");
+                                            GlobalConfig.interPhoneType=0;
                                             break;
                                         case 4:
                                             if (musicPlayer != null) {
@@ -342,6 +348,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             lin_call.setVisibility(View.VISIBLE);
                                             isCall = false;
                                             Log.e("服务端拨号状态", "呼叫用户占线（在通电话）");
+                                            GlobalConfig.interPhoneType=0;
                                             break;
                                         case 5:
                                             if (musicPlayer != null) {
@@ -353,6 +360,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             lin_call.setVisibility(View.VISIBLE);
                                             isCall = false;
                                             Log.e("服务端拨号状态", "呼叫用户占线（在对讲）");
+                                            GlobalConfig.interPhoneType=0;
                                             break;
                                         case 6:
                                             if (musicPlayer != null) {
@@ -364,6 +372,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             lin_call.setVisibility(View.VISIBLE);
                                             isCall = false;
                                             Log.e("服务端拨号状态", "呼叫用户占线（自己呼叫自己）");
+                                            GlobalConfig.interPhoneType=0;
                                             break;
                                         case 0x81:
                                             if (musicPlayer != null) {
@@ -375,6 +384,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             lin_call.setVisibility(View.VISIBLE);
                                             isCall = false;
                                             Log.e("服务端拨号状态", "此通话已被占用");
+                                            GlobalConfig.interPhoneType=0;
                                             break;
                                         case 0x82:
                                             if (musicPlayer != null) {
@@ -387,6 +397,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             isCall = false;
                                             //此通话对象状态错误（status应该为0，这个消息若没有特殊情况，是永远不会返回的）
                                             Log.e("服务端拨号状态", "此通话对象状态错误");
+                                            GlobalConfig.interPhoneType=0;
                                             break;
                                         case 0xff:
                                             if (musicPlayer != null) {
@@ -398,6 +409,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             lin_call.setVisibility(View.VISIBLE);
                                             isCall = false;
                                             Log.e("服务端拨号状态", "异常返回值");
+                                            GlobalConfig.interPhoneType=0;
                                             break;
                                         default:
                                             break;
@@ -418,6 +430,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                         lin_guaduan.setVisibility(View.GONE);
                                         lin_call.setVisibility(View.VISIBLE);
                                         isCall = false;
+                                        GlobalConfig.interPhoneType=0;
                                     }
                                     break;
                                 case 0x20:
@@ -430,6 +443,17 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                             musicPlayer = null;
                                         }
                                         if (isCall) addUser(id);
+                                        // 超时拒接后隐藏界面
+                                        if (lin_two_call.getVisibility() == View.VISIBLE) {
+
+                                            Intent it3 = new Intent(BroadcastConstants.PUSH_CALL_CHAT);
+                                            Bundle b3 = new Bundle();
+                                            b3.putString("type", "call");
+                                            b3.putString("callId", callId);
+                                            b3.putString("callerId", callerId);
+                                            it3.putExtras(b3);
+                                            sendBroadcast(it3);
+                                        }
                                     } else if (ACKType != null && !ACKType.equals("") && ACKType.equals("2")) {
                                         //拒绝通话，挂断电话
                                         if (musicPlayer != null) {
@@ -440,6 +464,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                         lin_guaduan.setVisibility(View.GONE);
                                         lin_call.setVisibility(View.VISIBLE);
                                         isCall = false;
+                                        GlobalConfig.interPhoneType=0;
                                     } else if (ACKType != null && !ACKType.equals("") && ACKType.equals("31")) {
                                         //被叫客户端超时应答，挂断电话
                                         if (musicPlayer != null) {
@@ -450,6 +475,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                         lin_guaduan.setVisibility(View.GONE);
                                         lin_call.setVisibility(View.VISIBLE);
                                         isCall = false;
+                                        GlobalConfig.interPhoneType=0;
                                     } else if (ACKType != null && !ACKType.equals("") && ACKType.equals("32")) {
                                         //长时间不接听，服务器超时，挂断电话
                                         if (musicPlayer != null) {
@@ -460,6 +486,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                         lin_guaduan.setVisibility(View.GONE);
                                         lin_call.setVisibility(View.VISIBLE);
                                         isCall = false;
+                                        GlobalConfig.interPhoneType=0;
                                     } else {
                                         if (musicPlayer != null) {
                                             musicPlayer.stop();
@@ -469,6 +496,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                                         lin_guaduan.setVisibility(View.GONE);
                                         lin_call.setVisibility(View.VISIBLE);
                                         isCall = false;
+                                        GlobalConfig.interPhoneType=0;
                                     }
                                     break;
                                 default:
@@ -545,8 +573,10 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                     musicPlayer = null;
                 }
                 InterPhoneControl.PersonTalkHangUp(instance, InterPhoneControl.bdcallid);
+                GlobalConfig.interPhoneType=0;
             } else {
                 finish();
+                GlobalConfig.interPhoneType=0;
             }
             return true;
         }
@@ -556,6 +586,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        GlobalConfig.interPhoneType=0;
         if (musicPlayer != null) {
             musicPlayer.stop();
             musicPlayer = null;

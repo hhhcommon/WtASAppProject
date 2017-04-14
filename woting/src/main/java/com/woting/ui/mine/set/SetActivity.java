@@ -41,7 +41,7 @@ import com.woting.ui.mine.set.help.HelpActivity;
 import com.woting.ui.mine.set.messageset.MessageSetActivity;
 import com.woting.ui.mine.set.preference.activity.PreferenceActivity;
 import com.woting.ui.mine.set.secretset.SecretSetActivity;
-import com.woting.ui.mine.set.updateusernum.updateUserNumActivity;
+import com.woting.ui.mine.person.updateusernum.updateUserNumActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -202,7 +202,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
             case R.id.lin_bindPhone:        // 绑定手机号
                 String phoneNumber = BSApplication.SharedPreferences.getString(StringConstant.USER_PHONE_NUMBER, ""); // 用户手机号
                 Intent intent = new Intent(context, PhoneCheckActivity.class);
-                if (!phoneNumber.equals("") || !phoneNumber.equals("null")) {// 已经有存在的手机号
+                if (phoneNumber!=null&&!phoneNumber.equals("") && !phoneNumber.equals("null")) {// 已经有存在的手机号
                     intent.putExtra("PhoneType", "1");
                     intent.putExtra("PhoneNumber", phoneNumber);
                 } else {// 手机号为空

@@ -52,6 +52,8 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.photocut.PhotoCutActivity;
 import com.woting.ui.common.qrcodes.EWMShowActivity;
+import com.woting.ui.download.main.DownloadFragment;
+import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
 import com.woting.ui.interphone.model.UserInviteMeInside;
 import com.woting.ui.mine.favorite.main.FavoriteFragment;
 import com.woting.ui.mine.hardware.HardwareIntroduceActivity;
@@ -113,6 +115,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     private View linAlbum;                      // 我的专辑  我上传的专辑
     private View circleView;
     private View viewLine;
+    private View lin_download;
 
     private TextView textUserAutograph;
     private TextView textUserArea;
@@ -215,6 +218,10 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         linAnchor = rootView.findViewById(R.id.lin_anchor);                          // 我的主播
         linAnchor.setOnClickListener(this);
 
+
+        lin_download = rootView.findViewById(R.id.lin_download);                     // 我的下载
+        lin_download.setOnClickListener(this);
+
         linSubscribe = rootView.findViewById(R.id.lin_subscribe);                    // 我的订阅
         linSubscribe.setOnClickListener(this);
 
@@ -296,6 +303,13 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 subscriberListFragment.setArguments(bundleSub);
                 MineActivity.open(subscriberListFragment);
                 break;
+            case R.id.lin_download:        // 我的下载
+                DownloadFragment d = new DownloadFragment();
+                Bundle b = new Bundle();
+                b.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_MINE);
+                d.setArguments(b);
+                MineActivity.open(d);
+                break;
             case R.id.lin_album:            // 我的专辑  我上传的专辑
                 startActivity(new Intent(context, MyUploadActivity.class));
                 break;
@@ -355,6 +369,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             linLike.setVisibility(View.VISIBLE);            // 我喜欢的
             linAnchor.setVisibility(View.VISIBLE);
             linSubscribe.setVisibility(View.VISIBLE);
+            lin_download.setVisibility(View.VISIBLE);
             linAlbum.setVisibility(View.VISIBLE);
             viewLine.setVisibility(View.GONE);
 
@@ -411,6 +426,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             linLike.setVisibility(View.GONE);
             linAnchor.setVisibility(View.GONE);
             linSubscribe.setVisibility(View.GONE);
+            lin_download.setVisibility(View.GONE);
             linAlbum.setVisibility(View.GONE);
             viewLine.setVisibility(View.VISIBLE);
 
