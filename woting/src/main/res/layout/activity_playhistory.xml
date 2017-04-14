@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dinglan_orange"
     android:clipToPadding="true"
-    android:fitsSystemWindows="true"
-    >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
+        android:id="@+id/relativeLayout3"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:id="@+id/relativeLayout3">
+        android:layout_height="48dp">
 
         <ImageView
             android:id="@+id/head_left_btn"
@@ -35,33 +35,21 @@
             android:textColor="@color/WHITE_1"
             android:textSize="@dimen/wt_dinglan_text_right"/>
 
-        <TextView
-            android:id="@+id/open_edit"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="编辑"
-            android:textColor="@color/WHITE_1"
-            android:textSize="@dimen/wt_dinglan_text_right"
-            android:visibility="gone"/>
-
     </RelativeLayout>
 
     <com.woting.common.widgetui.TipView
         android:id="@+id/tip_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:layout_below="@+id/relativeLayout3" />
+        android:layout_below="@+id/relativeLayout3"
+        android:visibility="gone"/>
 
     <ListView
         android:id="@+id/lv_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/app_bg"
-        android:layout_below="@+id/relativeLayout3" />
+        android:layout_below="@+id/relativeLayout3"
+        android:background="@color/app_bg"/>
 
 
 </RelativeLayout>
