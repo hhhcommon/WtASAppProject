@@ -234,6 +234,8 @@ public class PlayerHistory implements Serializable{
 		this.ContentFavorite=ContentFavorite;
 		this.ContentID=ContentID;
 		this.localurl=localurl;
+		this.ColumnNum=ColumnNum;
+
 	}
 
 	public String getPlayerAddTime() {

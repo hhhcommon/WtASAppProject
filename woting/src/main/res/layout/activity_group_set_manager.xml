@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="选择联系人"
+            android:text="设置管理员"
             android:textColor="@color/WHITE_1"
             android:textSize="@dimen/activity_head_center_s" />
 
@@ -29,15 +29,16 @@
             android:layout_width="60dip"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:background="@color/dinglan_orange"
             android:gravity="center">
 
             <TextView
-                android:id="@+id/tv_head"
+                android:id="@+id/tv_head_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="确定"
+                android:text="编辑"
                 android:textColor="@color/white"
                 android:textSize="@dimen/activity_head_right" />
 
@@ -59,51 +60,52 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/add_manager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/color_wt_circle_grays"
+
             android:gravity="left|center">
 
             <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginLeft="10dp"
-                android:src="@mipmap/abc_ic_search_api_holo_light" />
+                android:layout_width="50dip"
+                android:layout_height="50dip"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/wt_img_groupdetail_gridview_itemnull"/>
 
-            <EditText
-                android:id="@+id/et_search"
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="3dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@color/WHITE"
-                android:hint="搜索"
-                android:padding="2dp"
-                android:textColor="@color/gray"
-                android:textColorHint="@color/gray"
-                android:textCursorDrawable="@drawable/wt_edittext_cursor"
-                android:textSize="@dimen/wt_edittext_default_text" />
+                android:gravity="left|center"
+                android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/image_clear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:src="@mipmap/wt_img_clearnew"
-                android:visibility="invisible" />
+                <TextView
+                    android:id="@+id/tv_newpersons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="添加管理员"
+                    android:textColor="@color/dinglan_orange"
+                    android:textSize="16sp"/>
+            </LinearLayout>
 
         </LinearLayout>
-
-        <FrameLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
+        <TextView
+            android:id="@+id/tv_sum"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:background="@color/app_bg"
+            android:text="管理员"
+            android:textSize="10sp"
+            android:paddingLeft="12dp"
+            android:gravity="left|center"
+            />
             <ListView
                 android:id="@+id/country_lvcountry"
                 android:layout_width="fill_parent"
@@ -111,34 +113,6 @@
                 android:layout_gravity="center"
                 android:divider="@null"
                 android:scrollbars="none" />
-
-            <com.woting.common.widgetui.TipView
-                android:id="@+id/tip_search_null"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"/>
-
-            <TextView
-                android:id="@+id/dialog"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center"
-                android:background="@drawable/linkman_bt"
-                android:gravity="center"
-                android:text="A"
-                android:textColor="@color/WHITE"
-                android:textSize="30sp"
-                android:visibility="gone" />
-
-            <com.woting.ui.interphone.linkman.view.SideBar
-                android:id="@+id/sidrbar"
-                android:layout_width="20dip"
-                android:layout_height="fill_parent"
-                android:layout_gravity="right|center"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp" />
-
-        </FrameLayout>
 
     </LinearLayout>
 
