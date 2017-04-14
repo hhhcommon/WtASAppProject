@@ -659,15 +659,9 @@
         </receiver>
         -->
 
-        <service android:name=".common.service.SubclassService"/>
-        <service android:name=".ui.interphone.commom.service.NotificationService"/>
-        <service android:name=".ui.home.player.timeset.service.timeroffservice"/>
-        <service android:name=".common.service.SocketService"/>
-        <service android:name=".ui.interphone.commom.service.VoiceStreamRecordService"/>
-        <service android:name=".ui.interphone.commom.service.VoiceStreamPlayerService"/>
-        <service android:name=".ui.download.service.DownloadService"/>
+        <service android:name=".ui.home.player.timeset.service.TimerService"/>
+        <service android:name=".common.service.CoreService"/>
         <service android:name=".common.service.FloatingWindowService"/>
-        <service android:name=".common.service.LocationService"/>
 
         <!-- 集成播放器服务 -->
         <service android:name=".common.service.IntegrationPlayerService"/>

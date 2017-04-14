@@ -16,7 +16,7 @@ import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.manager.MyActivityManager;
-import com.woting.common.service.SubclassService;
+import com.woting.common.service.SubclassControl;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
@@ -89,7 +89,7 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
 
     private void getSource() {
         //查找当前好友的展示信息
-        id = SubclassService.callerId;
+        id = SubclassControl.callerId;
         try {
             if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
                 for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
@@ -121,11 +121,11 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.lin_call:
-                SubclassService.isallow = true;
-                InterPhoneControl.PersonTalkAllow(getApplicationContext(), SubclassService.callid, SubclassService.callerId);//接收应答
-                if (SubclassService.musicPlayer != null) {
-                    SubclassService.musicPlayer.stop();
-                    SubclassService.musicPlayer = null;
+                SubclassControl.isallow = true;
+                InterPhoneControl.PersonTalkAllow(getApplicationContext(), SubclassControl.callid, SubclassControl.callerId);//接收应答
+                if (SubclassControl.musicPlayer != null) {
+                    SubclassControl.musicPlayer.stop();
+                    SubclassControl.musicPlayer = null;
                 }
                 ChatFragment.isCallingForUser = true;
 //			Intent intent = new Intent(getApplicationContext(),MainActivity.class);
@@ -136,11 +136,11 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
                 addUser();
                 break;
             case R.id.lin_guaduan:
-                SubclassService.isallow = true;
-                InterPhoneControl.PersonTalkOver(getApplicationContext(), SubclassService.callid, SubclassService.callerId);//拒绝应答
-                if (SubclassService.musicPlayer != null) {
-                    SubclassService.musicPlayer.stop();
-                    SubclassService.musicPlayer = null;
+                SubclassControl.isallow = true;
+                InterPhoneControl.PersonTalkOver(getApplicationContext(), SubclassControl.callid, SubclassControl.callerId);//拒绝应答
+                if (SubclassControl.musicPlayer != null) {
+                    SubclassControl.musicPlayer.stop();
+                    SubclassControl.musicPlayer = null;
                 }
                 this.finish();
                 break;
@@ -157,7 +157,7 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
         dbDao.addTalkHistory(history);
 //        DBTalkHistorary talkdb = dbDao.queryHistory().get(0);//得到数据库里边数据
         //对讲主页界面更新
-        InterPhoneControl.bdcallid = SubclassService.callid;
+        InterPhoneControl.bdcallid = SubclassControl.callid;
         MainActivity.changeTwo();
         DuiJiangActivity.update();
         ChatFragment.zhiDingPerson();
@@ -169,11 +169,11 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN && KeyEvent.KEYCODE_BACK == keyCode) {
-            SubclassService.isallow = true;
-            InterPhoneControl.PersonTalkOver(getApplicationContext(), SubclassService.callid, SubclassService.callerId);//拒绝应答
-            if (SubclassService.musicPlayer != null) {
-                SubclassService.musicPlayer.stop();
-                SubclassService.musicPlayer = null;
+            SubclassControl.isallow = true;
+            InterPhoneControl.PersonTalkOver(getApplicationContext(), SubclassControl.callid, SubclassControl.callerId);//拒绝应答
+            if (SubclassControl.musicPlayer != null) {
+                SubclassControl.musicPlayer.stop();
+                SubclassControl.musicPlayer = null;
             }
             finish();
             return true;

@@ -1,6 +1,5 @@
 package com.woting.common.service;
 
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Handler;
-import android.os.IBinder;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -38,7 +36,7 @@ import java.util.Map;
  * 2016/12/28 11:21
  * 邮箱：645700751@qq.com
  */
-public class SubclassService extends Service {
+public class SubclassControl {
     private MessageReceiver Receiver;
     public static String callid;
     public static String callerId;
@@ -49,22 +47,21 @@ public class SubclassService extends Service {
     private Handler handler;
     private volatile Object Lock = new Object();//锁
 
-    @Override
-    public IBinder onBind(Intent arg0) {
-        return null;
-    }
+    private Context context;
 
-    public void onCreate() {
+    public SubclassControl(Context context) {
+        this.context = context;
+
         if (Receiver == null) {
             Receiver = new MessageReceiver();
             IntentFilter filter = new IntentFilter();
             filter.addAction(BroadcastConstants.PUSH_SERVICE);
-            getApplicationContext().registerReceiver(Receiver, filter);
+            context.registerReceiver(Receiver, filter);
 
             IntentFilter filterb3 = new IntentFilter();
             filterb3.addAction(BroadcastConstants.PUSH_BACK);
             filterb3.setPriority(1000);
-            getApplicationContext().registerReceiver(Receiver, filterb3);
+            context.registerReceiver(Receiver, filterb3);
         }
         handler = new Handler();
     }
@@ -76,7 +73,7 @@ public class SubclassService extends Service {
         private Runnable run;
 
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(final Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(BroadcastConstants.PUSH_BACK)) {////////////////////////////////////////////////////////////////////////////////
                 if (ReceiveAlertActivity.instance == null) {
@@ -167,14 +164,14 @@ public class SubclassService extends Service {
                                                 if (ReceiveAlertActivity.instance == null) {
                                                     Intent it = new Intent(context, ReceiveAlertActivity.class);
                                                     it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                    startActivity(it);
+                                                    context.startActivity(it);
                                                 }
                                                 run = new Runnable() {
                                                     @Override
                                                     public void run() {
                                                         if (!isallow) {
                                                             //如果60s后没有没有对应答消息进行处理，则发送拒绝应答的消息已经弹出框消失
-                                                            InterPhoneControl.PersonTalkTimeOver(getApplicationContext(), callid, callerId);//拒绝应答
+                                                            InterPhoneControl.PersonTalkTimeOver(context, callid, callerId);//拒绝应答
                                                             if (musicPlayer != null) {
                                                                 musicPlayer.stop();
                                                                 musicPlayer = null;
@@ -214,8 +211,6 @@ public class SubclassService extends Service {
                                         }
                                     }
                                     break;
-                                default:
-                                    break;
                             }
                         }
                     }
@@ -226,19 +221,16 @@ public class SubclassService extends Service {
         }
     }
 
-    //获取系统默认铃声的Uri
+    // 获取系统默认铃声的 Uri
     private Uri getSystemDefultRingtoneUri() {
-        return RingtoneManager.getActualDefaultRingtoneUri(this,
-                RingtoneManager.TYPE_RINGTONE);
+        return RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+    // 注销广播
+    public void unregister() {
         if (Receiver != null) {
-            getApplicationContext().unregisterReceiver(Receiver);
+            context.unregisterReceiver(Receiver);
             Receiver = null;
         }
     }
-
 }

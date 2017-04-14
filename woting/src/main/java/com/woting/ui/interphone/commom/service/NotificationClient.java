@@ -3,13 +3,11 @@ package com.woting.ui.interphone.commom.service;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -20,7 +18,6 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.JsonEncloseUtils;
-import com.woting.common.util.SequenceUUID;
 import com.woting.ui.interphone.commom.message.MessageUtils;
 import com.woting.ui.interphone.commom.message.MsgNormal;
 import com.woting.ui.interphone.commom.message.content.MapContent;
@@ -31,8 +28,8 @@ import com.woting.ui.interphone.commom.model.InviteUserInfo;
 import com.woting.ui.interphone.commom.model.SeqMediaInfo;
 import com.woting.ui.interphone.commom.model.UserInfo;
 import com.woting.ui.interphone.linkman.model.DBNotifyHistory;
-import com.woting.ui.interphone.message.messagecenter.dao.MessageSubscriberDao;
 import com.woting.ui.interphone.message.messagecenter.dao.MessageNotifyDao;
+import com.woting.ui.interphone.message.messagecenter.dao.MessageSubscriberDao;
 import com.woting.ui.interphone.message.messagecenter.dao.MessageSystemDao;
 import com.woting.ui.interphone.message.messagecenter.model.DBSubscriberMessage;
 import com.woting.ui.interphone.model.Message;
@@ -44,32 +41,28 @@ import org.json.JSONTokener;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * Notification
- *
- * @author 辛龙
- *         2016年4月27日
+ * 辛龙
+ * 2016年4月27日
  */
-public class NotificationService extends Service {
+public class NotificationClient {
     private MessageReceiver Receiver;
-    private NotificationService context;
+    private Context context;
     private MessageNotifyDao dbDaoNotify;
     private MessageSubscriberDao dbDaoSubscriber;
     private MessageSystemDao dbDaoSystem;
     private int num = 1;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        context = this;
+    public NotificationClient(Context context) {
+        this.context = context;
         initDao();
         if (Receiver == null) {
             Receiver = new MessageReceiver();
             IntentFilter filter = new IntentFilter();
             filter.addAction(BroadcastConstants.PUSH_NOTIFY);
-            registerReceiver(Receiver, filter);
+            this.context.registerReceiver(Receiver, filter);
         }
     }
 
@@ -990,10 +983,9 @@ public class NotificationService extends Service {
         if (MainActivity.MsgQueue != null) MainActivity.MsgQueue.add(new Message(src, url, type));
     }
 
-
     private void setNewMessageNotification(Context mContext, String message, String title) {
 
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Intent pushIntent = new Intent(BroadcastConstants.PUSH_NOTIFICATION);
 //        Intent pushIntent = new Intent(mContext, NotifyNewActivity.class);
 //        PendingIntent in = PendingIntent.getActivity(mContext, 0, pushIntent, 0);
@@ -1014,19 +1006,11 @@ public class NotificationService extends Service {
         mNotificationManager.notify(num++, mBuilder.build());
     }
 
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+    // 注销广播
+    public void unregister() {
         if (Receiver != null) {
-            unregisterReceiver(Receiver);
+            context.unregisterReceiver(Receiver);
             Receiver = null;
         }
     }
-
 }

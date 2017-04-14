@@ -16,7 +16,7 @@ import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.home.player.main.play.PlayerFragment;
-import com.woting.ui.home.player.timeset.service.timeroffservice;
+import com.woting.ui.home.player.timeset.service.TimerService;
 
 /**
  * 定时关闭 关闭程序要以服务形式出现
@@ -43,7 +43,7 @@ public class TimerPowerOffActivity extends AppBaseActivity implements OnClickLis
         mFilter.addAction(BroadcastConstants.TIMER_UPDATE);
         registerReceiver(mBroadcastReceiver, mFilter);
 
-        intent = new Intent(context, timeroffservice.class);        // 设置 Intent
+        intent = new Intent(context, TimerService.class);        // 设置 Intent
         intent.setAction(BroadcastConstants.TIMER_START);
 
         initView();
@@ -170,7 +170,7 @@ public class TimerPowerOffActivity extends AppBaseActivity implements OnClickLis
             case R.id.lin_nostart:// 不启动
                 PlayerFragment.isCurrentPlay = false;
                 imageTimeCheck = 0;
-                Intent intent = new Intent(context, timeroffservice.class);
+                Intent intent = new Intent(context, TimerService.class);
                 intent.setAction(BroadcastConstants.TIMER_STOP);
                 startService(intent);
                 textTime.setText("00:00");

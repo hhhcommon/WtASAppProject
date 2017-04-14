@@ -37,7 +37,7 @@ import com.woting.ui.download.activity.DownloadFragment;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.fragment.DownLoadUnCompletedFragment;
 import com.woting.ui.download.model.FileInfo;
-import com.woting.ui.download.service.DownloadService;
+import com.woting.ui.download.service.DownloadClient;
 import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.program.album.adapter.AlbumAdapter;
@@ -465,7 +465,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                     // 未下载列表
                     for (int kk = 0; kk < tempList.size(); kk++) {
                         if (tempList.get(kk).getDownloadtype() == 1) {
-                            DownloadService.workStop(tempList.get(kk));
+                            DownloadClient.workStop(tempList.get(kk));
                             FID.updataDownloadStatus(tempList.get(kk).getUrl(), "2");
                             Log.e("测试下载问题", " 暂停下载的单体" + (tempList.get(kk).getFileName()));
                         }
@@ -473,7 +473,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                     tempList.get(0).setDownloadtype(1);
                     FID.updataDownloadStatus(tempList.get(0).getUrl(), "1");
                     Log.e("数据库内数据", tempList.toString());
-                    DownloadService.workStart(tempList.get(0));
+                    DownloadClient.workStart(tempList.get(0));
                     if(DownloadFragment.isVisible){
                         DownLoadUnCompletedFragment.dwType=true;
                     }
