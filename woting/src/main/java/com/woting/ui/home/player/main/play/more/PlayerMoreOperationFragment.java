@@ -47,7 +47,7 @@ import com.woting.ui.download.main.DownloadFragment;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.fragment.DownLoadUnCompletedFragment;
 import com.woting.ui.download.model.FileInfo;
-import com.woting.ui.download.service.DownloadService;
+import com.woting.ui.download.service.DownloadClient;
 import com.woting.ui.home.player.main.adapter.ImageAdapter;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
 import com.woting.ui.home.player.main.model.ShareModel;
@@ -555,7 +555,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                 List<FileInfo> fileUnDownLoadList = mFileDao.queryFileInfo("false", CommonUtils.getUserId(context));// 未下载列表
                 for (int kk = 0; kk < fileUnDownLoadList.size(); kk++) {
                     if (fileUnDownLoadList.get(kk).getDownloadtype() == 1) {
-                        DownloadService.workStop(fileUnDownLoadList.get(kk));
+                        DownloadClient.workStop(fileUnDownLoadList.get(kk));
                         mFileDao.updataDownloadStatus(fileUnDownLoadList.get(kk).getUrl(), "2");
                     }
                 }
@@ -563,7 +563,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                     if (fileUnDownLoadList.get(k).getUrl().equals(m.getContentPlay())) {
                         FileInfo file = fileUnDownLoadList.get(k);
                         mFileDao.updataDownloadStatus(m.getContentPlay(), "1");
-                        DownloadService.workStart(file);
+                        DownloadClient.workStart(file);
                         Intent p_intent = new Intent(BroadcastConstants.PUSH_DOWN_UNCOMPLETED);
                         context.sendBroadcast(p_intent);
                         break;
@@ -578,7 +578,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                 if (fileUnDownloadList.get(k).getUrl().equals(m.getContentPlay())) {
                     FileInfo file = fileUnDownloadList.get(k);
                     mFileDao.updataDownloadStatus(m.getContentPlay(), "1");
-                    DownloadService.workStart(file);
+                    DownloadClient.workStart(file);
                     DownLoadUnCompletedFragment.dwType = true;
                     Intent p_intent = new Intent(BroadcastConstants.PUSH_DOWN_UNCOMPLETED);
                     context.sendBroadcast(p_intent);

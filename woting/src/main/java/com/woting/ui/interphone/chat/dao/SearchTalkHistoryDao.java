@@ -33,7 +33,7 @@ public class SearchTalkHistoryDao {
 	public void addTalkHistory(DBTalkHistorary history) {
 		//通过helper的实现对象获取可操作的数据库db
 		SQLiteDatabase db = helper.getWritableDatabase();
-		db.execSQL("insert into talkhistory(bjuserid,type,id,addtime) values(?,?,?,?)",
+		db.execSQL("insert into talkHistory(bjUserId,type,id,addTime) values(?,?,?,?)",
 				new Object[] {history.getBJUserId(),history.getTyPe(), history.getID(),history.getAddTime()});//sql语句
 		db.close();//关闭数据库对象
 	}
@@ -49,7 +49,7 @@ public class SearchTalkHistoryDao {
 		String userid = CommonUtils.getUserId(context);
 		Cursor cursor = null;
 		try {
-			cursor = db.rawQuery("Select * from talkhistory  where bjuserid=? order by addtime desc", new String[]{userid});
+			cursor = db.rawQuery("Select * from talkHistory  where bjUserId=? order by addTime desc", new String[]{userid});
 			while (cursor.moveToNext()) {
 				String bjuserid = cursor.getString(1);
 				String type = cursor.getString(2);
@@ -81,7 +81,7 @@ public class SearchTalkHistoryDao {
 		SQLiteDatabase db = helper.getReadableDatabase();
 		String userid = CommonUtils.getUserId(context);
 		String uid = id;
-		db.execSQL("Delete from talkhistory where id=? and bjuserid=?",
+		db.execSQL("Delete from talkHistory where id=? and bjUserId=?",
 				new String[] { uid ,userid});
 		db.close();
 	}

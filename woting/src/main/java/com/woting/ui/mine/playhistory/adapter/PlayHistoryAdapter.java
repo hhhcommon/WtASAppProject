@@ -91,26 +91,43 @@ public class PlayHistoryAdapter extends BaseAdapter {
                 holder.imageLast.setVisibility(View.GONE);
                 holder.textView_PlayIntroduce.setVisibility(View.GONE);
             } else {
-                holder.imageLast.setVisibility(View.VISIBLE);
-                holder.textView_PlayIntroduce.setVisibility(View.VISIBLE);
+              //  holder.imageLast.setVisibility(View.VISIBLE);
+				holder.imageLast.setVisibility(View.GONE);
+				holder.textView_PlayIntroduce.setVisibility(View.VISIBLE);
             }
         }
 
-		if (lists.getPlayerName() == null || lists.getPlayerName().equals("")) {
-			holder.textView_playName.setText("未知");
-		} else {
-			holder.textView_playName.setText(lists.getPlayerName());
-		}
-		if (lists.getPlayerNum() == null || lists.getPlayerNum().equals("")) {
+
+		/*if (lists.getPlayerNum() == null || lists.getPlayerNum().equals("")) {
 			holder.textNumber.setText("0");
 		} else {
 			holder.textNumber.setText(lists.getPlayerNum());
+		}*/
+		if (mediaType!=null&&mediaType.equals("AUDIO")){
+			if (lists.getSequName() == null || lists.getSequName().equals("")) {
+				holder.textView_playName.setText("暂无专辑信息");
+			} else {
+				holder.textView_playName.setText(lists.getSequName());
+			}
+			if (lists.getPlayerName() == null || lists.getPlayerName().equals("")) {
+				holder.textRankContent.setText("暂无收听过的节目");
+			} else {
+				holder.textRankContent.setText(lists.getPlayerName());
+			}
+		}else{
+			if (lists.getPlayerName() == null || lists.getPlayerName().equals("")) {
+				holder.textView_playName.setText("未知");
+			} else {
+				holder.textView_playName.setText(lists.getPlayerName());
+			}
+			if (lists.getIsPlaying() == null || lists.getIsPlaying().equals("")) {
+				holder.textRankContent.setText("暂无信息");
+			} else {
+				holder.textRankContent.setText("上次收听的节目:  "+lists.getIsPlaying());
+			}
+
 		}
-		if (lists.getIsPlaying() == null || lists.getIsPlaying().equals("")) {
-			holder.textRankContent.setText("暂无信息");
-		} else {
-			holder.textRankContent.setText("上次收听的节目:  "+lists.getIsPlaying());
-		}
+
 		if (lists.getPlayerInTime() == null || lists.getPlayerInTime().equals("")) {
 			holder.textView_PlayIntroduce.setText("未知");
 		} else {

@@ -67,7 +67,7 @@ import com.woting.ui.interphone.commom.message.MsgNormal;
 import com.woting.ui.interphone.commom.message.content.MapContent;
 import com.woting.ui.interphone.commom.model.ListInfo;
 import com.woting.ui.interphone.commom.service.InterPhoneControl;
-import com.woting.ui.interphone.commom.service.VoiceStreamRecordService;
+import com.woting.ui.interphone.commom.service.VoiceStreamRecord;
 import com.woting.ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivity;
 import com.woting.ui.interphone.group.groupcontrol.grouppersonnews.GroupPersonNewsActivity;
 import com.woting.ui.interphone.group.groupcontrol.personnews.TalkPersonNewsActivity;
@@ -442,6 +442,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
 //                Log.e("上次通话ID", InterPhoneControl.bdcallid + "");
 //                Log.e("上次通话ID222", GlobalConfig.oldBCCallId + "");
 //                Log.e("新的来电ID", callid + "");
+//                Log.e("新的来电ID", SubclassControl.callid + "");
                         InterPhoneControl.PersonTalkHangUp(context, GlobalConfig.oldBCCallId);
                     } else {
                         InterPhoneControl.Quit(context, interPhoneId);//退出小组
@@ -1183,19 +1184,19 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    VoiceStreamRecordService.stop();
+                    VoiceStreamRecord.stop();
                     InterPhoneControl.Loosen(context, interPhoneId);//发送取消说话控制
                     image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
                     Log.e("对讲页面====", "录音机停止+发送取消说话控制+延时0.30秒");
                 }
             }, 300);
         } else {//此处处理个人对讲的逻辑
-            VoiceStreamRecordService.stop();
+            VoiceStreamRecord.stop();
             InterPhoneControl.PersonTalkPressStop(context);//发送取消说话控制
             image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
         }
 //        } else {
-//            VoiceStreamRecordService.stop();
+//            VoiceStreamRecord.stop();
 //        }
     }
 
@@ -1204,13 +1205,13 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         if (interPhoneType.equals("group")) {
             // 此处处理组对讲的逻辑
             InterPhoneControl.Press(context, interPhoneId);                 // 发送说话请求
-            VoiceStreamRecordService.stop();                                     // 停止可能存在的录音服务
-            VoiceStreamRecordService.start(context, interPhoneId, "group"); // 开始录音
+            VoiceStreamRecord.stop();                                     // 停止可能存在的录音服务
+            VoiceStreamRecord.start(interPhoneId, "group"); // 开始录音
         } else {
             //此处处理个人对讲的逻辑
             InterPhoneControl.PersonTalkPressStart(context);                 // 发送说话请求
-            VoiceStreamRecordService.stop();                                 // 停止可能存在的录音服务
-            VoiceStreamRecordService.start(context, interPhoneId, "person"); // 开始录音
+            VoiceStreamRecord.stop();                                 // 停止可能存在的录音服务
+            VoiceStreamRecord.start(interPhoneId, "person"); // 开始录音
         }
     }
 
@@ -1241,18 +1242,18 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                         case 0xff://TTT
                                             //请求通话出异常了
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
-                                            VoiceStreamRecordService.stop();
+                                            VoiceStreamRecord.stop();
                                             ToastUtils.show_always(context, "请求通话—出异常了");
                                             break;
                                         case 0x00:
                                             //没有有效登录用户
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
-                                            VoiceStreamRecordService.stop();
+                                            VoiceStreamRecord.stop();
                                             ToastUtils.show_always(context, "没有有效登录用户");
                                             break;
                                         case 0x02:                                            //无法获取用户组
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
-                                            VoiceStreamRecordService.stop();
+                                            VoiceStreamRecord.stop();
                                             ToastUtils.show_always(context, "无法获取用户组");
                                             break;
                                         case 0x01:
@@ -1263,30 +1264,30 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                             // headview中展示自己的头像
                                             // String url = BSApplication.SharedPreferences.getString(StringConstant.IMAGEURL, "");
                                             // setImageViewForGroup(1, UserName, url);
-                                            VoiceStreamRecordService.send();
+                                            VoiceStreamRecord.send();
                                             break;
                                         case 0x04:
                                             //用户不在所指定的组
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
-                                            VoiceStreamRecordService.stop();
+                                            VoiceStreamRecord.stop();
                                             ToastUtils.show_always(context, "用户不在所指定的组");
                                             break;
                                         case 0x05:
                                             //进入组的人员不足两人
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
-                                            VoiceStreamRecordService.stop();
+                                            VoiceStreamRecord.stop();
                                             ToastUtils.show_always(context, "进入组的人员不足两人");
                                             break;
                                         case 0x08:
                                             //有人在说话，无权通话
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
-                                            VoiceStreamRecordService.stop();
+                                            VoiceStreamRecord.stop();
                                             ToastUtils.show_always(context, "有人在说话");
                                             break;
                                         case 0x90:
                                             //用户在电话通话
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
-                                            VoiceStreamRecordService.stop();
+                                            VoiceStreamRecord.stop();
                                             ToastUtils.show_always(context, "用户在电话通话");
                                             break;
                                         default:
@@ -1503,13 +1504,13 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                         case 0xff://TT
                                             //请求通话出异常了
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
-                                            VoiceStreamRecordService.stop();
+                                            VoiceStreamRecord.stop();
                                             ToastUtils.show_always(context, "请求通话—出异常了");
                                             break;
                                         case 0x02:
                                             //无权通话
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
-                                            VoiceStreamRecordService.stop();
+                                            VoiceStreamRecord.stop();
                                             ToastUtils.show_always(context, "当前有人在说话");
                                             break;
                                         case 0x01:
@@ -1517,18 +1518,18 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                             isTalking = true;
                                             ToastUtils.show_short(context, "可以说话");
                                             image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.wt_duijiang_button_pressed));
-                                            VoiceStreamRecordService.send();
+                                            VoiceStreamRecord.send();
                                             break;
                                         case 0x04:
                                             //用户无权通话
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
-                                            VoiceStreamRecordService.stop();
+                                            VoiceStreamRecord.stop();
                                             ToastUtils.show_always(context, "不能对讲，有人在说话");
                                             break;
                                         case 0x05:
                                             //无权通话
                                             VibratorUtils.Vibrate(ChatFragment.context, Vibrate);
-                                            VoiceStreamRecordService.stop();
+                                            VoiceStreamRecord.stop();
                                             ToastUtils.show_always(context, "不能对讲，状态错误");
                                             break;
                                         default:

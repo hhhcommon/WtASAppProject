@@ -419,12 +419,13 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                         String sequImg = mainLists.get(position).getSequImg();
                         String ContentPlayType = mainLists.get(position).getContentPlayType();
                         String IsPlaying = mainLists.get(position).getIsPlaying();
+                        String ColumnNum = mainLists.get(position).getColumnNum();
                         // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playName, playImage, playUrl, playUri, playMediaType,
                                 playAllTime, playInTime, playContentDesc, playerNum,
                                 playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying);
+                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying,ColumnNum);
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
@@ -542,13 +543,13 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
 
                         String ContentPlayType = newList.get(groupPosition).getList().get(childPosition).getContentPlayType();
                         String IsPlaying = newList.get(groupPosition).getList().get(childPosition).getIsPlaying();
-
+                        String ColumnNum = newList.get(groupPosition).getList().get(childPosition).getColumnNum();
                         // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
                                 playName, playImage, playUrl, playUri, playMediaType,
                                 playAllTime, playInTime, playContentDesc, playerNum,
                                 playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying);
+                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying,ColumnNum);
 
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);

@@ -40,7 +40,7 @@ package Test;//package Test;
 // * @author 辛龙
 // *2016年7月13日
 // */
-//public class SocketService extends Service  {
+//public class SocketClient extends Service  {
 //
 //	private static  SocketClientConfig scc; //客户端配置
 //	private Context context; //android 上下文，这个要自己恢复
@@ -476,7 +476,7 @@ package Test;//package Test;
 //							//							String message="TalkId=="+id+"::Rtime=="+System.currentTimeMillis()+"::SeqNum=="+SeqNum;
 //							////							Log.e("需要打印的数据=======", message+"");
 //							//							timeMsgQueue.add(message);
-//							//														VoiceStreamPlayerService.dealVedioPack(Audiodata, Integer.parseInt(SeqNum), id);
+//							//														VoiceStreamPlayer.dealVedioPack(Audiodata, Integer.parseInt(SeqNum), id);
 //							tpm.dealVedioPack(Audiodata, Integer.parseInt(SeqNum), id);
 //						}
 //					}

@@ -2,7 +2,6 @@ package com.woting.common.service;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -26,7 +24,7 @@ import com.woting.ui.interphone.commom.message.MessageUtils;
 import com.woting.ui.interphone.commom.message.MsgMedia;
 import com.woting.ui.interphone.commom.message.MsgNormal;
 import com.woting.ui.interphone.commom.service.InterPhoneControl;
-import com.woting.ui.interphone.commom.service.VoiceStreamPlayerService;
+import com.woting.ui.interphone.commom.service.VoiceStreamPlayer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -46,7 +44,7 @@ import java.util.concurrent.ArrayBlockingQueue;
  * 2016/12/28 11:21
  * 邮箱：645700751@qq.com
  */
-public class SocketService extends Service {
+public class SocketClient {
     private static SocketClientConfig scc = BSApplication.scc;        // 客户端配置
     private Context context;                                          // android 上下文，这个要自己恢复
     private int nextReConnIndex = 0;                                  // 重连策略下一个执行序列;
@@ -57,22 +55,22 @@ public class SocketService extends Service {
 
     private volatile long lastReceiveTime;                            // 最后收到服务器消息时间
     private volatile Object socketSendLock = new Object();            // 发送锁
-    private volatile Object socketRecvLock = new Object();            // 接收锁
+//    private volatile Object socketRecvLock = new Object();            // 接收锁
     private static Timer healthWatch;                                 // 健康检查线程
     private static ReConn reConn;                                     // 重新连接线程
     private static Timer sendBeat;                                    // 发送心跳线程
     private static SendMsg sendMsg;                                   // 发送消息线程
     private static ReceiveMsg receiveMsg;                             // 结束消息线程
-    private static ArrayBlockingQueue<Message> audioMsgQueue = new ArrayBlockingQueue<Message>(128);                // 接收到的音频消息队列
-    private static ArrayBlockingQueue<Message> newsMsgQueue = new ArrayBlockingQueue<Message>(128);                 // 接收到的数据消息队列
-    private static ArrayBlockingQueue<Message> MsgQueue = new ArrayBlockingQueue<Message>(128);                     // 需要处理的已经组装好的消息队列
-    private static ArrayBlockingQueue<Message> ControlReceiptMsgQueue = new ArrayBlockingQueue<Message>(128);       // 控制回执消息,4.3-(2-4-7)
-    protected ArrayBlockingQueue<Byte> receiveByteQueue = new ArrayBlockingQueue<Byte>(10240);                   // 接收到的原始数据
-    protected static ArrayBlockingQueue<byte[]> sendMsgQueue = new ArrayBlockingQueue<byte[]>(512);           // 要发送的消息队列
+    private static ArrayBlockingQueue<Message> audioMsgQueue = new ArrayBlockingQueue<>(128);                // 接收到的音频消息队列
+    private static ArrayBlockingQueue<Message> newsMsgQueue = new ArrayBlockingQueue<>(128);                 // 接收到的数据消息队列
+    private static ArrayBlockingQueue<Message> MsgQueue = new ArrayBlockingQueue<>(128);                     // 需要处理的已经组装好的消息队列
+    private static ArrayBlockingQueue<Message> ControlReceiptMsgQueue = new ArrayBlockingQueue<>(128);       // 控制回执消息,4.3-(2-4-7)
+    protected ArrayBlockingQueue<Byte> receiveByteQueue = new ArrayBlockingQueue<>(10240);                   // 接收到的原始数据
+    protected static ArrayBlockingQueue<byte[]> sendMsgQueue = new ArrayBlockingQueue<>(512);           // 要发送的消息队列
 
-    private static ArrayBlockingQueue<Message> recVoiceMsgQueue = new ArrayBlockingQueue<Message>(128);
-    private static ArrayBlockingQueue<String> allRecMsgQueue = new ArrayBlockingQueue<String>(1024);               // 打印日志的数据消息队列
-    private static ArrayBlockingQueue<String> overSendMsgQueue = new ArrayBlockingQueue<String>(1024);             // 已经发送的消息队列
+    private static ArrayBlockingQueue<Message> recVoiceMsgQueue = new ArrayBlockingQueue<>(128);
+    private static ArrayBlockingQueue<String> allRecMsgQueue = new ArrayBlockingQueue<>(1024);               // 打印日志的数据消息队列
+    private static ArrayBlockingQueue<String> overSendMsgQueue = new ArrayBlockingQueue<>(1024);             // 已经发送的消息队列
 
     private static BufferedInputStream in = null;
     private static BufferedOutputStream out = null;
@@ -80,10 +78,8 @@ public class SocketService extends Service {
 
     private PowerManager.WakeLock mWakelock;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        context = this;
+    public SocketClient(Context context) {
+        this.context = context;
         setForeground();
         // 广播接收器
         if (Receiver == null) {
@@ -91,7 +87,7 @@ public class SocketService extends Service {
             // 接收网络状态
             IntentFilter filter = new IntentFilter();
             filter.addAction(BroadcastConstants.PUSH_NetWorkPush);
-            getApplicationContext().registerReceiver(Receiver, filter);
+            this.context.registerReceiver(Receiver, filter);
         }
 
         ScreenObServer sb = new ScreenObServer(context);
@@ -151,11 +147,11 @@ public class SocketService extends Service {
     }
 
     private void setForeground() {
-        startForeground(4, showNotification());
+
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private Notification showNotification() {
+    public Notification showNotification() {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
         mBuilder.setContentTitle("Socket测试")// 设置通知栏标题
                 .setContentText("该服务为前台服务")// 设置通知栏显示内容
@@ -170,7 +166,7 @@ public class SocketService extends Service {
 
     private void acquireWakeLock() {
         if (mWakelock == null) {
-            PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
             mWakelock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "so");
         }
         mWakelock.acquire();
@@ -700,9 +696,11 @@ public class SocketService extends Service {
                         try {
                             byte[] AudioData = msg.getMediaData();
                             VoiceStreamPlayerService.dealVedioPack(AudioData, SeqNum, id);
+                            byte[] Audiodata = msg.getMediaData();
+                            VoiceStreamPlayer.dealVedioPack(Audiodata, SeqNum, id);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            VoiceStreamPlayerService.dealVedioPack(null, SeqNum, id);
+                            VoiceStreamPlayer.dealVedioPack(null, SeqNum, id);
                         }
                         //	tpm.dealVedioPack(Audiodata, SeqNum, id);
                         //	String message="TalkId=="+id+"::Rtime=="+System.currentTimeMillis()+"::SeqNum=="+SeqNum;
@@ -852,37 +850,23 @@ public class SocketService extends Service {
         return socket != null && socket.isBound() && socket.isConnected() && !socket.isClosed();
     }
 
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
     public void onDestroy() {
-        super.onDestroy();
-        stopForeground(true);// 停止前台服务--参数：表示是否移除之前的通知
-        this.healthWatch = null;
-        this.reConn.destroy();
-        this.reConn = null;
-        sendBeat = null;
-        this.sendMsg.destroy();
-        this.sendMsg = null;
-        this.receiveMsg.destroy();
-        this.receiveMsg = null;
         if (socket != null) {
             try {
                 socket.shutdownInput();
             } catch (Exception e) {
+                e.printStackTrace();
             }
             try {
                 socket.shutdownOutput();
             } catch (Exception e) {
+                e.printStackTrace();
             }
 
             try {
                 socket.close();
             } catch (Exception e) {
+                e.printStackTrace();
             }
 
             socket = null;
@@ -891,6 +875,7 @@ public class SocketService extends Service {
             try {
                 out.close();
             } catch (Exception e1) {
+                e1.printStackTrace();
             } finally {
                 out = null;
             }
@@ -900,6 +885,7 @@ public class SocketService extends Service {
             try {
                 in.close();
             } catch (Exception e2) {
+                e2.printStackTrace();
             } finally {
                 in = null;
             }

@@ -13,10 +13,10 @@ import java.util.TimeZone;
 
 /**
  * 定时关闭后台服务
- * @author 辛龙
+ * 辛龙
  * 2016年4月1日
  */
-public class timeroffservice extends Service {
+public class TimerService extends Service {
 
 	private CountDownTimer mcountDownTimer;
 	private Intent mIntent;

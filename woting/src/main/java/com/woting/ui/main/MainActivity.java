@@ -47,9 +47,7 @@ import com.woting.common.gatherdata.GatherData;
 import com.woting.common.manager.UpdateManager;
 import com.woting.common.receiver.NetWorkChangeReceiver;
 import com.woting.common.receiver.PhoneStatReceiver;
-import com.woting.common.service.LocationService;
-import com.woting.common.service.SocketService;
-import com.woting.common.service.SubclassService;
+import com.woting.common.service.CoreService;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
@@ -63,7 +61,6 @@ import com.woting.common.widgetui.RoundImageView;
 import com.woting.ui.common.favoritetype.FavoriteProgramTypeActivity;
 import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.model.GroupInfo;
-import com.woting.ui.download.service.DownloadService;
 import com.woting.ui.home.main.HomeActivity;
 import com.woting.ui.home.model.Catalog;
 import com.woting.ui.home.model.CatalogName;
@@ -71,7 +68,7 @@ import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
 import com.woting.ui.home.player.main.model.PlayerHistory;
 import com.woting.ui.home.player.main.play.PlayerActivity;
 import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
-import com.woting.ui.home.player.timeset.service.timeroffservice;
+import com.woting.ui.home.player.timeset.service.TimerService;
 import com.woting.ui.home.program.citylist.dao.CityInfoDao;
 import com.woting.ui.home.search.main.SearchLikeActivity;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
@@ -84,9 +81,6 @@ import com.woting.ui.interphone.commom.model.CallerInfo;
 import com.woting.ui.interphone.commom.model.Data;
 import com.woting.ui.interphone.commom.model.MessageForMainGroup;
 import com.woting.ui.interphone.commom.service.InterPhoneControl;
-import com.woting.ui.interphone.commom.service.NotificationService;
-import com.woting.ui.interphone.commom.service.VoiceStreamPlayerService;
-import com.woting.ui.interphone.commom.service.VoiceStreamRecordService;
 import com.woting.ui.interphone.linkman.model.LinkMan;
 import com.woting.ui.interphone.main.DuiJiangActivity;
 import com.woting.ui.mine.main.MineActivity;
@@ -110,7 +104,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 public class MainActivity extends TabActivity implements OnClickListener {
     private static MainActivity context;
     public static TabHost tabHost;
-    private static Intent Socket, record, voicePlayer, Subclass, download, Location, Notification;
+    private static Intent coreService;
 
     private static RoundImageView image0;// 播放
     private static ImageView image1,image2,image5;
@@ -202,20 +196,23 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     // 创建服务
     private void createService() {
-        Socket = new Intent(this, SocketService.class);                                             // socket服务
-        startService(Socket);
-        record = new Intent(this, VoiceStreamRecordService.class);                                  // 录音服务
-        startService(record);
-        voicePlayer = new Intent(this, VoiceStreamPlayerService.class);                             // 播放服务
-        startService(voicePlayer);
-        Location = new Intent(this, LocationService.class);                                         // 定位服务
-        startService(Location);
-        Subclass = new Intent(this, SubclassService.class);                                         // 单对单接听控制服务
-        startService(Subclass);
-        download = new Intent(this, DownloadService.class);
-        startService(download);
-        Notification = new Intent(this, NotificationService.class);
-        startService(Notification);
+        coreService = new Intent(this, CoreService.class);
+        startService(coreService);
+
+//        Socket = new Intent(this, SocketClient.class);                                             // socket服务
+//        startService(Socket);
+//        record = new Intent(this, VoiceStreamRecord.class);                                  // 录音服务
+//        startService(record);
+//        voicePlayer = new Intent(this, VoiceStreamPlayer.class);                             // 播放服务
+//        startService(voicePlayer);
+//        Location = new Intent(this, LocationInfo.class);                                         // 定位服务
+//        startService(Location);
+//        Subclass = new Intent(this, SubclassControl.class);                                         // 单对单接听控制服务
+//        startService(Subclass);
+//        download = new Intent(this, DownloadClient.class);
+//        startService(download);
+//        Notification = new Intent(this, NotificationClient.class);
+//        startService(Notification);
     }
 
     // 更改wifi连接状态
@@ -601,7 +598,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                         ContentName, ContentImg, ContentPlay, "", mediatype,
                                         ContentTimes, "0", ContentDescn, PlayCount,
                                         "0", ContentPub, "", "", CTime, CommonUtils.getUserId(context), ContentShareURL,
-                                        ContentFavorite, contentid, "", "", "", "", "", ContentPlayType, IsPlaying);
+                                        ContentFavorite, contentid, "", "", "", "", "", ContentPlayType, IsPlaying,"");
                                 dbDao.deleteHistory(ContentPlay);
                                 dbDao.addHistory(history);
                                 Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
@@ -1064,7 +1061,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                 }
             } else if (intent.getAction().equals(BroadcastConstants.TIMER_END)) {// 结束应用
                 ToastUtils.show_always(MainActivity.this, "定时关闭应用时间就要到了，应用即将退出");
-                stopService(new Intent(MainActivity.this, timeroffservice.class));    // 停止服务
+                stopService(new Intent(MainActivity.this, TimerService.class));    // 停止服务
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -1303,13 +1300,13 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     //app退出时执行该操作
     public static void stop() {
-        context.stopService(Socket);
-        context.stopService(record);
-        context.stopService(voicePlayer);
-        context.stopService(Subclass);
-        context.stopService(download);
-        context.stopService(Location);
-        context.stopService(Notification);
+        context.stopService(coreService);
+//        context.stopService(record);
+//        context.stopService(voicePlayer);
+//        context.stopService(Subclass);
+//        context.stopService(download);
+//        context.stopService(Location);
+//        context.stopService(Notification);
         Log.v("--- onStop ---", "--- 杀死进程 ---");
     }
 
@@ -1407,6 +1404,4 @@ public class MainActivity extends TabActivity implements OnClickListener {
         MainActivity.changeTwo();
         DuiJiangActivity.update();
     }
-
-
 }

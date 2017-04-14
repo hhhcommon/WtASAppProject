@@ -16,7 +16,7 @@ import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.manager.MyActivityManager;
-import com.woting.common.service.SubclassService;
+import com.woting.common.service.SubclassControl;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;

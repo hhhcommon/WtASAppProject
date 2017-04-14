@@ -22,7 +22,7 @@ import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.service.SocketService;
+import com.woting.common.service.SocketClient;
 import com.woting.common.util.ToastUtils;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.common.login.LoginActivity;
@@ -339,7 +339,7 @@ public class DuiJiangActivity extends FragmentActivity {
                 ToastUtils.show_always(DuiJiangActivity.this, "再按一次退出");
                 touchTime = currentTime;
             } else {
-                SocketService.workStop(false);
+                SocketClient.workStop(false);
                 MainActivity.stop();
                 MobclickAgent.onKillProcess(this);
                 finish();

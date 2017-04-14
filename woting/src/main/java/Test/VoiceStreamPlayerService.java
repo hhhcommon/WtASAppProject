@@ -16,7 +16,7 @@ package Test;
 // *	播放
 // * 辛龙
 // */
-//public class VoiceStreamPlayerService extends  Service  {
+//public class VoiceStreamPlayer extends  Service  {
 //	private static AudioTrack audioTrack;
 //	private static HashMap <Integer, byte[]>  receiveVedio;
 //	private static int curNum=0;//现在要播放的序号

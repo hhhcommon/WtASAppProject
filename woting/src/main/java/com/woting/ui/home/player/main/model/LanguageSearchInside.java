@@ -36,6 +36,15 @@ public class LanguageSearchInside implements Serializable{
 	private String playTag;         // 标签<预留>
 	private String ContentPlayType; // 内容后缀
 	private String IsPlaying;
+	private String ColumnNum;
+
+	public String getColumnNum() {
+		return ColumnNum;
+	}
+
+	public void setColumnNum(String columnNum) {
+		ColumnNum = columnNum;
+	}
 
 	public void setContentPersons(List<PersonInfo> contentPersons) {
 		ContentPersons = contentPersons;

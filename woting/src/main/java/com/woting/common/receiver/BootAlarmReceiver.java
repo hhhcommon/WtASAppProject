@@ -1,6 +1,6 @@
 package com.woting.common.receiver;//package com.wotingfm.receiver;
 //
-//import com.wotingfm.service.SocketService;
+//import com.wotingfm.service.SocketClient;
 //
 //import android.content.BroadcastReceiver;
 //import android.content.Context;
@@ -14,7 +14,7 @@ package com.woting.common.receiver;//package com.wotingfm.receiver;
 //
 //	@Override
 //	public void onReceive(Context context, Intent intent) {
-//		Intent startSrv = new Intent(context, SocketService.class);
+//		Intent startSrv = new Intent(context, SocketClient.class);
 //		startSrv.putExtra("CMD", "TICK1");
 //		context.startService(startSrv);
 //	}

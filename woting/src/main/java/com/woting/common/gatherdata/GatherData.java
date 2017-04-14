@@ -46,7 +46,7 @@ public class GatherData {
             GivenUploadDataThread givenUploadDataThread = new GivenUploadDataThread();
             givenUploadDataThread.start();
 
-            // 定时上传数据线程
+            // 即时上传数据线程
             ImmUploadDataThread immUploadDataThread = new ImmUploadDataThread();
             immUploadDataThread.start();
         }

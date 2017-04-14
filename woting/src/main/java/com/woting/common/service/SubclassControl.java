@@ -1,6 +1,5 @@
 package com.woting.common.service;
 
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -39,29 +37,28 @@ import java.util.Map;
  * 2016/12/28 11:21
  * 邮箱：645700751@qq.com
  */
-public class SubclassService extends Service {
+public class SubclassControl {
     private MessageReceiver Receiver;
     public static boolean isallow = false;
     public static MediaPlayer musicPlayer;
     private Handler handler;
     private volatile Object Lock = new Object();//锁
 
-    @Override
-    public IBinder onBind(Intent arg0) {
-        return null;
-    }
+    private Context context;
 
-    public void onCreate() {
+    public SubclassControl(Context context) {
+        this.context = context;
+
         if (Receiver == null) {
             Receiver = new MessageReceiver();
             IntentFilter filter = new IntentFilter();
             filter.addAction(BroadcastConstants.PUSH_SERVICE);
-            getApplicationContext().registerReceiver(Receiver, filter);
+            context.registerReceiver(Receiver, filter);
 
             IntentFilter filterb3 = new IntentFilter();
             filterb3.addAction(BroadcastConstants.PUSH_BACK);
             filterb3.setPriority(1000);
-            getApplicationContext().registerReceiver(Receiver, filterb3);
+            context.registerReceiver(Receiver, filterb3);
         }
         handler = new Handler();
     }
@@ -73,7 +70,7 @@ public class SubclassService extends Service {
         private Runnable run;
 
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(final Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(BroadcastConstants.PUSH_BACK)) {
                         //  abortBroadcast();//中断广播传递
@@ -345,8 +342,6 @@ public class SubclassService extends Service {
                                         }
                                     }
                                     break;
-                                default:
-                                    break;
                             }
                         }
                 } catch (Exception e1) {
@@ -361,13 +356,11 @@ public class SubclassService extends Service {
         return RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_RINGTONE);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+    // 注销广播
+    public void unregister() {
         if (Receiver != null) {
-            getApplicationContext().unregisterReceiver(Receiver);
+            context.unregisterReceiver(Receiver);
             Receiver = null;
         }
     }
-
 }
