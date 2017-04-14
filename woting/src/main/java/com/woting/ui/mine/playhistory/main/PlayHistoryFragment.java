@@ -138,12 +138,13 @@ public class PlayHistoryFragment extends Fragment implements OnClickListener, Ad
             String sequimg = subList.get(position).getSequImg();
             String ContentPlayType = subList.get(position).getContentPlayType();
             String IsPlaying = subList.get(position).getIsPlaying();
+            String ColumnNum= subList.get(position).getColumnNum();
 
             PlayerHistory history = new PlayerHistory(
                     playerName, playerImage, playerUrl, playerUri, playerMediaType,
                     playerAllTime, playerInTime, playerContentDesc, playerNum,
                     playerZanType, playerFrom, playerFromId, playerFromUrl,
-                    playerAddTime, bjUserId, playShareUrl, contentFavorite, contentId, localUrl, sequname, sequid, sequdesc, sequimg, ContentPlayType, IsPlaying);
+                    playerAddTime, bjUserId, playShareUrl, contentFavorite, contentId, localUrl, sequname, sequid, sequdesc, sequimg, ContentPlayType, IsPlaying, ColumnNum);
 
             // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
             if (playerMediaType != null && playerMediaType.equals(StringConstant.TYPE_TTS)) {
