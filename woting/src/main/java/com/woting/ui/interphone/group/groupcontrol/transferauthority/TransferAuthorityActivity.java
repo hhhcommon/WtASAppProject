@@ -59,7 +59,7 @@ public class TransferAuthorityActivity extends AppBaseActivity implements OnClic
 
     private String groupId;
     private String toUserId;
-    private String tag = "TRANSFERAUTHORITY_VOLLEY_REQUEST_CANCEL_TAG";
+    private String tag = "TRANSFER_AUTHORITY_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
 
     private TipView tipView;// 没有网络没有数据提示

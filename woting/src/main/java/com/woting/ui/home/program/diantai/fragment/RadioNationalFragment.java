@@ -198,11 +198,12 @@ public class RadioNationalFragment extends Fragment implements View.OnClickListe
                         String ContentPlayType = SubList.get(groupPosition).getList().get(childPosition).getContentPlayType();
                         String IsPlaying=SubList.get(groupPosition).getList().get(childPosition).getIsPlaying();
                         // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+                        String ColumnNum=SubList.get(groupPosition).getList().get(childPosition).getColumnNum();
                         PlayerHistory history = new PlayerHistory(
                                 playName, playImage, playUrl, playUri, playMediaType,
                                 playAllTime, playInTime, playContentDesc, playerNum,
                                 playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying);
+                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying,ColumnNum);
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);

@@ -209,12 +209,13 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                         String sequImg1 = sequImg;
                         String ContentPlayType = SubListAll.get(position - 1).getContentPlayType();
                         String IsPlaying = SubListAll.get(position - 1).getIsPlaying();
+                        String ColumnNum= SubListAll.get(position - 1).getColumnNum();
 
                         PlayerHistory history = new PlayerHistory(
                                 playerName, playerImage, playUrl, playUrI, playMediaType,
                                 playAllTime, playInTime, playContentDesc, playNum,
                                 playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName1, sequId1, sequDesc1, sequImg1, ContentPlayType, IsPlaying);
+                                ContentFavorite, ContentId, localUrl, sequName1, sequId1, sequDesc1, sequImg1, ContentPlayType, IsPlaying,ColumnNum);
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
                         MainActivity.change();

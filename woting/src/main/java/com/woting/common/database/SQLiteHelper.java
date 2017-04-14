@@ -19,45 +19,36 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		// 搜索历史表
 		db.execSQL("CREATE TABLE IF NOT EXISTS history(_id Integer primary key autoincrement, "
-				+ "userid varchar(50),playname varchar(50))");
+				+ "userid varchar(50),playName varchar(50))");
 		// talkhistory对讲历史，暂缺对讲结束时间
 		//bjuserid用户id    type对讲类型group，person   id对讲id  addtime对讲开始时间
-		db.execSQL("CREATE TABLE IF NOT EXISTS talkhistory(_id Integer primary key autoincrement, "
-				+ "bjuserid varchar(50),type varchar(50),id varchar(50),addtime varchar(50))");
+		db.execSQL("CREATE TABLE IF NOT EXISTS talkHistory(_id Integer primary key autoincrement, "
+				+ "bjUserId varchar(50),type varchar(50),id varchar(50),addTime varchar(50))");
 
 		// player播放历史,暂时缺本机userid
 		//		PlayerName播放显示名称PlayerImage播放显示图片PlayerUrl播放路径PlayerMediaType播放类型，radio，audio，seq,PlayerAllTime播放文件总时长
 		//		PlayerInTime此时播放时长PlayerContentDesc播放文件介绍PlayerNum播放次数PlayerZanTypeString类型的true,false
 		//		PlayerFrom预留字段PlayerFromId预留字段
-		db.execSQL("CREATE TABLE IF NOT EXISTS playerhistory(_id Integer primary key autoincrement, "
-				+ "playername varchar(50),playerimage varchar(50),playerurl varchar(300),playerurI varchar(500),playermediatype varchar(50),"
-				+ "playeralltime varchar(50),playerintime varchar(50),playercontentdesc varchar(2000),playernum varchar(50),"
-				+ "playerzantype varchar(50),playerfrom varchar(50),playerfromid varchar(50),playerfromurl varchar(300)," +
-				"playeraddtime varchar(50),bjuserid varchar(50),playshareurl varchar(300),playfavorite varchar(100),contentid varchar(50),localurl varchar(300)," +
-				"sequname varchar(50),sequimg varchar(300),sequdesc varchar(2000),sequid varchar(50),playtag varchar(100),contentplaytype varchar(20),IsPlaying varchar(50))");
-		//playtag,contentplaytype
+		db.execSQL("CREATE TABLE IF NOT EXISTS playHistory(_id Integer primary key autoincrement, "
+				+ "playName varchar(50),playImage varchar(300),playUrl varchar(300),playUrI varchar(500),playMediaType varchar(50),"
+				+ "playAllTime varchar(50),playInTime varchar(50),playContentDesc varchar(3000),playNum varchar(50),"
+				+ "playZanType varchar(50),playFrom varchar(50),playFromId varchar(50),playFromUrl varchar(300)," +
+				"playAddTime varchar(50),bjUserId varchar(50),playShareUrl varchar(300),playFavorite varchar(100),contentId varchar(50),localUrl varchar(300)," +
+				"albumName varchar(50),albumImg varchar(300),albumDesc varchar(3000),albumId varchar(50),playTag varchar(100),contentPlayType varchar(20),IsPlaying varchar(50),ColumnNum varchar(100))");
 		// 线程表
 		db.execSQL("create table IF NOT EXISTS thread_info(_id integer primary key autoincrement,"
 				+ "thread_id integer, url varchar(300), start integer, end integer, finished integer)");
 		// 文件数据
-		db.execSQL("create table IF NOT EXISTS fileinfo(_id integer primary key autoincrement,"
-				+ "start integer,end integer,url varchar(200),imageurl varchar(300), finished varchar(10),"
-				+ "author varchar(50),playcontent varchar(50),filename varchar(50),localurl varchar(300),"
-				+ "sequname varchar(50),sequimgurl varchar(300),sequdesc varchar(2000),sequid varchar(50)," +
-				"userid varchar(50),downloadtype varchar(10),playshareurl varchar(100),playfavorite varchar(100),contentid varchar(50)," +
-				"playeralltime varchar(50),playerfrom varchar(50),playcount varchar(50),contentdescn varchar(2000),playtag varchar(100),contentplaytype varchar(20),IsPlaying varchar(50))");
+		db.execSQL("create table IF NOT EXISTS fileInfo(_id integer primary key autoincrement,"
+				+ "start integer,end integer,url varchar(200),imageUrl varchar(300), finished varchar(10),"
+				+ "author varchar(50),playContent varchar(50),fileName varchar(50),localUrl varchar(300),"
+				+ "albumName varchar(50),albumImgUrl varchar(300),albumDesc varchar(2000),albumId varchar(50)," +
+				"userId varchar(50),downloadType varchar(10),playShareUrl varchar(100),playFavorite varchar(100),contentId varchar(50)," +
+				"playAllTime varchar(50),playFrom varchar(50),playCount varchar(50),contentDesc varchar(2000),playTag varchar(100),contentPlayType varchar(20),IsPlaying varchar(50),ColumnNum varchar(100))");
 
 		// 城市表
-		db.execSQL("create table IF NOT EXISTS cityinfo(_id integer primary key autoincrement,"
-				+ "adcode varchar(20), cityname varchar(50))");
-		// 专辑表
-		//		db.execSQL("create table IF NOT EXISTS sequinfo(_id integer primary key autoincrement,"
-		//				+ "sequimgurl varchar(200),sequdesc varchar(150),sequname varchar(50))");
-		// 记录的电台
-		//		db.execSQL("CREATE TABLE IF NOT EXISTS fmhistory(_id Integer primary key autoincrement, "
-		//				+ "userid varchar(50),auther varchar(50),name varchar(50),image varchar(50),url varchar(50),"
-		//				+ "content varchar(50),bftype varchar(50),addtime varchar(50))");
-
+		db.execSQL("create table IF NOT EXISTS cityInfo(_id integer primary key autoincrement,"
+				+ "adCode varchar(20), cityName varchar(50))");
 
 
 		// 通知消息库表
@@ -84,14 +75,14 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		db.execSQL("DROP TABLE IF EXISTS history");
-		db.execSQL("DROP TABLE IF EXISTS talkhistory");
+		db.execSQL("DROP TABLE IF EXISTS talkHistory");
 		db.execSQL("DROP TABLE IF EXISTS message_notify");
 		db.execSQL("DROP TABLE IF EXISTS message_system");
 		db.execSQL("DROP TABLE IF EXISTS message_subscriber");
 		db.execSQL("DROP TABLE IF EXISTS thread_info");
-		db.execSQL("DROP TABLE IF EXISTS fileinfo");
-		db.execSQL("DROP TABLE IF EXISTS playerhistory");
-		db.execSQL("DROP TABLE IF EXISTS cityinfo");
+		db.execSQL("DROP TABLE IF EXISTS fileInfo");
+		db.execSQL("DROP TABLE IF EXISTS playHistory");
+		db.execSQL("DROP TABLE IF EXISTS cityInfo");
 		//		db.execSQL("DROP TABLE IF EXISTS fmhistory");
 		onCreate(db);
 	}

@@ -450,6 +450,38 @@
 
             </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/lin_set_manager"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:visibility="visible"
+                android:background="@drawable/person_color">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="设置管理员"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/beijing"
+                    android:textSize="@dimen/wt_login_text_wjmm" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="13dp"
+                    android:src="@mipmap/live_more" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/view_color" />
+
+            </RelativeLayout>
+
             <Button
                 android:id="@+id/tv_delete"
                 android:layout_width="match_parent"

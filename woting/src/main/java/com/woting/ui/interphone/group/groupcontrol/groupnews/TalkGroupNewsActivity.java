@@ -68,6 +68,7 @@ import com.woting.ui.interphone.group.groupcontrol.changegrouptype.ChangeGroupTy
 import com.woting.ui.interphone.group.groupcontrol.groupnews.adapter.GroupTalkAdapter;
 import com.woting.ui.interphone.group.groupcontrol.groupnumdel.GroupMemberDelActivity;
 import com.woting.ui.interphone.group.groupcontrol.grouppersonnews.GroupPersonNewsActivity;
+import com.woting.ui.interphone.group.groupcontrol.setgroupmanager.SetGroupManagerActivity;
 import com.woting.ui.interphone.message.groupapply.HandleGroupApplyActivity;
 import com.woting.ui.interphone.message.reviewednews.JoinGroupListActivity;
 import com.woting.ui.interphone.group.groupcontrol.memberadd.GroupMemberAddActivity;
@@ -140,6 +141,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
     private final int TO_GALLERY = 5;// 打开图库
     private final int TO_CAMERA = 6;// 打开系统相机
     private final int PHOTO_REQUEST_CUT = 7;// 图片裁剪
+    private View lin_set_manager;
 
     // 初始化数据库命令执行对象
     private void initDao() {
@@ -313,9 +315,12 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         LinearTransferAuthority = findViewById(R.id.lin_yijiao);   // 移交管理员权限
         LinearTransferAuthority.setOnClickListener(this);
 
-        imageEwm = (ImageView) findViewById(R.id.imageView_ewm);   // 二维码
-        textGroupNumber = (TextView) findViewById(R.id.tv_number); // 群成员数量
-        editAliasName = (EditText) findViewById(R.id.et_b_name);   // 别名
+        lin_set_manager=findViewById(R.id.lin_set_manager);        // 设置群管理员
+        lin_set_manager.setOnClickListener(this);
+
+        imageEwm = (ImageView) findViewById(R.id.imageView_ewm);   //  二维码
+        textGroupNumber = (TextView) findViewById(R.id.tv_number); //  群成员数量
+        editAliasName = (EditText) findViewById(R.id.et_b_name);   //  别名
         editSignature = (EditText) findViewById(R.id.et_groupSignature);// 描述
         textGroupId = (TextView) findViewById(R.id.tv_id);         // 群号
 
@@ -383,13 +388,16 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                     linearGroupApply.setVisibility(View.VISIBLE);// 审核消息
                     linearAddMessage.setVisibility(View.VISIBLE);// 加群消息
                     LinearTransferAuthority.setVisibility(View.VISIBLE);// 移交权限
+                    lin_set_manager.setVisibility(View.VISIBLE);
                     break;
                 case "1":// 公开群
                     LinearTransferAuthority.setVisibility(View.VISIBLE);
+                    lin_set_manager.setVisibility(View.VISIBLE);
                     break;
                 case "2":// 密码群
                     LinearTransferAuthority.setVisibility(View.VISIBLE);
                     linearModifyPassword.setVisibility(View.VISIBLE);// 修改密码
+                    lin_set_manager.setVisibility(View.VISIBLE);
                     break;
             }
         }
@@ -501,17 +509,20 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 intent.putExtras(bundle);
                 startActivity(intent);
                 break;
-            case R.id.head_left_btn:// 返回
+            case R.id.head_left_btn:  // 返回
                 finish();
                 break;
-            case R.id.lin_allperson:// 查看所有成员
+            case R.id.lin_allperson:  // 查看所有成员
                 startToActivity(GroupMembersActivity.class);
                 break;
-            case R.id.tv_delete:// 退出群组
+            case R.id.tv_delete:      // 退出群组
                 confirmDialog.show();
                 break;
-            case R.id.image_add:// 加入激活状态
+            case R.id.image_add:      // 加入激活状态
                 addGroup();
+                break;
+            case R.id.lin_set_manager: //设置群管理员
+                startToActivity(SetGroupManagerActivity.class, 1);
                 break;
             case R.id.image_xiugai:// 修改
                 if (update) {// 此时是修改状态需要进行以下操作
@@ -760,6 +771,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
             case 1:
                 if (resultCode == 1) {
                     LinearTransferAuthority.setVisibility(View.GONE);
+                    lin_set_manager.setVisibility(View.GONE);
                     lists.remove(lists.size() - 1);
                     GroupTalkAdapter adapter = new GroupTalkAdapter(context, lists);
                     gridView.setAdapter(adapter);

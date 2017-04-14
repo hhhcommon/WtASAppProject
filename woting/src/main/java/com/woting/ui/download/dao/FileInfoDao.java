@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.woting.ui.download.model.FileInfo;
-import com.woting.ui.download.service.DownloadClient;
+import com.woting.ui.download.service.DownloadService;
 import com.woting.ui.home.program.album.model.ContentInfo;
 import com.woting.common.database.SQLiteHelper;
 import com.woting.common.util.SequenceUUID;
@@ -37,7 +37,7 @@ public class FileInfoDao {
 		try {
 			// 执行查询语句 返回一个cursor对象
 			cursor = db.rawQuery(
-					"Select * from fileinfo where finished like ? and userid like ? order by _id desc",
+					"Select * from fileInfo where finished like ? and userId like ? order by _id desc",
 					new String[] { s ,useridnow});
 			// 循环遍历cursor中储存的键值对
 			while (cursor.moveToNext()) {
@@ -45,22 +45,22 @@ public class FileInfoDao {
 				String url = cursor.getString(cursor.getColumnIndex("url"));
 				String author = cursor.getColumnName(cursor.getColumnIndex("author"));
 				String filename = cursor.getString(cursor.getColumnIndex("filename"));
-				String seqimageurl = cursor.getString(cursor.getColumnIndex("sequimgurl"));
-				String downloadtype = cursor.getString(cursor.getColumnIndex("downloadtype"));
-				String userid= cursor.getString(cursor.getColumnIndex("userid"));
-				String sequid=cursor.getString(cursor.getColumnIndex("sequid"));
-				String imagurl=cursor.getString(cursor.getColumnIndex("imageurl"));
+				String seqimageurl = cursor.getString(cursor.getColumnIndex("albumImgUrl"));
+				String downloadtype = cursor.getString(cursor.getColumnIndex("downloadType"));
+				String userid= cursor.getString(cursor.getColumnIndex("userId"));
+				String sequid=cursor.getString(cursor.getColumnIndex("albumId"));
+				String imagurl=cursor.getString(cursor.getColumnIndex("imageUrl"));
 				int start=cursor.getInt(1);
 				int end=cursor.getInt(2);
-				String playcontentshareurl=cursor.getString(cursor.getColumnIndex("playshareurl"));
-				String playfavorite=cursor.getString(cursor.getColumnIndex("playfavorite"));
-				String contentid=cursor.getString(cursor.getColumnIndex("contentid"));
-				String playAllTime=cursor.getString(cursor.getColumnIndex("playeralltime"));
-				String playfrom=cursor.getString(cursor.getColumnIndex("playerfrom"));
-				String contentDescn=cursor.getString(cursor.getColumnIndex("contentdescn"));
-				String playcount=cursor.getString(cursor.getColumnIndex("playcount"));
-				String contentplaytype=cursor.getString(cursor.getColumnIndex("contentplaytype"));
-                String localUrl=cursor.getString(cursor.getColumnIndex("localurl"));
+				String playcontentshareurl=cursor.getString(cursor.getColumnIndex("playShareUrl"));
+				String playfavorite=cursor.getString(cursor.getColumnIndex("playFavorite"));
+				String contentid=cursor.getString(cursor.getColumnIndex("contentId"));
+				String playAllTime=cursor.getString(cursor.getColumnIndex("playAllTime"));
+				String playfrom=cursor.getString(cursor.getColumnIndex("playFrom"));
+				String contentDescn=cursor.getString(cursor.getColumnIndex("contentDesc"));
+				String playcount=cursor.getString(cursor.getColumnIndex("playCount"));
+				String contentplaytype=cursor.getString(cursor.getColumnIndex("contentPlayType"));
+                String localUrl=cursor.getString(cursor.getColumnIndex("localUrl"));
 				//IsPlaying
 				String IsPlaying=cursor.getString(cursor.getColumnIndex("IsPlaying"));
 				// 把每个对象都放到history对象里
@@ -109,29 +109,29 @@ public class FileInfoDao {
 		try {
 			// 执行查询语句 返回一个cursor对象
 			cursor = db.rawQuery(
-					"Select * from fileinfo where finished='true'and sequid=? and userid=?",
+					"Select * from fileInfo where finished='true'and albumId=? and userId=?",
 					new String[] { sequid, userid});
 			// 循环遍历cursor中储存的键值对
 			while (cursor.moveToNext()) {
-				String localurl = cursor.getString(cursor.getColumnIndex("localurl"));
+				String localurl = cursor.getString(cursor.getColumnIndex("localUrl"));
 				String author = cursor.getColumnName(cursor
 						.getColumnIndex("author"));
 				String filename = cursor.getString(cursor
-						.getColumnIndex("filename"));
-				String sequimgurl=cursor.getString(cursor.getColumnIndex("sequimgurl"));
-				String imgurl=cursor.getString(cursor.getColumnIndex("imageurl"));
+						.getColumnIndex("fileName"));
+				String sequimgurl=cursor.getString(cursor.getColumnIndex("albumImgUrl"));
+				String imgurl=cursor.getString(cursor.getColumnIndex("imageUrl"));
 				int start=cursor.getInt(1);
 				int end=cursor.getInt(2);
-				String playcontentshareurl=cursor.getString(cursor.getColumnIndex("playshareurl"));
-				String playfavorite=cursor.getString(cursor.getColumnIndex("playfavorite"));
-				String contentid=cursor.getString(cursor.getColumnIndex("contentid"));
+				String playcontentshareurl=cursor.getString(cursor.getColumnIndex("playShareUrl"));
+				String playfavorite=cursor.getString(cursor.getColumnIndex("playFavorite"));
+				String contentid=cursor.getString(cursor.getColumnIndex("contentId"));
 				String url=cursor.getString(cursor.getColumnIndex("url"));
-				String playAllTime=cursor.getString(cursor.getColumnIndex("playeralltime"));
-				String playfrom=cursor.getString(cursor.getColumnIndex("playerfrom"));
-				String contentDescn=cursor.getString(cursor.getColumnIndex("contentdescn"));
-				String playcount=cursor.getString(cursor.getColumnIndex("playcount"));
-				String contentplaytype=cursor.getString(cursor.getColumnIndex("contentplaytype"));
-                String localUrl=cursor.getString(cursor.getColumnIndex("localurl"));
+				String playAllTime=cursor.getString(cursor.getColumnIndex("playAllTime"));
+				String playfrom=cursor.getString(cursor.getColumnIndex("playFrom"));
+				String contentDescn=cursor.getString(cursor.getColumnIndex("contentDesc"));
+				String playcount=cursor.getString(cursor.getColumnIndex("playCount"));
+				String contentplaytype=cursor.getString(cursor.getColumnIndex("contentPlayType"));
+                String localUrl=cursor.getString(cursor.getColumnIndex("localUrl"));
 				// 把每个对象都放到history对象里
 				FileInfo h = new FileInfo();
 				h.setLocalurl(localurl);
@@ -175,13 +175,13 @@ public class FileInfoDao {
 		Cursor cursor = null;
 		try {
 			// 执行查询语句 返回一个cursor对象
-			cursor = db.rawQuery("Select * from fileinfo where userid like ? ", new String[] {userid});
+			cursor = db.rawQuery("Select * from fileInfo where userId like ? ", new String[] {userid});
 			// 循环遍历cursor中储存的键值对
 			while (cursor.moveToNext()) {
 				int id=cursor.getInt(0);
 				String url = cursor.getString(cursor.getColumnIndex("url"));
-				String filename = cursor.getString(cursor.getColumnIndex("filename"));
-				String seqimageurl = cursor.getString(cursor.getColumnIndex("sequimgurl"));
+				String filename = cursor.getString(cursor.getColumnIndex("fileName"));
+				String seqimageurl = cursor.getString(cursor.getColumnIndex("albumImgUrl"));
 				// 把每个对象都放到history对象里
 				FileInfo h = new FileInfo(url, filename,id,seqimageurl);
 				// 网m里储存每个history对象
@@ -224,8 +224,8 @@ public class FileInfoDao {
 						"")+".mp3";
 			}
 
-			db.execSQL("insert into fileinfo(url,imageurl,filename,sequname,sequimgurl,sequdesc,finished,sequid,userid,downloadtype,author," +
-					"playshareurl,playfavorite,contentid,playeralltime,playerfrom,playcount,contentdescn,playtag,contentplaytype) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",new Object[] { content.getContentPlay(),
+			db.execSQL("insert into fileInfo(url,imageUrl,fileName,albumName,albumImgUrl,albumDesc,finished,albumId,userId,downloadType,author," +
+					"playShareUrl,playFavorite,contentId,playAllTime,playFrom,playCount,contentDesc,playTag,contentPlayType) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",new Object[] { content.getContentPlay(),
 					content.getContentImg(), playname,
 					content.getSequname(), content.getSequimgurl(),
 					content.getSequdesc(), "false",sequid,content.getUserid(),content.getDownloadtype(),content.getAuthor(),content.getContentShareURL(),
@@ -238,8 +238,8 @@ public class FileInfoDao {
 	// 改
 	public void updataFileInfo(String filename) {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String localUrl= DownloadClient.DOWNLOAD_PATH+filename;
-		db.execSQL("update fileinfo set finished=?,localurl=? where filename=?",
+		String localUrl= DownloadService.DOWNLOAD_PATH+filename;
+		db.execSQL("update fileInfo set finished=?,localUrl=? where fileName=?",
 				new Object[] {"true",localUrl,filename});
 		db.close();
 	}
@@ -251,7 +251,7 @@ public class FileInfoDao {
 	 */
 	public void updataDownloadStatus(String url,String downloadtype) {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		db.execSQL("update fileinfo set downloadtype=? where url=?",
+		db.execSQL("update fileInfo set downloadType=? where url=?",
 				new Object[] {downloadtype,url});
 		db.close();
 	}
@@ -263,7 +263,7 @@ public class FileInfoDao {
 	 */
 	public void updataFileProgress(String url,int start,int end){
 		SQLiteDatabase db = helper.getWritableDatabase();
-		db.execSQL("update fileinfo set start=?,end =? where url=?",
+		db.execSQL("update fileInfo set start=?,end =? where url=?",
 				new Object[] { start,end,url});
 		db.close();
 	}
@@ -273,20 +273,20 @@ public class FileInfoDao {
 	 */
 	public void deleteFileByUserId(String userid) {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		db.execSQL("delete from fileinfo where finished='false' and userid=?",new Object[]{userid});
+		db.execSQL("delete from fileInfo where finished='false' and userId=?",new Object[]{userid});
 		db.close();
 	}
 	//删除已经不存在的项目
 	public void deleteFileInfo(String localurl,String userid) {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		db.execSQL("delete from fileinfo where finished='true' and localurl=? and userid=?",new Object[]{localurl,userid});
+		db.execSQL("delete from fileInfo where finished='true' and localUrl=? and userId=?",new Object[]{localurl,userid});
 		db.close();
 	}
 	//删除专辑信息
 	public void deleteSequ(String sequname,String userid) {
 		SQLiteDatabase db = helper.getWritableDatabase();
 	/*	db.execSQL("delete from fileinfo where finished='true' and sequname=? and userid=?",new Object[]{sequname,userid});*/
-		db.execSQL("delete from fileinfo where sequname=? and userid=?",new Object[]{sequname,userid});
+		db.execSQL("delete from fileInfo where albumName=? and userId=?",new Object[]{sequname,userid});
 		db.close();
 	}
 
@@ -300,18 +300,18 @@ public class FileInfoDao {
 			// 执行查询语句 返回一个cursor对象
 			/*cursor = db.rawQuery("Select * from fileinfo where finished='true' and userid =? group by sequid ", new String[]{userid});*/
 
-			cursor = db.rawQuery("Select count(filename),sum(end),sequname,sequimgurl,sequdesc,sequid,filename,author,playerfrom from fileinfo where finished='true' and userid =? group by sequid ", new String[]{userid});
+			cursor = db.rawQuery("Select count(fileName),sum(end),albumName,albumImgUrl,albumDesc,albumId,fileName,author,playFrom from fileInfo where finished='true' and userId =? group by albumId ", new String[]{userid});
 			// 循环遍历cursor中储存的键值对
 			while (cursor.moveToNext()) {
 				int count=cursor.getInt(0);
 				int sum=cursor.getInt(1);
-				String sequname = cursor.getString(cursor.getColumnIndex("sequname"));
-				String sequimgurl = cursor.getString(cursor.getColumnIndex("sequimgurl"));
-				String sequdesc = cursor.getString(cursor.getColumnIndex("sequdesc"));
-				String sequid = cursor.getString(cursor.getColumnIndex("sequid"));
+				String sequname = cursor.getString(cursor.getColumnIndex("albumName"));
+				String sequimgurl = cursor.getString(cursor.getColumnIndex("albumImgUrl"));
+				String sequdesc = cursor.getString(cursor.getColumnIndex("albumDesc"));
+				String sequid = cursor.getString(cursor.getColumnIndex("albumId"));
 				String filename= cursor.getString(cursor.getColumnIndex("filename"));
 				String author= cursor.getString(cursor.getColumnIndex("author"));
-				String playerfrom=cursor.getString(cursor.getColumnIndex("playerfrom"));
+				String playerfrom=cursor.getString(cursor.getColumnIndex("playFrom"));
 				// 把每个对象都放到history对象里
 				FileInfo h = new FileInfo();
 				h.setSequname(sequname);

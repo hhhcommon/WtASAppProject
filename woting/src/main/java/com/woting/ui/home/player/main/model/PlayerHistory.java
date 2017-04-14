@@ -27,6 +27,7 @@ public class PlayerHistory implements Serializable{
 	private String ContentFavorite;
 	private String ContentID;
 	private String ContentPub;
+	private String ColumnNum;
 
 	private String localurl;        // 本地播放地址
 	private String sequId;          // 专辑ID
@@ -37,6 +38,14 @@ public class PlayerHistory implements Serializable{
 	private String ContentPlayType; // 内容后缀
 	private String IsPlaying;       // 正在播放的内容
 	private String PlayCount;
+
+	public String getColumnNum() {
+		return ColumnNum;
+	}
+
+	public void setColumnNum(String columnNum) {
+		ColumnNum = columnNum;
+	}
 
 	public void setPlayCount(String playCount) {
 		PlayCount = playCount;
@@ -198,7 +207,7 @@ public class PlayerHistory implements Serializable{
 						 String playerzantype,String  playerfrom,String playerfromid,String Playerfromurl,
 						 String playeraddtime,String bjuserid,String playcontentshareurl,String ContentFavorite,
 						 String ContentID,String localurl,String sequName,
-						 String sequId,String sequDesc,String sequImg,String contentPlayType,String IsPlaying) {
+						 String sequId,String sequDesc,String sequImg,String contentPlayType,String IsPlaying,String ColumnNum) {
 		super();
 		PlayerName = playername;
 		PlayerImage = playerimage;
@@ -225,6 +234,8 @@ public class PlayerHistory implements Serializable{
 		this.ContentFavorite=ContentFavorite;
 		this.ContentID=ContentID;
 		this.localurl=localurl;
+		this.ColumnNum=ColumnNum;
+
 	}
 
 	public String getPlayerAddTime() {

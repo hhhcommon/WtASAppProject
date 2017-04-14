@@ -273,13 +273,14 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
 
                             String ContentPlayType = newList.get(position - 2).getContentPlayType();
                             String IsPlaying = newList.get(position - 2).getIsPlaying();
+                            String ColumnNum = newList.get(position - 2).getColumnNum();
 
                             // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                             PlayerHistory history = new PlayerHistory(
                                     playerName, playerImage, playUrl, playUrI, playMediaType,
                                     playAllTime, playInTime, playContentDesc, playNum,
                                     playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                    ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying);
+                                    ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying,ColumnNum);
                             dbDao.deleteHistory(playUrl);
                             dbDao.addHistory(history);
 
