@@ -21,7 +21,7 @@ import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.download.activity.DownloadFragment;
+import com.woting.ui.download.main.DownloadFragment;
 import com.woting.ui.download.adapter.DownLoadAudioAdapter;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.model.FileInfo;

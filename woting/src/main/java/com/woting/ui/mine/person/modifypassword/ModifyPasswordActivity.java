@@ -3,8 +3,11 @@ package com.woting.ui.mine.person.modifypassword;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.android.volley.VolleyError;
@@ -37,6 +40,7 @@ public class ModifyPasswordActivity extends AppBaseActivity implements OnClickLi
     private String tag = "MODIFY_PASSWORD_VOLLEY_REQUEST_CANCEL_TAG";
 
     private boolean isCancelRequest;
+    private Button btn_modifypassword;
 
     @Override
     public void onClick(View v) {
@@ -58,16 +62,88 @@ public class ModifyPasswordActivity extends AppBaseActivity implements OnClickLi
         setContentView(R.layout.activity_modify_password);
 
         initView();
+        setEditListener();
     }
 
     // 初始化视图
     private void initView() {
-        findViewById(R.id.head_left_btn).setOnClickListener(this);// 返回
-        findViewById(R.id.btn_modifypassword).setOnClickListener(this);// 确定修改密码
+        findViewById(R.id.head_left_btn).setOnClickListener(this);                  // 返回
+        btn_modifypassword = (Button) findViewById(R.id.btn_modifypassword);        // 确定修改密码
+        btn_modifypassword.setOnClickListener(this);
 
-        editOldPassword = (EditText) findViewById(R.id.edit_oldpassword);// 输入 旧密码
-        editNewPassword = (EditText) findViewById(R.id.edit_newpassword);// 输入 新密码
+        editOldPassword = (EditText) findViewById(R.id.edit_oldpassword);           // 输入 旧密码
+        editNewPassword = (EditText) findViewById(R.id.edit_newpassword);           // 输入 新密码
         editNewPasswordConfirm = (EditText) findViewById(R.id.edit_confirmpassword);// 输入 确定新密码
+    }
+
+    private void setEditListener() {
+        // 输入 旧密码
+        editOldPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                setBtView();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        // 输入 新密码
+        editNewPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                setBtView();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        // 输入 确定新密码
+        editNewPasswordConfirm.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                setBtView();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    private void setBtView() {
+        String password_old = editOldPassword.getText().toString().trim();
+        String password = editNewPassword.getText().toString().trim();
+        String password_qz = editNewPasswordConfirm.getText().toString().trim();
+
+        if (password_old != null && !password_old.equals("") && password_old.length() > 5) {
+            if (password != null && !password.equals("") && password.length() > 5) {
+                if (password_qz != null && !password_qz.equals("") && password_qz.length() > 5) {
+                    btn_modifypassword.setBackgroundResource(R.drawable.zhuxiao_press);
+                } else {
+                    btn_modifypassword.setBackgroundResource(R.drawable.bg_graybutton);
+                }
+            } else {
+                btn_modifypassword.setBackgroundResource(R.drawable.bg_graybutton);
+            }
+        } else {
+            btn_modifypassword.setBackgroundResource(R.drawable.bg_graybutton);
+        }
     }
 
     // 检查数据的正确性
@@ -92,7 +168,7 @@ public class ModifyPasswordActivity extends AppBaseActivity implements OnClickLi
             return false;
         }
         if (!newPassword.equals(passwordConfirm)) {
-            new AlertDialog.Builder(context).setMessage("两次输入的密码不一致").setPositiveButton("确定", null).show();
+            ToastUtils.show_always(context, "您两次输入的密码不一样!");
             return false;
         }
         if (passwordConfirm.length() < 6) {

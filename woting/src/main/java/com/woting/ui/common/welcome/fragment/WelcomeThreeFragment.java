@@ -107,5 +107,6 @@ public class WelcomeThreeFragment extends Fragment implements OnClickListener {
             bmp.recycle();
             bmp = null;
         }
+        context = null;
     }
 }

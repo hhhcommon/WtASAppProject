@@ -1,4 +1,4 @@
-package com.woting.ui.mine.set.updateusernum;
+package com.woting.ui.mine.person.updateusernum;
 
 import android.app.Dialog;
 import android.content.SharedPreferences;
@@ -27,7 +27,8 @@ import org.json.JSONObject;
 
 /**
  * 设置用户号  只能设置一次
- * Created by Administrator on 2016/11/9 0009.
+ * 作者：xinlong on 2016/11/19 21:18
+ * 邮箱：645700751@qq.com
  */
 public class updateUserNumActivity extends AppActivity implements View.OnClickListener {
     private EditText et_UsrNum;
@@ -46,33 +47,51 @@ public class updateUserNumActivity extends AppActivity implements View.OnClickLi
 
     @Override
     protected void init() {
-        setTitle("用户号");
-
-        et_UsrNum = (EditText) findViewById(R.id.edit_usr_num);
-        et_UsrNum.addTextChangedListener(new MyEditListener());
-
-        btn_Confirm = (Button) findViewById(R.id.btn_confirm);
-        btn_Confirm.setOnClickListener(this);
-
+        setView();    // 设置界面
         initDialog();
     }
 
-    private void initDialog() {
-        View dialog1 = LayoutInflater.from(context).inflate(R.layout.dialog_usernumber, null);
-        dialog1.findViewById(R.id.tv_cancel).setOnClickListener(this);
-        dialog1.findViewById(R.id.tv_confirm).setOnClickListener(this);
+    private void setView() {
+        setTitle("用户号");
+        btn_Confirm = (Button) findViewById(R.id.btn_confirm);
+        btn_Confirm.setOnClickListener(this);
+        et_UsrNum = (EditText) findViewById(R.id.edit_usr_num);
+        et_UsrNum.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-        tv_desc = (TextView) dialog1.findViewById(R.id.tv_desc);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isComplete()) {
+                    btn_Confirm.setBackgroundResource(R.drawable.wt_commit_button_background);
+                } else {
+                    btn_Confirm.setBackgroundResource(R.drawable.bg_graybutton);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    private void initDialog() {
+        View _dialog = LayoutInflater.from(context).inflate(R.layout.dialog_usernumber, null);
+        tv_desc = (TextView) dialog.findViewById(R.id.tv_desc);
+        _dialog.findViewById(R.id.tv_cancel).setOnClickListener(this);
+        _dialog.findViewById(R.id.tv_confirm).setOnClickListener(this);
+
         confirmDialog = new Dialog(context, R.style.MyDialog);
-        confirmDialog.setContentView(dialog1);
-        confirmDialog.setCanceledOnTouchOutside(true);
+        confirmDialog.setContentView(_dialog);
+        confirmDialog.setCanceledOnTouchOutside(false);
         confirmDialog.getWindow().setBackgroundDrawableResource(R.color.white);
     }
 
     // 判断数据是否填写完整
     private boolean isComplete() {
         userNum = et_UsrNum.getText().toString().trim();
-        return !"".equalsIgnoreCase(userNum)&&userNum.length()>5&&userNum.length()<21;
+        return !"".equalsIgnoreCase(userNum) && userNum.length() > 5 && userNum.length() < 21;
     }
 
     @Override
@@ -80,15 +99,15 @@ public class updateUserNumActivity extends AppActivity implements View.OnClickLi
         switch (v.getId()) {
             case R.id.btn_confirm:      // 确定修改
                 if (isComplete()) {
-                    String fName=userNum.substring(0,1);
+                    String fName = userNum.substring(0, 1);
                     String regex = "^[a-zA-Z]*$"; //以字母开头
-                    if(fName.matches(regex)){
-                        tv_desc.setText("用户号是账号的唯一凭证,只能修改一次.\n\n请再次确认,用户号:" + userNum);
+                    if (fName.matches(regex)) {
+                        tv_desc.setText("  用户号是账号的唯一凭证，只能修改一次。\n\n  请再次确认，用户号：" + userNum);
                         confirmDialog.show();
-                    }else{
+                    } else {
                         ToastUtils.show_always(context, "用户号必须以字母开头！");
                     }
-                }else{
+                } else {
                     ToastUtils.show_always(context, "用户号不能为空！");
                 }
                 break;
@@ -108,6 +127,7 @@ public class updateUserNumActivity extends AppActivity implements View.OnClickLi
         }
     }
 
+    // 修改用户号
     private void send() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
@@ -130,7 +150,16 @@ public class updateUserNumActivity extends AppActivity implements View.OnClickLi
                         if (!et.commit()) Log.w("commit", " 数据 commit 失败!");
                         setResult(1);
                         finish();
-                    } else {
+                    } else if (returnType != null && returnType.equals("0000")) {
+                        Log.e("用户号修改", "0000——无法获取相关的参数");
+                        ToastUtils.show_always(context, "用户号修改失败!");
+                    }else if (returnType != null && returnType.equals("1002")) {
+                        Log.e("用户号修改", "1002——无法获得用户Id");
+                        ToastUtils.show_always(context, "用户号修改失败!");
+                    } else if (returnType != null && returnType.equals("1003")) {
+                        Log.e("用户号修改", "1003——给定用户号和系统记录账号不匹配");
+                        ToastUtils.show_always(context, "用户号修改失败!");
+                    }  else {
                         ToastUtils.show_always(context, "用户号修改失败!");
                     }
                 } catch (JSONException e) {
@@ -145,26 +174,6 @@ public class updateUserNumActivity extends AppActivity implements View.OnClickLi
                 ToastUtils.showVolleyError(context);
             }
         });
-    }
-
-    // 输入框监听
-    class MyEditListener implements TextWatcher {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (isComplete()) {
-                btn_Confirm.setBackgroundResource(R.drawable.wt_commit_button_background);
-            } else {
-                btn_Confirm.setBackgroundResource(R.drawable.bg_graybutton);
-            }
-        }
     }
 
     @Override

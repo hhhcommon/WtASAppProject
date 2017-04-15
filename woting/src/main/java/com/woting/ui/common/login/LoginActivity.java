@@ -4,9 +4,12 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.android.volley.VolleyError;
@@ -39,22 +42,16 @@ import java.util.Map;
  * 邮箱：645700751@qq.com
  */
 public class LoginActivity extends BaseActivity implements OnClickListener {
-    private UMShareAPI mShareAPI;
+    private UMShareAPI mShareAPI;      // 友盟
 
-    private Dialog dialog;// 加载数据对话框
-    private EditText editUserName;// 输入 用户名
-    private EditText editPassword;// 输入密码
-    private String userName;// 用户名
-    private String password;// 密码
+    private Dialog dialog;             // 加载数据对话框
+    private Button btn_login;          // 登录按钮
+    private EditText editUserName;     // 输入 用户名
+    private EditText editPassword;     // 输入密码
+    private String userName;           // 用户名
+    private String password;           // 密码
     // 三方登录信息
-    private String thirdNickName;
-    private String thirdUserId;
-    private String thirdUserImg;
-    private String county;
-    private String province;
-    private String city;
-    private String thirdType;
-    private String description;
+    private String thirdNickName, thirdUserId, thirdUserImg, county, province, city, thirdType, description;
     private String tag = "LOGIN_VOLLEY_REQUEST_CANCEL_TAG";
     private String viewTag = "LoginActivity";
     private boolean isCancelRequest;
@@ -64,45 +61,97 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        mShareAPI = UMShareAPI.get(context);                      // 初始化友盟
+        mShareAPI = UMShareAPI.get(context);                              // 初始化友盟
         setView();
     }
 
     // 初始化视图
     private void setView() {
-        findViewById(R.id.head_left_btn).setOnClickListener(this);// 返回按钮
-        findViewById(R.id.tv_wjmm).setOnClickListener(this);      // 忘记密码
-        findViewById(R.id.btn_login).setOnClickListener(this);    // 登录按钮
-        findViewById(R.id.btn_register).setOnClickListener(this); // 注册按钮
-        findViewById(R.id.lin_login_wx).setOnClickListener(this); // 微信
-        findViewById(R.id.lin_login_qq).setOnClickListener(this); // qq登录
-        findViewById(R.id.lin_login_wb).setOnClickListener(this); // 微博登录
+        findViewById(R.id.head_left_btn).setOnClickListener(this);         // 返回按钮
+        findViewById(R.id.tv_wjmm).setOnClickListener(this);               // 忘记密码
 
+        findViewById(R.id.btn_register).setOnClickListener(this);          // 注册按钮
+        findViewById(R.id.lin_login_wx).setOnClickListener(this);          // 微信
+        findViewById(R.id.lin_login_qq).setOnClickListener(this);          // qq登录
+        findViewById(R.id.lin_login_wb).setOnClickListener(this);          // 微博登录
+
+        btn_login = (Button) findViewById(R.id.btn_login);                 // 登录按钮
+        btn_login.setOnClickListener(this);
         editUserName = (EditText) findViewById(R.id.edittext_username);    // 输入用户名
         editPassword = (EditText) findViewById(R.id.edittext_password);    // 输入密码按钮
 
         // 设置上次登录的手机号,此方法已经失效，注销后手机号等就会置为空
-//        String phoneName = BSApplication.SharedPreferences.getString(StringConstant.USER_PHONE_NUMBER, "");
-//        editUserName.setText(phoneName);
-//        editUserName.setSelection(editUserName.getText().length());// 移动光标到最后
+        // String phoneName = BSApplication.SharedPreferences.getString(StringConstant.USER_PHONE_NUMBER, "");
+        // editUserName.setText(phoneName);
+        // editUserName.setSelection(editUserName.getText().length());      // 移动光标到最后
+        setEditListener();                                                  // 设置输入框的监听
+    }
+
+    private void setEditListener() {
+        // 用户名的监听
+        editUserName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                setBtView();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        //  密码的监听
+        editPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                setBtView();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+
+    private void setBtView() {
+        String userName = editUserName.getText().toString().trim();
+        String password = editPassword.getText().toString().trim();
+        if (userName != null && !userName.trim().equals("")) {
+            if (password != null && !password.trim().equals("") && password.length() > 5) {
+                btn_login.setBackgroundResource(R.drawable.zhuxiao_press);
+            } else {
+                btn_login.setBackgroundResource(R.drawable.bg_graybutton);
+            }
+        } else {
+            btn_login.setBackgroundResource(R.drawable.bg_graybutton);
+        }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.head_left_btn:// 返回
+            case R.id.head_left_btn:             // 返回
                 finish();
                 break;
-            case R.id.btn_login:// 登录
+            case R.id.btn_login:                 // 登录
                 checkData();
                 break;
-            case R.id.btn_register:// 注册
+            case R.id.btn_register:              // 注册
                 startActivityForResult(new Intent(context, RegisterActivity.class), 0);
                 break;
-            case R.id.tv_wjmm:// 忘记密码
+            case R.id.tv_wjmm:                   // 忘记密码
                 startActivity(new Intent(context, ForgetPasswordActivity.class));
                 break;
-            case R.id.lin_login_wx:// 微信登录
+            case R.id.lin_login_wx:              // 微信登录
                 SHARE_MEDIA platform = SHARE_MEDIA.WEIXIN;
                 mShareAPI.doOauthVerify(this, platform, new UMAuthListener() {
                     @Override
@@ -121,7 +170,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                     }
                 });
                 break;
-            case R.id.lin_login_qq:// QQ登录
+            case R.id.lin_login_qq:                // QQ登录
                 SHARE_MEDIA platform1 = SHARE_MEDIA.QQ;
                 mShareAPI.doOauthVerify(this, platform1, new UMAuthListener() {
                     @Override

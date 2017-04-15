@@ -1,4 +1,4 @@
-package com.woting.ui.download.activity;
+package com.woting.ui.download.main;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -21,12 +21,14 @@ import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.PhoneMessage;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.download.fragment.DownLoadAudioFragment;
 import com.woting.ui.download.fragment.DownLoadSequFragment;
 import com.woting.ui.download.fragment.DownLoadUnCompletedFragment;
 import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
+import com.woting.ui.mine.main.MineActivity;
 
 import java.util.ArrayList;
 
@@ -53,12 +55,17 @@ public class DownloadFragment extends Fragment implements OnClickListener {
     private int offset;
 
     public static boolean isVisible = false;
+    private int fromType = 5;// 默认从我的界面进来的  == 6 时从播放中的更多进来的
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.image_left:// 返回
-                PlayerMoreOperationActivity.close();
+                if (fromType == 5) {
+                    MineActivity.close();
+                } else if (fromType == 6) {
+                    PlayerMoreOperationActivity.close();
+                }
                 break;
             case R.id.text_clear_sequ:// 清空下载的专辑
                 context.sendBroadcast(new Intent(BroadcastConstants.DOWNLOAD_CLEAR_EMPTY_SEQU));
@@ -73,6 +80,8 @@ public class DownloadFragment extends Fragment implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
+        Bundle bundle = getArguments();
+        fromType = bundle.getInt(StringConstant.FROM_TYPE);
     }
 
     @Nullable

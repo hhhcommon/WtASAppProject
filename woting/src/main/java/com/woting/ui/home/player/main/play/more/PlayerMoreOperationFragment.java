@@ -43,7 +43,7 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.HorizontalListView;
-import com.woting.ui.download.activity.DownloadFragment;
+import com.woting.ui.download.main.DownloadFragment;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.fragment.DownLoadUnCompletedFragment;
 import com.woting.ui.download.model.FileInfo;
@@ -410,7 +410,11 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                 PlayerMoreOperationActivity.open(subscriberListFragment);
                 break;
             case R.id.text_local:// 我的下载
-                PlayerMoreOperationActivity.open(new DownloadFragment());
+                DownloadFragment d = new DownloadFragment();
+                Bundle bun = new Bundle();
+                bun.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_MORE);
+                d.setArguments(bun);
+                PlayerMoreOperationActivity.open(d);
                 break;
             case R.id.text_liked:// 我喜欢的
                 FavoriteFragment favoriteFragment = new FavoriteFragment();

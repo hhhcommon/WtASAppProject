@@ -36,10 +36,11 @@ import java.util.regex.Pattern;
 
 /**
  * 注册
+ *
  * @author 辛龙
- * 2016年8月8日
+ *         2016年8月8日
  */
-public class RegisterActivity extends BaseActivity implements OnClickListener, TextWatcher {
+public class RegisterActivity extends BaseActivity implements OnClickListener {
     private CountDownTimer mCountDownTimer;       // 再次获取验证码时间
 
     private Dialog dialog;                        // 加载数据对话框
@@ -50,7 +51,6 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
     private TextView textGetYzm;                  // 获取验证码
     private TextView textRegister;                // 注册
     private TextView textCxFaSong;                // 重新获取验证码
-    private TextView textNext;                    // 注册
 
     private String password;                      // 密码
     private String userName;                      // 用户名
@@ -61,7 +61,6 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
     private String tag = "REGISTER_VOLLEY_REQUEST_CANCEL_TAG";
     private String viewTag = "RegisterActivity";
     private int sendType = -1;                    // == -1 首次获取验证码 == 其他 再次发送验证码
-    private int verifyStatus = -1;                // == -1 没有发送过验证码  == 1 成功
     private boolean isCancelRequest;
 
     @Override
@@ -80,19 +79,116 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
         mEditTextUserPhone = (EditText) findViewById(R.id.edittext_userphone);                      // 输入 手机号
 
         editVerify = (EditText) findViewById(R.id.et_yzm);                                          // 输入 验证码
-        editVerify.addTextChangedListener(this);
+
 
         textGetYzm = (TextView) findViewById(R.id.tv_getyzm);                                       // 获取验证码
         textGetYzm.setOnClickListener(this);
 
         textCxFaSong = (TextView) findViewById(R.id.tv_cxfasong);                                   // 重新获取验证码
-        textNext = (TextView) findViewById(R.id.tv_next);
 
         textRegister = (TextView) findViewById(R.id.tv_register);                                   // 注册
         textRegister.setOnClickListener(this);
 
         LinearLayout agreement = (LinearLayout) findViewById(R.id.lin_agreement);                   // 注册协议
         agreement.setOnClickListener(this);
+
+        setEditListener();                                                                          // 输入框监听
+    }
+
+    private void setEditListener() {
+        // 手机号输入框的监听
+        mEditTextUserPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                setBtView();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        // 昵称输入框的监听
+        mEditTextName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                setBtView();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        // 密码输入框的监听
+        mEditTextPassWord.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                setBtView();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        // 验证码输入框的监听
+        editVerify.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                setBtView();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+    }
+
+    private void setBtView() {
+        String phoneNum = mEditTextUserPhone.getText().toString().trim();
+        String userName = mEditTextName.getText().toString().trim();
+        String password = mEditTextPassWord.getText().toString().trim();
+        String verifyCode = editVerify.getText().toString().trim();
+
+        if (phoneNum != null && !phoneNum.equals("")) {
+            if (userName != null && !userName.equals("")) {
+                if (password != null && !password.equals("") && password.length() > 5) {
+                    if (verifyCode != null && !verifyCode.equals("") && verifyCode.length() == 6) {
+                        textRegister.setBackgroundResource(R.drawable.zhuxiao_press);
+                    } else {
+                        textRegister.setBackgroundResource(R.drawable.bg_graybutton);
+                    }
+                } else {
+                    textRegister.setBackgroundResource(R.drawable.bg_graybutton);
+                }
+            } else {
+                textRegister.setBackgroundResource(R.drawable.bg_graybutton);
+            }
+        } else {
+            textRegister.setBackgroundResource(R.drawable.bg_graybutton);
+        }
     }
 
     @Override
@@ -128,11 +224,15 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
             ToastUtils.show_always(context, "手机号码不正确!");
             return;
         }
+        if(phoneNumber==null||phoneNumber.trim().equals("")){
+            ToastUtils.show_always(context, "您还没有获取验证码！");
+            return;
+        }
         if (!phoneNum.equals(phoneNumber)) {
             ToastUtils.show_always(context, "请输入您之前获取验证的手机号码");
             return;
         }
-        if (userName == null || userName.trim().equals("") || userName.length()>20) {
+        if (userName == null || userName.trim().equals("") || userName.length() > 20) {
             ToastUtils.show_always(context, "昵称不能为空或长度不能超过20字");
             return;
         }
@@ -170,17 +270,17 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
                 try {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {
-                        Log.i(viewTag,"1001");
+                        Log.i(viewTag, "1001");
                         dialog = DialogUtils.Dialogph(context, "注册中");
                         send();
                     } else if (ReturnType != null && ReturnType.equals("T")) {
-                        Log.i(viewTag,"T");
+                        Log.i(viewTag, "T");
                         ToastUtils.show_always(context, "出错了，请您稍后再试!");
                     } else if (ReturnType != null && ReturnType.equals("1002")) {
-                        Log.i(viewTag,"1002");
+                        Log.i(viewTag, "1002");
                         ToastUtils.show_always(context, "您输入的验证码不匹配!");
                     } else {
-                        Log.i(viewTag,"Message");
+                        Log.i(viewTag, "Message");
                         try {
                             String Message = result.getString("Message");
                             if (Message != null && !Message.trim().equals("")) {
@@ -248,21 +348,21 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
                         setResult(1);
                         finish();
                     } else if (ReturnType != null && ReturnType.equals("1002")) {
-                        Log.i(viewTag,"1002");
+                        Log.i(viewTag, "1002");
                         ToastUtils.show_always(context, "当前用户暂未注册!");
                     } else if (ReturnType != null && ReturnType.equals("1003")) {
-                        Log.i(viewTag,"1003");
+                        Log.i(viewTag, "1003");
                         ToastUtils.show_always(context, "您输入的用户名重复了!");
                     } else if (ReturnType != null && ReturnType.equals("0000")) {
-                        Log.i(viewTag,"0000");
+                        Log.i(viewTag, "0000");
                         ToastUtils.show_always(context, "注册失败，请稍后重试");
                     } else if (ReturnType != null && ReturnType.equals("T")) {
-                        Log.i(viewTag,"T");
+                        Log.i(viewTag, "T");
                         ToastUtils.show_always(context, "注册失败，请稍后重试");
                     } else {
-                        Log.i(viewTag,"Message");
+                        Log.i(viewTag, "Message");
                         try {
-                            String  Message = result.getString("Message");
+                            String Message = result.getString("Message");
                             ToastUtils.show_always(context, Message + "");
                         } catch (JSONException e1) {
                             e1.printStackTrace();
@@ -309,7 +409,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
     // 发送获取验证码请求
     private void getVerifyCode() {
         String url;
-        if(sendType == -1) {
+        if (sendType == -1) {
             url = GlobalConfig.registerByPhoneNumUrl;// 第一次获取验证码
         } else {
             url = GlobalConfig.reSendPhoneCheckCodeNumUrl;// 再次获取验证码
@@ -317,7 +417,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("PhoneNum", phoneNumber);
-            if(sendType != -1) {
+            if (sendType != -1) {
                 jsonObject.put("OperType", 1);
             }
         } catch (JSONException e) {
@@ -333,20 +433,19 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
                 try {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {
-                        Log.i(viewTag,"1001");
+                        Log.i(viewTag, "1001");
                         ToastUtils.show_always(context, "验证码已经发送!");
                         timerDown();
                         sendType = 2;
-                        verifyStatus = 1;
                         textGetYzm.setVisibility(View.GONE);
                         textCxFaSong.setVisibility(View.VISIBLE);
                     } else if (ReturnType != null && ReturnType.equals("T")) {
-                        Log.i(viewTag,"T");
+                        Log.i(viewTag, "T");
                         ToastUtils.show_always(context, "数据出错了,请您稍后再试!");
                     } else if (ReturnType != null && ReturnType.equals("1002")) {
-                        ToastUtils.show_always(context, "数据出错了,请您稍后再试!");
+                        ToastUtils.show_always(context, "该手机号已经绑定账号");
                     } else {
-                        Log.i(viewTag,"Message");
+                        Log.i(viewTag, "Message");
                         try {
                             String Message = result.getString("Message");
                             if (Message != null && !Message.trim().equals("")) {
@@ -396,21 +495,6 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
     }
 
     @Override
-    public void afterTextChanged(Editable s) {
-        if (s.length() == 6 && phoneNumber != null && !phoneNumber.equals("")) {
-            if (verifyStatus == 1) {
-                textNext.setVisibility(View.GONE);
-                textRegister.setVisibility(View.VISIBLE);
-            } else {
-                ToastUtils.show_always(context, "请点击获取验证码，获取验证码信息!");
-            }
-        } else {
-            textRegister.setVisibility(View.GONE);
-            textNext.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
@@ -431,18 +515,11 @@ public class RegisterActivity extends BaseActivity implements OnClickListener, T
         textGetYzm = null;
         verifyCode = null;
         textCxFaSong = null;
-        textNext = null;
         phoneNumber = null;
         tempVerify = null;
         tag = null;
         setContentView(R.layout.activity_null);
     }
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-    }
 
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-    }
 }

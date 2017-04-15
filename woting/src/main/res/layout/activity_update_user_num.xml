@@ -38,6 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:textColor="@color/gray"
                 android:layout_marginTop="5dp"
                 android:text="用户号是账号的唯一凭证，只能修改一次"
                 android:textSize="14sp" />
@@ -53,7 +54,7 @@
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginRight="12dp"
                 android:src="@mipmap/img_username" />
 

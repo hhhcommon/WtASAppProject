@@ -1,4 +1,7 @@
 package com.woting.common.constant;
+
+import android.content.Intent;
+
 /**
  * 广播参数
  * author：辛龙 (xinLong)
@@ -67,6 +70,12 @@ public class BroadcastConstants {
 
     //PUSH_NOTIFICATION-----pushnnn
     public static final String PUSH_NOTIFICATION = "PUSH_NOTIFICATION";
+
+    // 此时在呼叫页，则在呼叫页展示被呼叫
+    public static final String PUSH_CALL_CHAT = "PUSH_CALL_CHAT";
+
+    // 此时在对讲页对讲
+    public static final String PUSH_CALL_CALLALERT = "PUSH_CALL_CALLALERT";
 
     // 搜索
     public static final String SEARCH_VIEW_UPDATE = "SEARCH_VIEW_UPDATE";

@@ -18,12 +18,11 @@ import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
 import com.woting.common.util.BitmapUtils;
 
 import java.util.ArrayList;
-
 /**
  * 引导页
- *
- * @author 辛龙
- *         2016年4月27日
+ * author：辛龙 (xinLong)
+ * 2016/12/28 11:21
+ * 邮箱：645700751@qq.com
  */
 public class WelcomeActivity extends FragmentActivity {
     private ImageView[] imageViews;
@@ -99,5 +98,7 @@ public class WelcomeActivity extends FragmentActivity {
             bmp1.recycle();
             bmp1 = null;
         }
+        imageViews=null;
+        setContentView(R.layout.activity_null);
     }
 }

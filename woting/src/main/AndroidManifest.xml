@@ -470,7 +470,7 @@
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
         <activity
-            android:name=".ui.mine.set.updateusernum.updateUserNumActivity"
+            android:name=".ui.mine.person.updateusernum.updateUserNumActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>

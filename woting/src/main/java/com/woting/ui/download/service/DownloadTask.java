@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.woting.common.constant.BroadcastConstants;
-import com.woting.ui.download.activity.DownloadFragment;
+import com.woting.ui.download.main.DownloadFragment;
 import com.woting.ui.download.dao.FileInfoDao;
 import com.woting.ui.download.dao.ThreadDao;
 import com.woting.ui.download.model.FileInfo;
