@@ -106,8 +106,8 @@ public class SubclassControl {
                                             b2.putString("type", "back");
                                             it2.putExtras(b2);
                                             it3.putExtras(b2);
-                                            sendBroadcast(it2);
-                                            sendBroadcast(it3);
+                                            context.sendBroadcast(it2);
+                                            context.sendBroadcast(it3);
                                         }
                                         break;
                                     default:
@@ -166,14 +166,14 @@ public class SubclassControl {
                                                             b.putString("callerId", _callerId);
                                                             it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                             it.putExtras(b);
-                                                            startActivity(it);
+                                                            context.startActivity(it);
                                                         }
                                                         run = new Runnable() {
                                                             @Override
                                                             public void run() {
                                                                 if (!isallow) {
                                                                     //如果60s后没有没有对应答消息进行处理，则发送拒绝应答的消息已经弹出框消失
-                                                                    InterPhoneControl.PersonTalkTimeOver(getApplicationContext(), _callId, _callerId);//拒绝应答
+                                                                    InterPhoneControl.PersonTalkTimeOver(context, _callId, _callerId);//拒绝应答
                                                                     if (musicPlayer != null) {
                                                                         musicPlayer.stop();
                                                                         musicPlayer = null;
@@ -217,7 +217,7 @@ public class SubclassControl {
                                                     MapContent _data = (MapContent) message.getMsgContent();
                                                     String _callId = _data.get("CallId") + "";
                                                     String _callerId = _data.get("CallerId") + "";
-                                                    InterPhoneControl.PersonTalkTimeOver(getApplicationContext(), _callId, _callerId);//拒绝应答
+                                                    InterPhoneControl.PersonTalkTimeOver(context, _callId, _callerId);//拒绝应答
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
                                                 }
@@ -243,19 +243,19 @@ public class SubclassControl {
                                                         b2.putString("callId", _callId);
                                                         b2.putString("callerId", _callerId);
                                                         it2.putExtras(b2);
-                                                        sendBroadcast(it2);
+                                                        context.sendBroadcast(it2);
                                                         run = new Runnable() {
                                                             @Override
                                                             public void run() {
                                                                 if (!isallow) {
                                                                     //如果60s后没有没有对应答消息进行处理，则发送拒绝应答的消息已经弹出框消失
-                                                                    InterPhoneControl.PersonTalkTimeOver(getApplicationContext(), _callId, _callerId);//拒绝应答
+                                                                    InterPhoneControl.PersonTalkTimeOver(context, _callId, _callerId);//拒绝应答
 
                                                                     Intent it2 = new Intent(BroadcastConstants.PUSH_CALL_CHAT);
                                                                     Bundle b2 = new Bundle();
                                                                     b2.putString("type", "back");
                                                                     it2.putExtras(b2);
-                                                                    sendBroadcast(it2);
+                                                                    context.sendBroadcast(it2);
 
                                                                     handler.removeCallbacks(run);
                                                                 }
@@ -289,13 +289,13 @@ public class SubclassControl {
                                                         b3.putString("callId", _callId);
                                                         b3.putString("callerId", _callerId);
                                                         it3.putExtras(b3);
-                                                        sendBroadcast(it3);
+                                                        context.sendBroadcast(it3);
                                                         run = new Runnable() {
                                                             @Override
                                                             public void run() {
                                                                 if (!isallow) {
                                                                     //如果60s后没有没有对应答消息进行处理，则发送拒绝应答的消息已经弹出框消失
-                                                                    InterPhoneControl.PersonTalkTimeOver(getApplicationContext(), _callId, _callerId);//拒绝应答
+                                                                    InterPhoneControl.PersonTalkTimeOver(context, _callId, _callerId);//拒绝应答
                                                                     if (musicPlayer != null) {
                                                                         musicPlayer.stop();
                                                                         musicPlayer = null;
@@ -305,7 +305,7 @@ public class SubclassControl {
                                                                     Bundle b3 = new Bundle();
                                                                     b3.putString("type", "back");
                                                                     it3.putExtras(b3);
-                                                                    sendBroadcast(it3);
+                                                                    context.sendBroadcast(it3);
 
                                                                     handler.removeCallbacks(run);
 
@@ -353,7 +353,7 @@ public class SubclassControl {
 
     // 获取系统默认铃声的Uri
     private Uri getSystemDefaultRingtoneUri() {
-        return RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_RINGTONE);
+        return RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE);
     }
 
     // 注销广播

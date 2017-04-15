@@ -695,9 +695,7 @@ public class SocketClient {
                         String id = msg.getTalkId();
                         try {
                             byte[] AudioData = msg.getMediaData();
-                            VoiceStreamPlayerService.dealVedioPack(AudioData, SeqNum, id);
-                            byte[] Audiodata = msg.getMediaData();
-                            VoiceStreamPlayer.dealVedioPack(Audiodata, SeqNum, id);
+                            VoiceStreamPlayer.dealVedioPack(AudioData, SeqNum, id);
                         } catch (Exception e) {
                             e.printStackTrace();
                             VoiceStreamPlayer.dealVedioPack(null, SeqNum, id);

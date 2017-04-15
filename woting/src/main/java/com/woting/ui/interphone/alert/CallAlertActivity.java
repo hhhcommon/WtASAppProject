@@ -22,7 +22,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.manager.MyActivityManager;
-import com.woting.common.service.SubclassService;
+import com.woting.common.service.SubclassControl;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
@@ -252,21 +252,21 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                 GlobalConfig.interPhoneType=0;
                 break;
             case R.id.small_lin_call:
-                SubclassService.isallow = true;
+                SubclassControl.isallow = true;
                 InterPhoneControl.PersonTalkAllow(getApplicationContext(), callId, callerId);//接收应答
-                if (SubclassService.musicPlayer != null) {
-                    SubclassService.musicPlayer.stop();
-                    SubclassService.musicPlayer = null;
+                if (SubclassControl.musicPlayer != null) {
+                    SubclassControl.musicPlayer.stop();
+                    SubclassControl.musicPlayer = null;
                 }
                 ChatFragment.isCallingForUser = true;
                 addUser(callerId);
                 break;
             case R.id.small_lin_guaduan:
-                SubclassService.isallow = true;
+                SubclassControl.isallow = true;
                 InterPhoneControl.PersonTalkOver(getApplicationContext(), callId, callerId);//拒绝应答
-                if (SubclassService.musicPlayer != null) {
-                    SubclassService.musicPlayer.stop();
-                    SubclassService.musicPlayer = null;
+                if (SubclassControl.musicPlayer != null) {
+                    SubclassControl.musicPlayer.stop();
+                    SubclassControl.musicPlayer = null;
                 }
                 if (lin_two_call.getVisibility() == View.VISIBLE) {
                     lin_two_call.setVisibility(View.GONE);

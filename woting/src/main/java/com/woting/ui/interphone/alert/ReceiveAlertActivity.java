@@ -120,11 +120,11 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.lin_call:
-                SubclassService.isallow = true;
+                SubclassControl.isallow = true;
                 InterPhoneControl.PersonTalkAllow(getApplicationContext(), callid, callerId);//接收应答
-                if (SubclassService.musicPlayer != null) {
-                    SubclassService.musicPlayer.stop();
-                    SubclassService.musicPlayer = null;
+                if (SubclassControl.musicPlayer != null) {
+                    SubclassControl.musicPlayer.stop();
+                    SubclassControl.musicPlayer = null;
                 }
                 ChatFragment.isCallingForUser = true;
 //			Intent intent = new Intent(getApplicationContext(),MainActivity.class);
@@ -135,11 +135,11 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
                 addUser();
                 break;
             case R.id.lin_guaduan:
-                SubclassService.isallow = true;
+                SubclassControl.isallow = true;
                 InterPhoneControl.PersonTalkOver(getApplicationContext(), callid,callerId);//拒绝应答
-                if (SubclassService.musicPlayer != null) {
-                    SubclassService.musicPlayer.stop();
-                    SubclassService.musicPlayer = null;
+                if (SubclassControl.musicPlayer != null) {
+                    SubclassControl.musicPlayer.stop();
+                    SubclassControl.musicPlayer = null;
                 }
                 this.finish();
                 break;
@@ -168,11 +168,11 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN && KeyEvent.KEYCODE_BACK == keyCode) {
-            SubclassService.isallow = true;
+            SubclassControl.isallow = true;
             InterPhoneControl.PersonTalkOver(getApplicationContext(), callid,callerId);//拒绝应答
-            if (SubclassService.musicPlayer != null) {
-                SubclassService.musicPlayer.stop();
-                SubclassService.musicPlayer = null;
+            if (SubclassControl.musicPlayer != null) {
+                SubclassControl.musicPlayer.stop();
+                SubclassControl.musicPlayer = null;
             }
             finish();
             return true;

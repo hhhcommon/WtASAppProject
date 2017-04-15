@@ -40,8 +40,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.manager.MyActivityManager;
-import com.woting.common.service.SubclassService;
+import com.woting.common.service.SubclassControl;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -289,11 +288,11 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         lin_call.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                SubclassService.isallow = true;
+                SubclassControl.isallow = true;
                 InterPhoneControl.PersonTalkAllow(context, callId, callerId);//接收应答
-                if (SubclassService.musicPlayer != null) {
-                    SubclassService.musicPlayer.stop();
-                    SubclassService.musicPlayer = null;
+                if (SubclassControl.musicPlayer != null) {
+                    SubclassControl.musicPlayer.stop();
+                    SubclassControl.musicPlayer = null;
                 }
                 isCallingForUser = true;
                 addUser(callerId,callId);
@@ -305,11 +304,11 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         lin_guaduan.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                SubclassService.isallow = true;
+                SubclassControl.isallow = true;
                 InterPhoneControl.PersonTalkOver(context, callId, callerId);//拒绝应答
-                if (SubclassService.musicPlayer != null) {
-                    SubclassService.musicPlayer.stop();
-                    SubclassService.musicPlayer = null;
+                if (SubclassControl.musicPlayer != null) {
+                    SubclassControl.musicPlayer.stop();
+                    SubclassControl.musicPlayer = null;
                 }
                 if (lin_two_call.getVisibility() == View.VISIBLE) {
                     lin_two_call.setVisibility(View.GONE);
