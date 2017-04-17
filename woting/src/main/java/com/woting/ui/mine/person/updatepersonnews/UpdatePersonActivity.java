@@ -1,6 +1,5 @@
 package com.woting.ui.mine.person.updatepersonnews;
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -53,48 +52,40 @@ import java.util.Map;
  * 邮箱：645700751@qq.com
  */
 public class UpdatePersonActivity extends AppBaseActivity implements
-        OnClickListener, DatePicker.OnDateChangedListener, DatePickerDialog.OnDateSetListener {
+        OnClickListener, DatePicker.OnDateChangedListener {
 
-    private List<String> yearList;
-    private List<String> monthList;
-    private List<String> dateList;
-    private List<CatalogName> myList = new ArrayList<>(); // 存储临时组装的 list 数据
-    private List<String> provinceList; // 一级菜单 list
+    private List<String> yearList = DateUtil.getYearList();
+    private List<String> monthList = DateUtil.getMonthList();
+    private List<String> dateList = DateUtil.getDayList31();
+    private List<CatalogName> myList = new ArrayList<>();           // 存储临时组装的 list 数据
+    private List<String> provinceList;                              // 一级菜单 list
     private Map<String, List<CatalogName>> tempMap;
     private Map<String, List<String>> positionMap = new HashMap<>(); // 主数据 Map
 
-    private Dialog cityDialog;// 选择城市 Dialog
-    private Dialog dateDialog;// 选择生日 Dialog
-    private View genderMan;// 性别  男
-    private View genderWoman;// 性别 女
-    private View viewArea;// 地区
+    private Dialog cityDialog;       // 选择城市 Dialog
+    private Dialog dateDialog;       // 选择生日 Dialog
+    private View genderMan;          // 性别  男
+    private View genderWoman;        // 性别 女
+    private View viewArea;           // 地区
 
-    private TextView textAge;// 年龄
-    private TextView textStarSign;// 星座
-    private TextView textAccount;// 账号
-    private TextView textRegion;// 地区
-    private EditText textName;// 昵称
-    private EditText textEmail;// 邮箱
-    private EditText textSignature;// 签名
+    private TextView textAge;        // 年龄
+    private TextView textStarSign;   // 星座
+    private TextView textAccount;    // 账号
+    private TextView textRegion;     // 地区
+    private EditText textName;       // 昵称
+    private EditText textEmail;      // 邮箱
+    private EditText textSignature;  // 签名
 
-    private LoopView pickDay;
-    private LoopView pickCity;
-
-    private String year;// 年
-    private String month;// 月
-    private String day;// 日
-    private String nickName;// 昵称
-    private String birthday;// 生日
-    private String starSign;// 星座
-    private String region;// 地区
-    private String regionId;// 所选择的地区 ID  提交服务器需要
-    private String email;// 邮箱
-    private String userSign;// 签名
-    private String gender;// 性别
+    private String year;             // 年
+    private String month;            // 月
+    private String day;              // 日
+    private String birthday;         // 生日
+    private String region;           // 地区
+    private String regionId;         // 所选择的地区 ID  提交服务器需要
+    private String gender;           // 性别
     private String tag = "UPDATE_PERSON_VOLLEY_REQUEST_CANCEL_TAG";
 
     private boolean isCancelRequest;
-    private int screenWidth;
     private int pYear;
     private int pMonth;
     private int pDay;
@@ -109,54 +100,15 @@ public class UpdatePersonActivity extends AppBaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_updateperson);
         initView();
+        datePickerDialog();
         setValueByPrefer();
         if (GlobalConfig.CityCatalogList != null && GlobalConfig.CityCatalogList.size() > 0) {
-            int a=GlobalConfig.CityCatalogList.size();
+//            int a=GlobalConfig.CityCatalogList.size();
             handleCityList(GlobalConfig.CityCatalogList);
         } else if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             send();
         }
     }
-
-    private void setValueByPrefer() {
-        // 账号
-        String userCount = BSApplication.SharedPreferences.getString(StringConstant.USER_PHONE_NUMBER, "");
-        if (userCount.equals("")) {
-            userCount = BSApplication.SharedPreferences.getString(StringConstant.NICK_NAME, "");
-        } else {
-            userCount = userCount.replaceAll("(\\d{3})\\d{6}(\\d{2})", "$1 * * * * * * $2");
-        }
-        textAccount.setText(userCount);
-
-        // 昵称
-        nickName = BSApplication.SharedPreferences.getString(StringConstant.NICK_NAME, "");
-        textName.setText(nickName);
-
-        // 性别
-        gender = BSApplication.SharedPreferences.getString(StringConstant.GENDERUSR, "xb001");
-        changViewGender();
-
-        // 生日
-        birthday = BSApplication.SharedPreferences.getString(StringConstant.BIRTHDAY, "");
-        textAge.setText(TimeUtils.timeStamp2Date(birthday));
-
-        // 星座
-        starSign = BSApplication.SharedPreferences.getString(StringConstant.STAR_SIGN, "");
-        textStarSign.setText(starSign);
-
-        // 地区
-        region = BSApplication.SharedPreferences.getString(StringConstant.REGION, "");
-        textRegion.setText(region);
-
-        // 邮箱
-        email = BSApplication.SharedPreferences.getString(StringConstant.EMAIL, "");
-        textEmail.setText(email);
-
-        // 个性签名
-        userSign = BSApplication.SharedPreferences.getString(StringConstant.USER_SIGN, "");
-        textSignature.setText(userSign);
-    }
-
 
     // 设置界面
     private void initView() {
@@ -177,8 +129,45 @@ public class UpdatePersonActivity extends AppBaseActivity implements
         textRegion = (TextView) findViewById(R.id.tv_region);
         textEmail = (EditText) findViewById(R.id.tv_mail);
         textSignature = (EditText) findViewById(R.id.tv_signature);
+    }
 
-        datePickerDialog();
+    private void setValueByPrefer() {
+        // 账号
+        String userCount = BSApplication.SharedPreferences.getString(StringConstant.USER_PHONE_NUMBER, "");
+        if (userCount.equals("")) {
+            userCount = BSApplication.SharedPreferences.getString(StringConstant.NICK_NAME, "");
+        } else {
+            userCount = userCount.replaceAll("(\\d{3})\\d{6}(\\d{2})", "$1 * * * * * * $2");
+        }
+        textAccount.setText(userCount);
+
+        // 昵称
+        String nickName = BSApplication.SharedPreferences.getString(StringConstant.NICK_NAME, "");
+        textName.setText(nickName);
+
+        // 性别
+        gender = BSApplication.SharedPreferences.getString(StringConstant.GENDERUSR, "xb001");
+        changViewGender();
+
+        // 生日
+        birthday = BSApplication.SharedPreferences.getString(StringConstant.BIRTHDAY, "");
+        textAge.setText(TimeUtils.timeStamp2Date(birthday));
+
+        // 星座
+        String starSign = BSApplication.SharedPreferences.getString(StringConstant.STAR_SIGN, "");
+        textStarSign.setText(starSign);
+
+        // 地区
+        region = BSApplication.SharedPreferences.getString(StringConstant.REGION, "");
+        textRegion.setText(region);
+
+        // 邮箱
+        String email = BSApplication.SharedPreferences.getString(StringConstant.EMAIL, "");
+        textEmail.setText(email);
+
+        // 个性签名
+        String userSign = BSApplication.SharedPreferences.getString(StringConstant.USER_SIGN, "");
+        textSignature.setText(userSign);
     }
 
     // 获取地理位置
@@ -201,16 +190,15 @@ public class UpdatePersonActivity extends AppBaseActivity implements
                     String ReturnType = result.getString("ReturnType");
                     Log.v("ReturnType", "ReturnType -- > > " + ReturnType);
                     if (ReturnType != null && ReturnType.equals("1001")) {
-                        Catalog subListAll = new Gson().fromJson(result.getString("CatalogData"), new TypeToken<Catalog>() {}.getType());
-                        if(subListAll.getSubCata()!=null&&subListAll.getSubCata().size()>0){
+                        Catalog subListAll = new Gson().fromJson(result.getString("CatalogData"), new TypeToken<Catalog>() {
+                        }.getType());
+                        if (subListAll.getSubCata() != null && subListAll.getSubCata().size() > 0) {
                             List<CatalogName> catalogNameList = subListAll.getSubCata();
                             GlobalConfig.CityCatalogList = catalogNameList;
                             handleCityList(catalogNameList);
-                        }else{
-                            ToastUtils.show_always(context,"城市列表获取异常，请检查您的网络后重试");
+                        } else {
+                            ToastUtils.show_always(context, "城市列表获取异常，请检查您的网络后重试");
                         }
-
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -257,36 +245,37 @@ public class UpdatePersonActivity extends AppBaseActivity implements
                         }
                     } else {
                         // 港澳台
-                       if (!TextUtils.isEmpty(catalogNameList.get(i).getCatalogId())){
-                           List<CatalogName> myList1 = new ArrayList<>();
-                           for (int t = 0; t < 4; t++) {
-                            CatalogName mCatalog = new CatalogName();
-                            if(catalogNameList.get(i).getCatalogId()!=null&&
-                                    !catalogNameList.get(i).getCatalogId().trim().equals("")){
-                            mCatalog.setCatalogId(catalogNameList.get(i).getCatalogId());}
-                            mCatalog.setCatalogName(" ");
-                            myList1.add(mCatalog);
-                        }
-                        if(catalogNameList.get(i).getCatalogId()!=null) {
-                            if (catalogNameList.get(i).getCatalogId().equals("710000")) {
-                                provinceList.add("台湾");
-                                tempMap.put("台湾", myList1);
-                            } else if (catalogNameList.get(i).getCatalogId().equals("810000")) {
-                                provinceList.add("香港");
-                                tempMap.put("香港", myList1);
-                            } else if (catalogNameList.get(i).getCatalogId().equals("820000")) {
-                                provinceList.add("澳门");
-                                tempMap.put("澳门", myList1);
+                        if (!TextUtils.isEmpty(catalogNameList.get(i).getCatalogId())) {
+                            List<CatalogName> myList1 = new ArrayList<>();
+                            for (int t = 0; t < 4; t++) {
+                                CatalogName mCatalog = new CatalogName();
+                                if (catalogNameList.get(i).getCatalogId() != null &&
+                                        !catalogNameList.get(i).getCatalogId().trim().equals("")) {
+                                    mCatalog.setCatalogId(catalogNameList.get(i).getCatalogId());
+                                }
+                                mCatalog.setCatalogName(" ");
+                                myList1.add(mCatalog);
                             }
+                            if (catalogNameList.get(i).getCatalogId() != null) {
+                                if (catalogNameList.get(i).getCatalogId().equals("710000")) {
+                                    provinceList.add("台湾");
+                                    tempMap.put("台湾", myList1);
+                                } else if (catalogNameList.get(i).getCatalogId().equals("810000")) {
+                                    provinceList.add("香港");
+                                    tempMap.put("香港", myList1);
+                                } else if (catalogNameList.get(i).getCatalogId().equals("820000")) {
+                                    provinceList.add("澳门");
+                                    tempMap.put("澳门", myList1);
+                                }
+                            }
+                        } else {
+                            //服务器返回的垃圾数据无意义
+                            ToastUtils.show_always(context, "服务器返回的垃圾数据无意义");
                         }
-                       }else{
-                           //服务器返回的垃圾数据无意义
-                           ToastUtils.show_always(context,"服务器返回的垃圾数据无意义");
-                       }
                     }
                 }
             }
-            if (tempMap!=null&&tempMap.size() > 0&&provinceList!=null&&provinceList.size()>0) {
+            if (tempMap != null && tempMap.size() > 0 && provinceList != null && provinceList.size() > 0) {
                 for (int i = 0; i < provinceList.size(); i++) {
                     List<CatalogName> mList = tempMap.get(provinceList.get(i));
                     ArrayList<String> cityList = new ArrayList<>();
@@ -309,7 +298,6 @@ public class UpdatePersonActivity extends AppBaseActivity implements
             Log.e("", "获取城市列表为空");
         }
     }
-
 
     @Override
     public void onClick(View v) {
@@ -336,33 +324,20 @@ public class UpdatePersonActivity extends AppBaseActivity implements
         }
     }
 
-    // 此方法用来保存当前页面的数据
-    private void saveData() {
-        nickName = textName.getText().toString().trim();// 昵称
-        starSign = textStarSign.getText().toString();// 星座
-        region = textRegion.getText().toString().trim();// 地区
-        email = textEmail.getText().toString().trim();// 邮箱
-        userSign = textSignature.getText().toString().trim();// 签名
-
-        Intent intent = new Intent();
-        UpdatePerson pM = new UpdatePerson(nickName, birthday, starSign, region, userSign, gender, email);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("data", pM);
-        bundle.putString("regionId", regionId);
-        intent.putExtras(bundle);
-        setResult(1, intent);
-    }
-
     // 日期选择框
     private void datePickerDialog() {
         final View dialog = LayoutInflater.from(context).inflate(R.layout.dialog_datepicker, null);
         LoopView pickYear = (LoopView) dialog.findViewById(R.id.pick_year);
         LoopView pickMonth = (LoopView) dialog.findViewById(R.id.pick_month);
-        pickDay = (LoopView) dialog.findViewById(R.id.pick_day);
+        final LoopView pickDay = (LoopView) dialog.findViewById(R.id.pick_day);
+        // 设置字体样式
+        pickYear.setInitPosition(59);
+        pickMonth.setInitPosition(4);
+        pickDay.setInitPosition(24);
 
-        yearList = DateUtil.getYearList();
-        monthList = DateUtil.getMonthList();
-        dateList = DateUtil.getDayList31();
+        pickYear.setTextSize(20);
+        pickMonth.setTextSize(20);
+        pickDay.setTextSize(20);
 
         pickYear.setListener(new OnItemSelectedListener() {
             @Override
@@ -435,27 +410,21 @@ public class UpdatePersonActivity extends AppBaseActivity implements
         pickMonth.setItems(monthList);
         pickDay.setItems(dateList);
 
-        pickYear.setInitPosition(59);
-        pickMonth.setInitPosition(4);
-        pickDay.setInitPosition(24);
-
-        pickYear.setTextSize(20);
-        pickMonth.setTextSize(20);
-        pickDay.setTextSize(20);
-
         dateDialog = new Dialog(context, R.style.MyDialog);
         dateDialog.setContentView(dialog);
-        Window window = dateDialog.getWindow();
+        dateDialog.setCanceledOnTouchOutside(true);
+
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
-        screenWidth = dm.widthPixels;
+        int screenWidth = dm.widthPixels;
         ViewGroup.LayoutParams params = dialog.getLayoutParams();
         params.width = screenWidth;
         dialog.setLayoutParams(params);
+
+        Window window = dateDialog.getWindow();
         window.setGravity(Gravity.BOTTOM);
         window.setWindowAnimations(R.style.sharestyle);
-        dateDialog.setCanceledOnTouchOutside(true);
-        dateDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
+        window.setBackgroundDrawableResource(R.color.dialog);
 
         dialog.findViewById(R.id.tv_confirm).setOnClickListener(new OnClickListener() {
             @Override
@@ -463,17 +432,17 @@ public class UpdatePersonActivity extends AppBaseActivity implements
                 if (wheelTypeYear == 1) {
                     year = yearList.get(pYear);
                 } else {
-                    year = "1989年";
+                    year = "2000年";
                 }
                 if (wheelTypeMonth == 1) {
                     month = monthList.get(pMonth);
                 } else {
-                    month = "5月";
+                    month = "1月";
                 }
                 if (wheelTypeDay == 1) {
                     day = dateList.get(pDay);
                 } else {
-                    day = "25日";
+                    day = "1日";
                 }
 
                 String Constellation = DateUtil.getConstellation(Integer.valueOf(month.substring(0, month.length() - 1).trim()),
@@ -502,7 +471,11 @@ public class UpdatePersonActivity extends AppBaseActivity implements
     private void cityPickerDialog() {
         final View dialog = LayoutInflater.from(context).inflate(R.layout.dialog_city, null);
         LoopView pickProvince = (LoopView) dialog.findViewById(R.id.pick_province);
-        pickCity = (LoopView) dialog.findViewById(R.id.pick_city);
+        final LoopView pickCity = (LoopView) dialog.findViewById(R.id.pick_city);
+        // 设置字体样式
+        pickProvince.setInitPosition(4);
+        pickProvince.setTextSize(15);
+        pickCity.setTextSize(15);
 
         pickProvince.setListener(new OnItemSelectedListener() {
             @Override
@@ -519,27 +492,26 @@ public class UpdatePersonActivity extends AppBaseActivity implements
                 cityIndex = index;
             }
         });
+
         pickProvince.setItems(provinceList);
         List<String> tempList = positionMap.get(provinceList.get(4));
-
         pickCity.setItems(tempList);
 
-        pickProvince.setInitPosition(4);
-        pickProvince.setTextSize(15);
-        pickCity.setTextSize(15);
         cityDialog = new Dialog(context, R.style.MyDialog);
         cityDialog.setContentView(dialog);
-        Window window = cityDialog.getWindow();
+        cityDialog.setCanceledOnTouchOutside(true);
+
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
-        screenWidth = dm.widthPixels;
+        int screenWidth = dm.widthPixels;
         ViewGroup.LayoutParams params = dialog.getLayoutParams();
         params.width = screenWidth;
         dialog.setLayoutParams(params);
+
+        Window window = cityDialog.getWindow();
         window.setGravity(Gravity.BOTTOM);
         window.setWindowAnimations(R.style.sharestyle);
-        cityDialog.setCanceledOnTouchOutside(true);
-        cityDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
+        window.setBackgroundDrawableResource(R.color.dialog);
 
         dialog.findViewById(R.id.tv_confirm).setOnClickListener(new OnClickListener() {
             @Override
@@ -548,12 +520,12 @@ public class UpdatePersonActivity extends AppBaseActivity implements
                     region = tempMap.get(provinceList.get(provinceIndex)).get(cityIndex).getCatalogId();
                     regionId = tempMap.get(provinceList.get(provinceIndex)).get(cityIndex).getCatalogId();
                     textRegion.setText(provinceList.get(provinceIndex) + " " + tempMap.get(provinceList.get(provinceIndex)).get(cityIndex).getCatalogName());
-                }catch (Exception e){
+                } catch (Exception e) {
                     /*region = tempMap.get(provinceList.get(0)).get(0).getCatalogId();
                     regionId = tempMap.get(provinceList.get(0)).get(0).getCatalogId();*/
                     textRegion.setText("北京市朝阳区");
                 }
-                    cityDialog.dismiss();
+                cityDialog.dismiss();
             }
         });
 
@@ -579,20 +551,6 @@ public class UpdatePersonActivity extends AppBaseActivity implements
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        isCancelRequest = VolleyRequest.cancelRequest(tag);
-        tempMap.clear();
-        tempMap=null;
-    }
-
-    @Override
-    public void onBackPressed() {
-        saveData();
-        super.onBackPressed();
-    }
-
-    @Override
     public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, monthOfYear, dayOfMonth);
@@ -601,7 +559,48 @@ public class UpdatePersonActivity extends AppBaseActivity implements
         ToastUtils.show_always(context, "选中的日期为" + dateTime);
     }
 
-    @Override
-    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+    // 此方法用来保存当前页面的数据
+    private void saveData() {
+        String nickName = textName.getText().toString().trim();     // 昵称
+        String starSign = textStarSign.getText().toString();        // 星座
+        region = textRegion.getText().toString().trim();            // 地区
+        String email = textEmail.getText().toString().trim();       // 邮箱
+        String userSign = textSignature.getText().toString().trim();// 签名
+        // 发送数据到个人中心界面
+        Intent intent = new Intent();
+        UpdatePerson pM = new UpdatePerson(nickName, birthday, starSign, region, userSign, gender, email);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("data", pM);
+        bundle.putString("regionId", regionId);
+        intent.putExtras(bundle);
+        setResult(1, intent);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isCancelRequest = VolleyRequest.cancelRequest(tag);
+        yearList.clear();
+        yearList = null;
+        monthList.clear();
+        monthList = null;
+        dateList.clear();
+        dateList = null;
+        myList.clear();
+        myList = null;
+        provinceList.clear();
+        provinceList = null;
+        positionMap.clear();
+        positionMap = null;
+        tempMap.clear();
+        tempMap = null;
+    }
+
+    // 返回按钮的处理
+    @Override
+    public void onBackPressed() {
+        saveData();
+        super.onBackPressed();
+    }
+
 }

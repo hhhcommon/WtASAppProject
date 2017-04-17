@@ -281,7 +281,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 et.putString(StringConstant.BIRTHDAY, "");
                 et.putString(StringConstant.USER_SIGN, "");
                 et.putString(StringConstant.STAR_SIGN, "");
-                et.putString(StringConstant.AGE, "");
+//                et.putString(StringConstant.AGE, "");
                 et.putString(StringConstant.NICK_NAME, "");
                 if (!et.commit()) {
                     Log.v("commit", "数据 commit 失败!");
