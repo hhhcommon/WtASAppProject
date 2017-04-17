@@ -50,7 +50,7 @@
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="8dp"
                     android:layout_marginRight="12dp"
                     android:src="@mipmap/img_telephone" />
 
@@ -88,7 +88,7 @@
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="8dp"
                     android:layout_marginRight="12dp"
                     android:src="@mipmap/img_username" />
 
@@ -100,7 +100,7 @@
                     android:background="@color/WHITE"
                     android:ems="10"
                     android:gravity="left|center"
-                    android:hint="昵称"
+                    android:hint="设置昵称，20字以内"
                     android:maxLength="20"
                     android:maxLines="1"
                     android:singleLine="true"
@@ -126,11 +126,11 @@
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="8dp"
                     android:layout_marginRight="12dp"
                     android:src="@mipmap/img_password" />
 
-                <EditText
+                 <EditText
                     android:id="@+id/edittext_password"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -138,10 +138,9 @@
                     android:background="@color/WHITE"
                     android:ems="10"
                     android:gravity="left|center"
-                    android:hint="密码"
+                    android:hint="设置登录密码，不少于6位"
                     android:maxLength="100"
                     android:maxLines="1"
-                    android:password="true"
                     android:singleLine="true"
                     android:textColor="@color/wt_login_third"
                     android:textColorHint="@color/gray"
@@ -164,7 +163,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="13dp"
                 android:layout_marginRight="12dp"
                 android:src="@mipmap/wt_group_vertify" />
 
@@ -232,17 +231,6 @@
 
             <TextView
                 android:id="@+id/tv_register"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/wt_button_default_high"
-                android:background="@drawable/zhuxiao_press"
-                android:gravity="center"
-                android:text="确定"
-                android:textColor="@color/WHITE"
-                android:textSize="@dimen/wt_button_default_text"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/tv_next"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/wt_button_default_high"
                 android:background="@drawable/bg_graybutton"

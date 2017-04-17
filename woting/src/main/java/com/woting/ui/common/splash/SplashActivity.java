@@ -14,6 +14,9 @@ import com.google.gson.reflect.TypeToken;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
+import com.woting.common.helper.CommonHelper;
+import com.woting.common.util.DialogUtils;
+import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.common.model.UserInfo;
@@ -47,7 +50,12 @@ public class SplashActivity extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                send();
+                CommonHelper.checkNetworkStatus(SplashActivity.this); // 网络设置获取
+                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                    send();
+                } else {
+                    close();    // 界面跳转
+                }
             }
         }, 1000);
     }
@@ -80,18 +88,13 @@ public class SplashActivity extends Activity {
                                         e.printStackTrace();
                                         et.putString(StringConstant.USERID, "");
                                     }
-                                    // 没有这个字段
-//                                    try {
-//                                        String userName = list.getUserName();// 用户名
-//                                        if (userName != null && !userName.equals("")) {
-//                                            et.putString(StringConstant.USERNAME, userName);
-//                                        } else {
-//                                            et.putString(StringConstant.USERNAME, "");
-//                                        }
-//                                    } catch (Exception e) {
-//                                        e.printStackTrace();
-//                                        et.putString(StringConstant.USERNAME, "");
-//                                    }
+                                    try {
+                                        String phoneNumber = list.getPhoneNum();
+                                        et.putString(StringConstant.USER_PHONE_NUMBER, phoneNumber);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        et.putString(StringConstant.USER_PHONE_NUMBER, "");
+                                    }
                                     try {
                                         String imageUrl = list.getPortraitMini();// 用户头像
                                         if (imageUrl != null && !imageUrl.equals("")) {
@@ -141,11 +144,11 @@ public class SplashActivity extends Activity {
                                                 et.putString(StringConstant.GENDERUSR, "xb002");
                                             }
                                         } else {
-                                            et.putString(StringConstant.REGION, "");
+                                            et.putString(StringConstant.REGION, "xb001");
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
-                                        et.putString(StringConstant.REGION, "");
+                                        et.putString(StringConstant.REGION, "xb001");
                                     }
                                     try {
                                         String region = list.getRegion();// 区域
@@ -183,17 +186,17 @@ public class SplashActivity extends Activity {
                                         e.printStackTrace();
                                         et.putString(StringConstant.BIRTHDAY, "");
                                     }
-                                    try {
-                                        String age = list.getAge();// 年龄
-                                        if (age != null && !age.equals("")) {
-                                            et.putString(StringConstant.AGE, age);
-                                        } else {
-                                            et.putString(StringConstant.AGE, "");
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                        et.putString(StringConstant.AGE, "");
-                                    }
+//                                    try {
+//                                        String age = list.getAge();// 年龄
+//                                        if (age != null && !age.equals("")) {
+//                                            et.putString(StringConstant.AGE, age);
+//                                        } else {
+//                                            et.putString(StringConstant.AGE, "");
+//                                        }
+//                                    } catch (Exception e) {
+//                                        e.printStackTrace();
+//                                        et.putString(StringConstant.AGE, "");
+//                                    }
                                     try {
                                         String starSign = list.getStarSign();// 星座
                                         if (starSign != null && !starSign.equals("")) {
@@ -270,27 +273,24 @@ public class SplashActivity extends Activity {
                     e.printStackTrace();
                     unRegisterLogin();
                 }
-
-                if (first != null && first.equals("1")) {
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));       // 跳转到主页
-                } else {
-                    startActivity(new Intent(SplashActivity.this, WelcomeActivity.class));    // 跳转到引导页
-                }
-                // overridePendingTransition(R.anim.wt_fade, R.anim.wt_hold);
-                // overridePendingTransition(R.anim.wt_zoom_enter, R.anim.wt_zoom_exit);
-                finish();
+                close();    // 界面跳转
             }
 
             @Override
             protected void requestError(VolleyError error) {
-                if (first != null && first.equals("1")) {
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));       // 跳转到主页
-                } else {
-                    startActivity(new Intent(SplashActivity.this, WelcomeActivity.class));    // 跳转到引导页
-                }
-                finish();
+                close();    // 界面跳转
             }
         });
+    }
+
+    // 界面跳转
+    private void close() {
+        if (first != null && first.equals("1")) {
+            startActivity(new Intent(SplashActivity.this, MainActivity.class));       // 跳转到主页
+        } else {
+            startActivity(new Intent(SplashActivity.this, WelcomeActivity.class));    // 跳转到引导页
+        }
+        finish();
     }
 
     // 更改一下登录状态
@@ -309,7 +309,7 @@ public class SplashActivity extends Activity {
         et.putString(StringConstant.BIRTHDAY, "");
         et.putString(StringConstant.USER_SIGN, "");
         et.putString(StringConstant.STAR_SIGN, "");
-        et.putString(StringConstant.AGE, "");
+//        et.putString(StringConstant.AGE, "");
         et.putString(StringConstant.NICK_NAME, "");
         if (!et.commit()) {
             Log.v("commit", "数据 commit 失败!");

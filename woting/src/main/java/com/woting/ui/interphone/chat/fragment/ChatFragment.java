@@ -40,6 +40,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
+import com.woting.common.service.SubclassControl;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
@@ -140,6 +141,14 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
     private String oldTalkId;
     private Handler handler;
     private Runnable run;
+    private ImageView imageview;
+    private TextView tv_name;
+    private LinearLayout lin_call;
+    private LinearLayout lin_guaduan;
+    private LinearLayout lin_two_call;
+    private String callId;
+    private String callerId;
+    private static LinearLayout lin_press;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -210,6 +219,9 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
             filter.addAction(BroadcastConstants.UP_DATA_GROUP);
             filter.addAction(BroadcastConstants.PUSH_ALLURL_CHANGE);
             filter.addAction(BroadcastConstants.PUSH_VOICE_IMAGE_REFRESH);
+            filter.addAction(BroadcastConstants.PUSH_CALL_CALLALERT);
+            filter.addAction(BroadcastConstants.PUSH_CALL_CHAT);
+
             context.registerReceiver(Receiver, filter);
 
             IntentFilter f = new IntentFilter();
@@ -228,6 +240,12 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
     }
 
     private void setView() {
+        lin_two_call = (LinearLayout) rootView.findViewById(R.id.lin_two_call);                 //
+        imageview = (ImageView) rootView.findViewById(R.id.image);                              //
+        tv_name = (TextView) rootView.findViewById(R.id.tv_name);                               //
+        lin_call = (LinearLayout) rootView.findViewById(R.id.lin_call);                         //
+        lin_guaduan = (LinearLayout) rootView.findViewById(R.id.lin_guaduan);
+        // 以上为被呼叫界面
         lin_notalk = (LinearLayout) rootView.findViewById(R.id.lin_notalk);                     // 没有对讲时候的界面
         lin_personhead = (LinearLayout) rootView.findViewById(R.id.lin_personhead);             // 有个人对讲时候的界面
         tv_personname = (TextView) rootView.findViewById(R.id.tv_personname);                   // 个人对讲时候的好友名字
@@ -248,6 +266,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         talking_news = (TextView) rootView.findViewById(R.id.talking_news);                     // 群组对讲时候通话解释
         mListView = (ListView) rootView.findViewById(R.id.listView);                            //
         lin_foot = (MyLinearLayout) rootView.findViewById(R.id.lin_foot);                       // 对讲按钮
+        lin_press = (LinearLayout) rootView.findViewById(R.id.lin_press);                       // 说话那妞
         imageView_answer = (ImageView) rootView.findViewById(R.id.imageView_answer);            //
         image_button = (Button) rootView.findViewById(R.id.image_button);                       //
         Relative_listview = (RelativeLayout) rootView.findViewById(R.id.Relative_listview);     //
@@ -266,6 +285,41 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
     }
 
     private void listener() {
+        lin_call.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SubclassControl.isallow = true;
+                InterPhoneControl.PersonTalkAllow(context, callId, callerId);//接收应答
+                if (SubclassControl.musicPlayer != null) {
+                    SubclassControl.musicPlayer.stop();
+                    SubclassControl.musicPlayer = null;
+                }
+                isCallingForUser = true;
+                addUser(callerId,callId);
+                if (lin_two_call.getVisibility() == View.VISIBLE) {
+                    lin_two_call.setVisibility(View.GONE);
+                }
+            }
+        });
+        lin_guaduan.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SubclassControl.isallow = true;
+                InterPhoneControl.PersonTalkOver(context, callId, callerId);//拒绝应答
+                if (SubclassControl.musicPlayer != null) {
+                    SubclassControl.musicPlayer.stop();
+                    SubclassControl.musicPlayer = null;
+                }
+                if (lin_two_call.getVisibility() == View.VISIBLE) {
+                    lin_two_call.setVisibility(View.GONE);
+                }
+                if(lin_press.getVisibility()==View.VISIBLE){
+                    GlobalConfig.interPhoneType=3;
+                }else{
+                    GlobalConfig.interPhoneType=0;
+                }
+            }
+        });
         image_grouptx.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -301,6 +355,16 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                 return false;
             }
         });
+    }
+
+    private void addUser(String id,String  callid) {
+        String addTime = Long.toString(System.currentTimeMillis());    // 获取最新激活状态的数据
+        String bjuserid = CommonUtils.getUserId(context);
+        dbDao.deleteHistory(id);                                       // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+        DBTalkHistorary history = new DBTalkHistorary(bjuserid, "user", id, addTime);
+        dbDao.addTalkHistory(history);
+        InterPhoneControl.bdcallid = callid;
+        zhiDingPerson();
     }
 
     /**
@@ -376,6 +440,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                     if (interPhoneType.equals("user")) {
 //                Log.e("上次通话ID", InterPhoneControl.bdcallid + "");
 //                Log.e("上次通话ID222", GlobalConfig.oldBCCallId + "");
+//                Log.e("新的来电ID", callid + "");
 //                Log.e("新的来电ID", SubclassControl.callid + "");
                         InterPhoneControl.PersonTalkHangUp(context, GlobalConfig.oldBCCallId);
                     } else {
@@ -404,7 +469,9 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         lin_notalk.setVisibility(View.GONE);
         lin_personhead.setVisibility(View.VISIBLE);
         lin_head.setVisibility(View.GONE);
+        lin_press.setVisibility(View.VISIBLE);
         lin_foot.setVisibility(View.VISIBLE);
+        GlobalConfig.interPhoneType=3;
         GlobalConfig.isActive = true;
         tipView.setVisibility(View.GONE);
         tv_personname.setText(firstdate.getName());
@@ -461,7 +528,8 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
             JSONObject jsonObject = VolleyRequest.getJsonObject(context);
             try {
                 jsonObject.put("Page", "1");
-                jsonObject.put("PageSize", "10000");            } catch (JSONException e) {
+                jsonObject.put("PageSize", "10000");
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
             VolleyRequest.requestPost(GlobalConfig.gettalkpersonsurl, tag, jsonObject, new VolleyCallback() {
@@ -579,7 +647,9 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         lin_notalk.setVisibility(View.GONE);
         lin_personhead.setVisibility(View.GONE);
         lin_head.setVisibility(View.VISIBLE);
+        lin_press.setVisibility(View.VISIBLE);
         lin_foot.setVisibility(View.VISIBLE);
+        GlobalConfig.interPhoneType=3;
         GlobalConfig.isActive = true;
         tipView.setVisibility(View.GONE);
         GroupInfo firstdate = allList.remove(0);
@@ -735,6 +805,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                     lin_personhead.setVisibility(View.GONE);
                     lin_head.setVisibility(View.GONE);
                     lin_foot.setVisibility(View.GONE);
+                    GlobalConfig.interPhoneType=0;
                     image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
                     GlobalConfig.isActive = false;
                     call(phoneId);
@@ -747,6 +818,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                     lin_personhead.setVisibility(View.GONE);
                     lin_head.setVisibility(View.GONE);
                     lin_foot.setVisibility(View.GONE);
+                    GlobalConfig.interPhoneType=0;
                     image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
                     GlobalConfig.isActive = false;
                     zhiDingGroupSS(groupId);
@@ -772,6 +844,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                 lin_personhead.setVisibility(View.GONE);
                 lin_head.setVisibility(View.GONE);
                 lin_foot.setVisibility(View.GONE);
+                GlobalConfig.interPhoneType=0;
                 image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
                 GlobalConfig.isActive = false;
                 tipView.setVisibility(View.GONE);
@@ -779,12 +852,18 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                 Editor et = shared.edit();
                 et.putString(StringConstant.PERSONREFRESHB, "false");
                 et.commit();
+
             }
         } else {
             //显示未登录
             Relative_listview.setVisibility(View.GONE);
             tipView.setVisibility(View.VISIBLE);
             tipView.setTipView(TipView.TipStatus.NO_LOGIN);
+        }
+        if (lin_foot.getVisibility() == View.VISIBLE) {
+            GlobalConfig.interPhoneType=3;
+        }else{
+            GlobalConfig.interPhoneType=0;
         }
     }
 
@@ -822,7 +901,15 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         lin_notalk.setVisibility(View.VISIBLE);
         lin_personhead.setVisibility(View.GONE);
         lin_head.setVisibility(View.GONE);
-        lin_foot.setVisibility(View.GONE);
+
+        if (lin_two_call.getVisibility() == View.VISIBLE) {
+           lin_press.setVisibility(View.GONE);
+            GlobalConfig.interPhoneType=3;
+        }else{
+            lin_foot.setVisibility(View.GONE);
+            GlobalConfig.interPhoneType=0;
+        }
+
         image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
         GlobalConfig.isActive = false;
         gridView_person.setVisibility(View.GONE);
@@ -1552,6 +1639,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                             lin_personhead.setVisibility(View.GONE);
                                             lin_head.setVisibility(View.GONE);
                                             lin_foot.setVisibility(View.GONE);
+                                            GlobalConfig.interPhoneType=0;
                                             image_button.setBackgroundDrawable(context.getResources().getDrawable(R.mipmap.talknormal));
                                             gridView_person.setVisibility(View.GONE);
                                             GlobalConfig.isActive = false;
@@ -1733,6 +1821,68 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                     }
                 } catch (Exception e1) {
                     e1.printStackTrace();
+                }
+            } else if (action.equals(BroadcastConstants.PUSH_CALL_CHAT)) {
+                // 收到新的别人呼叫
+                String type = intent.getStringExtra("type");
+                callId = intent.getStringExtra("callId");
+                callerId = intent.getStringExtra("callerId");
+                if (type != null && !type.trim().equals("") && type.trim().equals("call")) {
+                    if (lin_two_call.getVisibility() == View.VISIBLE) {
+                        //  此时已经有人在通话了，再次收到会拒接
+                        InterPhoneControl.PersonTalkOver(context, callId, callerId);//拒绝应答
+                    } else {
+                        String _name = null;
+                        String _image = null;
+                        try {
+                            if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
+                                for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
+                                    if (callerId.equals(GlobalConfig.list_person.get(i).getUserId())) {
+                                        _image = GlobalConfig.list_person.get(i).getPortraitBig();
+                                        _name = GlobalConfig.list_person.get(i).getNickName();
+                                        break;
+                                    }
+                                }
+                            } else {
+                                _image = null;
+                                _name = "我听科技";
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            _image = null;
+                            _name = "我听科技";
+                        }
+
+                        //适配好友展示信息
+                        tv_name.setText(_name);
+                        if (_image == null || _image.equals("") || _image.equals("null") || _image.trim().equals("")) {
+                            imageview.setImageResource(R.mipmap.wt_image_tx_hy);
+                        } else {
+                            String url = GlobalConfig.imageurl + _image;
+                            final String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
+                            // 加载图片
+                            AssembleImageUrlUtils.loadImage(_url, url, imageview, IntegerConstant.TYPE_LIST);
+                        }
+                        // 超时拒接后隐藏界面
+                        if (lin_two_call.getVisibility() == View.VISIBLE) {
+                            lin_two_call.setVisibility(View.GONE);
+                        }else{
+                            lin_two_call.setVisibility(View.VISIBLE);
+                        }
+                    }
+                } else {
+                    // 超时拒接后隐藏界面
+                    if (lin_two_call.getVisibility() == View.VISIBLE) {
+                        lin_two_call.setVisibility(View.GONE);
+                    }
+                }
+            }else if (action.equals(BroadcastConstants.PUSH_CALL_CALLALERT)) {
+                String type = intent.getStringExtra("type");
+                if (type != null && !type.trim().equals("") && type.trim().equals("back")) {
+                    // 超时拒接后隐藏界面
+                    if (lin_two_call.getVisibility() == View.VISIBLE) {
+                        lin_two_call.setVisibility(View.GONE);
+                    }
                 }
             }
         }

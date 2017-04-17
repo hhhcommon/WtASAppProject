@@ -539,11 +539,11 @@ public class SocketClient {
                     Log.e("接收消息线程toBeStop", toBeStop + "");
                     if (toBeStop) break;
                     if (socketOk()) {
-                            Log.e("接收消息线程====", "接收消息线程正在干活");
-                            int r;
-                            while ((r = in.read()) != -1) {
-                                receiveByteQueue.add((byte) r);
-                            }
+                        Log.e("接收消息线程====", "接收消息线程正在干活");
+                        int r;
+                        while ((r = in.read()) != -1) {
+                            receiveByteQueue.add((byte) r);
+                        }
                     } else {
                         break;
                     }
@@ -559,7 +559,7 @@ public class SocketClient {
     private class AssembleReceive extends Thread {
         public void run() {
             byte[] ba = new byte[20480];
-            byte[] mba ;
+            byte[] mba;
             int i = 0;
             boolean hasBeginMsg = false; //是否开始了一个消息
             byte[] endMsgFlag = {0x00, 0x00, 0x00};
@@ -694,8 +694,8 @@ public class SocketClient {
                         int SeqNum = msg.getSeqNo();
                         String id = msg.getTalkId();
                         try {
-                            byte[] Audiodata = msg.getMediaData();
-                            VoiceStreamPlayer.dealVedioPack(Audiodata, SeqNum, id);
+                            byte[] AudioData = msg.getMediaData();
+                            VoiceStreamPlayer.dealVedioPack(AudioData, SeqNum, id);
                         } catch (Exception e) {
                             e.printStackTrace();
                             VoiceStreamPlayer.dealVedioPack(null, SeqNum, id);
@@ -717,11 +717,11 @@ public class SocketClient {
             while (true) {
                 try {
                     Message msg = newsMsgQueue.take();
-                    MsgNormal Nmsg = (MsgNormal) msg;
-                    if (Nmsg != null) {
-                        int biztype = Nmsg.getBizType();
-                        Log.e("biztype", "biztype=======【" + biztype + "】");
-                        switch (biztype) {
+                    MsgNormal _msg = (MsgNormal) msg;
+                    if (_msg != null) {
+                        int bizType = _msg.getBizType();
+                        Log.e("bizType", "bizType=======【" + bizType + "】");
+                        switch (bizType) {
                             case 0://应答消息
                             /*
                              * 接收该广播的地方
@@ -740,10 +740,10 @@ public class SocketClient {
                                 break;
                             case 2://电话通话
 
-                                int cmdType = Nmsg.getCmdType();
+                                int cmdType = _msg.getCmdType();
                                 switch (cmdType) {
                                     case 1:
-                                        int command = Nmsg.getCommand();
+                                        int command = _msg.getCommand();
                                         if (command == 9 || command == 0x20 || command == 0x40) {
                                     /*
                                      * 接收该广播的地方

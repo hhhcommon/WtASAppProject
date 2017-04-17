@@ -39,15 +39,17 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
     private SearchTalkHistoryDao dbDao;
     private String image;
     private String name;
-    private String id;
+    private String callid;
+    private String callerId;
     private long[] Vibrate = {400, 800, 400, 800};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_receivecall);
+        GlobalConfig.interPhoneType=1;
         instance = this;
-        VibratorUtils.Vibrate(instance,Vibrate,true);
+        VibratorUtils.Vibrate(instance, Vibrate, true);
         if (DuiJiangActivity.context == null) {
             //对讲主页界面更新
             MainActivity.changeTwo();
@@ -63,12 +65,8 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
     private void setView() {
         ImageView imageview = (ImageView) findViewById(R.id.image);
         TextView tv_name = (TextView) findViewById(R.id.tv_name);
-
-        LinearLayout lin_call = (LinearLayout) findViewById(R.id.lin_call);
-        lin_call.setOnClickListener(this);
-
-        LinearLayout lin_guaduan = (LinearLayout) findViewById(R.id.lin_guaduan);
-        lin_guaduan.setOnClickListener(this);
+        findViewById(R.id.lin_call).setOnClickListener(this);
+        findViewById(R.id.lin_guaduan).setOnClickListener(this);
 
         ImageView img_zhezhao = (ImageView) findViewById(R.id.img_zhezhao);
         Bitmap bmp_zhezhao = BitmapUtils.readBitMap(instance, R.mipmap.liubianxing_orange_big);
@@ -89,11 +87,12 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
 
     private void getSource() {
         //查找当前好友的展示信息
-        id = SubclassControl.callerId;
+        callid = getIntent().getStringExtra("callId");
+        callerId = getIntent().getStringExtra("callerId");
         try {
             if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
                 for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
-                    if (id.equals(GlobalConfig.list_person.get(i).getUserId())) {
+                    if (callerId.equals(GlobalConfig.list_person.get(i).getUserId())) {
                         image = GlobalConfig.list_person.get(i).getPortraitBig();
                         name = GlobalConfig.list_person.get(i).getNickName();
                         break;
@@ -122,7 +121,7 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
         switch (v.getId()) {
             case R.id.lin_call:
                 SubclassControl.isallow = true;
-                InterPhoneControl.PersonTalkAllow(getApplicationContext(), SubclassControl.callid, SubclassControl.callerId);//接收应答
+                InterPhoneControl.PersonTalkAllow(getApplicationContext(), callid, callerId);//接收应答
                 if (SubclassControl.musicPlayer != null) {
                     SubclassControl.musicPlayer.stop();
                     SubclassControl.musicPlayer = null;
@@ -137,7 +136,7 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
                 break;
             case R.id.lin_guaduan:
                 SubclassControl.isallow = true;
-                InterPhoneControl.PersonTalkOver(getApplicationContext(), SubclassControl.callid, SubclassControl.callerId);//拒绝应答
+                InterPhoneControl.PersonTalkOver(getApplicationContext(), callid,callerId);//拒绝应答
                 if (SubclassControl.musicPlayer != null) {
                     SubclassControl.musicPlayer.stop();
                     SubclassControl.musicPlayer = null;
@@ -152,12 +151,12 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
         String addtime = Long.toString(System.currentTimeMillis());
         String bjuserid = CommonUtils.getUserId(instance);
         //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-        dbDao.deleteHistory(id);
-        DBTalkHistorary history = new DBTalkHistorary(bjuserid, "user", id, addtime);
+        dbDao.deleteHistory(callerId);
+        DBTalkHistorary history = new DBTalkHistorary(bjuserid, "user", callerId, addtime);
         dbDao.addTalkHistory(history);
 //        DBTalkHistorary talkdb = dbDao.queryHistory().get(0);//得到数据库里边数据
         //对讲主页界面更新
-        InterPhoneControl.bdcallid = SubclassControl.callid;
+        InterPhoneControl.bdcallid = callid;
         MainActivity.changeTwo();
         DuiJiangActivity.update();
         ChatFragment.zhiDingPerson();
@@ -170,7 +169,7 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN && KeyEvent.KEYCODE_BACK == keyCode) {
             SubclassControl.isallow = true;
-            InterPhoneControl.PersonTalkOver(getApplicationContext(), SubclassControl.callid, SubclassControl.callerId);//拒绝应答
+            InterPhoneControl.PersonTalkOver(getApplicationContext(), callid,callerId);//拒绝应答
             if (SubclassControl.musicPlayer != null) {
                 SubclassControl.musicPlayer.stop();
                 SubclassControl.musicPlayer = null;
@@ -184,12 +183,12 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        GlobalConfig.interPhoneType=0;
         VibratorUtils.cancel(instance);
         Log.e("停止震动", "停止震动");
         instance = null;
         image = null;
         name = null;
-        id = null;
         if (dbDao != null) {
             dbDao = null;
         }

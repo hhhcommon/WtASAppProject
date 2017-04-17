@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_bg"
@@ -10,14 +9,14 @@
     <RelativeLayout
         android:id="@+id/lin_status_denglu"
         android:layout_width="match_parent"
+        android:layout_height="236dp"
         android:background="@color/WHITE"
-        android:layout_height="176dp"
-        android:visibility="visible" >
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/lin_image"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="120dp"
             android:scaleType="centerCrop" />
 
         <ImageView
@@ -25,18 +24,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:src="@mipmap/ewm_white" />
 
         <TextView
             android:id="@+id/tv_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:layout_marginTop="40dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="35dp"
+            android:ellipsize="end"
             android:maxWidth="200dp"
+            android:singleLine="true"
             android:text="小茉莉"
             android:textColor="@color/white"
             android:textSize="17sp" />
@@ -45,37 +44,38 @@
             android:id="@+id/lin_xiugai"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:scaleType="centerCrop"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="40dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="30dp"
+            android:scaleType="centerCrop"
             android:src="@mipmap/image_edit_profile" />
 
         <ImageView
             android:id="@+id/image_touxiang"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="51dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="71dp"
             android:scaleType="centerCrop" />
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="51dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="71dp"
             android:src="@mipmap/wt_liubianxing_orange" />
 
         <LinearLayout
             android:id="@+id/linear_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/wt_login_third"
-            android:layout_centerHorizontal="true"
             android:layout_above="@+id/text_user_autograph"
-            android:gravity="center">
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:textColor="@color/wt_login_third">
 
             <TextView
                 android:id="@+id/text_user_area"
@@ -91,7 +91,7 @@
                 android:layout_height="2dp"
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
-                android:background="@drawable/d_circle_black"/>
+                android:background="@drawable/d_circle_black" />
 
             <TextView
                 android:id="@+id/text_user_id"
@@ -107,14 +107,15 @@
             android:id="@+id/text_user_autograph"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxHeight="28dp"
-            android:textColor="@color/wt_login_third"
-            android:layout_marginBottom="10dp"
-            android:singleLine="true"
-            android:maxWidth="240dp"
-            android:ellipsize="end"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="25dp"
+            android:ellipsize="end"
+            android:maxHeight="28dp"
+            android:maxWidth="240dp"
+            android:singleLine="true"
+            android:text="fasfasfasfasfasf"
+            android:textColor="@color/wt_login_third"
             android:textSize="12sp" />
 
         <View
@@ -127,54 +128,54 @@
     <RelativeLayout
         android:id="@+id/lin_status_nodenglu"
         android:layout_width="match_parent"
-        android:layout_height="176dp"
+        android:layout_height="236dp"
         android:background="@color/WHITE"
-        android:visibility="gone" >
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/lin_image_0"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="120dp"
             android:scaleType="centerCrop" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
             android:text="我的"
             android:textColor="@color/white"
             android:textSize="17sp" />
 
         <ImageView
             android:id="@+id/image_nodenglu"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="51dp"
+            android:layout_marginBottom="71dp"
             android:src="@mipmap/person_nologinimage" />
 
         <TextView
             android:id="@+id/text_denglu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_above="@+id/text_wt"
+            android:layout_centerHorizontal="true"
             android:text="点击登录"
             android:textColor="@color/wt_login_third"
-            android:textSize="12sp"
-            android:layout_above="@+id/text_wt"
-            android:layout_centerHorizontal="true"/>
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/text_wt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/wt_login_third"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="3dp"
-            android:text="用我听，听我想听，说我想说!"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="3dp"
+            android:text="用我听，听我想听，说我想说!"
+            android:textColor="@color/wt_login_third"
             android:textSize="12sp" />
 
         <View
@@ -186,8 +187,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -207,25 +208,63 @@
                     android:src="@mipmap/wt_person_playhistory" />
 
                 <TextView
-                    android:layout_width="wrap_content"
                     style="@style/PersonAndSetTextStyle"
-                    android:text="播放历史"
-                    android:layout_toRightOf="@id/image_play_history"/>
+                    android:layout_width="wrap_content"
+                    android:layout_toRightOf="@id/image_play_history"
+                    android:text="播放历史" />
 
                 <ImageView style="@style/PersonAndSetRightStyle" />
 
                 <View
                     android:id="@+id/view_line"
                     style="@style/ViewStyle"
-                    android:layout_alignParentBottom="true"/>
+                    android:layout_alignParentBottom="true" />
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/lin_like"
+                android:id="@+id/lin_subscribe"
+                style="@style/PersonAndSetRelativeStyle">
+
+                <View style="@style/LineStyle" />
+
+                <ImageView
+                    android:id="@+id/image_subscribe"
+                    style="@style/PersonAndSetLeftStyle"
+                    android:src="@mipmap/wt_image_person_subscribe" />
+
+                <TextView
+                    style="@style/PersonAndSetTextStyle"
+                    android:layout_toRightOf="@id/image_subscribe"
+                    android:text="我的订阅" />
+
+                <ImageView style="@style/PersonAndSetRightStyle" />
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/lin_download"
                 style="@style/PersonAndSetRelativeStyle">
 
                 <View style="@style/LineStyle"/>
+
+                <ImageView
+                    android:id="@+id/image_download"
+                    style="@style/PersonAndSetLeftStyle"
+                    android:src="@mipmap/wt_image_set_download" />
+
+                <TextView
+                    style="@style/PersonAndSetTextStyle"
+                    android:text="我的下载"
+                    android:layout_toRightOf="@id/image_download" />
+
+                <ImageView style="@style/PersonAndSetRightStyle" />
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/lin_like"
+                style="@style/PersonAndSetRelativeStyle">
+
+                <View style="@style/LineStyle" />
 
                 <ImageView
                     android:id="@+id/image_like"
@@ -234,8 +273,8 @@
 
                 <TextView
                     style="@style/PersonAndSetTextStyle"
-                    android:text="我喜欢的"
-                    android:layout_toRightOf="@id/image_like" />
+                    android:layout_toRightOf="@id/image_like"
+                    android:text="我喜欢的" />
 
                 <ImageView style="@style/PersonAndSetRightStyle" />
 
@@ -245,7 +284,7 @@
                 android:id="@+id/lin_anchor"
                 style="@style/PersonAndSetRelativeStyle">
 
-                <View style="@style/LineStyle"/>
+                <View style="@style/LineStyle" />
 
                 <ImageView
                     android:id="@+id/image_anchor"
@@ -254,38 +293,19 @@
 
                 <TextView
                     style="@style/PersonAndSetTextStyle"
-                    android:text="我的关注"
-                    android:layout_toRightOf="@id/image_anchor" />
+                    android:layout_toRightOf="@id/image_anchor"
+                    android:text="我的关注" />
 
                 <ImageView style="@style/PersonAndSetRightStyle" />
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/lin_subscribe"
-                style="@style/PersonAndSetRelativeStyle">
-
-                <View style="@style/LineStyle"/>
-
-                <ImageView
-                    android:id="@+id/image_subscribe"
-                    style="@style/PersonAndSetLeftStyle"
-                    android:src="@mipmap/wt_image_person_subscribe" />
-
-                <TextView
-                    style="@style/PersonAndSetTextStyle"
-                    android:text="我的订阅"
-                    android:layout_toRightOf="@id/image_subscribe" />
-
-                <ImageView style="@style/PersonAndSetRightStyle" />
-
-            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/lin_album"
                 style="@style/PersonAndSetRelativeStyle">
 
-                <View style="@style/LineStyle"/>
+                <View style="@style/LineStyle" />
 
                 <ImageView
                     android:id="@+id/image_album"
@@ -294,8 +314,8 @@
 
                 <TextView
                     style="@style/PersonAndSetTextStyle"
-                    android:text="我的上传"
-                    android:layout_toRightOf="@id/image_album" />
+                    android:layout_toRightOf="@id/image_album"
+                    android:text="我的上传" />
 
                 <ImageView style="@style/PersonAndSetRightStyle" />
 
@@ -309,8 +329,8 @@
                 android:id="@+id/lin_timer"
                 android:layout_width="match_parent"
                 android:layout_height="43dp"
-                android:visibility="gone"
-                android:background="@drawable/person_color" >
+                android:background="@drawable/person_color"
+                android:visibility="gone">
 
                 <View
                     android:layout_width="match_parent"
@@ -321,17 +341,17 @@
                     android:id="@+id/image_timer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="19dp"
                     android:layout_centerVertical="true"
+                    android:layout_marginLeft="19dp"
                     android:src="@mipmap/wt_person_timer" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:text="定时关闭"
-                    android:layout_toRightOf="@id/image_timer"
                     android:layout_centerVertical="true"
+                    android:layout_marginLeft="14dp"
+                    android:layout_toRightOf="@id/image_timer"
+                    android:text="定时关闭"
                     android:textColor="@color/wt_login_third"
                     android:textSize="@dimen/list_text_size" />
 
@@ -348,9 +368,9 @@
                     android:id="@+id/text_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@id/image_more"
-                    android:layout_marginRight="6dp"
                     android:layout_centerVertical="true"
+                    android:layout_marginRight="6dp"
+                    android:layout_toLeftOf="@id/image_more"
                     android:text="00:00"
                     android:textColor="@color/wt_login_third"
                     android:textSize="13sp"
@@ -372,8 +392,8 @@
 
                 <TextView
                     style="@style/PersonAndSetTextStyle"
-                    android:text="2/3/4G网络播放和下载提醒"
-                    android:layout_toRightOf="@id/image_liuliang" />
+                    android:layout_toRightOf="@id/image_liuliang"
+                    android:text="2/3/4G网络播放和下载提醒" />
 
                 <ImageView
                     android:id="@+id/wt_img_toggle"
@@ -400,8 +420,8 @@
 
                 <TextView
                     style="@style/PersonAndSetTextStyle"
-                    android:text="智能硬件"
-                    android:layout_toRightOf="@id/image_hardware" />
+                    android:layout_toRightOf="@id/image_hardware"
+                    android:text="智能硬件" />
 
                 <ImageView style="@style/PersonAndSetRightStyle" />
 
@@ -411,7 +431,7 @@
                 android:id="@+id/lin_app"
                 style="@style/PersonAndSetRelativeStyle">
 
-                <View style="@style/LineStyle"/>
+                <View style="@style/LineStyle" />
 
                 <ImageView
                     android:id="@+id/image_app"
@@ -420,8 +440,8 @@
 
                 <TextView
                     style="@style/PersonAndSetTextStyle"
-                    android:text="应用分享"
-                    android:layout_toRightOf="@id/image_app" />
+                    android:layout_toRightOf="@id/image_app"
+                    android:text="应用分享" />
 
                 <ImageView style="@style/PersonAndSetRightStyle" />
 
@@ -437,7 +457,7 @@
                 android:layout_marginBottom="40dp"
                 android:layout_marginTop="20dp">
 
-                <View style="@style/ViewStyle"/>
+                <View style="@style/ViewStyle" />
 
                 <ImageView
                     android:id="@+id/image_set"
@@ -446,8 +466,8 @@
 
                 <TextView
                     style="@style/PersonAndSetTextStyle"
-                    android:text="其它设置"
-                    android:layout_toRightOf="@id/image_set" />
+                    android:layout_toRightOf="@id/image_set"
+                    android:text="其它设置" />
 
                 <ImageView style="@style/PersonAndSetRightStyle" />
 

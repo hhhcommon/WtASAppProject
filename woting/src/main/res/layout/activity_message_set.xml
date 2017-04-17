@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="通知设置"
+            android:text="消息设置"
             android:textColor="@color/WHITE"
             android:textSize="@dimen/activity_head_center_s" />
 
@@ -35,7 +35,6 @@
 
         <LinearLayout
             style="@style/PersonAndSetRelativeStyle"
-            android:layout_marginTop="10dp"
             android:gravity="left|center"
             android:orientation="horizontal">
 
@@ -47,12 +46,12 @@
 
                 <TextView
                     style="@style/PersonAndSetTextStyle"
-                    android:text="通知消息" />
+                    android:text="消息提示音" />
 
                 <TextView
                     style="@style/PersonAndSetTextStyle"
                     android:layout_marginTop="2dp"
-                    android:text="此处显示提醒的内容"
+                    android:text="关闭消息提示音后，只有振动提醒。"
                     android:textColor="@color/gray"
                     android:textSize="11sp" />
             </LinearLayout>
@@ -77,12 +76,12 @@
 
                 <TextView
                     style="@style/PersonAndSetTextStyle"
-                    android:text="语音播报" />
+                    android:text="语音提醒" />
 
                 <TextView
                     style="@style/PersonAndSetTextStyle"
                     android:layout_marginTop="2dp"
-                    android:text="此处显示提醒的内容"
+                    android:text="打开后，收到新消息会有语音提醒您。"
                     android:textColor="@color/gray"
                     android:textSize="11sp" />
             </LinearLayout>

@@ -22,7 +22,7 @@ public class StringConstant {
     public static final String BIRTHDAY = "BIRTHDAY";                              // 用户生日
     public static final String USER_SIGN = "USER_SIGN";                            // 用户签名
     public static final String STAR_SIGN = "STAR_SIGN";                            // 用户星座
-    public static final String AGE = "AGE";                                        // 年龄
+//    public static final String AGE = "AGE";                                        // 年龄
     public static final String NICK_NAME = "NICK_NAME";                            // 昵称
 
     // 播放器缓存进度  数据传递

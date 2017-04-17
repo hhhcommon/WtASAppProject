@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.umeng.analytics.MobclickAgent;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
+import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.service.SocketClient;
 import com.woting.common.util.ToastUtils;
@@ -116,6 +117,7 @@ public class DuiJiangActivity extends FragmentActivity {
                     bundle.putString("type", "friend");
                     Intent.putExtras(bundle);
                     startActivity(Intent);
+                    GlobalConfig.interPhoneType = 0;
                 } else {
                     startActivity(new Intent(context, LoginActivity.class));
                 }
@@ -124,7 +126,7 @@ public class DuiJiangActivity extends FragmentActivity {
         });
 
 		/*
-		 * 跳转到加入群组
+         * 跳转到加入群组
 		 */
         lin_b.setOnClickListener(new OnClickListener() {
             @Override
@@ -136,6 +138,7 @@ public class DuiJiangActivity extends FragmentActivity {
                     bundle.putString("type", "group");
                     Intent.putExtras(bundle);
                     startActivity(Intent);
+                    GlobalConfig.interPhoneType = 0;
                 } else {
                     startActivity(new Intent(context, LoginActivity.class));
                 }
@@ -152,6 +155,7 @@ public class DuiJiangActivity extends FragmentActivity {
                 String login = sharedPreferences.getString(StringConstant.ISLOGIN, "false");// 是否登录
                 if (!login.trim().equals("") && login.equals("true")) {
                     Intent intent = new Intent(context, CreateGroupActivity.class);
+                    GlobalConfig.interPhoneType = 0;
                     startActivity(intent);
                 } else {
                     startActivity(new Intent(context, LoginActivity.class));
@@ -169,6 +173,7 @@ public class DuiJiangActivity extends FragmentActivity {
                 String login = sharedPreferences.getString(StringConstant.ISLOGIN, "false");// 是否登录
                 if (!login.trim().equals("") && login.equals("true")) {
                     startActivity(new Intent(context, CaptureActivity.class));
+                    GlobalConfig.interPhoneType = 0;
                 } else {
                     startActivity(new Intent(context, LoginActivity.class));
                 }
@@ -201,6 +206,7 @@ public class DuiJiangActivity extends FragmentActivity {
         lin_news.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                GlobalConfig.interPhoneType = 0;
                 Intent intent = new Intent(context, MessageMainActivity.class);
                 startActivity(intent);
             }
@@ -241,11 +247,23 @@ public class DuiJiangActivity extends FragmentActivity {
         public void onClick(View v) {
             mPager.setCurrentItem(index);
             if (index == 0) {
+                try {
+                    if (ChatFragment.lin_foot != null) {
+                        if (ChatFragment.lin_foot.getVisibility() == View.VISIBLE) {
+                            GlobalConfig.interPhoneType = 3;
+                        } else {
+                            GlobalConfig.interPhoneType = 0;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 view1.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
                 view2.setTextColor(context.getResources().getColor(R.color.white));
                 view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_home_white));
                 view2.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
             } else if (index == 1) {
+                GlobalConfig.interPhoneType = 0;
                 view1.setTextColor(context.getResources().getColor(R.color.white));
                 view2.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
                 view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
@@ -298,6 +316,7 @@ public class DuiJiangActivity extends FragmentActivity {
                 view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_home_white));
                 view2.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
             } else if (arg0 == 1) {
+                GlobalConfig.interPhoneType = 0;
                 view1.setTextColor(context.getResources().getColor(R.color.white));
                 view2.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
                 view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));

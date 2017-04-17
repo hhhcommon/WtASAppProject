@@ -52,6 +52,8 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.photocut.PhotoCutActivity;
 import com.woting.ui.common.qrcodes.EWMShowActivity;
+import com.woting.ui.download.main.DownloadFragment;
+import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
 import com.woting.ui.interphone.model.UserInviteMeInside;
 import com.woting.ui.mine.favorite.main.FavoriteFragment;
 import com.woting.ui.mine.hardware.HardwareIntroduceActivity;
@@ -113,6 +115,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     private View linAlbum;                      // 我的专辑  我上传的专辑
     private View circleView;
     private View viewLine;
+    private View lin_download;
 
     private TextView textUserAutograph;
     private TextView textUserArea;
@@ -215,6 +218,10 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         linAnchor = rootView.findViewById(R.id.lin_anchor);                          // 我的主播
         linAnchor.setOnClickListener(this);
 
+
+        lin_download = rootView.findViewById(R.id.lin_download);                     // 我的下载
+        lin_download.setOnClickListener(this);
+
         linSubscribe = rootView.findViewById(R.id.lin_subscribe);                    // 我的订阅
         linSubscribe.setOnClickListener(this);
 
@@ -296,6 +303,13 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 subscriberListFragment.setArguments(bundleSub);
                 MineActivity.open(subscriberListFragment);
                 break;
+            case R.id.lin_download:        // 我的下载
+                DownloadFragment d = new DownloadFragment();
+                Bundle b = new Bundle();
+                b.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_MINE);
+                d.setArguments(b);
+                MineActivity.open(d);
+                break;
             case R.id.lin_album:            // 我的专辑  我上传的专辑
                 startActivity(new Intent(context, MyUploadActivity.class));
                 break;
@@ -355,6 +369,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             linLike.setVisibility(View.VISIBLE);            // 我喜欢的
             linAnchor.setVisibility(View.VISIBLE);
             linSubscribe.setVisibility(View.VISIBLE);
+            lin_download.setVisibility(View.VISIBLE);
             linAlbum.setVisibility(View.VISIBLE);
             viewLine.setVisibility(View.GONE);
 
@@ -411,6 +426,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             linLike.setVisibility(View.GONE);
             linAnchor.setVisibility(View.GONE);
             linSubscribe.setVisibility(View.GONE);
+            lin_download.setVisibility(View.GONE);
             linAlbum.setVisibility(View.GONE);
             viewLine.setVisibility(View.VISIBLE);
 
@@ -750,7 +766,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     }
 
     // 判断个人资料是否有修改过  有则将数据提交服务器
-    private void sendUpdate(Bundle bundle) {
+    private void sendUpdate(final Bundle bundle) {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             UpdatePerson pM = (UpdatePerson) bundle.getSerializable("data");
@@ -872,157 +888,119 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 try {
                     String returnType = result.getString("ReturnType");
                     Log.v("returnType", "returnType -- > > " + returnType);
-
                     if (returnType != null && returnType.equals("1001")) {
-
                         try {
-                            JSONObject ui = (JSONObject) new JSONTokener(result.getString("UserInfo")).nextValue();
                             SharedPreferences.Editor et = BSApplication.SharedPreferences.edit();
-                            try {
-                                String imageUrl = ui.getString("PortraitMini");
-                                et.putString(StringConstant.IMAGEURL, imageUrl);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                et.putString(StringConstant.IMAGEURL, "");
-                            }
-//                            try {
-//                                String returnUserName = ui.getString("UserName");
-//                                et.putString(StringConstant.USERNAME, returnUserName);
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                                et.putString(StringConstant.USERNAME, "");
-//                            }
-                            try {
-                                String UserNum = ui.getString("UserNum");
-                                et.putString(StringConstant.USER_NUM, UserNum);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                et.putString(StringConstant.USER_NUM, "");
-                            }
-                            try {
-                                String imageUrlBig = ui.getString("PortraitBig");
-                                et.putString(StringConstant.IMAGEURBIG, imageUrlBig);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                et.putString(StringConstant.IMAGEURBIG, "");
-                            }
-                            try {
-                                String userId = ui.getString("UserId");
-                                et.putString(StringConstant.USERID, userId);
-                                textUserId.setText(userNum);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                et.putString(StringConstant.USERID, "");
-                            }
-                            try {
-                                String phoneNumber = ui.getString("PhoneNum");
-                                et.putString(StringConstant.USER_PHONE_NUMBER, phoneNumber);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                et.putString(StringConstant.USER_PHONE_NUMBER, "");
-                            }
-                            try {
-                                String gender = ui.getString("Sex");
-                                if (gender.equals("男")) {
-                                    et.putString(StringConstant.GENDERUSR, "xb001");
-                                } else if (gender.equals("女")) {
-                                    et.putString(StringConstant.GENDERUSR, "xb002");
-                                } else {
-                                    et.putString(StringConstant.GENDERUSR, "");
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                et.putString(StringConstant.GENDERUSR, "");
-                            }
-                            try {
-                                String region = ui.getString("Region");
-                                /**
-                                 * 地区的三种格式
-                                 * 1、行政区划\/**市\/市辖区\/**区
-                                 * 2、行政区划\/**特别行政区  港澳台三地区
-                                 * 3、行政区划\/**自治区\/通辽市  自治区地区
-                                 */
-                                if (region != null && !region.equals("")) {
-                                    String[] subRegion = region.split("/");
-                                    if (subRegion.length > 3) {
-                                        region = subRegion[1] + " " + subRegion[3];
-                                    } else if (subRegion.length == 3) {
-                                        region = subRegion[1] + " " + subRegion[2];
-                                    } else {
-                                        region = subRegion[1].substring(0, 2);
+                            String OkFields = result.getString("OkFields");
+                            String[] name = OkFields.split(",");
+                            UpdatePerson pM = (UpdatePerson) bundle.getSerializable("data");
+
+                            for (String _name : name) {
+                                if (_name.equals("NickName")) {
+                                    try {
+                                        String nickName = pM.getNickName();
+                                        if (nickName != null && !nickName.equals("")) {
+                                            if (nickName.equals("&null")) {
+                                                et.putString(StringConstant.NICK_NAME, "");
+                                            } else {
+                                                et.putString(StringConstant.NICK_NAME, nickName);
+                                            }
+                                        } else {
+                                            et.putString(StringConstant.NICK_NAME, "");
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
-                                    et.putString(StringConstant.REGION, region);
-                                    textUserArea.setText(region);
-                                } else {
-                                    et.putString(StringConstant.REGION, "");
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                et.putString(StringConstant.REGION, "");
-                            }
-                            try {
-                                String birthday = ui.getString("Birthday");
-                                et.putString(StringConstant.BIRTHDAY, birthday);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                et.putString(StringConstant.BIRTHDAY, "");
-                            }
-                            try {
-                                String age = ui.getString("Age");
-                                et.putString(StringConstant.AGE, age);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                et.putString(StringConstant.AGE, "");
-                            }
-                            try {
-                                String starSign = ui.getString("StarSign");
-                                et.putString(StringConstant.STAR_SIGN, starSign);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                et.putString(StringConstant.STAR_SIGN, "");
-                            }
-                            try {
-                                String email = ui.getString("Email");
-                                if (email != null && !email.equals("")) {
-                                    if (email.equals("&null")) {
-                                        et.putString(StringConstant.EMAIL, "");
-                                    } else {
-                                        et.putString(StringConstant.EMAIL, email);
+                                    break;
+                                } else if (_name.equals("Sex")) {
+                                    try {
+                                        String gender = pM.getGender();
+                                        et.putString(StringConstant.GENDERUSR, gender);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        et.putString(StringConstant.GENDERUSR, "");
                                     }
-                                } else {
-                                    et.putString(StringConstant.EMAIL, "");
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                String userSign = ui.getString("UserSign");
-                                if (userSign != null && !userSign.equals("")) {
-                                    if (userSign.equals("&null")) {
-                                        et.putString(StringConstant.USER_SIGN, "");
-                                    } else {
-                                        et.putString(StringConstant.USER_SIGN, userSign);
-                                        textUserAutograph.setText(userSign);
+                                    break;
+                                } else if (_name.equals("Region")) {
+                                    try {
+                                        String region = pM.getRegion();
+                                        /**
+                                         * 地区的三种格式
+                                         * 1、行政区划\/**市\/市辖区\/**区
+                                         * 2、行政区划\/**特别行政区  港澳台三地区
+                                         * 3、行政区划\/**自治区\/通辽市  自治区地区
+                                         */
+                                        if (region != null && !region.equals("")) {
+                                            String[] subRegion = region.split("/");
+                                            if (subRegion.length > 3) {
+                                                region = subRegion[1] + " " + subRegion[3];
+                                            } else if (subRegion.length == 3) {
+                                                region = subRegion[1] + " " + subRegion[2];
+                                            } else {
+                                                region = subRegion[1].substring(0, 2);
+                                            }
+                                            et.putString(StringConstant.REGION, region);
+                                            textUserArea.setText(region);
+                                        } else {
+                                            et.putString(StringConstant.REGION, "");
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        et.putString(StringConstant.REGION, "");
                                     }
-                                } else {
-                                    et.putString(StringConstant.USER_SIGN, "");
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                String nickName = ui.getString("NickName");
-                                if (nickName != null && !nickName.equals("")) {
-                                    if (nickName.equals("&null")) {
-                                        et.putString(StringConstant.NICK_NAME, "");
-                                    } else {
-                                        et.putString(StringConstant.NICK_NAME, nickName);
+                                    break;
+                                } else if (_name.equals("Birthday")) {
+                                    try {
+                                        String birthday = pM.getBirthday();
+                                        et.putString(StringConstant.BIRTHDAY, birthday);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        et.putString(StringConstant.BIRTHDAY, "");
                                     }
-                                } else {
-                                    et.putString(StringConstant.NICK_NAME, "");
+                                    break;
+                                } else if (_name.equals("StarSign")) {
+                                    try {
+                                        String starSign = pM.getStarSign();
+                                        et.putString(StringConstant.STAR_SIGN, starSign);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        et.putString(StringConstant.STAR_SIGN, "");
+                                    }
+                                    break;
+                                } else if (_name.equals("UserSign")) {
+                                    try {
+                                        String userSign = pM.getUserSign();
+                                        if (userSign != null && !userSign.equals("")) {
+                                            if (userSign.equals("&null")) {
+                                                et.putString(StringConstant.USER_SIGN, "");
+                                            } else {
+                                                et.putString(StringConstant.USER_SIGN, userSign);
+                                                textUserAutograph.setText(userSign);
+                                            }
+                                        } else {
+                                            et.putString(StringConstant.USER_SIGN, "");
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    break;
+                                } else if (_name.equals("Email")) {
+                                    try {
+                                        String email = pM.getEmail();
+                                        if (email != null && !email.equals("")) {
+                                            if (email.equals("&null")) {
+                                                et.putString(StringConstant.EMAIL, "");
+                                            } else {
+                                                et.putString(StringConstant.EMAIL, email);
+                                            }
+                                        } else {
+                                            et.putString(StringConstant.EMAIL, "");
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    break;
                                 }
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
                             if (!et.commit()) {
                                 Log.v("commit", "数据 commit 失败!");
@@ -1030,7 +1008,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
