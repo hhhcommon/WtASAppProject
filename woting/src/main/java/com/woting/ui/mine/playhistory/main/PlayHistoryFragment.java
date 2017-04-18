@@ -170,11 +170,18 @@ public class PlayHistoryFragment extends Fragment implements OnClickListener, Ad
             }
             dbDao.addHistory(history);
             MainActivity.change();
-            Intent pushIntent = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
-            Bundle bundle = new Bundle();
-            bundle.putString(StringConstant.TEXT_CONTENT, subList.get(position).getPlayerName());
-            pushIntent.putExtras(bundle);
-            context.sendBroadcast(pushIntent);
+            if (mediaType.equals(StringConstant.TYPE_AUDIO)) {
+                Intent intent = new Intent(BroadcastConstants.PLAY_SEQU_LIST);
+                intent.putExtra(StringConstant.ID_CONTENT, contentId);
+                intent.putExtra(StringConstant.SEQU_LIST_SIZE, ColumnNum);
+                context.sendBroadcast(intent);
+            } else {
+                Intent pushIntent = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                Bundle bundle = new Bundle();
+                bundle.putString(StringConstant.TEXT_CONTENT, subList.get(position).getPlayerName());
+                pushIntent.putExtras(bundle);
+                context.sendBroadcast(pushIntent);
+            }
         }
     }
 
