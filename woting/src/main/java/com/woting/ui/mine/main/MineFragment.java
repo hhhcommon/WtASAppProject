@@ -53,7 +53,6 @@ import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.photocut.PhotoCutActivity;
 import com.woting.ui.common.qrcodes.EWMShowActivity;
 import com.woting.ui.download.main.DownloadFragment;
-import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
 import com.woting.ui.interphone.model.UserInviteMeInside;
 import com.woting.ui.mine.favorite.main.FavoriteFragment;
 import com.woting.ui.mine.hardware.HardwareIntroduceActivity;
@@ -69,7 +68,6 @@ import com.woting.ui.picture.ViewBigPictureActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -931,14 +929,14 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                                          * 3、行政区划\/**自治区\/通辽市  自治区地区
                                          */
                                         if (region != null && !region.equals("")) {
-                                            String[] subRegion = region.split("/");
+                                         /*   String[] subRegion = region.split(" ");
                                             if (subRegion.length > 3) {
                                                 region = subRegion[1] + " " + subRegion[3];
                                             } else if (subRegion.length == 3) {
                                                 region = subRegion[1] + " " + subRegion[2];
                                             } else {
                                                 region = subRegion[1].substring(0, 2);
-                                            }
+                                            }*/
                                             et.putString(StringConstant.REGION, region);
                                             textUserArea.setText(region);
                                         } else {
