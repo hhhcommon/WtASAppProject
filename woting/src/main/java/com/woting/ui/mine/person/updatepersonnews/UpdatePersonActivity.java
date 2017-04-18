@@ -95,13 +95,22 @@ public class UpdatePersonActivity extends AppBaseActivity implements
     private int provinceIndex;        // 选中的省级角标
     private int cityIndex;            // 选中的市级角标
 
+    private int initYear;
+    private int initMonth;
+    private int initDay;
+
+    private int initProvince;         // 省初值
+    private int initCity;             // 市初值
+    private String birthdayString;
+    private Boolean birthDayType;     //
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_updateperson);
         initView();
-        datePickerDialog();
         setValueByPrefer();
+        datePickerDialog();
         if (GlobalConfig.CityCatalogList != null && GlobalConfig.CityCatalogList.size() > 0) {
 //            int a=GlobalConfig.CityCatalogList.size();
             handleCityList(GlobalConfig.CityCatalogList);
@@ -151,7 +160,8 @@ public class UpdatePersonActivity extends AppBaseActivity implements
 
         // 生日
         birthday = BSApplication.SharedPreferences.getString(StringConstant.BIRTHDAY, "");
-        textAge.setText(TimeUtils.timeStamp2Date(birthday));
+        birthdayString=TimeUtils.timeStamp2Date(birthday);
+        textAge.setText(birthdayString);
 
         // 星座
         String starSign = BSApplication.SharedPreferences.getString(StringConstant.STAR_SIGN, "");
@@ -330,10 +340,55 @@ public class UpdatePersonActivity extends AppBaseActivity implements
         LoopView pickYear = (LoopView) dialog.findViewById(R.id.pick_year);
         LoopView pickMonth = (LoopView) dialog.findViewById(R.id.pick_month);
         final LoopView pickDay = (LoopView) dialog.findViewById(R.id.pick_day);
-        // 设置字体样式
-        pickYear.setInitPosition(59);
-        pickMonth.setInitPosition(4);
-        pickDay.setInitPosition(24);
+
+        if(!TextUtils.isEmpty(birthdayString)){
+            try{
+                String year=birthdayString.substring(0,birthdayString.lastIndexOf("年"));
+                String month=birthdayString.substring(birthdayString.lastIndexOf("年")+1,birthdayString.lastIndexOf("月"));
+                if(month.startsWith("0")){
+                    month=month.substring(1,month.length());
+                }
+                String day=birthdayString.substring(birthdayString.lastIndexOf("月")+1,birthdayString.lastIndexOf("日"));
+
+                for(int i=0;i<yearList.size();i++){
+                      if(yearList.get(i).contains(year)){
+                          initYear=i;
+                          break;
+                      }
+                   }
+
+                for(int i=0;i<monthList.size();i++){
+                    if(monthList.get(i).contains(month)){
+                        initMonth=i;
+                        break;
+                    }
+                }
+
+                for(int i=0;i<dateList.size();i++){
+                    if(dateList.get(i).contains(day)){
+                        initDay=i;
+                        break;
+                    }
+                }
+                pickYear.setInitPosition(initYear);
+                pickMonth.setInitPosition(initMonth);
+                pickDay.setInitPosition(initDay);
+                birthDayType=true;
+
+            }catch (Exception e){
+                pickYear.setInitPosition(59);
+                pickMonth.setInitPosition(4);
+                pickDay.setInitPosition(24);
+            }
+
+        }else{
+            // 设置字体样式
+            pickYear.setInitPosition(59);
+            pickMonth.setInitPosition(4);
+            pickDay.setInitPosition(24);
+        }
+
+
 
         pickYear.setTextSize(20);
         pickMonth.setTextSize(20);
@@ -429,6 +484,34 @@ public class UpdatePersonActivity extends AppBaseActivity implements
         dialog.findViewById(R.id.tv_confirm).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(birthDayType){
+                    if (wheelTypeYear == 1) {
+                        year = yearList.get(pYear);
+                    } else {
+                        year = yearList.get(initYear);
+                    }
+                    if (wheelTypeMonth == 1) {
+                        month = monthList.get(pMonth);
+                    } else {
+                        month = monthList.get(initMonth);
+                    }
+                    if (wheelTypeDay == 1) {
+                        day = dateList.get(pDay);
+                    } else {
+                        day = dateList.get(initDay);
+                    }
+                    String Constellation = DateUtil.getConstellation(Integer.valueOf(month.substring(0, month.length() - 1).trim()),
+                            Integer.valueOf(day.substring(0, day.length() - 1).trim()));
+
+                    textStarSign.setText(Constellation);
+                    birthday = TimeUtils.date2TimeStamp(year + month + day);
+                    if(Integer.valueOf(month)<10){
+                        textAge.setText(year + "0"+month + day);
+                    }else{
+                        textAge.setText(year + month + day);
+                    }
+                    dateDialog.dismiss();
+                }else{
                 if (wheelTypeYear == 1) {
                     year = yearList.get(pYear);
                 } else {
@@ -445,14 +528,13 @@ public class UpdatePersonActivity extends AppBaseActivity implements
                     day = "1日";
                 }
 
-                String Constellation = DateUtil.getConstellation(Integer.valueOf(month.substring(0, month.length() - 1).trim()),
-                        Integer.valueOf(day.substring(0, day.length() - 1).trim()));
-
-                textStarSign.setText(Constellation);
-                birthday = TimeUtils.date2TimeStamp(year + month + day);
-                textAge.setText(year + month + day);
-
-                dateDialog.dismiss();
+                    String Constellation = DateUtil.getConstellation(Integer.valueOf(month.substring(0, month.length() - 1).trim()),
+                            Integer.valueOf(day.substring(0, day.length() - 1).trim()));
+                    textStarSign.setText(Constellation);
+                    birthday = TimeUtils.date2TimeStamp(year + month + day);
+                    textAge.setText(year + month + day);
+                    dateDialog.dismiss();
+                }
             }
         });
 

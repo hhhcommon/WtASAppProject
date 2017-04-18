@@ -238,7 +238,7 @@ public class FileInfoDao {
 	// 改
 	public void updataFileInfo(String filename) {
 		SQLiteDatabase db = helper.getWritableDatabase();
-		String localUrl= DownloadService.DOWNLOAD_PATH+filename;
+		String localUrl= DownloadClient.DOWNLOAD_PATH+filename;
 		db.execSQL("update fileInfo set finished=?,localUrl=? where fileName=?",
 				new Object[] {"true",localUrl,filename});
 		db.close();
