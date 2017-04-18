@@ -92,8 +92,8 @@ public class UpdatePersonActivity extends AppBaseActivity implements
     private int wheelTypeYear = -1;
     private int wheelTypeMonth = -1;
     private int wheelTypeDay = -1;
-    private int provinceIndex;        // 选中的省级角标
-    private int cityIndex;            // 选中的市级角标
+    private int provinceIndex=-1;        // 选中的省级角标
+    private int cityIndex=-1;            // 选中的市级角标
 
     private int initYear;
     private int initMonth;
@@ -237,12 +237,13 @@ public class UpdatePersonActivity extends AppBaseActivity implements
                             myList = catalogNameList.get(i).getSubCata();
                             tempMap.put(catalogNameList.get(i).getCatalogName(), myList);
                         } else {
-                         /*   // 直辖市
+                            // 直辖市
+                            try{
                             if(!TextUtils.isEmpty(catalogNameList.get(i).getCatalogName())){
                             List<CatalogName> myList1 = new ArrayList<>();
                             provinceList.add(catalogNameList.get(i).getCatalogName());
                             if(catalogNameList.get(i).getSubCata().get(0).getSubCata()!=null){
-                            myList1.addAll(catalogNameList.get(i).getSubCata().get(0).getSubCata());
+                               myList1.addAll(catalogNameList.get(i).getSubCata().get(0).getSubCata());
                             }
                             if(catalogNameList.get(i).getSubCata().get(1).getSubCata()!=null){
                                 myList1.addAll(catalogNameList.get(i).getSubCata().get(1).getSubCata());
@@ -251,7 +252,10 @@ public class UpdatePersonActivity extends AppBaseActivity implements
                             }else{
                              //服务器返回的垃圾数据无意义
                                 ToastUtils.show_always(context,"服务器返回的垃圾数据无意义");
-                            }*/
+                            }
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
                         }
                     } else {
                         // 港澳台
@@ -505,11 +509,7 @@ public class UpdatePersonActivity extends AppBaseActivity implements
 
                     textStarSign.setText(Constellation);
                     birthday = TimeUtils.date2TimeStamp(year + month + day);
-                    if(Integer.valueOf(month)<10){
-                        textAge.setText(year + "0"+month + day);
-                    }else{
-                        textAge.setText(year + month + day);
-                    }
+                    textAge.setText(year + month + day);
                     dateDialog.dismiss();
                 }else{
                 if (wheelTypeYear == 1) {
@@ -528,12 +528,13 @@ public class UpdatePersonActivity extends AppBaseActivity implements
                     day = "1日";
                 }
 
-                    String Constellation = DateUtil.getConstellation(Integer.valueOf(month.substring(0, month.length() - 1).trim()),
-                            Integer.valueOf(day.substring(0, day.length() - 1).trim()));
-                    textStarSign.setText(Constellation);
-                    birthday = TimeUtils.date2TimeStamp(year + month + day);
-                    textAge.setText(year + month + day);
-                    dateDialog.dismiss();
+                String Constellation = DateUtil.getConstellation(Integer.valueOf(month.substring(0, month.length() - 1).trim()),
+                Integer.valueOf(day.substring(0, day.length() - 1).trim()));
+                textStarSign.setText(Constellation);
+                birthday = TimeUtils.date2TimeStamp(year + month + day);
+                textAge.setText(year + month + day);
+
+                dateDialog.dismiss();
                 }
             }
         });
@@ -552,18 +553,59 @@ public class UpdatePersonActivity extends AppBaseActivity implements
     // 城市选择框
     private void cityPickerDialog() {
         final View dialog = LayoutInflater.from(context).inflate(R.layout.dialog_city, null);
-        LoopView pickProvince = (LoopView) dialog.findViewById(R.id.pick_province);
+        final LoopView pickProvince = (LoopView) dialog.findViewById(R.id.pick_province);
         final LoopView pickCity = (LoopView) dialog.findViewById(R.id.pick_city);
         // 设置字体样式
-        pickProvince.setInitPosition(4);
+
         pickProvince.setTextSize(15);
         pickCity.setTextSize(15);
+        if(!TextUtils.isEmpty(region)) {
+            try {
+                String[] s = region.split(" ");
+                String s1=s[0];
+                String s2=s[1];
+                for(int i=0;i<provinceList.size();i++){
+                    String s3=provinceList.get(i);
+                    if(provinceList.get(i).contains(s[0])){
+                        initProvince = i;
+                        pickProvince.setInitPosition(initProvince);
+                    }
+                }
+                List<String> tempList1 = positionMap.get(provinceList.get(initProvince));
+                for(int i=0;i<tempList1.size();i++){
+                    String s3=tempList1.get(i);
+                    if(tempList1.get(i).contains(s[1])){
+                        initCity = i;
+                        pickProvince.setInitPosition(initCity);
+                    }
+                }
+                pickProvince.setItems(provinceList);
+                List<String> tempList = positionMap.get(provinceList.get(initProvince));
+                pickCity.setItems(tempList);
+                pickProvince.setInitPosition(initProvince);
+                pickCity.setInitPosition(initCity);
+            } catch (Exception e) {
+                initProvince = 0;
+                pickProvince.setItems(provinceList);
+                List<String> tempList = positionMap.get(provinceList.get(0));
+                pickCity.setItems(tempList);
+                pickProvince.setInitPosition(0);
+                pickCity.setInitPosition(0);
+            }
+        }else{
+            pickProvince.setItems(provinceList);
+            List<String> tempList = positionMap.get(provinceList.get(0));
+            pickCity.setItems(tempList);
+            pickProvince.setInitPosition(0);
+            pickCity.setInitPosition(0);
+        }
+
 
         pickProvince.setListener(new OnItemSelectedListener() {
             @Override
             public void onItemSelected(int index) {
                 provinceIndex = index;
-                List<String> tempList1 = positionMap.get(provinceList.get(index));
+                List<String> tempList1 = positionMap.get(provinceList.get(provinceIndex));
                 pickCity.setItems(tempList1);
                 pickCity.setInitPosition(0);
             }
@@ -575,9 +617,7 @@ public class UpdatePersonActivity extends AppBaseActivity implements
             }
         });
 
-        pickProvince.setItems(provinceList);
-        List<String> tempList = positionMap.get(provinceList.get(4));
-        pickCity.setItems(tempList);
+
 
         cityDialog = new Dialog(context, R.style.MyDialog);
         cityDialog.setContentView(dialog);
@@ -599,9 +639,29 @@ public class UpdatePersonActivity extends AppBaseActivity implements
             @Override
             public void onClick(View v) {
                 try {
-                    region = tempMap.get(provinceList.get(provinceIndex)).get(cityIndex).getCatalogId();
-                    regionId = tempMap.get(provinceList.get(provinceIndex)).get(cityIndex).getCatalogId();
-                    textRegion.setText(provinceList.get(provinceIndex) + " " + tempMap.get(provinceList.get(provinceIndex)).get(cityIndex).getCatalogName());
+                    if(provinceIndex==-1||cityIndex==-1){
+                        region = tempMap.get(provinceList.get(initProvince)).get(initCity).getCatalogId();
+                        regionId = tempMap.get(provinceList.get(initProvince)).get(initCity).getCatalogId();
+                        String s=provinceList.get(initProvince);
+                        String s1=tempMap.get(provinceList.get(initProvince)).get(initCity).getCatalogName();
+                        textRegion.setText(provinceList.get(initProvince) + " " + tempMap.get(provinceList.get(initProvince)).get(initCity).getCatalogName());
+
+                        if(provinceIndex!=-1){
+                            region = tempMap.get(provinceList.get(provinceIndex)).get(0).getCatalogId();
+                            regionId = tempMap.get(provinceList.get(provinceIndex)).get(0).getCatalogId();
+                            textRegion.setText(provinceList.get(provinceIndex) + " " + tempMap.get(provinceList.get(provinceIndex)).get(0).getCatalogName());
+                        }
+
+                        if(cityIndex!=-1){
+                            regionId = tempMap.get(provinceList.get(initProvince)).get(cityIndex).getCatalogId();
+                            textRegion.setText(provinceList.get(initProvince) + " " + tempMap.get(provinceList.get(initProvince)).get(cityIndex).getCatalogName());
+                        }
+
+                    }else {
+                        region = tempMap.get(provinceList.get(provinceIndex)).get(cityIndex).getCatalogId();
+                        regionId = tempMap.get(provinceList.get(provinceIndex)).get(cityIndex).getCatalogId();
+                        textRegion.setText(provinceList.get(provinceIndex) + " " + tempMap.get(provinceList.get(provinceIndex)).get(cityIndex).getCatalogName());
+                    }
                 } catch (Exception e) {
                     /*region = tempMap.get(provinceList.get(0)).get(0).getCatalogId();
                     regionId = tempMap.get(provinceList.get(0)).get(0).getCatalogId();*/
