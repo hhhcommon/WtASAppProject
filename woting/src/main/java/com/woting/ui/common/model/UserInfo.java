@@ -6,6 +6,7 @@ import java.io.Serializable;
 public class UserInfo implements Serializable {
     private int Type = 1;           // 标记是否为最后一项的，新加入尾部的数据会设置type为2，在adapter里针对此属性设置对应的gridview
     private int CheckType = 1;      // 标记item是否被选中，1为未选中，2为选中
+    private int ViewType=1;         // 默认不显示
     private String name;            // 显示的数据
     private String sortLetters;     // 显示数据拼音的首字母
     private String InnerPhoneNum;
@@ -34,6 +35,15 @@ public class UserInfo implements Serializable {
     private String Age;             // 年龄
     private String NickName;        // 昵称
     private String PhoneNumIsPub;   // 是否允许手机号查找
+
+
+    public void setViewType(int viewType) {
+        ViewType = viewType;
+    }
+
+    public int getViewType() {
+        return ViewType;
+    }
 
     public String getPhoneNumIsPub() {
         return PhoneNumIsPub;

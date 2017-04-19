@@ -6,9 +6,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.woting.ui.home.download.model.FileInfo;
 import com.woting.ui.home.download.service.DownloadClient;
-import com.woting.ui.home.program.album.model.ContentInfo;
 import com.woting.common.database.SQLiteHelper;
 import com.woting.common.util.SequenceUUID;
+import com.woting.ui.download.model.FileInfo;
+import com.woting.ui.download.service.DownloadClient;
+import com.woting.ui.home.program.album.model.ContentInfo;
 
 import java.util.ArrayList;
 import java.util.List;
