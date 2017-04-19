@@ -290,7 +290,7 @@ public class TransferAuthorityActivity extends AppBaseActivity implements OnClic
             e.printStackTrace();
         }
 
-        VolleyRequest.requestPost(GlobalConfig.changGroupAdminnerUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(GlobalConfig.changGroupMasterUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
             private String Message;
 

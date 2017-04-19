@@ -7,12 +7,19 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.DialogUtils;
+import com.woting.common.util.StringUtils;
 import com.woting.ui.baseactivity.AppBaseActivity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 通知消息的设置
@@ -27,9 +34,10 @@ public class MessageSetActivity extends AppBaseActivity implements OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_set);
-        DialogUtils.MessageShow(this,"");
+        DialogUtils.MessageShow(this, "");
         setView();
     }
+
 
     // 初始化视图
     private void setView() {

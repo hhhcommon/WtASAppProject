@@ -144,11 +144,11 @@ public class SplashActivity extends Activity {
                                                 et.putString(StringConstant.GENDERUSR, "xb002");
                                             }
                                         } else {
-                                            et.putString(StringConstant.REGION, "");
+                                            et.putString(StringConstant.REGION, "xb001");
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
-                                        et.putString(StringConstant.REGION, "");
+                                        et.putString(StringConstant.REGION, "xb001");
                                     }
                                     try {
                                         String region = list.getRegion();// 区域
@@ -186,17 +186,17 @@ public class SplashActivity extends Activity {
                                         e.printStackTrace();
                                         et.putString(StringConstant.BIRTHDAY, "");
                                     }
-                                    try {
-                                        String age = list.getAge();// 年龄
-                                        if (age != null && !age.equals("")) {
-                                            et.putString(StringConstant.AGE, age);
-                                        } else {
-                                            et.putString(StringConstant.AGE, "");
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                        et.putString(StringConstant.AGE, "");
-                                    }
+//                                    try {
+//                                        String age = list.getAge();// 年龄
+//                                        if (age != null && !age.equals("")) {
+//                                            et.putString(StringConstant.AGE, age);
+//                                        } else {
+//                                            et.putString(StringConstant.AGE, "");
+//                                        }
+//                                    } catch (Exception e) {
+//                                        e.printStackTrace();
+//                                        et.putString(StringConstant.AGE, "");
+//                                    }
                                     try {
                                         String starSign = list.getStarSign();// 星座
                                         if (starSign != null && !starSign.equals("")) {
@@ -309,7 +309,7 @@ public class SplashActivity extends Activity {
         et.putString(StringConstant.BIRTHDAY, "");
         et.putString(StringConstant.USER_SIGN, "");
         et.putString(StringConstant.STAR_SIGN, "");
-        et.putString(StringConstant.AGE, "");
+//        et.putString(StringConstant.AGE, "");
         et.putString(StringConstant.NICK_NAME, "");
         if (!et.commit()) {
             Log.v("commit", "数据 commit 失败!");

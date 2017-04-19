@@ -305,10 +305,18 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                             }
                             try {
                                 String gender = ui.getString("Sex");// 性别
-                                et.putString(StringConstant.GENDERUSR, gender);
+                                if (gender != null && !gender.equals("")) {
+                                    if (gender.equals("男")) {
+                                        et.putString(StringConstant.GENDERUSR, "xb001");
+                                    } else if (gender.equals("女")) {
+                                        et.putString(StringConstant.GENDERUSR, "xb002");
+                                    }
+                                } else {
+                                    et.putString(StringConstant.REGION, "xb001");
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                et.putString(StringConstant.GENDERUSR, "");
+                                et.putString(StringConstant.REGION, "xb001");
                             }
                             try {
                                 String birthday = ui.getString("Birthday");// 生日
@@ -341,13 +349,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                                 e.printStackTrace();
                                 et.putString(StringConstant.REGION, "");
                             }
-                            try {
-                                String age = ui.getString("Age");   // 年龄
-                                et.putString(StringConstant.AGE, age);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                et.putString(StringConstant.AGE, "");
-                            }
+//                            try {
+//                                String age = ui.getString("Age");   // 年龄
+//                                et.putString(StringConstant.AGE, age);
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                                et.putString(StringConstant.AGE, "");
+//                            }
                             try {
                                 String starSign = ui.getString("StarSign");// 星座
                                 et.putString(StringConstant.STAR_SIGN, starSign);
@@ -546,11 +554,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                                 } else if (gender.equals("女")) {
                                     et.putString(StringConstant.GENDERUSR, "xb002");
                                 } else {
-                                    et.putString(StringConstant.GENDERUSR, "");
+                                    et.putString(StringConstant.GENDERUSR, "xb001");
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                et.putString(StringConstant.GENDERUSR, "");
+                                et.putString(StringConstant.GENDERUSR, "xb001");
                             }
                             try {
                                 String region = ui.getString("Region");
@@ -584,13 +592,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                                 e.printStackTrace();
                                 et.putString(StringConstant.BIRTHDAY, "");
                             }
-                            try {
-                                String age = ui.getString("Age");
-                                et.putString(StringConstant.AGE, age);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                et.putString(StringConstant.AGE, "");
-                            }
+//                            try {
+//                                String age = ui.getString("Age");
+//                                et.putString(StringConstant.AGE, age);
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                                et.putString(StringConstant.AGE, "");
+//                            }
                             try {
                                 String starSign = ui.getString("StarSign");
                                 et.putString(StringConstant.STAR_SIGN, starSign);

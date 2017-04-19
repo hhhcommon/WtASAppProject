@@ -148,7 +148,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
     private LinearLayout lin_two_call;
     private String callId;
     private String callerId;
-    private LinearLayout lin_press;
+    private static LinearLayout lin_press;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -469,6 +469,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         lin_notalk.setVisibility(View.GONE);
         lin_personhead.setVisibility(View.VISIBLE);
         lin_head.setVisibility(View.GONE);
+        lin_press.setVisibility(View.VISIBLE);
         lin_foot.setVisibility(View.VISIBLE);
         GlobalConfig.interPhoneType=3;
         GlobalConfig.isActive = true;
@@ -646,6 +647,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         lin_notalk.setVisibility(View.GONE);
         lin_personhead.setVisibility(View.GONE);
         lin_head.setVisibility(View.VISIBLE);
+        lin_press.setVisibility(View.VISIBLE);
         lin_foot.setVisibility(View.VISIBLE);
         GlobalConfig.interPhoneType=3;
         GlobalConfig.isActive = true;
