@@ -33,8 +33,8 @@ import com.woting.common.gatherdata.model.DataModel;
 import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.ResourceUtil;
-import com.woting.ui.download.dao.FileInfoDao;
-import com.woting.ui.download.model.FileInfo;
+import com.woting.ui.home.download.dao.FileInfoDao;
+import com.woting.ui.home.download.model.FileInfo;
 import com.woting.ui.home.player.main.model.LanguageSearchInside;
 
 import org.videolan.libvlc.EventHandler;

@@ -44,7 +44,13 @@ public class FavoriteProgramTypeActivity extends BaseActivity implements View.On
     private ImageView viewStory;// 听故事
     private ImageView viewKnowledge;// 涨知识
     private ImageView viewTaste;// 有情趣
-
+    private boolean isLiterature;// 爱文艺
+    private boolean isLife;// 会生活
+    private boolean isJoke;// 讲笑话
+    private boolean isWorld;// 看世界
+    private boolean isStory;// 听故事
+    private boolean isKnowledge;// 涨知识
+    private boolean isTaste;// 有情趣
     private Dialog dialog;
     private Button btnFinish;// 完成
 
@@ -107,14 +113,6 @@ public class FavoriteProgramTypeActivity extends BaseActivity implements View.On
 
         getPreferenceDataRequest();
     }
-
-    private boolean isLiterature;// 爱文艺
-    private boolean isLife;// 会生活
-    private boolean isJoke;// 讲笑话
-    private boolean isWorld;// 看世界
-    private boolean isStory;// 听故事
-    private boolean isKnowledge;// 涨知识
-    private boolean isTaste;// 有情趣
 
     @Override
     public void onClick(View v) {
@@ -280,14 +278,14 @@ public class FavoriteProgramTypeActivity extends BaseActivity implements View.On
             protected void requestSuccess(JSONObject result) {
                 if(dialog != null) dialog.dismiss();
                 if(isCancelRequest) return ;
-                try {
-                    String returnType = result.getString("ReturnType");
-                    if(returnType != null && returnType.equals("1001")) {
-                        ToastUtils.show_always(context, "设置成功!");
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    String returnType = result.getString("ReturnType");
+//                    if(returnType != null && returnType.equals("1001")) {
+//                        ToastUtils.show_always(context, "设置成功!");
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
                 finish();
             }
 

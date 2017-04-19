@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.woting.ui.download.service.DownloadClient;
+import com.woting.ui.home.download.service.DownloadClient;
 import com.woting.ui.interphone.commom.service.NotificationClient;
 import com.woting.ui.interphone.commom.service.VoiceStreamPlayer;
 import com.woting.ui.interphone.commom.service.VoiceStreamRecord;

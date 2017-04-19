@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.download.service.DownloadClient;
+import com.woting.ui.home.download.service.DownloadClient;
 
 /**
  * 下载位置

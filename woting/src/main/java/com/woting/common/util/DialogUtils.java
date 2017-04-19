@@ -31,8 +31,8 @@ public class DialogUtils {
      */
     public static Dialog Dialogph(Context context, String str) {
         View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog, null);
-        TextView loadText = (TextView) dialogView.findViewById(R.id.text_wenzi);
-        loadText.setText(str);
+//        TextView loadText = (TextView) dialogView.findViewById(R.id.text_wenzi);
+//        loadText.setText(str);
         Dialog dialog = new Dialog(context, R.style.MyDialog1);
         dialog.setContentView(dialogView);
         dialog.setCanceledOnTouchOutside(false);
@@ -45,8 +45,8 @@ public class DialogUtils {
     public static Dialog Dialogphnoshow(Context ctx, String str, Dialog dialog) {
         View dialog1 = LayoutInflater.from(ctx).inflate(R.layout.dialog, null);
         //		LinearLayout linear = (LinearLayout)dialog1.findViewById(R.id.main_dialog_layout);
-        TextView text_wenzi = (TextView) dialog1.findViewById(R.id.text_wenzi);
-        text_wenzi.setText("loading");
+//        TextView text_wenzi = (TextView) dialog1.findViewById(R.id.text_wenzi);
+//        text_wenzi.setText("loading");
         dialog = new Dialog(ctx, R.style.MyDialog1);
         dialog.setContentView(dialog1);
         dialog.setCanceledOnTouchOutside(false);

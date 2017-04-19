@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.helper.CreateQRImageHelper;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
@@ -72,34 +73,68 @@ public class EWMShowActivity extends AppBaseActivity implements OnClickListener 
     // 初始化数据
     private void setData(int type, String imageUrl, String news, String name) {
         if (type == 1) {
+            if (name != null && !name.equals("")) {
+                textName.setText(name);
+            }
+
+            if (news != null && !news.equals("")) {
+                textNews.setText(news);
+            }
+
+            if (imageUrl != null && !imageUrl.equals("null") && !imageUrl.trim().equals("")) {
+                String url;
+                if (imageUrl.startsWith("http:")) {
+                    url = imageUrl;
+                } else {
+                    url = GlobalConfig.imageurl + imageUrl;
+                }
+                String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
+                // 加载图片
+                AssembleImageUrlUtils.loadImage(_url, url, imageHead, IntegerConstant.TYPE_PERSON);
+            } else {
+                imageHead.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_hy));
+            }
+
             UserInviteMeInside meInside = (UserInviteMeInside) getIntent().getSerializableExtra("person");
             bmp = CreateQRImageHelper.getInstance().createQRImage(type, null, meInside, 220, 220);
+            if (bmp == null) {
+                bmp = BitmapUtils.readBitMap(context, R.mipmap.ewm);
+            }
+
+            imageEwm.setImageBitmap(bmp);
+            textTip.setText("扫面上面的二维码图案，加我为好友");
+
         } else if (type == 2) {
+            if (name != null && !name.equals("")) {
+                textName.setText(name);
+            }
+
+            if (news != null && !news.equals("")) {
+                textNews.setText(news);
+            }
+
+            if (imageUrl != null && !imageUrl.equals("null") && !imageUrl.trim().equals("")) {
+                String url;
+                if (imageUrl.startsWith("http:")) {
+                    url = imageUrl;
+                } else {
+                    url = GlobalConfig.imageurl + imageUrl;
+                }
+                String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
+                // 加载图片
+                AssembleImageUrlUtils.loadImage(_url, url, imageHead, IntegerConstant.TYPE_GROUP);
+            } else {
+                imageHead.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_qz));
+            }
+
             GroupInfo groupNews = (GroupInfo) getIntent().getSerializableExtra("group");
             bmp = CreateQRImageHelper.getInstance().createQRImage(type, groupNews, null, 220, 220);
-
+            if (bmp == null) {
+                bmp = BitmapUtils.readBitMap(context, R.mipmap.ewm);
+            }
+            imageEwm.setImageBitmap(bmp);
             textTip.setText("扫面上面的二维码图案，加入群组");
         }
-        if (name != null && !name.equals("")) {
-            textName.setText(name);
-        }
-        if (news != null && !news.equals("")) {
-            textNews.setText(news);
-        }
-        if (imageUrl != null && !imageUrl.equals("null") && !imageUrl.trim().equals("")) {
-            if (!imageUrl.startsWith("http:")) {
-                imageUrl = AssembleImageUrlUtils.assembleImageUrl150(GlobalConfig.imageurl + imageUrl);
-            }else{
-                imageUrl = AssembleImageUrlUtils.assembleImageUrl150(imageUrl);
-            }
-            Picasso.with(context).load(imageUrl.replace("\\/", "/")).resize(100, 100).centerCrop().into(imageHead);
-        } else {
-            imageHead.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_hy));
-        }
-        if (bmp == null) {
-            bmp = BitmapUtils.readBitMap(context, R.mipmap.ewm);
-        }
-        imageEwm.setImageBitmap(bmp);
     }
 
     @Override

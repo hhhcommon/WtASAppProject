@@ -311,9 +311,10 @@
         <!--  -->
         <activity
             android:name=".ui.mine.feedback.feedbacklist.activity.FeedbackListActivity"
+            android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
 
         <!--  -->
         <activity
@@ -443,7 +444,7 @@
 
         <!--  -->
         <activity
-            android:name=".ui.download.downloadlist.activity.DownLoadListActivity"
+            android:name=".ui.home.download.downloadlist.activity.DownLoadListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
@@ -561,7 +562,7 @@
 
         <!--查看大图-->
         <activity
-            android:name=".ui.picture.ViewBigPictureActivity"
+            android:name=".ui.common.picture.ViewBigPictureActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>

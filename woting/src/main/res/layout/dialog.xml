@@ -2,33 +2,31 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:visibility="visible" >
+    android:visibility="visible">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/main_dialog_layout"
-        android:layout_width="150dp"
-        android:layout_height="130dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_centerInParent="true"
-        android:background="@color/transparent"
-        android:gravity="center"
-        android:orientation="vertical" >
+        android:background="@color/translucent42_black"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/dialog_wt_white" />
 
         <ProgressBar
             android:id="@+id/progressBar"
-            style="@style/mProgress_circle"
-            android:layout_width="17dp"
-            android:layout_height="17dp"
-            android:indeterminateDuration="720" />
+            style="@style/dialog_circle"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerInParent="true"
+            android:indeterminateDuration="400" />
 
-        <TextView
-            android:id="@+id/text_wenzi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="正在加载"
-            android:textColor="@color/WHITE"
-            android:textSize="12sp" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

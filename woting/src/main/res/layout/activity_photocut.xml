@@ -1,45 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:clipToPadding="true"
-    android:fitsSystemWindows="true"
-    android:background="@color/dinglan_orange"
-    android:orientation="vertical" >
-
-    <RelativeLayout
-        android:id="@+id/lin_head"
-        android:layout_width="match_parent"
-        android:layout_height="48dp">
-
-        <ImageView
-            android:id="@+id/head_left_btn"
-            style="@style/LeftImageStyle" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="图片剪切"
-            android:textColor="@color/WHITE_1"
-            android:textSize="@dimen/activity_head_center_s" />
-
-        <TextView
-            android:id="@+id/lin_save"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:gravity="center"
-            android:layout_alignParentRight="true"
-            android:text="保 存"
-            android:textColor="@color/WHITE"/>
-
-    </RelativeLayout>
+    android:layout_height="fill_parent">
 
     <com.woting.common.widgetui.photocut.ClipImageLayout
         android:id="@+id/id_clipImageLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:layout_below="@id/lin_head"/>
+        android:background="@color/black" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@color/black"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/head_left_btn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:text="取消"
+            android:textColor="@color/WHITE"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/lin_save"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="选取"
+            android:textColor="@color/WHITE"
+            android:textSize="20sp" />
+
+    </RelativeLayout>
 </RelativeLayout>

@@ -32,6 +32,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.mine.feedback.activity.FeedbackActivity;
+import com.woting.ui.mine.feedback.feedbacklist.activity.FeedbackListActivity;
 import com.woting.ui.mine.person.modifypassword.ModifyPasswordActivity;
 import com.woting.ui.mine.person.phonecheck.PhoneCheckActivity;
 import com.woting.ui.mine.set.about.AboutActivity;
@@ -166,7 +167,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 startActivity(new Intent(context, SecretSetActivity.class));
                 break;
             case R.id.lin_feedback:         // 意见反馈
-                startActivity(new Intent(context, FeedbackActivity.class));
+                startActivity(new Intent(context, FeedbackListActivity.class));
                 break;
             case R.id.lin_update:           // 检查更新
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {

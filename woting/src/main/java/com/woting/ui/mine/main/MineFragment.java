@@ -52,8 +52,7 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.photocut.PhotoCutActivity;
 import com.woting.ui.common.qrcodes.EWMShowActivity;
-import com.woting.ui.download.main.DownloadFragment;
-import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
+import com.woting.ui.home.download.main.DownloadFragment;
 import com.woting.ui.interphone.model.UserInviteMeInside;
 import com.woting.ui.mine.favorite.main.FavoriteFragment;
 import com.woting.ui.mine.hardware.HardwareIntroduceActivity;
@@ -65,11 +64,10 @@ import com.woting.ui.mine.playhistory.main.PlayHistoryFragment;
 import com.woting.ui.mine.set.SetActivity;
 import com.woting.ui.mine.shapeapp.ShapeAppActivity;
 import com.woting.ui.mine.subscriber.main.SubscriberListFragment;
-import com.woting.ui.picture.ViewBigPictureActivity;
+import com.woting.ui.common.picture.ViewBigPictureActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.io.File;
 import java.util.ArrayList;

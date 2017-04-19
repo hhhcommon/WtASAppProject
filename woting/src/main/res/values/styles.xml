@@ -64,6 +64,14 @@
         <item name="android:maxHeight">45dp</item>
     </style>
 
+    <style name="dialog_circle">
+        <item name="android:indeterminateDrawable">@drawable/dialog_background</item>
+        <item name="android:minWidth">35dp</item>
+        <item name="android:minHeight">35dp</item>
+        <item name="android:maxWidth">35dp</item>
+        <item name="android:maxHeight">35dp</item>
+    </style>
+
     <style name="MyDialog_duijiang" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <!-- 边框 -->
