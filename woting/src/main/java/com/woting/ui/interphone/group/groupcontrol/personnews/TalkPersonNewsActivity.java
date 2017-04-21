@@ -114,7 +114,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
                 if (id != null && !id.equals("")) {
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                         confirmDialog.dismiss();
-                        dialogs = DialogUtils.Dialogph(context, "正在获取数据");
+                        dialogs = DialogUtils.Dialog(context);
                         send();
                     } else {
                         ToastUtils.show_always(context, "网络失败，请检查网络");
@@ -307,7 +307,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
                         groupSignature = "";
                     }
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialogs = DialogUtils.Dialogph(context, "提交中");
+                        dialogs = DialogUtils.Dialog(context);
                         update(biename, groupSignature);
                     } else {
                         ToastUtils.show_always(context, "网络失败，请检查网络");

@@ -1,11 +1,9 @@
 package com.woting.ui.mine.feedback.feedbacklist.activity;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Adapter;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupClickListener;
@@ -20,11 +18,8 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.common.widgetui.MyEditText;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.home.program.diantai.adapter.OnLinesAdapter;
-import com.woting.ui.home.program.diantai.model.RadioPlay;
 import com.woting.ui.mine.feedback.feedbacklist.adapter.FeedBackExpandAdapter;
 import com.woting.ui.mine.feedback.feedbacklist.model.OpinionMessage;
 
@@ -54,7 +49,7 @@ public class FeedbackListActivity extends AppBaseActivity implements OnClickList
     @Override
     public void onWhiteViewClick() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "通讯中");
+            dialog = DialogUtils.Dialog(context);
             send();
         } else {
             tipView.setVisibility(View.VISIBLE);
@@ -80,7 +75,7 @@ public class FeedbackListActivity extends AppBaseActivity implements OnClickList
         setContentView(R.layout.activity_feedbacklistex);
         setView();
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "通讯中");
+            dialog = DialogUtils.Dialog(context);
             send();
         } else {
             tipView.setVisibility(View.VISIBLE);
@@ -162,7 +157,7 @@ public class FeedbackListActivity extends AppBaseActivity implements OnClickList
             Toast.makeText(context, "请您输入您的意见", Toast.LENGTH_LONG).show();
         } else {
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                dialog = DialogUtils.Dialogph(context, "反馈中");
+                dialog = DialogUtils.Dialog(context);
                 sendNews(sEditContent);
             } else {
                 ToastUtils.show_short(context, "网络失败，请检查网络");

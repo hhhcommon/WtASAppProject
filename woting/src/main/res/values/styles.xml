@@ -1,31 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
     </style>
+
     <!--启动页主题-->
     <style name="SplashTheme" parent="@android:style/Theme.Light.NoTitleBar.Fullscreen">
         <item name="android:windowBackground">@drawable/background_splash</item>
     </style>
+
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
+
     <!-- Activity无标题栏 开始 -->
     <style name="MyAppTheme" parent="AppTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
     </style>
     <!-- Activity无标题栏 结束 -->
+
     <style name="MyDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowNoTitle">true</item>
@@ -43,19 +38,16 @@
         <item name="@android:windowExitAnimation">@anim/umeng_socialize_slide_out_from_bottom</item>
     </style>
 
-
     <style name="MyDialog1" parent="@android:style/Theme.Dialog">
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowBackground">@null</item>
-        <item name="android:windowIsTranslucent">false</item>
-        <!-- 半透明 -->
-        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
-        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+        <item name="android:windowFrame">@null</item><!--边框-->
+        <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
+        <item name="android:windowIsTranslucent">false</item><!--半透明-->
+        <item name="android:windowNoTitle">true</item><!--无标题-->
+        <item name="android:windowBackground">@color/transparent</item><!--背景透明-->
+        <item name="android:backgroundDimEnabled">false</item><!--模糊-->
     </style>
 
+    <!--加载更多-->
     <style name="mProgress_circle">
         <item name="android:indeterminateDrawable">@drawable/progre</item>
         <item name="android:minWidth">30dp</item>
@@ -64,8 +56,10 @@
         <item name="android:maxHeight">45dp</item>
     </style>
 
+    <!--等待提示-->
     <style name="dialog_circle">
         <item name="android:indeterminateDrawable">@drawable/dialog_background</item>
+        <item name="android:background">@mipmap/dialog_circle_white</item>
         <item name="android:minWidth">35dp</item>
         <item name="android:minHeight">35dp</item>
         <item name="android:maxWidth">35dp</item>

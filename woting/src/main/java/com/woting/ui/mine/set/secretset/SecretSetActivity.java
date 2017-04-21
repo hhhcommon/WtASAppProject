@@ -71,7 +71,7 @@ public class SecretSetActivity extends AppBaseActivity implements OnClickListene
             case R.id.phone_set:             // 隐私设置-是否允许通过手机号查找好友
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                     String phoneSet = BSApplication.SharedPreferences.getString(StringConstant.PHONE_NUMBER_FIND, "0");
-                    dialog = DialogUtils.Dialogph(context, "通讯中");
+                    dialog = DialogUtils.Dialog(context);
                     if (phoneSet.equals("1")) {
                         sendUpdate("0");
                     } else {

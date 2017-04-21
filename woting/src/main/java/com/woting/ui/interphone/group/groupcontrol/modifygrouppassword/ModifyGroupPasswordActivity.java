@@ -111,7 +111,7 @@ public class ModifyGroupPasswordActivity extends AppBaseActivity implements OnCl
 	}
 
 	protected void send() {
-		dialog = DialogUtils.Dialogph(context, "修改群密码提交请求");
+		dialog = DialogUtils.Dialog(context);
 		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
 			jsonObject.put("OldPassword", oldpassword);

@@ -137,7 +137,7 @@ public class FriendAddActivity extends AppBaseActivity implements OnClickListene
 				ToastUtils.show_always(context, "请输入验证信息");
 			}else{
 				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-					dialog = DialogUtils.Dialogph(context, "申请中");
+					dialog = DialogUtils.Dialog(context);
 					sendRequest();
 				} else {
 					ToastUtils.show_always(getApplicationContext(),"网络连接失败，请稍后重试");

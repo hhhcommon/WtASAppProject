@@ -24,7 +24,6 @@ import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.GroupInfo;
-import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.interphone.find.findresult.adapter.FindFriendResultAdapter;
 import com.woting.ui.interphone.find.findresult.adapter.FindGroupResultAdapter;
 import com.woting.ui.interphone.find.friendadd.FriendAddActivity;
@@ -93,7 +92,7 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
         if (type.equals("friend")) {// 搜索好友
             if (!searchstr.trim().equals("")) {
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                    dialog = DialogUtils.Dialogph(context, "正在获取数据");
+                    dialog = DialogUtils.Dialog(context);
                     PageNum = 1;
                     RefreshType = 1;
                     getFriend();
@@ -108,7 +107,7 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
         } else if (type.equals("group")) {// 搜索群组
             if (!searchstr.trim().equals("")) {
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                    dialog = DialogUtils.Dialogph(context, "正在获取数据");
+                    dialog = DialogUtils.Dialog(context);
                     PageNum = 1;
                     RefreshType = 1;
                     getGroup();

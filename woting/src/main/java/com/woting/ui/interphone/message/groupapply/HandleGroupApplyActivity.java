@@ -80,7 +80,7 @@ public class HandleGroupApplyActivity extends AppBaseActivity implements OnClick
     // 获取数据
     private void getData() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
+            dialog = DialogUtils.Dialog(context);
             send();
         } else {
             tipView.setVisibility(View.VISIBLE);
@@ -125,7 +125,7 @@ public class HandleGroupApplyActivity extends AppBaseActivity implements OnClick
     @Override
     public void onWhiteViewClick() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
+            dialog = DialogUtils.Dialog(context);
             send();
         } else {
             tipView.setVisibility(View.VISIBLE);

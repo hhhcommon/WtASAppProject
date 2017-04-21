@@ -70,7 +70,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
         push.putExtras(bundle);
         context.sendBroadcast(push);
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "通讯中");
+            dialog = DialogUtils.Dialog(context);
             sendForGetPerson();
         } else {
             tipView.setVisibility(View.VISIBLE);
@@ -102,7 +102,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                 delDialog.dismiss();
                 if (mes != null && mes.get(Position) != null && mes.get(Position).getMSType() != null && !mes.get(Position).getMSType().equals("")) {
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(context, "正在获取数据");
+                        dialog = DialogUtils.Dialog(context);
                         sendRequest(mes.get(Position), 2);
                     } else {
                         ToastUtils.show_always(context, "网络连接失败，请稍后重试");
@@ -296,7 +296,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
             public void tongyi(int position) {
                 if (mes != null && mes.get(position) != null && mes.get(position).getMSType() != null && !mes.get(position).getMSType().equals("")) {
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(context, "正在获取数据");
+                        dialog = DialogUtils.Dialog(context);
                         Position = position;
                         sendRequest(mes.get(position), 1);
                     } else {

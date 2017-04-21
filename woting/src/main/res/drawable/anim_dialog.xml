@@ -2,7 +2,7 @@
 <animation-list
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@mipmap/dialog_circle_05" android:duration="50"/>
+    <item android:drawable="@mipmap/dialog_circle_01" android:duration="50"/>
     <!--<item android:drawable="@mipmap/dialog_circle_02" android:duration="50"/>-->
     <!--<item android:drawable="@mipmap/dialog_circle_03" android:duration="50"/>-->
     <!--<item android:drawable="@mipmap/dialog_circle_04" android:duration="50"/>-->

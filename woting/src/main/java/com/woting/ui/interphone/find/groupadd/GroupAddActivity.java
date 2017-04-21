@@ -177,7 +177,7 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 					} else {
 						if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 							// 进入验证群走单独接口
-							dialog = DialogUtils.Dialogph(GroupAddActivity.this,"正在发送请求");
+							dialog = DialogUtils.Dialog(context);
 							sendRequest();
 						} else {
 							ToastUtils.show_always(getApplicationContext(),"网络连接失败，请稍后重试");
@@ -190,7 +190,7 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 						ToastUtils.show_always(getApplicationContext(), "请输入验证密码");
 					} else {
 						if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-							dialog = DialogUtils.Dialogph(GroupAddActivity.this,"通讯中");
+							dialog = DialogUtils.Dialog(context);
 							send();
 						} else {
 							ToastUtils.show_always(getApplicationContext(),"网络连接失败，请稍后重试");
@@ -199,7 +199,7 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 				} else {
 					// 公开群
 					if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-						dialog = DialogUtils.Dialogph(GroupAddActivity.this, "通讯中");
+						dialog = DialogUtils.Dialog(context);
 						send();
 					} else {
 						ToastUtils.show_always(getApplicationContext(),"网络连接失败，请稍后重试");

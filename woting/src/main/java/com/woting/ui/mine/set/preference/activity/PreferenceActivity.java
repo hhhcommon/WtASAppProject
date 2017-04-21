@@ -22,7 +22,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.home.program.fenlei.model.FenLei;
+import com.woting.ui.music.classify.model.FenLei;
 import com.woting.ui.mine.set.preference.adapter.PianHaoAdapter;
 
 import org.json.JSONException;
@@ -52,7 +52,7 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
     @Override
     public void onWhiteViewClick() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在获取信息");
+            dialog = DialogUtils.Dialog(context);
             send();
         } else {
             tipView.setVisibility(View.VISIBLE);
@@ -78,7 +78,7 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
         listPrefer = (ListView) findViewById(R.id.lv_prefer);
 
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在获取信息");
+            dialog = DialogUtils.Dialog(context);
             send();
         } else {
             tipView.setVisibility(View.VISIBLE);
@@ -112,7 +112,7 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
                 }
                 if (preferenceList.size() != 0) {
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(context, "通讯中...");
+                        dialog = DialogUtils.Dialog(context);
                         sendRequest();
                     } else {
                         ToastUtils.show_always(context, "网络失败，请检查网络");

@@ -118,7 +118,7 @@ public class updateUserNumActivity extends AppActivity implements View.OnClickLi
                 break;
             case R.id.tv_confirm:
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                    dialog = DialogUtils.Dialogph(context, "正在获取数据");
+                    dialog = DialogUtils.Dialog(context);
                     send();
                 } else {
                     ToastUtils.show_always(context, "网络失败，请检查网络");

@@ -70,7 +70,7 @@ public class TransferAuthorityActivity extends AppBaseActivity implements OnClic
         groupId = getIntent().getStringExtra("GroupId");
         if (groupId != null && !groupId.equals("")) {
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
+                dialog = DialogUtils.Dialog(context);
                 send();
             } else {
                 tipView.setVisibility(View.VISIBLE);
@@ -117,7 +117,7 @@ public class TransferAuthorityActivity extends AppBaseActivity implements OnClic
         groupId = getIntent().getStringExtra("GroupId");
         if (groupId != null && !groupId.equals("")) {
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
+                dialog = DialogUtils.Dialog(context);
                 send();
             } else {
                 tipView.setVisibility(View.VISIBLE);
@@ -150,7 +150,7 @@ public class TransferAuthorityActivity extends AppBaseActivity implements OnClic
                     return;
                 }
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {// 发送进入组的邀请
-                    dialog = DialogUtils.Dialogph(context, "正在发送邀请");
+                    dialog = DialogUtils.Dialog(context);
                     sendTransferAuthority();
                 } else {
                     ToastUtils.show_always(context, "网络失败，请检查网络");

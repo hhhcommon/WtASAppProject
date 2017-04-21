@@ -14,9 +14,12 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
-import com.woting.ui.home.program.fmlist.model.RankInfo;
+import com.woting.ui.model.album;
+import com.woting.ui.model.content;
+import com.woting.ui.model.program;
 
 import java.util.List;
+
 
 /**
  * 展示上传文件的列表
@@ -24,7 +27,7 @@ import java.util.List;
  */
 public class MyUploadListAdapter extends BaseAdapter {
     private Context context;
-    private List<RankInfo> list;
+    private List<content> list;
     private boolean isVisible;// 选择
 
     // 设置状态
@@ -39,17 +42,17 @@ public class MyUploadListAdapter extends BaseAdapter {
     }
 
     // 刷新界面
-    public void setList(List<RankInfo> list) {
+    public void setList(List<content> list) {
         this.list = list;
         notifyDataSetChanged();
     }
 
-    public MyUploadListAdapter(Context context, List<RankInfo> list) {
+    public MyUploadListAdapter(Context context, List<content> list) {
         this.context = context;
         this.list = list;
     }
 
-    public MyUploadListAdapter(Context context, List<RankInfo> list, boolean isVisible) {
+    public MyUploadListAdapter(Context context, List<content> list, boolean isVisible) {
         this.context = context;
         this.list = list;
         this.isVisible = isVisible;
@@ -94,7 +97,7 @@ public class MyUploadListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        RankInfo rankInfo = list.get(position);
+        content rankInfo = list.get(position);
 
         // 展示封面图片
         String coverUrl = rankInfo.getContentImg();

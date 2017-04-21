@@ -167,7 +167,7 @@ public class SetGroupManagerActivity extends AppBaseActivity implements OnClickL
                     if(resultList.size()>0){
                         //调接口
                         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                            dialog = DialogUtils.Dialogph(context, "正在删除群成员");
+                            dialog = DialogUtils.Dialog(context);
                             send();
                         } else {
                             tipView.setVisibility(View.VISIBLE);

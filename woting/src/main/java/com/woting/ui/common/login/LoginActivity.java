@@ -224,7 +224,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
             return;
         }
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "登录中");
+            dialog = DialogUtils.Dialog(context);
             send();
         } else {
             ToastUtils.show_always(context, "网络连接失败，请检查网络");
@@ -731,7 +731,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         description = arg1.getString("description");
                         county = arg1.getString("country");
                         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                            dialog = DialogUtils.Dialogph(context, "正在用新浪信息注册");
+                            dialog = DialogUtils.Dialog(context);
                             sendThird();
                         } else {
                             ToastUtils.show_always(context, "网络失败，请检查网络");
@@ -750,7 +750,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                     province = data.get("province");
                     city = data.get("city");
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(context, "正在用微信信息注册");
+                        dialog = DialogUtils.Dialog(context);
                         sendThird();
                     } else {
                         ToastUtils.show_always(context, "网络失败，请检查网络");
@@ -764,7 +764,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                     province = data.get("province");
                     city = data.get("city");
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(context, "正在用qq信息注册");
+                        dialog = DialogUtils.Dialog(context);
                         sendThird();
                     } else {
                         ToastUtils.show_always(context, "网络失败，请检查网络");

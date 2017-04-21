@@ -26,8 +26,9 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.home.program.album.main.AlbumFragment;
-import com.woting.ui.home.program.fmlist.model.RankInfo;
+import com.woting.ui.model.album;
+import com.woting.ui.model.content;
+import com.woting.ui.musicplay.album.main.AlbumFragment;
 import com.woting.ui.mine.myupload.MyUploadActivity;
 import com.woting.ui.mine.myupload.adapter.MyUploadListAdapter;
 
@@ -47,8 +48,8 @@ public class MyUploadSequFragment extends Fragment implements AdapterView.OnItem
     private MyUploadListAdapter adapter;
 //    private List<RankInfo> subList;
 //    private List<String> delList;
-    private List<RankInfo> newList = new ArrayList<>();
-    private List<RankInfo> checkList = new ArrayList<>();
+    private List<content> newList = new ArrayList<>();
+    private List<content> checkList = new ArrayList<>();
 
     private View rootView;
     private Dialog dialog;
@@ -61,7 +62,7 @@ public class MyUploadSequFragment extends Fragment implements AdapterView.OnItem
 
     @Override
     public void onWhiteViewClick() {
-        dialog = DialogUtils.Dialogph(context, "获取数据中....");
+        dialog = DialogUtils.Dialog(context);
         sendRequest();
     }
 
@@ -89,7 +90,7 @@ public class MyUploadSequFragment extends Fragment implements AdapterView.OnItem
         mListView = (ListView) rootView.findViewById(R.id.list_view);
         mListView.setOnItemClickListener(this);
 
-        dialog = DialogUtils.Dialogph(context, "数据加载中....");
+        dialog = DialogUtils.Dialog(context);
         sendRequest();
     }
 
@@ -125,7 +126,7 @@ public class MyUploadSequFragment extends Fragment implements AdapterView.OnItem
 
                     if (ReturnType != null && ReturnType.equals("1001")) {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        newList = new Gson().fromJson(arg1.getString("FavoriteList"), new TypeToken<List<RankInfo>>() {}.getType());
+                        newList = new Gson().fromJson(arg1.getString("FavoriteList"), new TypeToken<List<content>>() {}.getType());
                         if (adapter == null) {
                             mListView.setAdapter(adapter = new MyUploadListAdapter(context, newList));
                         } else {
@@ -219,7 +220,7 @@ public class MyUploadSequFragment extends Fragment implements AdapterView.OnItem
     // 删除
     public void delItem() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在删除...");
+            dialog = DialogUtils.Dialog(context);
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < newList.size(); i++) {
                 if (newList.get(i).getChecktype() == 1) {

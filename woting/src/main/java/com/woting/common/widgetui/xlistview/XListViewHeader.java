@@ -1,9 +1,3 @@
-/**
- * @file XListViewHeader.java
- * @create Apr 18, 2012 5:22:27 PM
- * @author Maxwin
- * @description XListView's header
- */
 package com.woting.common.widgetui.xlistview;
 
 import android.content.Context;
@@ -21,17 +15,18 @@ import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.common.util.TimeUtils;
-
+/**
+ * 下拉刷新
+ *
+ * @author 辛龙
+ *         2016年8月8日
+ */
 public class XListViewHeader extends LinearLayout {
 	private LinearLayout mContainer;
 	private ImageView mArrowImageView;
 	private ProgressBar mProgressBar;
 	private TextView mHintTextView;
-    private TextView mRefreshTimeTextView;// 最近更新时间
 	private int mState = STATE_NORMAL;
-
-	private Animation mRotateUpAnim;
-	private Animation mRotateDownAnim;
 
 	private final int ROTATE_ANIM_DURATION = 180;
 
@@ -39,8 +34,10 @@ public class XListViewHeader extends LinearLayout {
 	public final static int STATE_READY = 1;
 	public final static int STATE_REFRESHING = 2;
 
-    private long refreshTime;
-
+	/**
+	 * 构造方法
+	 * @param context
+     */
 	public XListViewHeader(Context context) {
 		super(context);
 		initView(context);
@@ -56,71 +53,63 @@ public class XListViewHeader extends LinearLayout {
 		return true;
 	}
 
+	/**
+	 * 初始化界面
+	 * @param context
+     */
 	private void initView(Context context) {
-		// 初始情况，设置下拉刷新view高度�?0
-		LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, 0);
+		// 初始情况，设置下拉刷新view高度为0
 		mContainer = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.xlistview_header, null);
+		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT,0);
 		addView(mContainer, lp);
 		setGravity(Gravity.BOTTOM);
 
 		mArrowImageView = (ImageView)findViewById(R.id.xlistview_header_arrow);
 		mHintTextView = (TextView)findViewById(R.id.xlistview_header_hint_textview);
 		mProgressBar = (ProgressBar)findViewById(R.id.xlistview_header_progressbar);
-        mRefreshTimeTextView = (TextView) findViewById(R.id.xlistview_header_time);
-
-        refreshTime = System.currentTimeMillis();
-        mRefreshTimeTextView.setText(TimeUtils.converTime(refreshTime));
-
-		mRotateUpAnim = new RotateAnimation(0.0f, -180.0f,
-				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+		// 转换动画
+		Animation mRotateUpAnim = new RotateAnimation(0.0f, -180.0f,Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 		mRotateUpAnim.setDuration(ROTATE_ANIM_DURATION);
 		mRotateUpAnim.setFillAfter(true);
-		mRotateDownAnim = new RotateAnimation(-180.0f, 0.0f,
-				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+		// 转换动画
+		Animation mRotateDownAnim = new RotateAnimation(-180.0f, 0.0f,Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 		mRotateDownAnim.setDuration(ROTATE_ANIM_DURATION);
 		mRotateDownAnim.setFillAfter(true);
 	}
 
+	/**
+	 * 样式设置
+	 * @param state
+     */
 	public void setState(int state) {
 		if (state == mState) return ;
 
 		if (state == STATE_REFRESHING) {	// 显示进度
-			mArrowImageView.clearAnimation();
-			mArrowImageView.setVisibility(View.INVISIBLE);
+			mArrowImageView.setVisibility(View.GONE);
 			mProgressBar.setVisibility(View.VISIBLE);
-		} else {	// 显示箭头图片
+		} else {	                        // 显示箭头图片
 			mArrowImageView.setVisibility(View.VISIBLE);
-			mProgressBar.setVisibility(View.INVISIBLE);
+			mProgressBar.setVisibility(View.GONE);
 		}
 
 		switch(state){
 		case STATE_NORMAL:
-			if (mState == STATE_READY) {
-				mArrowImageView.startAnimation(mRotateDownAnim);
-                mRefreshTimeTextView.setText(TimeUtils.converTime(refreshTime));
-			}
-			if (mState == STATE_REFRESHING) {
-				mArrowImageView.clearAnimation();
-			}
 			mHintTextView.setText(R.string.xlistview_header_hint_normal);
 			break;
 		case STATE_READY:
 			if (mState != STATE_READY) {
-				mArrowImageView.clearAnimation();
-				mArrowImageView.startAnimation(mRotateUpAnim);
 				mHintTextView.setText(R.string.xlistview_header_hint_ready);
 			}
 			break;
 		case STATE_REFRESHING:
 			mHintTextView.setText(R.string.xlistview_header_hint_loading);
-            refreshTime = System.currentTimeMillis();
 			break;
 			default:
 		}
 		mState = state;
 	}
 
-	public void setVisiableHeight(int height) {
+	public void setVisibleHeight(int height) {
 		if (height < 0)
 			height = 0;
 		LayoutParams lp = (LayoutParams) mContainer.getLayoutParams();
@@ -128,7 +117,7 @@ public class XListViewHeader extends LinearLayout {
 		mContainer.setLayoutParams(lp);
 	}
 
-	public int getVisiableHeight() {
+	public int getVisibleHeight() {
 		return mContainer.getHeight();
 	}
 }

@@ -17,9 +17,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	}
 
 	public void onCreate(SQLiteDatabase db) {
-		// 搜索历史表
-		db.execSQL("CREATE TABLE IF NOT EXISTS history(_id Integer primary key autoincrement, "
-				+ "userid varchar(50),playName varchar(50))");
+
 		// talkhistory对讲历史，暂缺对讲结束时间
 		//bjuserid用户id    type对讲类型group，person   id对讲id  addtime对讲开始时间
 		db.execSQL("CREATE TABLE IF NOT EXISTS talkHistory(_id Integer primary key autoincrement, "
@@ -71,6 +69,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 				+ "seq_id varchar(50),content_name varchar(100),content_id varchar(50),"
 				+"deal_time varchar(50),add_time varchar(50)," +
 				"biz_type varchar(10),cmd_type varchar(10),command varchar(10),message_id varchar(50))");
+
+		// 搜索历史表
+		db.execSQL("CREATE TABLE IF NOT EXISTS history(_id Integer primary key autoincrement, "
+				+ "user_id varchar(50),playName varchar(50))");
 	}
 
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

@@ -222,7 +222,7 @@ public class FavoriteProgramTypeActivity extends BaseActivity implements View.On
         if(prefStr.length() != 0) {
 //            ToastUtils.show_always(context, prefStr.substring(0, prefStr.length() - 1));
 
-            dialog = DialogUtils.Dialogph(context, "Loading...");
+            dialog = DialogUtils.Dialog(context);
             sendPreferenceOkRequest(prefStr.substring(0, prefStr.length() - 1));
         }
     }

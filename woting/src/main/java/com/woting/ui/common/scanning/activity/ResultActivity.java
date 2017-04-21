@@ -52,7 +52,7 @@ public class ResultActivity extends Activity {
             if (result.contains("http")) {
                 webview.setVisibility(View.VISIBLE);
                 mResultText.setVisibility(View.GONE);
-                dialog = DialogUtils.Dialogph(context, "正在加载");
+                dialog = DialogUtils.Dialog(context);
                 WebSettings setting = webview.getSettings();
                 setting.setJavaScriptEnabled(true);    // 支持 js
                 webview.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);// 解决缓存问题

@@ -12,8 +12,8 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.location.GDLocation;
-import com.woting.ui.home.model.CatalogName;
-import com.woting.ui.home.program.citylist.dao.CityInfoDao;
+import com.woting.ui.model.city.CatalogName;
+import com.woting.ui.music.citylist.dao.CityInfoDao;
 
 import java.util.List;
 

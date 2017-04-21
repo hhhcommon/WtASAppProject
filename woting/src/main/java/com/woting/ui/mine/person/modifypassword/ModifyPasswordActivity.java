@@ -179,7 +179,7 @@ public class ModifyPasswordActivity extends AppBaseActivity implements OnClickLi
     }
 
     protected void send() {
-        dialog = DialogUtils.Dialogph(context, "正在提交请求");
+        dialog = DialogUtils.Dialog(context);
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("OldPassword", oldPassword);// 待改

@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.ui.home.program.fenlei.model.FenLeiName;
+import com.woting.ui.music.classify.model.FenLeiName;
 
 import java.util.List;
 

@@ -3,12 +3,4 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:drawable="@mipmap/load_more_1" android:duration="100"/>
-    <item android:drawable="@mipmap/load_more_2" android:duration="100"/>
-    <item android:drawable="@mipmap/load_more_3" android:duration="100"/>
-    <item android:drawable="@mipmap/load_more_4" android:duration="100"/>
-    <item android:drawable="@mipmap/load_more_5" android:duration="100"/>
-    <item android:drawable="@mipmap/load_more_6" android:duration="100"/>
-    <item android:drawable="@mipmap/load_more_7" android:duration="100"/>
-    <item android:drawable="@mipmap/load_more_8" android:duration="100"/>
-
 </animation-list>

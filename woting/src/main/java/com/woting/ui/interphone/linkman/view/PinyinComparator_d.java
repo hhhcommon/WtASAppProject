@@ -1,6 +1,6 @@
 package com.woting.ui.interphone.linkman.view;
 
-import com.woting.ui.home.model.CatalogName;
+import com.woting.ui.model.city.CatalogName;
 
 import java.util.Comparator;
 

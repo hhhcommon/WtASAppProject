@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,57 +24,57 @@ import com.woting.common.widgetui.CustomProgressDialog;
 public class DialogUtils {
 
     /**
-     * 暂时把传递的数据隐藏，只是展示转圈提示
-     *
+     * 等待提示
      * @param context
-     * @param str
      * @return
      */
-    public static Dialog Dialogph(Context context, String str) {
+    public static Dialog Dialog(Context context) {
         View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog, null);
-//        TextView loadText = (TextView) dialogView.findViewById(R.id.text_wenzi);
-//        loadText.setText(str);
+
         Dialog dialog = new Dialog(context, R.style.MyDialog1);
         dialog.setContentView(dialogView);
         dialog.setCanceledOnTouchOutside(false);
-        dialog.getWindow().setGravity(Gravity.CENTER);
-        dialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
+
+        Window dialogWindow = dialog.getWindow();
+        // WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        // lp.width = 300; // 宽度
+        // lp.height = 300; // 高度
+        // dialogWindow.setAttributes(lp);
+        dialogWindow.setGravity(Gravity.CENTER);
+        dialogWindow.setBackgroundDrawableResource(R.color.dialog);
         dialog.show();
         return dialog;
     }
 
-    public static Dialog Dialogphnoshow(Context ctx, String str, Dialog dialog) {
+    /**
+     * 用于分享的样式
+     * @param ctx
+     * @return
+     */
+    public static Dialog DialogForShare(Context ctx) {
         View dialog1 = LayoutInflater.from(ctx).inflate(R.layout.dialog, null);
-        //		LinearLayout linear = (LinearLayout)dialog1.findViewById(R.id.main_dialog_layout);
-//        TextView text_wenzi = (TextView) dialog1.findViewById(R.id.text_wenzi);
-//        text_wenzi.setText("loading");
-        dialog = new Dialog(ctx, R.style.MyDialog1);
+        Dialog dialog = new Dialog(ctx, R.style.MyDialog1);
         dialog.setContentView(dialog1);
         dialog.setCanceledOnTouchOutside(false);
         dialog.getWindow().setGravity(Gravity.CENTER);
         dialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
-//		 android:background="@drawable/dialog_ph"
-        return dialog;
-    }
-
-    public static Dialog Dialogph_f(Context ctx, String str, Dialog dialog) {
-        dialog = new CustomProgressDialog(ctx, str, R.drawable.frame);
         return dialog;
     }
 
     /**
+     * 广告位弹出框---现在是在界面中写死的数据，需要对接修改此dialog
      * @param context
      * @param message
      * @return
      */
     public static void MessageShow(Context context, String message) {
-        //加载Toast布局
+        // 加载Toast布局
         View toastRoot = LayoutInflater.from(context).inflate(R.layout.dialog_message_show, null);
-        //初始化布局控件
+        // 初始化布局控件
         TextView mTextView = (TextView) toastRoot.findViewById(R.id.tv_notify);
-        //为控件设置属性
-//			mTextView.setText(message);
-        //Toast的初始化
+        // 为控件设置属性
+        // mTextView.setText(message);
+        // Toast的初始化
         Toast toastStart = new Toast(context);
         //Toast的Y坐标是屏幕高度的1/3，不会出现不适配的问题
         toastStart.setGravity(Gravity.TOP, 0, 140);

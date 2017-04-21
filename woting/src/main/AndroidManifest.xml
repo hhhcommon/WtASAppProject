@@ -166,7 +166,7 @@
 
         <!--  -->
         <activity
-            android:name=".ui.home.main.HomeActivity"
+            android:name=".ui.music.main.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan"/>
@@ -200,7 +200,7 @@
 
         <!--  -->
         <activity
-            android:name=".ui.home.program.comment.CommentActivity"
+            android:name=".ui.musicplay.comment.CommentActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
@@ -226,7 +226,7 @@
 
         <!--  -->
         <activity
-            android:name=".ui.home.player.main.play.PlayerActivity"
+            android:name=".ui.musicplay.play.play.PlayerActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan"/>
@@ -409,7 +409,7 @@
 
         <!--  -->
         <activity
-            android:name=".ui.home.player.timeset.activity.TimerPowerOffActivity"
+            android:name=".ui.musicplay.timeimg.TimerPowerOffActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
@@ -444,7 +444,7 @@
 
         <!--  -->
         <activity
-            android:name=".ui.home.download.downloadlist.activity.DownLoadListActivity"
+            android:name=".ui.musicplay.download.downloadlist.activity.DownLoadListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
@@ -541,21 +541,21 @@
 
         <!-- 电台节目单界面 -->
         <activity
-            android:name=".ui.home.player.programme.ProgrammeActivity"
+            android:name=".ui.musicplay.programme.ProgrammeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
         <!-- 播放界面更多的操作 -->
         <activity
-            android:name=".ui.home.player.main.play.more.PlayerMoreOperationActivity"
+            android:name=".ui.musicplay.more.PlayerMoreOperationActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
         <!-- 搜索 -->
         <activity
-            android:name=".ui.home.search.main.SearchLikeActivity"
+            android:name=".ui.music.search.main.SearchLikeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
@@ -660,7 +660,7 @@
         </receiver>
         -->
 
-        <service android:name=".ui.home.player.timeset.service.TimerService"/>
+        <service android:name=".common.service.timing.TimerService"/>
         <service android:name=".common.service.CoreService"/>
         <service android:name=".common.service.FloatingWindowService"/>
 

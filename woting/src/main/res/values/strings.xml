@@ -563,9 +563,9 @@
     <string name="tip_guide_fourth">问而答——知乎漫游指南</string>
     <string name="tip_guide_fifth">答而得——知乎漫游指南</string>
     <!-- 下拉刷新 -->
-    <string name="xlistview_header_hint_normal">下拉刷新</string>
-    <string name="xlistview_header_hint_ready">松开刷新数据</string>
-    <string name="xlistview_header_hint_loading">正在加载...</string>
+    <string name="xlistview_header_hint_normal">下拉更新</string>
+    <string name="xlistview_header_hint_ready">释放数据</string>
+    <string name="xlistview_header_hint_loading">玩命加载中...</string>
     <string name="xlistview_header_last_time">最近更新：</string>
     <string name="xlistview_footer_hint_normal">查看更多</string>
     <string name="xlistview_footer_hint_ready">松开载入更多</string>

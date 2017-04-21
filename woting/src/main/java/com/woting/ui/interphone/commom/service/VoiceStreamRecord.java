@@ -49,7 +49,7 @@ public class VoiceStreamRecord {
         try {
             //创建一个新的AudioRecord对象记录音频。
             bufferSize = AudioRecord.getMinBufferSize(frequency, channelConfiguration, audioEncoding);
-            Log.e("最小缓冲区=============", bufferSize + "");
+            Log.e("录音最小缓冲区=============", bufferSize + "");
             audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, frequency, channelConfiguration, audioEncoding, bufferSize);
             buffer = new byte[bufferSize];
         } catch (Exception e) {
