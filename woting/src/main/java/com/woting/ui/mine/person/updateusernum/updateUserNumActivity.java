@@ -78,7 +78,7 @@ public class updateUserNumActivity extends AppActivity implements View.OnClickLi
 
     private void initDialog() {
         View _dialog = LayoutInflater.from(context).inflate(R.layout.dialog_usernumber, null);
-        tv_desc = (TextView) dialog.findViewById(R.id.tv_desc);
+        tv_desc = (TextView) _dialog.findViewById(R.id.tv_desc);
         _dialog.findViewById(R.id.tv_cancel).setOnClickListener(this);
         _dialog.findViewById(R.id.tv_confirm).setOnClickListener(this);
 

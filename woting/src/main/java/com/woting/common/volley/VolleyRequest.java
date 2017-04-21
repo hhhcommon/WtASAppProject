@@ -51,6 +51,7 @@ public class VolleyRequest {
      * @param callback   返回值
      */
     public static void requestPost(String url, String tag, JSONObject jsonObject, VolleyCallback callback) {
+        //GlobalConfig.baseUrl="http://182.92.175.134/";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Method.POST, GlobalConfig.baseUrl + url, jsonObject, callback.loadingListener(), callback.errorListener());
 
@@ -59,7 +60,6 @@ public class VolleyRequest {
         BSApplication.getHttpQueues().add(jsonObjectRequest);// 加入队列
         long a = System.currentTimeMillis();
         Log.e("请求服务器时间", "--- > > >  " +a);
-
         Log.i("请求服务器地址", "--- > > >  " + GlobalConfig.baseUrl + url);
         Log.v("请求服务器提交的参数", "--- > > >  " + jsonObject.toString());
     }

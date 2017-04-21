@@ -74,16 +74,18 @@ public class FindGroupResultAdapter extends BaseAdapter {
 
         if (Inviter.getGroupNum() == null || Inviter.getGroupNum().equals("")) {
             holder.tv_b_id.setVisibility(View.GONE);
+            holder.tv_b_id.setText("群号: " + "未知");//id
         } else {
             holder.tv_b_id.setVisibility(View.VISIBLE);
-            holder.tv_b_id.setText("ID: " + Inviter.getGroupNum());//id
+            holder.tv_b_id.setText("群号: " + Inviter.getGroupNum());//id
         }
 
         if (Inviter.getGroupOriDescn() == null || Inviter.getGroupOriDescn().equals("")) {
             holder.textview_invitemessage.setVisibility(View.GONE);
         } else {
-            holder.textview_invitemessage.setVisibility(View.VISIBLE);
-            holder.textview_invitemessage.setText(Inviter.getGroupOriDescn());
+            holder.textview_invitemessage.setVisibility(View.GONE);
+       /*     holder.textview_invitemessage.setVisibility(View.VISIBLE);
+            holder.textview_invitemessage.setText(Inviter.getGroupOriDescn());*/
         }
         if (Inviter.getGroupImg() == null || Inviter.getGroupImg().equals("")
                 || Inviter.getGroupImg().equals("null") || Inviter.getGroupImg().trim().equals("")) {

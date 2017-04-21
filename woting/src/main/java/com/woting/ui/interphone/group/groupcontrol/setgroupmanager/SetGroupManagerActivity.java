@@ -88,7 +88,6 @@ public class SetGroupManagerActivity extends AppBaseActivity implements OnClickL
         tipView = (TipView) findViewById(R.id.tip_view);
         tipView.setWhiteClick(this);
 
-
         groupId = getIntent().getStringExtra("GroupId");
         managerList=(String [])getIntent().getSerializableExtra("GroupManager");
         tempList=(List<GroupInfo>)getIntent().getSerializableExtra("GroupManagerData");
@@ -177,6 +176,7 @@ public class SetGroupManagerActivity extends AppBaseActivity implements OnClickL
                         }
                     }
                 }
+
                 break;
             case R.id.add_manager:
                 if(!TextUtils.isEmpty(groupId)){
