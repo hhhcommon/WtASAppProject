@@ -405,7 +405,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
             case R.id.text_subscribe:// 我的订阅
                 subscriberListFragment = new com.woting.ui.mine.subscriber.main.SubscriberListFragment();
                 Bundle bundleSub = new Bundle();
-                bundleSub.putInt("fromType", 6);
+                bundleSub.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_MORE);
                 subscriberListFragment.setArguments(bundleSub);
                 PlayerMoreOperationActivity.open(subscriberListFragment);
                 break;

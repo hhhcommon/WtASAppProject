@@ -522,13 +522,21 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                     break;
                 case BroadcastConstants.PLAY_SEQU_LIST:// 播放专辑列表
                     contentId = intent.getStringExtra(StringConstant.ID_CONTENT);
-//                    sequListSize = intent.getIntExtra(StringConstant.SEQU_LIST_SIZE, 0);
+                    int sequListSize = intent.getIntExtra(StringConstant.SEQU_LIST_SIZE, 0);
                     requestType = StringConstant.PLAY_REQUEST_TYPE_SEARCH_SEQU;
 
-//                    sequListSize = 10;
-                    page = 1;
                     refreshType = 0;
-                    sequListRequest();
+                    if (sequListSize == -1) {
+                        page = 1;
+                        sequListRequest();
+                    } else {
+                        if (sequListSize == 0) {
+                            page = 1;
+                        } else {
+                            page = sequListSize / 10;
+                        }
+                        queryData();
+                    }
                     break;
             }
         }
@@ -560,7 +568,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
         LanguageSearchInside languageSearchInside = getDaoList(context);
         if (languageSearchInside != null) {
             playList.add(languageSearchInside);// 将查询得到的第一条数据加入播放列表中
-            if (requestType.equals(StringConstant.PLAY_REQUEST_TYPE_SEARCH_TEXT)) {
+            if (requestType.equals(StringConstant.PLAY_REQUEST_TYPE_SEARCH_TEXT) || requestType.equals(StringConstant.PLAY_REQUEST_TYPE_SEARCH_SEQU)) {
                 ArrayList<LanguageSearchInside> playerList = new ArrayList<>();
                 playerList.add(languageSearchInside);
                 mPlayer.updatePlayList(playerList);
@@ -569,7 +577,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
                 isResetData = true;
             }
         }
-        mainPageRequest();
+        if (requestType.equals(StringConstant.PLAY_REQUEST_TYPE_SEARCH_SEQU)) {
+            sequListRequest();
+        } else {
+            mainPageRequest();
+        }
     }
 
     // listView 的 item 点击事件监听
