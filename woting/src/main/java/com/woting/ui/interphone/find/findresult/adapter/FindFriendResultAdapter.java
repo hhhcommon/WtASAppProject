@@ -74,9 +74,10 @@ public class FindFriendResultAdapter extends BaseAdapter {
 
         if (Inviter.getUserNum() == null || Inviter.getUserNum().equals("")) {
             holder.tv_b_id.setVisibility(View.GONE);
+            holder.tv_b_id.setText("用户号: " + "未知");//id
         } else {
             holder.tv_b_id.setVisibility(View.VISIBLE);
-            holder.tv_b_id.setText("ID: " + Inviter.getUserNum());//id
+            holder.tv_b_id.setText("用户号: " + Inviter.getUserNum());//id
         }
 
 
@@ -84,8 +85,9 @@ public class FindFriendResultAdapter extends BaseAdapter {
             holder.textview_invitemessage.setVisibility(View.GONE);
 //			holder.textview_invitemessage.setText("驾车体验生活");
         } else {
-            holder.textview_invitemessage.setVisibility(View.VISIBLE);
-            holder.textview_invitemessage.setText("" + Inviter.getUserSign());
+            //holder.textview_invitemessage.setVisibility(View.VISIBLE);
+            holder.textview_invitemessage.setVisibility(View.GONE);
+            //holder.textview_invitemessage.setText("" + Inviter.getUserSign());
         }
         if (Inviter.getPortraitMini() == null || Inviter.getPortraitMini().equals("")
                 || Inviter.getPortraitMini().equals("null") || Inviter.getPortraitMini().trim().equals("")) {

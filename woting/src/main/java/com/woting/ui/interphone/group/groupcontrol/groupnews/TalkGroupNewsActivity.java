@@ -144,7 +144,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
     private final int PHOTO_REQUEST_CUT = 7;// 图片裁剪
     private View lin_set_manager;
     private String[] ManagerList;
-    private Boolean IsManager;
+    private Boolean IsManager= false;
     private ArrayList<GroupInfo> GroupTransformList= new ArrayList<>();
 
     // 初始化数据库命令执行对象
@@ -407,12 +407,12 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 //说明是管理员
                 IsManager=true;
                  }
-
            }
            }else{
                ToastUtils.show_always(context,"群GroupManager信息获取有误");
                return;
            }
+
             if(IsManager==true){
 
                 switch (GroupType) {

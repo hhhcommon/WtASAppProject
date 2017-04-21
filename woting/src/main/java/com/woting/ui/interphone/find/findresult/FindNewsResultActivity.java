@@ -29,6 +29,7 @@ import com.woting.ui.interphone.find.findresult.adapter.FindGroupResultAdapter;
 import com.woting.ui.interphone.find.friendadd.FriendAddActivity;
 import com.woting.ui.interphone.find.groupadd.GroupAddActivity;
 import com.woting.ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivity;
+import com.woting.ui.interphone.group.groupcontrol.personnews.TalkPersonNewsActivity;
 import com.woting.ui.interphone.model.UserInviteMeInside;
 
 import org.json.JSONException;
@@ -56,6 +57,7 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
     private FindGroupResultAdapter adapters;
     private String tag = "FINDNEWS_RESULT_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
+    private boolean isFriend=false;
 
     private TipView tipView;// 搜索没有数据提示
 
@@ -180,11 +182,36 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                     if (type.equals("friend")) {
                         if (position > 0) {
                             if (newList != null && newList.size() > 0) {
-                                Intent intent = new Intent(FindNewsResultActivity.this, FriendAddActivity.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putSerializable("contact", newList.get(position - 1));
-                                intent.putExtras(bundle);
-                                startActivity(intent);
+                                if(GlobalConfig.list_person!=null&&GlobalConfig.list_person.size()>0&&newList.get(position - 1)!=null){
+                                    for(int i=0;i<GlobalConfig.list_person.size();i++){
+                                      if(GlobalConfig.list_person.get(i).getUserId().equals(newList.get(position - 1).getUserId())){
+                                          isFriend=true;
+                                      }
+                                        if(isFriend){
+                                            //好友
+                                            Intent intent = new Intent(FindNewsResultActivity.this, TalkPersonNewsActivity.class);
+                                            Bundle bundle = new Bundle();
+                                            bundle.putSerializable("contact", newList.get(position - 1));
+                                            intent.putExtras(bundle);
+                                            startActivity(intent);
+                                        }else{
+                                            //非好友
+                                            Intent intent = new Intent(FindNewsResultActivity.this, FriendAddActivity.class);
+                                            Bundle bundle = new Bundle();
+                                            bundle.putSerializable("contact", newList.get(position - 1));
+                                            intent.putExtras(bundle);
+                                            startActivity(intent);
+                                        }
+                                    }
+                                }else{
+                                    //Global通讯录保存数据异常时，所有用户都认为非好友
+                                    Intent intent = new Intent(FindNewsResultActivity.this, FriendAddActivity.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable("contact", newList.get(position - 1));
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
+                                }
+
                             } else {
                                 ToastUtils.show_always(context, "获取数据异常");
                             }
@@ -280,6 +307,12 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                                     adapter.ChangeData(newList);
                                 }
                                 setItemListener();    // 设置 item 的点击事件
+                                if(UserList.size()!=20){
+                                    mxlistview.setPullLoadEnable(false);
+                                }else{
+                                    mxlistview.setPullLoadEnable(true);
+                                }
+
                             } else {
                                 if (RefreshType == 1) {
                                     tipView.setVisibility(View.VISIBLE);
@@ -352,6 +385,11 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                                     adapters.ChangeData(GroupList);
                                 }
                                 setItemListener();    // 设置 item 的点击事件
+                                if(_groupList.size()!=20){
+                                    mxlistview.setPullLoadEnable(false);
+                                }else{
+                                    mxlistview.setPullLoadEnable(true);
+                                }
                             } else {
                                 tipView.setVisibility(View.VISIBLE);
                                 tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到该群组哟\n换个群组再试一次吧");

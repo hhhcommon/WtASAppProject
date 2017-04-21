@@ -1,6 +1,7 @@
 package com.woting.ui.interphone.group.groupcontrol.setgroupmanager;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.common.model.UserInfo;
+import com.woting.ui.interphone.group.groupcontrol.addgroupmanager.AddGroupManagerActivity;
 import com.woting.ui.interphone.group.groupcontrol.setgroupmanager.adapter.SetGroupManagerAdapter;
 
 import org.json.JSONException;
@@ -85,7 +87,6 @@ public class SetGroupManagerActivity extends AppBaseActivity implements OnClickL
         tipSearchNull = (TipView) findViewById(R.id.tip_search_null);
         tipView = (TipView) findViewById(R.id.tip_view);
         tipView.setWhiteClick(this);
-
 
         groupId = getIntent().getStringExtra("GroupId");
         managerList=(String [])getIntent().getSerializableExtra("GroupManager");
@@ -175,6 +176,17 @@ public class SetGroupManagerActivity extends AppBaseActivity implements OnClickL
                         }
                     }
                 }
+
+                break;
+            case R.id.add_manager:
+                if(!TextUtils.isEmpty(groupId)){
+                    Intent intent=new Intent(this, AddGroupManagerActivity.class);
+                    intent.putExtra("GroupId",groupId);
+                    startActivity(intent);
+                }else{
+                    ToastUtils.show_always(context,"未获取到组Id信息，请检查网络或返回上一级页面重试");
+                }
+
                 break;
         }
     }

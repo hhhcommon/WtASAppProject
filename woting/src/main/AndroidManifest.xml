@@ -451,6 +451,13 @@
 
         <!--  -->
         <activity
+            android:name=".ui.interphone.group.groupcontrol.addgroupmanager.AddGroupManagerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+
+        <!--  -->
+        <activity
             android:name=".ui.mine.set.downloadposition.DownloadPositionActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
