@@ -175,9 +175,6 @@ public class SearchContentAdapter extends BaseExpandableListAdapter {
                 holder.textview_ranktitle.setText(lists.getContentName());
             }
 
-
-
-
             if (lists.getContentImg() == null || lists.getContentImg().equals("") || lists.getContentImg().equals("null")
                     || lists.getContentImg().trim().equals("")) {
                 Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
@@ -193,16 +190,16 @@ public class SearchContentAdapter extends BaseExpandableListAdapter {
                 Picasso.with(context).load(url1.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageCover);
             }
 
-            String contentPer = null;
+            String seqName = null;
             try {
-                contentPer = lists.getSeqInfo().getContentName();
+                seqName = lists.getSeqInfo().getContentName();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (contentPer == null || contentPer.equals("") || contentPer.equals("null")) {
+            if (seqName == null || seqName.equals("") || seqName.equals("null")) {
                 holder.textview_rankplaying.setText("未知");
             } else {
-                holder.textview_rankplaying.setText(contentPer);
+                holder.textview_rankplaying.setText(seqName);
             }
 
             // 节目时长
@@ -239,15 +236,16 @@ public class SearchContentAdapter extends BaseExpandableListAdapter {
                 url = AssembleImageUrlUtils.assembleImageUrl180(url);
                 Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageCover);
             }
-
-            if (lists.getContentName() == null || lists.getContentName().equals("") || lists.getContentName().equals("null")) {
-                holder.textview_rankplaying.setText("未知");
-            } else {
-                holder.textview_rankplaying.setText(lists.getContentName());
+            String anchor;
+            try {
+                 anchor = lists.getContentPersons().get(0).getPerName();
+            } catch (Exception e) {
+                e.printStackTrace();
+                anchor="未知";
             }
+            holder.textview_rankplaying.setText(anchor);
 
-            if (lists.getContentSubCount() == null || lists.getContentSubCount().equals("")
-                    || lists.getContentSubCount().equals("null")) {
+            if (lists.getContentSubCount() == null || lists.getContentSubCount().equals("")|| lists.getContentSubCount().equals("null")) {
                 holder.tvLast.setText("0" + "集");
             } else {
                 holder.tvLast.setText(lists.getContentSubCount() + "集");

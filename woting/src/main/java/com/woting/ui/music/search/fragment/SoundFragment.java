@@ -50,7 +50,6 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
     private FragmentActivity context;
     private FavorListAdapter adapter;
     private SearchPlayerHistoryDao dbDao;
-    private List<content> SubList;
     private List<content> newList = new ArrayList<>();
 
     private Dialog dialog;
@@ -64,6 +63,15 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
     private int refreshType = 1;
     private int page = 1;
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        context = getActivity();
+        setReceiver(); // 设置广播接收器
+        initDao();
+    }
+
     // 初始化数据库对象
     private void initDao() {
         dbDao = new SearchPlayerHistoryDao(context);
@@ -71,19 +79,42 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
 
     @Override
     public void onWhiteViewClick() {
-        dialog = DialogUtils.Dialog(context);
-        sendRequest();
+        getData();// 获取数据
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        context = getActivity();
-
+    // 设置广播接收器
+    private void setReceiver() {
         IntentFilter mFilter = new IntentFilter();
         mFilter.addAction(BroadcastConstants.SEARCH_VIEW_UPDATE);
         context.registerReceiver(mBroadcastReceiver, mFilter);
-        initDao();
+    }
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(BroadcastConstants.SEARCH_VIEW_UPDATE)) {
+                searchStr = intent.getStringExtra("searchStr");
+                if (searchStr != null && !searchStr.equals("")) {
+                    refreshType = 1;
+                    page = 1;
+                    newList.clear();
+                    if (adapter == null) {
+                        mListView.setAdapter(adapter = new FavorListAdapter(context, newList));
+                    } else {
+                        adapter.notifyDataSetChanged();
+                    }
+                    getData();// 获取数据
+                }
+            }
+        }
+    };
+
+    // 获取数据
+    private void getData() {
+        dialog = DialogUtils.Dialog(context);
+        sendRequest();
     }
 
     @Override
@@ -120,6 +151,101 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
         });
     }
 
+
+    private void sendRequest() {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
+            if (refreshType == 1) {
+                mListView.stopRefresh();
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_NET);
+            } else {
+                mListView.stopLoadMore();
+            }
+            return;
+        }
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("MediaType", StringConstant.TYPE_AUDIO);
+            if (searchStr != null && !searchStr.equals("")) {
+                jsonObject.put("SearchStr", searchStr);
+                jsonObject.put("Page", String.valueOf(page));
+                jsonObject.put("PageSize", "10");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        VolleyRequest.requestPost(GlobalConfig.getSearchByText, tag, jsonObject, new VolleyCallback() {
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (dialog != null) dialog.dismiss();
+                if (isCancelRequest) return;
+                try {
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        try {
+                            page++;
+                            JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
+                            ArrayList<content> SubList = new Gson().fromJson(arg1.getString("List"), new TypeToken<ArrayList<content>>() {
+                            }.getType());
+                            if (refreshType == 1) newList.clear();
+                            newList.addAll(SubList);
+                            if (newList.size() > 0) {
+                                adapter.notifyDataSetChanged();
+                                setListener();
+                                tipView.setVisibility(View.GONE);
+                                mListView.setPullLoadEnable(true);
+                            } else {
+                                if (refreshType == 1) {
+                                    tipView.setVisibility(View.VISIBLE);
+                                    tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关结果\n试试其他词，不要太逆天哟");
+                                    mListView.setPullLoadEnable(false);
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            mListView.setPullLoadEnable(false);
+                            if (refreshType == 1) {
+                                tipView.setVisibility(View.VISIBLE);
+                                tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                                mListView.setPullLoadEnable(false);
+                            }
+                        }
+                    } else {
+                        if (refreshType == 1) {
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关结果\n试试其他词，不要太逆天哟");
+                            mListView.setPullLoadEnable(false);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    mListView.setPullLoadEnable(false);
+                    if (refreshType == 1) {
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关结果\n试试其他词，不要太逆天哟");
+                        mListView.setPullLoadEnable(false);
+                    }
+                }
+
+                if (refreshType == 1) {
+                    mListView.stopRefresh();
+                } else {
+                    mListView.stopLoadMore();
+                }
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+                if (dialog != null) dialog.dismiss();
+                if (refreshType == 1) {
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                    mListView.setPullLoadEnable(false);
+                }
+            }
+        });
+    }
+
     private void setListener() {
         adapter.setOnListener(new FavorListAdapter.favorCheck() {
             @Override
@@ -139,40 +265,39 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
                 if (newList != null && newList.get(position - 1) != null && newList.get(position - 1).getMediaType() != null) {
                     String MediaType = newList.get(position - 1).getMediaType();
                     if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
-                        String playername = newList.get(position - 1).getContentName();
-                        String playerimage = newList.get(position - 1).getContentImg();
-                        String playerurl = newList.get(position - 1).getContentPlay();
-                        String playerurI = newList.get(position - 1).getContentURI();
-                        String playermediatype = newList.get(position - 1).getMediaType();
-                        String playcontentshareurl = newList.get(position - 1).getContentShareURL();
-                        String plaplayeralltime = "0";
-                        String playerintime = "0";
-                        String playercontentdesc = newList.get(position - 1).getContentDescn();
-                        String playernum = newList.get(position - 1).getWatchPlayerNum();
-                        String playerzantype = "0";
-                        String playerfrom = newList.get(position - 1).getContentPub();
-                        String playerfromid = "";
-                        String playerfromurl = "";
-                        String playeraddtime = Long.toString(System.currentTimeMillis());
-                        String bjuserid = CommonUtils.getUserId(context);
+                        String playName = newList.get(position - 1).getContentName();
+                        String playImage = newList.get(position - 1).getContentImg();
+                        String playUrl = newList.get(position - 1).getContentPlay();
+                        String playUri = newList.get(position - 1).getContentURI();
+                        String playMediaType = newList.get(position - 1).getMediaType();
+                        String playContentShareUrl = newList.get(position - 1).getContentShareURL();
+                        String playAllTime = newList.get(position - 1).getContentTimes();
+                        String playInTime = "0";
+                        String playContentDesc = newList.get(position - 1).getContentDescn();
+                        String playerNum = newList.get(position - 1).getPlayCount();
+                        String playZanType = "0";
+                        String playFrom = newList.get(position - 1).getContentPub();
+                        String playFromId = "";
+                        String playFromUrl = "";
+                        String playAddTime = Long.toString(System.currentTimeMillis());
+                        String bjUserId = CommonUtils.getUserId(context);
                         String ContentFavorite = newList.get(position - 1).getContentFavorite();
                         String ContentId = newList.get(position - 1).getContentId();
-                        String localurl = newList.get(position - 1).getLocalurl();
-
-                        String sequName = newList.get(position - 1).getSeqInfo().getContentName();
-                        String sequId = newList.get(position - 1).getSeqInfo().getContentId();
-                        String sequDesc = newList.get(position - 1).getSeqInfo().getContentDescn();
-                        String sequImg = newList.get(position - 1).getSeqInfo().getContentImg();
+                        String localUrl = newList.get(position - 1).getLocalurl();
+                        String seqName = newList.get(position - 1).getSeqInfo().getContentName();
+                        String seqId = newList.get(position - 1).getSeqInfo().getContentId();
+                        String seqDesc = newList.get(position - 1).getSeqInfo().getContentDescn();
+                        String seqImg = newList.get(position - 1).getSeqInfo().getContentImg();
                         String ContentPlayType = newList.get(position - 1).getContentPlayType();
-                        String IsPlaying=newList.get(position-1).getIsPlaying();
-                        String ColumnNum = newList.get(position-1).getColumnNum();
+                        String IsPlaying = newList.get(position - 1).getIsPlaying();
+                        String ColumnNum = newList.get(position - 1).getColumnNum();
                         // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
-                                playername, playerimage, playerurl, playerurI, playermediatype,
-                                plaplayeralltime, playerintime, playercontentdesc, playernum,
-                                playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playcontentshareurl,
-                                ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg,ContentPlayType,IsPlaying,ColumnNum);
-                        dbDao.deleteHistory(playerurl);
+                                playName, playImage, playUrl, playUri, playMediaType,
+                                playAllTime, playInTime, playContentDesc, playerNum,
+                                playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
+                                ContentFavorite, ContentId, localUrl, seqName, seqId, seqDesc, seqImg, ContentPlayType, IsPlaying, ColumnNum);
+                        dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
 
                         MainActivity.change();
@@ -188,125 +313,6 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
             }
         });
     }
-
-    private void sendRequest() {
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
-            if(dialog != null) dialog.dismiss();
-            if (refreshType == 1) {
-                mListView.stopRefresh();
-                tipView.setVisibility(View.VISIBLE);
-                tipView.setTipView(TipView.TipStatus.NO_NET);
-            } else {
-                mListView.stopLoadMore();
-            }
-            return;
-        }
-
-        VolleyRequest.requestPost(GlobalConfig.getSearchByText, tag, setParam(), new VolleyCallback() {
-            private String ReturnType;
-
-            @Override
-            protected void requestSuccess(JSONObject result) {
-                if (dialog != null) dialog.dismiss();
-                if (isCancelRequest) return;
-                try {
-                    ReturnType = result.getString("ReturnType");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if (ReturnType != null && ReturnType.equals("1001")) {
-                    try {
-                        page++;
-                        JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        SubList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<content>>() {}.getType());
-                        if (refreshType == 1) newList.clear();
-                        newList.addAll(SubList);
-                        if(newList.size() > 0) {
-                            adapter.notifyDataSetChanged();
-                            setListener();
-                            tipView.setVisibility(View.GONE);
-                        } else {
-                            if(refreshType == 1) {
-                                tipView.setVisibility(View.VISIBLE);
-                                tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关结果\n试试其他词，不要太逆天哟");
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (refreshType == 1) {
-                            tipView.setVisibility(View.VISIBLE);
-                            tipView.setTipView(TipView.TipStatus.IS_ERROR);
-                        } else {
-                            ToastUtils.show_always(context, getString(R.string.error_data));
-                        }
-                    }
-                } else {
-                    mListView.setPullLoadEnable(false);
-                    if(refreshType == 1) {
-                        tipView.setVisibility(View.VISIBLE);
-                        tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关结果\n试试其他词，不要太逆天哟");
-                    } else if (isVisible()) {
-                        ToastUtils.show_always(context, getString(R.string.no_data));
-                    }
-                }
-                if (refreshType == 1) {
-                    mListView.stopRefresh();
-                } else {
-                    mListView.stopLoadMore();
-                }
-            }
-
-            @Override
-            protected void requestError(VolleyError error) {
-                if (dialog != null) dialog.dismiss();
-                if (refreshType == 1) {
-                    tipView.setVisibility(View.VISIBLE);
-                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
-                } else {
-                    ToastUtils.showVolleyError(context);
-                }
-            }
-        });
-    }
-
-    private JSONObject setParam() {
-        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        try {
-            jsonObject.put("MediaType", StringConstant.TYPE_AUDIO);
-            if (searchStr != null && !searchStr.equals("")) {
-                jsonObject.put("SearchStr", searchStr);
-                jsonObject.put("Page", String.valueOf(page));
-                jsonObject.put("PageSize", "10");
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
-    }
-
-    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(BroadcastConstants.SEARCH_VIEW_UPDATE)) {
-                searchStr = intent.getStringExtra("searchStr");
-                if (searchStr != null && !searchStr.equals("")) {
-                    refreshType = 1;
-                    page = 1;
-                    newList.clear();
-                    if (adapter == null) {
-                        mListView.setAdapter(adapter = new FavorListAdapter(context, newList));
-                    } else {
-                        adapter.notifyDataSetChanged();
-                    }
-
-                    dialog = DialogUtils.Dialog(context);
-                    sendRequest();
-                }
-            }
-        }
-    };
 
     @Override
     public void onDestroyView() {
@@ -324,16 +330,12 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
         context.unregisterReceiver(mBroadcastReceiver);
         context = null;
         dialog = null;
-        SubList = null;
         mListView = null;
         newList = null;
         rootView = null;
         adapter = null;
         searchStr = null;
         tag = null;
-        if (dbDao != null) {
-            dbDao.closedb();
-            dbDao = null;
-        }
+
     }
 }

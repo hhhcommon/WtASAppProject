@@ -1,11 +1,11 @@
-package com.woting.ui.model.city;
+package com.woting.ui.music.citylist.cityModel;
 
 import java.io.Serializable;
 import java.util.List;
 /**
  * 城市分类二级数据
  */
-public class CatalogName implements Serializable{
+public class secondaryCity implements Serializable{
 	private String name;         //显示的数据
 	private String sortLetters;  //显示数据拼音的首字母
 	private String pinYinName;
@@ -13,12 +13,12 @@ public class CatalogName implements Serializable{
 	private String CatalogId;
 	private String CatalogType;
 	private String truename;
-	private List<CatalogName> SubCata;
+	private List<secondaryCity> SubCata;
 	
-	public List<CatalogName> getSubCata() {
+	public List<secondaryCity> getSubCata() {
 		return SubCata;
 	}
-	public void setSubCata(List<CatalogName> subCata) {
+	public void setSubCata(List<secondaryCity> subCata) {
 		SubCata = subCata;
 	}
 	public String getName() {

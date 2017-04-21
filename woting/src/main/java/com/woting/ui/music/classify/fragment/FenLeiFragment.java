@@ -38,8 +38,9 @@ import java.util.List;
 
 /**
  * 分类页面
+ *
  * @author 辛龙
- * 2016年3月31日
+ *         2016年3月31日
  */
 public class FenLeiFragment extends Fragment implements TipView.WhiteViewClick {
     private FragmentActivity context;
@@ -53,18 +54,8 @@ public class FenLeiFragment extends Fragment implements TipView.WhiteViewClick {
     private String tag = "CATALOG_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
     private Banner mLoopViewPager;
-    private List<String> ImageStringList=new ArrayList<>();
+    private List<String> ImageStringList = new ArrayList<>();
 
-    @Override
-    public void onWhiteViewClick() {
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {// 发送网络请求
-            dialog = DialogUtils.Dialog(context);
-            sendRequest();
-        } else {
-            tipView.setVisibility(View.VISIBLE);
-            tipView.setTipView(TipView.TipStatus.NO_NET);
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,28 +67,103 @@ public class FenLeiFragment extends Fragment implements TipView.WhiteViewClick {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_fenlei_new, container, false);
-            View headView = LayoutInflater.from(context).inflate(R.layout.headview_fragment_fenlei, null);
-            View footView = LayoutInflater.from(context).inflate(R.layout.footview_fragment_fenlei, null);
 
             tipView = (TipView) rootView.findViewById(R.id.tip_view);
             tipView.setWhiteClick(this);
-
             listViewCatalog = (ListView) rootView.findViewById(R.id.ebl_fenlei);
-            listViewCatalog.addHeaderView(headView);
             listViewCatalog.setSelector(new ColorDrawable(Color.TRANSPARENT));
-            listViewCatalog.addFooterView(footView);
 
             // 轮播图
+            View headView = LayoutInflater.from(context).inflate(R.layout.headview_fragment_fenlei, null);
             mLoopViewPager = (Banner) headView.findViewById(R.id.slideshowView);
-            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {// 发送网络请求
-                sendRequest();
-                getImage();
-            } else {
-                tipView.setVisibility(View.VISIBLE);
-                tipView.setTipView(TipView.TipStatus.NO_NET);
-            }
+            listViewCatalog.addHeaderView(headView);
+            mLoopViewPager.setVisibility(View.GONE);
+
+            View footView = LayoutInflater.from(context).inflate(R.layout.footview_fragment_fenlei, null);
+            listViewCatalog.addFooterView(footView);
+
+            getData(); // 获取数据
+
         }
         return rootView;
+    }
+
+    // 获取数据
+    private void getData() {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {// 发送网络请求
+            getImage();
+            sendRequest();
+        } else {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
+        }
+    }
+
+    @Override
+    public void onWhiteViewClick() {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {// 发送网络请求
+            dialog = DialogUtils.Dialog(context);
+            getData();
+        } else {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
+        }
+    }
+
+    // 请求网络获取图片信息
+    private void getImage() {
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("CatalogType", "-1");
+            jsonObject.put("CatalogId", "cn17");
+            jsonObject.put("Size", "4");// 此处需要改成-1
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        VolleyRequest.requestPost(GlobalConfig.getImage, tag, jsonObject, new VolleyCallback() {
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (dialog != null) dialog.dismiss();
+                if (isCancelRequest) return;
+                try {
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        try {
+                            List<Image> imageList = new Gson().fromJson(result.getString("LoopImgs"), new TypeToken<List<Image>>() {
+                            }.getType());
+                            if (imageList != null && imageList.size() > 0) {
+                                // 有轮播图
+                                ImageStringList.clear();
+                                mLoopViewPager.setImageLoader(new PicassoBannerLoader());
+                                for (int i = 0; i < imageList.size(); i++) {
+                                    ImageStringList.add(imageList.get(i).getLoopImg());
+                                }
+                                mLoopViewPager.setImages(ImageStringList);
+                                mLoopViewPager.setOnBannerListener(new OnBannerListener() {
+                                    @Override
+                                    public void OnBannerClick(int position) {
+                                        ToastUtils.show_always(context, ImageStringList.get(position));
+                                    }
+                                });
+                                mLoopViewPager.start();
+                                tipView.setVisibility(View.GONE);
+                                mLoopViewPager.setVisibility(View.VISIBLE);
+                            } else {
+                                // 无轮播图，原先的轮播图就是隐藏的此处不需要操作
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+            }
+        });
     }
 
     // 发送网络请求
@@ -116,38 +182,39 @@ public class FenLeiFragment extends Fragment implements TipView.WhiteViewClick {
         }
 
         VolleyRequest.requestPost(GlobalConfig.getPreferenceUrl, tag, jsonObject, new VolleyCallback() {
-            private String ReturnType;
-
             @Override
             protected void requestSuccess(JSONObject result) {
-                if(dialog != null) dialog.dismiss();
+                if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 try {
-                    ReturnType = result.getString("ReturnType");
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        try {
+                            JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("PrefTree")).nextValue();
+                            List<FenLei> childrenList = new Gson().fromJson(arg1.getString("children"), new TypeToken<List<FenLei>>() {
+                            }.getType());
+                            if (childrenList == null || childrenList.size() == 0) {
+                                tipView.setVisibility(View.VISIBLE);
+                                tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
+                            } else {
+                                if (adapter == null) {
+                                    listViewCatalog.setAdapter(adapter = new CatalogListAdapter(context, childrenList));
+                                } else {
+                                    adapter.notifyDataSetChanged();
+                                }
+                                tipView.setVisibility(View.GONE);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        }
+                    } else {
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }
-                if (ReturnType != null && ReturnType.equals("1001")) {
-                    try {
-                        JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("PrefTree")).nextValue();
-                        List<FenLei> childrenList = new Gson().fromJson(arg1.getString("children"), new TypeToken<List<FenLei>>() {}.getType());
-                        if (childrenList == null || childrenList.size() == 0) {
-                            tipView.setVisibility(View.VISIBLE);
-                            tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
-                        } else {
-                            if (adapter == null) {
-                                listViewCatalog.setAdapter(adapter = new CatalogListAdapter(context, childrenList));
-                            } else {
-                                adapter.notifyDataSetChanged();
-                            }
-                            tipView.setVisibility(View.GONE);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        tipView.setVisibility(View.VISIBLE);
-                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
-                    }
-                } else {
                     tipView.setVisibility(View.VISIBLE);
                     tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
                 }
@@ -155,76 +222,13 @@ public class FenLeiFragment extends Fragment implements TipView.WhiteViewClick {
 
             @Override
             protected void requestError(VolleyError error) {
-                if(dialog != null) dialog.dismiss();
+                if (dialog != null) dialog.dismiss();
                 ToastUtils.showVolleyError(context);
                 tipView.setVisibility(View.VISIBLE);
                 tipView.setTipView(TipView.TipStatus.IS_ERROR);
             }
         });
     }
-
-
-    // 请求网络获取图片信息
-    private void getImage() {
-        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        try {
-            jsonObject.put("CatalogType", "-1");
-            jsonObject.put("CatalogId", "cn17");
-            jsonObject.put("Size", "4");// 此处需要改成-1
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        VolleyRequest.requestPost(GlobalConfig.getImage, tag, jsonObject, new VolleyCallback() {
-            private String ReturnType;
-
-            @Override
-            protected void requestSuccess(JSONObject result) {
-                if (dialog != null) dialog.dismiss();
-                if (isCancelRequest) return;
-                try {
-                    ReturnType = result.getString("ReturnType");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if (ReturnType != null && ReturnType.equals("1001")) {
-                    try {
-                        List<Image>  imageList = new Gson().fromJson(result.getString("LoopImgs"), new TypeToken<List<Image>>() {
-                        }.getType());
-                        // mLoopViewPager.setAdapter(new LoopAdapter(mLoopViewPager, context, imageList));
-                        // mLoopViewPager.setHintView(new IconHintView(context, R.mipmap.indicators_now, R.mipmap.indicators_default));
-                        mLoopViewPager.setImageLoader(new PicassoBannerLoader());
-
-                        for(int i=0; i<imageList.size(); i++){
-                            ImageStringList.add(imageList.get(i).getLoopImg());
-                        }
-                        mLoopViewPager.setImages(ImageStringList);
-
-                        mLoopViewPager.setOnBannerListener(new OnBannerListener() {
-                            @Override
-                            public void OnBannerClick(int position) {
-                                ToastUtils.show_always(context,ImageStringList.get(position));
-                            }
-                        });
-                        mLoopViewPager.start();
-                        tipView.setVisibility(View.GONE);
-                        mLoopViewPager.setVisibility(View.VISIBLE);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }else{
-                    mLoopViewPager.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            protected void requestError(VolleyError error) {
-                mLoopViewPager.setVisibility(View.GONE);
-            }
-        });
-    }
-
-
-
 
     @Override
     public void onDestroyView() {

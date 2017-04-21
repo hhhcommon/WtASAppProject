@@ -165,7 +165,6 @@ public class DownLoadAudioFragment extends Fragment implements View.OnClickListe
                             push.putExtras(bundle);
                             context.sendBroadcast(push);
                             MainActivity.change();
-                            dbDao.closedb();
                         } else {    // 此处要调对话框，点击同意删除对应的文件信息
                             confirmDialog.show();
                         }

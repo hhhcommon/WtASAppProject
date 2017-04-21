@@ -23,8 +23,6 @@ import java.util.List;
 public class RankInfoAdapter extends BaseAdapter {
     private List<content> list;
     private Context context;
-//	private RankInfo rank;
-//	private String url;
 
     public RankInfoAdapter(Context context, List<content> list) {
         this.list = list;
@@ -96,7 +94,6 @@ public class RankInfoAdapter extends BaseAdapter {
                 url = GlobalConfig.imageurl + lists.getContentImg();
             }
             String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
-
             // 加载图片
             AssembleImageUrlUtils.loadImage(_url, url, holder.imageview_rankimage, IntegerConstant.TYPE_LIST);
         }

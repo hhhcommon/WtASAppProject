@@ -7,13 +7,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -40,11 +38,9 @@ import com.woting.ui.music.recommended.adapter.RecommendListAdapter;
 import com.woting.ui.main.MainActivity;
 import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +55,6 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
     private RecommendListAdapter adapter;
     private Banner mLoopViewPager;
 
-    private List<content> subList;
     private List<content> newList = new ArrayList<>();
     private List<String> ImageStringList = new ArrayList<>();
 
@@ -75,21 +70,10 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
     private String tag = "RECOMMEND_VOLLEY_REQUEST_CANCEL_TAG";
 
     @Override
-    public void onWhiteViewClick() {
-        dialog = DialogUtils.Dialog(context);
-        sendRequest();
-    }
-
-    // 初始化数据库命令执行对象
-    private void initDao() {
-        dbDao = new SearchPlayerHistoryDao(context);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-        initDao();
+        initDao();   // 加载数据库
     }
 
     @Override
@@ -99,23 +83,54 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             tipView = (TipView) rootView.findViewById(R.id.tip_view);
             tipView.setWhiteClick(this);
             mListView = (XListView) rootView.findViewById(R.id.listView);
-            headView = LayoutInflater.from(context).inflate(R.layout.headview_fragment_recommend, null);
-            // 轮播图
-            mLoopViewPager = (Banner) headView.findViewById(R.id.slideshowView);
-            mListView.addHeaderView(headView);
             mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 
-            initListView();
-            getImage();
+            // 轮播图
+            headView = LayoutInflater.from(context).inflate(R.layout.headview_fragment_recommend, null);
+            mLoopViewPager = (Banner) headView.findViewById(R.id.slideshowView);
+            mListView.addHeaderView(headView);
+            mLoopViewPager.setVisibility(View.GONE);
 
-            dialog = DialogUtils.Dialog(context);
-            sendRequest();
+            initListViewListener();   // 设置监听
+            getData();                // 获取数据
         }
         return rootView;
     }
 
+    // 获取数据
+    private void getData() {
+        // 以下操作需要网络支持 所以没有网络则直接提示用户设置网络
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
+            mListView.stopRefresh();
+            mListView.stopLoadMore();
+            if (newList != null && newList.size() > 0) {
+                ToastUtils.show_always(context, "网络连接失败，请检查网络设置!");
+            } else {
+                if (refreshType == 1) {
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.NO_NET);
+                }
+            }
+            return;
+        }
+        dialog = DialogUtils.Dialog(context);
+        getImage();     // 获取轮播图
+        sendRequest();  // 获取列表数据
+    }
+
+    @Override
+    public void onWhiteViewClick() {
+        dialog = DialogUtils.Dialog(context);
+        getData();
+    }
+
+    // 初始化数据库命令执行对象
+    private void initDao() {
+        dbDao = new SearchPlayerHistoryDao(context);
+    }
+
     // 初始化展示列表控件
-    private void initListView() {
+    private void initListViewListener() {
         mListView.setPullRefreshEnable(true);
         mListView.setPullLoadEnable(true);
         mListView.setXListViewListener(new XListView.IXListViewListener() {
@@ -134,69 +149,118 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
         });
     }
 
-    // 获取推荐列表
-    private void sendRequest() {
-        // 以下操作需要网络支持 所以没有网络则直接提示用户设置网络
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
-            if (dialog != null) dialog.dismiss();
-            mListView.stopRefresh();
-            mListView.stopLoadMore();
-            if (newList != null && newList.size() > 0) {
-                ToastUtils.show_always(context, "网络连接失败，请检查网络设置!");
-            } else {
-                if (refreshType == 1) {
-                    tipView.setVisibility(View.VISIBLE);
-                    tipView.setTipView(TipView.TipStatus.NO_NET);
-                }
-            }
-            return;
+    // 请求网络获取分类信息
+    private void getImage() {
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("CatalogType", "-1");
+            jsonObject.put("CatalogId", "cn17");
+            jsonObject.put("Size", "4");// 此处需要改成-1
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-
-        VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, setParam(), new VolleyCallback() {
-            private String returnType;
-
+        VolleyRequest.requestPost(GlobalConfig.getImage, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 try {
-                    returnType = result.getString("ReturnType");
-                    Log.e("returnType", "returnType -- > > " + returnType);
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        try {
+                            List<Image> imageList = new Gson().fromJson(result.getString("LoopImgs"), new TypeToken<List<Image>>() {
+                            }.getType());
+                            if (imageList != null && imageList.size() > 0) {
+                                // 有轮播图
+                                ImageStringList.clear();
+                                mLoopViewPager.setImageLoader(new PicassoBannerLoader());
+                                for (int i = 0; i < imageList.size(); i++) {
+                                    ImageStringList.add(imageList.get(i).getLoopImg());
+                                }
+                                mLoopViewPager.setImages(ImageStringList);
+                                mLoopViewPager.setOnBannerListener(new OnBannerListener() {
+                                    @Override
+                                    public void OnBannerClick(int position) {
+                                        ToastUtils.show_always(context, ImageStringList.get(position));
+                                    }
+                                });
+                                mLoopViewPager.start();
+                                tipView.setVisibility(View.GONE);
+                                mLoopViewPager.setVisibility(View.VISIBLE);
+                            } else {
+                                // 无轮播图，原先的轮播图就是隐藏的此处不需要操作
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (returnType != null && returnType.equals("1001")) {
-                    try {
-                        page++;
-                        JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<content>>() {
-                        }.getType());
-                        if (refreshType == 1) newList.clear();
-                        newList.addAll(subList);
-                        if (adapter == null) {
-                            mListView.setAdapter(adapter = new RecommendListAdapter(context, newList));
-                        } else {
-                            adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+            }
+        });
+    }
+
+    // 获取推荐列表
+    private void sendRequest() {
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("MediaType", "");
+            jsonObject.put("CatalogType", "-1");// 001 为一个结果 002 为另一个
+            jsonObject.put("CatalogId", "");
+            jsonObject.put("Page", String.valueOf(page));
+            jsonObject.put("PerSize", "3");
+            jsonObject.put("ResultType", "3");
+            jsonObject.put("PageSize", "10");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, jsonObject, new VolleyCallback() {
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (isCancelRequest) return;
+                try {
+                    String returnType = result.getString("ReturnType");
+                    if (returnType != null && returnType.equals("1001")) {
+                        try {
+                            page++;
+                            JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
+                            List<content> subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<content>>() {
+                            }.getType());
+                            if (refreshType == 1) newList.clear();
+                            newList.addAll(subList);
+                            if (adapter == null) {
+                                mListView.setAdapter(adapter = new RecommendListAdapter(context, newList));
+                            } else {
+                                adapter.notifyDataSetChanged();
+                            }
+                            setListener();
+                            tipView.setVisibility(View.GONE);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            if (refreshType == 1) {
+                                tipView.setVisibility(View.VISIBLE);
+                                tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                            } else {
+                                ToastUtils.show_always(context, getString(R.string.error_data));
+                            }
                         }
-                        setListener();
-                        tipView.setVisibility(View.GONE);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } else {
+                        mListView.setPullLoadEnable(false);
                         if (refreshType == 1) {
                             tipView.setVisibility(View.VISIBLE);
-                            tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                            tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
                         } else {
-                            ToastUtils.show_always(context, getString(R.string.error_data));
+                            ToastUtils.show_always(context, getString(R.string.no_data));
                         }
                     }
-                } else {
-                    mListView.setPullLoadEnable(false);
-                    if (refreshType == 1) {
-                        tipView.setVisibility(View.VISIBLE);
-                        tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
-                    } else {
-                        ToastUtils.show_always(context, getString(R.string.no_data));
-                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
 
                 // 无论何种返回值，都需要终止掉下拉刷新及上拉加载的滚动状态
@@ -220,72 +284,53 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
         });
     }
 
-    private JSONObject setParam() {
-        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        try {
-            jsonObject.put("MediaType", "");
-            jsonObject.put("CatalogType", "-1");// 001 为一个结果 002 为另一个
-            jsonObject.put("CatalogId", "");
-            jsonObject.put("Page", String.valueOf(page));
-            jsonObject.put("PerSize", "3");
-            jsonObject.put("ResultType", "3");
-            jsonObject.put("PageSize", "10");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
-    }
-
     // 列表点击事件监听
     private void setListener() {
         mListView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 position = position - 2;
-                Log.v("TAG", "position -- > " + position);
-
                 if (position < 0) {
-                    Log.v("TAG", "position error -- > " + position);
-                    return ;
+                    return;
                 }
 
                 if (newList != null && newList.get(position) != null && newList.get(position).getMediaType() != null) {
                     String MediaType = newList.get(position).getMediaType();
                     if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
-                        String playername = newList.get(position).getContentName();
-                        String playerimage = newList.get(position).getContentImg();
-                        String playerurl = newList.get(position).getContentPlay();
-                        String playerurI = newList.get(position).getContentURI();
-                        String playermediatype = newList.get(position).getMediaType();
+                        String playerName = newList.get(position).getContentName();
+                        String playerImage = newList.get(position).getContentImg();
+                        String playerUrl = newList.get(position).getContentPlay();
+                        String playerUrI = newList.get(position).getContentURI();
+                        String playerMediaType = newList.get(position).getMediaType();
                         String playerContentShareUrl = newList.get(position).getContentShareURL();
-                        String plaplayeralltime = newList.get(position).getContentTimes();
-                        String playerintime = "0";
-                        String playercontentdesc = newList.get(position).getContentDescn();
-                        String playernum = newList.get(position).getPlayCount();
-                        String playerzantype = "0";
-                        String playerfrom = newList.get(position).getContentPub();
-                        String playerfromid = "";
-                        String playerfromurl = "";
-                        String playeraddtime = Long.toString(System.currentTimeMillis());
-                        String bjuserid = CommonUtils.getUserId(context);
+                        String playerAllTime = newList.get(position).getContentTimes();
+                        String playerInTime = "0";
+                        String playerContentDesc = newList.get(position).getContentDescn();
+                        String playerNum = newList.get(position).getPlayCount();
+                        String playerZanType = "0";
+                        String playerFrom = newList.get(position).getContentPub();
+                        String playerFromId = "";
+                        String playerFromUrl = "";
+                        String playerAddTime = Long.toString(System.currentTimeMillis());
+                        String bjUserId = CommonUtils.getUserId(context);
                         String ContentFavorite = newList.get(position).getContentFavorite();
                         String ContentId = newList.get(position).getContentId();
-                        String localurl = newList.get(position).getLocalurl();
+                        String localUrl = newList.get(position).getLocalurl();
 
-                        String sequName = newList.get(position).getSeqInfo().getContentName();
-                        String sequId = newList.get(position).getSeqInfo().getContentId();
-                        String sequDesc = newList.get(position).getSeqInfo().getContentDescn();
-                        String sequImg = newList.get(position).getSeqInfo().getContentImg();
+                        String seqName = newList.get(position).getSeqInfo().getContentName();
+                        String seqId = newList.get(position).getSeqInfo().getContentId();
+                        String seqDesc = newList.get(position).getSeqInfo().getContentDescn();
+                        String seqImg = newList.get(position).getSeqInfo().getContentImg();
                         String ContentPlayType = newList.get(position).getContentPlayType();
                         String IsPlaying = newList.get(position).getIsPlaying();
                         String ColumnNum = newList.get(position).getColumnNum();
                         // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                         PlayerHistory history = new PlayerHistory(
-                                playername, playerimage, playerurl, playerurI, playermediatype,
-                                plaplayeralltime, playerintime, playercontentdesc, playernum,
-                                playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playerContentShareUrl,
-                                ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying,ColumnNum);
-                        dbDao.deleteHistory(playerurl);
+                                playerName, playerImage, playerUrl, playerUrI, playerMediaType,
+                                playerAllTime, playerInTime, playerContentDesc, playerNum,
+                                playerZanType, playerFrom, playerFromId, playerFromUrl, playerAddTime, bjUserId, playerContentShareUrl,
+                                ContentFavorite, ContentId, localUrl, seqName, seqId, seqDesc, seqImg, ContentPlayType, IsPlaying, ColumnNum);
+                        dbDao.deleteHistory(playerUrl);
                         dbDao.addHistory(history);
 
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
@@ -318,66 +363,6 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
         }
     }
 
-    // 请求网络获取分类信息
-    private void getImage() {
-        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        try {
-            jsonObject.put("CatalogType", "-1");
-            jsonObject.put("CatalogId", "cn17");
-            jsonObject.put("Size", "4");// 此处需要改成-1
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        VolleyRequest.requestPost(GlobalConfig.getImage, tag, jsonObject, new VolleyCallback() {
-            private String ReturnType;
-
-            @Override
-            protected void requestSuccess(JSONObject result) {
-                if (dialog != null) dialog.dismiss();
-                if (isCancelRequest) return;
-                try {
-                    ReturnType = result.getString("ReturnType");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if (ReturnType != null && ReturnType.equals("1001")) {
-                    try {
-                        List<Image> imageList = new Gson().fromJson(result.getString("LoopImgs"), new TypeToken<List<Image>>() {
-                        }.getType());
-                        // mLoopViewPager.setAdapter(new LoopAdapter(mLoopViewPager, context, imageList));
-                        // mLoopViewPager.setHintView(new IconHintView(context, R.mipmap.indicators_now, R.mipmap.indicators_default));
-                        mLoopViewPager.setImageLoader(new PicassoBannerLoader());
-
-                        for (int i = 0; i < imageList.size(); i++) {
-                            ImageStringList.add(imageList.get(i).getLoopImg());
-                        }
-                        mLoopViewPager.setImages(ImageStringList);
-
-                        mLoopViewPager.setOnBannerListener(new OnBannerListener() {
-                            @Override
-                            public void OnBannerClick(int position) {
-                                ToastUtils.show_always(context, ImageStringList.get(position));
-                            }
-                        });
-                        mLoopViewPager.start();
-                        tipView.setVisibility(View.GONE);
-                        mLoopViewPager.setVisibility(View.VISIBLE);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        mLoopViewPager.setVisibility(View.GONE);
-                    }
-                }else{
-                    mLoopViewPager.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            protected void requestError(VolleyError error) {
-                mLoopViewPager.setVisibility(View.GONE);
-            }
-        });
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -385,14 +370,9 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
         context = null;
         headView = null;
         adapter = null;
-        subList = null;
         mListView = null;
         newList = null;
         rootView = null;
         tag = null;
-        if (dbDao != null) {
-            dbDao.closedb();
-            dbDao = null;
-        }
     }
 }

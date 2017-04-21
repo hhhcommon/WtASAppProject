@@ -84,7 +84,6 @@ public class RecommendListAdapter extends BaseAdapter {
                 contentImg = GlobalConfig.imageurl + contentImg;
             }
             String _url = AssembleImageUrlUtils.assembleImageUrl180(contentImg);
-
             // 加载图片
             AssembleImageUrlUtils.loadImage(_url, contentImg, holder.imageCover, IntegerConstant.TYPE_LIST);
         }

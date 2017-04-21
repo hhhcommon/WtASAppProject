@@ -39,10 +39,11 @@ import java.util.List;
 
 /**
  * 群成员添加页
+ *
  * @author 辛龙
- * 2016年3月25日
+ *         2016年3月25日
  */
-public class AddGroupManagerActivity extends AppBaseActivity implements OnClickListener, TextWatcher, TipView.WhiteViewClick  {
+public class AddGroupManagerActivity extends AppBaseActivity implements OnClickListener, TipView.WhiteViewClick {
     private CharacterParser characterParser = CharacterParser.getInstance();// 实例化汉字转拼音类
     private PinyinComparator pinyinComparator = new PinyinComparator();
     private CreateGroupMembersDelAdapter adapter;
@@ -71,7 +72,7 @@ public class AddGroupManagerActivity extends AppBaseActivity implements OnClickL
         groupId = getIntent().getStringExtra("GroupId");
         if (groupId != null && !groupId.equals("")) {
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
+                dialog = DialogUtils.Dialog(context);
                 send();
             } else {
                 tipView.setVisibility(View.VISIBLE);
@@ -100,7 +101,41 @@ public class AddGroupManagerActivity extends AppBaseActivity implements OnClickL
         tipView.setWhiteClick(this);
 
         editSearchContent = (EditText) findViewById(R.id.et_search);// 搜索控件
-        editSearchContent.addTextChangedListener(this);
+        editSearchContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String search_name = s.toString();
+                if (search_name.trim().equals("")) {
+                    imageClear.setVisibility(View.INVISIBLE);
+                    tipSearchNull.setVisibility(View.GONE);
+                    if (userList == null || userList.size() == 0) {
+                        listView.setVisibility(View.GONE);
+                    } else {
+                        listView.setVisibility(View.VISIBLE);
+                        userList2.clear();
+                        userList2.addAll(userList);
+                        filledData(userList2);
+                        Collections.sort(userList2, pinyinComparator);
+                        listView.setAdapter(adapter = new CreateGroupMembersDelAdapter(context, userList2));
+                        setInterface();
+                    }
+                } else {
+                    userList2.clear();
+                    userList2.addAll(userList);
+                    imageClear.setVisibility(View.VISIBLE);
+                    search(search_name);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         imageClear = (ImageView) findViewById(R.id.image_clear);
         imageClear.setOnClickListener(this);
@@ -117,7 +152,7 @@ public class AddGroupManagerActivity extends AppBaseActivity implements OnClickL
         groupId = getIntent().getStringExtra("GroupId");
         if (groupId != null && !groupId.equals("")) {
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
+                dialog = DialogUtils.Dialog(context);
                 send();
             } else {
                 tipView.setVisibility(View.VISIBLE);
@@ -151,11 +186,12 @@ public class AddGroupManagerActivity extends AppBaseActivity implements OnClickL
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     try {
-                        userList = new Gson().fromJson(result.getString("UserList"), new TypeToken<List<UserInfo>>() {}.getType());
-                        if(userList == null || userList.size() == 0) {
+                        userList = new Gson().fromJson(result.getString("UserList"), new TypeToken<List<UserInfo>>() {
+                        }.getType());
+                        if (userList == null || userList.size() == 0) {
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.NO_DATA, "群内没有其他成员了\n赶紧去邀请好友加入群组吧");
-                            return ;
+                            return;
                         }
                         String userId = CommonUtils.getUserId(context);// 从返回的 list 当中去掉用户自己
                         for (int i = 0; i < userList.size(); i++) {
@@ -233,7 +269,7 @@ public class AddGroupManagerActivity extends AppBaseActivity implements OnClickL
             filterDateList.clear();
             for (UserInfo sortModel : userList2) {
                 String name = sortModel.getName();
-                if (name.contains(search_name)|| characterParser.getSelling(name).startsWith(search_name)) {
+                if (name.contains(search_name) || characterParser.getSelling(name).startsWith(search_name)) {
                     filterDateList.add(sortModel);
                 }
             }
@@ -266,7 +302,7 @@ public class AddGroupManagerActivity extends AppBaseActivity implements OnClickL
                 }
                 if (delList != null && delList.size() > 0) {
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(context, "正在发送请求，请稍候");
+                        dialog = DialogUtils.Dialog(context);
                         sendSetGroupManager();
                     } else {
                         ToastUtils.show_always(context, "网络失败，请检查网络");
@@ -279,7 +315,7 @@ public class AddGroupManagerActivity extends AppBaseActivity implements OnClickL
                 imageClear.setVisibility(View.INVISIBLE);
                 editSearchContent.setText("");
                 tipSearchNull.setVisibility(View.GONE);
-            break;
+                break;
         }
     }
 
@@ -295,26 +331,29 @@ public class AddGroupManagerActivity extends AppBaseActivity implements OnClickL
         }
 
         VolleyRequest.requestPost(GlobalConfig.setGroupAdminUrl, tag, jsonObject, new VolleyCallback() {
-            private String ReturnType;
-            private String Message;
-
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 try {
-                    ReturnType = result.getString("ReturnType");
-                    Message = result.getString("Message");
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        ToastUtils.show_always(context, "群成员已经添加成功");
+                        finish();
+                    } else {
+                        try {
+                            String Message = result.getString("Message");
+                            if (Message != null && !Message.trim().equals("")) {
+                                ToastUtils.show_always(context, Message + "");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            ToastUtils.show_always(context, "数据出错了,请稍后再试！");
+                        }
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }
-                if (ReturnType != null && ReturnType.equals("1001")) {
-                    ToastUtils.show_always(context, "群成员已经添加成功");
-                    finish();
-                } else {
-                    if (Message != null && !Message.trim().equals("")) {
-                        ToastUtils.show_always(context, Message + "");
-                    }
+                    ToastUtils.show_always(context, "数据出错了,请稍后再试！");
                 }
             }
 
@@ -324,31 +363,6 @@ public class AddGroupManagerActivity extends AppBaseActivity implements OnClickL
                 ToastUtils.showVolleyError(context);
             }
         });
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        String search_name = s.toString();
-        if (search_name.trim().equals("")) {
-            imageClear.setVisibility(View.INVISIBLE);
-            tipSearchNull.setVisibility(View.GONE);
-            if (userList == null || userList.size() == 0) {
-                listView.setVisibility(View.GONE);
-            } else {
-                listView.setVisibility(View.VISIBLE);
-                userList2.clear();
-                userList2.addAll(userList);
-                filledData(userList2);
-                Collections.sort(userList2, pinyinComparator);
-                listView.setAdapter(adapter = new CreateGroupMembersDelAdapter(context, userList2));
-                setInterface();
-            }
-        } else {
-            userList2.clear();
-            userList2.addAll(userList);
-            imageClear.setVisibility(View.VISIBLE);
-            search(search_name);
-        }
     }
 
     @Override
@@ -371,11 +385,4 @@ public class AddGroupManagerActivity extends AppBaseActivity implements OnClickL
         setContentView(R.layout.activity_null);
     }
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-    }
 }

@@ -12,7 +12,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.location.GDLocation;
-import com.woting.ui.model.city.CatalogName;
+import com.woting.ui.music.citylist.cityModel.secondaryCity;
 import com.woting.ui.music.citylist.dao.CityInfoDao;
 
 import java.util.List;
@@ -121,7 +121,7 @@ public class LocationInfo implements GDLocation.Location {
     // 城市发生变化电台也需要跟随变化
     private void handleAdCode(String adCode) {
         if (cityDao == null) cityDao = new CityInfoDao(context);
-        List<CatalogName> list = cityDao.queryCityInfo();
+        List<secondaryCity> list = cityDao.queryCityInfo();
         if (list.size() == 0) {
             adCode = "110000";
         } else {

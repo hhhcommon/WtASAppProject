@@ -62,8 +62,8 @@ import com.woting.ui.common.favoritetype.FavoriteProgramTypeActivity;
 import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.music.main.HomeActivity;
-import com.woting.ui.model.city.Catalog;
-import com.woting.ui.model.city.CatalogName;
+import com.woting.ui.music.citylist.cityModel.stairCity;
+import com.woting.ui.music.citylist.cityModel.secondaryCity;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
 import com.woting.ui.musicplay.play.model.PlayerHistory;
 import com.woting.ui.musicplay.play.play.PlayerActivity;
@@ -121,7 +121,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private boolean isFirst = true;
     public static boolean v;
 
-    private List<CatalogName> list;
+    private List<secondaryCity> list;
     private NetWorkChangeReceiver netWorkChangeReceiver = null;
     private PhoneStatReceiver phoneStatReceiver = null;
 
@@ -357,17 +357,17 @@ public class MainActivity extends TabActivity implements OnClickListener {
                         if (ReturnType.equals("1001")) {
                             try {
                                 String ResultList = result.getString("CatalogData");
-                                Catalog SubList_all = new Gson().fromJson(ResultList, new TypeToken<Catalog>() {
+                                stairCity SubList_all = new Gson().fromJson(ResultList, new TypeToken<stairCity>() {
                                 }.getType());
-                                List<CatalogName> s = SubList_all.getSubCata();
+                                List<secondaryCity> s = SubList_all.getSubCata();
 
                                 if (s != null && s.size() > 0) {
                                     // 将数据写入数据库
                                     GlobalConfig.CityCatalogList = s;
                                     list = CID.queryCityInfo();
-                                    List<CatalogName> m = new ArrayList<>();
+                                    List<secondaryCity> m = new ArrayList<>();
                                     for (int i = 0; i < s.size(); i++) {
-                                        CatalogName mFenLeiName = new CatalogName();
+                                        secondaryCity mFenLeiName = new secondaryCity();
                                         mFenLeiName.setCatalogId(s.get(i).getCatalogId());
                                         mFenLeiName.setCatalogName(s.get(i).getCatalogName());
                                         m.add(mFenLeiName);

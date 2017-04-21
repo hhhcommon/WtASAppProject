@@ -477,9 +477,5 @@ public class SoundFragment extends Fragment implements TipView.WhiteViewClick {
         linearNull = null;
         tag = null;
         isData = false;
-        if (dbDao != null) {
-            dbDao.closedb();
-            dbDao = null;
-        }
     }
 }

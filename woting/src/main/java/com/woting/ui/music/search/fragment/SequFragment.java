@@ -52,7 +52,7 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
     private FragmentActivity context;
     protected FavorListAdapter adapter;
     private SearchPlayerHistoryDao dbDao;
-    private List<content> SubList;
+
     private ArrayList<content> newList = new ArrayList<>();
 
     private Dialog dialog;
@@ -66,26 +66,57 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
     private int refreshType = 1;
     private int page = 1;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        context = getActivity();
+        setReceiver(); // 设置广播接收器
+        initDao();
+    }
+
+    // 设置广播接收器
+    private void setReceiver() {
+        IntentFilter mFilter = new IntentFilter();
+        mFilter.addAction(BroadcastConstants.SEARCH_VIEW_UPDATE);
+        context.registerReceiver(mBroadcastReceiver, mFilter);
+    }
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(BroadcastConstants.SEARCH_VIEW_UPDATE)) {
+                searchStr = intent.getStringExtra("searchStr");
+                if (searchStr != null && !searchStr.equals("")) {
+                    refreshType = 1;
+                    page = 1;
+                    newList.clear();
+                    if (adapter == null) {
+                        mListView.setAdapter(adapter = new FavorListAdapter(context, newList));
+                    } else {
+                        adapter.notifyDataSetChanged();
+                    }
+                    getData();// 获取数据
+                }
+            }
+        }
+    };
+
     // 初始化数据库
     private void initDao() {
         dbDao = new SearchPlayerHistoryDao(context);
     }
 
-    @Override
-    public void onWhiteViewClick() {
+    // 获取数据
+    private void getData() {
         dialog = DialogUtils.Dialog(context);
         sendRequest();
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        context = getActivity();
-
-        IntentFilter mFilter = new IntentFilter();
-        mFilter.addAction(BroadcastConstants.SEARCH_VIEW_UPDATE);
-        context.registerReceiver(mBroadcastReceiver, mFilter);
-        initDao();
+    public void onWhiteViewClick() {
+        getData();// 获取数据
     }
 
     @Override
@@ -122,84 +153,81 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
         });
     }
 
-    private void setListener() {
-        mListView.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (newList != null && newList.get(position - 1) != null && newList.get(position - 1).getMediaType() != null) {
-                    String MediaType = newList.get(position - 1).getMediaType();
-                    if(MediaType.equals(StringConstant.TYPE_SEQU)) {
-                        AlbumFragment fragment = new AlbumFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_SEARCH);
-                        bundle.putString("type", "search");
-                        bundle.putSerializable("list", newList.get(position - 1));
-                        fragment.setArguments(bundle);
-                        SearchLikeActivity.open(fragment);
-                    }
-                }
-            }
-        });
-    }
 
     private void sendRequest() {
-        if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
-            if(dialog != null) dialog.dismiss();
-            if(refreshType == 1) {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
+            if (refreshType == 1) {
                 mListView.stopRefresh();
                 tipView.setVisibility(View.VISIBLE);
                 tipView.setTipView(TipView.TipStatus.NO_NET);
             } else {
                 mListView.stopLoadMore();
             }
-            return ;
+            return;
         }
-        VolleyRequest.requestPost(GlobalConfig.getSearchByText, tag, setParam(), new VolleyCallback() {
-            private String ReturnType;
-
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("MediaType", StringConstant.TYPE_SEQU);
+            if (searchStr != null && !searchStr.equals("")) {
+                jsonObject.put("SearchStr", searchStr);
+                jsonObject.put("Page", String.valueOf(page));
+                jsonObject.put("PageSize", "10");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        VolleyRequest.requestPost(GlobalConfig.getSearchByText, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 try {
-                    ReturnType = result.getString("ReturnType");
-                    Log.v("ReturnType", "ReturnType -- > > " + ReturnType);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if (ReturnType != null && ReturnType.equals("1001")) {
-                    try {
-                        page++;
-                        JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        SubList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<content>>() {}.getType());
-                        if (refreshType == 1) newList.clear();
-                        newList.addAll(SubList);
-                        if(newList.size() > 0) {
-                            adapter.notifyDataSetChanged();
-                            setListener();
-                            tipView.setVisibility(View.GONE);
-                        } else {
-                            if(refreshType == 1) {
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        try {
+                            page++;
+                            JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
+                            ArrayList<content> SubList = new Gson().fromJson(arg1.getString("List"), new TypeToken<ArrayList<content>>() {
+                            }.getType());
+                            if (refreshType == 1) newList.clear();
+                            newList.addAll(SubList);
+                            if (newList.size() > 0) {
+                                adapter.notifyDataSetChanged();
+                                setListener();
+                                tipView.setVisibility(View.GONE);
+                                mListView.setPullLoadEnable(true);
+                            } else {
+                                if (refreshType == 1) {
+                                    tipView.setVisibility(View.VISIBLE);
+                                    tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关结果\n试试其他词，不要太逆天哟");
+                                    mListView.setPullLoadEnable(false);
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            if (refreshType == 1) {
                                 tipView.setVisibility(View.VISIBLE);
                                 tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关结果\n试试其他词，不要太逆天哟");
+                                mListView.setPullLoadEnable(false);
                             }
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        tipView.setVisibility(View.VISIBLE);
-                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                    } else {
+                        if (refreshType == 1) {
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关结果\n试试其他词，不要太逆天哟");
+                            mListView.setPullLoadEnable(false);
+                        }
                     }
-                } else {
-                    mListView.setPullLoadEnable(false);
-                    if(refreshType == 1) {
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    if (refreshType == 1) {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.NO_DATA, "没有找到相关结果\n试试其他词，不要太逆天哟");
-                    } else if (isVisible()) {
-                        ToastUtils.show_always(context, getString(R.string.no_data));
+                        mListView.setPullLoadEnable(false);
                     }
                 }
 
-                if(refreshType == 1) {
+                if (refreshType == 1) {
                     mListView.stopRefresh();
                 } else {
                     mListView.stopLoadMore();
@@ -212,51 +240,31 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
                 if (refreshType == 1) {
                     tipView.setVisibility(View.VISIBLE);
                     tipView.setTipView(TipView.TipStatus.IS_ERROR);
-                } else {
-                    ToastUtils.showVolleyError(context);
+                    mListView.setPullLoadEnable(false);
                 }
             }
         });
     }
 
-    private JSONObject setParam() {
-        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        try {
-            jsonObject.put("MediaType", StringConstant.TYPE_SEQU);
-            if (searchStr != null && !searchStr.equals("")) {
-                jsonObject.put("SearchStr", searchStr);
-                jsonObject.put("Page", String.valueOf(page));
-                jsonObject.put("PageSize", "10");
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
-    }
-
-    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(BroadcastConstants.SEARCH_VIEW_UPDATE)) {
-                searchStr = intent.getStringExtra("searchStr");
-                if (searchStr != null && !searchStr.equals("")) {
-                    refreshType = 1;
-                    page = 1;
-                    newList.clear();
-                    if (adapter == null) {
-                        mListView.setAdapter(adapter = new FavorListAdapter(context, newList));
-                    } else {
-                        adapter.notifyDataSetChanged();
+    private void setListener() {
+        mListView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (newList != null && newList.get(position - 1) != null && newList.get(position - 1).getMediaType() != null) {
+                    String MediaType = newList.get(position - 1).getMediaType();
+                    if (MediaType.equals(StringConstant.TYPE_SEQU)) {
+                        AlbumFragment fragment = new AlbumFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_SEARCH);
+                        bundle.putString("type", "search");
+                        bundle.putSerializable("list", newList.get(position - 1));
+                        fragment.setArguments(bundle);
+                        SearchLikeActivity.open(fragment);
                     }
-
-                    dialog = DialogUtils.Dialog(context);
-                    sendRequest();
                 }
             }
-        }
-    };
+        });
+    }
 
     @Override
     public void onDestroyView() {
@@ -274,16 +282,12 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
         context.unregisterReceiver(mBroadcastReceiver);
         context = null;
         dialog = null;
-        SubList = null;
         mListView = null;
         newList = null;
         rootView = null;
         adapter = null;
         searchStr = null;
         tag = null;
-        if (dbDao != null) {
-            dbDao.closedb();
-            dbDao = null;
-        }
+
     }
 }

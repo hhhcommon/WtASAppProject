@@ -2,7 +2,7 @@ package com.woting.common.config;
 
 import android.os.Environment;
 
-import com.woting.ui.model.city.CatalogName;
+import com.woting.ui.music.citylist.cityModel.secondaryCity;
 import com.woting.ui.musicplay.play.model.LanguageSearchInside;
 import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.common.model.UserInfo;
@@ -48,7 +48,7 @@ public class GlobalConfig {
     public static String upLoadCache = "/WTFM/APP/";// app安装地址
 
     //缓存的城市列表
-    public static List<CatalogName> CityCatalogList;
+    public static List<secondaryCity> CityCatalogList;
 
     /**
      * 数据库版本号

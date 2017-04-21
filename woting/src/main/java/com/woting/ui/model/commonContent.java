@@ -1,13 +1,12 @@
 package com.woting.ui.model;
 
-import java.io.Serializable;
 
 /**
  * 公共节目的model
  * 作者：xinlong on 2016/8/23 21:18
  * 邮箱：645700751@qq.com
  */
-  public class commonContent implements Serializable {
+  public class commonContent  {
 	public String PlayCount;         // 播放数量 0
 	public String CTime;             // 创建时间 1469250320000
 	public String ContentName;       // 电台名称 北京新闻广播

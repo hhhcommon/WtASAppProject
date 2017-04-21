@@ -150,7 +150,7 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                     if (ReturnType != null && ReturnType.equals("1001")) {
                         try {
                             JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                            subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<content>>() {}.getType());
+                            subList = new Gson().fromJson(arg1.getString("List"), new TypeToken<ArrayList<content>>() {}.getType());
 
                             tipView.setVisibility(View.GONE);
 

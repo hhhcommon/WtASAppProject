@@ -19,6 +19,9 @@ import com.woting.ui.music.radiolist.main.RadioListFragment;
 
 import java.util.List;
 
+/**
+ * 分类一级适配器
+ */
 public class CatalogListAdapter extends BaseAdapter {
     private List<FenLei> list;
     private Context context;

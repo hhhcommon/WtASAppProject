@@ -10,27 +10,27 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.ui.model.city.CatalogName;
+import com.woting.ui.music.citylist.cityModel.secondaryCity;
 
 import java.util.List;
 
 /**
- * 通讯录好友适配器
+ * 城市列表适配器
  *
  * @author 辛龙
  *         2016年3月25日
  */
 public class CityListAdapter extends BaseAdapter implements SectionIndexer {
-    private List<CatalogName> list;
+    private List<secondaryCity> list;
     private Context context;
-    private CatalogName lists;
+    private secondaryCity lists;
 
-    public CityListAdapter(Context context, List<CatalogName> list) {
+    public CityListAdapter(Context context, List<secondaryCity> list) {
         this.list = list;
         this.context = context;
     }
 
-    public void ChangeDate(List<CatalogName> list) {
+    public void ChangeDate(List<secondaryCity> list) {
         this.list = list;
         this.notifyDataSetChanged();
     }
