@@ -41,6 +41,16 @@ public class GroupInfo implements Serializable {
     private String PortraitBig;
     private String UserNames;
     private String UserIds;
+    private String GroupMasterId;   // 群管理员
+
+
+    public void setGroupMasterId(String groupMasterId) {
+        GroupMasterId = groupMasterId;
+    }
+
+    public String getGroupMasterId() {
+        return GroupMasterId;
+    }
 
     public String getUserIds() {
         return UserIds;

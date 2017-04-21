@@ -119,10 +119,10 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 		} else {
 			tv_id.setText("ID: " +contact.getGroupNum());
 		}
-		if (contact.getGroupOriDescn() == null || contact.getGroupOriDescn().equals("")) {
+		if (contact.getGroupSignature() == null || contact.getGroupSignature() .equals("")) {
 			tv_sign.setText("这家伙很懒，什么都没写");
 		} else {
-			tv_sign.setText(contact.getGroupOriDescn());
+			tv_sign.setText(contact.getGroupSignature());
 		}
 		if (contact.getGroupImg() == null || contact.getGroupImg().equals("")
 				|| contact.getGroupImg().equals("null") || contact.getGroupImg().trim().equals("")) {

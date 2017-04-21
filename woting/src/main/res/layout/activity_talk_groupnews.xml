@@ -48,7 +48,6 @@
                 android:paddingTop="12dp"
                 android:visibility="visible"
                 android:background="@color/dinglan_orange">
-
                 <ImageView
                     android:id="@+id/image_touxiang"
                     android:layout_width="85dp"
@@ -454,7 +453,7 @@
                 android:id="@+id/lin_set_manager"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:background="@drawable/person_color">
 
                 <TextView
@@ -486,7 +485,10 @@
                 android:id="@+id/tv_delete"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_margin="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="45dp"
+                android:layout_marginBottom="15dp"
                 android:background="@drawable/zhuxiao_press"
                 android:text="退出该群"
                 android:textColor="@color/WHITE"
