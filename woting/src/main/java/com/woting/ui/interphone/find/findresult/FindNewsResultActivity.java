@@ -3,6 +3,7 @@ package com.woting.ui.interphone.find.findresult;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -14,7 +15,6 @@ import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.helper.CommonHelper;
-import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
@@ -217,11 +217,12 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                             }
                         }
                     } else if (type.equals("group")) {
+                        String s=GroupList.get(position - 1).getGroupName();
+                        isTrue=false;
                         if (position > 0) {
                             if (GroupList != null && GroupList.size() > 0) {
-                                if (GroupList.get(position - 1).getUserIds() != null &&
-                                        !GroupList.get(position - 1).getUserIds().trim().equals("")) {
-                                    if (isGroupUser(GroupList.get(position - 1).getUserIds())) {
+                                if (GroupList.get(position - 1).getGroupId() != null && !GroupList.get(position - 1).getGroupId().trim().equals("")) {
+                                    if (isGroupUser(GroupList.get(position - 1).getGroupId())) {
                                         Intent intent = new Intent(context, TalkGroupNewsActivity.class);
                                         Bundle bundle = new Bundle();
                                         bundle.putSerializable("data", GroupList.get(position - 1));
@@ -245,20 +246,26 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
             }
         });
     }
-
-    private boolean isGroupUser(String getUserIds) {
+    boolean isTrue = false;
+    private boolean isGroupUser(String groupIds) {
         // 另外一种写法
         // (","+userIds).indexOf(","+userId)!=-1
+        if(GlobalConfig.list_group!=null&&GlobalConfig.list_group.size()>0&&!TextUtils.isEmpty(groupIds)){
 
-        boolean isTrue = false;
-        String[] strArray;
-        strArray = getUserIds.split(",");
-        for (int i = 0; i < strArray.length; i++) {
-            if (strArray[i].equals(CommonUtils.getUserId(context))) {
-                isTrue = true;
-                break;
+            for(int i=0;i<GlobalConfig.list_group.size();i++){
+
+                if(!TextUtils.isEmpty(GlobalConfig.list_group.get(i).getGroupId())){
+                    if(GlobalConfig.list_group.get(i).getGroupId().equals(groupIds)){
+                        isTrue=true;
+                        break;
+                    }
+                }
             }
+
+        }else{
+            isTrue=false;
         }
+
         return isTrue;
     }
 

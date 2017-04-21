@@ -71,7 +71,7 @@ public class AddGroupManagerActivity extends AppBaseActivity implements OnClickL
         groupId = getIntent().getStringExtra("GroupId");
         if (groupId != null && !groupId.equals("")) {
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
+                dialog = DialogUtils.Dialog(context);
                 send();
             } else {
                 tipView.setVisibility(View.VISIBLE);
@@ -117,7 +117,7 @@ public class AddGroupManagerActivity extends AppBaseActivity implements OnClickL
         groupId = getIntent().getStringExtra("GroupId");
         if (groupId != null && !groupId.equals("")) {
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
+                dialog = DialogUtils.Dialog(context);
                 send();
             } else {
                 tipView.setVisibility(View.VISIBLE);
@@ -266,7 +266,7 @@ public class AddGroupManagerActivity extends AppBaseActivity implements OnClickL
                 }
                 if (delList != null && delList.size() > 0) {
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(context, "正在发送请求，请稍候");
+                        dialog = DialogUtils.Dialog(context);
                         sendSetGroupManager();
                     } else {
                         ToastUtils.show_always(context, "网络失败，请检查网络");
@@ -309,7 +309,8 @@ public class AddGroupManagerActivity extends AppBaseActivity implements OnClickL
                     e.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
-                    ToastUtils.show_always(context, "群成员已经添加成功");
+                    ToastUtils.show_always(context, "群管理员设置已经添加成功");
+                    setResult(1);
                     finish();
                 } else {
                     if (Message != null && !Message.trim().equals("")) {
