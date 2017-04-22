@@ -187,21 +187,22 @@ public class FindNewsResultActivity extends AppBaseActivity implements OnClickLi
                                       if(GlobalConfig.list_person.get(i).getUserId().equals(newList.get(position - 1).getUserId())){
                                           isFriend=true;
                                       }
-                                        if(isFriend){
-                                            //好友
-                                            Intent intent = new Intent(FindNewsResultActivity.this, TalkPersonNewsActivity.class);
-                                            Bundle bundle = new Bundle();
-                                            bundle.putSerializable("contact", newList.get(position - 1));
-                                            intent.putExtras(bundle);
-                                            startActivity(intent);
-                                        }else{
-                                            //非好友
-                                            Intent intent = new Intent(FindNewsResultActivity.this, FriendAddActivity.class);
-                                            Bundle bundle = new Bundle();
-                                            bundle.putSerializable("contact", newList.get(position - 1));
-                                            intent.putExtras(bundle);
-                                            startActivity(intent);
-                                        }
+                                    }
+                                    if(isFriend){
+                                        //好友
+                                        Intent intent = new Intent(FindNewsResultActivity.this, TalkPersonNewsActivity.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putSerializable("type","findAdd");
+                                        bundle.putSerializable("contact", newList.get(position - 1));
+                                        intent.putExtras(bundle);
+                                        startActivity(intent);
+                                    }else{
+                                        //非好友
+                                        Intent intent = new Intent(FindNewsResultActivity.this, FriendAddActivity.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putSerializable("contact", newList.get(position - 1));
+                                        intent.putExtras(bundle);
+                                        startActivity(intent);
                                     }
                                 }else{
                                     //Global通讯录保存数据异常时，所有用户都认为非好友
