@@ -595,10 +595,7 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
         mListView = null;
         dialog = null;
         mTextView_Head = null;
-        if (dbDao != null) {
-            dbDao.closedb();
-            dbDao = null;
-        }
+
         if (SubList != null) {
             SubList.clear();
             SubList = null;

@@ -1,4 +1,4 @@
-package com.woting.ui.model.city;
+package com.woting.ui.music.citylist.cityModel;
 
 import java.io.Serializable;
 import java.util.List;
@@ -6,9 +6,9 @@ import java.util.List;
 /**
  * 城市分类一级数据
  */
-public class Catalog implements Serializable{
+public class stairCity implements Serializable{
 	private String CatalogName;
-	private List<CatalogName> SubCata;
+	private List<secondaryCity> SubCata;
 	private String CatalogType;
 	public String getCatalogName() {
 		return CatalogName;
@@ -22,10 +22,10 @@ public class Catalog implements Serializable{
 	public void setCatalogType(String catalogType) {
 		CatalogType = catalogType;
 	}
-	public List<CatalogName> getSubCata() {
+	public List<secondaryCity> getSubCata() {
 		return SubCata;
 	}
-	public void setSubCata(List<CatalogName> subCata) {
+	public void setSubCata(List<secondaryCity> subCata) {
 		SubCata = subCata;
 	}
 }

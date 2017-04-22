@@ -254,7 +254,6 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
                             push.putExtras(bundle);
                             context.sendBroadcast(push);
                             MainActivity.change();
-                            dbDao.closedb();
                             finish();
                         } else {    // 此处要调对话框，点击同意删除对应的文件信息
                             positionNow = position;

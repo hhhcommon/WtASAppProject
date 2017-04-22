@@ -145,26 +145,23 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                         }
                         UserList = new Gson().fromJson(ContactMeString, new TypeToken<List<UserInviteMeInside>>() {
                         }.getType());
-                        sendForGetGroup();
+
                     } else if (ReturnType != null && ReturnType.equals("1002")) {
                         try {
                             String Message = result.getString("Message");
                             if (Message != null && !Message.trim().equals("")) {
                                 Log.e("邀请信息", "页面加载失败，失败原因" + Message);
-                                sendForGetGroup();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     } else if (ReturnType != null && ReturnType.equals("1011")) {
                         Log.e("邀请信息", "所有的邀请信息都已经处理完毕");
-                        sendForGetGroup();
                     } else {
                         try {
                             String Message = result.getString("Message");
                             if (Message != null && !Message.trim().equals("")) {
                                 Log.e("邀请信息", "页面加载失败，失败原因" + Message);
-                                sendForGetGroup();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -173,6 +170,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                sendForGetGroup();
             }
 
             @Override

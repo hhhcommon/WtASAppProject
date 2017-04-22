@@ -23,7 +23,7 @@ import com.woting.ui.music.radio.model.RadioPlay;
 import java.util.List;
 
 /**
- * expandableListView适配器
+ * 国家台适配器
  */
 public class RadioNationAdapter extends BaseExpandableListAdapter  {
 	private Context context;
@@ -173,7 +173,6 @@ public class RadioNationAdapter extends BaseExpandableListAdapter  {
 							url = GlobalConfig.imageurl + lists.getContentImg();
 						}
 						String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
-
 						// 加载图片
 						AssembleImageUrlUtils.loadImage(_url, url, holder.imageview_rankimage, IntegerConstant.TYPE_LIST);
 					}

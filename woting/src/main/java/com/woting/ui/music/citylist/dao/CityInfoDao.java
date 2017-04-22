@@ -5,11 +5,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.woting.common.database.SQLiteHelper;
-import com.woting.ui.model.city.CatalogName;
+import com.woting.ui.music.citylist.cityModel.secondaryCity;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 存储地理位置
+ */
 public class CityInfoDao {
 
     private SQLiteHelper helper;
@@ -20,23 +23,25 @@ public class CityInfoDao {
         this.context = context;
     }
 
-    //查
-    public List<CatalogName> queryCityInfo() {
-        List<CatalogName> mylist = new ArrayList<CatalogName>();
+    /**
+     * 查找本地存储的地理位置
+     * @return
+     */
+    public List<secondaryCity> queryCityInfo() {
+        List<secondaryCity> _c = new ArrayList<secondaryCity>();
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cursor = null;
     /*	String url = cursor.getString(cursor.getColumnIndex("url"));
 		String author = cursor.getColumnName(cursor.getColumnIndex("author"));*/
-
         try {
             cursor = db.rawQuery("Select * from cityInfo", new String[]{});
             while (cursor.moveToNext()) {
-                String Adcode = cursor.getString(cursor.getColumnIndex("adCode"));
-                String CityName = cursor.getString(cursor.getColumnIndex("cityName"));
-                CatalogName mfFenleiname = new CatalogName();
-                mfFenleiname.setCatalogId(Adcode);
-                mfFenleiname.setCatalogName(CityName);
-                mylist.add(mfFenleiname);
+                String adCode = cursor.getString(cursor.getColumnIndex("adCode"));
+                String cityName = cursor.getString(cursor.getColumnIndex("cityName"));
+                secondaryCity _n = new secondaryCity();
+                _n.setCatalogId(adCode);
+                _n.setCatalogName(cityName);
+                _c.add(_n);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,16 +53,19 @@ public class CityInfoDao {
                 db.close();
             }
         }
-        return mylist;
+        return _c;
     }
 
-    //增
-    public void InsertCityInfo(List<CatalogName> list) {
+    /**
+     * 新添加数据
+     * @param list
+     */
+    public void InsertCityInfo(List<secondaryCity> list) {
         SQLiteDatabase db = helper.getWritableDatabase();
         for (int i = 0; i < list.size(); i++) {
-            String adcode = list.get(i).getCatalogId();
+            String adCode = list.get(i).getCatalogId();
             String cityName = list.get(i).getCatalogName();
-            db.execSQL("insert into cityInfo(adCode,cityName)values(?,?)", new Object[]{adcode, cityName});
+            db.execSQL("insert into cityInfo(adCode,cityName)values(?,?)", new Object[]{adCode , cityName});
         }
         if (db != null) {
             db.close();

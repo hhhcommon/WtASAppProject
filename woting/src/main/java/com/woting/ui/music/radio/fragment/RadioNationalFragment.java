@@ -41,7 +41,10 @@ import org.json.JSONTokener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RadioNationalFragment extends Fragment implements View.OnClickListener, TipView.WhiteViewClick {
+/**
+ * 国家台
+ */
+public class RadioNationalFragment extends Fragment implements TipView.WhiteViewClick {
     private Context context;
     private SearchPlayerHistoryDao dbDao;
     private RadioNationAdapter adapter;
@@ -57,77 +60,134 @@ public class RadioNationalFragment extends Fragment implements View.OnClickListe
     private String tag = "RADIO_NATION_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
+        initDao();// 初始化数据库
     }
 
-    @Nullable
+    // 初始化数据库
+    private void initDao() {// 初始化数据库命令执行对象
+        dbDao = new SearchPlayerHistoryDao(context);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.activity_radio_nation, container, false);
-            rootView.setOnClickListener(this);
-            setView();
-            initDao();
-            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                dialog = DialogUtils.Dialog(context);
-                sendRequest();
-            } else {
-                tipView.setVisibility(View.VISIBLE);
-                tipView.setTipView(TipView.TipStatus.NO_NET);
-            }
+            rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+            setView();// 设置界面
+            getData();// 获取数据
         }
         return rootView;
     }
 
-    private void sendRequest() {
-        VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, setParam(), new VolleyCallback() {
-            private String StringSubList;
-            private String ReturnType;
+    // 设置界面
+    private void setView() {
+        tipView = (TipView) rootView.findViewById(R.id.tip_view);
+        tipView.setWhiteClick(this);
 
+        rootView.findViewById(R.id.head_left_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HomeActivity.close();
+            }
+        });
+
+        mTextView_Head = (TextView) rootView.findViewById(R.id.head_name_tv);
+        mTextView_Head.setText("国家台");
+
+        mListView = (ExpandableListView) rootView.findViewById(R.id.listview_fm);
+        mListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                return true;
+            }
+        });
+        mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+        mListView.setGroupIndicator(null);
+    }
+
+    @Override
+    public void onWhiteViewClick() {
+        getData();
+    }
+
+    // 获取数据
+    private void getData() {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            dialog = DialogUtils.Dialog(context);
+            sendRequest();
+        } else {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
+        }
+    }
+
+    private void sendRequest() {
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("MediaType", "RADIO");
+            jsonObject.put("CatalogId", "dtfl2001");
+            jsonObject.put("CatalogType", "9");
+            jsonObject.put("PerSize", "20");
+            jsonObject.put("ResultType", "1");
+            jsonObject.put("PageSize", "50");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 try {
-                    ReturnType = result.getString("ReturnType");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if (ReturnType != null && ReturnType.equals("1001")) {
-                    try {
-                        JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
                         try {
-                            StringSubList = arg1.getString("List");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            SubList = new Gson().fromJson(StringSubList, new TypeToken<List<RadioPlay>>() {}.getType());
-                            if (adapter == null) {
-                                adapter = new RadioNationAdapter(context, SubList);
-                                mListView.setAdapter(adapter);
-                            } else {
-                                adapter.notifyDataSetChanged();
+                            JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
+                            try {
+                                String StringSubList = arg1.getString("List");
+                                try {
+                                    SubList = new Gson().fromJson(StringSubList, new TypeToken<List<RadioPlay>>() {
+                                    }.getType());
+                                    if (adapter == null) {
+                                        adapter = new RadioNationAdapter(context, SubList);
+                                        mListView.setAdapter(adapter);
+                                    } else {
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                    for (int i = 0; i < SubList.size(); i++) {
+                                        mListView.expandGroup(i);
+                                    }
+                                    tipView.setVisibility(View.GONE);
+                                    setListView();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    tipView.setVisibility(View.VISIBLE);
+                                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                            for (int i = 0; i < SubList.size(); i++) {
-                                mListView.expandGroup(i);
-                            }
-                            tipView.setVisibility(View.GONE);
                         } catch (Exception e) {
                             e.printStackTrace();
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.IS_ERROR);
                         }
-                        setListView();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } else {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.IS_ERROR);
                     }
-                } else {
+                } catch (JSONException e) {
+                    e.printStackTrace();
                     tipView.setVisibility(View.VISIBLE);
                     tipView.setTipView(TipView.TipStatus.IS_ERROR);
                 }
@@ -140,25 +200,6 @@ public class RadioNationalFragment extends Fragment implements View.OnClickListe
                 tipView.setTipView(TipView.TipStatus.IS_ERROR);
             }
         });
-    }
-
-    private JSONObject setParam() {
-        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        try {
-            jsonObject.put("MediaType", "RADIO");
-            jsonObject.put("CatalogId", "dtfl2001");
-            jsonObject.put("CatalogType", "9");
-            jsonObject.put("PerSize", "20");
-            jsonObject.put("ResultType", "1");
-            jsonObject.put("PageSize", "50");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
-    }
-
-    private void initDao() {// 初始化数据库命令执行对象
-        dbDao = new SearchPlayerHistoryDao(context);
     }
 
     // 这里要改
@@ -190,20 +231,20 @@ public class RadioNationalFragment extends Fragment implements View.OnClickListe
                         String ContentId = SubList.get(groupPosition).getList().get(childPosition).getContentId();
                         String localUrl = SubList.get(groupPosition).getList().get(childPosition).getLocalurl();
 
-                        String sequName = SubList.get(groupPosition).getList().get(childPosition).getSeqInfo().getContentName();
-                        String sequId = SubList.get(groupPosition).getList().get(childPosition).getSeqInfo().getContentId();
-                        String sequDesc = SubList.get(groupPosition).getList().get(childPosition).getSeqInfo().getContentDescn();
-                        String sequImg = SubList.get(groupPosition).getList().get(childPosition).getSeqInfo().getContentImg();
+                        String seqName = SubList.get(groupPosition).getList().get(childPosition).getSeqInfo().getContentName();
+                        String seqId = SubList.get(groupPosition).getList().get(childPosition).getSeqInfo().getContentId();
+                        String seqDesc = SubList.get(groupPosition).getList().get(childPosition).getSeqInfo().getContentDescn();
+                        String seqImg = SubList.get(groupPosition).getList().get(childPosition).getSeqInfo().getContentImg();
 
                         String ContentPlayType = SubList.get(groupPosition).getList().get(childPosition).getContentPlayType();
-                        String IsPlaying=SubList.get(groupPosition).getList().get(childPosition).getIsPlaying();
+                        String IsPlaying = SubList.get(groupPosition).getList().get(childPosition).getIsPlaying();
                         // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-                        String ColumnNum=SubList.get(groupPosition).getList().get(childPosition).getColumnNum();
+                        String ColumnNum = SubList.get(groupPosition).getList().get(childPosition).getColumnNum();
                         PlayerHistory history = new PlayerHistory(
                                 playName, playImage, playUrl, playUri, playMediaType,
                                 playAllTime, playInTime, playContentDesc, playerNum,
                                 playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying,ColumnNum);
+                                ContentFavorite, ContentId, localUrl, seqName, seqId, seqDesc, seqImg, ContentPlayType, IsPlaying, ColumnNum);
                         dbDao.deleteHistory(playUrl);
                         dbDao.addHistory(history);
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
@@ -221,44 +262,6 @@ public class RadioNationalFragment extends Fragment implements View.OnClickListe
         });
     }
 
-    private void setView() {
-        tipView = (TipView) rootView.findViewById(R.id.tip_view);
-        tipView.setWhiteClick(this);
-
-        rootView.findViewById(R.id.head_left_btn).setOnClickListener(this);
-
-        mListView = (ExpandableListView) rootView.findViewById(R.id.listview_fm);
-        mTextView_Head = (TextView) rootView.findViewById(R.id.head_name_tv);
-        mTextView_Head.setText("国家台");
-        mListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                return true;
-            }
-        });
-        mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-        mListView.setGroupIndicator(null);
-    }
-
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.head_left_btn:// 返回
-                HomeActivity.close();
-                break;
-        }
-    }
-
-    @Override
-    public void onWhiteViewClick() {
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialog(context);
-            sendRequest();
-        } else {
-            tipView.setVisibility(View.VISIBLE);
-            tipView.setTipView(TipView.TipStatus.NO_NET);
-        }
-    }
 
     @Override
     public void onDestroy() {
@@ -267,10 +270,7 @@ public class RadioNationalFragment extends Fragment implements View.OnClickListe
         mListView = null;
         dialog = null;
         mTextView_Head = null;
-        if (dbDao != null) {
-            dbDao.closedb();
-            dbDao = null;
-        }
+
         newList.clear();
         newList = null;
         if (SubList != null) {

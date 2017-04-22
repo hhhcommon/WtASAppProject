@@ -35,8 +35,8 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.music.main.HomeActivity;
-import com.woting.ui.model.city.Catalog;
-import com.woting.ui.model.city.CatalogName;
+import com.woting.ui.music.citylist.cityModel.stairCity;
+import com.woting.ui.music.citylist.cityModel.secondaryCity;
 import com.woting.ui.music.citylist.adapter.CityListAdapter;
 import com.woting.ui.music.radio.fragment.CityRadioFragment;
 import com.woting.ui.interphone.linkman.view.CharacterParser;
@@ -61,8 +61,8 @@ public class CityListFragment extends Fragment implements OnClickListener, TipVi
     private CharacterParser characterParser;
     private PinyinComparator_d pinyinComparator;
     private CityListAdapter adapter;
-    private List<CatalogName> srcList;
-    private List<CatalogName> userList = new ArrayList<>();
+    private List<secondaryCity> srcList;
+    private List<secondaryCity> userList = new ArrayList<>();
 
     private View rootView;
     private TipView tipView;// 出错、没有数据、没有网络提示
@@ -153,7 +153,7 @@ public class CityListFragment extends Fragment implements OnClickListener, TipVi
         }
     }
 
-    private void handleCityList(List<CatalogName> srcList) {
+    private void handleCityList(List<secondaryCity> srcList) {
         if (srcList.size() == 0) {
             tipView.setVisibility(View.VISIBLE);
             tipView.setTipView(TipView.TipStatus.NO_DATA, "数据列表为空!");
@@ -180,7 +180,7 @@ public class CityListFragment extends Fragment implements OnClickListener, TipVi
                 try {
                     ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {
-                        Catalog subListAll = new Gson().fromJson(result.getString("CatalogData"), new TypeToken<Catalog>() {}.getType());
+                        stairCity subListAll = new Gson().fromJson(result.getString("CatalogData"), new TypeToken<stairCity>() {}.getType());
                         srcList = subListAll.getSubCata();
                         GlobalConfig.CityCatalogList = srcList;
                         handleCityList(srcList);
@@ -218,7 +218,7 @@ public class CityListFragment extends Fragment implements OnClickListener, TipVi
         return jsonObject;
     }
 
-    private void filledData(List<CatalogName> person) {
+    private void filledData(List<secondaryCity> person) {
         for (int i = 0; i < person.size(); i++) {
             person.get(i).setName(person.get(i).getCatalogName());
             String pinyin = characterParser.getSelling(person.get(i).getCatalogName());// 汉字转换成拼音
@@ -321,13 +321,13 @@ public class CityListFragment extends Fragment implements OnClickListener, TipVi
 
     // 根据输入框中的值来过滤数据并更新ListView
     private void search(String search_name) {
-        List<CatalogName> filterDateList = new ArrayList<>();
+        List<secondaryCity> filterDateList = new ArrayList<>();
         if (TextUtils.isEmpty(search_name)) {
             filterDateList = userList;
             tipSearchNull.setVisibility(View.GONE);
         } else {
             filterDateList.clear();
-            for (CatalogName sortModel : userList) {
+            for (secondaryCity sortModel : userList) {
                 String name = sortModel.getName();
                 if (name.contains(search_name) || characterParser.getSelling(name).startsWith(search_name)) {
                     filterDateList.add(sortModel);

@@ -524,9 +524,5 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
         dialog = null;
         tag = null;
         isData = false;
-        if (dbDao != null) {
-            dbDao.closedb();
-            dbDao = null;
-        }
     }
 }

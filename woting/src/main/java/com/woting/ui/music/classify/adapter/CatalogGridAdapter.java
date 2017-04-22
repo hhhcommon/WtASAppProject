@@ -12,6 +12,9 @@ import com.woting.ui.music.classify.model.FenLeiName;
 
 import java.util.List;
 
+/**
+ * 分类二级适配器
+ */
 public class CatalogGridAdapter extends BaseAdapter {
 	private List<FenLeiName> list;
 	private Context context;
@@ -23,11 +26,6 @@ public class CatalogGridAdapter extends BaseAdapter {
 		this.list = list;
 	}
 
-	public void changeData(List<FenLeiName> list) {
-		this.list = list;
-		notifyDataSetChanged();
-	}
-
 	@Override
 	public int getCount() {
 			return list.size();
@@ -36,7 +34,6 @@ public class CatalogGridAdapter extends BaseAdapter {
 	@Override
 	public Object getItem(int position) {
 			return list.get(position);
-
 	}
 
 	@Override
