@@ -268,6 +268,7 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
                     lin_status_second.setVisibility(View.VISIBLE);
                     lin_status_third.setVisibility(View.GONE);
                 } else {
+                    send();
                     img_edit_clear.setVisibility(View.GONE);
                     img_edit_normal.setVisibility(View.VISIBLE);
                     lin_status_second.setVisibility(View.GONE);
@@ -451,6 +452,7 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
                 break;
             case R.id.img_edit_normal:
                 yuyinDialog.show();
+                tv_speak_status.setText("请按住讲话");
                 imm.hideSoftInputFromWindow(rl_voice.getWindowToken(), 0);
                 break;
         }
@@ -620,7 +622,7 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
                         adapterHistory = new SearchHistoryAdapter(context, historyDatabaseList);
                         gv_history.setAdapter(adapterHistory);
                     }else{
-                        adapterHistory.notifyDataSetChanged();
+                        adapterHistory.changeData(historyDatabaseList);
                     }
                 } else {
                     lin_history.setVisibility(View.GONE);

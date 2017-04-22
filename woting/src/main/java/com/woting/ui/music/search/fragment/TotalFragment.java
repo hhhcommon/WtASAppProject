@@ -166,19 +166,15 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                                         if (subList.get(i).getMediaType().equals(StringConstant.TYPE_AUDIO)) {
                                             if (playList == null) playList = new ArrayList<>();
                                             if (playList.size() < 3) playList.add(subList.get(i));
-                                            break;
                                         } else if (subList.get(i).getMediaType().equals(StringConstant.TYPE_SEQU)) {
                                             if (sequList == null) sequList = new ArrayList<>();
                                             if (sequList.size() < 3) sequList.add(subList.get(i));
-                                            break;
                                         } else if (subList.get(i).getMediaType().equals(StringConstant.TYPE_TTS)) {
                                             if (ttsList == null) ttsList = new ArrayList<>();
                                             if (ttsList.size() < 3) ttsList.add(subList.get(i));
-                                            break;
                                         } else if (subList.get(i).getMediaType().equals(StringConstant.TYPE_RADIO)) {
                                             if (radioList == null) radioList = new ArrayList<>();
                                             if (radioList.size() < 3) radioList.add(subList.get(i));
-                                            break;
                                         }
                                     }
                                 }
