@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.ui.musicplay.album.model.ContentInfo;
+import com.woting.ui.model.content;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,18 +16,18 @@ import java.util.List;
 import java.util.Locale;
 
 public class AlbumMainAdapter extends BaseAdapter {
-	private List<ContentInfo> list;
+	private List<content> list;
 	private Context context;
-	private ContentInfo lists;
+	private content lists;
 	private SimpleDateFormat format;
 
-	public AlbumMainAdapter(Context context, List<ContentInfo> subList) {
+	public AlbumMainAdapter(Context context, List<content> subList) {
 		this.list = subList;
 		this.context = context;
 		 format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
 	}
 
-	public void ChangeDate(List<ContentInfo> list) {
+	public void ChangeDate(List<content> list) {
 		this.list = list;
 		this.notifyDataSetChanged();
 	}

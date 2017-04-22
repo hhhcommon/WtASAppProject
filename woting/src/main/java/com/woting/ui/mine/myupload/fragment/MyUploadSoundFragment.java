@@ -190,42 +190,8 @@ public class MyUploadSoundFragment extends Fragment implements AdapterView.OnIte
         } else {
             String MediaType = newList.get(position).getMediaType();
             if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
-                String playername = newList.get(position).getContentName();
-                String playerimage = newList.get(position).getContentImg();
-                String playerurl = newList.get(position).getContentPlay();
-                String playerurI = newList.get(position).getContentURI();
-                String playermediatype = newList.get(position).getMediaType();
-                String playcontentshareurl = newList.get(position).getContentShareURL();
-                String plaplayeralltime = "0";
-                String playerintime = "0";
-                String playercontentdesc = newList.get(position).getContentDescn();
-                String playernum = newList.get(position).getWatchPlayerNum();
-                String playerzantype = "0";
-                String playerfrom = newList.get(position).getContentPub();
-                String playerfromid = "";
-                String playerfromurl = "";
-                String playeraddtime = Long.toString(System.currentTimeMillis());
-                String bjuserid = CommonUtils.getUserId(context);
-                String ContentFavorite = newList.get(position).getContentFavorite();
-                String ContentId = newList.get(position).getContentId();
-                String localurl = newList.get(position).getLocalurl();
 
-                String sequName = newList.get(position).getSeqInfo().getContentName();
-                String sequId = newList.get(position).getContentId();
-                String sequDesc = newList.get(position).getContentDescn();
-                String sequImg = newList.get(position).getContentImg();
-
-                String ContentPlayType = newList.get(position).getContentPlayType();
-                String IsPlaying=newList.get(position).getIsPlaying();
-                String ColumnNum=newList.get(position).getColumnNum();
-                // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-                PlayerHistory history = new PlayerHistory(
-                        playername, playerimage, playerurl, playerurI, playermediatype,
-                        plaplayeralltime, playerintime, playercontentdesc, playernum,
-                        playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playcontentshareurl,
-                        ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying,ColumnNum);
-                dbDao.deleteHistory(playerurl);
-                dbDao.addHistory(history);
+                dbDao.savePlayerHistory(MediaType,newList,position);// 保存播放历史
 
                 if (PlayerFragment.context != null) {
                     MainActivity.change();

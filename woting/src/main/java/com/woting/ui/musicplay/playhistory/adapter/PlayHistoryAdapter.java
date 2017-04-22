@@ -104,10 +104,10 @@ public class PlayHistoryAdapter extends BaseAdapter {
 			holder.textNumber.setText(lists.getPlayerNum());
 		}*/
 		if (mediaType!=null&&mediaType.equals("AUDIO")){
-			if (lists.getSequName() == null || lists.getSequName().equals("")) {
+			if (lists.getSeqName() == null || lists.getSeqName().equals("")) {
 				holder.textView_playName.setText("暂无专辑信息");
 			} else {
-				holder.textView_playName.setText(lists.getSequName());
+				holder.textView_playName.setText(lists.getSeqName());
 			}
 			if (lists.getPlayerName() == null || lists.getPlayerName().equals("")) {
 				holder.textRankContent.setText("暂无收听过的节目");

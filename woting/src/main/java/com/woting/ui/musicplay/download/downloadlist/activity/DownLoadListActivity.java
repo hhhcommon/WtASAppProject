@@ -213,40 +213,35 @@ public class DownLoadListActivity extends BaseActivity implements OnClickListene
                     if (mFileInfo.getLocalurl() != null && !mFileInfo.getLocalurl().equals("")) {
                         File file = new File(mFileInfo.getLocalurl());
                         if (file.exists()) {
-                            String playername = mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4);
-                            String playerimage = mFileInfo.getImageurl();
-                            String playerurl = mFileInfo.getUrl();
-                            String playerurI = mFileInfo.getLocalurl();
-                            String playlocalrurl = mFileInfo.getLocalurl();
-                            String playermediatype = "AUDIO";
-                            String playercontentshareurl = mFileInfo.getContentShareURL();
-                            String plaplayeralltime = mFileInfo.getPlayAllTime();
-                            String playerintime = "0";
-                            String playercontentdesc = mFileInfo.getContentDescn();
-                            String playernum = mFileInfo.getPlayCount();
-                            String playerzantype = "0";
-                            String playerfrom = mFileInfo.getPlayFrom();
-                            String playerfromid = "";
-                            String playerfromurl = "";
-                            String playeraddtime = Long.toString(System.currentTimeMillis());
-                            String bjuserid = CommonUtils.getUserId(context);
-                            String ContentFavorite = mFileInfo.getContentFavorite();
-                            String ContentId = mFileInfo.getContentId();
-                            String sequName = mFileInfo.getSequname();
-                            String sequId = mFileInfo.getSequid();
-                            String sequImg = mFileInfo.getSequimgurl();
-                            String sequDesc = mFileInfo.getSequdesc();
-                            String ContentPlayType = mFileInfo.getContentPlayType();
+                            String playName = mFileInfo.getFileName().substring(0, mFileInfo.getFileName().length() - 4);
+                            String playImage = mFileInfo.getImageurl();
+                            String playUrl = mFileInfo.getUrl();
+                            String playMediaType = "AUDIO";
+                            String playShareUrl = mFileInfo.getContentShareURL();
+                            String playAllTime = mFileInfo.getPlayAllTime();
+                            String playInTime = "0";
+                            String playContentDesc = mFileInfo.getContentDescn();
+                            String playNum = mFileInfo.getPlayCount();
+                            String playZanType = "0";
+                            String playTag = mFileInfo.getPlayTag();
+                            String playAddTime = Long.toString(System.currentTimeMillis());
+                            String bjUserId = CommonUtils.getUserId(context);
+                            String playFavorite = mFileInfo.getContentFavorite();
+                            String contentId = mFileInfo.getContentId();
+                            String albumName = mFileInfo.getSequname();
+                            String albumId = mFileInfo.getSequid();
+                            String albumImg = mFileInfo.getSequimgurl();
+                            String albumDesc = mFileInfo.getSequdesc();
+                            String contentPlayType = mFileInfo.getContentPlayType();
                             String IsPlaying = mFileInfo.getIsPlaying();
                             String ColumnNum=mFileInfo.getColumnNum();
 
                             // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-                            PlayerHistory history = new PlayerHistory(
-                                    playername, playerimage, playerurl, playerurI, playermediatype,
-                                    plaplayeralltime, playerintime, playercontentdesc, playernum,
-                                    playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playercontentshareurl, ContentFavorite,
-                                    ContentId, playlocalrurl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying,ColumnNum);
-                            dbDao.deleteHistory(playerurl);
+                            PlayerHistory history = new PlayerHistory(contentId, playName, playImage, playUrl, "", playMediaType, playAllTime,
+                                    playTag, playContentDesc, contentPlayType, IsPlaying, ColumnNum, playShareUrl, playFavorite, playNum,
+                                    albumName, albumImg, albumDesc, albumId, playInTime, playZanType, playAddTime, bjUserId);
+
+                            dbDao.deleteHistory(playUrl);
                             dbDao.addHistory(history);
                             Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                             Bundle bundle = new Bundle();

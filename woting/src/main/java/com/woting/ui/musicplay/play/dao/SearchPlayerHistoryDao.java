@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.woting.common.constant.StringConstant;
+import com.woting.ui.model.content;
 import com.woting.ui.musicplay.play.model.PlayerHistory;
 import com.woting.common.database.SQLiteHelper;
 import com.woting.common.util.CommonUtils;
@@ -34,26 +36,15 @@ public class SearchPlayerHistoryDao {
     public void addHistory(PlayerHistory playerhistory) {
         //通过helper的实现对象获取可操作的数据库db
         SQLiteDatabase db = helper.getWritableDatabase();
-//        String s = playerhistory.getPlayerNum();
-//        String s1 = playerhistory.getPlayerName();
-//        String s2 = playerhistory.getPlayerUrl();
-//        String s3 = playerhistory.getIsPlaying();
-//        Log.e("加库地址======", "" + s2);
-
-        db.execSQL("insert into playHistory(playName,playImage,playUrl,playUrI,playMediaType,playAllTime"
-                        + ",playInTime,playContentDesc,playNum,playZanType,playFrom,playFromId,"
-                        + "playAddTime,bjUserId,playShareUrl,playFavorite,"
-                        + "contentId,localUrl,albumName,albumImg,albumDesc,albumId,playTag,contentPlayType,IsPlaying,ColumnNum) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                new Object[]{playerhistory.getPlayerName(), playerhistory.getPlayerImage()
-                        , playerhistory.getPlayerUrl(), playerhistory.getPlayerUrI()
-                        , playerhistory.getPlayerMediaType()
-                        , playerhistory.getPlayerAllTime(), playerhistory.getPlayerInTime()//这里
-                        , playerhistory.getPlayerContentDescn(), playerhistory.getPlayerNum()
-                        , playerhistory.getPlayerZanType(), playerhistory.getPlayerFrom(), playerhistory.getPlayerFromId(), playerhistory.getPlayerAddTime()
-                        , playerhistory.getBJUserid(), playerhistory.getPlayContentShareUrl()
-                        , playerhistory.getContentFavorite(), playerhistory.getContentID(), playerhistory.getLocalurl()
-                        , playerhistory.getSequName(), playerhistory.getSequImg(), playerhistory.getSequDesc()
-                        , playerhistory.getSequId(), playerhistory.getPlayTag(), playerhistory.getContentPlayType(), playerhistory.getIsPlaying(), playerhistory.getColumnNum()});//sql语句
+        db.execSQL("insert into playHistory(contentId,playName,playImage,playUrl,playUrI,playMediaType,playAllTime,playTag,playContentDesc,"
+                        + "contentPlayType,IsPlaying,ColumnNum,playShareUrl,playFavorite,playNum,albumName,albumImg,albumDesc,albumId,"
+                        + "playInTime,playZanType,playAddTime,bjUserId) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                new Object[]{playerhistory.getContentID(), playerhistory.getPlayerName(), playerhistory.getPlayerImage()
+                        , playerhistory.getPlayerUrl(), playerhistory.getPlayerUrI(), playerhistory.getPlayerMediaType()
+                        , playerhistory.getPlayerAllTime(), playerhistory.getPlayTag(), playerhistory.getPlayerContentDescn()
+                        , playerhistory.getContentPlayType(), playerhistory.getIsPlaying(), playerhistory.getColumnNum(), playerhistory.getPlayContentShareUrl()
+                        , playerhistory.getContentFavorite(), playerhistory.getPlayCount(), playerhistory.getSeqName(), playerhistory.getSeqImg(), playerhistory.getSeqDescn()
+                        , playerhistory.getSeqId(), playerhistory.getPlayerInTime(), playerhistory.getPlayerZanType(), playerhistory.getPlayerAddTime(), playerhistory.getBJUserId()});//sql语句
         db.close();//关闭数据库对象
     }
 
@@ -68,36 +59,36 @@ public class SearchPlayerHistoryDao {
         try {
             cursor = db.rawQuery("Select * from playHistory where bjUserId =? order by playAddTime desc ", new String[]{user_id});
             while (cursor.moveToNext()) {
-                String playerName = cursor.getString(1);
-                String playerImage = cursor.getString(2);
-                String playerUrl = cursor.getString(3);
-                String playerUrI = cursor.getString(4);//
-                String playerMediaType = cursor.getString(5);
-                String playerAllTime = cursor.getString(cursor.getColumnIndex("playAllTime"));
-                String playerInTime = cursor.getString(cursor.getColumnIndex("playInTime"));
-                String playerContentDesc = cursor.getString(8);
-                String playerNum = cursor.getString(cursor.getColumnIndex("playNum"));
-                String playerZanType = cursor.getString(10);
-                String playerFrom = cursor.getString(11);
-                String playerFromId = cursor.getString(12);
-                String playerFromUrl = cursor.getString(13);
-                String playerAddTime = cursor.getString(14);
-                String bjUserId = cursor.getString(15);
-                String playContentShareUrl = cursor.getString(16);
-                String ContentFavorite = cursor.getString(17);
-                String ContentID = cursor.getString(18);
-                String localUrl = cursor.getString(19);
-                String seqName = cursor.getString(cursor.getColumnIndex("albumName"));
-                String seqId = cursor.getString(cursor.getColumnIndex("albumId"));
-                String seqDesc = cursor.getString(cursor.getColumnIndex("albumDesc"));
-                String seqImg = cursor.getString(cursor.getColumnIndex("albumImg"));
+
+                String contentId = cursor.getString(cursor.getColumnIndex("contentId"));
+                String playName = cursor.getString(cursor.getColumnIndex("playName"));
+                String playImage = cursor.getString(cursor.getColumnIndex("playImage"));
+                String playUrl = cursor.getString(cursor.getColumnIndex("playUrl"));
+                String playUrI = cursor.getString(cursor.getColumnIndex("playUrI"));//
+                String playMediaType = cursor.getString(cursor.getColumnIndex("playMediaType"));
+                String playAllTime = cursor.getString(cursor.getColumnIndex("playAllTime"));
+                String playTag = cursor.getString(cursor.getColumnIndex("playTag"));
+                String playContentDesc = cursor.getString(cursor.getColumnIndex("playContentDesc"));
                 String contentPlayType = cursor.getString(cursor.getColumnIndex("contentPlayType"));
                 String IsPlaying = cursor.getString(cursor.getColumnIndex("IsPlaying"));
                 String ColumnNum = cursor.getString(cursor.getColumnIndex("ColumnNum"));
+                String playShareUrl = cursor.getString(cursor.getColumnIndex("playShareUrl"));
+                String playFavorite = cursor.getString(cursor.getColumnIndex("playFavorite"));
+                String playNum = cursor.getString(cursor.getColumnIndex("playNum"));
 
-                PlayerHistory h = new PlayerHistory(playerName, playerImage, playerUrl, playerUrI, playerMediaType, playerAllTime,
-                        playerInTime, playerContentDesc, playerNum, playerZanType, playerFrom, playerFromId, playerFromUrl, playerAddTime, bjUserId, playContentShareUrl, ContentFavorite, ContentID
-                        , localUrl, seqName, seqId, seqDesc, seqImg, contentPlayType, IsPlaying, ColumnNum);
+                String albumName = cursor.getString(cursor.getColumnIndex("albumName"));
+                String albumImg = cursor.getString(cursor.getColumnIndex("albumImg"));
+                String albumDesc = cursor.getString(cursor.getColumnIndex("albumDesc"));
+                String albumId = cursor.getString(cursor.getColumnIndex("albumId"));
+
+                String playInTime = cursor.getString(cursor.getColumnIndex("playInTime"));
+                String playZanType = cursor.getString(cursor.getColumnIndex("playZanType"));
+                String playAddTime = cursor.getString(cursor.getColumnIndex("playAddTime"));
+                String bjUserId = cursor.getString(cursor.getColumnIndex("bjUserId"));
+
+                PlayerHistory h = new PlayerHistory(contentId, playName, playImage, playUrl, playUrI, playMediaType, playAllTime,
+                        playTag, playContentDesc, contentPlayType, IsPlaying, ColumnNum, playShareUrl, playFavorite, playNum,
+                        albumName, albumImg, albumDesc, albumId, playInTime, playZanType, playAddTime, bjUserId);
                 _p.add(h);
             }
         } catch (Exception e) {
@@ -111,6 +102,441 @@ public class SearchPlayerHistoryDao {
             }
         }
         return _p;
+    }
+
+    /**
+     * 保存播放历史
+     *
+     * @param type
+     * @param list
+     * @param position
+     */
+    public void savePlayerHistory(String type, List<content> list, int position) {
+        if (type != null && type.equals(StringConstant.TYPE_RADIO)) {
+            // 电台
+            String playerName;// 名称
+            String playerImage;// 头像
+            String playerUrl;//播放地址
+            String playerUrI;//
+            String playerMediaType;// 媒体类型
+            String playerContentShareUrl;// 分享地址
+            String playerInTime = "0";
+            String playerZanType = "0";
+            String seqName="" ;
+            String playTag ;
+            String seqId="" ;
+            String seqDesc="" ;
+            String seqImg="" ;
+            String playerAllTime;// 总时长
+            String playerContentDesc;// 描述
+            String playerNum;// 播放次数
+            String playerFrom;// 节目来源
+            String ColumnNum;// 所处位置
+            String ContentFavorite;// 喜欢
+            String ContentId;// 节目ID
+            String IsPlaying;// 正在直播
+            String ContentPlayType;// 节目数据类型
+            String playerAddTime = Long.toString(System.currentTimeMillis());
+            String bjUserId = CommonUtils.getUserId(context);
+
+            try {
+                playerName = list.get(position).getContentName();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerName = "";
+            }
+            try {
+                playerImage = list.get(position).getContentImg();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerImage = "";
+            }
+            try {
+                playerUrl = list.get(position).getContentPlay();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerUrl = "";
+            }
+            try {
+                playerUrI = list.get(position).getContentURI();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerUrI = "";
+            }
+            try {
+                playTag = list.get(position).getContentKeyWord();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playTag = "";
+            }
+            try {
+                playerMediaType = list.get(position).getMediaType();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerMediaType = "";
+            }
+            try {
+                playerContentShareUrl = list.get(position).getContentShareURL();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerContentShareUrl = "";
+            }
+            try {
+                playerAllTime = list.get(position).getContentTimes();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerAllTime = "";
+            }
+            try {
+                playerContentDesc = list.get(position).getContentDescn();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerContentDesc = "";
+            }
+            try {
+                playerNum = list.get(position).getPlayCount();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerNum = "";
+            }
+            try {
+                ColumnNum = list.get(position).getColumnNum();
+            } catch (Exception e) {
+                e.printStackTrace();
+                ColumnNum = "";
+            }
+            try {
+                ContentFavorite = list.get(position).getContentFavorite();
+            } catch (Exception e) {
+                e.printStackTrace();
+                ContentFavorite = "";
+            }
+            try {
+                ContentId = list.get(position).getContentId();
+            } catch (Exception e) {
+                e.printStackTrace();
+                ContentId = "";
+            }
+            try {
+                IsPlaying = list.get(position).getIsPlaying();
+            } catch (Exception e) {
+                e.printStackTrace();
+                IsPlaying = "";
+            }
+            try {
+                ContentPlayType = list.get(position).getContentPlayType();
+            } catch (Exception e) {
+                e.printStackTrace();
+                ContentPlayType = "";
+            }
+
+            // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+            PlayerHistory history = new PlayerHistory(
+                    ContentId, playerName, playerImage, playerUrl, playerUrI, playerMediaType, playerAllTime,
+                    playTag, playerContentDesc, ContentPlayType, IsPlaying, ColumnNum, playerContentShareUrl, ContentFavorite, playerNum,
+                    seqName, seqImg, seqDesc, seqId, playerInTime, playerZanType, playerAddTime, bjUserId);
+
+            deleteHistory(playerUrl);
+            addHistory(history);
+        } else if (type != null && type.equals(StringConstant.TYPE_AUDIO)) {
+            // 单体节目
+            String playerName;// 名称
+            String playerImage;// 头像
+            String playerUrl;//播放地址
+            String playerUrI;//
+            String playerMediaType;// 媒体类型
+            String playerContentShareUrl;// 分享地址
+            String playerInTime = "0";
+            String playerZanType = "0";
+            String seqName ;
+            String playTag ;
+            String seqId ;
+            String seqDesc ;
+            String seqImg ;
+            String playerAllTime;// 总时长
+            String playerContentDesc;// 描述
+            String playerNum;// 播放次数
+            String playerFrom;// 节目来源
+            String ColumnNum;// 所处位置
+            String ContentFavorite;// 喜欢
+            String ContentId;// 节目ID
+            String IsPlaying;// 正在直播
+            String ContentPlayType;// 节目数据类型
+            String playerAddTime = Long.toString(System.currentTimeMillis());
+            String bjUserId = CommonUtils.getUserId(context);
+
+            try {
+                playerName = list.get(position).getContentName();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerName = "";
+            }
+            try {
+                playerImage = list.get(position).getContentImg();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerImage = "";
+            }
+            try {
+                playerUrl = list.get(position).getContentPlay();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerUrl = "";
+            }
+            try {
+                playerUrI = list.get(position).getContentURI();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerUrI = "";
+            }
+            try {
+                playTag = list.get(position).getContentKeyWord();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playTag = "";
+            }
+            try {
+                playerMediaType = list.get(position).getMediaType();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerMediaType = "";
+            }
+            try {
+                playerContentShareUrl = list.get(position).getContentShareURL();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerContentShareUrl = "";
+            }
+            try {
+                playerAllTime = list.get(position).getContentTimes();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerAllTime = "";
+            }
+            try {
+                playerContentDesc = list.get(position).getContentDescn();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerContentDesc = "";
+            }
+            try {
+                playerNum = list.get(position).getPlayCount();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerNum = "";
+            }
+            try {
+                ColumnNum = list.get(position).getColumnNum();
+            } catch (Exception e) {
+                e.printStackTrace();
+                ColumnNum = "";
+            }
+            try {
+                ContentFavorite = list.get(position).getContentFavorite();
+            } catch (Exception e) {
+                e.printStackTrace();
+                ContentFavorite = "";
+            }
+            try {
+                ContentId = list.get(position).getContentId();
+            } catch (Exception e) {
+                e.printStackTrace();
+                ContentId = "";
+            }
+            try {
+                IsPlaying = list.get(position).getIsPlaying();
+            } catch (Exception e) {
+                e.printStackTrace();
+                IsPlaying = "";
+            }
+            try {
+                ContentPlayType = list.get(position).getContentPlayType();
+            } catch (Exception e) {
+                e.printStackTrace();
+                ContentPlayType = "";
+            }
+            try {
+                seqName = list.get(position).getSeqInfo().getContentName();
+            } catch (Exception e) {
+                e.printStackTrace();
+                seqName="";
+            }
+            try {
+                seqId = list.get(position).getSeqInfo().getContentId();
+            } catch (Exception e) {
+                e.printStackTrace();
+                seqId="";
+            }
+            try {
+                seqDesc = list.get(position).getSeqInfo().getContentDescn();
+            } catch (Exception e) {
+                e.printStackTrace();
+                seqDesc="";
+            }
+            try {
+                seqImg = list.get(position).getSeqInfo().getContentImg();
+            } catch (Exception e) {
+                e.printStackTrace();
+                seqImg="";
+            }
+
+            // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+            PlayerHistory history = new PlayerHistory(
+                    ContentId, playerName, playerImage, playerUrl, playerUrI, playerMediaType, playerAllTime,
+                    playTag, playerContentDesc, ContentPlayType, IsPlaying, ColumnNum, playerContentShareUrl, ContentFavorite, playerNum,
+                    seqName, seqImg, seqDesc, seqId, playerInTime, playerZanType, playerAddTime, bjUserId);
+
+            deleteHistory(playerUrl);
+            addHistory(history);
+        }else if (type != null && type.equals(StringConstant.TYPE_TTS)) {
+            String playerName;// 名称
+            String playerImage;// 头像
+            String playerUrl;//播放地址
+            String playerUrI;//
+            String playerMediaType;// 媒体类型
+            String playerContentShareUrl;// 分享地址
+            String playerInTime = "0";
+            String playerZanType = "0";
+            String seqName ;
+            String playTag ;
+            String seqId ;
+            String seqDesc ;
+            String seqImg ;
+            String playerAllTime;// 总时长
+            String playerContentDesc;// 描述
+            String playerNum;// 播放次数
+            String playerFrom;// 节目来源
+            String ColumnNum;// 所处位置
+            String ContentFavorite;// 喜欢
+            String ContentId;// 节目ID
+            String IsPlaying;// 正在直播
+            String ContentPlayType;// 节目数据类型
+            String playerAddTime = Long.toString(System.currentTimeMillis());
+            String bjUserId = CommonUtils.getUserId(context);
+
+            try {
+                playerName = list.get(position).getContentName();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerName = "";
+            }
+            try {
+                playerImage = list.get(position).getContentImg();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerImage = "";
+            }
+            try {
+                playerUrl = list.get(position).getContentPlay();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerUrl = "";
+            }
+            try {
+                playerUrI = list.get(position).getContentURI();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerUrI = "";
+            }
+            try {
+                playTag = list.get(position).getContentKeyWord();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playTag = "";
+            }
+            try {
+                playerMediaType = list.get(position).getMediaType();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerMediaType = "";
+            }
+            try {
+                playerContentShareUrl = list.get(position).getContentShareURL();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerContentShareUrl = "";
+            }
+            try {
+                playerAllTime = list.get(position).getContentTimes();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerAllTime = "";
+            }
+            try {
+                playerContentDesc = list.get(position).getContentDescn();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerContentDesc = "";
+            }
+            try {
+                playerNum = list.get(position).getPlayCount();
+            } catch (Exception e) {
+                e.printStackTrace();
+                playerNum = "";
+            }
+            try {
+                ColumnNum = list.get(position).getColumnNum();
+            } catch (Exception e) {
+                e.printStackTrace();
+                ColumnNum = "";
+            }
+            try {
+                ContentFavorite = list.get(position).getContentFavorite();
+            } catch (Exception e) {
+                e.printStackTrace();
+                ContentFavorite = "";
+            }
+            try {
+                ContentId = list.get(position).getContentId();
+            } catch (Exception e) {
+                e.printStackTrace();
+                ContentId = "";
+            }
+            try {
+                IsPlaying = list.get(position).getIsPlaying();
+            } catch (Exception e) {
+                e.printStackTrace();
+                IsPlaying = "";
+            }
+            try {
+                ContentPlayType = list.get(position).getContentPlayType();
+            } catch (Exception e) {
+                e.printStackTrace();
+                ContentPlayType = "";
+            }
+            try {
+                seqName = list.get(position).getSeqInfo().getContentName();
+            } catch (Exception e) {
+                e.printStackTrace();
+                seqName="";
+            }
+            try {
+                seqId = list.get(position).getSeqInfo().getContentId();
+            } catch (Exception e) {
+                e.printStackTrace();
+                seqId="";
+            }
+            try {
+                seqDesc = list.get(position).getSeqInfo().getContentDescn();
+            } catch (Exception e) {
+                e.printStackTrace();
+                seqDesc="";
+            }
+            try {
+                seqImg = list.get(position).getSeqInfo().getContentImg();
+            } catch (Exception e) {
+                e.printStackTrace();
+                seqImg="";
+            }
+
+            // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
+            PlayerHistory history = new PlayerHistory(
+                    ContentId, playerName, playerImage, playerUrl, playerUrI, playerMediaType, playerAllTime,
+                    playTag, playerContentDesc, ContentPlayType, IsPlaying, ColumnNum, playerContentShareUrl, ContentFavorite, playerNum,
+                    seqName, seqImg, seqDesc, seqId, playerInTime, playerZanType, playerAddTime, bjUserId);
+            deleteHistoryById(ContentId);
+            addHistory(history);
+        }
     }
 
     /**
@@ -168,9 +594,10 @@ public class SearchPlayerHistoryDao {
 
     /**
      * 更新播放时间
-     * @param url 当前节目播放地址
+     *
+     * @param url          当前节目播放地址
      * @param CurrentTimes 当前播放了多久
-     * @param TotalTimes 总时长
+     * @param TotalTimes   总时长
      */
     public void updatePlayerInTime(String url, long CurrentTimes, long TotalTimes) {
         SQLiteDatabase db = helper.getWritableDatabase();

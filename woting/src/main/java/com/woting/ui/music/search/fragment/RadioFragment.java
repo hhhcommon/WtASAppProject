@@ -83,12 +83,12 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
 
     @Override
     public void onWhiteViewClick() {
+        dialog = DialogUtils.Dialog(context);
         getData();
     }
 
     // 获取数据
     private void getData() {
-        dialog = DialogUtils.Dialog(context);
         sendRequest();
     }
 
@@ -176,40 +176,8 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
                 if (newList != null && newList.get(position - 1) != null && newList.get(position - 1).getMediaType() != null) {
                     String MediaType = newList.get(position - 1).getMediaType();
                     if (MediaType.equals(StringConstant.TYPE_AUDIO) || MediaType.equals(StringConstant.TYPE_RADIO)) {
-                        String playName = newList.get(position - 1).getContentName();
-                        String playImage = newList.get(position - 1).getContentImg();
-                        String playUrl = newList.get(position - 1).getContentPlay();
-                        String playUri = newList.get(position - 1).getContentURI();
-                        String playMediaType = newList.get(position - 1).getMediaType();
-                        String playContentShareUrl = newList.get(position - 1).getContentShareURL();
-                        String playAllTime = newList.get(position - 1).getContentTimes();
-                        String playInTime = "0";
-                        String playContentDesc = newList.get(position - 1).getContentDescn();
-                        String playerNum = newList.get(position - 1).getPlayCount();
-                        String playZanType = "0";
-                        String playFrom = newList.get(position - 1).getContentPub();
-                        String playFromId = "";
-                        String playFromUrl = "";
-                        String playAddTime = Long.toString(System.currentTimeMillis());
-                        String bjUserId = CommonUtils.getUserId(context);
-                        String ContentFavorite = newList.get(position - 1).getContentFavorite();
-                        String ContentId = newList.get(position - 1).getContentId();
-                        String localUrl = newList.get(position - 1).getLocalurl();
-                        String seqName = newList.get(position - 1).getSeqInfo().getContentName();
-                        String seqId = newList.get(position - 1).getSeqInfo().getContentId();
-                        String seqDesc = newList.get(position - 1).getSeqInfo().getContentDescn();
-                        String seqImg = newList.get(position - 1).getSeqInfo().getContentImg();
-                        String ContentPlayType = newList.get(position - 1).getContentPlayType();
-                        String IsPlaying = newList.get(position - 1).getIsPlaying();
-                        String ColumnNum = newList.get(position - 1).getColumnNum();
-                        // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-                        PlayerHistory history = new PlayerHistory(
-                                playName, playImage, playUrl, playUri, playMediaType,
-                                playAllTime, playInTime, playContentDesc, playerNum,
-                                playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, seqName, seqId, seqDesc, seqImg, ContentPlayType, IsPlaying, ColumnNum);
-                        dbDao.deleteHistory(playUrl);
-                        dbDao.addHistory(history);
+
+                        dbDao.savePlayerHistory(MediaType,newList,position-1);// 保存播放历史
 
                         MainActivity.change();
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);

@@ -140,27 +140,22 @@ public class PlayHistoryFragment extends Fragment implements OnClickListener, Ad
             String playerNum = subList.get(position).getPlayCount();
             String playerZanType = "0";
             String playerFrom = subList.get(position).getContentPub();
-            String playerFromId = "";
-            String playerFromUrl = subList.get(position).getPlayerFromUrl();
             String playerAddTime = Long.toString(System.currentTimeMillis());
             String bjUserId = CommonUtils.getUserId(context);
             String contentFavorite = subList.get(position).getContentFavorite();
             String playShareUrl = subList.get(position).getPlayContentShareUrl();
             String contentId = subList.get(position).getContentID();
-            String localUrl = subList.get(position).getLocalurl();
-            String sequname = subList.get(position).getSequName();
-            String sequid = subList.get(position).getSequId();
-            String sequdesc = subList.get(position).getSequDesc();
-            String sequimg = subList.get(position).getSequImg();
+            String sequname = subList.get(position).getSeqName();
+            String sequid = subList.get(position).getSeqId();
+            String sequdesc = subList.get(position).getSeqDescn();
+            String albumImg = subList.get(position).getSeqImg();
             String ContentPlayType = subList.get(position).getContentPlayType();
             String IsPlaying = subList.get(position).getIsPlaying();
             String ColumnNum= subList.get(position).getColumnNum();
 
-            PlayerHistory history = new PlayerHistory(
-                    playerName, playerImage, playerUrl, playerUri, playerMediaType,
-                    playerAllTime, playerInTime, playerContentDesc, playerNum,
-                    playerZanType, playerFrom, playerFromId, playerFromUrl,
-                    playerAddTime, bjUserId, playShareUrl, contentFavorite, contentId, localUrl, sequname, sequid, sequdesc, sequimg, ContentPlayType, IsPlaying, ColumnNum);
+            PlayerHistory history = new PlayerHistory(contentId, playerName, playerImage, playerUrl, playerUri, playerMediaType, playerAllTime,
+                    playerFrom, playerContentDesc, ContentPlayType, IsPlaying, ColumnNum, playShareUrl, contentFavorite, playerNum,
+                    sequname, albumImg, sequdesc, sequid, playerInTime, playerZanType, playerAddTime, bjUserId);
 
             // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
             if (playerMediaType != null && playerMediaType.equals(StringConstant.TYPE_TTS)) {
@@ -169,6 +164,7 @@ public class PlayHistoryFragment extends Fragment implements OnClickListener, Ad
                 dbDao.deleteHistory(playerUrl);
             }
             dbDao.addHistory(history);
+
             MainActivity.change();
             if (mediaType.equals(StringConstant.TYPE_AUDIO)) {
                 Intent intent = new Intent(BroadcastConstants.PLAY_SEQU_LIST);

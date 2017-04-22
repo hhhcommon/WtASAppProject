@@ -595,12 +595,17 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
                                 //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                                 PlayerHistory history = new PlayerHistory(
-                                        ContentName, ContentImg, ContentPlay, "", mediatype,
-                                        ContentTimes, "0", ContentDescn, PlayCount,
-                                        "0", ContentPub, "", "", CTime, CommonUtils.getUserId(context), ContentShareURL,
-                                        ContentFavorite, contentid, "", "", "", "", "", ContentPlayType, IsPlaying,"");
+                                        contentid, ContentName, ContentImg, ContentPlay, "", mediatype, "",
+                                        ContentKeyWord, ContentDescn, ContentPlayType, IsPlaying, "", ContentShareURL, ContentFavorite, PlayCount,
+                                        "", "", "", "", "", "", "", CommonUtils.getUserId(context));
+
+//                                PlayerHistory history = new PlayerHistory(
+//                                        contentid, ContentName, ContentImg, ContentPlay, playerUrI, mediatype, playerAllTime,
+//                                        ContentKeyWord, ContentDescn, ContentPlayType, IsPlaying, ColumnNum, ContentShareURL, ContentFavorite, PlayCount,
+//                                        seqName, seqImg, seqDesc, seqId, playerInTime, playerZanType, playerAddTime, bjUserId);
                                 dbDao.deleteHistory(ContentPlay);
                                 dbDao.addHistory(history);
+
                                 Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                                 Bundle bundle1 = new Bundle();
                                 bundle1.putString("text", ContentName);

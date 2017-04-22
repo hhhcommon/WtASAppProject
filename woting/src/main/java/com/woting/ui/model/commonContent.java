@@ -32,7 +32,15 @@ package com.woting.ui.model;
 	public String ContentSubCount;   // 集数
 	public String WatchPlayerNum;    // 收听次数
 	public String ContentTimes;      // 收听次数
+	public String Downloadtype;      //
 
+	public String getDownloadtype() {
+		return Downloadtype;
+	}
+
+	public void setDownloadtype(String downloadtype) {
+		Downloadtype = downloadtype;
+	}
 
 	public String getContentURI() {
 		return ContentURI;

@@ -32,7 +32,7 @@ public class CoreService extends Service {
         context = getApplicationContext();
 
         initLocation();
-        initSocket();
+//        initSocket();
         initDownLoad();
         initSubclass();
         initRecord();
@@ -42,41 +42,40 @@ public class CoreService extends Service {
 
     // 开启定位
     private void initLocation() {
-        locationInfo = new LocationInfo(context);
+        if (locationInfo == null) locationInfo = new LocationInfo(context);
     }
 
     // SocketClient
     private void initSocket() {
-        socketClient = new SocketClient(context);
+        if (socketClient == null) socketClient = new SocketClient(context);
         startForeground(4, socketClient.showNotification());
     }
 
     // 下载
     private void initDownLoad() {
-        downloadClient = new DownloadClient(this);
+        if (downloadClient == null) downloadClient = new DownloadClient(this);
     }
 
     // 单对单对讲控制
     private void initSubclass() {
-        subclassControl = new SubclassControl(context);
+        if (subclassControl == null) subclassControl = new SubclassControl(context);
     }
 
     // 录音
     private void initRecord() {
-        record = new VoiceStreamRecord();
+        if (record == null) record = new VoiceStreamRecord();
     }
 
     // 播放录音
     private void initPlayRecord() {
-        playerRecord = new VoiceStreamPlayer(context);
+        if (playerRecord == null) playerRecord = new VoiceStreamPlayer(context);
     }
 
     // 初始化接收通知消息功能
     private void initNotify() {
-        notificationClient = new NotificationClient(context);
+        if (notificationClient == null) notificationClient = new NotificationClient(context);
     }
 
-    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;

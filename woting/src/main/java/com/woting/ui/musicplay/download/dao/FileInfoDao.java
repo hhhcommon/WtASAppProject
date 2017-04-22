@@ -4,11 +4,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.woting.common.util.CommonUtils;
+import com.woting.ui.model.content;
 import com.woting.ui.musicplay.download.model.FileInfo;
 import com.woting.ui.musicplay.download.service.DownloadClient;
 import com.woting.common.database.SQLiteHelper;
 import com.woting.common.util.SequenceUUID;
-import com.woting.ui.musicplay.album.model.ContentInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +21,12 @@ import java.util.List;
  */
 public class FileInfoDao {
 	private SQLiteHelper helper;
-	private ContentInfo content;
+	private content contents;
+	private Context context;
 
 	// 构造方法
 	public FileInfoDao(Context context) {
+		this.context=context;
 		helper = new SQLiteHelper(context);
 	}
 
@@ -201,16 +204,20 @@ public class FileInfoDao {
 	}
 
 
-	public void insertFileInfo(List<ContentInfo> urlList) {
+	public void insertFileInfo(List<content> urlList) {
 		SQLiteDatabase db = helper.getWritableDatabase();
 		// 通过helper的实现对象获取可操作的数据库db
 		for (urlList.size(); urlList.size() > 0;) {
-			content = urlList.remove(0);
+			contents = urlList.remove(0);
 			//String playname = content.getContentName() + ".mp3".replaceAll("/", "").replaceAll(" ", "").replaceAll("", "");
-			String name = content.getContentName();
+			String name = contents.getContentName();
 			String playname;
-			String sequid=content.getSequid();
-
+			String sequid= null;
+			try {
+				sequid = contents.getSeqInfo().getContentId();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			if(sequid==null||sequid.trim().equals("")){
 				sequid="woting";
 			}else{
@@ -225,12 +232,14 @@ public class FileInfoDao {
 			}
 
 			db.execSQL("insert into fileInfo(url,imageUrl,fileName,albumName,albumImgUrl,albumDesc,finished,albumId,userId,downloadType,author," +
-					"playShareUrl,playFavorite,contentId,playAllTime,playFrom,playCount,contentDesc,playTag,contentPlayType) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",new Object[] { content.getContentPlay(),
-					content.getContentImg(), playname,
-					content.getSequname(), content.getSequimgurl(),
-					content.getSequdesc(), "false",sequid,content.getUserid(),content.getDownloadtype(),content.getAuthor(),content.getContentShareURL(),
-					content.getContentFavorite(),content.getContentId(),content.getContentTimes(),content.getContentPub(),
-					content.getPlayCount(),content.getContentDescn(),content.getPlayTag(),content.getContentPlayType()});// sql语句
+					"playShareUrl,playFavorite,contentId,playAllTime,playFrom,playCount,contentDesc,playTag,contentPlayType) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",new Object[] {
+					contents.getContentPlay(),
+					contents.getContentImg(), playname,
+					contents.getSeqInfo().getContentName(), contents.getSeqInfo().getContentImg(),
+					contents.getSeqInfo().getContentDescn(), "false",sequid, CommonUtils.getUserId(context),contents.getDownloadtype(),
+					contents.getContentPersons().get(0).getPerName(),contents.getContentShareURL(),
+					contents.getContentFavorite(),contents.getContentId(),contents.getContentTimes(),contents.getContentPub(),
+					contents.getPlayCount(),contents.getContentDescn(),contents.getPlayTag(),contents.getContentPlayType()});// sql语句
 		}
 		db.close();// 关闭数据库对象
 	}

@@ -9,21 +9,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.ui.musicplay.album.model.ContentInfo;
+import com.woting.ui.model.content;
 
 import java.util.List;
 
 public class AlbumAdapter extends BaseAdapter {
-	private List<ContentInfo> list;
+	private List<content> list;
 	private Context context;
-	private ContentInfo lists;
+	private content lists;
 
-	public AlbumAdapter(Context context, List<ContentInfo> list) {
+	public AlbumAdapter(Context context, List<content> list) {
 		this.list = list;
 		this.context = context;
 	}
 
-	public void ChangeDate(List<ContentInfo> list) {
+	public void ChangeDate(List<content> list) {
 		this.list = list;
 		this.notifyDataSetChanged();
 	}
@@ -61,9 +61,9 @@ public class AlbumAdapter extends BaseAdapter {
 		} else {
 			holder.tv_name.setText(lists.getContentName());// 名
 		}
-		if (lists.getCheckType() == 3) {
+		if (lists.getChecktype() == 3) {
 			holder.imageView_check.setImageResource(R.mipmap.wt_group_checkedpress);
-		}else if (lists.getCheckType() == 2) {
+		}else if (lists.getChecktype() == 2) {
 			holder.imageView_check.setImageResource(R.mipmap.wt_group_checked);
 		}  else {
 			holder.imageView_check.setImageResource(R.mipmap.wt_group_nochecked);
