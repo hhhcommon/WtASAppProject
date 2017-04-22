@@ -196,7 +196,16 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             b_name = data.getUserAliasName();
             num = data.getUserNum();
             viewType = 1;
-        } else {
+        } else if (type.equals("findAdd")) {
+            UserInviteMeInside data = (UserInviteMeInside) getIntent().getSerializableExtra("contact");
+            name = data.getNickName();
+            imageUrl = data.getPortraitMini();
+            id = data.getUserId();
+            descN = data.getUserSign();
+            num = data.getUserNum();
+            b_name = data.getUserAliasName();
+            viewType = 1;
+        }else {
             UserInfo data = (UserInfo) getIntent().getSerializableExtra("data");
             name = data.getNickName();
             imageUrl = data.getPortraitMini();
