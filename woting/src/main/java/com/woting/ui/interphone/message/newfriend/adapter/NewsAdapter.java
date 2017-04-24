@@ -114,16 +114,17 @@ public class NewsAdapter extends BaseAdapter {
                     Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.Image);
                 }
             } else {
-
-                if (lists.getGroupName() == null || lists.getGroupName().equals("")) {
+                   //配用户名的
+                if (lists.getNickName() == null || lists.getNickName().equals("")) {
                     holder.tv_news.setText("未知");
                 } else {
-                    holder.tv_news.setText(Html.fromHtml("<font  color=\"#ff6600\">" + lists.getNickName() + "</font>"));
+                    holder.tv_news.setText(Html.fromHtml("<font  color=\"#ff6600\">" + lists.getNickName() + "</font>邀请你进入群组"));
+                    //holder.tv_news.setText(Html.fromHtml("邀请您加入<font  color=\"#ff6600\">" + lists.getGroupName() + "</font>."));
                 }
-                if (lists.getNickName() == null || lists.getNickName().equals("")) {
+                if (lists.getGroupName() == null || lists.getGroupName().equals("")) {
                     holder.tv_jieshao.setText("无邀请信息");
                 } else {
-                    holder.tv_jieshao.setText(Html.fromHtml("邀请您加入<font  color=\"#ff6600\">" + lists.getGroupName() + "</font>。"));
+                    holder.tv_jieshao.setText(Html.fromHtml("邀请您加入<font  color=\"#ff6600\">" + lists.getGroupName() + "</font>."));
                 }
                 if (lists.getInviteTime() == null || lists.getInviteTime().equals("") || lists.getInviteTime().equals("null")) {
                     holder.time.setText("0000-00-00  00:00");

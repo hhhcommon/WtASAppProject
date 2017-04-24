@@ -33,6 +33,7 @@ public class MessageInFo implements Serializable {
 	private String Portrait;		//
 	private String PortraitMini;	//
 
+
 	
 	public String getMSType() {
 		return MSType;

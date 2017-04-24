@@ -7,6 +7,7 @@ public class LanguageSearch implements Serializable{
 	
 	private String AllCount;
 	private List<LanguageSearchInside> List;
+
 	public String getAllCount() {
 		return AllCount;
 	}
@@ -19,6 +20,4 @@ public class LanguageSearch implements Serializable{
 	public void setList(List<LanguageSearchInside> list) {
 		List = list;
 	}
-	
-
 }
