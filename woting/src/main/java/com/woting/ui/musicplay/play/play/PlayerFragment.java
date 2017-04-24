@@ -1021,10 +1021,30 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         String bjUserId = CommonUtils.getUserId(context);
         String playFavorite = languageSearchInside.getContentFavorite();
         String ContentID = languageSearchInside.getContentId();
-        String albumName = languageSearchInside.getSeqInfo().getContentName();
-        String albumId = languageSearchInside.getSeqInfo().getContentId();
-        String albumDesc = languageSearchInside.getSeqInfo().getContentDescn();
-        String albumImg = languageSearchInside.getSeqInfo().getContentImg();
+        String albumName = null;
+        try {
+            albumName = languageSearchInside.getSeqInfo().getContentName();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String albumId = null;
+        try {
+            albumId = languageSearchInside.getSeqInfo().getContentId();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String albumDesc = null;
+        try {
+            albumDesc = languageSearchInside.getSeqInfo().getContentDescn();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String albumImg = null;
+        try {
+            albumImg = languageSearchInside.getSeqInfo().getContentImg();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         String contentPlayType = languageSearchInside.getContentPlayType();
         String IsPlaying = languageSearchInside.getIsPlaying();
         String ColumnNum = languageSearchInside.getColumnNum();
