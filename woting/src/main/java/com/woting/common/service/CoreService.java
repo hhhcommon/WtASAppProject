@@ -32,7 +32,7 @@ public class CoreService extends Service {
         context = getApplicationContext();
 
         initLocation();
-//        initSocket();
+        initSocket();
         initDownLoad();
         initSubclass();
         initRecord();

@@ -1,4 +1,4 @@
-package com.woting.ui.music.radio.fragment;
+package com.woting.ui.music.nationalradio;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -28,9 +28,8 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.music.main.HomeActivity;
+import com.woting.ui.music.radio.adapter.OnLinesAdapter;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
-import com.woting.ui.musicplay.play.model.PlayerHistory;
-import com.woting.ui.music.radio.fragment.adapter.RadioNationAdapter;
 import com.woting.ui.music.radio.model.RadioPlay;
 import com.woting.ui.main.MainActivity;
 
@@ -44,10 +43,10 @@ import java.util.List;
 /**
  * 国家台
  */
-public class RadioNationalFragment extends Fragment implements TipView.WhiteViewClick {
+public class NationalRadioFragment extends Fragment implements TipView.WhiteViewClick {
     private Context context;
     private SearchPlayerHistoryDao dbDao;
-    private RadioNationAdapter adapter;
+    private OnLinesAdapter adapter;
     private List<RadioPlay> newList = new ArrayList<>();
     private List<RadioPlay> SubList;
 
@@ -159,7 +158,7 @@ public class RadioNationalFragment extends Fragment implements TipView.WhiteView
                                     SubList = new Gson().fromJson(StringSubList, new TypeToken<List<RadioPlay>>() {
                                     }.getType());
                                     if (adapter == null) {
-                                        adapter = new RadioNationAdapter(context, SubList);
+                                        adapter = new OnLinesAdapter(context, SubList,2);
                                         mListView.setAdapter(adapter);
                                     } else {
                                         adapter.notifyDataSetChanged();

@@ -10,7 +10,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.ui.music.citylist.cityModel.secondaryCity;
+import com.woting.ui.music.citylist.citymodel.secondaryCity;
 
 import java.util.List;
 
@@ -106,22 +106,6 @@ public class CityListAdapter extends BaseAdapter implements SectionIndexer {
             }
         }
         return -1;
-    }
-
-    /**
-     * 提取英文的首字母，非英文字母用#代替。
-     *
-     * @param str
-     * @return
-     */
-    private String getAlpha(String str) {
-        String sortStr = str.trim().substring(0, 1).toUpperCase();
-        // 正则表达式，判断首字母是否是英文字母
-        if (sortStr.matches("[A-Z]")) {
-            return sortStr;
-        } else {
-            return "#";
-        }
     }
 
     @Override

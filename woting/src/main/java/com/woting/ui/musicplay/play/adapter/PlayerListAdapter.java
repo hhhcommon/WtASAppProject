@@ -16,22 +16,21 @@ import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
-import com.woting.ui.musicplay.play.model.LanguageSearchInside;
-
+import com.woting.ui.model.content;
 import java.util.List;
 
 public class PlayerListAdapter extends BaseAdapter {
-    private List<LanguageSearchInside> list;
+    private List<content> list;
     private Context context;
     private Bitmap bmp;
 
-    public PlayerListAdapter(Context context, List<LanguageSearchInside> list) {
+    public PlayerListAdapter(Context context, List<content> list) {
         this.context = context;
         this.list = list;
         bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
     }
 
-    public void setList(List<LanguageSearchInside> list) {
+    public void setList(List<content> list) {
         this.list = list;
         notifyDataSetChanged();
     }
@@ -77,7 +76,7 @@ public class PlayerListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        LanguageSearchInside searchList = list.get(position);
+        content searchList = list.get(position);
         if (searchList == null) return convertView;
         String contentType = searchList.getMediaType();// 播放的节目 TYPE
 
@@ -101,17 +100,23 @@ public class PlayerListAdapter extends BaseAdapter {
             holder.textview_ranktitle.setText(contentName);
         }
 
-        // 单体节目显示主播
+        // 单体显示专辑。节目显示主播
         try {
             if (contentType != null && contentType.equals(StringConstant.TYPE_RADIO)) {
                 String IsPlaying = searchList.getIsPlaying();
                 if (IsPlaying != null && !IsPlaying.equals("")) {
                     IsPlaying = "正在直播: " + IsPlaying;
                 } else {
-                    IsPlaying = "正在直播: 未知";
+                    IsPlaying = "正在直播";
                 }
                 holder.RankContent.setText(IsPlaying);
-            } else {
+            } else if (contentType != null && contentType.equals(StringConstant.TYPE_AUDIO)) {
+                String contentPub = searchList.getSeqInfo().getContentName();
+                if (contentPub == null || contentPub.equals("")) {
+                    contentPub = "未知";
+                }
+                holder.RankContent.setText(contentPub);
+            } else if (contentType != null && contentType.equals(StringConstant.TYPE_SEQU)) {
                 String contentPub = searchList.getContentPersons().get(0).getPerName();
                 if (contentPub == null || contentPub.equals("")) {
                     contentPub = "未知";
@@ -154,22 +159,22 @@ public class PlayerListAdapter extends BaseAdapter {
         }
 
         // 正在播放的动画
-        String type = searchList.getType();
+        int type = searchList.getType();
         switch (type) {
-            case "2":
+            case 2:
                 holder.imageView_playering.setVisibility(View.VISIBLE);
                 holder.textview_ranktitle.setTextColor(context.getResources().getColor(R.color.dinglan_orange_z));
                 if (!holder.draw.isRunning()) {
                     holder.draw.start();
                 }
                 break;
-            case "0":
+            case 0:
                 holder.draw.stop();
                 holder.draw.selectDrawable(0);
                 holder.imageView_playering.setVisibility(View.VISIBLE);
                 holder.textview_ranktitle.setTextColor(context.getResources().getColor(R.color.dinglan_orange_z));
                 break;
-            case "1":
+            case 1:
                 holder.imageView_playering.setVisibility(View.INVISIBLE);
                 holder.textview_ranktitle.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
                 if (holder.draw.isRunning()) {

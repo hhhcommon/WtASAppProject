@@ -33,9 +33,9 @@ import com.woting.common.gatherdata.model.DataModel;
 import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.ResourceUtil;
+import com.woting.ui.model.content;
 import com.woting.ui.musicplay.download.dao.FileInfoDao;
 import com.woting.ui.musicplay.download.model.FileInfo;
-import com.woting.ui.musicplay.play.model.LanguageSearchInside;
 
 import org.videolan.libvlc.EventHandler;
 import org.videolan.libvlc.LibVLC;
@@ -53,7 +53,7 @@ import java.util.List;
  * 邮箱：645700751@qq.com
  */
 public class IntegrationPlayerService extends Service implements OnCacheStatusListener, BVideoView.OnErrorListener {
-    private List<LanguageSearchInside> playList = new ArrayList<>();
+    private List<content> playList = new ArrayList<>();
     private List<FileInfo> mFileInfoList;// 下载数据
 
     private SpeechSynthesizer mTtsPlay;// 播放路况 TTS
@@ -224,12 +224,12 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
     }
 
     // 更新播放列表
-    public void updatePlayList(List<LanguageSearchInside> list) {
+    public void updatePlayList(List<content> list) {
         updatePlayList(list, -1);
     }
 
     // 更新播放列表  position
-    public void updatePlayList(List<LanguageSearchInside> list, int position) {
+    public void updatePlayList(List<content> list, int position) {
         if(list != null && list.size() > 0) {
             if(playList != null) playList.clear();
             playList = list;
@@ -264,7 +264,7 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
         if(index < 0 || index >= playList.size()) return ;
         position = index;
         secondProgress = 0;
-        LanguageSearchInside playObject = playList.get(position);
+        content playObject = playList.get(position);
         if(initPlayObject(playObject)) {
             switch (mediaType) {
                 case StringConstant.TYPE_TTS:// TTS
@@ -344,7 +344,7 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
     }
 
     // 初始化播放对象
-    private boolean initPlayObject(LanguageSearchInside playObject) {
+    private boolean initPlayObject(content playObject) {
         if(playObject == null) return false;
         GlobalConfig.playerObject = playObject;
 

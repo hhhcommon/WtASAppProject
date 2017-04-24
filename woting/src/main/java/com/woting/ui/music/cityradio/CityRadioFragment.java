@@ -1,4 +1,4 @@
-package com.woting.ui.music.radio.fragment;
+package com.woting.ui.music.cityradio;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -23,7 +23,6 @@ import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
@@ -31,13 +30,12 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout;
 import com.woting.common.widgetui.xlistview.XListView;
+import com.woting.ui.music.adapter.ContentAdapter;
 import com.woting.ui.model.content;
 import com.woting.ui.music.main.HomeActivity;
+import com.woting.ui.music.radio.adapter.OnLinesAdapter;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
-import com.woting.ui.musicplay.play.model.PlayerHistory;
-import com.woting.ui.music.radio.fragment.adapter.OnLinesRadioAdapter;
 import com.woting.ui.music.radio.model.RadioPlay;
-import com.woting.ui.music.fmlist.adapter.RankInfoAdapter;
 import com.woting.ui.main.MainActivity;
 
 import org.json.JSONException;
@@ -54,8 +52,8 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
     private Context context;
 
     private SearchPlayerHistoryDao dbDao;
-    private RankInfoAdapter adapterList;
-    private OnLinesRadioAdapter adapter;
+    private ContentAdapter adapterList;
+    private OnLinesAdapter adapter;
 
     private ArrayList<content> newList = new ArrayList<>();
     private ArrayList<content> SubListList;
@@ -177,7 +175,7 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
                                     }
 
                                     if (adapter == null) {
-                                        adapter = new OnLinesRadioAdapter(context, SubList);
+                                        adapter = new OnLinesAdapter(context, SubList,3);
                                         mListView.setAdapter(adapter);
                                     } else {
                                         adapter.notifyDataSetChanged();
@@ -284,7 +282,7 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
                                 if (SubListList != null && SubListList.size() > 0) {
                                     newList.addAll(SubListList);
                                     if (adapterList == null) {
-                                        adapterList = new RankInfoAdapter(context, newList);
+                                        adapterList = new ContentAdapter(context, newList);
                                         mlistView_main.setAdapter(adapterList);
                                     } else {
                                         adapterList.notifyDataSetChanged();
@@ -298,7 +296,7 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
                                     mlistView_main.stopLoadMore();
                                     newList.addAll(SubListList);
                                     if (adapterList == null) {
-                                        adapterList = new RankInfoAdapter(context, newList);
+                                        adapterList = new ContentAdapter(context, newList);
                                         mlistView_main.setAdapter(adapterList);
                                     } else {
                                         adapterList.notifyDataSetChanged();

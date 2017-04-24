@@ -1,6 +1,6 @@
 package com.woting.ui.interphone.linkman.view;
 
-import com.woting.ui.music.citylist.cityModel.secondaryCity;
+import com.woting.ui.music.citylist.citymodel.secondaryCity;
 
 import java.util.Comparator;
 

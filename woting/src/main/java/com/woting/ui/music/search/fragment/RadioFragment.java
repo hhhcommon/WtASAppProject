@@ -24,7 +24,6 @@ import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
@@ -32,26 +31,23 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.model.content;
-import com.woting.ui.model.radio;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
-import com.woting.ui.musicplay.play.model.PlayerHistory;
 import com.woting.ui.main.MainActivity;
-import com.woting.ui.musicplay.favorite.adapter.FavorListAdapter;
-import com.woting.ui.musicplay.favorite.adapter.FavorListAdapter.favorCheck;
+import com.woting.ui.music.adapter.ContentForCheckAdapter;
+import com.woting.ui.music.adapter.ContentForCheckAdapter.favorCheck;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 搜索电台界面
  */
 public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
     private FragmentActivity context;
-    private FavorListAdapter adapter;
+    private ContentForCheckAdapter adapter;
     private SearchPlayerHistoryDao dbDao;
 
     private ArrayList<content> newList = new ArrayList<>();
@@ -112,7 +108,7 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
                     page = 1;
                     newList.clear();
                     if (adapter == null) {
-                        mListView.setAdapter(adapter = new FavorListAdapter(context, newList));
+                        mListView.setAdapter(adapter = new ContentForCheckAdapter(context, newList));
                     } else {
                         adapter.notifyDataSetChanged();
                     }

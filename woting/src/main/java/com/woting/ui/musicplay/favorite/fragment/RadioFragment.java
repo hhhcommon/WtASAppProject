@@ -24,7 +24,6 @@ import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
@@ -33,12 +32,10 @@ import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.model.content;
+import com.woting.ui.music.adapter.ContentForCheckAdapter;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
-import com.woting.ui.musicplay.play.model.PlayerHistory;
 import com.woting.ui.main.MainActivity;
 import com.woting.ui.musicplay.favorite.main.FavoriteFragment;
-import com.woting.ui.musicplay.favorite.adapter.FavorListAdapter;
-import com.woting.ui.musicplay.favorite.adapter.FavorListAdapter.favorCheck;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,7 +49,7 @@ import java.util.List;
  */
 public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
     private FragmentActivity context;
-    private FavorListAdapter adapter;
+    private ContentForCheckAdapter adapter;
     private SearchPlayerHistoryDao dbDao;
     private List<content> subList;
     private List<String> delList;
@@ -122,7 +119,7 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
     }
 
     private void setListener() {
-        adapter.setOnListener(new favorCheck() {
+        adapter.setOnListener(new ContentForCheckAdapter.favorCheck() {
             @Override
             public void checkPosition(int position) {
                 if (newList.get(position).getChecktype() == 0) {
@@ -236,7 +233,7 @@ public class RadioFragment extends Fragment implements TipView.WhiteViewClick {
                         if (refreshType == 1) newList.clear();
                         newList.addAll(subList);
                         if (adapter == null) {
-                            mListView.setAdapter(adapter = new FavorListAdapter(context, newList));
+                            mListView.setAdapter(adapter = new ContentForCheckAdapter(context, newList));
                         } else {
                             adapter.notifyDataSetChanged();
                         }

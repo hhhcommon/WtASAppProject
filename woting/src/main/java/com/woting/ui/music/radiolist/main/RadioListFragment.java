@@ -26,7 +26,9 @@ import com.woting.common.widgetui.TipView;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.music.classify.model.FenLeiName;
 import com.woting.ui.music.radiolist.adapter.MyPagerAdapter;
+import com.woting.ui.music.radiolist.fragment.ClassifyFragment;
 import com.woting.ui.music.radiolist.fragment.RecommendFragment;
+import com.woting.ui.music.radiolist.mode.CatalogData;
 import com.woting.ui.music.radiolist.mode.SubCata;
 
 import org.json.JSONException;
@@ -129,38 +131,41 @@ public class RadioListFragment extends Fragment implements OnClickListener, TipV
         }
         VolleyRequest.requestPost(GlobalConfig.getCatalogUrl, tag, setParam(), new VolleyCallback() {
             private List<SubCata> subDataList;
-            private String ReturnType;
-            private String CatalogData;
-
             @Override
             protected void requestSuccess(JSONObject result) {
                 tipView.setVisibility(View.GONE);
                 try {
-                    ReturnType = result.getString("ReturnType");
-                    CatalogData = result.getString("CatalogData");
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        try {
+                            String cd = result.getString("CatalogData");
+                            CatalogData catalogData = new Gson().fromJson(cd, new TypeToken<CatalogData>() {}.getType());
+                            subDataList = catalogData.getSubCata();
+                            if (subDataList != null && subDataList.size() > 0) {
+                                for (int i = 0; i < subDataList.size(); i++) {
+                                    list.add(subDataList.get(i).getCatalogName());
+                                    fragments.add(ClassifyFragment.instance(subDataList.get(i).getCatalogId(), subDataList.get(i).getCatalogType()));
+                                    count++;
+                                }
+                            }
+                            viewPager.setAdapter(new MyPagerAdapter(getChildFragmentManager(), list, fragments));
+                            pageSlidingTab.setViewPager(viewPager);
+                            if (count == 1) {
+                                pageSlidingTab.setVisibility(View.GONE);
+                            }else{
+                                pageSlidingTab.setVisibility(View.VISIBLE);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    } else {
+                        ToastUtils.show_always(context, "暂没有该分类数据");
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (ReturnType != null && ReturnType.equals("1001")) {
-//                    CatalogData catalogData = new Gson().fromJson(CatalogData, new TypeToken<CatalogData>() {}.getType());
-                /*    subDataList = catalogData.getSubCata();
-                    if (subDataList != null && subDataList.size() > 0) {
-                        for (int i = 0; i < subDataList.size(); i++) {
-                            list.add(subDataList.get(i).getCatalogName());
-                            fragments.add(ClassifyFragment.instance(subDataList.get(i).getCatalogId(), subDataList.get(i).getCatalogType()));
-                            count++;
-                        }
-                    }*/
-                    viewPager.setAdapter(new MyPagerAdapter(getChildFragmentManager(), list, fragments));
-                    pageSlidingTab.setViewPager(viewPager);
-                    if (count == 1) {
-                        pageSlidingTab.setVisibility(View.GONE);
-                    }else{
-                        pageSlidingTab.setVisibility(View.VISIBLE);
-                    }
-                } else {
-                    ToastUtils.show_always(context, "暂没有该分类数据");
-                }
+
             }
 
             @Override

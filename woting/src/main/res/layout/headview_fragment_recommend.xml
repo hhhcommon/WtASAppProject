@@ -9,28 +9,11 @@
         android:id="@+id/slideshowView"
         android:layout_width="match_parent"
         android:layout_height="150dp" />
-
-    <LinearLayout
+    <!--在代码中设置与隐藏-->
+    <include
+        android:id="@+id/include_view"
+        layout="@layout/adapter_content_more"
         android:layout_width="match_parent"
-        android:layout_height="34dp"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/setting_bg_color"
-            android:gravity="left|center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:text="猜你喜欢"
-                android:textColor="@color/wt_login_third"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-    </LinearLayout>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

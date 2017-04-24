@@ -1,4 +1,4 @@
-package com.woting.ui.musicplay.album.model;
+package com.woting.ui.musicplay.subscriber.model;
 
 /**
  * 订阅信息

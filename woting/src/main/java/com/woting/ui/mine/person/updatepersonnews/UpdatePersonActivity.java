@@ -30,8 +30,8 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.pickview.LoopView;
 import com.woting.common.widgetui.pickview.OnItemSelectedListener;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.music.citylist.cityModel.stairCity;
-import com.woting.ui.music.citylist.cityModel.secondaryCity;
+import com.woting.ui.music.citylist.citymodel.stairCity;
+import com.woting.ui.music.citylist.citymodel.secondaryCity;
 import com.woting.ui.mine.person.updatepersonnews.model.UpdatePerson;
 import com.woting.ui.mine.person.updatepersonnews.util.DateUtil;
 

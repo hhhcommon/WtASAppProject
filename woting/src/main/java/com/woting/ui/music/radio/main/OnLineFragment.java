@@ -34,7 +34,6 @@ import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
@@ -46,13 +45,12 @@ import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout.OnRefreshLis
 import com.woting.ui.model.content;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
-import com.woting.ui.musicplay.play.model.PlayerHistory;
 import com.woting.ui.music.citylist.main.CityListFragment;
 import com.woting.ui.music.radio.adapter.CityNewAdapter;
 import com.woting.ui.music.radio.adapter.OnLinesAdapter;
-import com.woting.ui.music.radio.fragment.RadioNationalFragment;
+import com.woting.ui.music.nationalradio.NationalRadioFragment;
 import com.woting.ui.music.radio.model.RadioPlay;
-import com.woting.ui.music.fmlist.fragment.FMListFragment;
+import com.woting.ui.music.fmlist.FMListFragment;
 import com.woting.ui.main.MainActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -173,7 +171,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
     private void setAdapter() {
         adapters = new CityNewAdapter(context, mainLists);
         gridView.setAdapter(adapters);
-        adapter = new OnLinesAdapter(context, newList);
+        adapter = new OnLinesAdapter(context, newList,1);
         expandableListMain.setAdapter(adapter);
     }
 
@@ -207,7 +205,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
         linCountry.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                RadioNationalFragment fragment = new RadioNationalFragment();
+                NationalRadioFragment fragment = new NationalRadioFragment();
                 HomeActivity.open(fragment);
             }
         });

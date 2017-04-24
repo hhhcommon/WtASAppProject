@@ -21,7 +21,6 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.PicassoBannerLoader;
 import com.woting.common.util.ToastUtils;
@@ -30,13 +29,12 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
+import com.woting.ui.music.adapter.ContentAdapter;
 import com.woting.ui.model.content;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
-import com.woting.ui.musicplay.play.model.PlayerHistory;
 import com.woting.ui.musicplay.album.main.AlbumFragment;
 import com.woting.ui.music.radiolist.adapter.ForNullAdapter;
-import com.woting.ui.music.radiolist.adapter.RadioListAdapter;
 import com.woting.ui.music.radiolist.main.RadioListFragment;
 import com.woting.ui.music.radiolist.mode.Image;
 import com.woting.ui.main.MainActivity;
@@ -58,7 +56,7 @@ import java.util.List;
 public class RecommendFragment extends Fragment implements TipView.WhiteViewClick {
     private Context context;
     private SearchPlayerHistoryDao dbDao;// 数据库
-    private RadioListAdapter adapter;
+    private ContentAdapter adapter;
     private Banner mLoopViewPager;
 
     private List<Image> imageList=new ArrayList<>();
@@ -174,7 +172,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                         if (refreshType == 1) newList.clear();
                         newList.addAll(subList);
                         if (adapter == null) {
-                            mListView.setAdapter(adapter = new RadioListAdapter(context, newList));
+                            mListView.setAdapter(adapter = new ContentAdapter(context, newList));
                         } else {
                             adapter.notifyDataSetChanged();
                         }
