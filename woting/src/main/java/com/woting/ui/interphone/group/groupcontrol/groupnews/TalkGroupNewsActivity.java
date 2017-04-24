@@ -36,7 +36,6 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
@@ -69,15 +68,15 @@ import com.woting.ui.interphone.group.groupcontrol.changegrouptype.ChangeGroupTy
 import com.woting.ui.interphone.group.groupcontrol.groupnews.adapter.GroupTalkAdapter;
 import com.woting.ui.interphone.group.groupcontrol.groupnumdel.GroupMemberDelActivity;
 import com.woting.ui.interphone.group.groupcontrol.grouppersonnews.GroupPersonNewsActivity;
-import com.woting.ui.interphone.group.groupcontrol.setgroupmanager.SetGroupManagerActivity;
-import com.woting.ui.interphone.message.groupapply.HandleGroupApplyActivity;
-import com.woting.ui.interphone.message.reviewednews.JoinGroupListActivity;
 import com.woting.ui.interphone.group.groupcontrol.memberadd.GroupMemberAddActivity;
 import com.woting.ui.interphone.group.groupcontrol.membershow.GroupMembersActivity;
 import com.woting.ui.interphone.group.groupcontrol.modifygrouppassword.ModifyGroupPasswordActivity;
 import com.woting.ui.interphone.group.groupcontrol.personnews.TalkPersonNewsActivity;
+import com.woting.ui.interphone.group.groupcontrol.setgroupmanager.SetGroupManagerActivity;
 import com.woting.ui.interphone.group.groupcontrol.transferauthority.TransferAuthorityActivity;
 import com.woting.ui.interphone.main.DuiJiangActivity;
+import com.woting.ui.interphone.message.groupapply.HandleGroupApplyActivity;
+import com.woting.ui.interphone.message.reviewednews.JoinGroupListActivity;
 import com.woting.ui.mine.model.UserPortaitInside;
 
 import org.json.JSONException;
@@ -899,9 +898,9 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                     if (!miniUri.startsWith("http:")) {
                         miniUri = GlobalConfig.imageurl + miniUri;
                     }
-                    miniUri = AssembleImageUrlUtils.assembleImageUrl150(miniUri);
-                    // 正常切可用代码 已从服务器获得返回值，但是无法正常显示
-                    Picasso.with(context).load(miniUri.replace("\\/", "/")).into(imageHead);
+                    String _url = AssembleImageUrlUtils.assembleImageUrl180( miniUri);
+                    // 加载图片
+                    AssembleImageUrlUtils.loadImage(_url, miniUri, imageHead, IntegerConstant.TYPE_LIST);
                     sendBroadcast(pushIntent);
                 } else if (msg.what == 0) {
                     ToastUtils.show_short(context, "头像保存失败，请稍后再试");
