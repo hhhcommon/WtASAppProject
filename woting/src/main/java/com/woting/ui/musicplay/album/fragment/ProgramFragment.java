@@ -33,17 +33,17 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
+import com.woting.ui.model.album;
+import com.woting.ui.model.content;
 import com.woting.ui.musicplay.download.main.DownloadFragment;
 import com.woting.ui.musicplay.download.dao.FileInfoDao;
 import com.woting.ui.musicplay.download.fragment.DownLoadUnCompletedFragment;
 import com.woting.ui.musicplay.download.model.FileInfo;
 import com.woting.ui.musicplay.download.service.DownloadClient;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
-import com.woting.ui.musicplay.play.model.PlayerHistory;
 import com.woting.ui.musicplay.album.adapter.AlbumAdapter;
 import com.woting.ui.musicplay.album.adapter.AlbumMainAdapter;
 import com.woting.ui.musicplay.album.main.AlbumFragment;
-import com.woting.ui.musicplay.album.model.ContentInfo;
 import com.woting.ui.main.MainActivity;
 
 import org.json.JSONException;
@@ -65,9 +65,9 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
     private AlbumMainAdapter mainAdapter;
     private AlbumAdapter adapter;
 
-    private List<ContentInfo> SubListAll = new ArrayList<>();
-    private List<ContentInfo> urlList = new ArrayList<>();
-    private List<ContentInfo> SubList;// 请求返回的网络数据值
+    private List<content> SubListAll = new ArrayList<>();
+    private List<content> urlList = new ArrayList<>();
+    private List<content> SubList;// 请求返回的网络数据值
     private List<FileInfo> fList;
 
     private View rootView;
@@ -184,40 +184,8 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                 if (SubListAll != null && SubListAll.get(position - 1) != null && SubListAll.get(position - 1).getMediaType() != null) {
                     String MediaType = SubListAll.get(position - 1).getMediaType();
                     if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
-                        String playerName = SubListAll.get(position - 1).getContentName();
-                        String playerImage = SubListAll.get(position - 1).getContentImg();
-                        String playUrl = SubListAll.get(position - 1).getContentPlay();
-                        String playUrI = SubListAll.get(position - 1).getContentURI();
-                        String playMediaType = SubListAll.get(position - 1).getMediaType();
-                        String playContentShareUrl = SubListAll.get(position - 1).getContentShareURL();
-                        String ContentId = SubListAll.get(position - 1).getContentId();
-                        String playAllTime = SubListAll.get(position - 1).getContentTimes();
-                        String playInTime = "0";
-                        String playContentDesc = SubListAll.get(position - 1).getContentDescn();
-                        String playNum = SubListAll.get(position - 1).getPlayCount();
-                        String playZanType = "0";
-                        String playFrom = SubListAll.get(position - 1).getContentPub();
-                        String playFromId = "";
-                        String playFromUrl = "";
-                        String playAddTime = Long.toString(System.currentTimeMillis());
-                        String bjUserId = CommonUtils.getUserId(context);
-                        String ContentFavorite = SubListAll.get(position - 1).getContentFavorite();
-                        String localUrl = SubListAll.get(position - 1).getLocalurl();
-                        String sequName1 = sequName;
-                        String sequId1 = sequId;
-                        String sequDesc1 = sequDesc;
-                        String sequImg1 = sequImg;
-                        String ContentPlayType = SubListAll.get(position - 1).getContentPlayType();
-                        String IsPlaying = SubListAll.get(position - 1).getIsPlaying();
-                        String ColumnNum= SubListAll.get(position - 1).getColumnNum();
+                        dbDao.savePlayerHistory(MediaType,SubListAll,position-1);// 保存播放历史
 
-                        PlayerHistory history = new PlayerHistory(
-                                playerName, playerImage, playUrl, playUrI, playMediaType,
-                                playAllTime, playInTime, playContentDesc, playNum,
-                                playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName1, sequId1, sequDesc1, sequImg1, ContentPlayType, IsPlaying,ColumnNum);
-                        dbDao.deleteHistory(playUrl);
-                        dbDao.addHistory(history);
                         MainActivity.change();
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
@@ -267,7 +235,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                                 e.printStackTrace();
                             }
                             try {
-                                SubList = new Gson().fromJson(subList, new TypeToken<List<ContentInfo>>() {}.getType());
+                                SubList = new Gson().fromJson(subList, new TypeToken<List<content>>() {}.getType());
                                 if (SubList != null && SubList.size() > 0) {
                                     if (page == 1) SubListAll.clear();
                                     SubListAll.addAll(SubList);
@@ -328,21 +296,21 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (SubListAll != null && SubListAll.get(position) != null) {
-                    if (SubListAll.get(position).getCheckType() == 3) {
+                    if (SubListAll.get(position).getChecktype() == 3) {
                         ToastUtils.show_always(context, "已经下载过");
                     } else {
-                        if (SubListAll.get(position).getCheckType() == 1) {
-                            SubListAll.get(position).setCheckType(2);
+                        if (SubListAll.get(position).getChecktype() == 1) {
+                            SubListAll.get(position).setChecktype(2);
                         } else {
-                            SubListAll.get(position).setCheckType(1);
+                            SubListAll.get(position).setChecktype(1);
                         }
                         int downLoadSum = 0;
                         sum = 0;
                         for (int i = 0; i < SubListAll.size(); i++) {
-                            if (SubListAll.get(i).getCheckType() == 2) {
+                            if (SubListAll.get(i).getChecktype() == 2) {
                                 sum++;
                             }
-                            if (SubListAll.get(i).getCheckType() == 3) {
+                            if (SubListAll.get(i).getChecktype() == 3) {
                                 downLoadSum++;
                             }
                             setSum();
@@ -382,7 +350,7 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                 if (temp != null && !temp.trim().equals("")) {
                     for (int j = 0; j < SubListAll.size(); j++) {
                         if (SubListAll.get(j).getContentPlay() != null && SubListAll.get(j).getContentPlay().equals(temp)) {
-                            SubListAll.get(j).setCheckType(3);
+                            SubListAll.get(j).setChecktype(3);
                         }
                     }
                 }
@@ -409,9 +377,9 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
             case R.id.tv_quxiao:        // 取消
                 lin_status2.setVisibility(View.GONE);
                 for (int i = 0; i < SubListAll.size(); i++) {
-                    if (SubListAll.get(i).getCheckType() != 3) {
+                    if (SubListAll.get(i).getChecktype() != 3) {
                         img_quanxuan.setImageResource(R.mipmap.image_not_all_check);
-                        SubListAll.get(i).setCheckType(1);
+                        SubListAll.get(i).setChecktype(1);
                     }
                 }
                 sum = 0;
@@ -422,8 +390,8 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                 if (!flag) {    // 默认为未选中状态
                     sum = 0;
                     for (int i = 0; i < SubListAll.size(); i++) {
-                        if (SubListAll.get(i).getCheckType() != 3) {
-                            SubListAll.get(i).setCheckType(2);
+                        if (SubListAll.get(i).getChecktype() != 3) {
+                            SubListAll.get(i).setChecktype(2);
                             sum++;
                         }
                     }
@@ -432,8 +400,8 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
                     setSum();
                 } else {
                     for (int i = 0; i < SubListAll.size(); i++) {
-                        if (SubListAll.get(i).getCheckType() != 3) {
-                            SubListAll.get(i).setCheckType(1);
+                        if (SubListAll.get(i).getChecktype() != 3) {
+                            SubListAll.get(i).setChecktype(1);
                         }
                     }
                     flag = false;
@@ -446,15 +414,17 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
             case R.id.tv_download:        // 下载
                 urlList.clear();
                 for (int i = 0; i < SubListAll.size(); i++) {
-                    if (SubListAll.get(i).getCheckType() == 2) {
-                        ContentInfo mContent = SubListAll.get(i);
-                        mContent.setSequdesc(AlbumFragment.ContentDesc);
-                        mContent.setSequname(AlbumFragment.ContentName);
-                        mContent.setSequimgurl(AlbumFragment.ContentImg);
-                        mContent.setSequid(AlbumFragment.id);
+                    if (SubListAll.get(i).getChecktype() == 2) {
+                        content mContent = SubListAll.get(i);
+                        album m = mContent.getSeqInfo();
+                        m.setContentDescn(AlbumFragment.ContentDesc);
+                        m.setContentName(AlbumFragment.ContentName);
+                        m.setContentImg(AlbumFragment.ContentImg);
+                        m.setContentId(AlbumFragment.id);
                         // 判断 userId 是否为空
                         mContent.setUserid(userId);
                         mContent.setDownloadtype("0");
+                        mContent.setSeqInfo(m);
                         FID.updataDownloadStatus(mContent.getContentPlay(), "0");// 将所有数据设置
                         urlList.add(mContent);
                     }

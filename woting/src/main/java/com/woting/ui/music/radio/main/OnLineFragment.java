@@ -447,41 +447,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                 if (mainLists != null && mainLists.get(position) != null && mainLists.get(position).getMediaType() != null) {
                     String MediaType = mainLists.get(position).getMediaType();
                     if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
-                        String playName = mainLists.get(position).getContentName();
-                        String playImage = mainLists.get(position).getContentImg();
-                        String playUrl = mainLists.get(position).getContentPlay();
-                        String playUri = mainLists.get(position).getContentURI();
-                        String playMediaType = mainLists.get(position).getMediaType();
-                        String playContentShareUrl = mainLists.get(position).getContentShareURL();
-                        String playAllTime = mainLists.get(position).getContentTimes();
-                        String playInTime = "0";
-                        String playContentDesc = mainLists.get(position).getContentDescn();
-                        String playerNum = mainLists.get(position).getPlayCount();
-                        String playZanType = "0";
-                        String playFrom = mainLists.get(position).getContentPub();
-                        String playFromId = "";
-                        String playFromUrl = "";
-                        String playAddTime = Long.toString(System.currentTimeMillis());
-                        String bjUserId = CommonUtils.getUserId(context);
-                        String ContentFavorite = mainLists.get(position).getContentFavorite();
-                        String ContentId = mainLists.get(position).getContentId();
-                        String localUrl = mainLists.get(position).getLocalurl();
-
-                        String seqName = mainLists.get(position - 1).getSeqInfo().getContentName();
-                        String seqId = mainLists.get(position - 1).getSeqInfo().getContentId();
-                        String seqDesc = mainLists.get(position - 1).getSeqInfo().getContentDescn();
-                        String seqImg = mainLists.get(position - 1).getSeqInfo().getContentImg();
-                        String ContentPlayType = mainLists.get(position).getContentPlayType();
-                        String IsPlaying = mainLists.get(position).getIsPlaying();
-                        String ColumnNum = mainLists.get(position).getColumnNum();
-                        // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-                        PlayerHistory history = new PlayerHistory(
-                                playName, playImage, playUrl, playUri, playMediaType,
-                                playAllTime, playInTime, playContentDesc, playerNum,
-                                playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, seqName, seqId, seqDesc, seqImg, ContentPlayType, IsPlaying, ColumnNum);
-                        dbDao.deleteHistory(playUrl);
-                        dbDao.addHistory(history);
+                        dbDao.savePlayerHistory(MediaType,mainLists,position);// 保存播放历史
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
                         bundle1.putString(StringConstant.TEXT_CONTENT, mainLists.get(position).getContentName());
@@ -503,43 +469,9 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                         && newList.get(groupPosition).getList().get(childPosition).getMediaType() != null) {
                     String MediaType = newList.get(groupPosition).getList().get(childPosition).getMediaType();
                     if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
-                        String playName = newList.get(groupPosition).getList().get(childPosition).getContentName();
-                        String playImage = newList.get(groupPosition).getList().get(childPosition).getContentImg();
-                        String playUrl = newList.get(groupPosition).getList().get(childPosition).getContentPlay();
-                        String playUri = newList.get(groupPosition).getList().get(childPosition).getContentURI();
-                        String playMediaType = newList.get(groupPosition).getList().get(childPosition).getMediaType();
-                        String playContentShareUrl = newList.get(groupPosition).getList().get(childPosition).getContentShareURL();
-                        String playAllTime = newList.get(groupPosition).getList().get(childPosition).getContentTimes();
-                        String playInTime = "0";
-                        String playContentDesc = newList.get(groupPosition).getList().get(childPosition).getContentDescn();
-                        String playerNum = newList.get(groupPosition).getList().get(childPosition).getPlayCount();
-                        String playZanType = "0";
-                        String playFrom = newList.get(groupPosition).getList().get(childPosition).getContentPub();
-                        String playFromId = "";
-                        String playFromUrl = "";
-                        String playAddTime = Long.toString(System.currentTimeMillis());
-                        String bjUserId = CommonUtils.getUserId(context);
-                        String ContentFavorite = newList.get(groupPosition).getList().get(childPosition).getContentFavorite();
-                        String ContentId = newList.get(groupPosition).getList().get(childPosition).getContentId();
-                        String localUrl = newList.get(groupPosition).getList().get(childPosition).getLocalurl();
 
-                        String seqName = newList.get(groupPosition).getList().get(childPosition).getSeqInfo().getContentName();
-                        String seqId = newList.get(groupPosition).getList().get(childPosition).getSeqInfo().getContentId();
-                        String seqDesc = newList.get(groupPosition).getList().get(childPosition).getSeqInfo().getContentDescn();
-                        String seqImg = newList.get(groupPosition).getList().get(childPosition).getSeqInfo().getContentImg();
+                        dbDao.savePlayerHistory(MediaType,newList.get(groupPosition).getList(),childPosition);// 保存播放历史
 
-                        String ContentPlayType = newList.get(groupPosition).getList().get(childPosition).getContentPlayType();
-                        String IsPlaying = newList.get(groupPosition).getList().get(childPosition).getIsPlaying();
-                        String ColumnNum = newList.get(groupPosition).getList().get(childPosition).getColumnNum();
-                        // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-                        PlayerHistory history = new PlayerHistory(
-                                playName, playImage, playUrl, playUri, playMediaType,
-                                playAllTime, playInTime, playContentDesc, playerNum,
-                                playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, seqName, seqId, seqDesc, seqImg, ContentPlayType, IsPlaying, ColumnNum);
-
-                        dbDao.deleteHistory(playUrl);
-                        dbDao.addHistory(history);
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
                         bundle1.putString(StringConstant.TEXT_CONTENT, newList.get(groupPosition).getList().get(childPosition).getContentName());

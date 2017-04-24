@@ -37,6 +37,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.android.volley.VolleyError;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
@@ -64,6 +65,7 @@ import com.woting.ui.music.search.fragment.TotalFragment;
 import com.woting.ui.music.search.model.History;
 import com.woting.ui.main.MainActivity;
 import com.woting.video.VoiceRecognizer;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -83,21 +85,23 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
 
     private Dialog dialog;
     private Dialog yuyinDialog;
+    private Handler mUIHandler = new Handler() {
+    };
 
-    private LinearLayout lin_head_left,lin_head_right,img_clear,lin_status_first,lin_status_second,lin_status_third,lin_history;
+    private LinearLayout lin_head_left, lin_head_right, img_clear, lin_status_first, lin_status_second, lin_status_third, lin_history;
     private TextView tv_speak_status;
-    private ImageView img_edit_clear,img_edit_normal,image;
-    private GridView gv_TopSearch,gv_history;
+    private ImageView img_edit_clear, img_edit_normal, image;
+    private GridView gv_TopSearch, gv_history;
     private EditText mEtSearchContent;
     private ListView lv_mListView;
     private MyLinearLayout rl_voice;
     private TipView tipView;// 没有网络提示
     private View rootView;
 
-    private static TextView tv_total,tv_sequ,tv_sound,tv_radio,tv_tts;
+    private static TextView tv_total, tv_sequ, tv_sound, tv_radio, tv_tts;
     private static ViewPager mPager;
 
-    private Bitmap bmp,bmpPress;
+    private Bitmap bmp, bmpPress;
     private SearchHistoryDao shd;
 
     private List<History> historyDatabaseList;
@@ -108,7 +112,7 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
     private SearchHotAdapter searchHotAdapter;
     private SearchHistoryAdapter adapterHistory;
 
-    private int offset,bmpW,stepVolume,curVolume;
+    private int offset, bmpW, stepVolume, curVolume;
 
     private String tag = "SEARCH_LIKE_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
@@ -268,6 +272,7 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
                     lin_status_second.setVisibility(View.VISIBLE);
                     lin_status_third.setVisibility(View.GONE);
                 } else {
+                    send();
                     img_edit_clear.setVisibility(View.GONE);
                     img_edit_normal.setVisibility(View.VISIBLE);
                     lin_status_second.setVisibility(View.GONE);
@@ -301,6 +306,7 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
         }
     }
 
+
     // 语音搜索框
     private void dialog() {
         View dialog = LayoutInflater.from(context).inflate(R.layout.dialog_yuyin_search, null);
@@ -332,6 +338,10 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
         tv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mCloseVoiceRunnable != null) {
+                    mUIHandler.removeCallbacks(mCloseVoiceRunnable);
+                    tv_speak_status.setText("请按住讲话");
+                }
                 yuyinDialog.dismiss();
                 textSpeakContent.setVisibility(View.GONE);
             }
@@ -346,19 +356,36 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
                 }
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+
+                        if (mCloseVoiceRunnable != null) {
+                            tv_speak_status.setText("请按住讲话");
+                            mUIHandler.removeCallbacks(mCloseVoiceRunnable);
+                        }
+
                         curVolume = audioMgr.getStreamVolume(AudioManager.STREAM_MUSIC);
-                        audioMgr.setStreamVolume(AudioManager.STREAM_MUSIC, stepVolume, AudioManager.FLAG_PLAY_SOUND);
-                        mVoiceRecognizer = VoiceRecognizer.getInstance(context, BroadcastConstants.SEARCHVOICE);
+                        audioMgr.setStreamVolume(AudioManager.STREAM_MUSIC, stepVolume, AudioManager.FLAG_PLAY_SOUND);// 设置想要的音量大小
+                        mVoiceRecognizer = VoiceRecognizer.getInstance(context, BroadcastConstants.SEARCHVOICE);// 讯飞开始
                         mVoiceRecognizer.startListen();
                         tv_speak_status.setText("开始语音转换");
                         imageView_voice.setImageBitmap(bmpPress);
                         textSpeakContent.setVisibility(View.GONE);
+
                         break;
                     case MotionEvent.ACTION_UP:
-                        audioMgr.setStreamVolume(AudioManager.STREAM_MUSIC, curVolume, AudioManager.FLAG_PLAY_SOUND);
-                        mVoiceRecognizer.stopListen();
+
+                        audioMgr.setStreamVolume(AudioManager.STREAM_MUSIC, curVolume, AudioManager.FLAG_PLAY_SOUND);// 还原原先音量大小
+                        mVoiceRecognizer.stopListen();// 讯飞停止
                         imageView_voice.setImageBitmap(bmp);
-                        tv_speak_status.setText("正在查询请稍等");
+                        tv_speak_status.setText("请按住讲话");
+
+                        break;
+                    case MotionEvent.ACTION_CANCEL:// 抬起
+
+                        audioMgr.setStreamVolume(AudioManager.STREAM_MUSIC, curVolume, AudioManager.FLAG_PLAY_SOUND);// 还原原先音量大小
+                        mVoiceRecognizer.stopListen();// 讯飞停止
+                        imageView_voice.setImageBitmap(bmp);
+                        tv_speak_status.setText("请按住讲话");
+
                         break;
                 }
                 return true;
@@ -373,6 +400,17 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
         context.registerReceiver(mBroadcastReceiver, f);
     }
 
+    // 智能关闭语音搜索框
+    private Runnable mCloseVoiceRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (yuyinDialog != null) {
+                yuyinDialog.dismiss();
+            }// 3秒后隐藏界面
+            tv_speak_status.setText("请按住讲话");
+        }
+    };
+
     // 广播接收器
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -385,6 +423,7 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
                     if (!str.trim().equals("")) {
                         mEtSearchContent.setText(str);
                         tv_speak_status.setText("正在搜索:" + str);
+                        mUIHandler.postDelayed(mCloseVoiceRunnable, 3000);
                         CheckEdit(str);
                     }
                 } else {
@@ -451,20 +490,13 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
                 break;
             case R.id.img_edit_normal:
                 yuyinDialog.show();
+                tv_speak_status.setText("请按住讲话");
                 imm.hideSoftInputFromWindow(rl_voice.getWindowToken(), 0);
                 break;
         }
     }
 
     private void CheckEdit(String str) {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (yuyinDialog != null) {
-                    yuyinDialog.dismiss();
-                }
-            }
-        }, 2000);
 
         // 发送广播，让fragment接收到该广播后进行数据查询
         Intent mIntent = new Intent();
@@ -614,13 +646,13 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
                 gv_TopSearch.setAdapter(adapter);
                 // 适配自己的搜索历史
                 historyDatabaseList = shd.queryHistory();
-                if (historyDatabaseList!=null&&historyDatabaseList.size() > 0) {
+                if (historyDatabaseList != null && historyDatabaseList.size() > 0) {
                     lin_history.setVisibility(View.VISIBLE);
-                    if(adapterHistory==null){
+                    if (adapterHistory == null) {
                         adapterHistory = new SearchHistoryAdapter(context, historyDatabaseList);
                         gv_history.setAdapter(adapterHistory);
-                    }else{
-                        adapterHistory.notifyDataSetChanged();
+                    } else {
+                        adapterHistory.changeData(historyDatabaseList);
                     }
                 } else {
                     lin_history.setVisibility(View.GONE);
@@ -672,7 +704,7 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
     }
 
     public static void updateViewPage(String mediaType) {
-        int index ;
+        int index;
         if (mediaType != null && !mediaType.equals("")) {
             if (mediaType.equals(StringConstant.TYPE_SEQU)) {
                 index = 1;
@@ -717,9 +749,11 @@ public class SearchLikeFragment extends Fragment implements View.OnClickListener
 
     public class txListener implements View.OnClickListener {
         private int index = 0;
+
         public txListener(int i) {
             index = i;
         }
+
         @Override
         public void onClick(View v) {
             mPager.setCurrentItem(index);

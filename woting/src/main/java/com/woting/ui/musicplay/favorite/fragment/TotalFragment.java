@@ -387,45 +387,7 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
                 if (mediaType.equals(StringConstant.TYPE_RADIO) ||
                         mediaType.equals(StringConstant.TYPE_AUDIO) || mediaType.equals(StringConstant.TYPE_TTS)) {
 
-                    String playername = list.get(groupPosition).getList().get(childPosition).getContentName();
-                    String playerimage = list.get(groupPosition).getList().get(childPosition).getContentImg();
-                    String playerurl = list.get(groupPosition).getList().get(childPosition).getContentPlay();
-                    String playerurI = list.get(groupPosition).getList().get(childPosition).getContentURI();
-                    String playermediatype = list.get(groupPosition).getList().get(childPosition).getMediaType();
-                    String plaplayeralltime = list.get(groupPosition).getList().get(childPosition).getContentTimes();
-                    String playerintime = "0";
-                    String playercontentdesc = list.get(groupPosition).getList().get(childPosition).getContentDescn();
-                    String playernum = list.get(groupPosition).getList().get(childPosition).getPlayCount();
-                    String playerzantype = "0";
-                    String playerfrom = list.get(groupPosition).getList().get(childPosition).getContentPub();
-                    String playerfromid = "";
-                    String playerfromurl = "";
-                    String playeraddtime = Long.toString(System.currentTimeMillis());
-                    String bjuserid = CommonUtils.getUserId(context);
-                    String playcontentshareurl = list.get(groupPosition).getList().get(childPosition).getContentShareURL();
-                    String ContentFavorite = list.get(groupPosition).getList().get(childPosition).getContentFavorite();
-                    String ContentId = list.get(groupPosition).getList().get(childPosition).getContentId();
-                    String localurl = list.get(groupPosition).getList().get(childPosition).getLocalurl();
-
-                    String sequName = list.get(groupPosition).getList().get(childPosition).getSeqInfo().getContentName();
-                    String sequId = list.get(groupPosition).getList().get(childPosition).getSeqInfo().getContentId();
-                    String sequDesc = list.get(groupPosition).getList().get(childPosition).getSeqInfo().getContentDescn();
-                    String sequImg = list.get(groupPosition).getList().get(childPosition).getSeqInfo().getContentImg();
-                    String ContentPlayType = list.get(groupPosition).getList().get(childPosition).getContentPlayType();
-                    String IsPlaying = list.get(groupPosition).getList().get(childPosition).getIsPlaying();
-                    String ColumnNum=list.get(groupPosition).getList().get(childPosition).getColumnNum();
-                    // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-                    PlayerHistory history = new PlayerHistory(
-                            playername, playerimage, playerurl, playerurI, playermediatype,
-                            plaplayeralltime, playerintime, playercontentdesc, playernum,
-                            playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playcontentshareurl,
-                            ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying,ColumnNum);
-                    if (mediaType.equals(StringConstant.TYPE_TTS)) {
-                        dbDao.deleteHistoryById(ContentId);
-                    } else {
-                        dbDao.deleteHistory(playerurl);
-                    }
-                    dbDao.addHistory(history);
+                    dbDao.savePlayerHistory(StringConstant.TYPE_RADIO,list.get(groupPosition).getList(),childPosition);
 
                     MainActivity.change();
                     Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);

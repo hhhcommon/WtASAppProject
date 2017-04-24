@@ -166,19 +166,15 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                                         if (subList.get(i).getMediaType().equals(StringConstant.TYPE_AUDIO)) {
                                             if (playList == null) playList = new ArrayList<>();
                                             if (playList.size() < 3) playList.add(subList.get(i));
-                                            break;
                                         } else if (subList.get(i).getMediaType().equals(StringConstant.TYPE_SEQU)) {
                                             if (sequList == null) sequList = new ArrayList<>();
                                             if (sequList.size() < 3) sequList.add(subList.get(i));
-                                            break;
                                         } else if (subList.get(i).getMediaType().equals(StringConstant.TYPE_TTS)) {
                                             if (ttsList == null) ttsList = new ArrayList<>();
                                             if (ttsList.size() < 3) ttsList.add(subList.get(i));
-                                            break;
                                         } else if (subList.get(i).getMediaType().equals(StringConstant.TYPE_RADIO)) {
                                             if (radioList == null) radioList = new ArrayList<>();
                                             if (radioList.size() < 3) radioList.add(subList.get(i));
-                                            break;
                                         }
                                     }
                                 }
@@ -261,43 +257,9 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                 try {
                     String MediaType = list.get(groupPosition).getList().get(childPosition).getMediaType();
                     if (MediaType != null && MediaType.equals(StringConstant.TYPE_RADIO) || MediaType != null && MediaType.equals(StringConstant.TYPE_AUDIO)) {
-                        String playName = list.get(groupPosition).getList().get(childPosition).getContentName();
-                        String playImage = list.get(groupPosition).getList().get(childPosition).getContentImg();
-                        String playUrl = list.get(groupPosition).getList().get(childPosition).getContentPlay();
-                        String playUri = list.get(groupPosition).getList().get(childPosition).getContentURI();
-                        String playMediaType = list.get(groupPosition).getList().get(childPosition).getMediaType();
-                        String playContentShareUrl = list.get(groupPosition).getList().get(childPosition).getContentShareURL();
-                        String playAllTime = list.get(groupPosition).getList().get(childPosition).getContentTimes();
-                        String playInTime = "0";
-                        String playContentDesc = list.get(groupPosition).getList().get(childPosition).getContentDescn();
-                        String playerNum = list.get(groupPosition).getList().get(childPosition).getPlayCount();
-                        String playZanType = "0";
-                        String playFrom = list.get(groupPosition).getList().get(childPosition).getContentPub();
-                        String playFromId = "";
-                        String playFromUrl = "";
-                        String playAddTime = Long.toString(System.currentTimeMillis());
-                        String bjUserId = CommonUtils.getUserId(context);
-                        String ContentFavorite = list.get(groupPosition).getList().get(childPosition).getContentFavorite();
-                        String ContentId = list.get(groupPosition).getList().get(childPosition).getContentId();
-                        String localUrl = list.get(groupPosition).getList().get(childPosition).getLocalurl();
 
-                        String sequName = list.get(groupPosition).getList().get(childPosition).getSeqInfo().getContentName();
-                        String sequId = list.get(groupPosition).getList().get(childPosition).getSeqInfo().getContentId();
-                        String sequDesc = list.get(groupPosition).getList().get(childPosition).getSeqInfo().getContentDescn();
-                        String sequImg = list.get(groupPosition).getList().get(childPosition).getSeqInfo().getContentImg();
+                        dbDao.savePlayerHistory(MediaType,list.get(groupPosition).getList(),childPosition);// 保存播放历史
 
-                        String ContentPlayType = list.get(groupPosition).getList().get(childPosition).getContentPlayType();
-                        String IsPlaying = list.get(groupPosition).getList().get(childPosition).getIsPlaying();
-                        String ColumnNum = list.get(groupPosition).getList().get(childPosition).getColumnNum();
-                        // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-                        PlayerHistory history = new PlayerHistory(
-                                playName, playImage, playUrl, playUri, playMediaType,
-                                playAllTime, playInTime, playContentDesc, playerNum,
-                                playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying, ColumnNum);
-
-                        dbDao.deleteHistory(playUrl);
-                        dbDao.addHistory(history);
                         MainActivity.change();
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();

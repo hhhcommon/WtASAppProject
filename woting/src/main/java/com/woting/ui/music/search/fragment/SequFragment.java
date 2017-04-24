@@ -110,12 +110,12 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
 
     // 获取数据
     private void getData() {
-        dialog = DialogUtils.Dialog(context);
         sendRequest();
     }
 
     @Override
     public void onWhiteViewClick() {
+        dialog = DialogUtils.Dialog(context);
         getData();// 获取数据
     }
 

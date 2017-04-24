@@ -147,43 +147,8 @@ public class TTSFragment extends Fragment implements TipView.WhiteViewClick {
                     if (newList != null && newList.get(position - 1) != null && newList.get(position - 1).getMediaType() != null) {
                         String MediaType = newList.get(position - 1).getMediaType();
                         if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
-                            String playername = newList.get(position - 1).getContentName();
-                            String playerimage = newList.get(position - 1).getContentImg();
-                            String playerurl = newList.get(position - 1).getContentPlay();
-                            String playerurI = newList.get(position - 1).getContentURI();
-                            String playermediatype = newList.get(position - 1).getMediaType();
-                            String playcontentshareurl = newList.get(position - 1).getContentShareURL();
-                            String plaplayeralltime = newList.get(position - 1).getContentTimes();
-                            String playerintime = "0";
-                            String playercontentdesc = newList.get(position - 1).getContentDescn();
-                            String playernum = newList.get(position - 1).getPlayCount();
-                            String playerzantype = "0";
-                            String playerfrom = newList.get(position - 1).getContentPub();
-                            String playerfromid = "";
-                            String playerfromurl = "";
-                            String playeraddtime = Long.toString(System.currentTimeMillis());
-                            String bjuserid = CommonUtils.getUserId(context);
-                            String ContentFavorite = newList.get(position - 1).getContentFavorite();
-                            String ContentId = newList.get(position - 1).getContentId();
-                            String localurl = newList.get(position - 1).getLocalurl();
 
-                            String sequName = newList.get(position - 1).getSeqInfo().getContentName();
-                            String sequId = newList.get(position - 1).getSeqInfo().getContentId();
-                            String sequDesc = newList.get(position - 1).getSeqInfo().getContentDescn();
-                            String sequImg = newList.get(position - 1).getSeqInfo().getContentImg();
-
-                            String ContentPlayType = newList.get(position - 1).getContentPlayType();
-                            String IsPlaying = newList.get(position - 1).getIsPlaying();
-                            String ColumnNum=newList.get(position - 1).getColumnNum();
-
-                            // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-                            PlayerHistory history = new PlayerHistory(
-                                    playername, playerimage, playerurl, playerurI, playermediatype,
-                                    plaplayeralltime, playerintime, playercontentdesc, playernum,
-                                    playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playcontentshareurl,
-                                    ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying,ColumnNum);
-                            dbDao.deleteHistory(playerurl);
-                            dbDao.addHistory(history);
+                            dbDao.savePlayerHistory(StringConstant.TYPE_RADIO,newList,position - 1);
 
                             MainActivity.change();
                             Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);

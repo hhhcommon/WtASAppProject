@@ -43,6 +43,8 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.HorizontalListView;
+import com.woting.ui.model.album;
+import com.woting.ui.model.content;
 import com.woting.ui.musicplay.download.main.DownloadFragment;
 import com.woting.ui.musicplay.download.dao.FileInfoDao;
 import com.woting.ui.musicplay.download.fragment.DownLoadUnCompletedFragment;
@@ -56,7 +58,6 @@ import com.woting.ui.musicplay.programme.ProgrammeActivity;
 import com.woting.ui.musicplay.timeimg.TimerPowerOffActivity;
 import com.woting.ui.musicplay.accuse.main.AccuseFragment;
 import com.woting.ui.musicplay.album.main.AlbumFragment;
-import com.woting.ui.musicplay.album.model.ContentInfo;
 import com.woting.ui.musicplay.comment.CommentActivity;
 import com.woting.ui.main.MainActivity;
 import com.woting.ui.musicplay.favorite.main.FavoriteFragment;
@@ -508,8 +509,8 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
             return;
         }
         // 对数据进行转换
-        List<ContentInfo> dataList = new ArrayList<>();
-        ContentInfo m = new ContentInfo();
+        List<content> dataList = new ArrayList<>();
+        content m = new content();
         m.setContentPlay(data.getContentPlay());
         m.setContentImg(data.getContentImg());
         m.setContentName(data.getContentName());
@@ -517,25 +518,26 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
         m.setContentTimes(data.getContentTimes());
         m.setUserid(CommonUtils.getUserId(context));
         m.setDownloadtype("0");
+        album _m = m.getSeqInfo();
         if (data.getSeqInfo() == null || data.getSeqInfo().getContentName() == null || data.getSeqInfo().getContentName().equals("")) {
-            m.setSequname(data.getContentName());
+            _m.setContentName(data.getContentName());
         } else {
-            m.setSequname(data.getSeqInfo().getContentName());
+            _m.setContentName(data.getSeqInfo().getContentName());
         }
         if (data.getSeqInfo() == null || data.getSeqInfo().getContentId() == null || data.getSeqInfo().getContentId().equals("")) {
-            m.setSequid(data.getContentId());
+            _m.setContentId(data.getContentId());
         } else {
-            m.setSequid(data.getSeqInfo().getContentId());
+            _m.setContentId(data.getSeqInfo().getContentId());
         }
         if (data.getSeqInfo() == null || data.getSeqInfo().getContentImg() == null || data.getSeqInfo().getContentImg().equals("")) {
-            m.setSequimgurl(data.getContentImg());
+            _m.setContentImg(data.getContentImg());
         } else {
-            m.setSequimgurl(data.getSeqInfo().getContentImg());
+            _m.setContentImg(data.getSeqInfo().getContentImg());
         }
         if (data.getSeqInfo() == null || data.getSeqInfo().getContentDesc() == null || data.getSeqInfo().getContentDesc().equals("")) {
-            m.setSequdesc(data.getContentDescn());
+            _m.setContentDescn(data.getContentDescn());
         } else {
-            m.setSequdesc(data.getSeqInfo().getContentDesc());
+            _m.setContentDescn(data.getSeqInfo().getContentDesc());
         }
         dataList.add(m);
         // 检查是否重复,如果不重复插入数据库，并且开始下载，重复了提示

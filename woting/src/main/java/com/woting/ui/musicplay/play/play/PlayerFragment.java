@@ -960,12 +960,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             historyNews.setContentTimes(historyNew.getPlayerAllTime());
             historyNews.setContentName(historyNew.getPlayerName());
             historyNews.setContentPubTime("");
-            historyNews.setContentPub(historyNew.getPlayerFrom());
+            historyNews.setContentPub("");
             historyNews.setContentPlay(historyNew.getPlayerUrl());
             historyNews.setMediaType(historyNew.getPlayerMediaType());
             historyNews.setContentId(historyNew.getContentID());
             historyNews.setContentDescn(historyNew.getPlayerContentDescn());
-            historyNews.setPlayCount(historyNew.getPlayerNum());
+            historyNews.setPlayCount(historyNew.getPlayCount());
             historyNews.setContentImg(historyNew.getPlayerImage());
             historyNews.setIsPlaying(historyNew.getIsPlaying());
             try {
@@ -988,11 +988,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
             }
             historyNews.setContentShareURL(historyNew.getPlayContentShareUrl());
             historyNews.setContentFavorite(historyNew.getContentFavorite());
-            historyNews.setLocalurl(historyNew.getLocalurl());
-            historyNews.setSequId(historyNew.getSequId());
-            historyNews.setSequName(historyNew.getSequName());
-            historyNews.setSequDesc(historyNew.getSequDesc());
-            historyNews.setSequImg(historyNew.getSequImg());
+            historyNews.setSequId(historyNew.getSeqId());
+            historyNews.setSequName(historyNew.getSeqName());
+            historyNews.setSequDesc(historyNew.getSeqDescn());
+            historyNews.setSequImg(historyNew.getSeqImg());
             historyNews.setContentPlayType(historyNew.getContentPlayType());
             return historyNews;
         } else {
@@ -1002,45 +1001,40 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, XL
 
     // 把数据添加数据库----播放历史数据库
     private void addDb(LanguageSearchInside languageSearchInside) {
-        String playerName = languageSearchInside.getContentName();
-        String playerImage = languageSearchInside.getContentImg();
-        String playerUrl = languageSearchInside.getContentPlay();
+        String playName = languageSearchInside.getContentName();
+        String playImage = languageSearchInside.getContentImg();
+        String playUrl = languageSearchInside.getContentPlay();
         String playerUrI = languageSearchInside.getContentURI();
-        String playerMediaType = languageSearchInside.getMediaType();
-        String playContentShareUrl = languageSearchInside.getContentShareURL();
-        String playerAllTime = languageSearchInside.getPlayerAllTime();
-        String playerInTime = languageSearchInside.getPlayerInTime();
-        String playerContentDesc = languageSearchInside.getContentDescn();
-        String playerNum = languageSearchInside.getPlayCount();
-        String playerZanType = "false";
+        String playMediaType = languageSearchInside.getMediaType();
+        String playShareUrl = languageSearchInside.getContentShareURL();
+        String playAllTime = languageSearchInside.getPlayerAllTime();
+        String playInTime = languageSearchInside.getPlayerInTime();
+        String playContentDesc = languageSearchInside.getContentDescn();
+        String playNum = languageSearchInside.getPlayCount();
+        String playZanType = "false";
         String playerFrom = languageSearchInside.getContentPub();
-        String playerFromId = "";
-        String playerFromUrl = "";
-        String playerAddTime = Long.toString(System.currentTimeMillis());
+        String playAddTime = Long.toString(System.currentTimeMillis());
         String bjUserId = CommonUtils.getUserId(context);
-        String contentFavorite = languageSearchInside.getContentFavorite();
+        String playFavorite = languageSearchInside.getContentFavorite();
         String ContentID = languageSearchInside.getContentId();
-        String localUrl = languageSearchInside.getLocalurl();
-        String sequName = languageSearchInside.getSequName();
-        String sequId = languageSearchInside.getSequId();
-        String sequDesc = languageSearchInside.getSequDesc();
-        String sequImg = languageSearchInside.getSequImg();
-        String ContentPlayType = languageSearchInside.getContentPlayType();
+        String albumName = languageSearchInside.getSequName();
+        String albumId = languageSearchInside.getSequId();
+        String albumDesc = languageSearchInside.getSequDesc();
+        String albumImg = languageSearchInside.getSequImg();
+        String contentPlayType = languageSearchInside.getContentPlayType();
         String IsPlaying = languageSearchInside.getIsPlaying();
         String ColumnNum=languageSearchInside.getColumnNum();
 
-        PlayerHistory history = new PlayerHistory(playerName, playerImage,
-                playerUrl, playerUrI, playerMediaType, playerAllTime,
-                playerInTime, playerContentDesc, playerNum, playerZanType,
-                playerFrom, playerFromId, playerFromUrl, playerAddTime,
-                bjUserId, playContentShareUrl, contentFavorite, ContentID, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying,ColumnNum);
+        PlayerHistory history = new PlayerHistory(contentId, playName, playImage, playUrl, playerUrI, playMediaType, playAllTime,
+                playerFrom, playContentDesc, contentPlayType, IsPlaying, ColumnNum, playShareUrl, playFavorite, playNum,
+                albumName, albumImg, albumDesc, albumId, playInTime, playZanType, playAddTime, bjUserId);
 
         if (mSearchHistoryDao == null)
             mSearchHistoryDao = new SearchPlayerHistoryDao(context);// 如果数据库没有初始化，则初始化 db
-        if (playerMediaType != null && playerMediaType.trim().length() > 0 && playerMediaType.equals("TTS")) {
+        if (playMediaType != null && playMediaType.trim().length() > 0 && playMediaType.equals("TTS")) {
             mSearchHistoryDao.deleteHistoryById(ContentID);
         } else {
-            mSearchHistoryDao.deleteHistory(playerUrl);
+            mSearchHistoryDao.deleteHistory(playUrl);
         }
         mSearchHistoryDao.addHistory(history);
     }

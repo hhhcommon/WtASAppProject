@@ -14,10 +14,19 @@ public class content extends commonContent implements Serializable {
     public String ContentPlay;       // 播放地址 http://hls.qingting.fm/live/339.m3u8?bitrate=64&format=mpegts
     public ArrayList<anchor> ContentPersons;    // 主播
     public album SeqInfo;            // 专辑
-    public String ColumnNum="0";    //
+    public String ColumnNum="0";     //
     public String IsPlaying;         //  正在直播 大城小事
     public String ContentFreqs;      //
     public String ContentURIS;       //
+    public String Userid;            //
+
+    public String getUserid() {
+        return Userid;
+    }
+
+    public void setUserid(String userid) {
+        Userid = userid;
+    }
 
     public String getIsPlaying() {
         return IsPlaying;

@@ -50,7 +50,7 @@ public class SearchHistoryDao {
 		Cursor cursor = null;
 		try {
 			//执行查询语句 返回一个cursor对象
-			cursor = db.rawQuery("Select * from history where user_id like ? ",new String[] { id });
+			cursor = db.rawQuery("Select * from history where user_id like ? order by _id desc ",new String[] { id });
 			//循环遍历cursor中储存的键值对
 			while (cursor.moveToNext()) {
 				//获取表中数据第2列

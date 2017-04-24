@@ -251,43 +251,9 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                 if (newList != null && newList.get(position - 2) != null && newList.get(position - 2).getMediaType() != null) {
                     String MediaType = newList.get(position - 2).getMediaType();
                     if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
-                        String playerName = newList.get(position - 2).getContentName();
-                        String playerImage = newList.get(position - 2).getContentImg();
-                        String playUrl = newList.get(position - 2).getContentPlay();
-                        String playUrI = newList.get(position - 2).getContentURI();
-                        String playContentShareUrl = newList.get(position - 2).getContentShareURL();
-                        String playMediaType = newList.get(position - 2).getMediaType();
-                        String playAllTime = "0";
-                        String playInTime = "0";
-                        String playContentDesc = newList.get(position - 2).getContentDescn();
-                        String playNum = newList.get(position - 2).getPlayCount();
-                        String playZanType = "0";
-                        String playFrom = newList.get(position - 2).getContentPub();
-                        String playFromId = "";
-                        String playFromUrl = "";
-                        String playAddTime = Long.toString(System.currentTimeMillis());
-                        String bjUserId = CommonUtils.getUserId(context);
-                        String ContentFavorite = newList.get(position - 2).getContentFavorite();
-                        String ContentId = newList.get(position - 2).getContentId();
-                        String localUrl = newList.get(position - 2).getLocalurl();
 
-                        String sequName = newList.get(position - 2).getSeqInfo().getContentName();
-                        String sequId = newList.get(position - 2).getSeqInfo().getContentId();
-                        String sequDesc = newList.get(position - 2).getSeqInfo().getContentDescn();
-                        String sequImg = newList.get(position - 2).getSeqInfo().getContentImg();
+                        dbDao.savePlayerHistory(MediaType,newList,position-2);// 保存播放历史
 
-                        String ContentPlayType = newList.get(position - 2).getContentPlayType();
-                        String IsPlaying = newList.get(position - 2).getIsPlaying();
-                        String ColumnNum = newList.get(position - 2).getColumnNum();
-
-                        //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-                        PlayerHistory history = new PlayerHistory(
-                                playerName, playerImage, playUrl, playUrI, playMediaType,
-                                playAllTime, playInTime, playContentDesc, playNum,
-                                playZanType, playFrom, playFromId, playFromUrl, playAddTime, bjUserId, playContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, sequName, sequId, sequDesc, sequImg, ContentPlayType, IsPlaying,ColumnNum);
-                        dbDao.deleteHistory(playUrl);
-                        dbDao.addHistory(history);
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
                         bundle1.putString(StringConstant.TEXT_CONTENT, newList.get(position - 2).getContentName());

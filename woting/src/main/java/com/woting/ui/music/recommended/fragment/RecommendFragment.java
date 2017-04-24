@@ -297,41 +297,8 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                 if (newList != null && newList.get(position) != null && newList.get(position).getMediaType() != null) {
                     String MediaType = newList.get(position).getMediaType();
                     if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
-                        String playerName = newList.get(position).getContentName();
-                        String playerImage = newList.get(position).getContentImg();
-                        String playerUrl = newList.get(position).getContentPlay();
-                        String playerUrI = newList.get(position).getContentURI();
-                        String playerMediaType = newList.get(position).getMediaType();
-                        String playerContentShareUrl = newList.get(position).getContentShareURL();
-                        String playerAllTime = newList.get(position).getContentTimes();
-                        String playerInTime = "0";
-                        String playerContentDesc = newList.get(position).getContentDescn();
-                        String playerNum = newList.get(position).getPlayCount();
-                        String playerZanType = "0";
-                        String playerFrom = newList.get(position).getContentPub();
-                        String playerFromId = "";
-                        String playerFromUrl = "";
-                        String playerAddTime = Long.toString(System.currentTimeMillis());
-                        String bjUserId = CommonUtils.getUserId(context);
-                        String ContentFavorite = newList.get(position).getContentFavorite();
-                        String ContentId = newList.get(position).getContentId();
-                        String localUrl = newList.get(position).getLocalurl();
 
-                        String seqName = newList.get(position).getSeqInfo().getContentName();
-                        String seqId = newList.get(position).getSeqInfo().getContentId();
-                        String seqDesc = newList.get(position).getSeqInfo().getContentDescn();
-                        String seqImg = newList.get(position).getSeqInfo().getContentImg();
-                        String ContentPlayType = newList.get(position).getContentPlayType();
-                        String IsPlaying = newList.get(position).getIsPlaying();
-                        String ColumnNum = newList.get(position).getColumnNum();
-                        // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-                        PlayerHistory history = new PlayerHistory(
-                                playerName, playerImage, playerUrl, playerUrI, playerMediaType,
-                                playerAllTime, playerInTime, playerContentDesc, playerNum,
-                                playerZanType, playerFrom, playerFromId, playerFromUrl, playerAddTime, bjUserId, playerContentShareUrl,
-                                ContentFavorite, ContentId, localUrl, seqName, seqId, seqDesc, seqImg, ContentPlayType, IsPlaying, ColumnNum);
-                        dbDao.deleteHistory(playerUrl);
-                        dbDao.addHistory(history);
+                        dbDao.savePlayerHistory(MediaType,newList,position);// 保存播放历史
 
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
@@ -354,6 +321,8 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             }
         });
     }
+
+
 
     @Override
     public void onDestroyView() {

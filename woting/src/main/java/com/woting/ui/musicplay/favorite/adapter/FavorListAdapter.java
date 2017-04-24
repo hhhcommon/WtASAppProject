@@ -79,6 +79,7 @@ public class FavorListAdapter extends BaseAdapter {
         }
         content lists = list.get(position);
         if (lists.getMediaType().equals("RADIO")) {
+
             holder.imageLast.setVisibility(View.GONE);
             holder.tvLast.setVisibility(View.GONE);
             holder.imageNum.setVisibility(View.GONE);
@@ -105,11 +106,11 @@ public class FavorListAdapter extends BaseAdapter {
                 }
                 final String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
                 final String c_url = url;
-
                 // 加载图片
                 AssembleImageUrlUtils.loadImage(_url, c_url, holder.imageview_rankimage, IntegerConstant.TYPE_LIST);
             }
         } else if (lists.getMediaType().equals("AUDIO")) {
+
             holder.textPlaying.setVisibility(View.GONE);
             holder.imageNum.setVisibility(View.GONE);
             if (lists.getContentName() == null || lists.getContentName().equals("")) {
@@ -117,12 +118,16 @@ public class FavorListAdapter extends BaseAdapter {
             } else {
                 holder.textview_ranktitle.setText(lists.getContentName());
             }
-
-            String contentPer = lists.getContentPersons().get(0).getPerName();
-            if (contentPer == null || contentPer.equals("")) {
+            String seqName = null;
+            try {
+                seqName = lists.getSeqInfo().getContentName();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (seqName == null || seqName.equals("") || seqName.equals("null")) {
                 holder.textview_rankplaying.setText("未知");
             } else {
-                holder.textview_rankplaying.setText(contentPer);
+                holder.textview_rankplaying.setText(seqName);
             }
             if (lists.getContentImg() == null || lists.getContentImg().equals("") || lists.getContentImg().equals("null")
                     || lists.getContentImg().trim().equals("")) {
@@ -136,17 +141,9 @@ public class FavorListAdapter extends BaseAdapter {
                     url = GlobalConfig.imageurl + lists.getContentImg();
                 }
                 String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
-
                 // 加载图片
                 AssembleImageUrlUtils.loadImage(_url, url, holder.imageview_rankimage, IntegerConstant.TYPE_LIST);
             }
-
-            if (lists.getContentPub() == null || lists.getContentPub().equals("") || lists.getContentPub().equals("null")) {
-                holder.textview_rankplaying.setText("未知");
-            } else {
-                holder.textview_rankplaying.setText(lists.getContentPub());
-            }
-
             // 节目时长
             if (lists.getContentTimes() == null || lists.getContentTimes().equals("") || lists.getContentTimes().equals("null")) {
                 holder.tvLast.setText(context.getString(R.string.play_time));
@@ -180,17 +177,17 @@ public class FavorListAdapter extends BaseAdapter {
                 }
                 final String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
                 final String c_url = url;
-
                 // 加载图片
                 AssembleImageUrlUtils.loadImage(_url, c_url, holder.imageview_rankimage, IntegerConstant.TYPE_LIST);
             }
-
-            if (lists.getContentName() == null || lists.getContentName().equals("") || lists.getContentName().equals("null")) {
-                holder.textview_rankplaying.setText("未知");
-            } else {
-                holder.textview_rankplaying.setText(lists.getContentName());
+            String anchor;
+            try {
+                anchor = lists.getContentPersons().get(0).getPerName();
+            } catch (Exception e) {
+                e.printStackTrace();
+                anchor="未知";
             }
-
+            holder.textview_rankplaying.setText(anchor);
             if (lists.getContentSubCount() == null || lists.getContentSubCount().equals("")
                     || lists.getContentSubCount().equals("null")) {
                 holder.tvLast.setText("0" + "集");
@@ -220,11 +217,9 @@ public class FavorListAdapter extends BaseAdapter {
                 }
                 final String _url = AssembleImageUrlUtils.assembleImageUrl180(url);
                 final String c_url = url;
-
                 // 加载图片
                 AssembleImageUrlUtils.loadImage(_url, c_url, holder.imageview_rankimage, IntegerConstant.TYPE_LIST);
             }
-
             if (lists.getContentPub() == null || lists.getContentPub().equals("") || lists.getContentPub().equals("null")) {
                 holder.textview_rankplaying.setText("未知");
             } else {
