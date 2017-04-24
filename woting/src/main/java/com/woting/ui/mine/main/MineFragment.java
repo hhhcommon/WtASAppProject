@@ -52,19 +52,19 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.photocut.PhotoCutActivity;
 import com.woting.ui.common.qrcodes.EWMShowActivity;
-import com.woting.ui.download.main.DownloadFragment;
+import com.woting.ui.musicplay.download.main.DownloadFragment;
 import com.woting.ui.interphone.model.UserInviteMeInside;
-import com.woting.ui.mine.favorite.main.FavoriteFragment;
+import com.woting.ui.musicplay.favorite.main.FavoriteFragment;
 import com.woting.ui.mine.hardware.HardwareIntroduceActivity;
 import com.woting.ui.mine.model.UserPortaitInside;
 import com.woting.ui.mine.myupload.MyUploadActivity;
 import com.woting.ui.mine.person.updatepersonnews.UpdatePersonActivity;
 import com.woting.ui.mine.person.updatepersonnews.model.UpdatePerson;
-import com.woting.ui.mine.playhistory.main.PlayHistoryFragment;
+import com.woting.ui.musicplay.playhistory.main.PlayHistoryFragment;
 import com.woting.ui.mine.set.SetActivity;
 import com.woting.ui.mine.shapeapp.ShapeAppActivity;
-import com.woting.ui.mine.subscriber.main.SubscriberListFragment;
-import com.woting.ui.picture.ViewBigPictureActivity;
+import com.woting.ui.musicplay.subscriber.main.SubscriberListFragment;
+import com.woting.ui.common.picture.ViewBigPictureActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -496,7 +496,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 if (resultCode == 1) {
                     imageNum = 1;
                     photoCutAfterImagePath = data.getStringExtra("return");
-                    dialog = DialogUtils.Dialogph(context, "头像上传中");
+                    dialog = DialogUtils.Dialog(context);
                     dealt();
                 }
                 break;

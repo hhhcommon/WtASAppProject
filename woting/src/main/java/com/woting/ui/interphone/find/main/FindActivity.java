@@ -73,7 +73,7 @@ public class FindActivity extends AppBaseActivity implements OnClickListener {
         setView();
         if (type != null && !type.equals("")) {
             if (type.equals("group")) {
-                et_news.setHint("群名称");
+                et_news.setHint("群名称/群号");
             }
         }
         audioMgr = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);

@@ -32,6 +32,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.mine.feedback.activity.FeedbackActivity;
+import com.woting.ui.mine.feedback.feedbacklist.activity.FeedbackListActivity;
 import com.woting.ui.mine.person.modifypassword.ModifyPasswordActivity;
 import com.woting.ui.mine.person.phonecheck.PhoneCheckActivity;
 import com.woting.ui.mine.set.about.AboutActivity;
@@ -142,7 +143,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 break;
             case R.id.lin_zhuxiao:          // 注销登录
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                    dialog = DialogUtils.Dialogph(context, "正在获取数据");
+                    dialog = DialogUtils.Dialog(context);
                     sendRequestLogout();    // 清空数据
                 } else {
                     ToastUtils.show_short(context, "网络失败，请检查网络");
@@ -166,11 +167,11 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 startActivity(new Intent(context, SecretSetActivity.class));
                 break;
             case R.id.lin_feedback:         // 意见反馈
-                startActivity(new Intent(context, FeedbackActivity.class));
+                startActivity(new Intent(context, FeedbackListActivity.class));
                 break;
             case R.id.lin_update:           // 检查更新
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                    dialog = DialogUtils.Dialogph(context, "通讯中");
+                    dialog = DialogUtils.Dialog(context);
                     sendRequestUpdate();
                 } else {
                     ToastUtils.show_short(context, "网络失败，请检查网络");
@@ -422,7 +423,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
         @Override
         protected void onPreExecute() {
             clearCacheDialog.dismiss();
-            dialog = DialogUtils.Dialogph(context, "正在清除缓存");
+            dialog = DialogUtils.Dialog(context);
         }
 
         @Override

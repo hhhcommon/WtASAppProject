@@ -163,7 +163,7 @@ public class PhoneCheckActivity extends AppActivity implements OnClickListener {
             ToastUtils.show_always(context, "请输入正确的手机号码!");
             return;
         }
-        dialog = DialogUtils.Dialogph(context, "正在获取验证码");
+        dialog = DialogUtils.Dialog(context);
         sendVerificationCode();                                         // 发送网络请求 获取验证码
     }
 
@@ -173,7 +173,7 @@ public class PhoneCheckActivity extends AppActivity implements OnClickListener {
          verificationCode = editVerificationCode.getText().toString().trim();
         if (phoneNumber != null && !phoneNumber.equals("") && phoneNumber.length() == 11) {
             if (verificationCode != null && !verificationCode.equals("") && verificationCode.length() == 6) {
-                dialog = DialogUtils.Dialogph(context, "正在验证手机号");
+                dialog = DialogUtils.Dialog(context);
                 sendRequest();
             } else {
                 ToastUtils.show_always(context, "请输入正确的验证码!");
@@ -261,7 +261,7 @@ public class PhoneCheckActivity extends AppActivity implements OnClickListener {
                 try {
                     String returnType = result.getString("ReturnType");
                     if (returnType != null && returnType.equals("1001")) {
-                        dialog = DialogUtils.Dialogph(context, "正在绑定手机号");
+                        dialog = DialogUtils.Dialog(context);
                         sendBinding();
                     } else if (returnType != null && returnType.equals("T")) {
                         ToastUtils.show_always(context, "数据出错了,请稍后再试");

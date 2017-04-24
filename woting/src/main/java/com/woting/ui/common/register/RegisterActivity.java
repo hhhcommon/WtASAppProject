@@ -245,7 +245,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
             return;
         }
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在验证手机号");
+            dialog = DialogUtils.Dialog(context);
             sendRequest();
         } else {
             ToastUtils.show_always(context, "网络失败，请检查网络");
@@ -271,7 +271,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {
                         Log.i(viewTag, "1001");
-                        dialog = DialogUtils.Dialogph(context, "注册中");
+                        dialog = DialogUtils.Dialog(context);
                         send();
                     } else if (ReturnType != null && ReturnType.equals("T")) {
                         Log.i(viewTag, "T");
@@ -399,7 +399,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
             return;
         }
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在验证手机号");
+            dialog = DialogUtils.Dialog(context);
             getVerifyCode();
         } else {
             ToastUtils.show_always(context, "网络失败，请检查网络");

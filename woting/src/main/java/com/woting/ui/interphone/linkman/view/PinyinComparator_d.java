@@ -1,12 +1,12 @@
 package com.woting.ui.interphone.linkman.view;
 
-import com.woting.ui.home.model.CatalogName;
+import com.woting.ui.music.citylist.cityModel.secondaryCity;
 
 import java.util.Comparator;
 
-public class PinyinComparator_d implements Comparator<CatalogName> {
+public class PinyinComparator_d implements Comparator<secondaryCity> {
 
-	public int compare(CatalogName o1, CatalogName o2) {
+	public int compare(secondaryCity o1, secondaryCity o2) {
 		if (o1.getSortLetters().equals("@")
 				|| o2.getSortLetters().equals("#")) {
 			return -1;

@@ -1,10 +1,12 @@
 package com.woting.ui.interphone.group.groupcontrol.setgroupmanager;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,6 +21,7 @@ import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.common.model.UserInfo;
+import com.woting.ui.interphone.group.groupcontrol.addgroupmanager.AddGroupManagerActivity;
 import com.woting.ui.interphone.group.groupcontrol.setgroupmanager.adapter.SetGroupManagerAdapter;
 
 import org.json.JSONException;
@@ -86,7 +89,6 @@ public class SetGroupManagerActivity extends AppBaseActivity implements OnClickL
         tipView = (TipView) findViewById(R.id.tip_view);
         tipView.setWhiteClick(this);
 
-
         groupId = getIntent().getStringExtra("GroupId");
         managerList=(String [])getIntent().getSerializableExtra("GroupManager");
         tempList=(List<GroupInfo>)getIntent().getSerializableExtra("GroupManagerData");
@@ -136,6 +138,13 @@ public class SetGroupManagerActivity extends AppBaseActivity implements OnClickL
                 adapter.notifyDataSetChanged();
             }
         });
+        lv_main.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ToastUtils.show_always(context,mainList.get(position).getNickName());
+            }
+        });
+
     }
 
     @Override
@@ -167,7 +176,7 @@ public class SetGroupManagerActivity extends AppBaseActivity implements OnClickL
                     if(resultList.size()>0){
                         //调接口
                         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                            dialog = DialogUtils.Dialogph(context, "正在删除群成员");
+                            dialog = DialogUtils.Dialog(context);
                             send();
                         } else {
                             tipView.setVisibility(View.VISIBLE);
@@ -175,6 +184,17 @@ public class SetGroupManagerActivity extends AppBaseActivity implements OnClickL
                         }
                     }
                 }
+
+                break;
+            case R.id.add_manager:
+                if(!TextUtils.isEmpty(groupId)){
+                    Intent intent=new Intent(this, AddGroupManagerActivity.class);
+                    intent.putExtra("GroupId",groupId);
+                    startActivityForResult(intent,1);
+                }else{
+                    ToastUtils.show_always(context,"未获取到组Id信息，请检查网络或返回上一级页面重试");
+                }
+
                 break;
         }
     }
@@ -182,8 +202,9 @@ public class SetGroupManagerActivity extends AppBaseActivity implements OnClickL
     private void send() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
+            String s=resultList.toString();
             jsonObject.put("GroupId", groupId);
-            jsonObject.put("DelAdminUserIds", resultList.toString());
+            jsonObject.put("DelAdminUserIds", s.substring(1,s.length()-1));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -200,14 +221,20 @@ public class SetGroupManagerActivity extends AppBaseActivity implements OnClickL
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (ReturnType != null && ReturnType.equals("1001")) {
-                    ToastUtils.show_always(context,"已经删除了该管理员");
+                if (ReturnType != null) {
+                    if(ReturnType.equals("1001")){
+                        ToastUtils.show_always(context,"已经删除了该管理员");
+                        setResult(1);
+                        finish();
+                    }else if(ReturnType.equals("1005")){
+                        ToastUtils.show_always(context,"您不能删除自己的管理权限");
+                    }else{
+                        ToastUtils.show_always(context,"删除该管理员失败");
+                    }
                 } else {
-                    tipView.setVisibility(View.VISIBLE);
-                    tipView.setTipView(TipView.TipStatus.NO_DATA, "");
+                    ToastUtils.show_always(context,"返回数据异常，请检查网络或者返回上一级尝试");
                 }
             }
-
             @Override
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
@@ -218,6 +245,17 @@ public class SetGroupManagerActivity extends AppBaseActivity implements OnClickL
         });
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case 1:
+                setResult(1);
+                finish();
+                break;
+        }
+    }
 
     @Override
     protected void onDestroy() {

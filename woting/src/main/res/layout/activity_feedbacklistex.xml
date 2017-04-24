@@ -5,11 +5,11 @@
     android:background="@color/dinglan_orange"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/wt_dinglan_high" >
+        android:layout_height="@dimen/wt_dinglan_high">
 
         <ImageView
             android:id="@+id/head_left_btn"
@@ -18,25 +18,68 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="反馈记录"
             android:layout_centerInParent="true"
+            android:text="反馈记录"
             android:textColor="@color/WHITE"
             android:textSize="@dimen/activity_head_center_s" />
 
     </RelativeLayout>
 
-    <com.woting.common.widgetui.TipView
-        android:id="@+id/tip_view"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:background="@color/app_bg">
 
-    <ExpandableListView
-        android:id="@+id/exlv_opinionlist"
-        android:background="@color/white"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none" 
-        android:divider="@null"/>
+        <com.woting.common.widgetui.TipView
+            android:id="@+id/tip_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
 
+        <ExpandableListView
+            android:id="@+id/exlv_opinionlist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/app_bg"
+            android:layout_marginBottom="55dp"
+            android:divider="@null"
+            android:scrollbars="none" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="bottom"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:background="@color/app_bg"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/input_sms"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dip"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:hint="请直接输入您的问题"
+                android:maxLines="6"
+                android:padding="8dip"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/send_sms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_gravity="bottom"
+                android:layout_marginRight="15dp"
+                android:background="@color/dinglan_orange"
+                android:padding="8dp"
+                android:text="发 送"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

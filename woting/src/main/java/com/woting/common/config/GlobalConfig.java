@@ -2,8 +2,8 @@ package com.woting.common.config;
 
 import android.os.Environment;
 
-import com.woting.ui.home.model.CatalogName;
-import com.woting.ui.home.player.main.model.LanguageSearchInside;
+import com.woting.ui.music.citylist.cityModel.secondaryCity;
+import com.woting.ui.musicplay.play.model.LanguageSearchInside;
 import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.common.model.UserInfo;
 
@@ -48,12 +48,12 @@ public class GlobalConfig {
     public static String upLoadCache = "/WTFM/APP/";// app安装地址
 
     //缓存的城市列表
-    public static List<CatalogName> CityCatalogList;
+    public static List<secondaryCity> CityCatalogList;
 
     /**
      * 数据库版本号
      */
-    public static final int dbVersionCode = 54;
+    public static final int dbVersionCode = 56;
     /**
      * 是否活跃状态，有活跃状态才能播放声音，否则即使收到音频包也不播放
      */

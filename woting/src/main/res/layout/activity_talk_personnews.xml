@@ -142,7 +142,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:text="10000"
-
                 android:textColor="@color/WHITE" />
 
             <EditText
@@ -171,12 +170,79 @@
             android:background="@color/WHITE"
             android:orientation="vertical">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/person_color"
+                android:gravity="left|center"
+                android:visibility="visible"
+                >
+
+                <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dip"
+                android:text="手机号"
+                android:textColor="@color/beijing"
+                android:textSize="@dimen/wt_login_text_wjmm"
+                android:id="@+id/textView" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="15dip"
+                    android:text="1571****45"
+                    android:gravity="center"
+                    android:textColor="@color/group_4b"
+                    android:textSize="@dimen/wt_login_text_wjmm" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="15dp"
+                    android:background="@color/app_bg"
+                    android:layout_below="@+id/textView"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/person_color"
+                android:gravity="left|center"
+                android:visibility="visible"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="15dip"
+                    android:text="签名"
+                    android:textColor="@color/beijing"
+                    android:textSize="@dimen/wt_login_text_wjmm"
+                  />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="15dip"
+                    android:text="1571****45"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/wt_login_text_wjmm" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+
             <LinearLayout
                 android:id="@+id/lin_ewm"
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:background="@drawable/person_color"
-                android:gravity="left|center">
+                android:gravity="left|center"
+                android:visibility="gone"
+                >
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -212,7 +278,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/app_bg" />
-        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout

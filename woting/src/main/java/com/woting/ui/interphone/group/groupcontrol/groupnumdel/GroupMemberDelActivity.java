@@ -72,7 +72,7 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
         groupId = getIntent().getStringExtra("GroupId");
         if (groupId != null && !groupId.equals("")) {
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
+                dialog = DialogUtils.Dialog(context);
                 send();
             } else {
                 tipView.setVisibility(View.VISIBLE);
@@ -118,7 +118,7 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
         groupId = getIntent().getStringExtra("GroupId");
         if (groupId != null && !groupId.equals("")) {
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
+                dialog = DialogUtils.Dialog(context);
                 send();
             } else {
                 tipView.setVisibility(View.VISIBLE);
@@ -267,7 +267,7 @@ public class GroupMemberDelActivity extends AppBaseActivity implements OnClickLi
                 }
                 if (delList != null && delList.size() > 0) {
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(context, "正在发送邀请");
+                        dialog = DialogUtils.Dialog(context);
                         sendMemberDelete();
                     } else {
                         ToastUtils.show_always(context, "网络失败，请检查网络");

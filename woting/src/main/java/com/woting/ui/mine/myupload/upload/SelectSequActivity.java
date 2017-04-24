@@ -20,8 +20,8 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.home.program.fmlist.model.RankInfo;
 import com.woting.ui.mine.myupload.adapter.MyUploadListAdapter;
+import com.woting.ui.model.content;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class SelectSequActivity extends AppBaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener, TipView.WhiteViewClick {
     private MyUploadListAdapter adapter;
-    private List<RankInfo> list;
+    private List<content> list;
 
     private Dialog dialog;
     private ListView mListView;// 展示专辑列表
@@ -47,7 +47,7 @@ public class SelectSequActivity extends AppBaseActivity implements View.OnClickL
     @Override
     public void onWhiteViewClick() {
         if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在获取列表...");
+            dialog = DialogUtils.Dialog(context);
             sendRequest();
         } else {
             tipView.setVisibility(View.VISIBLE);
@@ -75,7 +75,7 @@ public class SelectSequActivity extends AppBaseActivity implements View.OnClickL
         mListView.setOnItemClickListener(this);
 
         if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在获取列表...");
+            dialog = DialogUtils.Dialog(context);
             sendRequest();
         } else {
             tipView.setVisibility(View.VISIBLE);
@@ -92,7 +92,7 @@ public class SelectSequActivity extends AppBaseActivity implements View.OnClickL
             case R.id.text_confirm:// 确定
                 if(list != null && list.size() > 0) {
                     Intent intent = new Intent();
-                    intent.putExtra("SEQU_NAME", list.get(index).getSequId());
+                    intent.putExtra("SEQU_NAME", list.get(index).getSeqInfo().getContentId());
                     setResult(RESULT_OK, intent);
                 }
                 finish();
@@ -137,7 +137,7 @@ public class SelectSequActivity extends AppBaseActivity implements View.OnClickL
                     Log.w("ReturnType", "ReturnType -- > > " + ReturnType);
 
                     if (ReturnType != null && ReturnType.equals("1001")) {
-                        list = new Gson().fromJson(result.getString("ResultList"), new TypeToken<List<RankInfo>>() {}.getType());
+                        list = new Gson().fromJson(result.getString("ResultList"), new TypeToken<List<content>>() {}.getType());
                         mListView.setAdapter(adapter = new MyUploadListAdapter(context, list, true));
                         tipView.setVisibility(View.GONE);
                     } else {

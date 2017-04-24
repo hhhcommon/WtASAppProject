@@ -61,7 +61,7 @@ public class HelpActivity extends AppBaseActivity implements OnClickListener, Ti
 
     private void setWeb() {
         tipView.setVisibility(View.GONE);
-        dialog = DialogUtils.Dialogph(context, "正在加载");
+        dialog = DialogUtils.Dialog(context);
         String url = GlobalConfig.wthelpUrl;
         WebSettings setting = webview.getSettings();
         setting.setJavaScriptEnabled(true);                               // 支持js

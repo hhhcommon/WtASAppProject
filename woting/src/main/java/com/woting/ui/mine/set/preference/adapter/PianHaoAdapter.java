@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.common.widgetui.MyGridView;
-import com.woting.ui.home.program.fenlei.model.FenLei;
+import com.woting.ui.music.classify.model.FenLei;
 import com.woting.ui.mine.set.preference.activity.PreferenceActivity;
 
 import java.util.List;

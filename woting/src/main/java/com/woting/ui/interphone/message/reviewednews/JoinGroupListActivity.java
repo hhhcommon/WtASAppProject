@@ -57,7 +57,7 @@ public class JoinGroupListActivity extends AppBaseActivity implements OnClickLis
     public void onWhiteViewClick() {
         if (groupId != null && !groupId.equals("")) {
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
+                dialog = DialogUtils.Dialog(context);
                 send();
             } else {
                 tipView.setVisibility(View.VISIBLE);
@@ -80,7 +80,7 @@ public class JoinGroupListActivity extends AppBaseActivity implements OnClickLis
 
         if (groupId != null && !groupId.equals("")) {
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
+                dialog = DialogUtils.Dialog(context);
                 send();
             } else {
                 tipView.setVisibility(View.VISIBLE);
@@ -196,7 +196,7 @@ public class JoinGroupListActivity extends AppBaseActivity implements OnClickLis
             @Override
             public void tongyi(int position) {
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                    dialog = DialogUtils.Dialogph(context, "正在获取数据");
+                    dialog = DialogUtils.Dialog(context);
                     sendRequest();
                 } else {
                     ToastUtils.show_always(context, "网络连接失败，请稍后重试");

@@ -43,7 +43,7 @@
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:ellipsize="end"
-                    android:hint="昵称/手机号"
+                    android:hint="昵称/手机号/用户号"
                     android:singleLine="true"
                     android:layout_marginLeft="6dp"
                     android:textColorHint="@color/beijing"

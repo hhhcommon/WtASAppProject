@@ -18,433 +18,357 @@ import android.view.View.OnTouchListener;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
-public class ClipZoomImageView extends ImageView implements
-		OnScaleGestureListener, OnTouchListener,
-		ViewTreeObserver.OnGlobalLayoutListener{
-	private static final String TAG = ClipZoomImageView.class.getSimpleName();
-	public static float SCALE_MAX = 4.0f;
-	private static float SCALE_MID = 2.0f;
+import com.woting.common.util.PhoneMessage;
 
-	/**
-	 * 初始化时的缩放比例，如果图片宽或高大于屏幕，此值将小于0
-	 */
-	private float initScale = 1.0f;
-	private boolean once = true;
+/**
+ * 裁剪
+ * 作者：xinlong on 2016/11/6 21:18
+ * 邮箱：645700751@qq.com
+ */
+public class ClipZoomImageView extends ImageView implements OnScaleGestureListener, OnTouchListener,
+        ViewTreeObserver.OnGlobalLayoutListener {
 
-	/**
-	 * 用于存放矩阵的9个值
-	 */
-	private final float[] matrixValues = new float[9];
+    private static final String TAG = ClipZoomImageView.class.getSimpleName();
+    public static float SCALE_MAX = 4.0f;
+    private static float SCALE_MID = 2.0f;
+    private float initScale = 1.0f;                                         // 初始化时的缩放比例，如果图片宽或高大于屏幕，此值将小于0
+    private boolean once = true;
+    private final float[] matrixValues = new float[9];                      // 用于存放矩阵的9个值
+    private ScaleGestureDetector mScaleGestureDetector = null;              // 缩放的手势检测
+    private final Matrix mScaleMatrix = new Matrix();
+    private GestureDetector mGestureDetector;                               // 用于双击检测
+    private boolean isAutoScale;
+    private float mLastX;
+    private float mLastY;
+    private boolean isCanDrag;
+    private int lastPointerCount;
+    private int mHorizontalPadding;                                          // 水平方向与View的边距
+    private int mVerticalPadding;                                            // 垂直方向与View的边距
+    private double mTouchSlop;
 
-	/**
-	 * 缩放的手势检测
-	 */
-	private ScaleGestureDetector mScaleGestureDetector = null;
-	private final Matrix mScaleMatrix = new Matrix();
+    public ClipZoomImageView(Context context) {
+        this(context, null);
+    }
 
-	/**
-	 * 用于双击检测
-	 */
-	private GestureDetector mGestureDetector;
-	private boolean isAutoScale;
+    public ClipZoomImageView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        setScaleType(ScaleType.MATRIX);
+        mGestureDetector = new GestureDetector(context,
+                new SimpleOnGestureListener() {
+                    @Override
+                    public boolean onDoubleTap(MotionEvent e) {
+                        if (isAutoScale == true) return true;
+                        float x = e.getX();
+                        float y = e.getY();
+                        if (getScale() < SCALE_MID) {
+                            ClipZoomImageView.this.postDelayed(new AutoScaleRunnable(SCALE_MID, x, y), 16);
+                            isAutoScale = true;
+                        } else {
+                            ClipZoomImageView.this.postDelayed(new AutoScaleRunnable(initScale, x, y), 16);
+                            isAutoScale = true;
+                        }
+                        return true;
+                    }
+                });
+        mScaleGestureDetector = new ScaleGestureDetector(context, this);
+        this.setOnTouchListener(this);
+    }
 
-	private int mTouchSlop;
+    /*
+     * 自动缩放的任务
+     */
+    private class AutoScaleRunnable implements Runnable {
+        static final float BIGGER = 1.07f;
+        static final float SMALLER = 0.93f;
+        private float mTargetScale;
+        private float tmpScale;
 
-	private float mLastX;
-	private float mLastY;
+        /**
+         * 缩放的中心
+         */
+        private float x;
+        private float y;
 
-	private boolean isCanDrag;
-	private int lastPointerCount;
+        /**
+         * 传入目标缩放值，根据目标值与当前值，判断应该放大还是缩小
+         *
+         * @param targetScale
+         */
+        public AutoScaleRunnable(float targetScale, float x, float y) {
+            this.mTargetScale = targetScale;
+            this.x = x;
+            this.y = y;
+            if (getScale() < mTargetScale) {
+                tmpScale = BIGGER;
+            } else {
+                tmpScale = SMALLER;
+            }
 
-	public ClipZoomImageView(Context context){
-		this(context, null);
-	}
+        }
 
-	public ClipZoomImageView(Context context, AttributeSet attrs){
-		super(context, attrs);
-		setScaleType(ScaleType.MATRIX);
-		mGestureDetector = new GestureDetector(context,
-				new SimpleOnGestureListener(){
-					@Override
-					public boolean onDoubleTap(MotionEvent e){
-						if (isAutoScale == true)
-							return true;
-						float x = e.getX();
-						float y = e.getY();
-						if (getScale() < SCALE_MID){
-							ClipZoomImageView.this.postDelayed(
-									new AutoScaleRunnable(SCALE_MID, x, y), 16);
-							isAutoScale = true;
-						} else{
-							ClipZoomImageView.this.postDelayed(
-									new AutoScaleRunnable(initScale, x, y), 16);
-							isAutoScale = true;
-						}
-						return true;
-					}
-				});
-		mScaleGestureDetector = new ScaleGestureDetector(context, this);
-		this.setOnTouchListener(this);
-	}
+        @Override
+        public void run() {
+            // 进行缩放
+            mScaleMatrix.postScale(tmpScale, tmpScale, x, y);
+            checkBorder();
+            setImageMatrix(mScaleMatrix);
 
-	/**
-	 * 自动缩放的任务
-	 */
-	private class AutoScaleRunnable implements Runnable{
-		static final float BIGGER = 1.07f;
-		static final float SMALLER = 0.93f;
-		private float mTargetScale;
-		private float tmpScale;
+            final float currentScale = getScale();
+            // 如果值在合法范围内，继续缩放
+            if (((tmpScale > 1f) && (currentScale < mTargetScale)) || ((tmpScale < 1f) && (mTargetScale < currentScale))) {
+                ClipZoomImageView.this.postDelayed(this, 16);
+            } else {
+                // 设置为目标的缩放比例
+                final float deltaScale = mTargetScale / currentScale;
+                mScaleMatrix.postScale(deltaScale, deltaScale, x, y);
+                checkBorder();
+                setImageMatrix(mScaleMatrix);
+                isAutoScale = false;
+            }
 
-		/**
-		 * 缩放的中心
-		 */
-		private float x;
-		private float y;
+        }
+    }
 
-		/**
-		 * 传入目标缩放值，根据目标值与当前值，判断应该放大还是缩小
-		 * 
-		 * @param targetScale
-		 */
-		public AutoScaleRunnable(float targetScale, float x, float y){
-			this.mTargetScale = targetScale;
-			this.x = x;
-			this.y = y;
-			if (getScale() < mTargetScale){
-				tmpScale = BIGGER;
-			} else{
-				tmpScale = SMALLER;
-			}
+    @Override
+    public boolean onScale(ScaleGestureDetector detector) {
+        float scale = getScale();
+        float scaleFactor = detector.getScaleFactor();
 
-		}
+        if (getDrawable() == null) return true;
 
-		@Override
-		public void run(){
-			// 进行缩放
-			mScaleMatrix.postScale(tmpScale, tmpScale, x, y);
-			checkBorder();
-			setImageMatrix(mScaleMatrix);
+        /**
+         * 缩放的范围控制
+         */
+        if ((scale < SCALE_MAX && scaleFactor > 1.0f) || (scale > initScale && scaleFactor < 1.0f)) {
+            /**
+             * 最大值最小值判断
+             */
+            if (scaleFactor * scale < initScale) {
+                scaleFactor = initScale / scale;
+            }
+            if (scaleFactor * scale > SCALE_MAX) {
+                scaleFactor = SCALE_MAX / scale;
+            }
+            /**
+             * 设置缩放比例
+             */
+            mScaleMatrix.postScale(scaleFactor, scaleFactor, detector.getFocusX(), detector.getFocusY());
+            checkBorder();
+            setImageMatrix(mScaleMatrix);
+        }
+        return true;
 
-			final float currentScale = getScale();
-			// 如果值在合法范围内，继续缩放
-			if (((tmpScale > 1f) && (currentScale < mTargetScale))
-					|| ((tmpScale < 1f) && (mTargetScale < currentScale))){
-				ClipZoomImageView.this.postDelayed(this, 16);
-			} else
-			// 设置为目标的缩放比例
-			{
-				final float deltaScale = mTargetScale / currentScale;
-				mScaleMatrix.postScale(deltaScale, deltaScale, x, y);
-				checkBorder();
-				setImageMatrix(mScaleMatrix);
-				isAutoScale = false;
-			}
+    }
 
-		}
-	}
+    /**
+     * 根据当前图片的Matrix获得图片的范围
+     *
+     * @return
+     */
+    private RectF getMatrixRectF() {
+        Matrix matrix = mScaleMatrix;
+        RectF rect = new RectF();
+        Drawable d = getDrawable();
+        if (null != d) {
+            rect.set(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+            matrix.mapRect(rect);
+        }
+        return rect;
+    }
 
-	@Override
-	public boolean onScale(ScaleGestureDetector detector){
-		float scale = getScale();
-		float scaleFactor = detector.getScaleFactor();
+    @Override
+    public boolean onScaleBegin(ScaleGestureDetector detector) {
+        return true;
+    }
 
-		if (getDrawable() == null)
-			return true;
+    @Override
+    public void onScaleEnd(ScaleGestureDetector detector) {
+    }
 
-		/**
-		 * 缩放的范围控制
-		 */
-		if ((scale < SCALE_MAX && scaleFactor > 1.0f)
-				|| (scale > initScale && scaleFactor < 1.0f))
-		{
-			/**
-			 * 最大值最小值判断
-			 */
-			if (scaleFactor * scale < initScale)
-			{
-				scaleFactor = initScale / scale;
-			}
-			if (scaleFactor * scale > SCALE_MAX)
-			{
-				scaleFactor = SCALE_MAX / scale;
-			}
-			/**
-			 * 设置缩放比例
-			 */
-			mScaleMatrix.postScale(scaleFactor, scaleFactor,
-					detector.getFocusX(), detector.getFocusY());
-			checkBorder();
-			setImageMatrix(mScaleMatrix);
-		}
-		return true;
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (mGestureDetector.onTouchEvent(event)) return true;
+        mScaleGestureDetector.onTouchEvent(event);
 
-	}
+        float x = 0, y = 0;
+        // 拿到触摸点的个数
+        final int pointerCount = event.getPointerCount();
+        // 得到多个触摸点的x与y均值
+        for (int i = 0; i < pointerCount; i++) {
+            x += event.getX(i);
+            y += event.getY(i);
+        }
+        x = x / pointerCount;
+        y = y / pointerCount;
 
-	/**
-	 * 根据当前图片的Matrix获得图片的范围
-	 * 
-	 * @return
-	 */
-	private RectF getMatrixRectF()
-	{
-		Matrix matrix = mScaleMatrix;
-		RectF rect = new RectF();
-		Drawable d = getDrawable();
-		if (null != d)
-		{
-			rect.set(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-			matrix.mapRect(rect);
-		}
-		return rect;
-	}
+        /**
+         * 每当触摸点发生变化时，重置mLasX , mLastY
+         */
+        if (pointerCount != lastPointerCount) {
+            isCanDrag = false;
+            mLastX = x;
+            mLastY = y;
+        }
 
-	@Override
-	public boolean onScaleBegin(ScaleGestureDetector detector)
-	{
-		return true;
-	}
+        lastPointerCount = pointerCount;
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_MOVE:
+                float dx = x - mLastX;
+                float dy = y - mLastY;
 
-	@Override
-	public void onScaleEnd(ScaleGestureDetector detector)
-	{
-	}
+                if (!isCanDrag) {
+                    isCanDrag = isCanDrag(dx, dy);
+                }
+                if (isCanDrag) {
+                    if (getDrawable() != null) {
 
-	@Override
-	public boolean onTouch(View v, MotionEvent event)
-	{
+                        RectF rectF = getMatrixRectF();
+                        // 如果宽度小于屏幕宽度，则禁止左右移动
+                        if (rectF.width() <= getWidth() - mHorizontalPadding * 2) {
+                            dx = 0;
+                        }
+                        // 如果高度小雨屏幕高度，则禁止上下移动
+                        if (rectF.height() <= getHeight() - mVerticalPadding * 2) {
+                            dy = 0;
+                        }
+                        mScaleMatrix.postTranslate(dx, dy);
+                        checkBorder();
+                        setImageMatrix(mScaleMatrix);
+                    }
+                }
+                mLastX = x;
+                mLastY = y;
+                break;
 
-		if (mGestureDetector.onTouchEvent(event))
-			return true;
-		mScaleGestureDetector.onTouchEvent(event);
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                lastPointerCount = 0;
+                break;
+        }
 
-		float x = 0, y = 0;
-		// 拿到触摸点的个数
-		final int pointerCount = event.getPointerCount();
-		// 得到多个触摸点的x与y均值
-		for (int i = 0; i < pointerCount; i++)
-		{
-			x += event.getX(i);
-			y += event.getY(i);
-		}
-		x = x / pointerCount;
-		y = y / pointerCount;
+        return true;
+    }
 
-		/**
-		 * 每当触摸点发生变化时，重置mLasX , mLastY
-		 */
-		if (pointerCount != lastPointerCount)
-		{
-			isCanDrag = false;
-			mLastX = x;
-			mLastY = y;
-		}
+    /**
+     * 获得当前的缩放比例
+     *
+     * @return
+     */
+    public final float getScale() {
+        mScaleMatrix.getValues(matrixValues);
+        return matrixValues[Matrix.MSCALE_X];
+    }
 
-		lastPointerCount = pointerCount;
-		switch (event.getAction())
-		{
-		case MotionEvent.ACTION_MOVE:
-			float dx = x - mLastX;
-			float dy = y - mLastY;
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        getViewTreeObserver().addOnGlobalLayoutListener(this);
+    }
 
-			if (!isCanDrag)
-			{
-				isCanDrag = isCanDrag(dx, dy);
-			}
-			if (isCanDrag)
-			{
-				if (getDrawable() != null)
-				{
+    @SuppressWarnings("deprecation")
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        getViewTreeObserver().removeGlobalOnLayoutListener(this);
+    }
 
-					RectF rectF = getMatrixRectF();
-					// 如果宽度小于屏幕宽度，则禁止左右移动
-					if (rectF.width() <= getWidth() - mHorizontalPadding * 2)
-					{
-						dx = 0;
-					}
-					// 如果高度小雨屏幕高度，则禁止上下移动
-					if (rectF.height() <= getHeight() - mVerticalPadding * 2)
-					{
-						dy = 0;
-					}
-					mScaleMatrix.postTranslate(dx, dy);
-					checkBorder();
-					setImageMatrix(mScaleMatrix);
-				}
-			}
-			mLastX = x;
-			mLastY = y;
-			break;
+    @Override
+    public void onGlobalLayout() {
+        if (once) {
+            Drawable d = getDrawable();
+            if (d == null) return;
+            // 垂直方向的边距
+            mVerticalPadding = (getHeight() - (getWidth() - 2 * mHorizontalPadding)) / 2;
+            int width = getWidth();
+            int height = getHeight();
+            // 拿到图片的宽和高
+            int dw = d.getIntrinsicWidth();
+            int dh = d.getIntrinsicHeight();
+            float scale = 1.0f;
+            if (dw < getWidth() - mHorizontalPadding * 2 && dh > getHeight() - mVerticalPadding * 2) {
+                scale = (getWidth() * 1.0f - mHorizontalPadding * 2) / dw;
+            }
 
-		case MotionEvent.ACTION_UP:
-		case MotionEvent.ACTION_CANCEL:
-			lastPointerCount = 0;
-			break;
-		}
+            if (dh < getHeight() - mVerticalPadding * 2 && dw > getWidth() - mHorizontalPadding * 2) {
+                scale = (getHeight() * 1.0f - mVerticalPadding * 2) / dh;
+            }
 
-		return true;
-	}
+            if (dw < getWidth() - mHorizontalPadding * 2 && dh < getHeight() - mVerticalPadding * 2) {
+                float scaleW = (getWidth() * 1.0f - mHorizontalPadding * 2) / dw;
+                float scaleH = (getHeight() * 1.0f - mVerticalPadding * 2) / dh;
+                scale = Math.max(scaleW, scaleH);
+            }
 
-	/**
-	 * 获得当前的缩放比例
-	 * 
-	 * @return
-	 */
-	public final float getScale()
-	{
-		mScaleMatrix.getValues(matrixValues);
-		return matrixValues[Matrix.MSCALE_X];
-	}
+            initScale = scale;
+            SCALE_MID = initScale * 2;
+            SCALE_MAX = initScale * 4;
+            mScaleMatrix.postTranslate((width - dw) / 2, (height - dh) / 2);
+            mScaleMatrix.postScale(scale, scale, getWidth() / 2, getHeight() / 2);
+            // 图片移动至屏幕中心
+            setImageMatrix(mScaleMatrix);
+            once = false;
+        }
+    }
 
-	@Override
-	protected void onAttachedToWindow()
-	{
-		super.onAttachedToWindow();
-		getViewTreeObserver().addOnGlobalLayoutListener(this);
-	}
+    /**
+     * 剪切图片，返回剪切后的bitmap对象
+     *
+     * @return
+     */
+    public Bitmap clip() {
+        int h= PhoneMessage.ScreenHeight;
+        int w=PhoneMessage.ScreenWidth;
 
-	@SuppressWarnings("deprecation")
-	@Override
-	protected void onDetachedFromWindow()
-	{
-		super.onDetachedFromWindow();
-		getViewTreeObserver().removeGlobalOnLayoutListener(this);
-	}
+        int HorizontalPadding = (PhoneMessage.ScreenHeight - PhoneMessage.ScreenWidth) / 2;
+        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(bitmap);
+        draw(canvas);
 
-	/**
-	 * 水平方向与View的边距
-	 */
-	private int mHorizontalPadding;
-	/**
-	 * 垂直方向与View的边距
-	 */
-	private int mVerticalPadding;
+        return Bitmap.createBitmap(bitmap,0, HorizontalPadding, PhoneMessage.ScreenWidth, PhoneMessage.ScreenHeight-HorizontalPadding);
+    }
 
-	@Override
-	public void onGlobalLayout()
-	{
-		if (once)
-		{
-			Drawable d = getDrawable();
-			if (d == null)
-				return;
-			// 垂直方向的边距
-			mVerticalPadding = (getHeight() - (getWidth() - 2 * mHorizontalPadding)) / 2;
+    /*
+     * 边界检测
+     */
+    private void checkBorder() {
+        RectF rect = getMatrixRectF();
+        float deltaX = 0;
+        float deltaY = 0;
 
-			int width = getWidth();
-			int height = getHeight();
-			// 拿到图片的宽和高
-			int dw = d.getIntrinsicWidth();
-			int dh = d.getIntrinsicHeight();
-			float scale = 1.0f;
-			if (dw < getWidth() - mHorizontalPadding * 2
-					&& dh > getHeight() - mVerticalPadding * 2)
-			{
-				scale = (getWidth() * 1.0f - mHorizontalPadding * 2) / dw;
-			}
+        int width = getWidth();
+        int height = getHeight();
+        Log.e(TAG, "rect.width() =  " + rect.width() + " , width - 2 * mHorizontalPadding =" + (width - 2 * mHorizontalPadding));
 
-			if (dh < getHeight() - mVerticalPadding * 2
-					&& dw > getWidth() - mHorizontalPadding * 2)
-			{
-				scale = (getHeight() * 1.0f - mVerticalPadding * 2) / dh;
-			}
+        // 如果宽或高大于屏幕，则控制范围 ; 这里的0.001是因为精度丢失会产生问题，但是误差一般很小，所以我们直接加了一个0.01
+        if (rect.width() + 0.01 >= width - 2 * mHorizontalPadding) {
+            if (rect.left > mHorizontalPadding) {
+                deltaX = -rect.left + mHorizontalPadding;
+            }
+            if (rect.right < width - mHorizontalPadding) {
+                deltaX = width - mHorizontalPadding - rect.right;
+            }
+        }
+        if (rect.height() + 0.01 >= height - 2 * mVerticalPadding) {
+            if (rect.top > mVerticalPadding) {
+                deltaY = -rect.top + mVerticalPadding;
+            }
+            if (rect.bottom < height - mVerticalPadding) {
+                deltaY = height - mVerticalPadding - rect.bottom;
+            }
+        }
+        mScaleMatrix.postTranslate(deltaX, deltaY);
 
-			if (dw < getWidth() - mHorizontalPadding * 2
-					&& dh < getHeight() - mVerticalPadding * 2)
-			{
-				float scaleW = (getWidth() * 1.0f - mHorizontalPadding * 2)
-						/ dw;
-				float scaleH = (getHeight() * 1.0f - mVerticalPadding * 2) / dh;
-				scale = Math.max(scaleW, scaleH);
-			}
+    }
 
-			initScale = scale;
-			SCALE_MID = initScale * 2;
-			SCALE_MAX = initScale * 4;
-			mScaleMatrix.postTranslate((width - dw) / 2, (height - dh) / 2);
-			mScaleMatrix.postScale(scale, scale, getWidth() / 2,
-					getHeight() / 2);
-			// 图片移动至屏幕中心
-			setImageMatrix(mScaleMatrix);
-			once = false;
-		}
+    /*
+     * 是否是拖动行为
+     */
+    private boolean isCanDrag(float dx, float dy) {
+        return Math.sqrt((dx * dx) + (dy * dy)) >= mTouchSlop;
+    }
 
-	}
-
-	/**
-	 * 剪切图片，返回剪切后的bitmap对象
-	 * 
-	 * @return
-	 */
-	public Bitmap clip()
-	{
-		Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(),
-				Bitmap.Config.RGB_565);
-		Canvas canvas = new Canvas(bitmap);
-		draw(canvas);
-		return Bitmap.createBitmap(bitmap, mHorizontalPadding,
-				mVerticalPadding, getWidth() - 2 * mHorizontalPadding,
-				getWidth() - 2 * mHorizontalPadding);
-	}
-
-	/**
-	 * 边界检测
-	 */
-	private void checkBorder()
-	{
-
-		RectF rect = getMatrixRectF();
-		float deltaX = 0;
-		float deltaY = 0;
-
-		int width = getWidth();
-		int height = getHeight();
-		Log.e(TAG, "rect.width() =  " + rect.width()
-				+ " , width - 2 * mHorizontalPadding ="
-				+ (width - 2 * mHorizontalPadding));
-
-		// 如果宽或高大于屏幕，则控制范围 ; 这里的0.001是因为精度丢失会产生问题，但是误差一般很小，所以我们直接加了一个0.01
-		if (rect.width() + 0.01 >= width - 2 * mHorizontalPadding)
-		{
-			if (rect.left > mHorizontalPadding)
-			{
-				deltaX = -rect.left + mHorizontalPadding;
-			}
-			if (rect.right < width - mHorizontalPadding)
-			{
-				deltaX = width - mHorizontalPadding - rect.right;
-			}
-		}
-		if (rect.height() + 0.01 >= height - 2 * mVerticalPadding)
-		{
-			if (rect.top > mVerticalPadding)
-			{
-				deltaY = -rect.top + mVerticalPadding;
-			}
-			if (rect.bottom < height - mVerticalPadding)
-			{
-				deltaY = height - mVerticalPadding - rect.bottom;
-			}
-		}
-		mScaleMatrix.postTranslate(deltaX, deltaY);
-
-	}
-
-	/**
-	 * 是否是拖动行为
-	 * 
-	 * @param dx
-	 * @param dy
-	 * @return
-	 */
-	private boolean isCanDrag(float dx, float dy)
-	{
-		return Math.sqrt((dx * dx) + (dy * dy)) >= mTouchSlop;
-	}
-
-	public void setHorizontalPadding(int mHorizontalPadding)
-	{
-		this.mHorizontalPadding = mHorizontalPadding;
-	}
+    public void setHorizontalPadding(int mHorizontalPadding) {
+        this.mHorizontalPadding = mHorizontalPadding;
+    }
 
 }

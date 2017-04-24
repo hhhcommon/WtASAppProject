@@ -190,7 +190,7 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
                         groupSignature = "";
                     }
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialogs = DialogUtils.Dialogph(context, "提交中");
+                        dialog = DialogUtils.Dialog(context);
                         update(biename, groupSignature);
                     } else {
                         ToastUtils.show_always(context, "网络失败，请检查网络");
@@ -247,7 +247,7 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
                     ToastUtils.show_always(context, "请输入验证信息");
                 } else {
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(context, "申请中");
+                        dialog = DialogUtils.Dialog(context);
                         send();
                     } else {
                         ToastUtils.show_always(getApplicationContext(), "网络连接失败，请稍后重试");

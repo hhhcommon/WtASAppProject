@@ -77,7 +77,7 @@ public class GroupMembersActivity extends AppBaseActivity implements
     @Override
     public void onWhiteViewClick() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
+            dialog = DialogUtils.Dialog(context);
             send();
         } else {
             tipView.setVisibility(View.VISIBLE);
@@ -118,7 +118,7 @@ public class GroupMembersActivity extends AppBaseActivity implements
         textHeadName = (TextView) findViewById(R.id.head_name_tv);// 更新当前组员人数的控件
 
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在获取群成员信息");
+            dialog = DialogUtils.Dialog(context);
             send();
         } else {
             tipView.setVisibility(View.VISIBLE);

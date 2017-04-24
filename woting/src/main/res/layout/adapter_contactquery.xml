@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="ID:000000"
+                android:text="用户号:000000"
                 android:textColor="@color/beijing"
                 android:textSize="11sp" />
             <TextView

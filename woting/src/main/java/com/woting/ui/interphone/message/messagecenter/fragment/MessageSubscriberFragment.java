@@ -19,20 +19,14 @@ import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
-import com.woting.ui.home.program.album.main.AlbumFragment;
-import com.woting.ui.home.program.radiolist.mode.ListInfo;
-import com.woting.ui.interphone.linkman.model.DBNotifyHistory;
+import com.woting.ui.model.content;
+import com.woting.ui.musicplay.album.main.AlbumFragment;
 import com.woting.ui.interphone.message.messagecenter.activity.MessageMainActivity;
 import com.woting.ui.interphone.message.messagecenter.adapter.MessageSubscriberAdapter;
-import com.woting.ui.interphone.message.messagecenter.adapter.NotifyNewsAdapter;
-import com.woting.ui.interphone.message.messagecenter.dao.MessageNotifyDao;
 import com.woting.ui.interphone.message.messagecenter.dao.MessageSubscriberDao;
 import com.woting.ui.interphone.message.messagecenter.model.DBSubscriberMessage;
-import com.woting.ui.mine.main.MineActivity;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class MessageSubscriberFragment extends Fragment implements OnClickListener {
@@ -173,7 +167,7 @@ public class MessageSubscriberFragment extends Fragment implements OnClickListen
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ListInfo listInfo = new ListInfo();
+                content listInfo = new content();
                 listInfo.setContentName(_list.get(position).getSeqName());
                 listInfo.setContentDescn("");
                 listInfo.setContentId(_list.get(position).getSeqId());

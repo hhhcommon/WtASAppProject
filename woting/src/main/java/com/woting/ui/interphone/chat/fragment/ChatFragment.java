@@ -524,7 +524,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
     public void getTXL() {
         //第一次获取群成员跟组
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在获取数据");
+            dialog = DialogUtils.Dialog(context);
             JSONObject jsonObject = VolleyRequest.getJsonObject(context);
             try {
                 jsonObject.put("Page", "1");

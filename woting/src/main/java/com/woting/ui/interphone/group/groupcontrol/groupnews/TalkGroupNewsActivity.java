@@ -125,7 +125,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
     private String groupName;// NAME
     private String headUrl;// HEAD
     private String groupNumber;// NUMBER
-    private String groupCreator;// 群组管理员
+
     private String groupSignature;// 群描述
     private String groupAlias;// 别名
     private String groupType;// 群组类型
@@ -139,13 +139,15 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
 
     private boolean isCancelRequest;
     private boolean update;
-    private final int TO_GALLERY = 5;// 打开图库
-    private final int TO_CAMERA = 6;// 打开系统相机
+    private final int TO_GALLERY = 5;       // 打开图库
+    private final int TO_CAMERA = 6;        // 打开系统相机
     private final int PHOTO_REQUEST_CUT = 7;// 图片裁剪
+    private final int SET_GROUP_MANAGER=8;  // setGroupManager
     private View lin_set_manager;
     private String[] ManagerList;
-    private Boolean IsManager;
+    private Boolean IsManager= false;
     private ArrayList<GroupInfo> GroupTransformList= new ArrayList<>();
+    private String groupMaster;             // 群主
 
     // 初始化数据库命令执行对象
     private void initDao() {
@@ -213,12 +215,8 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 groupName = talkListGP.getName();
                 headUrl = talkListGP.getPortrait();
                 groupId = talkListGP.getId();
-                if (talkListGP.getGroupManager() == null || talkListGP.getGroupManager().equals("")) {
-                    groupCreator = talkListGP.getGroupCreator();
-                } else {
-                    groupCreator = talkListGP.getGroupManager();
-                }
-                baseCreaterDecideView(talkListGP.getGroupManager(), talkListGP.getGroupCreator(),talkListGP.getGroupType());
+                groupMaster=talkListGP.getGroupMasterId();
+                baseCreaterDecideView(talkListGP.getGroupManager(), talkListGP.getGroupMasterId(),talkListGP.getGroupType());
                 groupSignature = talkListGP.getGroupSignature();
                 groupIntroduce = talkListGP.getGroupDescn();
                 groupAlias = talkListGP.getGroupMyAlias();
@@ -229,13 +227,8 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 groupName = talkGroupInside.getGroupName();
                 headUrl = talkGroupInside.getGroupImg();
                 groupId = talkGroupInside.getGroupId();
-                if (talkGroupInside.getGroupManager() == null || talkGroupInside.getGroupManager().equals("")) {
-                    groupCreator = talkGroupInside.getGroupCreator();
-
-                } else {
-                    groupCreator = talkGroupInside.getGroupManager();
-                }
-                baseCreaterDecideView(talkGroupInside.getGroupManager(),  talkGroupInside.getGroupCreator(), talkGroupInside.getGroupType());
+                groupMaster=talkGroupInside.getGroupMasterId();
+                baseCreaterDecideView(talkGroupInside.getGroupManager(),  talkGroupInside.getGroupMasterId(), talkGroupInside.getGroupType());
                 groupSignature = talkGroupInside.getGroupSignature();
                 groupIntroduce = talkGroupInside.getGroupMyDescn();
                 groupAlias = talkGroupInside.getGroupMyAlias();
@@ -248,12 +241,8 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 headUrl = findGroupNews.getGroupImg();
                 groupId = findGroupNews.getGroupId();
                 groupNumber = findGroupNews.getGroupNum();
-                if (findGroupNews.getGroupManager() == null || findGroupNews.getGroupManager().equals("")) {
-                    groupCreator = findGroupNews.getGroupCreator();
-                } else {
-                    groupCreator = findGroupNews.getGroupManager();
-                }
-                baseCreaterDecideView(findGroupNews.getGroupManager(), findGroupNews.getGroupCreator(),findGroupNews.getGroupType());
+                groupMaster=findGroupNews.getGroupMasterId();
+                baseCreaterDecideView(findGroupNews.getGroupManager(), findGroupNews.getGroupMasterId(),findGroupNews.getGroupType());
                 groupSignature = findGroupNews.getGroupSignature();
                 groupIntroduce = findGroupNews.getGroupOriDescn();
                 groupAlias = findGroupNews.getGroupMyAlias();
@@ -265,12 +254,8 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 headUrl = groupInfo.getGroupImg();
                 groupId = groupInfo.getGroupId();
                 groupNumber = groupInfo.getGroupNum();
-                if (groupInfo.getGroupManager() == null || groupInfo.getGroupManager().equals("")) {
-                    groupCreator = groupInfo.getGroupCreator();
-                } else {
-                    groupCreator = groupInfo.getGroupManager();
-                }
-                baseCreaterDecideView(groupInfo.getGroupManager(), groupInfo.getGroupCreator(),groupInfo.getGroupType());
+                groupMaster=groupInfo.getGroupMasterId();
+                baseCreaterDecideView(groupInfo.getGroupManager(), groupInfo.getGroupMasterId(),groupInfo.getGroupType());
                 groupSignature = groupInfo.getGroupSignature();
                 groupType = groupInfo.getGroupType();
                 break;
@@ -281,7 +266,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 groupId = groupInformation.getGroupId();
                 groupNumber = groupInformation.getGroupNum();
                 groupType = groupInformation.getGroupType();
-                groupCreator = CommonUtils.getUserId(context);
+                groupMaster = CommonUtils.getUserId(context);
                 baseCreaterDecideView(CommonUtils.getUserId(context), CommonUtils.getUserId(context),groupInformation.getGroupType());
                 groupSignature = groupInformation.getGroupSignature();
                 break;
@@ -382,7 +367,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         news = new GroupInfo();
         news.setGroupName(groupName);
         news.setGroupType(groupType);
-        news.setGroupCreator(groupCreator);
+        news.setGroupCreator(groupMaster);
         news.setGroupImg(headUrl);
         news.setGroupId(groupId);
         news.setGroupNum(groupNumber);
@@ -396,7 +381,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
     }
 
 
-    private void baseCreaterDecideView(String GroupManager,String GroupCreater,String GroupType){
+    private void baseCreaterDecideView(String GroupManager,String GroupMasterId,String GroupType){
            ManagerList=GroupManager.split(",");
            String userId=CommonUtils.getUserId(context);
            if(ManagerList!=null&&ManagerList.length>0){
@@ -407,49 +392,48 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 //说明是管理员
                 IsManager=true;
                  }
-
            }
            }else{
                ToastUtils.show_always(context,"群GroupManager信息获取有误");
                return;
            }
-            if(IsManager==true){
 
+            if(IsManager==true){
                 switch (GroupType) {
                     case "0":// 审核群
                         linearGroupApply.setVisibility(View.VISIBLE);// 审核消息
                         linearAddMessage.setVisibility(View.VISIBLE);// 加群消息
-                        LinearTransferAuthority.setVisibility(View.VISIBLE);// 移交权限
                         break;
                     case "1":// 公开群
-                        LinearTransferAuthority.setVisibility(View.VISIBLE);
+                        lin_set_manager.setVisibility(View.VISIBLE);
                         break;
                     case "2":// 密码群
-                        LinearTransferAuthority.setVisibility(View.VISIBLE);
                         linearModifyPassword.setVisibility(View.VISIBLE);// 修改密码
                         break;
                 }
 
-                if(TextUtils.isEmpty(GroupCreater)){
+                if(TextUtils.isEmpty(GroupMasterId)){
+                    LinearTransferAuthority.setVisibility(View.GONE);
                     lin_set_manager.setVisibility(View.GONE);
                 }else{
-                if(GroupCreater.equals(userId)){
+                if(GroupMasterId.equals(userId)){
+                    //只有群主可以设置管理员
+                    LinearTransferAuthority.setVisibility(View.VISIBLE);// 移交权限
                     lin_set_manager.setVisibility(View.VISIBLE);
                 }else{
+                    LinearTransferAuthority.setVisibility(View.GONE);
                     lin_set_manager.setVisibility(View.GONE);
                 }
                 }
 
             }
 
-
-
     }
 
     // 获取网络数据
     public void send() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "通讯中");
+            dialog = DialogUtils.Dialog(context);
             sendNet();
         } else {
             tipView.setVisibility(View.VISIBLE);
@@ -564,7 +548,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 addGroup();
                 break;
             case R.id.lin_set_manager: //设置群管理员
-                startToActivity(SetGroupManagerActivity.class, 1);
+                startToActivity(SetGroupManagerActivity.class, SET_GROUP_MANAGER);
                 break;
             case R.id.image_xiugai:// 修改
                 if (update) {// 此时是修改状态需要进行以下操作
@@ -588,7 +572,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                     groupName = name;
                     groupSignature = signature;
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(context, "正在提交本次修改");
+                        dialog = DialogUtils.Dialog(context);
                         update(groupName, groupSignature);
                     } else {
                         ToastUtils.show_always(context, "网络失败，请检查网络");
@@ -860,8 +844,14 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
             case PHOTO_REQUEST_CUT:
                 if (resultCode == 1) {
                     photoCutAfterImagePath = data.getStringExtra("return");
-                    dialog = DialogUtils.Dialogph(context, "提交中");
+                    dialog = DialogUtils.Dialog(context);
                     dealt();
+                }
+                break;
+            case SET_GROUP_MANAGER:
+                if(resultCode==1){
+                    sendBroadcast(pushIntent);
+                    finish();
                 }
                 break;
         }

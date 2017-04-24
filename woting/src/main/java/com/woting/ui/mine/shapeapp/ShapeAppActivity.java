@@ -26,8 +26,8 @@ import com.woting.common.util.ShareUtils;
 import com.woting.common.widgetui.HorizontalListView;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.home.player.main.adapter.ImageAdapter;
-import com.woting.ui.home.player.main.model.ShareModel;
+import com.woting.ui.musicplay.play.adapter.ImageAdapter;
+import com.woting.ui.model.share.ShareModel;
 
 import java.util.List;
 
@@ -80,7 +80,7 @@ public class ShapeAppActivity extends AppBaseActivity implements View.OnClickLis
     // 设置 WebView
     private void setWeb() {
         tipView.setVisibility(View.GONE);
-        dialog = DialogUtils.Dialogph(context, "正在加载");
+        dialog = DialogUtils.Dialog(context);
         WebSettings setting = webView.getSettings();
         setting.setJavaScriptEnabled(true);                               // 支持js
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);    // 解决缓存问题
@@ -142,7 +142,7 @@ public class ShapeAppActivity extends AppBaseActivity implements View.OnClickLis
         window.setWindowAnimations(R.style.sharestyle);
         shareDialog.setCanceledOnTouchOutside(true);
         shareDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
-        Config.dialog = DialogUtils.Dialogphnoshow(context, "Loading...", new Dialog(context));
+        Config.dialog = DialogUtils.DialogForShare(context);
         final List<ShareModel> mList = ShareUtils.getShareModelList();
         ImageAdapter shareAdapter = new ImageAdapter(context, mList);
         mGallery.setAdapter(shareAdapter);

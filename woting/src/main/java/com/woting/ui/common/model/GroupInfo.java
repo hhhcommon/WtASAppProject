@@ -41,6 +41,33 @@ public class GroupInfo implements Serializable {
     private String PortraitBig;
     private String UserNames;
     private String UserIds;
+    private String GroupMasterId;   // 群管理员
+    private String InviteUserId ;   // 邀请进群的人
+    private InviteUserInfo inviteUserInfo;
+
+    public InviteUserInfo getInviteUserInfo() {
+        return inviteUserInfo;
+    }
+
+    public void setInviteUserInfo(InviteUserInfo inviteUserInfo1) {
+        inviteUserInfo= inviteUserInfo1;
+    }
+
+    public String getInviteUserId() {
+        return InviteUserId;
+    }
+
+    public void setInviteUserId(String inviteUserId) {
+        InviteUserId = inviteUserId;
+    }
+
+    public void setGroupMasterId(String groupMasterId) {
+        GroupMasterId = groupMasterId;
+    }
+
+    public String getGroupMasterId() {
+        return GroupMasterId;
+    }
 
     public String getUserIds() {
         return UserIds;

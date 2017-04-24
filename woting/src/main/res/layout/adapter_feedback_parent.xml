@@ -1,80 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
-    android:background="@color/white"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="right"
     android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:gravity="center" >
 
         <TextView
             android:id="@+id/tv_opiniontime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_grayedit"
             android:padding="5dp"
             android:text="2016年5月18日 18:18"
-            android:textColor="@color/WHITE"
+            android:textColor="@color/black"
             android:textSize="12sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <RelativeLayout
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:padding="10dp" >
-
-            <ImageView
-                android:id="@+id/image_touxiang"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_centerInParent="true"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/app_logo" />
-
-            <ImageView
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_centerInParent="true"
-                android:src="@mipmap/wt_img_feedback_circle" />
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="40dp"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/tv_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="姓名" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="3dp" >
-
-                <TextView
-                    android:id="@+id/tv_opinion"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_lin_normal"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:padding="15dp"
-                    android:gravity="center_vertical"/>
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_opinion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:paddingTop="18dp"
+        android:lineSpacingExtra="6sp"
+        android:layout_marginLeft="20dp"
+        android:textColor="@color/black"
+        android:paddingBottom="18dp"
+        android:textSize="13sp"
+        android:background="@drawable/bg_feedback_orange"
+        android:padding="10dp"/>
 
 </LinearLayout>

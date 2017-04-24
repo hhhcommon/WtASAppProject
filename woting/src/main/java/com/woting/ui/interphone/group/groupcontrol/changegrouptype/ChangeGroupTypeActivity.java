@@ -88,7 +88,7 @@ public class ChangeGroupTypeActivity extends Activity implements OnClickListener
 				checkEdit();
 			} else {
 				if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-					dialog = DialogUtils.Dialogph(context, "正在为您创建群组");
+					dialog = DialogUtils.Dialog(context);
 					send();
 				} else {
 					ToastUtils.show_always(context, "网络失败，请检查网络");
@@ -133,7 +133,7 @@ public class ChangeGroupTypeActivity extends Activity implements OnClickListener
 
 		// 提交数据
 		if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-			dialog = DialogUtils.Dialogph(context, "正在为您创建群组");
+			dialog = DialogUtils.Dialog(context);
 			send();
 		} else {
 			ToastUtils.show_always(context, "网络失败，请检查网络");

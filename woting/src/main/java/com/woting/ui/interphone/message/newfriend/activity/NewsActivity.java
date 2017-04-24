@@ -24,14 +24,17 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.GroupInfo;
+import com.woting.ui.common.model.InviteUserInfo;
 import com.woting.ui.interphone.commom.service.InterPhoneControl;
 import com.woting.ui.interphone.message.messagecenter.dao.MessageNotifyDao;
 import com.woting.ui.interphone.message.newfriend.adapter.NewsAdapter;
 import com.woting.ui.interphone.message.newfriend.model.MessageInFo;
 import com.woting.ui.interphone.model.UserInviteMeInside;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -70,7 +73,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
         push.putExtras(bundle);
         context.sendBroadcast(push);
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "通讯中");
+            dialog = DialogUtils.Dialog(context);
             sendForGetPerson();
         } else {
             tipView.setVisibility(View.VISIBLE);
@@ -102,7 +105,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                 delDialog.dismiss();
                 if (mes != null && mes.get(Position) != null && mes.get(Position).getMSType() != null && !mes.get(Position).getMSType().equals("")) {
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(context, "正在获取数据");
+                        dialog = DialogUtils.Dialog(context);
                         sendRequest(mes.get(Position), 2);
                     } else {
                         ToastUtils.show_always(context, "网络连接失败，请稍后重试");
@@ -143,28 +146,25 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                         } catch (JSONException e1) {
                             e1.printStackTrace();
                         }
-                        UserList = new Gson().fromJson(ContactMeString, new TypeToken<List<UserInviteMeInside>>() {
-                        }.getType());
-                        sendForGetGroup();
+
+                        UserList = new Gson().fromJson(ContactMeString, new TypeToken<List<UserInviteMeInside>>() { }.getType());
+
                     } else if (ReturnType != null && ReturnType.equals("1002")) {
                         try {
                             String Message = result.getString("Message");
                             if (Message != null && !Message.trim().equals("")) {
                                 Log.e("邀请信息", "页面加载失败，失败原因" + Message);
-                                sendForGetGroup();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     } else if (ReturnType != null && ReturnType.equals("1011")) {
                         Log.e("邀请信息", "所有的邀请信息都已经处理完毕");
-                        sendForGetGroup();
                     } else {
                         try {
                             String Message = result.getString("Message");
                             if (Message != null && !Message.trim().equals("")) {
                                 Log.e("邀请信息", "页面加载失败，失败原因" + Message);
-                                sendForGetGroup();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -173,6 +173,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                sendForGetGroup();
             }
 
             @Override
@@ -195,12 +196,14 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {
                         try {
-                            ContactMeString = result.getString("GroupList");
+                           ContactMeString = result.getString("GroupList");
                         } catch (JSONException e1) {
                             e1.printStackTrace();
                         }
-                        GroupList = new Gson().fromJson(ContactMeString, new TypeToken<List<GroupInfo>>() {
-                        }.getType());
+                        GroupList = new Gson().fromJson(ContactMeString, new TypeToken<List<GroupInfo>>() {}.getType());
+                      /*  if (GroupList!=null&&GroupList.size()>0&& !TextUtils.isEmpty(ContactMeString)){
+                                handleGroupListData(result);
+                           }*/
                     } else if (ReturnType != null && ReturnType.equals("1002")) {
                         try {
                             String Message = result.getString("Message");
@@ -227,8 +230,13 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                 }
 
                 if (dialog != null) dialog.dismiss();
+               /* if (GroupList!=null&&GroupList.size()>0&& !TextUtils.isEmpty(ContactMeString)){
+                    handleGroupListData(ContactMeString);
+                }*/
                 setData();
+
             }
+
 
             @Override
             protected void requestError(VolleyError error) {
@@ -237,6 +245,62 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
             }
         });
     }
+
+
+    private void handleGroupListData(JSONObject result) {
+        try {
+            JSONArray jsonArray = result.getJSONArray("GroupList");
+            for(int i=0;i<jsonArray.length();i++){
+                JSONObject jsonObject = (JSONObject)jsonArray.opt(i);
+                String s=(String)jsonObject.get("InviteUserInfo");
+                JSONTokener jsonParser = new JSONTokener(s);
+                JSONObject arg1 = (JSONObject) jsonParser.nextValue();
+                InviteUserInfo mInviteUserInfo=new InviteUserInfo();
+                try {
+                    mInviteUserInfo.setUserId((String)  arg1.get("UserId"));
+
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+                try {
+                    mInviteUserInfo.setNickName((String)  arg1.get("NickName"));
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+                try {
+                    mInviteUserInfo.setUserNum((String)  arg1.get("UserNum"));
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+                try {
+                    mInviteUserInfo.setUserSign((String)  arg1.get("UserSign"));
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+                try {
+                    mInviteUserInfo.setPortraitMini((String) arg1.get("PortraitMini"));
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+                try {
+                    mInviteUserInfo.setRegion((String) arg1.get("Region"));
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+                try {
+                    mInviteUserInfo.setPhoneNum((String) arg1.get("PhoneNum"));
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+                GroupList.get(i).setInviteUserInfo(mInviteUserInfo);
+            }
+
+
+        }catch (Exception e){
+               e.printStackTrace();
+        }
+    }
+
 
     protected void setData() {
         mes.clear();
@@ -267,11 +331,17 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                     MessageInFo msInfo = new MessageInFo();
                     msInfo.setMSType("group");
                     msInfo.setType(GroupList.get(i).getType());
+                    String s=GroupList.get(i).getGroupName();
                     msInfo.setGroupName(GroupList.get(i).getGroupName());
+                    String s1=GroupList.get(i).getGroupId();
                     msInfo.setGroupId(GroupList.get(i).getGroupId());
-                    msInfo.setNickName(GroupList.get(i).getNickName());
-                    msInfo.setPortraitMini(GroupList.get(i).getPortraitMini());
-                    msInfo.setUserId(GroupList.get(i).getUserId());
+                    msInfo.setUserId(GroupList.get(i).getInviteUserId());
+                    msInfo.setPortraitMini(GroupList.get(i).getGroupImg());
+                    String s2=GroupList.get(i).getInviteUserInfo().getNickName();
+                    msInfo.setNickName(GroupList.get(i).getInviteUserInfo().getNickName());
+                    String s3=GroupList.get(i).getInviteUserInfo().getUserId();
+                   // msInfo.setPortraitMini(GroupList.get(i).getPortraitMini());
+                    msInfo.setUserId(GroupList.get(i).getInviteUserInfo().getUserId());
                     msInfo.setInviteTime(GroupList.get(i).getInviteTime());
                     mes.add(msInfo);
                 }
@@ -296,7 +366,7 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
             public void tongyi(int position) {
                 if (mes != null && mes.get(position) != null && mes.get(position).getMSType() != null && !mes.get(position).getMSType().equals("")) {
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                        dialog = DialogUtils.Dialogph(context, "正在获取数据");
+                        dialog = DialogUtils.Dialog(context);
                         Position = position;
                         sendRequest(mes.get(position), 1);
                     } else {

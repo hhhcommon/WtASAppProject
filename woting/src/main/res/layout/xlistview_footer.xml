@@ -7,26 +7,47 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/view_color"/>
+        android:background="@color/view_color" />
 
     <RelativeLayout
         android:id="@+id/xlistview_footer_content"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp" >
+        android:padding="5dp">
 
-        <ProgressBar
-            android:id="@+id/xlistview_footer_progressbar"
-            android:layout_width="40dp"
+        <LinearLayout
+            android:id="@+id/xlistview_footer_lin"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_centerInParent="true"
-            android:visibility="invisible" />
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <ProgressBar
+                style="@style/mProgress_circle"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerInParent="true"
+                android:indeterminateDuration="300" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/darkgray"
+                android:textSize="14sp"
+                android:text="玩命加载中..." />
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/xlistview_footer_hint_textview"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_centerInParent="true"
+            android:textSize="14sp"
+            android:textColor="@color/darkgray"
+            android:gravity="center"
+            android:visibility="visible"
             android:text="@string/xlistview_footer_hint_normal" />
     </RelativeLayout>
 

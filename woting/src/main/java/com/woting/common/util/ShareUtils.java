@@ -2,7 +2,7 @@ package com.woting.common.util;
 
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.woting.R;
-import com.woting.ui.home.player.main.model.ShareModel;
+import com.woting.ui.model.share.ShareModel;
 
 import java.util.ArrayList;
 import java.util.List;

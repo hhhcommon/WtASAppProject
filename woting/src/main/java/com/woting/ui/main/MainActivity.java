@@ -61,16 +61,16 @@ import com.woting.common.widgetui.RoundImageView;
 import com.woting.ui.common.favoritetype.FavoriteProgramTypeActivity;
 import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.common.model.GroupInfo;
-import com.woting.ui.home.main.HomeActivity;
-import com.woting.ui.home.model.Catalog;
-import com.woting.ui.home.model.CatalogName;
-import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.model.PlayerHistory;
-import com.woting.ui.home.player.main.play.PlayerActivity;
-import com.woting.ui.home.player.main.play.more.PlayerMoreOperationActivity;
-import com.woting.ui.home.player.timeset.service.TimerService;
-import com.woting.ui.home.program.citylist.dao.CityInfoDao;
-import com.woting.ui.home.search.main.SearchLikeActivity;
+import com.woting.ui.music.main.HomeActivity;
+import com.woting.ui.music.citylist.cityModel.stairCity;
+import com.woting.ui.music.citylist.cityModel.secondaryCity;
+import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
+import com.woting.ui.musicplay.play.model.PlayerHistory;
+import com.woting.ui.musicplay.play.play.PlayerActivity;
+import com.woting.ui.musicplay.more.PlayerMoreOperationActivity;
+import com.woting.common.service.timing.TimerService;
+import com.woting.ui.music.citylist.dao.CityInfoDao;
+import com.woting.ui.music.search.main.SearchLikeActivity;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
 import com.woting.ui.interphone.chat.fragment.ChatFragment;
 import com.woting.ui.interphone.chat.model.DBTalkHistorary;
@@ -121,7 +121,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private boolean isFirst = true;
     public static boolean v;
 
-    private List<CatalogName> list;
+    private List<secondaryCity> list;
     private NetWorkChangeReceiver netWorkChangeReceiver = null;
     private PhoneStatReceiver phoneStatReceiver = null;
 
@@ -357,17 +357,17 @@ public class MainActivity extends TabActivity implements OnClickListener {
                         if (ReturnType.equals("1001")) {
                             try {
                                 String ResultList = result.getString("CatalogData");
-                                Catalog SubList_all = new Gson().fromJson(ResultList, new TypeToken<Catalog>() {
+                                stairCity SubList_all = new Gson().fromJson(ResultList, new TypeToken<stairCity>() {
                                 }.getType());
-                                List<CatalogName> s = SubList_all.getSubCata();
+                                List<secondaryCity> s = SubList_all.getSubCata();
 
                                 if (s != null && s.size() > 0) {
                                     // 将数据写入数据库
                                     GlobalConfig.CityCatalogList = s;
                                     list = CID.queryCityInfo();
-                                    List<CatalogName> m = new ArrayList<>();
+                                    List<secondaryCity> m = new ArrayList<>();
                                     for (int i = 0; i < s.size(); i++) {
-                                        CatalogName mFenLeiName = new CatalogName();
+                                        secondaryCity mFenLeiName = new secondaryCity();
                                         mFenLeiName.setCatalogId(s.get(i).getCatalogId());
                                         mFenLeiName.setCatalogName(s.get(i).getCatalogName());
                                         m.add(mFenLeiName);
@@ -595,12 +595,17 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
                                 //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
                                 PlayerHistory history = new PlayerHistory(
-                                        ContentName, ContentImg, ContentPlay, "", mediatype,
-                                        ContentTimes, "0", ContentDescn, PlayCount,
-                                        "0", ContentPub, "", "", CTime, CommonUtils.getUserId(context), ContentShareURL,
-                                        ContentFavorite, contentid, "", "", "", "", "", ContentPlayType, IsPlaying,"");
+                                        contentid, ContentName, ContentImg, ContentPlay, "", mediatype, "",
+                                        ContentKeyWord, ContentDescn, ContentPlayType, IsPlaying, "", ContentShareURL, ContentFavorite, PlayCount,
+                                        "", "", "", "", "", "", "", CommonUtils.getUserId(context));
+
+//                                PlayerHistory history = new PlayerHistory(
+//                                        contentid, ContentName, ContentImg, ContentPlay, playerUrI, mediatype, playerAllTime,
+//                                        ContentKeyWord, ContentDescn, ContentPlayType, IsPlaying, ColumnNum, ContentShareURL, ContentFavorite, PlayCount,
+//                                        seqName, seqImg, seqDesc, seqId, playerInTime, playerZanType, playerAddTime, bjUserId);
                                 dbDao.deleteHistory(ContentPlay);
                                 dbDao.addHistory(history);
+
                                 Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                                 Bundle bundle1 = new Bundle();
                                 bundle1.putString("text", ContentName);

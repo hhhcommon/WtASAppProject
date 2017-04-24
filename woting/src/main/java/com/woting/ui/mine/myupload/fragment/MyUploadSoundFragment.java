@@ -29,10 +29,11 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.home.player.main.dao.SearchPlayerHistoryDao;
-import com.woting.ui.home.player.main.model.PlayerHistory;
-import com.woting.ui.home.player.main.play.PlayerFragment;
-import com.woting.ui.home.program.fmlist.model.RankInfo;
+import com.woting.ui.model.content;
+import com.woting.ui.model.radio;
+import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
+import com.woting.ui.musicplay.play.model.PlayerHistory;
+import com.woting.ui.musicplay.play.play.PlayerFragment;
 import com.woting.ui.main.MainActivity;
 import com.woting.ui.mine.myupload.MyUploadActivity;
 import com.woting.ui.mine.myupload.adapter.MyUploadListAdapter;
@@ -53,8 +54,8 @@ public class MyUploadSoundFragment extends Fragment implements AdapterView.OnIte
     private MyUploadListAdapter adapter;
     private SearchPlayerHistoryDao dbDao;
     //    private List<String> delList;
-    private List<RankInfo> newList = new ArrayList<>();
-    private List<RankInfo> checkList = new ArrayList<>();
+    private List<content> newList = new ArrayList<>();
+    private List<content> checkList = new ArrayList<>();
 
     private View rootView;
     private Dialog dialog;
@@ -67,7 +68,7 @@ public class MyUploadSoundFragment extends Fragment implements AdapterView.OnIte
 
     @Override
     public void onWhiteViewClick() {
-        dialog = DialogUtils.Dialogph(context, "获取数据中....");
+        dialog = DialogUtils.Dialog(context);
         sendRequest();
     }
 
@@ -96,7 +97,7 @@ public class MyUploadSoundFragment extends Fragment implements AdapterView.OnIte
         mListView = (ListView) rootView.findViewById(R.id.list_view);
         mListView.setOnItemClickListener(this);
 
-        dialog = DialogUtils.Dialogph(context, "数据加载中....");
+        dialog = DialogUtils.Dialog(context);
         sendRequest();
     }
 
@@ -133,7 +134,7 @@ public class MyUploadSoundFragment extends Fragment implements AdapterView.OnIte
 
                     if (ReturnType != null && ReturnType.equals("1001")) {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        newList = new Gson().fromJson(arg1.getString("FavoriteList"), new TypeToken<List<RankInfo>>() {}.getType());
+                        newList = new Gson().fromJson(arg1.getString("FavoriteList"), new TypeToken<List<content>>() {}.getType());
                         if (adapter == null) {
                             mListView.setAdapter(adapter = new MyUploadListAdapter(context, newList));
                         } else {
@@ -189,42 +190,8 @@ public class MyUploadSoundFragment extends Fragment implements AdapterView.OnIte
         } else {
             String MediaType = newList.get(position).getMediaType();
             if (MediaType.equals("RADIO") || MediaType.equals("AUDIO")) {
-                String playername = newList.get(position).getContentName();
-                String playerimage = newList.get(position).getContentImg();
-                String playerurl = newList.get(position).getContentPlay();
-                String playerurI = newList.get(position).getContentURI();
-                String playermediatype = newList.get(position).getMediaType();
-                String playcontentshareurl = newList.get(position).getContentShareURL();
-                String plaplayeralltime = "0";
-                String playerintime = "0";
-                String playercontentdesc = newList.get(position).getCurrentContent();
-                String playernum = newList.get(position).getWatchPlayerNum();
-                String playerzantype = "0";
-                String playerfrom = newList.get(position).getContentPub();
-                String playerfromid = "";
-                String playerfromurl = "";
-                String playeraddtime = Long.toString(System.currentTimeMillis());
-                String bjuserid = CommonUtils.getUserId(context);
-                String ContentFavorite = newList.get(position).getContentFavorite();
-                String ContentId = newList.get(position).getContentId();
-                String localurl = newList.get(position).getLocalurl();
 
-                String sequName = newList.get(position).getSequName();
-                String sequId = newList.get(position).getSequId();
-                String sequDesc = newList.get(position).getSequDesc();
-                String sequImg = newList.get(position).getSequImg();
-
-                String ContentPlayType = newList.get(position).getContentPlayType();
-                String IsPlaying=newList.get(position).getIsPlaying();
-                String ColumnNum=newList.get(position).getColumnNum();
-                // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-                PlayerHistory history = new PlayerHistory(
-                        playername, playerimage, playerurl, playerurI, playermediatype,
-                        plaplayeralltime, playerintime, playercontentdesc, playernum,
-                        playerzantype, playerfrom, playerfromid, playerfromurl, playeraddtime, bjuserid, playcontentshareurl,
-                        ContentFavorite, ContentId, localurl, sequName, sequId, sequDesc, sequImg, ContentPlayType,IsPlaying,ColumnNum);
-                dbDao.deleteHistory(playerurl);
-                dbDao.addHistory(history);
+                dbDao.savePlayerHistory(MediaType,newList,position);// 保存播放历史
 
                 if (PlayerFragment.context != null) {
                     MainActivity.change();
@@ -282,7 +249,7 @@ public class MyUploadSoundFragment extends Fragment implements AdapterView.OnIte
     // 删除
     public void delItem() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialogph(context, "正在删除...");
+            dialog = DialogUtils.Dialog(context);
             StringBuilder builder = new StringBuilder();
             String contentSeqId = null;
             for (int i = 0; i < newList.size(); i++) {
@@ -292,7 +259,7 @@ public class MyUploadSoundFragment extends Fragment implements AdapterView.OnIte
 //                    }
                     builder.append(newList.get(i).getContentId() + ",");
 //                    contentId = newList.get(i).getContentId();
-                    contentSeqId = newList.get(i).getContentSeqId();
+                    contentSeqId = newList.get(i).getSeqInfo().getContentDescn();
 //                    delList.add(contentId);
                 }
             }

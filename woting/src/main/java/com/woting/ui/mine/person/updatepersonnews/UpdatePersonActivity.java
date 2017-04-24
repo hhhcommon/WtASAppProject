@@ -30,8 +30,8 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.pickview.LoopView;
 import com.woting.common.widgetui.pickview.OnItemSelectedListener;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.home.model.Catalog;
-import com.woting.ui.home.model.CatalogName;
+import com.woting.ui.music.citylist.cityModel.stairCity;
+import com.woting.ui.music.citylist.cityModel.secondaryCity;
 import com.woting.ui.mine.person.updatepersonnews.model.UpdatePerson;
 import com.woting.ui.mine.person.updatepersonnews.util.DateUtil;
 
@@ -57,9 +57,9 @@ public class UpdatePersonActivity extends AppBaseActivity implements
     private List<String> yearList = DateUtil.getYearList();
     private List<String> monthList = DateUtil.getMonthList();
     private List<String> dateList = DateUtil.getDayList31();
-    private List<CatalogName> myList = new ArrayList<>();           // 存储临时组装的 list 数据
+    private List<secondaryCity> myList = new ArrayList<>();           // 存储临时组装的 list 数据
     private List<String> provinceList;                              // 一级菜单 list
-    private Map<String, List<CatalogName>> tempMap;
+    private Map<String, List<secondaryCity>> tempMap;
     private Map<String, List<String>> positionMap = new HashMap<>(); // 主数据 Map
 
     private Dialog cityDialog;       // 选择城市 Dialog
@@ -200,10 +200,10 @@ public class UpdatePersonActivity extends AppBaseActivity implements
                     String ReturnType = result.getString("ReturnType");
                     Log.v("ReturnType", "ReturnType -- > > " + ReturnType);
                     if (ReturnType != null && ReturnType.equals("1001")) {
-                        Catalog subListAll = new Gson().fromJson(result.getString("CatalogData"), new TypeToken<Catalog>() {
+                        stairCity subListAll = new Gson().fromJson(result.getString("CatalogData"), new TypeToken<stairCity>() {
                         }.getType());
                         if (subListAll.getSubCata() != null && subListAll.getSubCata().size() > 0) {
-                            List<CatalogName> catalogNameList = subListAll.getSubCata();
+                            List<secondaryCity> catalogNameList = subListAll.getSubCata();
                             GlobalConfig.CityCatalogList = catalogNameList;
                             handleCityList(catalogNameList);
                         } else {
@@ -222,7 +222,7 @@ public class UpdatePersonActivity extends AppBaseActivity implements
         });
     }
 
-    private void handleCityList(List<CatalogName> catalogNameList) {
+    private void handleCityList(List<secondaryCity> catalogNameList) {
         if (catalogNameList != null && catalogNameList.size() > 0) {
             tempMap = new HashMap<>();
             provinceList = new ArrayList<>();
@@ -240,7 +240,7 @@ public class UpdatePersonActivity extends AppBaseActivity implements
                             // 直辖市
                             try{
                             if(!TextUtils.isEmpty(catalogNameList.get(i).getCatalogName())){
-                            List<CatalogName> myList1 = new ArrayList<>();
+                            List<secondaryCity> myList1 = new ArrayList<>();
                             provinceList.add(catalogNameList.get(i).getCatalogName());
                             if(catalogNameList.get(i).getSubCata().get(0).getSubCata()!=null){
                                myList1.addAll(catalogNameList.get(i).getSubCata().get(0).getSubCata());
@@ -260,9 +260,9 @@ public class UpdatePersonActivity extends AppBaseActivity implements
                     } else {
                         // 港澳台
                         if (!TextUtils.isEmpty(catalogNameList.get(i).getCatalogId())) {
-                            List<CatalogName> myList1 = new ArrayList<>();
+                            List<secondaryCity> myList1 = new ArrayList<>();
                             for (int t = 0; t < 4; t++) {
-                                CatalogName mCatalog = new CatalogName();
+                                secondaryCity mCatalog = new secondaryCity();
                                 if (catalogNameList.get(i).getCatalogId() != null &&
                                         !catalogNameList.get(i).getCatalogId().trim().equals("")) {
                                     mCatalog.setCatalogId(catalogNameList.get(i).getCatalogId());
@@ -291,7 +291,7 @@ public class UpdatePersonActivity extends AppBaseActivity implements
             }
             if (tempMap != null && tempMap.size() > 0 && provinceList != null && provinceList.size() > 0) {
                 for (int i = 0; i < provinceList.size(); i++) {
-                    List<CatalogName> mList = tempMap.get(provinceList.get(i));
+                    List<secondaryCity> mList = tempMap.get(provinceList.get(i));
                     ArrayList<String> cityList = new ArrayList<>();
                     for (int j = 0; j < mList.size(); j++) {
                         if (mList.get(j).getCatalogName() != null) {
