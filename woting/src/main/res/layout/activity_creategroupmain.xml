@@ -169,7 +169,7 @@
                     android:layout_height="wrap_content"
                     android:paddingRight="30dp"
                     android:paddingTop="5dp"
-                    android:text="提交验证信息加入"
+                    android:text="群管理人员审核加入"
                     android:textColor="@color/beijing"
                     android:textSize="@dimen/wt_login_text_wjmm" />
             </LinearLayout>
