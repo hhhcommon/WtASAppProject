@@ -74,7 +74,7 @@ public class ContentForCheckAdapter extends BaseAdapter {
             holder.image_seq = (ImageView) convertView.findViewById(R.id.image_seq);                // 专辑图标
             holder.image_anchor = (ImageView) convertView.findViewById(R.id.image_anchor);          // 主播图标
 
-            holder.NameTwo = (TextView) convertView.findViewById(R.id.NameOne);                     // 第二标题
+            holder.NameTwo = (TextView) convertView.findViewById(R.id.NameTwo);                     // 第二标题
 
             holder.image_num = (ImageView) convertView.findViewById(R.id.image_num);                // 收听次数图标
             holder.tv_num = (TextView) convertView.findViewById(R.id.tv_num);                       // 收听次数

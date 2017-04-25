@@ -65,7 +65,7 @@ public class ContentAdapter extends BaseAdapter {
             holder.image_seq = (ImageView) convertView.findViewById(R.id.image_seq);                // 专辑图标
             holder.image_anchor = (ImageView) convertView.findViewById(R.id.image_anchor);          // 主播图标
 
-            holder.NameTwo = (TextView) convertView.findViewById(R.id.NameOne);                     // 第二标题
+            holder.NameTwo = (TextView) convertView.findViewById(R.id.NameTwo);                     // 第二标题
 
             holder.image_num = (ImageView) convertView.findViewById(R.id.image_num);                // 收听次数图标
             holder.tv_num = (TextView) convertView.findViewById(R.id.tv_num);                       // 收听次数
@@ -115,9 +115,10 @@ public class ContentAdapter extends BaseAdapter {
                     // 第一标题
                     contentName = lists.getContentName();
                     if (contentName == null || contentName.equals("")) {
-                        contentName = "未知";
+                        holder.NameOne.setText("未知");
+                    }else{
+                        holder.NameOne.setText(contentName);
                     }
-                    holder.NameOne.setText(contentName);
 
                     // 第二标题
                     try {
@@ -172,12 +173,12 @@ public class ContentAdapter extends BaseAdapter {
                         AssembleImageUrlUtils.loadImage(_url, contentImg, holder.image, IntegerConstant.TYPE_LIST);
                     }
 
-                    // 第一标题
                     contentName = lists.getContentName();
                     if (contentName == null || contentName.equals("")) {
-                        contentName = "未知";
+                        holder.NameOne.setText("未知");
+                    }else{
+                        holder.NameOne.setText(contentName);
                     }
-                    holder.NameOne.setText(contentName);
 
                     // 第二标题
                     try {
@@ -268,7 +269,6 @@ public class ContentAdapter extends BaseAdapter {
                     } else {
                         holder.tv_num.setText(playCount);
                     }
-
                     break;
             }
         }

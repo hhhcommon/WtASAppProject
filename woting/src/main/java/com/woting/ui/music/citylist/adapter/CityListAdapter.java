@@ -10,8 +10,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.ui.music.citylist.citymodel.secondaryCity;
-
+import com.woting.ui.music.citylist.citysmodel.secondaryCity;
 import java.util.List;
 
 /**
