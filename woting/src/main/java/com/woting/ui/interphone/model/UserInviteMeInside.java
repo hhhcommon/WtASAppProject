@@ -18,6 +18,24 @@ public class UserInviteMeInside implements Serializable {
 	private String Portrait;		//
 	private String PortraitMini;	//
 	private String UserSign;	    // 签名
+	private String Sex;             // 性别
+	private String Region;          // 区域
+
+	public void setRegion(String region) {
+		Region = region;
+	}
+
+	public String getRegion() {
+		return Region;
+	}
+
+	public void setSex(String sex) {
+		Sex = sex;
+	}
+
+	public String getSex() {
+		return Sex;
+	}
 
 	public String getNickName() {
 		return NickName;

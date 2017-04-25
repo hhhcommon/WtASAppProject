@@ -129,7 +129,7 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 				@Override
 				public void afterTextChanged(Editable s) {
 					if(TextUtils.isEmpty(s)){
-						tv_group_entry.setBackgroundResource(R.drawable.bg_graybutton);
+						tv_group_entry.setBackgroundResource(R.drawable.bg_gray_edit);
 						tv_group_entry.setTextColor(getResources().getColor(R.color.group_4b));
 					}else {
 						tv_group_entry.setBackgroundResource(R.drawable.wt_commit_button_background);
@@ -154,7 +154,7 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 					@Override
 					public void afterTextChanged(Editable s) {
 						if(TextUtils.isEmpty(s)){
-							tv_group_entry.setBackgroundResource(R.drawable.bg_graybutton);
+							tv_group_entry.setBackgroundResource(R.drawable.bg_gray_edit);
 							tv_group_entry.setTextColor(getResources().getColor(R.color.group_4b));
 						}else{
 						if(!TextUtils.isEmpty(et_group_password.getText().toString().trim())&&!TextUtils.isEmpty(et_group_password_confirm.getText().toString().trim())){
@@ -180,7 +180,7 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 					@Override
 					public void afterTextChanged(Editable s) {
 						if(TextUtils.isEmpty(s)){
-							tv_group_entry.setBackgroundResource(R.drawable.bg_graybutton);
+							tv_group_entry.setBackgroundResource(R.drawable.bg_gray_edit);
 							tv_group_entry.setTextColor(getResources().getColor(R.color.group_4b));
 						}else{
 						if(!TextUtils.isEmpty(et_group_nick.getText().toString().trim())&&!TextUtils.isEmpty(et_group_password_confirm.getText().toString().trim())){
@@ -204,7 +204,7 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 					@Override
 					public void afterTextChanged(Editable s) {
 						if(TextUtils.isEmpty(s)){
-							tv_group_entry.setBackgroundResource(R.drawable.bg_graybutton);
+							tv_group_entry.setBackgroundResource(R.drawable.bg_gray_edit);
 							tv_group_entry.setTextColor(getResources().getColor(R.color.group_4b));
 						}else{
 							if(!TextUtils.isEmpty(et_group_nick.getText().toString().trim())&&!TextUtils.isEmpty(et_group_password.getText().toString().trim())){
