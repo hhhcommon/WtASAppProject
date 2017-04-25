@@ -52,7 +52,6 @@ import com.woting.ui.musicplay.download.model.FileInfo;
 import com.woting.ui.musicplay.download.service.DownloadClient;
 import com.woting.ui.musicplay.musicdetails.PlayDetailsFragment;
 import com.woting.ui.musicplay.play.adapter.ImageAdapter;
-import com.woting.ui.musicplay.play.model.LanguageSearchInside;
 import com.woting.ui.model.share.ShareModel;
 import com.woting.ui.musicplay.programme.ProgrammeActivity;
 import com.woting.ui.musicplay.timeimg.TimerPowerOffActivity;
@@ -370,7 +369,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
             case R.id.text_sequ:// 查看专辑
                 if (!CommonHelper.checkNetwork(context)) return;
                 if (GlobalConfig.playerObject == null) return;
-                if (GlobalConfig.playerObject.getSequId() != null) {
+                if (GlobalConfig.playerObject.getSeqInfo().getContentId() != null) {
                     AlbumFragment fragment = new AlbumFragment();
                     Bundle bundle = new Bundle();
                     bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_MORE);
@@ -502,7 +501,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
 
     // 内容的下载
     private void download() {
-        LanguageSearchInside data = GlobalConfig.playerObject;
+        content data = GlobalConfig.playerObject;
         if (data == null || !data.getMediaType().equals("AUDIO")) return;
         if (data.getLocalurl() != null) {
             ToastUtils.show_always(context, "此节目已经保存到本地，请到已下载界面查看");
@@ -534,10 +533,10 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
         } else {
             _m.setContentImg(data.getSeqInfo().getContentImg());
         }
-        if (data.getSeqInfo() == null || data.getSeqInfo().getContentDesc() == null || data.getSeqInfo().getContentDesc().equals("")) {
+        if (data.getSeqInfo() == null || data.getSeqInfo().getContentDescn() == null || data.getSeqInfo().getContentDescn().equals("")) {
             _m.setContentDescn(data.getContentDescn());
         } else {
-            _m.setContentDescn(data.getSeqInfo().getContentDesc());
+            _m.setContentDescn(data.getSeqInfo().getContentDescn());
         }
         dataList.add(m);
         // 检查是否重复,如果不重复插入数据库，并且开始下载，重复了提示

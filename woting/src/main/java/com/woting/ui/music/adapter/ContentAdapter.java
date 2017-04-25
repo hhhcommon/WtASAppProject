@@ -1,117 +1,56 @@
-package com.woting.ui.music.search.adapter;
+package com.woting.ui.music.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
-import com.woting.ui.model.SuperRankInfo;
 import com.woting.ui.model.content;
 
 import java.util.List;
 
 /**
- * 适配器--搜索结果全部
- * 作者：xinlong on 2016/7/19 21:18
- * 邮箱：645700751@qq.com
+ * 推荐数据展示
  */
-public class SearchContentAdapter extends BaseExpandableListAdapter {
+public class ContentAdapter extends BaseAdapter {
+    private List<content> list;
     private Context context;
-    private List<SuperRankInfo> mSuperRankInfo;
     private Bitmap bmp;
     private String contentImg, contentName, name, playCount, contentCount, contentTime;
 
-    public SearchContentAdapter(Context context, List<SuperRankInfo> mSuperRankInfo) {
+    public ContentAdapter(Context context, List<content> list) {
         this.context = context;
-        this.mSuperRankInfo = mSuperRankInfo;
-    }
-
-    public void setList(List<SuperRankInfo> mSuperRankInfo) {
-        this.mSuperRankInfo = mSuperRankInfo;
-        notifyDataSetChanged();
+        this.list = list;
     }
 
     @Override
-    public int getGroupCount() {
-        return mSuperRankInfo.size();
+    public int getCount() {
+        return list.size();
     }
 
     @Override
-    public int getChildrenCount(int groupPosition) {
-        return mSuperRankInfo.get(groupPosition).getList().size();
+    public Object getItem(int position) {
+        return list.get(position);
     }
 
     @Override
-    public Object getGroup(int groupPosition) {
-        return mSuperRankInfo.get(groupPosition);
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosition) {
-        return mSuperRankInfo.get(groupPosition).getList().get(childPosition);
-    }
-
-    @Override
-    public long getGroupId(int groupPosition) {
-        return groupPosition;
-    }
-
-    @Override
-    public long getChildId(int groupPosition, int childPosition) {
-        return childPosition;
-    }
-
-    @Override
-    public boolean hasStableIds() {
-        return false;
-    }
-
-    @Override
-    public View getGroupView(int groupPosition, boolean isExpanded,View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.adapter_content_more, null);
-            holder = new ViewHolder();
-            holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        String key = mSuperRankInfo.get(groupPosition).getKey();
-        if (key != null && !key.equals("")) {
-            if (key.equals(StringConstant.TYPE_AUDIO)) {
-                holder.tv_name.setText("声音");
-            } else if (key.equals(StringConstant.TYPE_RADIO)) {
-                holder.tv_name.setText("电台");
-            } else if (key.equals(StringConstant.TYPE_SEQU)) {
-                holder.tv_name.setText("专辑");
-            } else if (key.equals(StringConstant.TYPE_TTS)) {
-                holder.tv_name.setText("TTS");
-            }else{
-                holder.tv_name.setText("内容");
-            }
-        } else {
-            holder.tv_name.setText("内容");
-        }
-        return convertView;
-    }
-
-    @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        final ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.adapter_content, null);
@@ -144,7 +83,8 @@ public class SearchContentAdapter extends BaseExpandableListAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        content lists = mSuperRankInfo.get(groupPosition).getList().get(childPosition);
+
+        content lists = list.get(position);
         String mediaType = lists.getMediaType();// 媒体类型
         if (mediaType != null) {
             switch (mediaType) {
@@ -175,9 +115,10 @@ public class SearchContentAdapter extends BaseExpandableListAdapter {
                     // 第一标题
                     contentName = lists.getContentName();
                     if (contentName == null || contentName.equals("")) {
-                        contentName = "未知";
+                        holder.NameOne.setText("未知");
+                    }else{
+                        holder.NameOne.setText(contentName);
                     }
-                    holder.NameOne.setText(contentName);
 
                     // 第二标题
                     try {
@@ -232,12 +173,12 @@ public class SearchContentAdapter extends BaseExpandableListAdapter {
                         AssembleImageUrlUtils.loadImage(_url, contentImg, holder.image, IntegerConstant.TYPE_LIST);
                     }
 
-                    // 第一标题
                     contentName = lists.getContentName();
                     if (contentName == null || contentName.equals("")) {
-                        contentName = "未知";
+                        holder.NameOne.setText("未知");
+                    }else{
+                        holder.NameOne.setText(contentName);
                     }
-                    holder.NameOne.setText(contentName);
 
                     // 第二标题
                     try {
@@ -328,19 +269,15 @@ public class SearchContentAdapter extends BaseExpandableListAdapter {
                     } else {
                         holder.tv_num.setText(playCount);
                     }
-
                     break;
             }
         }
+
         return convertView;
     }
 
-    @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return true;
-    }
+    static class ViewHolder {
 
-    class ViewHolder {
         public ImageView img_cover;
         public ImageView image;
         public TextView NameOne;
@@ -354,6 +291,6 @@ public class SearchContentAdapter extends BaseExpandableListAdapter {
         public ImageView image_time;
         public TextView tv_time;
         public TextView text_update_count;
-        public TextView tv_name;
     }
+
 }

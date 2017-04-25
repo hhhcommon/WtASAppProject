@@ -1,4 +1,4 @@
-package com.woting.ui.music.citylist.cityModel;
+package com.woting.ui.music.citylist.citysmodel;
 
 import java.io.Serializable;
 import java.util.List;

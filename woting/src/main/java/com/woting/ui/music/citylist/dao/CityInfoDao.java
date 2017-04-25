@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.woting.common.database.SQLiteHelper;
-import com.woting.ui.music.citylist.cityModel.secondaryCity;
+import com.woting.ui.music.citylist.citysmodel.secondaryCity;
 
 import java.util.ArrayList;
 import java.util.List;

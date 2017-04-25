@@ -48,11 +48,9 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.HorizontalListView;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseadapter.MyFragmentChildPagerAdapter;
-import com.woting.ui.interphone.commom.model.ListInfo;
 import com.woting.ui.model.content;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.musicplay.play.adapter.ImageAdapter;
-import com.woting.ui.musicplay.play.model.LanguageSearchInside;
 import com.woting.ui.model.share.ShareModel;
 import com.woting.ui.musicplay.more.PlayerMoreOperationActivity;
 import com.woting.ui.musicplay.accuse.main.AccuseFragment;
@@ -364,12 +362,12 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
             id = bundle.getString("id");
         } else if (type != null && type.trim().equals("player")) {
             // 再做一个
-            LanguageSearchInside list = (LanguageSearchInside) bundle.getSerializable("list");
-            RadioName = list.getSequName();
-            ContentDesc = list.getSequDesc();
-            id = list.getSequId();
+            content list = (content) bundle.getSerializable("list");
+            RadioName = list.getSeqInfo().getContentName();
+            ContentDesc = list.getSeqInfo().getContentDescn();
+            id = list.getSeqInfo().getContentId();
         } else {
-            LanguageSearchInside list = (LanguageSearchInside) bundle.getSerializable("list");
+            content list = (content) bundle.getSerializable("list");
             RadioName = list.getContentName();
             ContentDesc = list.getContentDescn();
             id = list.getContentId();
