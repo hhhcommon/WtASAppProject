@@ -60,7 +60,6 @@ public class DetailsFragment extends Fragment implements OnClickListener {
     private TextView textAnchor, textContent, textLabel, textConcern;
     private ImageView imageConcern;
 
-    private String contentDesc;
     private String tag = "DETAILS_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
     private boolean isConcern;
@@ -79,36 +78,36 @@ public class DetailsFragment extends Fragment implements OnClickListener {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_album_details, container, false);
             initView(rootView);
-            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                dialog = DialogUtils.Dialog(context);
-                send();
-            } else {
-                AlbumFragment.setTip(TipView.TipStatus.NO_NET);
-            }
-            if(!TextUtils.isEmpty(AlbumFragment.id)){
-
-               initGatherData();
-
-            }
+            getData();         // 获取数据
+            initGatherData();  // 数据上传
         }
         return rootView;
     }
 
+    private void getData() {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            dialog = DialogUtils.Dialog(context);
+            send();
+        } else {
+            AlbumFragment.setTip(TipView.TipStatus.NO_NET);
+        }
+    }
+
     private void initGatherData() {
-        try {
-            String beginTime = String.valueOf(System.currentTimeMillis());
-            String apiType = StringConstant.APINAME_OPEN;
-            ObjType = StringConstant.OBJTYPE_SEQU;
-            ReqParam mReqParam = new ReqParam();
-            String objId = AlbumFragment.id;
-            DataModel mdataModel = new DataModel(beginTime, apiType, ObjType, mReqParam, objId);
-            if (mdataModel != null) {
-                GatherData.collectData(IntegerConstant.DATA_UPLOAD_TYPE_GIVEN, mdataModel);
+        if (!TextUtils.isEmpty(AlbumFragment.id)) {
+            try {
+                String beginTime = String.valueOf(System.currentTimeMillis());
+                String apiType = StringConstant.APINAME_OPEN;
+                ObjType = StringConstant.OBJTYPE_SEQU;
+                ReqParam mReqParam = new ReqParam();
+                String objId = AlbumFragment.id;
+                DataModel _m = new DataModel(beginTime, apiType, ObjType, mReqParam, objId);
+                if (_m != null) {
+                    GatherData.collectData(IntegerConstant.DATA_UPLOAD_TYPE_GIVEN, _m);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
         }
     }
 
@@ -179,7 +178,6 @@ public class DetailsFragment extends Fragment implements OnClickListener {
             e.printStackTrace();
         }
         VolleyRequest.requestPost(GlobalConfig.getContentById, tag, jsonObject, new VolleyCallback() {
-            private List<ContentCatalogs> contentCatalogsList;
             private String contentId;
 
             @Override
@@ -192,17 +190,6 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                         String ResultList = result.getString("ResultInfo");
                         JSONObject arg1 = (JSONObject) new JSONTokener(ResultList).nextValue();
 
-                        try {
-                            String s = arg1.getString("ContentCatalogs");
-                            contentCatalogsList = new Gson().fromJson(s, new TypeToken<List<ContentCatalogs>>() {}.getType());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            contentDesc = arg1.getString("ContentDescn");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
                         try {
                             contentId = arg1.getString("ContentId");
                         } catch (Exception e) {
@@ -234,6 +221,8 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                             e.printStackTrace();
                         }
 
+
+                        // 以下是主页的数据适配
                         try {
                             String contentSubscribe = arg1.getString("ContentSubscribe");// 专辑是否已经订阅 == "1" 订阅  == "0" 还没订阅
                             AlbumFragment.setFlag(contentSubscribe);
@@ -241,21 +230,8 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                             e.printStackTrace();
                         }
 
-                        try {
-                            String ContentPersons = arg1.getString("ContentPersons");
-                            List<anchor> mPersonInfoList = new Gson().fromJson(ContentPersons, new TypeToken<List<anchor>>() {}.getType());
-                            if (mPersonInfoList != null && mPersonInfoList.size() > 0) {
-                                if (mPersonInfoList.get(0).getPerId() != null) {
-                                    PersonId = mPersonInfoList.get(0).getPerId();
-                                } else {
-                                    PersonId = "";
-                                }
-                            } else {
-                                PersonId = "";
-                            }
-                            AlbumFragment.setInfo(contentId, AlbumFragment.ContentImg, AlbumFragment.ContentName, contentDesc);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        if (AlbumFragment.ContentName != null && !AlbumFragment.ContentName.equals("")) {
+                            AlbumFragment.tv_album_name.setText(AlbumFragment.ContentName);
                         }
 
                         AlbumFragment.returnResult = 1;
@@ -268,12 +244,8 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                                 AlbumFragment.imageFavorite.setImageDrawable(context.getResources().getDrawable(R.mipmap.wt_img_liked));
                             }
                         }
-                        if (AlbumFragment.ContentName != null && !AlbumFragment.ContentName.equals("")) {
-                            AlbumFragment.tv_album_name.setText(AlbumFragment.ContentName);
-                            textAnchor.setText(AlbumFragment.ContentName);
-                        } else {
-                            textAnchor.setText("我听我享听");
-                        }
+
+                      // 内容部分的数据
                         if (AlbumFragment.ContentImg == null || AlbumFragment.ContentImg.equals("")) {
                             AlbumFragment.img_album.setImageResource(R.mipmap.wt_image_playertx);
                         } else {
@@ -289,23 +261,74 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                             AssembleImageUrlUtils.loadImage(_url1, url, AlbumFragment.img_album, IntegerConstant.TYPE_MINE);
                             AssembleImageUrlUtils.loadImage(_url2, url, imageHead, IntegerConstant.TYPE_MINE);
                         }
-                        if (contentDesc != null && !contentDesc.equals("") && !contentDesc.equals("null")) {
-                            textContent.setText(Html.fromHtml("<font size='28'>" + contentDesc + "</font>"));
-                            AlbumFragment.ContentDesc = contentDesc;
-                        } else {
-                            textContent.setText("暂无介绍内容");
+
+                        // 主播名称
+                        String PersonName = "";
+                        try {
+                            String ContentPersons = arg1.getString("ContentPersons");
+                            List<anchor> mPersonInfoList = new Gson().fromJson(ContentPersons, new TypeToken<List<anchor>>() {
+                            }.getType());
+                            if (mPersonInfoList != null && mPersonInfoList.size() > 0) {
+                                if (mPersonInfoList.get(0).getPerId() != null) {
+                                    PersonId = mPersonInfoList.get(0).getPerId();
+                                    PersonName = mPersonInfoList.get(0).getPerName();
+                                } else {
+                                    PersonId = "";
+                                }
+                            } else {
+                                PersonId = "";
+                            }
+                            textAnchor.setText(PersonName);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            textAnchor.setText("主播");
+                        }
+                        String contentDesc;
+                        // 节目描述
+                        try {
+                             contentDesc = arg1.getString("ContentDescn");
+                            if (contentDesc != null && !contentDesc.equals("") && !contentDesc.equals("null")) {
+                                // 设置界面
+                                textContent.setText(Html.fromHtml("<font size='28'>" + contentDesc + "</font>"));
+                            } else {
+                                // 设置界面
+                                contentDesc="";
+                                textContent.setText("暂无描述");
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            // 设置界面
+                            contentDesc="";
+                            textContent.setText("暂无描述");
+                        }
+                        // 设置下载需要的专辑信息
+                        AlbumFragment.setInfo(contentId, AlbumFragment.ContentImg, AlbumFragment.ContentName, contentDesc);
+
+
+                        // 节目标签
+                        try {
+                            String s = arg1.getString("ContentCatalogs");
+                            List<ContentCatalogs> contentCatalogsList = new Gson().fromJson(s, new TypeToken<List<ContentCatalogs>>() {
+                            }.getType());
+                            if (contentCatalogsList != null && contentCatalogsList.size() > 0) {
+                                StringBuilder builder = new StringBuilder();
+                                for (int i = 0; i < contentCatalogsList.size(); i++) {
+                                    String str = contentCatalogsList.get(i).getCataTitle();
+                                    builder.append(str);
+                                    if (i != contentCatalogsList.size() - 1) builder.append("  ");
+                                }
+                                // 设置界面
+                                textLabel.setText(builder.toString());
+                            }else{
+                                // 设置界面
+                                textLabel.setText("无标签");
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            // 设置界面
+                            textLabel.setText("无标签");
                         }
 
-                        // 标签设置
-                        if (contentCatalogsList != null && contentCatalogsList.size() > 0) {
-                            StringBuilder builder = new StringBuilder();
-                            for (int i = 0; i < contentCatalogsList.size(); i++) {
-                                String str = contentCatalogsList.get(i).getCataTitle();
-                                builder.append(str);
-                                if (i != contentCatalogsList.size() - 1) builder.append("  ");
-                            }
-                            textLabel.setText(builder.toString());
-                        }
                         AlbumFragment.hideTip();
                     } else {
                         AlbumFragment.setTip(TipView.TipStatus.IS_ERROR);
@@ -344,7 +367,6 @@ public class DetailsFragment extends Fragment implements OnClickListener {
         textLabel = null;
         imageConcern = null;
         dialog = null;
-        contentDesc = null;
         textConcern = null;
     }
 }

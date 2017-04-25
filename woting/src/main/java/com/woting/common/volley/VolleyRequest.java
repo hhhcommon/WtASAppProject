@@ -51,7 +51,6 @@ public class VolleyRequest {
      * @param callback   返回值
      */
     public static void requestPost(String url, String tag, JSONObject jsonObject, VolleyCallback callback) {
-        //GlobalConfig.baseUrl="http://182.92.175.134/";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Method.POST, GlobalConfig.baseUrl + url, jsonObject, callback.loadingListener(), callback.errorListener());
 

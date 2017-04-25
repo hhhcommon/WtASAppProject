@@ -119,6 +119,7 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
             // 轮播图
             mLoopViewPager = (Banner) headView.findViewById(R.id.slideshowView);
             mListView.addHeaderView(headView);
+            mLoopViewPager.setVisibility(View.GONE);
             setListener();
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                 dialog = DialogUtils.Dialog(context);
@@ -344,23 +345,26 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                 if (ReturnType != null && ReturnType.equals("1001")) {
                     try {
                         imageList = new Gson().fromJson(result.getString("LoopImgs"), new TypeToken<List<Image>>() {}.getType());
-//                        mLoopViewPager.setAdapter(new LoopAdapter(mLoopViewPager, context, imageList));
-//                        mLoopViewPager.setHintView(new IconHintView(context, R.mipmap.indicators_now, R.mipmap.indicators_default));
-                        mLoopViewPager.setImageLoader(new PicassoBannerLoader());
-
-                        for (int i = 0; i < imageList.size(); i++) {
-                            ImageStringList.add(imageList.get(i).getLoopImg());
-                        }
-                        mLoopViewPager.setImages(ImageStringList);
-
-                        mLoopViewPager.setOnBannerListener(new OnBannerListener() {
-                            @Override
-                            public void OnBannerClick(int position) {
-                                ToastUtils.show_always(context, ImageStringList.get(position));
+                        if (imageList != null && imageList.size() > 0) {
+                            // 有轮播图
+                            ImageStringList.clear();
+                            mLoopViewPager.setImageLoader(new PicassoBannerLoader());
+                            for (int i = 0; i < imageList.size(); i++) {
+                                ImageStringList.add(imageList.get(i).getLoopImg());
                             }
-                        });
-                        mLoopViewPager.start();
-                        mLoopViewPager.setVisibility(View.VISIBLE);
+                            mLoopViewPager.setImages(ImageStringList);
+                            mLoopViewPager.setOnBannerListener(new OnBannerListener() {
+                                @Override
+                                public void OnBannerClick(int position) {
+                                    ToastUtils.show_always(context, ImageStringList.get(position));
+                                }
+                            });
+                            mLoopViewPager.start();
+                            tipView.setVisibility(View.GONE);
+                            mLoopViewPager.setVisibility(View.VISIBLE);
+                        } else {
+                            // 无轮播图，原先的轮播图就是隐藏的此处不需要操作
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

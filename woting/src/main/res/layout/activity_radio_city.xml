@@ -43,6 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/WHITE"
+        android:divider="@color/transparent"
         android:orientation="vertical">
         <include layout="@layout/refresh_head"/>
         <com.woting.common.widgetui.pulltorefresh.PullableExpandableListView
@@ -50,6 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/WHITE"
+            android:divider="@color/transparent"
             android:scrollbars="none" />
         <include layout="@layout/load_more"/>
     </com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout>
@@ -58,6 +60,7 @@
         android:id="@+id/listview_lv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:divider="@color/transparent"
         android:background="@color/WHITE"
         android:scrollbars="none"
         android:visibility="gone"/>

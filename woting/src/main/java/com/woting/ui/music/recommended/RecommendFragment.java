@@ -227,6 +227,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
         VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
+                if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 try {
                     String returnType = result.getString("ReturnType");

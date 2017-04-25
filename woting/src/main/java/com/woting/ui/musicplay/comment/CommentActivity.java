@@ -62,7 +62,6 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
     private List<View> views = new ArrayList<>();
     private List<String> faceList;
     private List<opinion> OM;
-    private InputMethodManager imm;
 
     private Dialog confirmDialog;
     private View chatFaceContainerView;// 表情布局
@@ -90,17 +89,20 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
-        imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+
         initData();
         initView();
         initEvent();
+        delDialog();// 初始化删除确认对话框
+        initViewPager();
+        callInternet();
     }
 
     // 初始化数据
     private void initData() {
         contentId = getIntent().getStringExtra("contentId");
         mediaType = getIntent().getStringExtra("MediaType");
-
+        // 从Asset中取出的表情list
         if (GlobalConfig.staticFacesList != null && GlobalConfig.staticFacesList.size() > 0) {
             faceList = GlobalConfig.staticFacesList;
         }
@@ -121,10 +123,6 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
 
         tipView = (TipView) findViewById(R.id.tip_view);
         tipView.setWhiteClick(this);
-
-        delDialog();// 初始化删除确认对话框
-        initViewPager();
-        callInternet();
     }
 
     // 初始化点击事件
@@ -132,21 +130,6 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
         findViewById(R.id.head_left_btn).setOnClickListener(this);// 返回
         findViewById(R.id.image_face).setOnClickListener(this);// 表情按钮
         findViewById(R.id.send_sms).setOnClickListener(this);// 发送
-    }
-
-    // 获取评论列表
-    private void callInternet() {
-        if (contentId != null && !contentId.equals("")) {
-            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                send();
-            } else {
-                tipView.setVisibility(View.VISIBLE);
-                tipView.setTipView(TipView.TipStatus.NO_NET);
-            }
-        } else {
-            tipView.setVisibility(View.VISIBLE);
-            tipView.setTipView(TipView.TipStatus.IS_ERROR);
-        }
     }
 
     // 删除评论确认对话框
@@ -171,6 +154,21 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
                 }
             }
         });
+    }
+
+    // 获取评论列表
+    private void callInternet() {
+        if (contentId != null && !contentId.equals("")) {
+            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                send();
+            } else {
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_NET);
+            }
+        } else {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.IS_ERROR);
+        }
     }
 
     @Override
@@ -481,7 +479,7 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
         commentList.setFocusable(true);
         commentList.setFocusableInTouchMode(true);
         commentList.requestFocus();
-
+        InputMethodManager  imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         // 隐藏键盘
         imm.hideSoftInputFromWindow(commentList.getWindowToken(), 0);
         return true;

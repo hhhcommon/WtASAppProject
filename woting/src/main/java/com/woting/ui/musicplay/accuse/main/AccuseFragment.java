@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -45,16 +46,14 @@ import java.util.List;
 /**
  * 举报
  */
-public class AccuseFragment extends Fragment implements OnClickListener, View.OnTouchListener {
+public class AccuseFragment extends Fragment implements OnClickListener {
     private Context context;
     private Dialog dialog;
-    private InputMethodManager imm;
 
     private String tag = "FMLIST_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
 
     private View rootView;
-    private TipView tipView;// 没有网络、没有数据、加载错误提示
     private List<Accuse> allList;
     private ListView mListView;
     private EditText et_InputReason;
@@ -70,36 +69,7 @@ public class AccuseFragment extends Fragment implements OnClickListener, View.On
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-
-        imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-    }
-
-    private void setView() {
-        rootView.findViewById(R.id.head_left_btn).setOnClickListener(this);                 //  返回
-        rootView.findViewById(R.id.head_right_btn).setOnClickListener(this);                //  提交
-        mListView = (ListView) rootView.findViewById(R.id.lv_main);                            //  主listView
-        mListView.setOnTouchListener(this);
-        View footView = LayoutInflater.from(context).inflate(R.layout.accuse_footer, null);
-        et_InputReason = (EditText) footView.findViewById(R.id.et_InputReason);               //  举报原因
-        mListView.addFooterView(footView);
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.activity_accuse, container, false);
-            setView();
-            HandleIntent();
-            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                dialog = DialogUtils.Dialog(context);
-                sendRequest();
-            } else {
-                tipView.setVisibility(View.VISIBLE);
-                tipView.setTipView(TipView.TipStatus.NO_NET);
-            }
-        }
-        return rootView;
+        HandleIntent();
     }
 
     // 从上一个界面传入的contentId
@@ -109,6 +79,48 @@ public class AccuseFragment extends Fragment implements OnClickListener, View.On
         fromType = bundle.getInt(StringConstant.FROM_TYPE);
         ContentId = bundle.getString("ContentId");
         MediaType = bundle.getString("MediaType");
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.activity_accuse, container, false);
+            setView();// 设置界面
+            getData();// 获取数据
+        }
+        return rootView;
+    }
+
+    // 设置界面
+    private void setView() {
+        rootView.findViewById(R.id.head_left_btn).setOnClickListener(this);                 //  返回
+        rootView.findViewById(R.id.head_right_btn).setOnClickListener(this);                //  提交
+        mListView = (ListView) rootView.findViewById(R.id.lv_main);                            //  主listView
+//        mListView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                // 点击空白处隐藏键盘
+//                mListView.setFocusable(true);
+//                mListView.setFocusableInTouchMode(true);
+//                mListView.requestFocus();
+//                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+//                imm.hideSoftInputFromWindow(mListView.getWindowToken(), 0);        // 隐藏键盘
+//                return true;
+//            }
+//        });
+        View footView = LayoutInflater.from(context).inflate(R.layout.accuse_footer, null);
+        et_InputReason = (EditText) footView.findViewById(R.id.et_InputReason);               //  举报原因
+        mListView.addFooterView(footView);
+    }
+
+    // 获取数据
+    private void getData() {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            dialog = DialogUtils.Dialog(context);
+            sendRequest();
+        } else {
+           ToastUtils.show_always(context,"网络连接失败,请稍后再试!");
+        }
     }
 
     //获取举报列表
@@ -125,9 +137,8 @@ public class AccuseFragment extends Fragment implements OnClickListener, View.On
         VolleyRequest.requestPost(GlobalConfig.getCatalogUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
-                Log.e("获取举报列表", "" + result.toString());
+                if (dialog != null ) dialog.dismiss();
                 if (isCancelRequest) return;
-                if (dialog != null && dialog.isShowing()) dialog.dismiss();
                 try {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null) {
@@ -137,27 +148,32 @@ public class AccuseFragment extends Fragment implements OnClickListener, View.On
                                 allList = new Gson().fromJson(ResultList, new TypeToken<List<Accuse>>() {
                                 }.getType());
                                 if (allList != null && allList.size() > 0) {
-                                    setListView();
+                                    setListViewData();
                                 } else {
-                                    ToastUtils.show_always(context, "获取举报列表失败，请返回上一级页面重试");
+                                    ToastUtils.show_always(context, "出错了,请您稍后再试!");
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                ToastUtils.show_always(context, "出错了,请您稍后再试!");
                             }
-                        } else if (ReturnType.equals("1002")) {
-                            ToastUtils.show_short(context, "无此分类信息");
-                        } else if (ReturnType.equals("1003")) {
-                            ToastUtils.show_short(context, "分类不存在");
-                        } else if (ReturnType.equals("1011")) {
-                            ToastUtils.show_short(context, "当前暂无分类");
-                        } else if (ReturnType.equals("T")) {
-                            ToastUtils.show_short(context, "获取列表异常");
+                        } else {
+                            ToastUtils.show_always(context, "出错了,请您稍后再试!");
                         }
+//                        if (ReturnType.equals("1002")) {
+//                            ToastUtils.show_short(context, "无此分类信息");
+//                        } else if (ReturnType.equals("1003")) {
+//                            ToastUtils.show_short(context, "分类不存在");
+//                        } else if (ReturnType.equals("1011")) {
+//                            ToastUtils.show_short(context, "当前暂无分类");
+//                        } else if (ReturnType.equals("T")) {
+//                            ToastUtils.show_short(context, "获取列表异常");
+//                        }
                     } else {
-                        ToastUtils.show_short(context, "数据获取异常，请稍候重试");
+                        ToastUtils.show_always(context, "出错了,请您稍后再试!");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    ToastUtils.show_always(context, "出错了,请您稍后再试!");
                 }
             }
 
@@ -171,7 +187,7 @@ public class AccuseFragment extends Fragment implements OnClickListener, View.On
     }
 
     //设置listview的数据内容
-    private void setListView() {
+    private void setListViewData() {
         if (mListView != null && allList != null && allList.size() > 0) {
             adapter = new AccuseAdapter(context, allList);
             mListView.setAdapter(adapter);
@@ -212,7 +228,7 @@ public class AccuseFragment extends Fragment implements OnClickListener, View.On
                 break;
             case R.id.head_right_btn:
                 if (!TextUtils.isEmpty(ContentId)) {
-                    if (!handledata()) {
+                    if (!handleData()) {
                         ToastUtils.show_always(context, "请至少选择一项举报理由");
                         return;
                     }
@@ -227,7 +243,7 @@ public class AccuseFragment extends Fragment implements OnClickListener, View.On
         }
     }
 
-    private boolean handledata() {
+    private boolean handleData() {
         // 单选策略
         for (int i = 0; i < allList.size(); i++) {
             if (allList.get(i).getCheckType() == 1) {
@@ -261,10 +277,9 @@ public class AccuseFragment extends Fragment implements OnClickListener, View.On
         VolleyRequest.requestPost(GlobalConfig.presentAccuseUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
-                Log.e("获取举报列表", "" + result.toString());
+                if (dialog != null ) dialog.dismiss();
                 if (isCancelRequest) return;
                 IsDataOk = false;
-                if (dialog != null && dialog.isShowing()) dialog.dismiss();
                 try {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null) {
@@ -323,15 +338,4 @@ public class AccuseFragment extends Fragment implements OnClickListener, View.On
         isCancelRequest = VolleyRequest.cancelRequest(tag);
     }
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        // 点击空白处隐藏键盘
-        mListView.setFocusable(true);
-        mListView.setFocusableInTouchMode(true);
-        mListView.requestFocus();
-
-        // 隐藏键盘
-        imm.hideSoftInputFromWindow(mListView.getWindowToken(), 0);
-        return true;
-    }
 }

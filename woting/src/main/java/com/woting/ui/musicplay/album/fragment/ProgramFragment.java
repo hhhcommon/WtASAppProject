@@ -281,7 +281,13 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
         });
     }
 
-    // 设置下载需要的专辑信息
+    /**
+     * 设置下载需要的专辑信息
+     * @param sequId
+     * @param sequImg
+     * @param sequName
+     * @param sequDesc
+     */
     public void setInfo(String sequId, String sequImg, String sequName, String sequDesc) {
         this.sequId = sequId;
         this.sequImg = sequImg;

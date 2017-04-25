@@ -14,6 +14,7 @@
     <ExpandableListView
         android:id="@+id/ex_listview"
         android:layout_width="match_parent"
+        android:divider="@color/transparent"
         android:layout_height="match_parent"
         android:scrollbars="none"/>
 
