@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animationCache="false"
-        android:divider="@color/app_bg"
+        android:divider="@color/transparent"
         android:background="@color/app_bg"
         android:scrollbars="none"
         android:scrollingCache="false"/>

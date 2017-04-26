@@ -12,8 +12,7 @@
         android:id="@+id/listView_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@color/text_line_1"
-        android:dividerHeight="0.5dp"
+        android:divider="@color/transparent"
         android:groupIndicator="@color/transparent"
         android:scrollbars="none">
     </com.woting.common.widgetui.pulltorefresh.PullableExpandableListView>

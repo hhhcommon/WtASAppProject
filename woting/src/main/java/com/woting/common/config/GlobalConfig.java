@@ -2,10 +2,10 @@ package com.woting.common.config;
 
 import android.os.Environment;
 
-import com.woting.ui.music.citylist.cityModel.secondaryCity;
-import com.woting.ui.musicplay.play.model.LanguageSearchInside;
+import com.woting.ui.model.content;
 import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.common.model.UserInfo;
+import com.woting.ui.music.citylist.citysmodel.secondaryCity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public class GlobalConfig {
     public static final int HTTP_CONNECTION_TIMEOUT = 0 * 1000;
     public static List<GroupInfo> list_group;       // 通讯录中的对讲组
     public static List<UserInfo> list_person;       // 通讯录中的好友
-    public static LanguageSearchInside playerObject;// 播放器播放对象
+    public static content playerObject;// 播放器播放对象
     //缓存路径
     public static String playCacheDirI = Environment.getRootDirectory().getAbsolutePath(); // 获取手机根目录
     public static String playCacheDirO = Environment.getExternalStorageDirectory().getAbsolutePath(); // 获取 SD 卡根目录

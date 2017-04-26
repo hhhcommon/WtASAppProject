@@ -21,7 +21,6 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.PicassoBannerLoader;
 import com.woting.common.util.ToastUtils;
@@ -30,13 +29,12 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
+import com.woting.ui.music.adapter.ContentAdapter;
 import com.woting.ui.model.content;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
-import com.woting.ui.musicplay.play.model.PlayerHistory;
 import com.woting.ui.musicplay.album.main.AlbumFragment;
 import com.woting.ui.music.radiolist.adapter.ForNullAdapter;
-import com.woting.ui.music.radiolist.adapter.RadioListAdapter;
 import com.woting.ui.music.radiolist.main.RadioListFragment;
 import com.woting.ui.music.radiolist.mode.Image;
 import com.woting.ui.main.MainActivity;
@@ -58,7 +56,7 @@ import java.util.List;
 public class RecommendFragment extends Fragment implements TipView.WhiteViewClick {
     private Context context;
     private SearchPlayerHistoryDao dbDao;// 数据库
-    private RadioListAdapter adapter;
+    private ContentAdapter adapter;
     private Banner mLoopViewPager;
 
     private List<Image> imageList=new ArrayList<>();
@@ -104,6 +102,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             // 轮播图
             mLoopViewPager = (Banner) headView.findViewById(R.id.slideshowView);
             mListView.addHeaderView(headView);
+            mLoopViewPager.setVisibility(View.GONE);
             setListener();
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {// 发送网络请求
                 sendRequest();
@@ -174,7 +173,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                         if (refreshType == 1) newList.clear();
                         newList.addAll(subList);
                         if (adapter == null) {
-                            mListView.setAdapter(adapter = new RadioListAdapter(context, newList));
+                            mListView.setAdapter(adapter = new ContentAdapter(context, newList));
                         } else {
                             adapter.notifyDataSetChanged();
                         }
@@ -344,24 +343,26 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                     try {
                         imageList = new Gson().fromJson(result.getString("LoopImgs"), new TypeToken<List<Image>>() {
                         }.getType());
-                        //  mLoopViewPager.setAdapter(new LoopAdapter(mLoopViewPager, context, imageList));
-                        //  mLoopViewPager.setHintView(new IconHintView(context, R.mipmap.indicators_now, R.mipmap.indicators_default));
-                        mLoopViewPager.setImageLoader(new PicassoBannerLoader());
-
-                        for (int i = 0; i < imageList.size(); i++) {
-                            ImageStringList.add(imageList.get(i).getLoopImg());
-                        }
-                        mLoopViewPager.setImages(ImageStringList);
-
-                        mLoopViewPager.setOnBannerListener(new OnBannerListener() {
-                            @Override
-                            public void OnBannerClick(int position) {
-                                ToastUtils.show_always(context, ImageStringList.get(position - 1));
+                        if (imageList != null && imageList.size() > 0) {
+                            // 有轮播图
+                            ImageStringList.clear();
+                            mLoopViewPager.setImageLoader(new PicassoBannerLoader());
+                            for (int i = 0; i < imageList.size(); i++) {
+                                ImageStringList.add(imageList.get(i).getLoopImg());
                             }
-                        });
-                        mLoopViewPager.start();
-                        tipView.setVisibility(View.GONE);
-                        mLoopViewPager.setVisibility(View.VISIBLE);
+                            mLoopViewPager.setImages(ImageStringList);
+                            mLoopViewPager.setOnBannerListener(new OnBannerListener() {
+                                @Override
+                                public void OnBannerClick(int position) {
+                                    ToastUtils.show_always(context, ImageStringList.get(position));
+                                }
+                            });
+                            mLoopViewPager.start();
+                            tipView.setVisibility(View.GONE);
+                            mLoopViewPager.setVisibility(View.VISIBLE);
+                        } else {
+                            // 无轮播图，原先的轮播图就是隐藏的此处不需要操作
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         mLoopViewPager.setVisibility(View.GONE);

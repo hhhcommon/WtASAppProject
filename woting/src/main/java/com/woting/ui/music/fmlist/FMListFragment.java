@@ -1,4 +1,4 @@
-package com.woting.ui.music.fmlist.fragment;
+package com.woting.ui.music.fmlist;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +25,6 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.helper.CommonHelper;
-import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
@@ -34,12 +32,11 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
+import com.woting.ui.music.adapter.ContentAdapter;
 import com.woting.ui.model.content;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
-import com.woting.ui.musicplay.play.model.PlayerHistory;
 import com.woting.ui.music.radio.model.RadioPlay;
-import com.woting.ui.music.fmlist.adapter.RankInfoAdapter;
 import com.woting.ui.main.MainActivity;
 
 import org.json.JSONException;
@@ -58,7 +55,7 @@ import java.util.List;
 public class FMListFragment extends Fragment implements TipView.WhiteViewClick {
     private Context context;
     private SearchPlayerHistoryDao dbDao;
-    private RankInfoAdapter adapter;
+    private ContentAdapter adapter;
     private SharedPreferences shared = BSApplication.SharedPreferences;
     private List<content> newList = new ArrayList<>();
 
@@ -265,7 +262,7 @@ public class FMListFragment extends Fragment implements TipView.WhiteViewClick {
                                     if (RefreshType == 1) newList.clear();
                                     newList.addAll(SubList);
                                     if (adapter == null) {
-                                        mListView.setAdapter(adapter = new RankInfoAdapter(context, newList));
+                                        mListView.setAdapter(adapter = new ContentAdapter(context, newList));
                                     } else {
                                         adapter.notifyDataSetChanged();
                                     }

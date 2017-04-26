@@ -19,17 +19,10 @@ public class AccuseAdapter extends BaseAdapter {
 	private Context context;
 	private Accuse lists;
 
-	private AccuseCheck friendcheck;
-
 	public AccuseAdapter(Context context, List<Accuse> list) {
 		super();
 		this.list = list;
 		this.context = context;
-	}
-
-
-	public void setOnListener(AccuseCheck friendcheck) {
-		this.friendcheck = friendcheck;
 	}
 
 	@Override
@@ -71,10 +64,6 @@ public class AccuseAdapter extends BaseAdapter {
 
 		}
 		return convertView;
-	}
-
-	public interface AccuseCheck {
-        void checkposition(int position);
 	}
 
 	class ViewHolder {

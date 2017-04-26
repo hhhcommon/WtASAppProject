@@ -18,7 +18,26 @@ public class content extends commonContent implements Serializable {
     public String IsPlaying;         //  正在直播 大城小事
     public String ContentFreqs;      //
     public String ContentURIS;       //
+    public String PlayerAllTime;       //
+    private String PlayerInTime;        // 此时播放时长
+
     public String Userid;            //
+
+    public String getPlayerInTime() {
+        return PlayerInTime;
+    }
+
+    public void setPlayerInTime(String playerInTime) {
+        PlayerInTime = playerInTime;
+    }
+
+    public String getPlayerAllTime() {
+        return PlayerAllTime;
+    }
+
+    public void setPlayerAllTime(String playerAllTime) {
+        PlayerAllTime = playerAllTime;
+    }
 
     public String getUserid() {
         return Userid;

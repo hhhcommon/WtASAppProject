@@ -1,4 +1,4 @@
-package com.woting.ui.music.recommended.fragment;
+package com.woting.ui.music.recommended;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
+
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -20,7 +22,6 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.PicassoBannerLoader;
 import com.woting.common.util.ToastUtils;
@@ -31,10 +32,9 @@ import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.model.content;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
-import com.woting.ui.musicplay.play.model.PlayerHistory;
 import com.woting.ui.musicplay.album.main.AlbumFragment;
 import com.woting.ui.music.radiolist.mode.Image;
-import com.woting.ui.music.recommended.adapter.RecommendListAdapter;
+import com.woting.ui.music.adapter.ContentAdapter;
 import com.woting.ui.main.MainActivity;
 import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
@@ -52,7 +52,7 @@ import java.util.List;
 public class RecommendFragment extends Fragment implements TipView.WhiteViewClick {
     private SearchPlayerHistoryDao dbDao;
     private FragmentActivity context;
-    private RecommendListAdapter adapter;
+    private ContentAdapter adapter;
     private Banner mLoopViewPager;
 
     private List<content> newList = new ArrayList<>();
@@ -87,6 +87,10 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
 
             // 轮播图
             headView = LayoutInflater.from(context).inflate(R.layout.headview_fragment_recommend, null);
+            View in= headView.findViewById(R.id.include_view);
+            TextView _tv=(TextView)in.findViewById(R.id.tv_name);
+            _tv .setText("猜你喜欢");
+            in.findViewById(R.id.lin_head_more).setVisibility(View.INVISIBLE);
             mLoopViewPager = (Banner) headView.findViewById(R.id.slideshowView);
             mListView.addHeaderView(headView);
             mLoopViewPager.setVisibility(View.GONE);
@@ -223,6 +227,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
         VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
+                if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 try {
                     String returnType = result.getString("ReturnType");
@@ -235,7 +240,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                             if (refreshType == 1) newList.clear();
                             newList.addAll(subList);
                             if (adapter == null) {
-                                mListView.setAdapter(adapter = new RecommendListAdapter(context, newList));
+                                mListView.setAdapter(adapter = new ContentAdapter(context, newList));
                             } else {
                                 adapter.notifyDataSetChanged();
                             }

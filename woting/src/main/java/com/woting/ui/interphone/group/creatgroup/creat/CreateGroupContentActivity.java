@@ -15,6 +15,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,7 +69,6 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 	private TextView head_name_tv;
 	private TextView tv_group_entry;
 	private EditText et_group_nick;
-	private EditText et_group_sign;
 	private EditText et_group_password;
 	private ImageView ImageUrl;
 
@@ -76,7 +78,7 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 	private String imagePath;
 	private String MiniUri;
 	private String NICK;
-	private String SIGN;
+	//private String SIGN;
 	private String outputFilePath;
 	private String PhotoCutAfterImagePath;
 	private String tag = "CREATE_GROUP_CONTENT_VOLLEY_REQUEST_CANCEL_TAG";
@@ -90,6 +92,7 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 	private int imageNum;
 	private boolean isCancelRequest;
 	private Uri outputFileUri;
+	private EditText et_group_password_confirm;
 
 
 	@Override
@@ -100,8 +103,121 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 		imageNum=0;
 		setView();
 		handleIntent();
+		initTextWatcher();
 		setListener();
 		Dialog();
+
+	}
+
+	private void initTextWatcher() {
+		if (GroupType==null||GroupType.equals("")) {
+			ToastUtils.show_always(context, "获取组类型异常，请返回上一界面重新选择");
+		}else {
+			if(GroupType.equals("Open")||GroupType.equals("Validate")){
+				//判断，一个EditText
+			et_group_nick.addTextChangedListener(new TextWatcher() {
+				@Override
+				public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+				}
+
+				@Override
+				public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+				}
+
+				@Override
+				public void afterTextChanged(Editable s) {
+					if(TextUtils.isEmpty(s)){
+						tv_group_entry.setBackgroundResource(R.drawable.bg_gray_edit);
+						tv_group_entry.setTextColor(getResources().getColor(R.color.group_4b));
+					}else {
+						tv_group_entry.setBackgroundResource(R.drawable.wt_commit_button_background);
+						tv_group_entry.setTextColor(getResources().getColor(R.color.white));
+					}
+
+					}
+			});
+		}else{
+				//密码群的判断，两个EditText
+				et_group_nick.addTextChangedListener(new TextWatcher() {
+					@Override
+					public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+					}
+
+					@Override
+					public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+					}
+
+					@Override
+					public void afterTextChanged(Editable s) {
+						if(TextUtils.isEmpty(s)){
+							tv_group_entry.setBackgroundResource(R.drawable.bg_gray_edit);
+							tv_group_entry.setTextColor(getResources().getColor(R.color.group_4b));
+						}else{
+						if(!TextUtils.isEmpty(et_group_password.getText().toString().trim())&&!TextUtils.isEmpty(et_group_password_confirm.getText().toString().trim())){
+							tv_group_entry.setBackgroundResource(R.drawable.wt_commit_button_background);
+							tv_group_entry.setTextColor(getResources().getColor(R.color.white));
+						}
+						}
+
+					}
+				});
+
+				et_group_password.addTextChangedListener(new TextWatcher() {
+					@Override
+					public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+					}
+
+					@Override
+					public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+					}
+
+					@Override
+					public void afterTextChanged(Editable s) {
+						if(TextUtils.isEmpty(s)){
+							tv_group_entry.setBackgroundResource(R.drawable.bg_gray_edit);
+							tv_group_entry.setTextColor(getResources().getColor(R.color.group_4b));
+						}else{
+						if(!TextUtils.isEmpty(et_group_nick.getText().toString().trim())&&!TextUtils.isEmpty(et_group_password_confirm.getText().toString().trim())){
+							tv_group_entry.setBackgroundResource(R.drawable.wt_commit_button_background);
+							tv_group_entry.setTextColor(getResources().getColor(R.color.white));
+						}
+						}
+					}
+				});
+				et_group_password_confirm.addTextChangedListener(new TextWatcher() {
+					@Override
+					public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+					}
+
+					@Override
+					public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+					}
+
+					@Override
+					public void afterTextChanged(Editable s) {
+						if(TextUtils.isEmpty(s)){
+							tv_group_entry.setBackgroundResource(R.drawable.bg_gray_edit);
+							tv_group_entry.setTextColor(getResources().getColor(R.color.group_4b));
+						}else{
+							if(!TextUtils.isEmpty(et_group_nick.getText().toString().trim())&&!TextUtils.isEmpty(et_group_password.getText().toString().trim())){
+								tv_group_entry.setBackgroundResource(R.drawable.wt_commit_button_background);
+								tv_group_entry.setTextColor(getResources().getColor(R.color.white));
+							}
+						}
+					}
+				});
+
+			}
+
+		}
 	}
 
 	private void Dialog() {
@@ -149,7 +265,7 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 		try {
 			// 模块属性
 			jsonObject.put("GroupType", groupType);
-			jsonObject.put("GroupSignature", SIGN);
+			//jsonObject.put("GroupSignature", SIGN);
 			jsonObject.put("GroupName", NICK);
 			/*
 			 * //NeedMember参数 0为不需要 1为需要 jsonObject.put("NeedMember", 0);
@@ -274,7 +390,7 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 			groupType = 2;
 		} else if (GroupType.equals("Validate")) {
 			lin_status_first.setVisibility(View.GONE);
-			lin_status_second.setVisibility(View.VISIBLE);
+			lin_status_second.setVisibility(View.GONE);
 			RequestStatus = 3;
 			groupType = 0;
 		}
@@ -292,9 +408,10 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 		head_name_tv = (TextView) findViewById(R.id.head_name_tv);
 		tv_group_entry = (TextView) findViewById(R.id.tv_group_entrygroup);
 		et_group_nick = (EditText) findViewById(R.id.et_group_nick);
-		et_group_sign = (EditText) findViewById(R.id.et_group_sign);
+		//et_group_sign = (EditText) findViewById(R.id.et_group_sign);
      	ImageUrl = (ImageView) findViewById(R.id.ImageUrl);
 		et_group_password = (EditText) findViewById(R.id.edittext_password);
+		et_group_password_confirm=(EditText)findViewById(R.id.edittext_password_confirm);
 	}
 
 	@Override
@@ -308,14 +425,15 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 			break;
 		case R.id.tv_group_entrygroup:
 			NICK=et_group_nick.getText().toString().trim();
-			SIGN=et_group_sign.getText().toString().trim();
+			//SIGN=et_group_sign.getText().toString().trim();
 			if(NICK==null||NICK.equals("")){
 				ToastUtils.show_always(context, "请输入群名");
 				return;
-			} else if (SIGN == null || SIGN.equals("")) {
-				ToastUtils.show_always(context, "请输入群签名");
-				return;
 			} else {
+				if(NICK.length()>11){
+					ToastUtils.show_always(context,"群名请不要超过11位");
+					return;
+				}
 				if (RequestStatus == 2) {
 					checkEdit();
 				} else if (RequestStatus == 1 || RequestStatus == 3) {
@@ -334,9 +452,20 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 	// 密码群时的edittext输入框验证方法
 	private void checkEdit() {
 		password = et_group_password.getText().toString().trim();
+		String passwordconfirm=et_group_password_confirm.getText().toString().trim();
 
 		if (password == null || password.trim().equals("")) {
 			Toast.makeText(this, "密码不能为空", Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		if(TextUtils.isEmpty(passwordconfirm)){
+			ToastUtils.show_always(context,"密码确认不能为空");
+			return;
+		}
+
+		if(!password.equals(passwordconfirm)){
+			ToastUtils.show_always(context,"两次输入的群密码不一致");
 			return;
 		}
 
@@ -345,6 +474,12 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 			// mEditTextPassWord.setError(Html.fromHtml("<font color=#ff0000>密码请输入六位以上</font>"));
 			return;
 		}
+		if(password.length() >11){
+			Toast.makeText(this, "密码不能超过11位", Toast.LENGTH_SHORT).show();
+			// mEditTextPassWord.setError(Html.fromHtml("<font color=#ff0000>密码请输入六位以上</font>"));
+			return;
+		}
+
 		// 提交数据
 		if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
 			dialog = DialogUtils.Dialog(context);
@@ -717,9 +852,7 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
 		et_group_nick = null;
 		et_group_password = null;
 		password = null;
-		et_group_sign = null;
 		NICK = null;
-		SIGN = null;
 		imageDialog = null;
 		ImageUrl = null;
 		outputFileUri = null;

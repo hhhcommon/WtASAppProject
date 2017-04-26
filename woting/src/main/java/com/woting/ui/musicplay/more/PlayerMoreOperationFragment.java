@@ -52,7 +52,6 @@ import com.woting.ui.musicplay.download.model.FileInfo;
 import com.woting.ui.musicplay.download.service.DownloadClient;
 import com.woting.ui.musicplay.musicdetails.PlayDetailsFragment;
 import com.woting.ui.musicplay.play.adapter.ImageAdapter;
-import com.woting.ui.musicplay.play.model.LanguageSearchInside;
 import com.woting.ui.model.share.ShareModel;
 import com.woting.ui.musicplay.programme.ProgrammeActivity;
 import com.woting.ui.musicplay.timeimg.TimerPowerOffActivity;
@@ -370,7 +369,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
             case R.id.text_sequ:// 查看专辑
                 if (!CommonHelper.checkNetwork(context)) return;
                 if (GlobalConfig.playerObject == null) return;
-                if (GlobalConfig.playerObject.getSequId() != null) {
+                if (GlobalConfig.playerObject.getSeqInfo()!=null&&GlobalConfig.playerObject.getSeqInfo().getContentId() != null) {
                     AlbumFragment fragment = new AlbumFragment();
                     Bundle bundle = new Bundle();
                     bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_MORE);
@@ -387,8 +386,10 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                 if (!TextUtils.isEmpty(GlobalConfig.playerObject.getContentId()) && !TextUtils.isEmpty(GlobalConfig.playerObject.getMediaType())) {
                     if (CommonUtils.getUserIdNoImei(context) != null && !CommonUtils.getUserIdNoImei(context).equals("")) {
                         Intent intent = new Intent(context, CommentActivity.class);
-                        intent.putExtra("contentId", GlobalConfig.playerObject.getContentId());
-                        intent.putExtra("MediaType", GlobalConfig.playerObject.getMediaType());
+                        Bundle _b=new Bundle();
+                        _b.putString("contentId", GlobalConfig.playerObject.getContentId());
+                        _b.putString("MediaType", GlobalConfig.playerObject.getMediaType());
+                        intent.putExtras(_b);
                         startActivity(intent);
                     } else {
                         ToastUtils.show_always(context, "请先登录~~");
@@ -405,7 +406,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                 PlayerMoreOperationActivity.open(historyFrag);
                 break;
             case R.id.text_subscribe:// 我的订阅
-                subscriberListFragment = new com.woting.ui.musicplay.subscriber.main.SubscriberListFragment();
+                subscriberListFragment = new SubscriberListFragment();
                 Bundle bundleSub = new Bundle();
                 bundleSub.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_MORE);
                 subscriberListFragment.setArguments(bundleSub);
@@ -502,7 +503,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
 
     // 内容的下载
     private void download() {
-        LanguageSearchInside data = GlobalConfig.playerObject;
+        content data = GlobalConfig.playerObject;
         if (data == null || !data.getMediaType().equals("AUDIO")) return;
         if (data.getLocalurl() != null) {
             ToastUtils.show_always(context, "此节目已经保存到本地，请到已下载界面查看");
@@ -510,51 +511,24 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
         }
         // 对数据进行转换
         List<content> dataList = new ArrayList<>();
-        content m = new content();
-        m.setContentPlay(data.getContentPlay());
-        m.setContentImg(data.getContentImg());
-        m.setContentName(data.getContentName());
-        m.setContentPub(data.getContentPub());
-        m.setContentTimes(data.getContentTimes());
-        m.setUserid(CommonUtils.getUserId(context));
-        m.setDownloadtype("0");
-        album _m = m.getSeqInfo();
-        if (data.getSeqInfo() == null || data.getSeqInfo().getContentName() == null || data.getSeqInfo().getContentName().equals("")) {
-            _m.setContentName(data.getContentName());
-        } else {
-            _m.setContentName(data.getSeqInfo().getContentName());
-        }
-        if (data.getSeqInfo() == null || data.getSeqInfo().getContentId() == null || data.getSeqInfo().getContentId().equals("")) {
-            _m.setContentId(data.getContentId());
-        } else {
-            _m.setContentId(data.getSeqInfo().getContentId());
-        }
-        if (data.getSeqInfo() == null || data.getSeqInfo().getContentImg() == null || data.getSeqInfo().getContentImg().equals("")) {
-            _m.setContentImg(data.getContentImg());
-        } else {
-            _m.setContentImg(data.getSeqInfo().getContentImg());
-        }
-        if (data.getSeqInfo() == null || data.getSeqInfo().getContentDesc() == null || data.getSeqInfo().getContentDesc().equals("")) {
-            _m.setContentDescn(data.getContentDescn());
-        } else {
-            _m.setContentDescn(data.getSeqInfo().getContentDesc());
-        }
-        dataList.add(m);
+        data.setUserid(CommonUtils.getUserId(context));
+        data.setDownloadtype("0");
+        dataList.add(data);
         // 检查是否重复,如果不重复插入数据库，并且开始下载，重复了提示
         List<FileInfo> fileDataList = mFileDao.queryFileInfoAll(CommonUtils.getUserId(context));
         if (fileDataList.size() != 0) {// 此时有下载数据
             boolean isDownload = false;
             for (int j = 0; j < fileDataList.size(); j++) {
-                if (fileDataList.get(j).getUrl().equals(m.getContentPlay())) {
+                if (fileDataList.get(j).getUrl().equals(data.getContentPlay())) {
                     isDownload = true;
                     break;
                 }
             }
             if (isDownload) {
-                ToastUtils.show_always(context, m.getContentName() + "已经存在于下载列表");
+                ToastUtils.show_always(context, data.getContentName() + "已经存在于下载列表");
             } else {
                 mFileDao.insertFileInfo(dataList);
-                ToastUtils.show_always(context, m.getContentName() + "已经插入了下载列表");
+                ToastUtils.show_always(context, data.getContentName() + "已经插入了下载列表");
                 List<FileInfo> fileUnDownLoadList = mFileDao.queryFileInfo("false", CommonUtils.getUserId(context));// 未下载列表
                 for (int kk = 0; kk < fileUnDownLoadList.size(); kk++) {
                     if (fileUnDownLoadList.get(kk).getDownloadtype() == 1) {
@@ -563,9 +537,9 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                     }
                 }
                 for (int k = 0; k < fileUnDownLoadList.size(); k++) {
-                    if (fileUnDownLoadList.get(k).getUrl().equals(m.getContentPlay())) {
+                    if (fileUnDownLoadList.get(k).getUrl().equals(data.getContentPlay())) {
                         FileInfo file = fileUnDownLoadList.get(k);
-                        mFileDao.updataDownloadStatus(m.getContentPlay(), "1");
+                        mFileDao.updataDownloadStatus(data.getContentPlay(), "1");
                         DownloadClient.workStart(file);
                         Intent p_intent = new Intent(BroadcastConstants.PUSH_DOWN_UNCOMPLETED);
                         context.sendBroadcast(p_intent);
@@ -575,12 +549,12 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
             }
         } else {// 此时库里没数据
             mFileDao.insertFileInfo(dataList);
-            ToastUtils.show_always(context, m.getContentName() + "已经插入了下载列表");
+            ToastUtils.show_always(context, data.getContentName() + "已经插入了下载列表");
             List<FileInfo> fileUnDownloadList = mFileDao.queryFileInfo("false", CommonUtils.getUserId(context));// 未下载列表
             for (int k = 0; k < fileUnDownloadList.size(); k++) {
-                if (fileUnDownloadList.get(k).getUrl().equals(m.getContentPlay())) {
+                if (fileUnDownloadList.get(k).getUrl().equals(data.getContentPlay())) {
                     FileInfo file = fileUnDownloadList.get(k);
-                    mFileDao.updataDownloadStatus(m.getContentPlay(), "1");
+                    mFileDao.updataDownloadStatus(data.getContentPlay(), "1");
                     DownloadClient.workStart(file);
                     DownLoadUnCompletedFragment.dwType = true;
                     Intent p_intent = new Intent(BroadcastConstants.PUSH_DOWN_UNCOMPLETED);

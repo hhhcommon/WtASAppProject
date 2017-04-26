@@ -9,8 +9,7 @@ import android.util.Log;
 
 import com.baidu.cyberplayer.core.BVideoView;
 import com.woting.common.service.IntegrationPlayerService;
-import com.woting.ui.musicplay.play.model.LanguageSearchInside;
-
+import com.woting.ui.model.content;
 import java.util.List;
 
 /**
@@ -91,7 +90,7 @@ public class IntegrationPlayer {
     /**
      * 更新播放列表
      */
-    public void updatePlayList(List<LanguageSearchInside> list) {
+    public void updatePlayList(List<content> list) {
         if(mBound && mService != null) {
             mService.updatePlayList(list);
         }
@@ -100,7 +99,7 @@ public class IntegrationPlayer {
     /**
      * 更新播放列表
      */
-    public void updatePlayList(List<LanguageSearchInside> list, int position) {
+    public void updatePlayList(List<content> list, int position) {
         if(mBound && mService != null) {
             mService.updatePlayList(list, position);
         }

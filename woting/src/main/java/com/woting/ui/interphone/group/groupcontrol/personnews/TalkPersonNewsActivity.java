@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -21,9 +23,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.helper.CreateQRImageHelper;
 import com.woting.common.util.AssembleImageUrlUtils;
-import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
@@ -33,7 +33,6 @@ import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.common.model.UserInfo;
-import com.woting.ui.common.qrcodes.EWMShowActivity;
 import com.woting.ui.interphone.alert.CallAlertActivity;
 import com.woting.ui.interphone.chat.fragment.ChatFragment;
 import com.woting.ui.interphone.model.UserInviteMeInside;
@@ -42,17 +41,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * 个人详情页
- * 作者：xinlong on 2016/1/19 21:18
- * 邮箱：645700751@qq.com
+ * 好友页面，只能修改AliasName
  */
 public class TalkPersonNewsActivity extends AppBaseActivity {
-    private String name;
     private String imageUrl;
     private String id;
     private String descN;
-    private String num;
-    private String b_name;
     private String groupId;
     private String tag = "TALK_PERSON_NEWS_VOLLEY_REQUEST_CANCEL_TAG";
 
@@ -62,14 +56,9 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
     private ImageView image_add;
     private ImageView image_xiugai;
     private ImageView image_touxiang;
-    private ImageView imageView_ewm;
-    private TextView tv_name;
-    private TextView tv_id;
     private TextView tv_delete;
     private Dialog confirmDialog;
     private Dialog dialogs;
-    private EditText et_groupSignature;
-    private EditText et_b_name;
 
     private Bitmap bmp;
     private Bitmap bmpS;
@@ -78,6 +67,22 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
     private boolean update;
     private boolean isCancelRequest;
     private UserInviteMeInside news;
+    private String phoneNum;
+    private String Sex;
+    private String Region;
+    private RelativeLayout rl_phone_num;
+    private TextView tv_phone_num;
+    private LinearLayout lin_sign;
+    private TextView tv_sign;
+    private TextView tv_zhankai;
+    private String name;
+    private String Usernum;
+    private String nick_name;
+    private EditText et_alias_name;
+    private TextView tv_introduce;
+    private TextView tv_nick_name;
+    private String   userIntroduce;
+    private String aliasName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,18 +135,24 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
         tipView = (TipView) findViewById(R.id.tip_view);
 
         image_touxiang = (ImageView) findViewById(R.id.image_touxiang);
-        tv_name = (TextView) findViewById(R.id.tv_name);
-        et_b_name = (EditText) findViewById(R.id.et_b_name);
-        et_groupSignature = (EditText) findViewById(R.id.et_groupSignature);
-        tv_id = (TextView) findViewById(R.id.tv_id);
-        lin_ewm = (LinearLayout) findViewById(R.id.lin_ewm);
-        imageView_ewm = (ImageView) findViewById(R.id.imageView_ewm);
         image_add = (ImageView) findViewById(R.id.image_add);
         image_xiugai = (ImageView) findViewById(R.id.image_xiugai);
         tv_delete = (TextView) findViewById(R.id.tv_delete);
         lin_person_xiugai = (LinearLayout) findViewById(R.id.lin_person_xiugai);
-        et_b_name.setEnabled(false);
-        et_groupSignature.setEnabled(false);
+
+        rl_phone_num=(RelativeLayout)findViewById(R.id.rl_phone_num);        //   手机号
+        tv_phone_num=(TextView)findViewById(R.id.tv_phone_num);
+
+        lin_sign=(LinearLayout)findViewById(R.id.lin_sign);                  //   Ｓｉｇｎ
+        tv_sign=(TextView)findViewById(R.id.tv_sign);                        //　 TextSign　　　　　
+        tv_zhankai=(TextView)findViewById(R.id.tv_zhankai);                  //   text_open
+
+        et_alias_name=(EditText)findViewById(R.id.tv_alias_name);            //   AliasName
+        tv_introduce=(TextView)findViewById(R.id.tv_introduce);              //   UserIntroduce
+        tv_nick_name=(TextView)findViewById(R.id.tv_nick_name);              //   昵称
+
+        et_alias_name.setEnabled(false);
+
     }
 
     private void handleIntent() {
@@ -155,16 +166,12 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             imageUrl = data.getPortrait();
             id = data.getId();
             descN = data.getDescn();
-            num = data.getUserNum();
-            b_name = data.getUserAliasName();
         } else if (type.equals("talkoldlistfragment_p")) {
             UserInfo data = (UserInfo) getIntent().getSerializableExtra("data");
             name = data.getNickName();
             imageUrl = data.getPortraitMini();
             id = data.getUserId();
             descN = data.getUserSign();
-            num = data.getUserNum();
-            b_name = data.getUserAliasName();
         } else if (type.equals("TalkGroupNewsActivity_p")) {
             GroupInfo data = (GroupInfo) getIntent().getSerializableExtra("data");
             groupId = this.getIntent().getStringExtra("id");
@@ -172,8 +179,6 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             imageUrl = data.getPortraitBig();
             id = data.getUserId();
             descN = data.getGroupSignature();
-            num = data.getUserNum();
-            b_name = data.getUserAliasName();
             viewType = 1;
         } else if (type.equals("findActivity")) {
             // 处理组邀请时进入
@@ -182,8 +187,6 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             imageUrl = data.getPortrait();
             id = data.getUserId();
             descN = data.getUserSign();
-            num = data.getUserNum();
-            b_name = data.getUserAliasName();
             tv_delete.setVisibility(View.GONE);
             lin_person_xiugai.setVisibility(View.INVISIBLE);
         } else if (type.equals("GroupMemers")) {
@@ -193,55 +196,89 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             imageUrl = data.getPortraitMini();
             id = data.getUserId();
             descN = data.getUserSign();
-            b_name = data.getUserAliasName();
-            num = data.getUserNum();
             viewType = 1;
         } else if (type.equals("findAdd")) {
+            //从搜索好友界面进来的
             UserInviteMeInside data = (UserInviteMeInside) getIntent().getSerializableExtra("contact");
-            name = data.getNickName();
+            nick_name = data.getNickName();
             imageUrl = data.getPortraitMini();
             id = data.getUserId();
             descN = data.getUserSign();
-            num = data.getUserNum();
-            b_name = data.getUserAliasName();
-            viewType = 1;
-        }else {
+            Usernum = data.getUserNum();
+            aliasName = data.getUserAliasName();
+            phoneNum=data.getPhoneNum();
+            Sex=data.getSex();
+            Region=data.getRegion();
+            viewType = -1;
+        }else if (type.equals("findAdd")) {
+            //从搜索好友界面进来的
+            UserInviteMeInside data = (UserInviteMeInside) getIntent().getSerializableExtra("contact");
+            nick_name = data.getNickName();
+            imageUrl = data.getPortraitMini();
+            id = data.getUserId();
+            descN = data.getUserSign();
+            Usernum = data.getUserNum();
+            aliasName = data.getUserAliasName();
+            phoneNum=data.getPhoneNum();
+            Sex=data.getSex();
+            Region=data.getRegion();
+            viewType = -1;
+        }else{
             UserInfo data = (UserInfo) getIntent().getSerializableExtra("data");
             name = data.getNickName();
             imageUrl = data.getPortraitMini();
             id = data.getUserId();
             descN = data.getUserSign();
-            b_name = data.getUserAliasName();
-            num = data.getUserNum();
         }
     }
 
     private void setData() {
-        if (name == null || name.equals("")) {
-            tv_name.setText("我听科技");
-        } else {
-            tv_name.setText(name);
+
+        if(!TextUtils.isEmpty(Sex)){
+           userIntroduce=Sex;
         }
-        if (num == null || num.equals("")) {
-            num = "0000";
-            tv_id.setVisibility(View.GONE);
-        } else {
-            tv_id.setVisibility(View.VISIBLE);
-            tv_id.setText(num);
+
+        if(!TextUtils.isEmpty(Region)){
+            if(!TextUtils.isEmpty(userIntroduce)){
+                userIntroduce+="."+Region.substring(5,Region.length()).replace("/","");
+            }else{
+                userIntroduce =Region.substring(5,Region.length()).replace("/","");
+            }
         }
-        if (descN == null || descN.equals("")) {
-            descN = "这家伙很懒，什么都没写";
-            et_groupSignature.setText(descN);
-        } else {
-            et_groupSignature.setText(descN);
+
+        if(!TextUtils.isEmpty(Usernum)){
+            if(!TextUtils.isEmpty(userIntroduce)){
+                userIntroduce+="."+"用户号："+Usernum;
+            }else{
+                userIntroduce ="用户号："+Usernum;
+            }
         }
-        if (b_name == null || b_name.equals("")) {
-            et_b_name.setText("暂无备注名");
-            et_b_name.setVisibility(View.GONE);
-        } else {
-            et_b_name.setText(b_name);
-            et_b_name.setVisibility(View.VISIBLE);
+
+        // 用户信息
+        if(!TextUtils.isEmpty(userIntroduce)){
+            tv_introduce.setText(userIntroduce);
+        }else{
+            tv_introduce.setText("暂无用户信息");
         }
+
+        // 备注名
+        if(!TextUtils.isEmpty(aliasName)){
+            et_alias_name.setText(aliasName);
+        }else{
+            if(!TextUtils.isEmpty(nick_name)){
+                et_alias_name.setText(nick_name);
+            }else{
+                et_alias_name.setText("暂无备注名");
+            }
+        }
+
+        // 正常显示的用户名
+        if(!TextUtils.isEmpty(nick_name)){
+            tv_nick_name.setText(nick_name);
+        }else{
+            tv_nick_name.setText("无用户名");
+        }
+
         if (imageUrl == null || imageUrl.equals("") || imageUrl.equals("null")
                 || imageUrl.trim().equals("")) {
             image_touxiang.setImageResource(R.mipmap.wt_image_tx_hy);
@@ -255,98 +292,58 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             String _url = AssembleImageUrlUtils.assembleImageUrl300(url);
             AssembleImageUrlUtils.loadImage(_url, url, image_touxiang, IntegerConstant.TYPE_PERSON);
         }
-        news = new UserInviteMeInside();
-        news.setPortraitMini(imageUrl);
-        news.setUserId(id);
-        news.setNickName(name);
-        bmp = CreateQRImageHelper.getInstance().createQRImage(1, null, news, 300, 300);
-        if (bmp != null) {
-            imageView_ewm.setImageBitmap(bmp);
-        } else {
-            bmpS = BitmapUtils.readBitMap(context, R.mipmap.ewm);
-            imageView_ewm.setImageBitmap(bmpS);
+
+        if(!TextUtils.isEmpty(phoneNum)){
+            rl_phone_num.setVisibility(View.VISIBLE);
+            tv_phone_num.setText(phoneNum);
         }
+
+        if(!TextUtils.isEmpty(descN)){
+            lin_sign.setVisibility(View.VISIBLE);
+            tv_sign.setText(descN);
+        }
+
     }
 
     private void setListener() {
-        lin_ewm.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, EWMShowActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("type", 1);
-                bundle.putString("id", num);
-                bundle.putString("image", imageUrl);
-                bundle.putString("news", descN);
-                bundle.putString("name", name);
-                bundle.putSerializable("person", news);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
 
         image_xiugai.setOnClickListener(new OnClickListener() {
             private String biename;
-            private String groupSignature;
-
             @Override
             public void onClick(View v) {
                 if (update) {
                     // 此时是修改状态需要进行以下操作
-                    if (id.equals(CommonUtils.getUserId(context))) {
-                        if (et_b_name.getText().toString().trim().equals("")
-                                || et_b_name.getText().toString().trim().equals("暂无备注名")) {
+
+                        if (et_alias_name.getText().toString().trim().equals("")
+                                || et_alias_name.getText().toString().trim().equals("暂无备注名")) {
                             biename = " ";
                         } else {
-                            biename = et_b_name.getText().toString();
+                            biename = et_alias_name.getText().toString();
                         }
-                        if (et_groupSignature.getText().toString().trim().equals("")
-                                || et_groupSignature.getText().toString().trim().equals("这家伙很懒，什么都没写")) {
-                            groupSignature = " ";
-                        } else {
-                            groupSignature = et_groupSignature.getText().toString();
-                        }
-                    } else {
-                        if (et_b_name.getText().toString().trim().equals("")
-                                || et_b_name.getText().toString().trim().equals("暂无备注名")) {
-                            biename=et_groupSignature.getText().toString().trim();
-                        } else {
-                            biename = et_b_name.getText().toString();
-                        }
-                        groupSignature = "";
-                    }
+
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                         dialogs = DialogUtils.Dialog(context);
-                        update(biename, groupSignature);
+                        update(biename);
                     } else {
                         ToastUtils.show_always(context, "网络失败，请检查网络");
                     }
-                    et_b_name.setEnabled(false);
-                    et_groupSignature.setEnabled(false);
-                    et_b_name.setBackgroundColor(context.getResources().getColor(R.color.dinglan_orange));
-                    et_b_name.setTextColor(context.getResources().getColor(R.color.white));
-                    et_groupSignature.setBackgroundColor(context.getResources().getColor(R.color.dinglan_orange));
-                    et_groupSignature.setTextColor(context.getResources().getColor(R.color.white));
+                    et_alias_name.setEnabled(false);
+                    et_alias_name.setBackgroundColor(context.getResources().getColor(R.color.dinglan_orange));
+                    et_alias_name.setTextColor(context.getResources().getColor(R.color.white));
                     image_xiugai.setImageResource(R.mipmap.xiugai);
                     update = false;
                 } else {
                     // 此时是未编辑状态
                     if (id.equals(CommonUtils.getUserId(context))) {
                         // 此时是我本人
-                        et_b_name.setEnabled(true);
-                        et_groupSignature.setEnabled(true);
-                        et_b_name.setBackgroundColor(context.getResources().getColor(R.color.white));
-                        et_b_name.setTextColor(context.getResources().getColor(R.color.gray));
-                        et_groupSignature.setBackgroundColor(context.getResources().getColor(R.color.white));
-                        et_groupSignature.setTextColor(context.getResources().getColor(R.color.gray));
+                        et_alias_name.setEnabled(true);
+                        et_alias_name.setBackgroundColor(context.getResources().getColor(R.color.white));
+                        et_alias_name.setTextColor(context.getResources().getColor(R.color.gray));
                     } else {
                         // 此时我不是我本人
-                        et_b_name.setEnabled(true);
-                        et_groupSignature.setEnabled(true);
-                        et_groupSignature.setBackgroundColor(context.getResources().getColor(R.color.white));
-                        et_groupSignature.setTextColor(context.getResources().getColor(R.color.gray));
-                        et_b_name.setBackgroundColor(context.getResources().getColor(R.color.white));
-                        et_b_name.setTextColor(context.getResources().getColor(R.color.gray));
+                        et_alias_name.setEnabled(true);
+                        et_alias_name.setBackgroundColor(context.getResources().getColor(R.color.white));
+                        et_alias_name.setTextColor(context.getResources().getColor(R.color.gray));
                     }
                     image_xiugai.setImageResource(R.mipmap.wancheng);
                     update = true;
@@ -377,23 +374,21 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
         });
     }
 
-    protected void update(final String b_name2, String groupSignature) {
+    protected void update(final String b_name2) {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         String url;
         try {
             if (viewType == -1) {
                 jsonObject.put("FriendUserId", id);
                 jsonObject.put("FriendAliasName", b_name2);
-                jsonObject.put("FriendAliasDescn", groupSignature);
                 url = GlobalConfig.updateFriendnewsUrl;
             } else {
                 jsonObject.put("GroupId", groupId);
                 jsonObject.put("UpdateUserId", id);
                 jsonObject.put("UserAliasName", b_name2);
-                jsonObject.put("UserAliasDescn", groupSignature);
                 url = GlobalConfig.updategroupFriendnewsUrl;
             }
-            VolleyRequest.requestPost(url, groupSignature, jsonObject, new VolleyCallback() {
+            VolleyRequest.requestPost(url,tag, jsonObject, new VolleyCallback() {
                 private String ReturnType;
 
                 @Override
@@ -407,7 +402,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
                     }
                     if (ReturnType != null) {
                         if (ReturnType.equals("1001") || ReturnType.equals("10011")) {
-                            et_b_name.setText(b_name2);
+                            et_alias_name.setText(b_name2);
                             context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                             context.sendBroadcast(new Intent(BroadcastConstants.GROUP_DETAIL_CHANGE));
                             ToastUtils.show_always(context, "修改成功");
@@ -527,23 +522,16 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
         news = null;
         confirmDialog = null;
         context = null;
-        name = null;
         imageUrl = null;
         id = null;
         image_add = null;
         tv_delete = null;
         image_xiugai = null;
         image_touxiang = null;
-        tv_name = null;
-        tv_id = null;
         lin_person_xiugai = null;
         dialogs = null;
-        et_groupSignature = null;
-        et_b_name = null;
+        et_alias_name = null;
         descN = null;
-        num = null;
-        b_name = null;
-        imageView_ewm = null;
         lin_ewm = null;
         groupId = null;
         tag = null;

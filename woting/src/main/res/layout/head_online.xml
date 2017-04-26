@@ -22,8 +22,8 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:background="@mipmap/national_fm_normal"/>
 
             <TextView
@@ -43,8 +43,8 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:background="@mipmap/local_fm_normal"/>
 
             <TextView
@@ -64,8 +64,8 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:background="@mipmap/net_fm_normal"/>
 
             <TextView
@@ -107,8 +107,8 @@
                 android:textSize="14sp"/>
 
             <ImageView
-                android:layout_width="10dp"
-                android:layout_height="14dp"
+                android:layout_width="12dp"
+                android:layout_height="16dp"
                 android:layout_marginLeft="7dp"
                 android:src="@mipmap/image_fixed_position"/>
 
@@ -148,8 +148,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/WHITE"
-        android:divider="@color/text_line_1"
-        android:dividerHeight="0.5dp"
+        android:divider="@color/transparent"
         android:scrollbars="none"/>
 
 </LinearLayout>

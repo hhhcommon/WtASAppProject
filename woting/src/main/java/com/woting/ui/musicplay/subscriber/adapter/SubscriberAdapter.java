@@ -14,7 +14,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
-import com.woting.ui.musicplay.album.model.SubscriberInfo;
+import com.woting.ui.musicplay.subscriber.model.SubscriberInfo;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.Locale;
 public class SubscriberAdapter extends BaseAdapter {
     private List<SubscriberInfo> list;
     private Context context;
-    private boolean flag;
+    private Bitmap bmp;
 
     public SubscriberAdapter(Context context, List<SubscriberInfo> list) {
         this.list = list;
@@ -56,29 +56,32 @@ public class SubscriberAdapter extends BaseAdapter {
         final ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = LayoutInflater.from(context).inflate(R.layout.adapter_rankinfo, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.adapter_content, null);
 
-            // 六边形封面图片遮罩
             Bitmap bitmapMask = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
-            holder.imageMask = (ImageView) convertView.findViewById(R.id.img_zhezhao);
-            holder.imageMask.setImageBitmap(bitmapMask);
+            holder.img_cover = (ImageView) convertView.findViewById(R.id.img_cover);
+            holder.img_cover.setImageBitmap(bitmapMask);                                            // 六边形封面图片遮罩
 
-            holder.imageCover = (ImageView) convertView.findViewById(R.id.RankImageUrl);// 封面图片
-            holder.textTitle = (TextView) convertView.findViewById(R.id.RankTitle);// 订阅的专辑名
-            holder.textContentPub = (TextView) convertView.findViewById(R.id.RankPlaying);// 专辑介绍
-            holder.textNumber = (TextView) convertView.findViewById(R.id.tv_num);// 播放次数
-            holder.textUpdateCount = (TextView) convertView.findViewById(R.id.text_update_count);// 更新数量
+            holder.image = (ImageView) convertView.findViewById(R.id.image);                        // 图片
 
-            holder.imagePlaying = (ImageView) convertView.findViewById(R.id.image_playing);// 小图标
-            holder.imagePlaying.setVisibility(View.GONE);
-            holder.imageNumber = (ImageView) convertView.findViewById(R.id.image_number);
-            holder.imageNumber.setVisibility(View.GONE);
-            holder.image_last = (ImageView) convertView.findViewById(R.id.image_last);
-            holder.image_last.setVisibility(View.GONE);
-            holder.image_num = (ImageView) convertView.findViewById(R.id.image_num);
-            holder.image_num.setVisibility(View.GONE);
-            holder.tv_last = (TextView) convertView.findViewById(R.id.tv_last);
-            holder.tv_last.setVisibility(View.GONE);
+            holder.NameOne = (TextView) convertView.findViewById(R.id.NameOne);                     // 第一标题
+            holder.image_seq = (ImageView) convertView.findViewById(R.id.image_seq);                // 专辑图标
+            holder.image_anchor = (ImageView) convertView.findViewById(R.id.image_anchor);          // 主播图标
+
+            holder.NameTwo = (TextView) convertView.findViewById(R.id.NameTwo);                     // 第二标题
+
+            holder.image_num = (ImageView) convertView.findViewById(R.id.image_num);                // 收听次数图标
+            holder.tv_num = (TextView) convertView.findViewById(R.id.tv_num);                       // 收听次数
+
+            holder.image_count = (ImageView) convertView.findViewById(R.id.image_count);            // 集数图标
+            holder.tv_count = (TextView) convertView.findViewById(R.id.tv_count);                   // 集数次数
+
+            holder.image_time = (ImageView) convertView.findViewById(R.id.image_time);              // 时间图标
+            holder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);                     // 时间
+
+            holder.text_update_count = (TextView) convertView.findViewById(R.id.text_update_count); // 更新
+
+            bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
 
             convertView.setTag(holder);
         } else {
@@ -86,20 +89,27 @@ public class SubscriberAdapter extends BaseAdapter {
         }
 
         SubscriberInfo lists = list.get(position);
-
+        // 设置控件的显示
+        holder.image_seq.setVisibility(View.GONE);               // 专辑图标
+        holder.image_anchor.setVisibility(View.GONE);         // 主播图标
+        holder.image_num.setVisibility(View.GONE);            // 收听次数图标
+        holder.tv_num.setVisibility(View.VISIBLE);               // 收听次数
+        holder.image_count.setVisibility(View.GONE);          // 集数图标
+        holder.tv_count.setVisibility(View.GONE);             // 集数次数
+        holder.image_time.setVisibility(View.GONE);              // 时间图标
+        holder.tv_time.setVisibility(View.GONE);                 // 时间
+        holder.text_update_count.setVisibility(View.GONE);       // 更新
         // 封面图片
         String contentImg = lists.getContentSeqImg();
         if (contentImg == null || contentImg.equals("null") || contentImg.trim().equals("")) {
-            Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
-            holder.imageCover.setImageBitmap(bmp);
+            holder.image.setImageBitmap(bmp);
         } else {
             if (!contentImg.startsWith("http")) {
                 contentImg = GlobalConfig.imageurl + contentImg;
             }
             String _url = AssembleImageUrlUtils.assembleImageUrl180(contentImg);
-
             // 加载图片
-            AssembleImageUrlUtils.loadImage(_url, contentImg, holder.imageCover, IntegerConstant.TYPE_LIST);
+            AssembleImageUrlUtils.loadImage(_url, contentImg, holder.image, IntegerConstant.TYPE_LIST);
 
         }
 
@@ -108,45 +118,48 @@ public class SubscriberAdapter extends BaseAdapter {
         if (sequName == null || sequName.trim().equals("")) {
             sequName = "未知";
         }
-        holder.textTitle.setText(sequName);
+        holder.NameOne.setText(sequName);
 
         // 专辑介绍
         String contentName = lists.getContentMediaName();
         if (contentName == null || contentName.trim().equals("")) {
             contentName = "未知";
         }
-        holder.textContentPub.setText(contentName);
+        holder.NameTwo.setText(contentName);
 
         // 更新时间
         String updateTime = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(lists.getContentPubTime());
         if (updateTime == null) {
             updateTime = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(System.currentTimeMillis());
         }
-        holder.textNumber.setText(updateTime);
+        holder.tv_num.setText(updateTime);
 
         // 更新数量
         int count = lists.getUpdateCount();
         if (count > 0) {
-            holder.textUpdateCount.setVisibility(View.VISIBLE);
-            holder.textUpdateCount.setText(count + "更新");
+            holder.text_update_count.setVisibility(View.VISIBLE);
+            holder.text_update_count.setText(count + "更新");
         } else {
-            holder.textUpdateCount.setVisibility(View.GONE);
+            holder.text_update_count.setVisibility(View.GONE);
         }
 
         return convertView;
     }
 
     class ViewHolder {
-        public ImageView imageMask;// 六边形封面图片遮罩
-        public ImageView imageCover;// 封面图片
-        public TextView textTitle;// 订阅的专辑名
-        public ImageView imagePlaying;// 小图标
-        public TextView textContentPub;// 专辑介绍
-        public TextView textNumber;// 播放次数
-        public TextView textUpdateCount;// 更新数量
-        public ImageView imageNumber;// 小图标
-        public TextView tv_last;
-        public ImageView image_last;
+
+        public ImageView img_cover;
+        public ImageView image;
+        public TextView NameOne;
+        public ImageView image_seq;
+        public ImageView image_anchor;
+        public TextView NameTwo;
         public ImageView image_num;
+        public TextView tv_num;
+        public ImageView image_count;
+        public TextView tv_count;
+        public ImageView image_time;
+        public TextView tv_time;
+        public TextView text_update_count;
     }
 }

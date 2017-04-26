@@ -3,6 +3,7 @@ package com.woting.ui.interphone.message.newfriend.activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -201,9 +202,9 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
                             e1.printStackTrace();
                         }
                         GroupList = new Gson().fromJson(ContactMeString, new TypeToken<List<GroupInfo>>() {}.getType());
-                      /*  if (GroupList!=null&&GroupList.size()>0&& !TextUtils.isEmpty(ContactMeString)){
+                        if (GroupList!=null&&GroupList.size()>0&& !TextUtils.isEmpty(ContactMeString)){
                                 handleGroupListData(result);
-                           }*/
+                           }
                     } else if (ReturnType != null && ReturnType.equals("1002")) {
                         try {
                             String Message = result.getString("Message");
@@ -252,43 +253,42 @@ public class NewsActivity extends AppBaseActivity implements OnClickListener {
             JSONArray jsonArray = result.getJSONArray("GroupList");
             for(int i=0;i<jsonArray.length();i++){
                 JSONObject jsonObject = (JSONObject)jsonArray.opt(i);
-                String s=(String)jsonObject.get("InviteUserInfo");
+                String s=jsonObject.getString("InviteUserInfo");
                 JSONTokener jsonParser = new JSONTokener(s);
                 JSONObject arg1 = (JSONObject) jsonParser.nextValue();
                 InviteUserInfo mInviteUserInfo=new InviteUserInfo();
                 try {
-                    mInviteUserInfo.setUserId((String)  arg1.get("UserId"));
-
+                    mInviteUserInfo.setUserId(arg1.getString("UserId"));
                 }catch (JSONException e){
                     e.printStackTrace();
                 }
                 try {
-                    mInviteUserInfo.setNickName((String)  arg1.get("NickName"));
+                    mInviteUserInfo.setNickName(arg1.getString("NickName"));
                 }catch (JSONException e){
                     e.printStackTrace();
                 }
                 try {
-                    mInviteUserInfo.setUserNum((String)  arg1.get("UserNum"));
+                    mInviteUserInfo.setUserNum(arg1.getString("UserNum"));
                 }catch (JSONException e){
                     e.printStackTrace();
                 }
                 try {
-                    mInviteUserInfo.setUserSign((String)  arg1.get("UserSign"));
+                    mInviteUserInfo.setUserSign(arg1.getString("UserSign"));
                 }catch (JSONException e){
                     e.printStackTrace();
                 }
                 try {
-                    mInviteUserInfo.setPortraitMini((String) arg1.get("PortraitMini"));
+                    mInviteUserInfo.setPortraitMini(arg1.getString("PortraitMini"));
                 }catch (JSONException e){
                     e.printStackTrace();
                 }
                 try {
-                    mInviteUserInfo.setRegion((String) arg1.get("Region"));
+                    mInviteUserInfo.setRegion(arg1.getString("Region"));
                 }catch (JSONException e){
                     e.printStackTrace();
                 }
                 try {
-                    mInviteUserInfo.setPhoneNum((String) arg1.get("PhoneNum"));
+                    mInviteUserInfo.setPhoneNum(arg1.getString("PhoneNum"));
                 }catch (JSONException e){
                     e.printStackTrace();
                 }

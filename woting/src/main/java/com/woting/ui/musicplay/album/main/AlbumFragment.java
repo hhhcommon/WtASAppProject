@@ -48,11 +48,9 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.HorizontalListView;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseadapter.MyFragmentChildPagerAdapter;
-import com.woting.ui.interphone.commom.model.ListInfo;
 import com.woting.ui.model.content;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.musicplay.play.adapter.ImageAdapter;
-import com.woting.ui.musicplay.play.model.LanguageSearchInside;
 import com.woting.ui.model.share.ShareModel;
 import com.woting.ui.musicplay.more.PlayerMoreOperationActivity;
 import com.woting.ui.musicplay.accuse.main.AccuseFragment;
@@ -93,7 +91,7 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
 
     private LinearLayout lin_share, lin_pinglun, lin_favorite, lin_subscriber;
     private ViewPager mPager;
-    private Dialog dialog, shareDialog, dialog1;
+    private Dialog dialog, shareDialog;
     private UMImage image;
 
     public static int fromType;// == 1 Home  == 5 Mine  == 6 PlayMore  == 7 SearchLike
@@ -111,20 +109,71 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
     private static TipView tipView;// 提示
     private FragmentActivity context;
 
-    @Override
-    public void onWhiteViewClick() {
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            if (detailsFragment != null) detailsFragment.send();
-            if (programFragment != null) programFragment.send();
-        } else {
-            setTip(TipView.TipStatus.NO_NET);
-        }
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
+        handleIntent();
+    }
+
+    private void handleIntent() {
+        Bundle bundle = getArguments();
+        if (bundle == null) {
+            tipView.setTipView(TipView.TipStatus.IS_ERROR, "数据出错了\n请返回重试!");
+            return;
+        }
+        fromType = bundle.getInt(StringConstant.FROM_TYPE);
+        String type = bundle.getString("type");
+//        if (type != null && type.trim().equals("radiolistactivity")) {
+//            content list = (content) bundle.getSerializable("list");
+//            RadioName = list.getContentName();
+//            ContentDesc = list.getContentDescn();
+//            id = list.getContentId();
+//        } else if (type != null && type.trim().equals("recommend")) {
+//            content list = (content) bundle.getSerializable("list");
+//            RadioName = list.getContentName();
+//            ContentDesc = list.getContentDescn();
+//            id = list.getContentId();
+//        } else if (type != null && type.trim().equals("search")) {
+//            content list = (content) bundle.getSerializable("list");
+//            RadioName = list.getContentName();
+//            ContentDesc = list.getContentDescn();
+//            id = list.getContentId();
+//        } else if (type != null && type.trim().equals("main")) {
+//            // 再做一个
+//            RadioName = bundle.getString("conentname");
+//            id = bundle.getString("id");
+//        } else if (type != null && type.trim().equals("player")) {
+//            // 再做一个
+//            content list = (content) bundle.getSerializable("list");
+//            RadioName = list.getSeqInfo().getContentName();
+//            ContentDesc = list.getSeqInfo().getContentDescn();
+//            id = list.getSeqInfo().getContentId();
+//        } else {
+//            content list = (content) bundle.getSerializable("list");
+//            RadioName = list.getContentName();
+//            ContentDesc = list.getContentDescn();
+//            id = list.getContentId();
+//        }
+
+        if (type != null) {
+            if ( type.trim().equals("main")) {
+                // 再做一个
+                RadioName = bundle.getString("conentname");
+                id = bundle.getString("id");
+            }else{
+                content list = (content) bundle.getSerializable("list");
+                RadioName = list.getContentName();
+                ContentDesc = list.getContentDescn();
+                id = list.getContentId();
+            }
+        }else{
+            RadioName = "";
+            ContentDesc ="";
+            id = "";
+        }
     }
 
     @Override
@@ -136,7 +185,6 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
             setListener();
             InitImage();
             InitViewPager();
-            handleIntent();
             shareDialog();// 分享 dialog
         }
         return rootView;
@@ -163,6 +211,15 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
 
         tipView = (TipView) rootView.findViewById(R.id.tip_view);
         tipView.setWhiteClick(this);
+
+        if (RadioName != null && !RadioName.equals("")) {
+            tv_album_name.setText(RadioName);
+        } else {
+            tv_album_name.setText("未知");
+        }
+        // 处理与该专辑相关的订阅消息
+        deleteMessageForNotify(id);
+        Log.e("本节目的专辑ID为", id + "");
     }
 
     private void setListener() {
@@ -204,6 +261,13 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
         mPager.setCurrentItem(0);                                      // 设置当前显示标签页为第一页 mPager
     }
 
+    /**
+     * 设置下载需要的专辑信息
+     * @param contentId
+     * @param contentImg
+     * @param contentName
+     * @param contentDesc
+     */
     public static void setInfo(String contentId, String contentImg, String contentName, String contentDesc) {
         programFragment.setInfo(contentId, contentImg, contentName, contentDesc);
     }
@@ -241,25 +305,29 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
         final View dialog = LayoutInflater.from(context).inflate(R.layout.dialog_sharedialog, null);
         HorizontalListView mGallery = (HorizontalListView) dialog.findViewById(R.id.share_gallery);
         TextView tv_cancel = (TextView) dialog.findViewById(R.id.tv_cancle);
+
         shareDialog = new Dialog(context, R.style.MyDialog);
-        // 从底部上升到一个位置
-        shareDialog.setContentView(dialog);
+
         Window window = shareDialog.getWindow();
+        window.setGravity(Gravity.BOTTOM);
+        window.setWindowAnimations(R.style.sharestyle);
+
+        shareDialog.setContentView(dialog);
+
         DisplayMetrics dm = new DisplayMetrics();
         context.getWindowManager().getDefaultDisplay().getMetrics(dm);
         int screenWidth = dm.widthPixels;
         LayoutParams params = dialog.getLayoutParams();
         params.width = screenWidth;
         dialog.setLayoutParams(params);
-        window.setGravity(Gravity.BOTTOM);
-        window.setWindowAnimations(R.style.sharestyle);
+
         shareDialog.setCanceledOnTouchOutside(true);
         shareDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
+
         final List<ShareModel> mList = ShareUtils.getShareModelList();
         ImageAdapter shareAdapter = new ImageAdapter(context, mList);
         mGallery.setAdapter(shareAdapter);
-        dialog1 = DialogUtils.DialogForShare(context);
-        Config.dialog = dialog1;
+        Config.dialog = DialogUtils.DialogForShare(context);
         mGallery.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -304,8 +372,7 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
             } else {
                 shareUrl = "http://www.wotingfm.com/";
             }
-            dialog = DialogUtils.Dialog(context);
-            Config.dialog = dialog1;
+            Config.dialog = DialogUtils.Dialog(context);
             new ShareAction(context).setPlatform(Platform).setCallback(umShareListener).withMedia(image)
                     .withText(shareDesc).withTitle(shareName).withTargetUrl(shareUrl).share();
         } else {
@@ -335,54 +402,7 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
         }
     };
 
-    private void handleIntent() {
-        Bundle bundle = getArguments();
-        if (bundle == null) {
-            tipView.setTipView(TipView.TipStatus.IS_ERROR, "数据出错了\n请返回重试!");
-            return;
-        }
-        fromType = bundle.getInt(StringConstant.FROM_TYPE);
-        String type = bundle.getString("type");
-        if (type != null && type.trim().equals("radiolistactivity")) {
-            content list = (content) bundle.getSerializable("list");
-            RadioName = list.getContentName();
-            ContentDesc = list.getContentDescn();
-            id = list.getContentId();
-        } else if (type != null && type.trim().equals("recommend")) {
-            content list = (content) bundle.getSerializable("list");
-            RadioName = list.getContentName();
-            ContentDesc = list.getContentDescn();
-            id = list.getContentId();
-        } else if (type != null && type.trim().equals("search")) {
-            content list = (content) bundle.getSerializable("list");
-            RadioName = list.getContentName();
-            ContentDesc = list.getContentDescn();
-            id = list.getContentId();
-        } else if (type != null && type.trim().equals("main")) {
-            // 再做一个
-            RadioName = bundle.getString("conentname");
-            id = bundle.getString("id");
-        } else if (type != null && type.trim().equals("player")) {
-            // 再做一个
-            LanguageSearchInside list = (LanguageSearchInside) bundle.getSerializable("list");
-            RadioName = list.getSequName();
-            ContentDesc = list.getSequDesc();
-            id = list.getSequId();
-        } else {
-            LanguageSearchInside list = (LanguageSearchInside) bundle.getSerializable("list");
-            RadioName = list.getContentName();
-            ContentDesc = list.getContentDescn();
-            id = list.getContentId();
-        }
-        if (RadioName != null && !RadioName.equals("")) {
-            tv_album_name.setText(RadioName);
-        } else {
-            tv_album_name.setText("未知");
-        }
-        // 处理与该专辑相关的订阅消息
-        deleteMessageForNotify(id);
-        Log.e("本节目的专辑ID为", id + "");
-    }
+
 
     // 处理与该专辑相关的订阅消息
     private void deleteMessageForNotify(String id) {
@@ -399,6 +419,16 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
         }
         // 删除数据库中存在的与该专辑相关的订阅消息
         dbDaoSubscriber.deleteSubscriberMessage(id);
+    }
+
+    @Override
+    public void onWhiteViewClick() {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            if (detailsFragment != null) detailsFragment.send();
+            if (programFragment != null) programFragment.send();
+        } else {
+            setTip(TipView.TipStatus.NO_NET);
+        }
     }
 
     @Override
@@ -449,14 +479,14 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
                 if (!TextUtils.isEmpty(id)) {
                     if (CommonUtils.getUserIdNoImei(context) != null && !CommonUtils.getUserIdNoImei(context).equals("")) {
                         Intent intent = new Intent(context, CommentActivity.class);
-                        intent.putExtra("contentId", id);
-                        intent.putExtra("MediaType", "SEQU");
+                        Bundle b=new Bundle();
+                        b.putString("contentId", id);
+                        b.putString("MediaType", "SEQU");
+                        intent.putExtras(b);
                         startActivity(intent);
                     } else {
                         ToastUtils.show_always(context, "请先登录~~");
                     }
-                } else {
-                    ToastUtils.show_always(context, "当前播放的节目的信息有误，无法获取评论列表");
                 }
                 break;
             case R.id.lin_subscriber: // 订阅
@@ -485,8 +515,6 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
                     } else if (fromType == IntegerConstant.TAG_SEARCH) {// SEARCH
                         SearchLikeActivity.open(fragment);
                     }
-                } else {
-                    ToastUtils.show_always(context, "获取本专辑信息有误，请回退回上一级界面重试");
                 }
                 break;
         }
@@ -496,10 +524,8 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
         flag = Integer.valueOf(contentSubscribe);
         if (flag == 0) {
             textSubscriber.setText("订阅");
-//            imageSubscriber
         } else {
             textSubscriber.setText("已订阅");
-//            imageSubscriber
         }
     }
 
@@ -534,11 +560,9 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
                     if (flag == 1) {
                         flag = 0;// 已经取消订阅
                         textSubscriber.setText("订阅");
-//                        imageSubscriber
                     } else {
                         textSubscriber.setText("已订阅");
                         flag = 1;// 订阅成功
-//                        imageSubscriber
                     }
                 } else {
                     ToastUtils.show_always(context, "获取数据出错了，请重试!");
@@ -638,7 +662,6 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
         lin_favorite = null;
         dialog = null;
         shareDialog = null;
-        dialog1 = null;
         image = null;
         textDetails = null;
         textProgram = null;

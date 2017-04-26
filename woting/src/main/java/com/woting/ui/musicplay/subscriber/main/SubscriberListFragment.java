@@ -33,7 +33,7 @@ import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.model.content;
 import com.woting.ui.musicplay.more.PlayerMoreOperationActivity;
 import com.woting.ui.musicplay.album.main.AlbumFragment;
-import com.woting.ui.musicplay.album.model.SubscriberInfo;
+import com.woting.ui.musicplay.subscriber.model.SubscriberInfo;
 import com.woting.ui.mine.main.MineActivity;
 import com.woting.ui.musicplay.subscriber.adapter.SubscriberAdapter;
 

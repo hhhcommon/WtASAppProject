@@ -31,10 +31,9 @@ import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.model.content;
+import com.woting.ui.music.adapter.ContentForCheckAdapter;
 import com.woting.ui.musicplay.more.PlayerMoreOperationActivity;
 import com.woting.ui.musicplay.album.main.AlbumFragment;
-import com.woting.ui.musicplay.favorite.adapter.FavorListAdapter;
-import com.woting.ui.musicplay.favorite.adapter.FavorListAdapter.favorCheck;
 import com.woting.ui.musicplay.favorite.main.FavoriteFragment;
 import com.woting.ui.mine.main.MineActivity;
 
@@ -50,7 +49,7 @@ import java.util.List;
  */
 public class SequFragment extends Fragment implements TipView.WhiteViewClick {
 	private FragmentActivity context;
-    private FavorListAdapter adapter;
+    private ContentForCheckAdapter adapter;
     private List<content> subList;
     private List<String> delList;
     private List<content> newList = new ArrayList<>();
@@ -113,7 +112,7 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
 	}
 
     private void setListener() {
-		adapter.setOnListener(new favorCheck() {
+		adapter.setOnListener(new ContentForCheckAdapter.favorCheck() {
 			@Override
 			public void checkPosition(int position) {
 				if (newList.get(position).getChecktype() == 0) {
@@ -234,7 +233,7 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
                         if (refreshType == 1) newList.clear();
                         newList.addAll(subList);
                         if (adapter == null) {
-                            mListView.setAdapter(adapter = new FavorListAdapter(context, newList));
+                            mListView.setAdapter(adapter = new ContentForCheckAdapter(context, newList));
                         } else {
                             adapter.notifyDataSetChanged();
                         }

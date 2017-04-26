@@ -705,5 +705,8 @@
     <!--UpdatePerson -->
     <color name="up_tv_default">#5e6471</color>
     <color name="up_bg_unselected">#888888</color>
+    <!--CreateGroupContent -->
+    <color name="CGC_tv_default">#d5d5d5</color>
+    <color name="CGC_text_color">#8c8c8c</color>
 
 </resources>
