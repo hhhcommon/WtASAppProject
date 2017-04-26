@@ -44,6 +44,33 @@ public class GroupInfo implements Serializable {
     private String GroupMasterId;   // 群管理员
     private String InviteUserId ;   // 邀请进群的人
     private InviteUserInfo inviteUserInfo;
+    private String Sex;
+    private String Region;
+    private String UserSign;
+
+    public void setUserSign(String userSign) {
+        UserSign = userSign;
+    }
+
+    public String getUserSign() {
+        return UserSign;
+    }
+
+    public String getSex() {
+        return Sex;
+    }
+
+    public void setSex(String sex) {
+        Sex = sex;
+    }
+
+    public String getRegion() {
+        return Region;
+    }
+
+    public void setRegion(String region) {
+        Region = region;
+    }
 
     public InviteUserInfo getInviteUserInfo() {
         return inviteUserInfo;
