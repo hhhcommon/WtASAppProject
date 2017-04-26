@@ -660,7 +660,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
                 // 跳转到详细信息界面
                 Intent intent = new Intent(context, TalkPersonNewsActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("type", "friendAdd");
+                bundle.putString("type", "LinkMan");
                 bundle.putSerializable("data", srclist_p.get(position - 1));
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -711,7 +711,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
                 // 跳转到群组详情页面
                 Intent intent = new Intent(context, TalkGroupNewsActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("type", "talkpersonfragment");
+                bundle.putString("type", "LinkMan");
                 bundle.putSerializable("data", groupList.get(position));
                 intent.putExtras(bundle);
                 startActivity(intent);

@@ -210,9 +210,9 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             Sex=data.getSex();
             Region=data.getRegion();
             viewType = -1;
-        }else if (type.equals("findAdd")) {
-            //从搜索好友界面进来的
-            UserInviteMeInside data = (UserInviteMeInside) getIntent().getSerializableExtra("contact");
+        }else if (type.equals("LinkMan")) {
+            //从通讯录
+            UserInfo data = (UserInfo) getIntent().getSerializableExtra("data");
             nick_name = data.getNickName();
             imageUrl = data.getPortraitMini();
             id = data.getUserId();

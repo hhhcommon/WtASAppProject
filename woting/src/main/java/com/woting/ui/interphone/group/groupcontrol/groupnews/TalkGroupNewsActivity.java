@@ -221,7 +221,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 groupAlias = talkListGP.getGroupMyAlias();
                 groupType = talkListGP.getGroupType();
                 break;
-            case "talkpersonfragment":// 通讯录界面传过来
+            case "LinkMan":// 通讯录界面传过来
                 GroupInfo talkGroupInside = (GroupInfo) getIntent().getSerializableExtra("data");
                 groupName = talkGroupInside.getGroupName();
                 headUrl = talkGroupInside.getGroupImg();
