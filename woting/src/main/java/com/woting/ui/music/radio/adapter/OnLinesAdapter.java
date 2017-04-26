@@ -102,20 +102,30 @@ public class OnLinesAdapter extends BaseExpandableListAdapter {
             holder.tv_name.setText(lists.getCatalogName());
         }
 
-        // 判断回调对象决定是哪个 fragment 的对象调用的词 adapter  从而实现多种布局
-        holder.lin_more.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(type==1){
+        if(type==1){
+            holder.lin_more.setVisibility(View.VISIBLE);
+            // 判断回调对象决定是哪个 fragment 的对象调用的词 adapter  从而实现多种布局
+            holder.lin_more.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     FMListFragment fragment = new FMListFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("Position", "GROUP");
                     bundle.putSerializable("list", lists);
                     fragment.setArguments(bundle);
                     HomeActivity.open(fragment);
-                }else if(type==2){
-                    // 不能点击
-                }else if(type==3){
+                }
+            });
+
+        }else if(type==2){
+            holder.lin_more.setVisibility(View.INVISIBLE);
+            // 不能点击
+        }else if(type==3){
+            holder.lin_more.setVisibility(View.VISIBLE);
+            // 判断回调对象决定是哪个 fragment 的对象调用的词 adapter  从而实现多种布局
+            holder.lin_more.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     FMListFragment fmListFragment = new FMListFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("fromtype", "cityRadio");
@@ -126,9 +136,9 @@ public class OnLinesAdapter extends BaseExpandableListAdapter {
                     fmListFragment.setArguments(bundle);
                     HomeActivity.open(fmListFragment);
                 }
+            });
+        }
 
-            }
-        });
         return convertView;
     }
 

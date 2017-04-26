@@ -549,7 +549,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                     // 正常切可用代码 已从服务器获得返回值，但是无法正常显示
                     final String _url = AssembleImageUrlUtils.assembleImageUrl150(imageUrl);
                     final String c_url = imageUrl;
-
                     // 加载图片
                     AssembleImageUrlUtils.loadImage(_url, c_url, imageHead, IntegerConstant.TYPE_MINE);
 
