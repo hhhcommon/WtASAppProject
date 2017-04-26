@@ -2,21 +2,25 @@ package com.woting.ui.interphone.find.friendadd;
 
 import android.app.Dialog;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
+import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
@@ -49,70 +53,145 @@ public class FriendAddActivity extends AppBaseActivity implements OnClickListene
 	private boolean isCancelRequest;
 
     private TipView tipView;// 数据错误提示
-	
+	private RelativeLayout rl_phone_num;
+	private TextView tv_phone_num;
+	private LinearLayout lin_sign;
+	private TextView tv_zhankai;
+	private EditText et_alias_name;
+	private TextView tv_introduce;
+	private TextView tv_nick_name;
+	private String nick_name;
+	private String imageUrl;
+	private String id;
+	private String descN;
+	private String Usernum;
+	private String aliasName;
+	private String phoneNum;
+	private String Sex;
+	private String Region;
+	private String userIntroduce;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friendadds);
 		username = sharedPreferences.getString(StringConstant.NICK_NAME, "");// 当前登录账号的姓名
-		contact = (UserInviteMeInside) getIntent().getSerializableExtra("contact");
 		setView();		// 设置界面
+		handleIntent();
 		setListener();	// 设置监听
-		if(contact != null){
+	}
+
+	private void handleIntent() {
+		UserInviteMeInside data = (UserInviteMeInside) getIntent().getSerializableExtra("contact");
+		if(data!=null){
+		    nick_name = data.getNickName();
+		    imageUrl = data.getPortraitMini();
+		    id = data.getUserId();
+		    descN = data.getUserSign();
+		    Usernum = data.getUserNum();
+		    aliasName = data.getUserAliasName();
+		    phoneNum = data.getPhoneNum();
+		    Sex = data.getSex();
+		    Region = data.getRegion();
 			setValue();
-		} else {
-            tipView.setVisibility(View.VISIBLE);
-            tipView.setTipView(TipView.TipStatus.IS_ERROR);
-        }
+		}else{
+			tipView.setVisibility(View.VISIBLE);
+			tipView.setTipView(TipView.TipStatus.IS_ERROR);
+		}
 	}
 
 	private void setView() {
+
+		rl_phone_num = (RelativeLayout) findViewById(R.id.rl_phone_num);        //   手机号
+		tv_phone_num = (TextView) findViewById(R.id.tv_phone_num);
+
+		lin_sign = (LinearLayout) findViewById(R.id.lin_sign);                  //   Ｓｉｇｎ
+		tv_sign = (TextView) findViewById(R.id.tv_sign);                        //　 TextSign　　　　　
+		tv_zhankai = (TextView) findViewById(R.id.tv_zhankai);                  //   text_open
+		et_alias_name = (EditText) findViewById(R.id.tv_alias_name);            //   AliasName
+		et_alias_name.setEnabled(false);
+		tv_introduce = (TextView) findViewById(R.id.tv_introduce);              //   UserIntroduce
+		tv_nick_name = (TextView) findViewById(R.id.tv_nick_name);              //   昵称
+		image_touxiang = (ImageView) findViewById(R.id.image_touxiang);
+
+		//老页面
 		lin_delete = (LinearLayout) findViewById(R.id.lin_delete);//验证信息清空
 		et_news= (EditText) findViewById(R.id.et_news);//验证信息输入框
-		image_touxiang = (ImageView) findViewById(R.id.image_touxiang);//头像
-		tv_name = (TextView) findViewById(R.id.tv_name);//姓名
-		tv_id = (TextView) findViewById(R.id.tv_id);//id号
-		tv_sign = (TextView) findViewById(R.id.tv_sign);
-		tv_add = (TextView) findViewById(R.id.tv_add);//添加好友
-
         tipView = (TipView) findViewById(R.id.tip_view);
+		tv_add = (TextView) findViewById(R.id.tv_add);//添加好友
 	}
 
 	private void setValue() {
 		// 数据适配
-		if(contact.getNickName()==null||contact.getNickName().equals("")){
-			tv_name.setText("未知");
-		}else{
-			tv_name.setText(contact.getNickName());
+		if (!TextUtils.isEmpty(Sex)) {
+			userIntroduce = Sex;
 		}
-		if(contact.getUserNum()==null||contact.getUserNum().equals("")){
-			tv_id.setVisibility(View.GONE);
-		}else{
-			tv_id.setVisibility(View.VISIBLE);
-			tv_id.setText("ID: " + contact.getUserNum());
-		}
-		if(contact.getUserSign()==null||contact.getUserSign().equals("")){
-			tv_sign.setVisibility(View.GONE);
-		}else{
-			tv_sign.setVisibility(View.VISIBLE);
-			tv_sign.setText(contact.getUserSign());
-		}
-		if(contact.getPortraitMini()==null||contact.getPortraitMini().equals("")||contact.getPortraitMini().equals("null")||contact.getPortraitMini().trim().equals("")){
-			image_touxiang.setImageResource(R.mipmap.wt_image_tx_hy);
-		}else{
-			String url;
-			if(contact.getPortraitMini().startsWith("http:")){
-				url=contact.getPortraitMini();
-			}else{
-				url = GlobalConfig.imageurl+contact.getPortraitMini();
+
+		if (!TextUtils.isEmpty(Region)) {
+			if (!TextUtils.isEmpty(userIntroduce)) {
+
+				userIntroduce += "." + Region.substring(5, Region.length()).replace("/", "").replace("省","").replace("市","").replace("区","");
+			} else {
+				userIntroduce = Region.substring(5, Region.length()).replace("/", "").replace("省","").replace("市","").replace("区","");
 			}
-			url=AssembleImageUrlUtils.assembleImageUrl150(url);
-			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(image_touxiang);
 		}
-		if(username==null||username.equals("")){
-			et_news.setText("");
-		}else{
-			et_news.setText("我是 "+username);
+
+		if (!TextUtils.isEmpty(Usernum)) {
+			if (!TextUtils.isEmpty(userIntroduce)) {
+				userIntroduce += "." + "用户号：" + Usernum;
+			} else {
+				userIntroduce = "用户号：" + Usernum;
+			}
+		}
+
+		// 用户信息
+		if (!TextUtils.isEmpty(userIntroduce)) {
+			tv_introduce.setText(userIntroduce);
+		} else {
+			tv_introduce.setText("暂无用户信息");
+		}
+
+		// 备注名
+		if (!TextUtils.isEmpty(aliasName)) {
+			et_alias_name.setText(aliasName);
+		} else {
+			if (!TextUtils.isEmpty(nick_name)) {
+				et_alias_name.setText(nick_name);
+			} else {
+				et_alias_name.setText("暂无备注名");
+			}
+		}
+
+		// 正常显示的用户名
+		if (!TextUtils.isEmpty(nick_name)) {
+			tv_nick_name.setText("昵称:"+nick_name);
+		} else {
+			tv_nick_name.setText("无用户名");
+		}
+
+		if (imageUrl == null || imageUrl.equals("") || imageUrl.equals("null")
+				|| imageUrl.trim().equals("")) {
+			Bitmap bitmap = BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_hy);
+			image_touxiang.setImageBitmap(bitmap);
+		} else {
+			String url;
+			if (imageUrl.startsWith("http:")) {
+				url = imageUrl;
+			} else {
+				url = GlobalConfig.imageurl + imageUrl;
+			}
+			String _url = AssembleImageUrlUtils.assembleImageUrl300(url);
+			AssembleImageUrlUtils.loadImage(_url, url, image_touxiang, IntegerConstant.TYPE_PERSON);
+		}
+
+		if (!TextUtils.isEmpty(phoneNum)) {
+			rl_phone_num.setVisibility(View.VISIBLE);
+			tv_phone_num.setText(phoneNum);
+		}
+
+		if (!TextUtils.isEmpty(descN)) {
+			lin_sign.setVisibility(View.VISIBLE);
+			tv_sign.setText(descN);
 		}
 	}
 
@@ -150,7 +229,7 @@ public class FriendAddActivity extends AppBaseActivity implements OnClickListene
 	private void sendRequest(){
 		JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 		try {
-			jsonObject.put("BeInvitedUserId", contact.getUserId());
+			jsonObject.put("BeInvitedUserId", id);
 			jsonObject.put("InviteMsg", et_news.getText().toString().trim());
 		} catch (JSONException e) {
 			e.printStackTrace();

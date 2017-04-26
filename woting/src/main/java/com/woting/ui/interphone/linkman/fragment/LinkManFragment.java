@@ -657,7 +657,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
         sortListView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // 跳转到详细信息界面
+                // 跳转到好友信息界面
                 Intent intent = new Intent(context, TalkPersonNewsActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("type", "LinkMan");

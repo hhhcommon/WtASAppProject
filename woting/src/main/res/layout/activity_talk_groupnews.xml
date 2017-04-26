@@ -44,7 +44,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="180dp"
                 android:paddingTop="12dp"
                 android:visibility="visible"
                 android:background="@color/dinglan_orange">
@@ -66,7 +66,7 @@
                     android:layout_width="65dp"
                     android:layout_toRightOf="@id/image_touxiang"
                     android:layout_height="80dp"
-                    android:layout_marginLeft="36dp"
+                    android:layout_marginLeft="42dp"
                     android:orientation="vertical" >
 
                     <ImageView
@@ -85,7 +85,7 @@
                 </RelativeLayout>
 
                 <EditText
-                    android:id="@+id/et_b_name"
+                    android:id="@+id/et_group_alias"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -107,17 +107,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="ID:100001"
-                    android:layout_below="@+id/et_b_name"
+                    android:text="群号:100001"
+                    android:layout_below="@+id/et_group_alias"
                     android:layout_centerHorizontal="true"
                     android:textColor="@color/WHITE"
                     android:textSize="@dimen/wt_login_text_wjmm" />
 
                 <EditText
-                    android:id="@+id/et_groupSignature"
+                    android:id="@+id/et_group_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
                     android:background="@color/dinglan_orange"
                     android:ellipsize="end"
                     android:singleLine="true"
@@ -161,6 +162,56 @@
                     android:layout_alignParentBottom="true"/>
 
             </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/lin_sign"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/person_color"
+                android:gravity="left|center"
+                android:visibility="gone"
+                android:orientation="vertical"
+                >
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:background="@color/app_bg"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="15dip"
+                    android:layout_marginLeft="5dp"
+                    android:text="群签名"
+                    android:textColor="@color/beijing"
+                    android:textSize="@dimen/wt_login_text_wjmm"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_sign"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1571****45"
+                    android:gravity="left|center"
+                    android:textColor="@color/black"
+                    android:paddingLeft="15dp"
+                    android:paddingBottom="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:maxLines="3"
+                    android:textSize="@dimen/wt_login_text_wjmm" />
+                <TextView
+                    android:id="@+id/tv_zhankai"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dip"
+                    android:text="展开"
+                    android:gravity="center"
+                    android:textColor="@color/gray"
+                    android:paddingLeft="15dp"
+                    android:background="@color/app_bg"
+                    android:textSize="@dimen/wt_login_text_wjmm" />
+
+            </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/lin_allperson"
@@ -213,81 +264,7 @@
                 android:layout_height="0.5dp"
                 android:background="@color/text_line_1" />
 
-            <RelativeLayout
-                android:id="@+id/lin_group_name"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@drawable/person_color" >
 
-                <TextView
-                    android:id="@+id/text_group_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="20dp"
-                    android:text="群名称"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/beijing"
-                    android:textSize="@dimen/wt_login_text_wjmm" />
-
-                <TextView
-                    android:id="@+id/tv_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/text_group_name"
-                    android:text="我听科技"
-                    android:textColor="@color/wt_login_third"
-                    android:textSize="@dimen/wt_edittext_default_text" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0.1dip"
-                    android:background="@color/text_line_1"
-                    android:layout_alignParentBottom="true"/>
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/lin_group_introduce"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:visibility="gone"
-                android:background="@drawable/person_color">
-
-                <TextView
-                    android:id="@+id/text_a"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="20dp"
-                    android:text="群介绍"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/beijing"
-                    android:textSize="@dimen/wt_login_text_wjmm" />
-
-                <TextView
-                    android:id="@+id/et_jieshao"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:ellipsize="end"
-                    android:layout_toRightOf="@+id/text_a"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp"
-                    android:text="本群还没有介绍~~"
-                    android:textColor="@color/wt_login_third"
-                    android:textSize="@dimen/wt_edittext_default_text" />
-
-                <TextView
-                    android:id="@+id/tv_jiaqun"
-                    android:layout_width="match_parent"
-                    android:layout_height="0.1dip"
-                    android:layout_alignParentBottom="true"
-                    android:background="@color/text_line_1" />
-
-            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/lin_jiaqun"

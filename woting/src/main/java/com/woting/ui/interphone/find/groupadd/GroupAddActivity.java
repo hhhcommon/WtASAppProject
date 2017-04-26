@@ -3,6 +3,7 @@ package com.woting.ui.interphone.find.groupadd;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,13 +13,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
+import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
@@ -57,6 +59,7 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 	private GroupInfo contact;
 	private GroupAddActivity context;
 	private boolean isCancelRequest;
+	private LinearLayout lin_sign;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +85,7 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 		tv_sign = (TextView) findViewById(R.id.tv_sign);
 		tv_add = (TextView) findViewById(R.id.tv_add);
 		lin_mm = (LinearLayout) findViewById(R.id.lin_mm);
+		lin_sign=(LinearLayout)findViewById(R.id.lin_sign);
 		lin_yzxx = (LinearLayout) findViewById(R.id.lin_yzxx);
 		lin_delete = (LinearLayout) findViewById(R.id.lin_delete);
 	}
@@ -110,33 +114,37 @@ public class  GroupAddActivity extends AppBaseActivity implements OnClickListene
 		}
 
 		if (contact.getGroupName() == null || contact.getGroupName().equals("")) {
-			tv_name.setText("未知");
+			tv_name.setText("群名未知");
 		} else {
 			tv_name.setText(contact.getGroupName());
 		}
 		if (contact.getGroupNum() == null || contact.getGroupNum().equals("")) {
-			tv_id.setText("000000");
+			tv_id.setText("群号未知");
 		} else {
-			tv_id.setText("ID: " +contact.getGroupNum());
+			tv_id.setText("群号: " +contact.getGroupNum());
 		}
 		if (contact.getGroupSignature() == null || contact.getGroupSignature() .equals("")) {
-			tv_sign.setText("这家伙很懒，什么都没写");
+			lin_sign.setVisibility(View.GONE);
 		} else {
+			lin_sign.setVisibility(View.VISIBLE);
 			tv_sign.setText(contact.getGroupSignature());
 		}
-		if (contact.getGroupImg() == null || contact.getGroupImg().equals("")
-				|| contact.getGroupImg().equals("null") || contact.getGroupImg().trim().equals("")) {
-			image_touxiang.setImageResource(R.mipmap.wt_image_tx_qz);
+
+		if (contact.getGroupImg() == null || contact.getGroupImg().equals("") || contact.getGroupImg().equals("null")
+				|| contact.getGroupImg().trim().equals("")) {
+			Bitmap bitmap = BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_hy);
+			image_touxiang.setImageBitmap(bitmap);
 		} else {
 			String url;
-			if(contact.getGroupImg().startsWith("http:")){
+			if (contact.getGroupImg().startsWith("http:")) {
 				url = contact.getGroupImg();
-			}else{
-				url = GlobalConfig.imageurl+contact.getGroupImg();
+			} else {
+				url = GlobalConfig.imageurl + contact.getGroupImg();
 			}
-			url=AssembleImageUrlUtils.assembleImageUrl150(url);
-			Picasso.with(context).load(url.replace("\\/", "/")).resize(100, 100).centerCrop().into(image_touxiang);
+			String _url = AssembleImageUrlUtils.assembleImageUrl300(url);
+			AssembleImageUrlUtils.loadImage(_url, url, image_touxiang, IntegerConstant.TYPE_PERSON);
 		}
+
 		if(username == null || username.equals("")){
 			et_news.setText("");
 		}else{
