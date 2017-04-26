@@ -414,6 +414,13 @@
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
+        <!-- 直播节目预告 -->
+        <activity
+            android:name="com.woting.ui.music.live.liveparade.LiveParadeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+
         <!--  -->
         <activity
             android:name=".ui.interphone.group.groupcontrol.changegrouptype.ChangeGroupTypeActivity"

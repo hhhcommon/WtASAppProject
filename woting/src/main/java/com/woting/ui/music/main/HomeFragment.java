@@ -3,7 +3,6 @@ package com.woting.ui.music.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -17,6 +16,7 @@ import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
+import com.woting.ui.music.live.main.LiveFragment;
 import com.woting.ui.music.radio.main.OnLineFragment;
 import com.woting.ui.music.classify.fragment.FenLeiFragment;
 import com.woting.ui.music.recommended.RecommendFragment;
@@ -36,6 +36,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private static TextView view1;// 推荐
     private static TextView view2;// 电台
     private static TextView view3;// 分类
+    private static TextView view4;// 直播
+
     private static ViewPager mPager;
 
     @Override
@@ -61,14 +63,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_wt_home, container, false);
             initView();
@@ -86,6 +87,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         view3 = (TextView) rootView.findViewById(R.id.tv_guid3);// 分类
         view3.setOnClickListener(new txListener(2));
+
+        view4 = (TextView) rootView.findViewById(R.id.tv_guid4);// 直播
+        view4.setOnClickListener(new txListener(3));
 
         rootView.findViewById(R.id.lin_news).setOnClickListener(this);// 消息
         rootView.findViewById(R.id.lin_find).setOnClickListener(this);// 搜索
@@ -113,12 +117,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         mPager.setOffscreenPageLimit(1);
         ArrayList<Fragment> fragmentList = new ArrayList<>();
         RecommendFragment rf = new RecommendFragment();// 推荐
-        OnLineFragment of = new OnLineFragment();// 电台
-        FenLeiFragment ff = new FenLeiFragment();// 分类
+        OnLineFragment of = new OnLineFragment();      // 电台
+        FenLeiFragment ff = new FenLeiFragment();      // 分类
+        LiveFragment lv = new LiveFragment();          // 直播
 
         fragmentList.add(rf);
         fragmentList.add(of);
         fragmentList.add(ff);
+        fragmentList.add(lv);
         mPager.setAdapter(new MyFragmentPagerAdapter(getChildFragmentManager(), fragmentList));
         mPager.setOnPageChangeListener(new MyOnPageChangeListener());// 页面变化时的监听器
         mPager.setCurrentItem(0);// 设置当前显示标签页为第一页 mPager
@@ -144,36 +150,39 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         if (index == 0) {// 推荐
             view1.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
             view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_home_white));
-
             view2.setTextColor(context.getResources().getColor(R.color.white));
             view2.setBackgroundColor(0);
-//            view2.setBackgroundDrawable(context.getResources().getDrawable(0));
-
             view3.setTextColor(context.getResources().getColor(R.color.white));
-//            view3.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
             view3.setBackgroundColor(0);
+            view4.setTextColor(context.getResources().getColor(R.color.white));
+            view4.setBackgroundColor(0);
         } else if (index == 1) {// 电台
             view1.setTextColor(context.getResources().getColor(R.color.white));
-//            view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
             view1.setBackgroundColor(0);
-
             view2.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
             view2.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_home_white));
-
             view3.setTextColor(context.getResources().getColor(R.color.white));
-//            view3.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
             view3.setBackgroundColor(0);
+            view4.setTextColor(context.getResources().getColor(R.color.white));
+            view4.setBackgroundColor(0);
         } else if (index == 2) {// 分类
             view1.setTextColor(context.getResources().getColor(R.color.white));
-//            view1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
             view1.setBackgroundColor(0);
-
             view2.setTextColor(context.getResources().getColor(R.color.white));
-//            view2.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
             view2.setBackgroundColor(0);
-
             view3.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
             view3.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_home_white));
+            view4.setTextColor(context.getResources().getColor(R.color.white));
+            view4.setBackgroundColor(0);
+        }else if (index == 3) {// 分类
+            view1.setTextColor(context.getResources().getColor(R.color.white));
+            view1.setBackgroundColor(0);
+            view2.setTextColor(context.getResources().getColor(R.color.white));
+            view2.setBackgroundColor(0);
+            view3.setTextColor(context.getResources().getColor(R.color.white));
+            view3.setBackgroundColor(0);
+            view4.setTextColor(context.getResources().getColor(R.color.dinglan_orange));
+            view4.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_home_white));
         }
     }
 
