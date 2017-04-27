@@ -17,6 +17,7 @@ import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
+import com.woting.common.util.TimeUtils;
 import com.woting.ui.model.content;
 
 import java.text.SimpleDateFormat;
@@ -141,19 +142,8 @@ public class LiveAdapter extends BaseAdapter {
             if (holder.draw.isRunning()) {
                 holder.draw.stop();
             }
-
-            CountDownTimer mCountDownTimer = new CountDownTimer(6000000*(position+1), 1000) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    String timeString = getTime(millisUntilFinished);
-                    holder.time_end.setText(timeString);
-                }
-
-                @Override
-                public void onFinish() {
-                    holder.time_end.setText("直播中");
-                }
-            }.start();
+            String timeString = TimeUtils.getTimes(Long.valueOf(lists.getPlayerInTime()));
+            holder.time_end.setText(timeString);
         } else {
             holder.time_end.setVisibility(View.GONE);
             holder.image_isShow.setVisibility(View.VISIBLE);
@@ -163,18 +153,6 @@ public class LiveAdapter extends BaseAdapter {
         }
 
         return convertView;
-    }
-
-    private String getTime(long time) {
-        SimpleDateFormat format;
-        if(time / 1000 / 60 > 60){
-            format = new SimpleDateFormat("hh:mm:ss");
-        }else{
-            format = new SimpleDateFormat("mm:ss");
-        }
-        format.setTimeZone(TimeZone.getTimeZone("GMT"));
-        String s = format.format(time);
-        return s;
     }
 
     static class ViewHolder {

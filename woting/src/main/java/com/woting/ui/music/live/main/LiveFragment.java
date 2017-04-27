@@ -6,8 +6,11 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +49,8 @@ import org.json.JSONTokener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 直播主页
@@ -78,6 +83,7 @@ public class LiveFragment extends Fragment implements TipView.WhiteViewClick {
 
     private OnLiveAdapter adapter;
     private Banner mLoopViewPager;
+    private Timer timer;
 
 
     @Override
@@ -290,6 +296,8 @@ public class LiveFragment extends Fragment implements TipView.WhiteViewClick {
                         }
                         setItemListener();
                         tipView.setVisibility(View.GONE);
+                        // 重新组装数据测试=====测试代码
+                        setDemoData();
                     } else {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
@@ -329,6 +337,43 @@ public class LiveFragment extends Fragment implements TipView.WhiteViewClick {
             }
         });
     }
+
+
+    private void setDemoData(){
+        for(int i=0;i<newList.size();i++){
+            ArrayList<content> _l = newList.get(i).getList();
+            for(int j=0;j<_l.size();j++){
+                _l.get(j).setPlayerInTime(String.valueOf(600*(j+1)));
+            }
+        }
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Message message = Message.obtain();
+                message.what = 1;
+                mHandler.sendMessage(message);
+            }
+        }, 1000, 1000);
+    }
+
+    private Handler mHandler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            if (msg.what == 1) {
+                for(int i=0;i<newList.size();i++){
+                    ArrayList<content> _l = newList.get(i).getList();
+                    for(int j=0;j<_l.size();j++){
+                        _l.get(j).setPlayerInTime(String.valueOf(Integer.parseInt(_l.get(j).getPlayerInTime())-1));
+                    }
+                }
+                adapter.changeData(newList);
+            }
+        }
+    };
 
 //    @Override
 //    public void onDestroyView() {

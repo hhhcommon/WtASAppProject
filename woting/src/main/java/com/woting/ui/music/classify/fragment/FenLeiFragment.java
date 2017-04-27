@@ -91,6 +91,7 @@ public class FenLeiFragment extends Fragment implements TipView.WhiteViewClick {
     // 获取数据
     private void getData() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {// 发送网络请求
+            dialog = DialogUtils.Dialog(context);
             getImage();
             sendRequest();
         } else {

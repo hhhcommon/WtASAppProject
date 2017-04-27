@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +48,8 @@ import org.json.JSONTokener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 电台列表
@@ -77,6 +81,7 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
     private String tag = "FM_LIST_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
     private int showType=1;
+    private Timer timer;
 
     @Override
     public void onWhiteViewClick() {
@@ -224,6 +229,10 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
                                         adapter.notifyDataSetChanged();
                                     }
                                     setListView();
+                                    if(showType==2){
+                                        // 重新组装数据测试=====测试代码
+                                        setDemoData();
+                                    }
                                     tipView.setVisibility(View.GONE);
                                     mListView.setPullLoadEnable(true);
                                 } catch (Exception e) {
@@ -299,6 +308,36 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
             }
         });
     }
+
+    private void setDemoData(){
+        for(int i=0;i<newList.size();i++){
+                newList.get(i).setPlayerInTime(String.valueOf(60000*(i+1)));
+        }
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Message message = Message.obtain();
+                message.what = 1;
+                mHandler.sendMessage(message);
+            }
+        }, 1000, 1000);
+    }
+
+    private Handler mHandler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            if (msg.what == 1) {
+                for(int i=0;i<newList.size();i++){
+                    newList.get(i).setPlayerInTime(String.valueOf(Integer.parseInt(newList.get(i).getPlayerInTime())-1));
+                }
+                adapter.notifyDataSetChanged();
+            }
+        }
+    };
 
     @Override
     public void onDestroy() {
