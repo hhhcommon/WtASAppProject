@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/dinglan_orange"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <ImageView
+            android:id="@+id/head_left_btn"
+            style="@style/LeftImageStyle"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="群签名"
+            android:layout_centerInParent="true"
+            android:textColor="@color/WHITE"
+            android:textSize="@dimen/activity_head_center_s" />
+        <LinearLayout
+            android:id="@+id/head_right_btn"
+            android:layout_width="60dip"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@color/dinglan_orange"
+            android:gravity="center|right"
+            android:layout_marginRight="13dp"
+            >
+
+            <TextView
+                android:id="@+id/tv_head_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="保存"
+                android:textColor="@color/white"
+                android:textSize="@dimen/activity_head_right" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/app_bg"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/bg_edittext_normal"
+            android:orientation="vertical"
+
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="200dp"
+                android:gravity="left|center"
+                android:orientation="horizontal"
+                android:padding="5dip">
+
+                <EditText
+                    android:id="@+id/edit_sign"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/WHITE"
+                    android:ems="10"
+                    android:layout_margin="10dp"
+                    android:gravity="left|top"
+                    android:hint="请输入新的群签名"
+                    android:maxLength="140"
+                    android:textColor="@color/wt_login_third"
+                    android:textColorHint="@color/gray"
+                    android:textCursorDrawable="@drawable/wt_edittext_cursor"
+                    android:lineSpacingExtra="2dp"
+                    android:textSize="@dimen/wt_edittext_default_text" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/wt_edittext_default_high"
+                android:gravity="left|center"
+                android:orientation="horizontal"
+                android:padding="5dip">
+
+                <TextView
+                    android:id="@+id/tv_num"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:paddingRight="10dp"
+                    android:background="@color/WHITE"
+                    android:ems="10"
+                    android:gravity="right|center"
+                    android:hint="您还可以输入140个字"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="@color/wt_login_third"
+                    android:textColorHint="@color/gray"
+                    android:textCursorDrawable="@drawable/wt_edittext_cursor"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+</LinearLayout>
