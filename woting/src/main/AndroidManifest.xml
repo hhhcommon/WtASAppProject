@@ -200,6 +200,13 @@
 
         <!--  -->
         <activity
+            android:name=".ui.interphone.group.groupcontrol.updategroupsign.UpdateGroupSignActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+        <!--  -->
+        <activity
             android:name=".ui.musicplay.comment.CommentActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
@@ -410,6 +417,13 @@
         <!--  -->
         <activity
             android:name=".ui.musicplay.timeimg.TimerPowerOffActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+
+        <!-- 直播节目预告 -->
+        <activity
+            android:name="com.woting.ui.music.live.liveparade.LiveParadeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>

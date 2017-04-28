@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingTop="6dp">
+            android:paddingTop="10dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -104,7 +104,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -146,6 +146,7 @@
                 android:text="本名"
                 android:textColor="@color/WHITE"
                 android:textSize="@dimen/wt_login_text_wjmm"
+                android:visibility="visible"
                 />
 
         </LinearLayout>

@@ -2,9 +2,9 @@ package com.woting.ui.interphone.message.reviewednews.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -12,12 +12,11 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.interphone.message.reviewednews.model.CheckInfo;
-import com.woting.common.config.GlobalConfig;
 
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -78,13 +77,13 @@ public class JoinGroupAdapter extends BaseAdapter {
         if (lists.getInvitedUserName()== null || lists.getInvitedUserName().equals("")) {
             holder.tv_news.setText("未知");
         } else {
-            holder.tv_news.setText(lists.getInvitedUserName());
+            holder.tv_news.setText(Html.fromHtml("<font  color=\"#ff6600\">" + lists.getInvitedUserName() + "</font>"));
         }
 
         if (lists.getUserName() == null || lists.getUserName().equals("")) {
             holder.tv_jieshao.setText("无邀请信息");
         } else {
-            holder.tv_jieshao.setText("邀请了" + lists.getUserName() + "加入本群");
+            holder.tv_jieshao.setText(Html.fromHtml("邀请了 <font  color=\"#ff6600\">" + lists.getUserName() + "</font> 加入本群"));
         }
 
 //        if (lists.getInviteTime() == null || lists.getInviteTime().equals("") || lists.getInviteTime().equals("null")) {
