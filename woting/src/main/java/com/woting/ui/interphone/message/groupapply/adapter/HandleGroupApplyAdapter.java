@@ -2,9 +2,9 @@ package com.woting.ui.interphone.message.groupapply.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -16,9 +16,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.common.model.UserInfo;
-import com.woting.ui.interphone.message.reviewednews.model.CheckInfo;
 
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -77,16 +75,18 @@ public class HandleGroupApplyAdapter extends BaseAdapter {
 
 		if (lists.getNickName() == null || lists.getNickName().equals("")) {
 			holder.tv_news.setText("未知");
+			holder.tv_jieshao.setText("我是未知");
 		} else {
-			holder.tv_news.setText(lists.getNickName());
+			holder.tv_news.setText(Html.fromHtml("<font  color=\"#ff6600\">" + lists.getNickName() + "</font> 申请加入本群"));
+			holder.tv_jieshao.setText("我是"+lists.getNickName()+".");
 		}
-		if (lists.getApplyTime() == null || lists.getApplyTime().equals("")) {
+		/*if (lists.getApplyTime() == null || lists.getApplyTime().equals("")) {
 			holder.tv_jieshao.setText("申请进入该群");
 		} else {
 			String time = format.format(new Date(Long.parseLong(lists.getApplyTime())));
 
 			holder.tv_jieshao.setText("于" + time + "申请进入该群");
-		}
+		}*/
 		if (lists.getPortraitMini() == null || lists.getPortraitMini().equals("")
 				|| lists.getPortraitMini().equals("null") || lists.getPortraitMini().trim().equals("")) {
 			Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_qz);

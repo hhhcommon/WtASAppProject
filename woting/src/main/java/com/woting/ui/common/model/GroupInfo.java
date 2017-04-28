@@ -47,6 +47,15 @@ public class GroupInfo implements Serializable {
     private String Sex;
     private String Region;
     private String UserSign;
+    private String GroupPassword;
+
+    public void setGroupPassword(String groupPassword) {
+        GroupPassword = groupPassword;
+    }
+
+    public String getGroupPassword() {
+        return GroupPassword;
+    }
 
     public void setUserSign(String userSign) {
         UserSign = userSign;

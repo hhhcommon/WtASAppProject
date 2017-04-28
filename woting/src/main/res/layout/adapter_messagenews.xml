@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingLeft="20dp"
+    android:paddingRight="15dp"
     android:background="@color/WHITE"
     android:orientation="vertical" >
 
@@ -15,7 +17,7 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp" >
+            >
 
             <ImageView
                 android:id="@+id/image"
@@ -83,13 +85,13 @@
             android:id="@+id/tv_res"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:paddingLeft="20dp"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:background="@drawable/bg_edittext_gray"
             android:gravity="center"
             android:padding="8dip"
-            android:text="拒  绝"
+            android:text="拒绝"
             android:textColor="@color/black"
             android:textSize="14sp" />
 
@@ -103,14 +105,9 @@
             android:background="@drawable/login_denglu"
             android:gravity="center"
             android:padding="8dip"
-            android:text="同  意"
+            android:text="同意"
             android:textColor="@color/WHITE"
             android:textSize="@dimen/wt_login_text_wjmm" />
     </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/text_line_1" />
 
 </LinearLayout>

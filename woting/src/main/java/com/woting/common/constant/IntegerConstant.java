@@ -54,18 +54,12 @@ public class IntegerConstant {
     // 通知消息默认头像
     public static final int TYPE_NOTIFY = 0x005;
 
-    // 数据收集类型 播放事件
-    public static final int DATA_TYPE_PLAY = 0x006;
-
-    // 数据收集类型 打开界面
-    public static final int DATA_TYPE_OPEN = 0x007;
-
     // 数据上传方式 即时上传
     public static final int DATA_UPLOAD_TYPE_IMM = 0;
 
-    // 数据上传方式 定制时间上传
+    // 数据上传方式 定时定量上传
     public static final int DATA_UPLOAD_TYPE_GIVEN = -1;
 
-    public static final int DATA_UPLOAD_COUNT = 10;
-
+    // 数据上传至少保证在此数量以上
+    public static final int DATA_UPLOAD_COUNT = 5;
 }

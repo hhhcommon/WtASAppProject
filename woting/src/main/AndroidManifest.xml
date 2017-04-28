@@ -200,6 +200,13 @@
 
         <!--  -->
         <activity
+            android:name=".ui.interphone.group.groupcontrol.updategroupsign.UpdateGroupSignActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+        <!--  -->
+        <activity
             android:name=".ui.musicplay.comment.CommentActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"

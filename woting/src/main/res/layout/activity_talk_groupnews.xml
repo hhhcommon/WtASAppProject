@@ -45,7 +45,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
-                android:paddingTop="12dp"
+                android:paddingTop="8dp"
                 android:visibility="visible"
                 android:background="@color/dinglan_orange">
                 <ImageView
@@ -118,7 +118,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:layout_marginBottom="6dp"
+                    android:layout_marginBottom="2dp"
                     android:background="@color/dinglan_orange"
                     android:ellipsize="end"
                     android:singleLine="true"
@@ -168,7 +168,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/person_color"
                 android:gravity="left|center"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:orientation="vertical"
                 >
 
@@ -195,6 +195,8 @@
                     android:gravity="left|center"
                     android:textColor="@color/black"
                     android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:lineSpacingExtra="2dp"
                     android:paddingBottom="10dp"
                     android:layout_marginLeft="5dp"
                     android:maxLines="3"

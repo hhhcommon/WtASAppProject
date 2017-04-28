@@ -249,7 +249,7 @@ public class SetGroupManagerActivity extends AppBaseActivity implements OnClickL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
+        switch (resultCode){
             case 1:
                 setResult(1);
                 finish();

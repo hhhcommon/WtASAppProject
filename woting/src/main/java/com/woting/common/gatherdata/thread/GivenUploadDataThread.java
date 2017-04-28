@@ -38,7 +38,7 @@ public class GivenUploadDataThread extends Thread {
                     }
                 }
 
-                Thread.sleep(5 * 1000 * 60);// 五分钟检查一次  如果有数据则上传
+                Thread.sleep(2 * 1000 * 60);// 一定时间检查一次  如果有数据则上传
             } catch (Exception e) {
                 e.printStackTrace();
                 GatherData.givenList.clear();
