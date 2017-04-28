@@ -2,13 +2,10 @@ package com.woting.common.gatherdata;
 
 import android.util.Log;
 
-import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.gatherdata.model.DataModel;
 import com.woting.common.gatherdata.thread.GivenUploadDataThread;
 import com.woting.common.gatherdata.thread.ImmUploadDataThread;
-import com.woting.common.util.CommonUtils;
-import com.woting.common.util.PhoneMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +16,6 @@ import java.util.concurrent.SynchronousQueue;
  * Created by Administrator on 2017/4/11.
  */
 public class GatherData {
-
-    public static int uploadType;
 
     public static boolean isRun = false;
 
@@ -53,91 +48,17 @@ public class GatherData {
     }
 
     /**
-     * 设置数据
-     */
-    public static DataModel setData() {
-        DataModel data = new DataModel();
-        data.setUserId(CommonUtils.getSocketUserId());// 用户 ID
-        data.setImei(PhoneMessage.imei);// IMEI
-        data.setPcdType(String.valueOf(GlobalConfig.PCDType));
-        data.setScreenSize(PhoneMessage.ScreenWidth + "x" + PhoneMessage.ScreenHeight);// 手机屏幕大小
-        data.setLongitude(PhoneMessage.longitude);// 经度
-        data.setLatitude(PhoneMessage.latitude);// 纬度
-        data.setRegion(GlobalConfig.Region);// 行政区划
-        return data;
-    }
-
-    /**
-     * 收集数据
-     * <p>
-     * uploadType == -1 定量上传
-     * uploadType == 0 实时上传
-     * uploadType == 时间 定时上传
-     */
-    public static void collectData(int type, int dataType) {
-        uploadType = type;
-        DataModel data;
-        switch (uploadType) {
-            case IntegerConstant.DATA_UPLOAD_TYPE_IMM:// 即时上传
-                if (dataType == IntegerConstant.DATA_TYPE_OPEN) {
-                    data = collectOpenData();
-                } else if (dataType == IntegerConstant.DATA_TYPE_PLAY) {
-                    data = collectPlayData();
-                } else {
-                    data = null;
-                }
-                if (data != null) immQueue.add(data);
-                break;
-            case IntegerConstant.DATA_UPLOAD_TYPE_GIVEN:// 定量上传
-                if (dataType == IntegerConstant.DATA_TYPE_OPEN) {
-                    data = collectOpenData();
-                } else if (dataType == IntegerConstant.DATA_TYPE_PLAY) {
-                    data = collectPlayData();
-                } else {
-                    data = null;
-                }
-                if (data != null) givenList.add(data);
-                break;
-        }
-    }
-
-    /**
      * 收集数据
      */
-    public static void collectData(int type, DataModel data) {
-        uploadType = type;
+    public static void collectData(int uploadType, DataModel data) {
         switch (uploadType) {
             case IntegerConstant.DATA_UPLOAD_TYPE_IMM:// 即时上传
                 immQueue.add(data);
                 break;
-            case IntegerConstant.DATA_UPLOAD_TYPE_GIVEN:// 定时或定量上传
+            case IntegerConstant.DATA_UPLOAD_TYPE_GIVEN:// 定时检查上传
                 givenList.add(data);
                 break;
         }
-    }
-
-    /**
-     * 收集打开新界面数据
-     */
-    private static DataModel collectOpenData() {
-        DataModel data = setData();
-
-        // 其他数据
-        // ...
-
-        return data;
-    }
-
-    /**
-     * 收集播放事件
-     */
-    private static DataModel collectPlayData() {
-        DataModel data = setData();
-
-        // 其他数据
-        // ...
-
-        return data;
     }
 
     /**
