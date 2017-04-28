@@ -17,11 +17,16 @@ import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
+import com.woting.common.util.CountDownUtil;
 import com.woting.common.util.TimeUtils;
 import com.woting.ui.model.content;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 /**
@@ -33,6 +38,7 @@ public class LiveAdapter extends BaseAdapter {
     private Bitmap bmp;
     private String contentImg, contentName, name, playCount;
     private int type;
+    private Map<TextView, CountDownUtil> leftTimeMap = new HashMap<TextView, CountDownUtil>();
 
     public LiveAdapter(Context context, List<content> list,int type) {
         this.context = context;
@@ -142,8 +148,23 @@ public class LiveAdapter extends BaseAdapter {
             if (holder.draw.isRunning()) {
                 holder.draw.stop();
             }
-            String timeString = TimeUtils.getTimes(Long.valueOf(lists.getPlayerInTime()));
-            holder.time_end.setText(timeString);
+
+            String a = lists.getPlayerInTime();
+            long b = Long.parseLong(a);
+            //获取控件对应的倒计时控件是否存在,存在就取消,解决时间重叠问题
+            //leftTimeMap哪来的?接着往下看
+            CountDownUtil tc = leftTimeMap.get(holder.time_end);
+            if (tc != null) {
+                tc.cancel();
+                tc = null;
+            }
+            //实例化倒计时类
+            CountDownUtil cdu = new CountDownUtil(b*1000, 1000, holder.time_end);
+            //开启倒计时
+            cdu.start();
+
+            //[醒目]此处需要map集合将控件和倒计时类关联起来,就是这里
+            leftTimeMap.put(holder.time_end, cdu);
         } else {
             holder.time_end.setVisibility(View.GONE);
             holder.image_isShow.setVisibility(View.VISIBLE);
@@ -153,6 +174,24 @@ public class LiveAdapter extends BaseAdapter {
         }
 
         return convertView;
+    }
+
+    //作为严谨的码工,当然要善始善终
+    public void cancelAllTimers() {
+        Set<Map.Entry<TextView, CountDownUtil>> s = leftTimeMap.entrySet();
+        Iterator it = s.iterator();
+        while (it.hasNext()) {
+            try {
+                Map.Entry pairs = (Map.Entry) it.next();
+                CountDownUtil cdt = (CountDownUtil) pairs.getValue();
+                cdt.cancel();
+                cdt = null;
+            } catch (Exception e) {
+            }
+        }
+        it = null;
+        s = null;
+        leftTimeMap.clear();
     }
 
     static class ViewHolder {

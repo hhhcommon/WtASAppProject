@@ -29,19 +29,21 @@
         android:id="@+id/tip_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ListView
+        <com.woting.common.widgetui.xlistview.XListView
             android:id="@+id/lv_comment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
             android:layout_marginBottom="40dp"
-            android:scrollbars="none" />
+            android:background="@color/white"
+            android:divider="@color/view_color"
+            android:dividerHeight="1dp"
+            android:scrollbars="none"></com.woting.common.widgetui.xlistview.XListView>
 
         <LinearLayout
             android:id="@+id/bottom"
@@ -83,10 +85,10 @@
                     android:id="@+id/send_sms"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
+                    android:layout_margin="5dp"
                     android:background="@drawable/bg_gridview_normal"
                     android:gravity="center"
                     android:text="发送"
-                    android:layout_margin="5dp"
                     android:textColor="@color/white"
                     android:textSize="14sp" />
 
