@@ -230,13 +230,13 @@ public class FenLeiFragment extends Fragment implements TipView.WhiteViewClick {
         });
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (null != rootView) {
-            ((ViewGroup) rootView.getParent()).removeView(rootView);
-        }
-    }
+//    @Override
+//    public void onDestroyView() {
+//        super.onDestroyView();
+//        if (null != rootView) {
+//            ((ViewGroup) rootView.getParent()).removeView(rootView);
+//        }
+//    }
 
     @Override
     public void onDestroy() {

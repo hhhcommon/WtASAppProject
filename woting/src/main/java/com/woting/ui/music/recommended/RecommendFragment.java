@@ -329,13 +329,13 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
 
 
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (null != rootView) {
-            ((ViewGroup) rootView.getParent()).removeView(rootView);
-        }
-    }
+//    @Override
+//    public void onDestroyView() {
+//        super.onDestroyView();
+//        if (null != rootView) {
+//            ((ViewGroup) rootView.getParent()).removeView(rootView);
+//        }
+//    }
 
     @Override
     public void onDestroy() {
