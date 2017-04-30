@@ -117,7 +117,7 @@ public class FenLeiFragment extends Fragment implements TipView.WhiteViewClick {
         try {
             jsonObject.put("CatalogType", "-1");
             jsonObject.put("CatalogId", "cn17");
-            jsonObject.put("Size", "4");// 此处需要改成-1
+            jsonObject.put("Size", "-1");// 此处需要改成-1
         } catch (JSONException e) {
             e.printStackTrace();
         }
