@@ -38,7 +38,9 @@
     <dimen name="activity_normal_textone">12sp</dimen>
     <dimen name="list_text_size">14sp</dimen>
     <dimen name="text_size_13">13sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
     <dimen name="text_size_10">10sp</dimen>
+    <dimen name="text_size_12">12sp</dimen>
     <dimen name="text_size_9">9sp</dimen>
     <dimen name="text_size_11">11sp</dimen>
 
@@ -99,4 +101,5 @@
     <dimen name="wt_group_main_33">33sp</dimen>
     <dimen name="wt_group_detail_16">16sp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_size_15">15sp</dimen>
 </resources>

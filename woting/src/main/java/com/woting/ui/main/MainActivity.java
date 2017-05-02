@@ -196,8 +196,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     // 创建服务
     private void createService() {
-        coreService = new Intent(this, CoreService.class);
-        startService(coreService);
+ /*       coreService = new Intent(this, CoreService.class);
+        startService(coreService);*/
 
 //        Socket = new Intent(this, SocketClient.class);                                             // socket服务
 //        startService(Socket);
@@ -1305,7 +1305,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     //app退出时执行该操作
     public static void stop() {
-        context.stopService(coreService);
+       // context.stopService(coreService);
 //        context.stopService(record);
 //        context.stopService(voicePlayer);
 //        context.stopService(Subclass);

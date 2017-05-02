@@ -8,9 +8,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
@@ -24,13 +27,18 @@ import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.DialogUtils;
+import com.woting.common.util.JsonUtil;
 import com.woting.common.util.PicassoBannerLoader;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyNewCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout;
 import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout.OnRefreshListener;
+import com.woting.live.ChatRoomLiveActivity;
+import com.woting.live.model.LiveInfo;
+import com.woting.live.net.NetManger;
 import com.woting.ui.model.content;
 import com.woting.ui.music.live.adapter.OnLiveAdapter;
 import com.woting.ui.music.live.liveparade.LiveParadeActivity;
@@ -56,7 +64,7 @@ public class LiveFragment extends Fragment implements TipView.WhiteViewClick {
     private FragmentActivity context;
     private SharedPreferences shared = BSApplication.SharedPreferences;
     private SearchPlayerHistoryDao dbDao;
-
+    private SharedPreferences sharedPreferences = BSApplication.SharedPreferences;
     private List<RadioPlay> mainList;
     private List<content> mainLists = new ArrayList<>();
     private List<RadioPlay> newList = new ArrayList<>();
@@ -321,13 +329,36 @@ public class LiveFragment extends Fragment implements TipView.WhiteViewClick {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 if (groupPosition == 2) {
-                    startActivity(new Intent(context, LiveParadeActivity.class));
+                    getLiveInfo("90");
+                    //  startActivity(new Intent(context, LiveParadeActivity.class));
                 } else {
                     // 跳转到直播间
                 }
                 return false;
             }
         });
+    }
+
+    private void getLiveInfo(String id) {
+        dialog = DialogUtils.Dialog(context);
+        if (sharedPreferences != null) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("user_id", sharedPreferences.getString(StringConstant.USERID, ""));
+                jsonObject.put("action", "add");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            NetManger.getInstance().start(jsonObject, id, new NetManger.BaseCallBack() {
+                @Override
+                public void callBackBase(LiveInfo liveInfo) {
+                    if (dialog != null) dialog.dismiss();
+                    if (liveInfo != null) {
+                        ChatRoomLiveActivity.intentInto(getActivity(), liveInfo);
+                    }
+                }
+            });
+        }
     }
 
 //    @Override
