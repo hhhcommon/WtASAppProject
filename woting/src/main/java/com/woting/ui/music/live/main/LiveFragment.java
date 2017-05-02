@@ -37,6 +37,7 @@ import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout.OnRefreshLis
 import com.woting.ui.model.content;
 import com.woting.ui.music.live.adapter.OnLiveAdapter;
 import com.woting.ui.music.live.liveparade.LiveParadeActivity;
+import com.woting.ui.music.live.model.MainLive;
 import com.woting.ui.music.radio.model.RadioPlay;
 import com.woting.ui.music.radiolist.mode.Image;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
@@ -59,12 +60,7 @@ import java.util.TimerTask;
  */
 public class LiveFragment extends Fragment implements TipView.WhiteViewClick {
     private FragmentActivity context;
-    private SharedPreferences shared = BSApplication.SharedPreferences;
-    private SearchPlayerHistoryDao dbDao;
-
-    private List<RadioPlay> mainList;
-    private List<content> mainLists = new ArrayList<>();
-    private List<RadioPlay> newList = new ArrayList<>();
+    private List<MainLive> mainList = new ArrayList<>();
     private List<String> ImageStringList = new ArrayList<>();
 
     private Dialog dialog;
@@ -76,8 +72,6 @@ public class LiveFragment extends Fragment implements TipView.WhiteViewClick {
 
     private int RefreshType;// refreshType 1 为下拉加载 2 为上拉加载更多
     private int page = 1;// 数的问题
-    private String beginCatalogId;
-    private String cityId;
     private String tag = "LIVE_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
 
@@ -89,14 +83,7 @@ public class LiveFragment extends Fragment implements TipView.WhiteViewClick {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-        initDao();// 初始化数据库命令执行对象
     }
-
-    // 初始化数据库命令执行对象
-    private void initDao() {
-        dbDao = new SearchPlayerHistoryDao(context);
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -121,15 +108,14 @@ public class LiveFragment extends Fragment implements TipView.WhiteViewClick {
 
             setListener();  // 设置监听
             setAdapter();   // 设置监听
-            String cityName = shared.getString(StringConstant.CITYNAME, "北京");
-            getData(cityName);
+            getData();
         }
         return relativeLayout;
     }
 
     // 设置监听
     private void setAdapter() {
-        adapter = new OnLiveAdapter(context, newList);
+        adapter = new OnLiveAdapter(context, mainList);
         expandableListMain.setAdapter(adapter);
     }
 
@@ -150,10 +136,9 @@ public class LiveFragment extends Fragment implements TipView.WhiteViewClick {
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                     RefreshType = 1;
                     page = 1;
-                    beginCatalogId = "";
                     send();
                 } else {
-                    if (mainLists != null && mainLists.size() > 0) {
+                    if (mainList != null && mainList.size() > 0) {
                         mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
                     } else {
                         mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
@@ -179,15 +164,13 @@ public class LiveFragment extends Fragment implements TipView.WhiteViewClick {
     @Override
     public void onWhiteViewClick() {
         dialog = DialogUtils.Dialog(context);
-        String cityName = shared.getString(StringConstant.CITYNAME, "北京");
-        getData(cityName);
+        getData();
     }
 
-    private void getData(String name) {
+    private void getData() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             page = 1;
             RefreshType = 1;
-            beginCatalogId = "";
             getImage();
             send();
         } else {
@@ -253,50 +236,36 @@ public class LiveFragment extends Fragment implements TipView.WhiteViewClick {
     }
 
     private void send() {
-        cityId = shared.getString(StringConstant.CITYID, "110000");
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            jsonObject.put("MediaType", "RADIO");
-            jsonObject.put("CatalogType", "1");// 按地区分类
-            JSONObject js = new JSONObject();
-            js.put("CatalogType", "2");
-            js.put("CatalogId", cityId);
-            jsonObject.put("FilterData", js);
-            jsonObject.put("BeginCatalogId", beginCatalogId);
             jsonObject.put("Page", String.valueOf(page));
-            jsonObject.put("PerSize", "3");
-            jsonObject.put("ResultType", "1");
-            jsonObject.put("PageSize", "10");
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPostForLive(GlobalConfig.getLiveMain, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 try {
-                    String returnType = result.getString("ReturnType");
-                    if (returnType != null && returnType.equals("1001")) {
+                    String returnType = result.getString("ret");
+                    if (returnType != null && returnType.equals("0")) {
                         page++;
-                        JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        beginCatalogId = arg1.getString("BeginCatalogId");
-                        mainList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RadioPlay>>() {
+                        List<MainLive> list = new Gson().fromJson(result.getString("data"), new TypeToken<List<MainLive>>() {
                         }.getType());
                         if (RefreshType == 1) {
-                            newList.clear();
+                            mainList.clear();
                         }
-                        newList.addAll(mainList);
-                        setDemoData();
-                        adapter.changeData(newList);
+                        mainList.addAll(list);
+                        // 重新组装数据测试=====测试代码   setDemoData();
+                        adapter.changeData(mainList);
 
-                        for (int i = 0; i < newList.size(); i++) {
+                        for (int i = 0; i < mainList.size(); i++) {
                             expandableListMain.expandGroup(i);
                         }
                         setItemListener();
                         tipView.setVisibility(View.GONE);
-                        // 重新组装数据测试=====测试代码
 
                     } else {
                         tipView.setVisibility(View.VISIBLE);
@@ -339,14 +308,14 @@ public class LiveFragment extends Fragment implements TipView.WhiteViewClick {
     }
 
 
-    private void setDemoData(){
-        for(int i=0;i<newList.size();i++){
-            ArrayList<content> _l = newList.get(i).getList();
-            for(int j=0;j<_l.size();j++){
-                _l.get(j).setPlayerInTime(String.valueOf(600*(j+1)));
-            }
-        }
-    }
+//    private void setDemoData(){
+//        for(int i=0;i<newList.size();i++){
+//            ArrayList<content> _l = newList.get(i).getList();
+//            for(int j=0;j<_l.size();j++){
+//                _l.get(j).setPlayerInTime(String.valueOf(600*(j+1)));
+//            }
+//        }
+//    }
 
 //    @Override
 //    public void onDestroyView() {

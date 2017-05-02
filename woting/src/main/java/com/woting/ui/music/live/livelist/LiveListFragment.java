@@ -38,6 +38,7 @@ import com.woting.ui.main.MainActivity;
 import com.woting.ui.model.content;
 import com.woting.ui.music.adapter.ContentAdapter;
 import com.woting.ui.music.live.adapter.LiveAdapter;
+import com.woting.ui.music.live.model.live;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.music.radio.model.RadioPlay;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
@@ -59,10 +60,8 @@ import java.util.TimerTask;
  */
 public class LiveListFragment extends Fragment implements TipView.WhiteViewClick {
     private Context context;
-    private SearchPlayerHistoryDao dbDao;
     private LiveAdapter adapter;
-    private SharedPreferences shared = BSApplication.SharedPreferences;
-    private List<content> newList = new ArrayList<>();
+    private List<live> mainList = new ArrayList<>();
 
 
     private Dialog dialog;
@@ -71,33 +70,19 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
     private XListView mListView;
     private TextView mTextView_Head;
 
-    private int ViewType = 1;
+
     private int page = 1;
     private int RefreshType = 1;// refreshType 1为下拉加载 2为上拉加载更多
 
-    private String CatalogType;
-    private String CatalogName;
-    private String CatalogId;
     private String tag = "FM_LIST_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
     private int showType = 1;
-
-    @Override
-    public void onWhiteViewClick() {
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialog(context);
-            sendRequest();
-        } else {
-            tipView.setVisibility(View.VISIBLE);
-            tipView.setTipView(TipView.TipStatus.NO_NET);
-        }
-    }
+    private String type;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-        initDao();
     }
 
     @Override
@@ -107,7 +92,6 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
             rootView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                 }
             });
             setView();              // 设置界面
@@ -117,10 +101,6 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
 
         }
         return rootView;
-    }
-
-    private void initDao() {// 初始化数据库命令执行对象
-        dbDao = new SearchPlayerHistoryDao(context);
     }
 
     // 获取数据
@@ -147,6 +127,17 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
                 HomeActivity.close();
             }
         });
+    }
+
+    @Override
+    public void onWhiteViewClick() {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            dialog = DialogUtils.Dialog(context);
+            sendRequest();
+        } else {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
+        }
     }
 
     private void setListener() {
@@ -179,83 +170,56 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
 
     private void HandleRequestType() {
         Bundle bundle = getArguments();
-        ViewType = 1;
-        CatalogName = bundle.getString("name");
-        CatalogId = bundle.getString("id");
-        CatalogType = bundle.getString("type");
-        showType = bundle.getInt("showType");
-        mTextView_Head.setText(CatalogName);
+        type = bundle.getString("type");
+        String name = bundle.getString("name");
+        if(name!=null&&!name.trim().equals("")){
+            mTextView_Head.setText(name);
+        }else{
+            mTextView_Head.setText("直播");
+        }
     }
 
     private void sendRequest() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            jsonObject.put("MediaType", "RADIO");
-            String cityId = shared.getString(StringConstant.CITYID, "110000");
-            // 获取当前城市下所有分类内容
-            jsonObject.put("CatalogId", cityId);
-            jsonObject.put("CatalogType", "2");
-            jsonObject.put("PerSize", "3");
-            jsonObject.put("ResultType", "3");
-            jsonObject.put("PageSize", "10");
             jsonObject.put("Page", String.valueOf(page));
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
+      final  String url;
+        if(type!=null&&!type.trim().equals("")){
+            // 路径的分类
+            url=GlobalConfig.getLivePlaying;
+        }else{
+            url=GlobalConfig.getLivePlaying;
+        }
 
-        VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestPost(url, tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 try {
-                    String ReturnType = result.getString("ReturnType");
-                    if (ReturnType != null && ReturnType.equals("1001")) {
+                    String ReturnType = result.getString("ret");
+                    if (ReturnType != null && ReturnType.equals("0")) {
                         try {
-                            JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                            try {
-                                String StringSubList = arg1.getString("List");
-                                try {
-                                    page++;
-                                    List<content> SubList = new Gson().fromJson(StringSubList, new TypeToken<List<content>>() {
-                                    }.getType());
-                                    if (RefreshType == 1) newList.clear();
-                                    newList.addAll(SubList);
-                                    if (showType == 2) {
-                                        // 重新组装数据测试=====测试代码
-                                        setDemoData();
-                                    }
-                                    if (adapter == null) {
-                                        mListView.setAdapter(adapter = new LiveAdapter(context, newList, showType));
-                                    } else {
-                                        adapter.notifyDataSetChanged();
-                                    }
-                                    setListView();
-
-                                    tipView.setVisibility(View.GONE);
-                                    mListView.setPullLoadEnable(true);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    mListView.setPullLoadEnable(false);
-                                    if (RefreshType == 1) {
-                                        tipView.setVisibility(View.VISIBLE);
-                                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
-                                    } else {
-                                        ToastUtils.show_always(context, getString(R.string.error_data));
-                                    }
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                mListView.setPullLoadEnable(false);
-                                if (RefreshType == 1) {
-                                    tipView.setVisibility(View.VISIBLE);
-                                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
-                                } else {
-                                    ToastUtils.show_always(context, getString(R.string.error_data));
-                                }
+                            page++;
+                            JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("data")).nextValue();
+                            List<live>  _l = new Gson().fromJson(arg1.getString("prepare_lives"), new TypeToken<List<live>>() {
+                            }.getType());
+                            if(RefreshType==1){
+                                mainList.clear();
                             }
-
+                            mainList.addAll(_l);
+                            // 重新组装数据测试=====测试代码 if (showType == 2) setDemoData();
+                            if (adapter == null) {
+                                mListView.setAdapter(adapter = new LiveAdapter(context, mainList, showType));
+                            } else {
+                                adapter.notifyDataSetChanged();
+                            }
+                            setListView();
+                            tipView.setVisibility(View.GONE);
+                            mListView.setPullLoadEnable(true);
                         } catch (Exception e) {
                             e.printStackTrace();
                             mListView.setPullLoadEnable(false);
@@ -309,12 +273,6 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
         });
     }
 
-    private void setDemoData() {
-        for (int i = 0; i < newList.size(); i++) {
-            newList.get(i).setPlayerInTime(String.valueOf(60000 * (i + 1)));
-        }
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -322,9 +280,9 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
         mListView = null;
         dialog = null;
         mTextView_Head = null;
-        if (newList != null) {
-            newList.clear();
-            newList = null;
+        if (mainList != null) {
+            mainList.clear();
+            mainList = null;
         }
         if (adapter != null) {
             adapter.cancelAllTimers();

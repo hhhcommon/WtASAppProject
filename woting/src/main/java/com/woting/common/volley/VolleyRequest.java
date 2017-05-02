@@ -64,6 +64,27 @@ public class VolleyRequest {
     }
 
     /**
+     * 用于直播的请求，不加GlobalConfig.baseUrl
+     *
+     * @param tag        标签
+     * @param url        网络请求地址
+     * @param jsonObject 请求参数
+     * @param callback   返回值
+     */
+    public static void requestPostForLive(String url, String tag, JSONObject jsonObject, VolleyCallback callback) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Method.POST, url, jsonObject, callback.loadingListener(), callback.errorListener());
+
+        jsonObjectRequest.setTag(tag);// 设置标签
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(GlobalConfig.HTTP_CONNECTION_TIMEOUT, 1, 1.0f));
+        BSApplication.getHttpQueues().add(jsonObjectRequest);// 加入队列
+        long a = System.currentTimeMillis();
+        Log.e("请求服务器时间", "--- > > >  " +a);
+        Log.i("请求服务器地址", "--- > > >  " +url);
+        Log.v("请求服务器提交的参数", "--- > > >  " + jsonObject.toString());
+    }
+
+    /**
      * post网络请求  自定义标签  用于取消网络请求
      *
      * @param tag        标签

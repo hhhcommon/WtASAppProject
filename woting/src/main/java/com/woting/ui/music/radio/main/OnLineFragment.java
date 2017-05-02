@@ -69,7 +69,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
     private SearchPlayerHistoryDao dbDao;
     private MessageReceiver Receiver;
 
-    private List<RadioPlay> mainList;
+
     private List<content> mainLists = new ArrayList<>();
     private List<RadioPlay> newList = new ArrayList<>();
 
@@ -399,7 +399,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                         page++;
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         beginCatalogId = arg1.getString("BeginCatalogId");
-                        mainList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RadioPlay>>() {
+                         List<RadioPlay>  mainList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RadioPlay>>() {
                         }.getType());
                         if (RefreshType == 1) {
                             newList.clear();

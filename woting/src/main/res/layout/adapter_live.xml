@@ -43,16 +43,33 @@
                 android:layout_marginRight="13dp"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:gravity="left|center"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/tv_classify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="分类分类"
+        android:padding="2dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/color_wt_circle_orange_white_live"
+        android:textColor="@color/dinglan_orange"
+        android:textSize="8sp" />
+    <TextView
+        android:id="@+id/NameOne"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="展示名称"
+        android:textColor="@color/dinglan_orange"
+        android:textSize="@dimen/activity_head_right" />
+</LinearLayout>
 
-                <TextView
-                    android:id="@+id/NameOne"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:text="展示名称"
-                    android:textColor="@color/dinglan_orange"
-                    android:textSize="@dimen/activity_head_right" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

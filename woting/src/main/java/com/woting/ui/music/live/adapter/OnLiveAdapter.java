@@ -24,6 +24,8 @@ import com.woting.common.util.CountDownUtil;
 import com.woting.common.util.TimeUtils;
 import com.woting.ui.model.content;
 import com.woting.ui.music.live.livelist.LiveListFragment;
+import com.woting.ui.music.live.model.MainLive;
+import com.woting.ui.music.live.model.live;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.music.radio.model.RadioPlay;
 
@@ -41,17 +43,16 @@ import java.util.TimeZone;
  */
 public class OnLiveAdapter extends BaseExpandableListAdapter {
     private Context context;
-    private List<RadioPlay> group;
+    private List<MainLive> group;
     private Bitmap bmp;
-    private String contentImg, contentName, name, playCount;
     private Map<TextView, CountDownUtil> leftTimeMap = new HashMap<TextView, CountDownUtil>();
 
-    public OnLiveAdapter(Context context, List<RadioPlay> group) {
+    public OnLiveAdapter(Context context, List<MainLive> group) {
         this.context = context;
         this.group = group;
     }
 
-    public void changeData(List<RadioPlay> group) {
+    public void changeData(List<MainLive> group) {
         this.group = group;
         notifyDataSetChanged();
     }
@@ -63,7 +64,7 @@ public class OnLiveAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return group.get(groupPosition).getList().size();
+        return group.get(groupPosition).getData().size();
     }
 
     @Override
@@ -73,7 +74,7 @@ public class OnLiveAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return group.get(groupPosition).getList().get(childPosition);
+        return group.get(groupPosition).getData().get(childPosition);
     }
 
     @Override
@@ -106,11 +107,11 @@ public class OnLiveAdapter extends BaseExpandableListAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        final RadioPlay lists = group.get(groupPosition);
-        if (lists.getCatalogName() == null || lists.getCatalogName().equals("")) {
+        final MainLive _ml = group.get(groupPosition);
+        if (_ml.getTitle() == null || _ml.getTitle().equals("")) {
             holder.tv_name.setText("未知");
         } else {
-            holder.tv_name.setText(lists.getCatalogName());
+            holder.tv_name.setText(_ml.getTitle());
         }
         holder.lin_more.setVisibility(View.VISIBLE);
         // 判断回调对象决定是哪个 fragment 的对象调用的词 adapter  从而实现多种布局
@@ -119,13 +120,8 @@ public class OnLiveAdapter extends BaseExpandableListAdapter {
             public void onClick(View v) {
                 LiveListFragment lv = new LiveListFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("fromtype", "cityRadio");
-                bundle.putSerializable("list", lists);
-                bundle.putString("type", "2");
-                bundle.putString("name", lists.getCatalogName());
-                bundle.putString("type", "2");
-                bundle.putInt("showType", groupPosition);
-                bundle.putString("id", lists.getCatalogId());
+                bundle.putString("name",_ml.getTitle());
+                bundle.putString("type",_ml.getType());
                 lv.setArguments(bundle);
                 HomeActivity.open(lv);
             }
@@ -150,6 +146,9 @@ public class OnLiveAdapter extends BaseExpandableListAdapter {
 
             holder.image = (ImageView) convertView.findViewById(R.id.image);                        // 图片
 
+
+            holder.classify = (TextView) convertView.findViewById(R.id.tv_classify);                // 分类
+
             holder.NameOne = (TextView) convertView.findViewById(R.id.NameOne);                     // 第一标题
 
             holder.image_anchor = (ImageView) convertView.findViewById(R.id.image_anchor);          // 主播图标
@@ -172,9 +171,9 @@ public class OnLiveAdapter extends BaseExpandableListAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        content lists = group.get(groupPosition).getList().get(childPosition);
+        live lists = group.get(groupPosition).getData().get(childPosition);
         // 封面图片
-        contentImg = lists.getContentImg();
+        String contentImg = lists.getCover();
         if (contentImg == null || contentImg.equals("null") || contentImg.trim().equals("")) {
             holder.image.setImageBitmap(bmp);
         } else {
@@ -185,65 +184,82 @@ public class OnLiveAdapter extends BaseExpandableListAdapter {
             AssembleImageUrlUtils.loadImage(_url, contentImg, holder.image, IntegerConstant.TYPE_LIST);
         }
 
+        // 分类
+        try {
+            String classifyName = lists.getChannel().getTitle();
+            if (classifyName == null || classifyName.equals("")) {
+                holder.classify.setVisibility(View.GONE);
+            } else {
+                holder.classify.setVisibility(View.VISIBLE);
+                holder.classify.setText(classifyName);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            holder.classify.setVisibility(View.GONE);
+        }
+
+
         // 第一标题
-        contentName = lists.getContentName();
+        String contentName = lists.getTitle();
         if (contentName == null || contentName.equals("")) {
-            holder.NameOne.setText("未知");
+            holder.NameOne.setText("直播");
         } else {
             holder.NameOne.setText(contentName);
         }
 
         // 第二标题
         try {
-            name = lists.getContentPersons().get(0).getPerName();
+            String  name = lists.getOwner().getName();
             if (name != null && !name.trim().equals("")) {
                 holder.NameTwo.setText(name);
             } else {
-                holder.NameTwo.setText("未知");
+                holder.NameTwo.setText("主播");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            holder.NameTwo.setText("未知");
+            holder.NameTwo.setText("主播");
         }
 
         // 收听次数
-        playCount = lists.getPlayCount();
+        String  playCount = lists.getAudience_count();
         if (playCount == null || playCount.equals("") || playCount.equals("null")) {
             holder.tv_num.setText("0");
         } else {
             holder.tv_num.setText(playCount);
         }
+
+
         // 测试代码
-        if (groupPosition == 2) {
-            holder.time_end.setVisibility(View.VISIBLE);
-            holder.image_isShow.setVisibility(View.GONE);
-            if (holder.draw.isRunning()) {
-                holder.draw.stop();
-            }
-
-            String a = lists.getPlayerInTime();
-            long b = Long.parseLong(a);
-            //获取控件对应的倒计时控件是否存在,存在就取消,解决时间重叠问题
-            //leftTimeMap哪来的?接着往下看
-            CountDownUtil tc = leftTimeMap.get(holder.time_end);
-            if (tc != null) {
-                tc.cancel();
-                tc = null;
-            }
-            //实例化倒计时类
-            CountDownUtil cdu = new CountDownUtil(b*1000, 1000, holder.time_end);
-            //开启倒计时
-            cdu.start();
-
-            //[醒目]此处需要map集合将控件和倒计时类关联起来,就是这里
-            leftTimeMap.put(holder.time_end, cdu);
-        } else {
-            holder.time_end.setVisibility(View.GONE);
-            holder.image_isShow.setVisibility(View.VISIBLE);
-            if (!holder.draw.isRunning()) {
-                holder.draw.start();
-            }
-        }
+//        if (groupPosition == 2) {
+//            holder.time_end.setVisibility(View.VISIBLE);
+//            holder.image_isShow.setVisibility(View.GONE);
+//            if (holder.draw.isRunning()) {
+//                holder.draw.stop();
+//            }
+//
+//            String a = lists.getPlayerInTime();
+//            long b = Long.parseLong(a);
+//            //获取控件对应的倒计时控件是否存在,存在就取消,解决时间重叠问题
+//            //leftTimeMap哪来的?接着往下看
+//            CountDownUtil tc = leftTimeMap.get(holder.time_end);
+//            if (tc != null) {
+//                tc.cancel();
+//                tc = null;
+//            }
+//            //实例化倒计时类
+//            CountDownUtil cdu = new CountDownUtil(b * 1000, 1000, holder.time_end);
+//            //开启倒计时
+//            cdu.start();
+//
+//            //[醒目]此处需要map集合将控件和倒计时类关联起来,就是这里
+//            leftTimeMap.put(holder.time_end, cdu);
+//        } else {
+//            holder.time_end.setVisibility(View.GONE);
+//            holder.image_isShow.setVisibility(View.VISIBLE);
+//            if (!holder.draw.isRunning()) {
+//                holder.draw.start();
+//            }
+//        }
         return convertView;
     }
 
@@ -280,6 +296,7 @@ public class OnLiveAdapter extends BaseExpandableListAdapter {
         public TextView time_end;
         public ImageView image_isShow;
         public AnimationDrawable draw;
+        public TextView classify;
     }
 
     @Override
