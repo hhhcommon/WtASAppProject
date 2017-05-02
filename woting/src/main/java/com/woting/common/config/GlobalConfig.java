@@ -26,7 +26,7 @@ public class GlobalConfig {
     public static String Region;
 
     public static String oldBCCallId;// 上次存在的对讲ID
-    public static int interPhoneType=0;// 此时的对讲状态
+    public static int interPhoneType = 0;// 此时的对讲状态
 
     public static ArrayList<String> staticFacesList;   //从Asset中取出的表情list
     // 网络情况 1为成功WiFi已连接，2为cmnet，3为cmwap，4为ctwap， -1为网络未连接
@@ -101,6 +101,7 @@ public class GlobalConfig {
      */
     // 启动页登录 应用入口
     public static final String splashUrl = "wt/common/entryApp.do?";
+    public static final String BASE_URL = "http://woting.suitingwei.com/api/";
     // 获得版本信息
     //	public static final String VersionUrl ="wt/common/getVersion.do?";
     // 获得版本信息
@@ -242,6 +243,12 @@ public class GlobalConfig {
     public static final String getCatalogUrl = "wt/getCatalogInfo.do";
     //内容主页获取统一接口
     public static final String getContentUrl = "wt/content/getContents.do";
+    //直播详情
+    public static final String liveInfo = "voice-lives/";
+    //直播详情
+    public static final String liveInfoStart = "voice-lives/";
+    //创建直播
+    public static final String createLive = "voice-lives";
     //内容主页获取节目单接口
     public static final String getProgrammeUrl = "wt/content/getBCProgramme.do";
     //根据contentID获取内容列表
@@ -289,12 +296,12 @@ public class GlobalConfig {
     // 新增主播内容
     public static final String getPersonContents = "wt/person/getPersonContents.do";
     // 获取当前的电台直播内容
-    public static final String getIsPlayIngUrl= "wt/content/getIsPlayingBCProgramme.do";
+    public static final String getIsPlayIngUrl = "wt/content/getIsPlayingBCProgramme.do";
     // 添加举报/wt/content/accuse.do
-    public static final String presentAccuseUrl= "wt/content/accuse.do";
+    public static final String presentAccuseUrl = "wt/content/accuse.do";
 
     // 获取轮播图
-    public static final String getImage ="wt/content/getLoopImgs.do";
+    public static final String getImage = "wt/content/getLoopImgs.do";
 
 
     /**
@@ -302,17 +309,17 @@ public class GlobalConfig {
      */
 
     // 获取专辑列表
-    public static final String getSequMediaList =  "content/seq/getSeqMediaList.do";
+    public static final String getSequMediaList = "content/seq/getSeqMediaList.do";
     // 删除专辑
-    public static final String removeSequMedia ="content/seq/removeSeqMedia.do";
+    public static final String removeSequMedia = "content/seq/removeSeqMedia.do";
     // 获取节目列表
     public static final String getMediaList = "content/media/getMediaList.do";
     // 删除节目
-    public static final String removeMedia =  "content/media/removeMedia.do";
+    public static final String removeMedia = "content/media/removeMedia.do";
     // 获取标签列表
-    public static final String getTags =  "content/getTags.do";
+    public static final String getTags = "content/getTags.do";
     // 上传文件 SrcType == 1、图片  == 2、音频
-    public static final String uploadFileUrl =  "common/uploadCM.do";
+    public static final String uploadFileUrl = "common/uploadCM.do";
     // 新增节目
     public static final String addMediaInfo = "content/media/addMediaInfo.do";
 
