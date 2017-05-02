@@ -297,11 +297,23 @@ public class LiveFragment extends Fragment implements TipView.WhiteViewClick {
         expandableListMain.setOnChildClickListener(new OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                if (groupPosition == 2) {
-                    startActivity(new Intent(context, LiveParadeActivity.class));
+                if (mainList != null && mainList.size() > 0 && mainList.get(groupPosition) != null &&
+                        mainList.get(groupPosition).getTitle() != null && !mainList.get(groupPosition).getTitle().trim().equals("")) {
+                    if (mainList.get(groupPosition).getTitle().trim().contains("预告")) {
+                        Intent intent = new Intent(context, LiveParadeActivity.class);
+                        Bundle bundle = new Bundle();
+                        // 传递数据，暂时，待对接
+                        bundle.putString("", "");
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    } else {
+                        // 跳转到直播间
+
+                    }
                 } else {
-                    // 跳转到直播间
+                    // 数据出错了
                 }
+
                 return false;
             }
         });
@@ -332,6 +344,6 @@ public class LiveFragment extends Fragment implements TipView.WhiteViewClick {
         if (adapter != null) {
             adapter.cancelAllTimers();
         }
-        adapter=null;
+        adapter = null;
     }
 }

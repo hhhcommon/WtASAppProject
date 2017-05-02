@@ -329,7 +329,7 @@ public class GlobalConfig {
     /**
      * 此处用到的接口是直播的接口
      */
-    public static final String getLiveMain = "http://woting.suitingwei.com/api/voice-lives";
-    public static final String getLivePlaying = "http://woting.suitingwei.com/api/voice-lives/hots";
-    public static final String getLivePrepares = "http://woting.suitingwei.com/api/voice-lives/prepares";
+    public static final String getLiveMain = "http://woting.suitingwei.com/api/voice-lives?";
+    public static final String getLivePlaying = "http://woting.suitingwei.com/api/voice-lives/hots?";
+    public static final String getLivePrepares = "http://woting.suitingwei.com/api/voice-lives/prepares?";
 }

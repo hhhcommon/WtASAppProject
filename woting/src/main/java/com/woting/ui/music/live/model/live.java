@@ -12,9 +12,17 @@ public class live {
     private String audience_count;          // 标题   0
     private String live_number;             // 标题   10000101
     private String begin_at;                // 标题   2017-05-02 10:37:00
+    private String begin_at_timestamp;      // 标题   时间戳
     private owner owner;                    // 标题
     private channel channel;                // 标题
 
+    public String getBegin_at_timestamp() {
+        return begin_at_timestamp;
+    }
+
+    public void setBegin_at_timestamp(String begin_at_timestamp) {
+        this.begin_at_timestamp = begin_at_timestamp;
+    }
 
     public String getId() {
         return id;

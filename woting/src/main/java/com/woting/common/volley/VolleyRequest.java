@@ -73,7 +73,7 @@ public class VolleyRequest {
      */
     public static void requestPostForLive(String url, String tag, JSONObject jsonObject, VolleyCallback callback) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Method.POST, url, jsonObject, callback.loadingListener(), callback.errorListener());
+                Method.GET, url, jsonObject, callback.loadingListener(), callback.errorListener());
 
         jsonObjectRequest.setTag(tag);// 设置标签
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(GlobalConfig.HTTP_CONNECTION_TIMEOUT, 1, 1.0f));

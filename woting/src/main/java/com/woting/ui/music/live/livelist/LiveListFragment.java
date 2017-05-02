@@ -76,7 +76,6 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
 
     private String tag = "FM_LIST_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
-    private int showType = 1;
     private String type;
 
     @Override
@@ -170,11 +169,12 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
 
     private void HandleRequestType() {
         Bundle bundle = getArguments();
-        type = bundle.getString("type");
         String name = bundle.getString("name");
         if(name!=null&&!name.trim().equals("")){
             mTextView_Head.setText(name);
+            if (name.contains("预告")) type = "parade";
         }else{
+            type = "playing";
             mTextView_Head.setText("直播");
         }
     }
@@ -187,11 +187,11 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
             e.printStackTrace();
         }
       final  String url;
-        if(type!=null&&!type.trim().equals("")){
+        if(type!=null&&!type.trim().equals("playing")){
             // 路径的分类
             url=GlobalConfig.getLivePlaying;
         }else{
-            url=GlobalConfig.getLivePlaying;
+            url=GlobalConfig.getLivePrepares;
         }
 
         VolleyRequest.requestPost(url, tag, jsonObject, new VolleyCallback() {
@@ -213,7 +213,7 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
                             mainList.addAll(_l);
                             // 重新组装数据测试=====测试代码 if (showType == 2) setDemoData();
                             if (adapter == null) {
-                                mListView.setAdapter(adapter = new LiveAdapter(context, mainList, showType));
+                                mListView.setAdapter(adapter = new LiveAdapter(context, mainList, type));
                             } else {
                                 adapter.notifyDataSetChanged();
                             }

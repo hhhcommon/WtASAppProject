@@ -77,29 +77,38 @@ public class TimeUtils {
         return format.format(new Date(time));
     }
 
-    public static String getTimes(long time) {
+    public static String getTimes(long time, String showTime) {
         if (time / 3600 > 0) {
             // 够一小时
             long a = time / 3600;
-            long b = (time - 3600 * a) / 60;
-            long c = time - a * 3600 - b * 60;
-
-            String A = String.valueOf(a);
-            String B;
-            String C;
-            if (b < 10) {
-                B = "0" + String.valueOf(b);
+            if (a > 24) {
+                // 超过一天展示原先数据
+                if(showTime!=null&&!showTime.trim().equals("")){
+                    return showTime;
+                }else{
+                    return "直播中";
+                }
             } else {
-                B = String.valueOf(b);
-            }
+                // 不超过一天展示倒计时
+                long b = (time - 3600 * a) / 60;
+                long c = time - a * 3600 - b * 60;
+                String A = String.valueOf(a);
+                String B;
+                String C;
+                if (b < 10) {
+                    B = "0" + String.valueOf(b);
+                } else {
+                    B = String.valueOf(b);
+                }
 
-            if (c < 10) {
-                 C = "0" + String.valueOf(c);
-            } else {
-                 C = String.valueOf(c);
+                if (c < 10) {
+                    C = "0" + String.valueOf(c);
+                } else {
+                    C = String.valueOf(c);
+                }
+                String s = A + ":" + B + ":" + C;
+                return s;
             }
-            String s = A + ":" + B + ":" + C;
-            return s;
         } else {
             // 不够一小时
             long b = time / 60;

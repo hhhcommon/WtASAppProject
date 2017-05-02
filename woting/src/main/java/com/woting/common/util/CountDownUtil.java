@@ -10,6 +10,8 @@ import android.widget.TextView;
  */
 public class CountDownUtil extends CountDownTimer {
     private TextView tv;//
+    private String time;//
+
 
     /**
      *
@@ -20,15 +22,16 @@ public class CountDownUtil extends CountDownTimer {
      * @param tv
      *          控件
      */
-    public CountDownUtil(long millisInFuture, long countDownInterval,TextView tv) {
+    public CountDownUtil(long millisInFuture, long countDownInterval,TextView tv,String time) {
         super(millisInFuture, countDownInterval);
         this.tv = tv;
+        this.time = time;
 
     }
 
     @Override
     public void onTick(long millisUntilFinished) {
-        String timeString = TimeUtils.getTimes(millisUntilFinished/1000);
+        String timeString = TimeUtils.getTimes(millisUntilFinished/1000,time);
         tv.setText(timeString);
     }
 

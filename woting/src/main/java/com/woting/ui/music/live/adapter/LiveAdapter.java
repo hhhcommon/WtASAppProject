@@ -37,10 +37,10 @@ public class LiveAdapter extends BaseAdapter {
     private List<live> list;
     private Context context;
     private Bitmap bmp;
-    private int type;
+    private String type;
     private Map<TextView, CountDownUtil> leftTimeMap = new HashMap<TextView, CountDownUtil>();
 
-    public LiveAdapter(Context context, List<live> list, int type) {
+    public LiveAdapter(Context context, List<live> list, String type) {
         this.context = context;
         this.list = list;
         this.type = type;
@@ -100,7 +100,7 @@ public class LiveAdapter extends BaseAdapter {
 
         live lists = list.get(position);
 
-        String  contentImg = lists.getCover();
+        String contentImg = lists.getCover();
         if (contentImg == null || contentImg.equals("null") || contentImg.trim().equals("")) {
             holder.image.setImageBitmap(bmp);
         } else {
@@ -136,7 +136,7 @@ public class LiveAdapter extends BaseAdapter {
 
         // 第二标题
         try {
-            String   name = lists.getOwner().getName();
+            String name = lists.getOwner().getName();
             if (name != null && !name.trim().equals("")) {
                 holder.NameTwo.setText(name);
             } else {
@@ -148,45 +148,52 @@ public class LiveAdapter extends BaseAdapter {
         }
 
         // 收听次数
-        String  playCount = lists.getAudience_count();
+        String playCount = lists.getAudience_count();
         if (playCount == null || playCount.equals("") || playCount.equals("null")) {
             holder.tv_num.setText("0");
         } else {
             holder.tv_num.setText(playCount);
         }
 
+        String begin_time = lists.getBegin_at();
+        if (begin_time == null || begin_time.equals("") || begin_time.equals("null")) {
+            holder.tv_time.setText("00:00");
+        } else {
+            holder.tv_time.setText(begin_time);
+        }
 
-        // 测试代码
-//        if (type == 2) {
-//            holder.time_end.setVisibility(View.VISIBLE);
-//            holder.image_isShow.setVisibility(View.GONE);
-//            if (holder.draw.isRunning()) {
-//                holder.draw.stop();
-//            }
-//
-//            String a = lists.getPlayerInTime();
-//            long b = Long.parseLong(a);
-//            //获取控件对应的倒计时控件是否存在,存在就取消,解决时间重叠问题
-//            //leftTimeMap哪来的?接着往下看
-//            CountDownUtil tc = leftTimeMap.get(holder.time_end);
-//            if (tc != null) {
-//                tc.cancel();
-//                tc = null;
-//            }
-//            //实例化倒计时类
-//            CountDownUtil cdu = new CountDownUtil(b*1000, 1000, holder.time_end);
-//            //开启倒计时
-//            cdu.start();
-//
-//            //[醒目]此处需要map集合将控件和倒计时类关联起来,就是这里
-//            leftTimeMap.put(holder.time_end, cdu);
-//        } else {
-//            holder.time_end.setVisibility(View.GONE);
-//            holder.image_isShow.setVisibility(View.VISIBLE);
-//            if (!holder.draw.isRunning()) {
-//                holder.draw.start();
-//            }
-//        }
+        // 是否显示倒计时
+        if (type != null && type.trim().equals("parade")) {
+            holder.time_end.setVisibility(View.VISIBLE);
+            holder.image_isShow.setVisibility(View.GONE);
+            if (holder.draw.isRunning()) {
+                holder.draw.stop();
+            }
+
+            String a = lists.getBegin_at_timestamp();
+            long b = Long.parseLong(a);
+            long currentSeconds = System.currentTimeMillis() / 1000;// 当前系统时间
+            long c = b - currentSeconds;
+            //获取控件对应的倒计时控件是否存在,存在就取消,解决时间重叠问题
+            //leftTimeMap哪来的?接着往下看
+            CountDownUtil tc = leftTimeMap.get(holder.time_end);
+            if (tc != null) {
+                tc.cancel();
+            }
+            //实例化倒计时类
+            CountDownUtil cdu = new CountDownUtil(c * 1000, 1000, holder.time_end,begin_time);
+            //开启倒计时
+            cdu.start();
+
+            //[醒目]此处需要map集合将控件和倒计时类关联起来,就是这里
+            leftTimeMap.put(holder.time_end, cdu);
+        } else {
+            holder.time_end.setVisibility(View.GONE);
+            holder.image_isShow.setVisibility(View.VISIBLE);
+            if (!holder.draw.isRunning()) {
+                holder.draw.start();
+            }
+        }
 
         return convertView;
     }
@@ -200,12 +207,9 @@ public class LiveAdapter extends BaseAdapter {
                 Map.Entry pairs = (Map.Entry) it.next();
                 CountDownUtil cdt = (CountDownUtil) pairs.getValue();
                 cdt.cancel();
-                cdt = null;
             } catch (Exception e) {
             }
         }
-        it = null;
-        s = null;
         leftTimeMap.clear();
     }
 
