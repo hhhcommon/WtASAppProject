@@ -259,6 +259,7 @@ public class ChatRoomLiveActivity extends Activity {
             tvUserId.setText("ID:" + liveInfo.data.voice_live.live_number);
             url = liveInfo.data.voice_live.owner.getAvatar();
             tvName.setText(liveInfo.data.voice_live.owner.name);
+            tvUserNumber.setText("在线人数 " + liveInfo.data.voice_live.audience_count);
             if (!url.equals("")) {
                 final String c_url = url;
                 if (!url.startsWith("http:")) {
@@ -344,9 +345,6 @@ public class ChatRoomLiveActivity extends Activity {
                             c.name = sharedPreferences.getString(StringConstant.NICK_NAME, "");
                             chatModels.add(c);
                             mAdapter.notifyDataSetChanged();
-                            RoomUser[] userList = avRoom.GetRoomUsers();
-                            int nLen = userList.length;
-                            tvUserNumber.setText("在线人数 " + nLen);
                             //加入
                             endLive();
                         } else {
