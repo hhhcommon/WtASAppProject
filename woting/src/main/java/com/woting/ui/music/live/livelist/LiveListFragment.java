@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +48,8 @@ import org.json.JSONTokener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 电台列表
@@ -76,7 +80,7 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
     private String CatalogId;
     private String tag = "FM_LIST_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
-    private int showType=1;
+    private int showType = 1;
 
     @Override
     public void onWhiteViewClick() {
@@ -218,12 +222,17 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
                                     }.getType());
                                     if (RefreshType == 1) newList.clear();
                                     newList.addAll(SubList);
+                                    if (showType == 2) {
+                                        // 重新组装数据测试=====测试代码
+                                        setDemoData();
+                                    }
                                     if (adapter == null) {
-                                        mListView.setAdapter(adapter = new LiveAdapter(context, newList,showType));
+                                        mListView.setAdapter(adapter = new LiveAdapter(context, newList, showType));
                                     } else {
                                         adapter.notifyDataSetChanged();
                                     }
                                     setListView();
+
                                     tipView.setVisibility(View.GONE);
                                     mListView.setPullLoadEnable(true);
                                 } catch (Exception e) {
@@ -300,6 +309,12 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
         });
     }
 
+    private void setDemoData() {
+        for (int i = 0; i < newList.size(); i++) {
+            newList.get(i).setPlayerInTime(String.valueOf(60000 * (i + 1)));
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -310,6 +325,9 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
         if (newList != null) {
             newList.clear();
             newList = null;
+        }
+        if (adapter != null) {
+            adapter.cancelAllTimers();
         }
         adapter = null;
     }

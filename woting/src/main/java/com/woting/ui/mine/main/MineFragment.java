@@ -1005,6 +1005,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        isFirst = true;
+                        initLoginStates();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

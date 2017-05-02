@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,12 +20,20 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
+import com.woting.common.util.CountDownUtil;
+import com.woting.common.util.TimeUtils;
 import com.woting.ui.model.content;
 import com.woting.ui.music.live.livelist.LiveListFragment;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.music.radio.model.RadioPlay;
+
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 /**
@@ -35,7 +44,7 @@ public class OnLiveAdapter extends BaseExpandableListAdapter {
     private List<RadioPlay> group;
     private Bitmap bmp;
     private String contentImg, contentName, name, playCount;
-
+    private Map<TextView, CountDownUtil> leftTimeMap = new HashMap<TextView, CountDownUtil>();
 
     public OnLiveAdapter(Context context, List<RadioPlay> group) {
         this.context = context;
@@ -130,7 +139,7 @@ public class OnLiveAdapter extends BaseExpandableListAdapter {
      */
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        final ViewHolder holder;
+        ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.adapter_live, null);
@@ -212,18 +221,22 @@ public class OnLiveAdapter extends BaseExpandableListAdapter {
                 holder.draw.stop();
             }
 
-            CountDownTimer mCountDownTimer = new CountDownTimer(6000000*(childPosition+1), 1000) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    String timeString = getTime(millisUntilFinished);
-                    holder.time_end.setText(timeString);
-                }
+            String a = lists.getPlayerInTime();
+            long b = Long.parseLong(a);
+            //获取控件对应的倒计时控件是否存在,存在就取消,解决时间重叠问题
+            //leftTimeMap哪来的?接着往下看
+            CountDownUtil tc = leftTimeMap.get(holder.time_end);
+            if (tc != null) {
+                tc.cancel();
+                tc = null;
+            }
+            //实例化倒计时类
+            CountDownUtil cdu = new CountDownUtil(b*1000, 1000, holder.time_end);
+            //开启倒计时
+            cdu.start();
 
-                @Override
-                public void onFinish() {
-                    holder.time_end.setText("直播中");
-                }
-            }.start();
+            //[醒目]此处需要map集合将控件和倒计时类关联起来,就是这里
+            leftTimeMap.put(holder.time_end, cdu);
         } else {
             holder.time_end.setVisibility(View.GONE);
             holder.image_isShow.setVisibility(View.VISIBLE);
@@ -231,21 +244,25 @@ public class OnLiveAdapter extends BaseExpandableListAdapter {
                 holder.draw.start();
             }
         }
-
         return convertView;
-
     }
 
-    private String getTime(long time) {
-        SimpleDateFormat format;
-        if(time / 1000 / 60 > 60){
-            format = new SimpleDateFormat("hh:mm:ss");
-        }else{
-            format = new SimpleDateFormat("mm:ss");
+    //作为严谨的码工,当然要善始善终
+    public void cancelAllTimers() {
+        Set<Map.Entry<TextView, CountDownUtil>> s = leftTimeMap.entrySet();
+        Iterator it = s.iterator();
+        while (it.hasNext()) {
+            try {
+                Map.Entry pairs = (Map.Entry) it.next();
+                CountDownUtil cdt = (CountDownUtil) pairs.getValue();
+                cdt.cancel();
+                cdt = null;
+            } catch (Exception e) {
+            }
         }
-        format.setTimeZone(TimeZone.getTimeZone("GMT"));
-        String s = format.format(time);
-        return s;
+        it = null;
+        s = null;
+        leftTimeMap.clear();
     }
 
     class ViewHolder {

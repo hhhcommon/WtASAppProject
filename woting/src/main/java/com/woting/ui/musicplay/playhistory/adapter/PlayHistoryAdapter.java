@@ -21,7 +21,12 @@ import com.woting.ui.musicplay.play.model.PlayerHistory;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.TimeZone;
-
+/**
+ * 播放历史的适配器
+ *
+ * @author 辛龙
+ *         2016年4月5日
+ */
 public class PlayHistoryAdapter extends BaseAdapter {
 	private List<PlayerHistory> list;
 	private Context context;
