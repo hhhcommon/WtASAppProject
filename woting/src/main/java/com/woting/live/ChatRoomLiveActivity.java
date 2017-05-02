@@ -273,6 +273,7 @@ public class ChatRoomLiveActivity extends Activity {
             }
         } else {
             ToastUtils.show_always(this, "进入失败");
+            finish();
         }
         mRecyclerView = (RecyclerView) findViewById(R.id.mRecyclerView);
         mRecyclerViewPhoto = (RecyclerView) findViewById(R.id.mRecyclerViewPhoto);
