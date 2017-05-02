@@ -24,7 +24,7 @@ import static com.woting.ui.music.radiolist.main.RadioListFragment.tag;
  * Created by amine on 16/1/20.
  */
 public class NetManger {
-
+ 
     private static NetManger sInstance;
 
 
