@@ -30,10 +30,16 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.PicassoBannerLoader;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
+import com.woting.common.volley.VolleyNewCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout;
 import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout.OnRefreshListener;
+import com.woting.live.ChatRoomLiveActivity;
+import com.woting.live.model.LiveInfo;
+import com.woting.live.net.NetManger;
+import com.woting.ui.common.login.LoginActivity;
+import com.woting.ui.common.scanning.activity.CaptureActivity;
 import com.woting.ui.model.content;
 import com.woting.ui.music.live.adapter.OnLiveAdapter;
 import com.woting.ui.music.live.liveparade.LiveParadeActivity;
@@ -236,14 +242,9 @@ public class LiveFragment extends Fragment implements TipView.WhiteViewClick {
     }
 
     private void send() {
-        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        try {
-            jsonObject.put("Page", String.valueOf(page));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
 
-        VolleyRequest.requestPostForLive(GlobalConfig.getLiveMain, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestGetForLive(GlobalConfig.getLiveMain+"page="+page, tag,  new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
@@ -307,18 +308,51 @@ public class LiveFragment extends Fragment implements TipView.WhiteViewClick {
                         intent.putExtras(bundle);
                         startActivity(intent);
                     } else {
-                        // 跳转到直播间
-
+                        // 跳转到直播间,需要登录,未登录则跳转到登录界面
+                        String login = BSApplication.SharedPreferences.getString(StringConstant.ISLOGIN, "false");// 是否登录
+                        if (!login.trim().equals("") && login.equals("true")) {
+                            try{
+                                String _id= mainList.get(groupPosition).getData().get(childPosition).getId();
+                                if(_id!=null&&!_id.trim().equals("")){
+                                    getLiveInfo(_id);
+                                }else{
+                                    ToastUtils.show_always(context,"该直播间已被冻结");
+                                }
+                            }catch (Exception e){
+                                ToastUtils.show_always(context,"该直播间已被冻结");
+                            }
+                        } else {
+                            startActivity(new Intent(context, LoginActivity.class));
+                        }
                     }
                 } else {
                     // 数据出错了
+                    ToastUtils.show_always(context,"该直播间已被冻结");
                 }
-
                 return false;
             }
         });
     }
 
+    private void getLiveInfo(String id) {
+        dialog = DialogUtils.Dialog(context);
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("user_id", BSApplication.SharedPreferences.getString(StringConstant.USERID, ""));
+                jsonObject.put("action", "add");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            NetManger.getInstance().start(jsonObject, id, new NetManger.BaseCallBack() {
+                @Override
+                public void callBackBase(LiveInfo liveInfo) {
+                    if (dialog != null) dialog.dismiss();
+                    if (liveInfo != null) {
+                        ChatRoomLiveActivity.intentInto(getActivity(), liveInfo);
+                    }
+                }
+            });
+    }
 
 //    private void setDemoData(){
 //        for(int i=0;i<newList.size();i++){

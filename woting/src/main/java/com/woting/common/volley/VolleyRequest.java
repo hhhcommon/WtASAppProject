@@ -103,12 +103,11 @@ public class VolleyRequest {
      *
      * @param tag        标签
      * @param url        网络请求地址
-     * @param jsonObject 请求参数
      * @param callback   返回值
      */
-    public static void requestPostForLive(String url, String tag, JSONObject jsonObject, VolleyCallback callback) {
+    public static void requestGetForLive(String url, String tag, VolleyCallback callback) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Method.GET, url, jsonObject, callback.loadingListener(), callback.errorListener());
+                Method.GET, GlobalConfig.BASE_URL + url, null, callback.loadingListener(), callback.errorListener());
 
         jsonObjectRequest.setTag(tag);// 设置标签
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(GlobalConfig.HTTP_CONNECTION_TIMEOUT, 1, 1.0f));
@@ -116,7 +115,6 @@ public class VolleyRequest {
         long a = System.currentTimeMillis();
         Log.e("请求服务器时间", "--- > > >  " +a);
         Log.i("请求服务器地址", "--- > > >  " +url);
-        Log.v("请求服务器提交的参数", "--- > > >  " + jsonObject.toString());
     }
 
     /**

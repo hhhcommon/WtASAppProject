@@ -247,10 +247,15 @@ public class OnLiveAdapter extends BaseExpandableListAdapter {
                     holder.draw.stop();
                 }
 
-                String a = lists.getBegin_at_timestamp();
-                long b = Long.parseLong(a);
-                long currentSeconds = System.currentTimeMillis() / 1000;// 当前系统时间
-                long c=b-currentSeconds;
+                long c;
+                try {
+                    String a = lists.getBegin_at_timestamp();
+                    long b = Long.parseLong(a);
+                    long currentSeconds = System.currentTimeMillis() / 1000;// 当前系统时间
+                    c = b - currentSeconds;
+                } catch (Exception e) {
+                    c = 0;
+                }
                 //获取控件对应的倒计时控件是否存在,存在就取消,解决时间重叠问题
                 //leftTimeMap哪来的?接着往下看
                 CountDownUtil tc = leftTimeMap.get(holder.time_end);

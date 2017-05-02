@@ -16,6 +16,7 @@ import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
+import com.woting.ui.music.live.main.LiveFragment;
 import com.woting.ui.music.radio.main.OnLineFragment;
 import com.woting.ui.music.classify.fragment.FenLeiFragment;
 import com.woting.ui.music.recommended.RecommendFragment;
@@ -118,8 +119,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         RecommendFragment rf = new RecommendFragment();// 推荐
         OnLineFragment of = new OnLineFragment();      // 电台
         FenLeiFragment ff = new FenLeiFragment();      // 分类
-        LiveNewFragment lv = new LiveNewFragment();          // 直播
-
+        LiveFragment lv = new LiveFragment();          // 直播
         fragmentList.add(rf);
         fragmentList.add(of);
         fragmentList.add(ff);

@@ -34,10 +34,15 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
+import com.woting.live.ChatRoomLiveActivity;
+import com.woting.live.model.LiveInfo;
+import com.woting.live.net.NetManger;
+import com.woting.ui.common.login.LoginActivity;
 import com.woting.ui.main.MainActivity;
 import com.woting.ui.model.content;
 import com.woting.ui.music.adapter.ContentAdapter;
 import com.woting.ui.music.live.adapter.LiveAdapter;
+import com.woting.ui.music.live.liveparade.LiveParadeActivity;
 import com.woting.ui.music.live.model.live;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.music.radio.model.RadioPlay;
@@ -76,7 +81,7 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
 
     private String tag = "FM_LIST_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
-    private String type;
+    private String type = "playing";;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -170,31 +175,31 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
     private void HandleRequestType() {
         Bundle bundle = getArguments();
         String name = bundle.getString("name");
-        if(name!=null&&!name.trim().equals("")){
+        if (name != null && !name.trim().equals("")) {
             mTextView_Head.setText(name);
             if (name.contains("预告")) type = "parade";
-        }else{
+        } else {
             type = "playing";
             mTextView_Head.setText("直播");
         }
     }
 
     private void sendRequest() {
-        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        try {
-            jsonObject.put("Page", String.valueOf(page));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-      final  String url;
-        if(type!=null&&!type.trim().equals("playing")){
+//        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+//        try {
+//            jsonObject.put("page", page);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+        final String url;
+        if (type != null && type.trim().equals("playing")) {
             // 路径的分类
-            url=GlobalConfig.getLivePlaying;
-        }else{
-            url=GlobalConfig.getLivePrepares;
+            url = GlobalConfig.getLivePlaying;
+        } else {
+            url = GlobalConfig.getLivePrepares;
         }
 
-        VolleyRequest.requestPost(url, tag, jsonObject, new VolleyCallback() {
+        VolleyRequest.requestGetForLive(url+"page="+page, tag, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
@@ -205,9 +210,18 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
                         try {
                             page++;
                             JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("data")).nextValue();
-                            List<live>  _l = new Gson().fromJson(arg1.getString("prepare_lives"), new TypeToken<List<live>>() {
-                            }.getType());
-                            if(RefreshType==1){
+                            List<live> _l;
+                            if (type != null && type.trim().equals("playing")) {
+                                // 直播中
+                                 _l = new Gson().fromJson(arg1.getString("hot_lives"), new TypeToken<List<live>>() {
+                                }.getType());
+                            } else {
+                                // 节目预告
+                                 _l = new Gson().fromJson(arg1.getString("prepare_lives"), new TypeToken<List<live>>() {
+                                }.getType());
+                            }
+
+                            if (RefreshType == 1) {
                                 mainList.clear();
                             }
                             mainList.addAll(_l);
@@ -268,10 +282,61 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
         mListView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                position = position - 1;
+                if (position < 0) {
+                    return;
+                }
 
+                if (type != null && type.trim().equals("parade")) {
+                    Intent intent = new Intent(context, LiveParadeActivity.class);
+                    Bundle bundle = new Bundle();
+                    // 传递数据，暂时，待对接
+                    bundle.putString("", "");
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                } else {
+                    // 跳转到直播间,需要登录,未登录则跳转到登录界面
+                    String login = BSApplication.SharedPreferences.getString(StringConstant.ISLOGIN, "false");// 是否登录
+                    if (!login.trim().equals("") && login.equals("true")) {
+                        try {
+                            String _id = mainList.get(position).getId();
+                            if (_id != null && !_id.trim().equals("")) {
+                                getLiveInfo(_id);
+                            } else {
+                                ToastUtils.show_always(context, "该直播间已被冻结");
+                            }
+                        } catch (Exception e) {
+                            ToastUtils.show_always(context, "该直播间已被冻结");
+                        }
+                    } else {
+                        startActivity(new Intent(context, LoginActivity.class));
+                    }
+
+                }
             }
         });
     }
+
+    private void getLiveInfo(String id) {
+        dialog = DialogUtils.Dialog(context);
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("user_id", BSApplication.SharedPreferences.getString(StringConstant.USERID, ""));
+            jsonObject.put("action", "add");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        NetManger.getInstance().start(jsonObject, id, new NetManger.BaseCallBack() {
+            @Override
+            public void callBackBase(LiveInfo liveInfo) {
+                if (dialog != null) dialog.dismiss();
+                if (liveInfo != null) {
+                    ChatRoomLiveActivity.intentInto(getActivity(), liveInfo);
+                }
+            }
+        });
+    }
+
 
     @Override
     public void onDestroy() {
