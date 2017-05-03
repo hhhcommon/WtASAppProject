@@ -324,7 +324,7 @@ public class GlobalConfig {
     public static final String addMediaInfo = "content/media/addMediaInfo.do";
 
     // 用户数据收集接口
-    public static final String gatherData = "http://345.67.8.9:708/sendGatherData.do";
+    public static String gatherData = "";
 
     // /passport/group/setGroupAdmin.do
     public static final String setGroupAdminUrl = "wt/passport/group/setGroupAdmin.do";
