@@ -7,6 +7,8 @@ import com.woting.common.gatherdata.model.DataModel;
 import com.woting.common.util.JsonEncloseUtils;
 import com.woting.common.volley.VolleyRequest;
 
+import java.util.ArrayList;
+
 /**
  * 立即上传数据线程
  * Created by Administrator on 2017/4/11.
@@ -19,11 +21,15 @@ public class ImmUploadDataThread extends Thread {
             try {
                 DataModel data = GatherData.immQueue.take();
                 if (data != null) {
+                    ArrayList<String> list = new ArrayList<>();
                     String jsonStr = JsonEncloseUtils.btToString(data);
-                    Log.v("TAG", "IMM jsonStr -- > > " + jsonStr);
+                    list.add(jsonStr);
 
                     // 上传数据
-                    VolleyRequest.updateData(jsonStr);
+                    String jsonString = JsonEncloseUtils.jsonEnclose(list).toString();
+                    Log.v("TAG", "IMM jsonStr -- > > " + jsonString);
+
+                    VolleyRequest.updateData(jsonString);
                 }
 
                 Thread.sleep(1000);

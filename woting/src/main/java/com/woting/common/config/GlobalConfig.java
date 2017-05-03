@@ -296,11 +296,9 @@ public class GlobalConfig {
     // 获取轮播图
     public static final String getImage ="wt/content/getLoopImgs.do";
 
-
     /**
      * 此处用到的接口是CM的接口
      */
-
     // 获取专辑列表
     public static final String getSequMediaList =  "content/seq/getSeqMediaList.do";
     // 删除专辑
@@ -317,13 +315,11 @@ public class GlobalConfig {
     public static final String addMediaInfo = "content/media/addMediaInfo.do";
 
     // 用户数据收集接口
-    public static final String gatherData = "http://345.67.8.9:708/sendGatherData.do";
+    public static String gatherData = "";
 
     // /passport/group/setGroupAdmin.do
     public static final String setGroupAdminUrl = "wt/passport/group/setGroupAdmin.do";
 
     // changGroupMaster.do
-
     public static final String changGroupMasterUrl = "wt/passport/group/changGroupMaster.do";
-
 }
