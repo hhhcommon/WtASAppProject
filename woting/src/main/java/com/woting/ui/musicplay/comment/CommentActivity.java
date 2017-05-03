@@ -37,6 +37,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.MyEditText;
 import com.woting.common.widgetui.TipView;
+import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.musicplay.comment.adapter.ChatLVAdapter;
 import com.woting.ui.musicplay.comment.adapter.ContentNoAdapter;
@@ -61,12 +62,11 @@ import java.util.regex.Pattern;
 public class CommentActivity extends AppBaseActivity implements View.OnClickListener, TipView.WhiteViewClick, View.OnTouchListener {
     private List<View> views = new ArrayList<>();
     private List<String> faceList;
-    private List<opinion> OM;
-
+    private List<opinion> newList = new ArrayList<>();
     private Dialog confirmDialog;
     private View chatFaceContainerView;// 表情布局
     private LinearLayout mDotsLayout;
-    private ListView commentList;// 评论列表
+    private XListView commentList;// 评论列表
     private ViewPager mViewPager;
     private MyEditText input;
     private TipView tipView;// 没有网络、没有数据提示
@@ -79,6 +79,9 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
     private String mediaType;
     private String tag = "HOME_COMMENT_TAG";
     private boolean isCancelRequest;
+    private int page = 1;
+    private int refreshType = 1; // refreshType 1 为下拉加载 2 为上拉加载更多
+    private ChatLVAdapter adapter;
 
     @Override
     public void onWhiteViewClick() {
@@ -93,6 +96,7 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
         initData();
         initView();
         initEvent();
+        initListViewListener();
         delDialog();// 初始化删除确认对话框
         initViewPager();
         callInternet();
@@ -110,8 +114,7 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
 
     // 初始化视图
     private void initView() {
-        commentList = (ListView) findViewById(R.id.lv_comment);
-        commentList.setOnTouchListener(this);
+        commentList = (XListView) findViewById(R.id.lv_comment);
         commentList.setSelector(new ColorDrawable(Color.TRANSPARENT));// 取消默认 selector
 
         mViewPager = (ViewPager) findViewById(R.id.face_viewpager);
@@ -132,26 +135,74 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
         findViewById(R.id.send_sms).setOnClickListener(this);// 发送
     }
 
+
     // 删除评论确认对话框
     private void delDialog() {
-        final View dialog1 = LayoutInflater.from(context).inflate(R.layout.dialog_exit_confirm, null);
+        final View dialog = LayoutInflater.from(context).inflate(R.layout.dialog_exit_confirm, null);
+        TextView tv_title = (TextView) dialog.findViewById(R.id.tv_title);
+        tv_title.setText("删除该条评论？");
         confirmDialog = new Dialog(context, R.style.MyDialog);
-        confirmDialog.setContentView(dialog1);
+        confirmDialog.setContentView(dialog);
         confirmDialog.setCanceledOnTouchOutside(true);
         confirmDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
-        dialog1.findViewById(R.id.tv_cancle).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.tv_cancle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 confirmDialog.dismiss();
             }
         });
-        dialog1.findViewById(R.id.tv_confirm).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.tv_confirm).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(CommonHelper.checkNetwork(context)) {
+                if (CommonHelper.checkNetwork(context)) {
                     sendDelComment(discussId);
                     confirmDialog.dismiss();
                 }
+            }
+        });
+    }
+
+    // 初始化展示列表控件
+    private void initListViewListener() {
+        commentList.setPullRefreshEnable(true);
+        commentList.setPullLoadEnable(true);
+        commentList.setXListViewListener(new XListView.IXListViewListener() {
+            @Override
+            public void onRefresh() {
+                refreshType = 1;
+                page = 1;
+                send();
+            }
+
+            @Override
+            public void onLoadMore() {
+                refreshType = 2;
+                send();
+            }
+        });
+    }
+
+    private void setListView() {
+        commentList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (CommonUtils.getUserId(context) != null) {
+                    if (newList != null && newList.size() > 0) {
+                        discussId = newList.get(position-1).getId();
+                        if (newList.get(position-1).getUserId().equals(CommonUtils.getUserId(context))) {
+                            if (discussId != null && !discussId.trim().equals("")) {
+                                confirmDialog.show();
+                            } else {
+                                ToastUtils.show_always(context, "服务器返回数据异常,请稍后重试");
+                            }
+                        } else {
+                            ToastUtils.show_always(context, "这条评论不是您提交的，您无权删除");
+                        }
+                    }
+                } else {
+                    ToastUtils.show_always(context, "删除评论需要您先登录");
+                }
+                return false;
             }
         });
     }
@@ -210,8 +261,86 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
         }
     }
 
+    // 获取评论
+    private void send() {
+        tipView.setVisibility(View.GONE);
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("MediaType", mediaType);
+            jsonObject.put("ContentId", contentId);
+            jsonObject.put("IsPub", "1");
+            jsonObject.put("Page", String.valueOf(page));
+            jsonObject.put("PageSize", "10");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        VolleyRequest.requestPost(GlobalConfig.getMyCommentListUrl, tag, jsonObject, new VolleyCallback() {
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (isCancelRequest) return;
+                try {
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        page++;
+                        List<opinion> OM = new Gson().fromJson(result.getString("DiscussList"), new TypeToken<List<opinion>>() {
+                        }.getType());
+
+                        if (refreshType == 1) newList.clear();
+
+                        // 对服务器返回的事件进行 sd 处理
+                        for (int i = 0; i < OM.size(); i++) {
+                            if (OM.get(i).getTime() != null) {
+                                long time = Long.valueOf(OM.get(i).getTime());
+                                SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
+                                OM.get(i).setTime(sd.format(new Date(time)));
+                            }
+                        }
+
+                        newList.addAll(OM);
+                        if (newList == null || newList.size() == 0) {
+                            commentList.setAdapter(new ContentNoAdapter(context));
+                            return;
+                        }
+
+                        if(adapter==null){
+                            adapter=new ChatLVAdapter(context, newList);
+                            commentList.setAdapter(adapter);
+                        }else{
+                            adapter.notifyDataSetChanged();
+                        }
+
+                    } else {
+                        commentList.setAdapter(new ContentNoAdapter(context));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    commentList.setAdapter(new ContentNoAdapter(context));
+                }
+                setListView();
+                // 无论何种返回值，都需要终止掉下拉刷新及上拉加载的滚动状态
+                if (newList != null && newList.size() > 10) {
+                    commentList.setPullLoadEnable(true);
+                } else {
+                    commentList.setPullLoadEnable(false);
+                }
+                if (refreshType == 1) {
+                    commentList.stopRefresh();
+                } else {
+                    commentList.stopLoadMore();
+                }
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+                ToastUtils.showVolleyError(context);
+                commentList.setAdapter(new ContentNoAdapter(context));
+            }
+        });
+    }
+
     // 删除评论
-    private void sendDelComment(String id) {
+    private void sendDelComment(final String id) {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("ContentId", contentId);
@@ -226,8 +355,7 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
                 try {
                     String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {
-                        send();
-                        setResult(1);
+                        setDelData(id);
                     } else {
                         ToastUtils.show_always(context, "网络失败，请检查网络");
                     }
@@ -243,74 +371,31 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
         });
     }
 
-    // 获取评论
-    private void send() {
-        tipView.setVisibility(View.GONE);
-        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        try {
-            jsonObject.put("MediaType", mediaType);
-            jsonObject.put("ContentId", contentId);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        VolleyRequest.requestPost(GlobalConfig.getMyCommentListUrl, tag, jsonObject, new VolleyCallback() {
-            @Override
-            protected void requestSuccess(JSONObject result) {
-                if (isCancelRequest) return;
+    // 组装展示删除数据
+    private void setDelData(String _id) {
+        if (newList != null && newList.size() > 0) {
+            for (int i = 0; i < newList.size(); i++) {
                 try {
-                    String ReturnType = result.getString("ReturnType");
-                    if (ReturnType != null && ReturnType.equals("1001")) {
-                        OM = new Gson().fromJson(result.getString("DiscussList"), new TypeToken<List<opinion>>() {}.getType());
-                        if (OM == null || OM.size() == 0) {
-                            commentList.setAdapter(new ContentNoAdapter(context));
-                            return;
-                        }
-                        // 对服务器返回的事件进行 sd 处理
-                        for (int i = 0; i < OM.size(); i++) {
-                            long time = Long.valueOf(OM.get(i).getTime());
-                            SimpleDateFormat sd = new SimpleDateFormat("MM-dd HH:mm", Locale.CHINA);
-                            OM.get(i).setTime(sd.format(new Date(time)));
-                        }
-                        commentList.setAdapter(new ChatLVAdapter(context, OM));
-                        setListView();
-                    } else {
-                        commentList.setAdapter(new ContentNoAdapter(context));
+                    String id = newList.get(i).getId();
+                    if (id != null && !id.trim().equals("") && id.trim().equals(_id)) {
+                        newList.remove(i);
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
-                    commentList.setAdapter(new ContentNoAdapter(context));
                 }
             }
+        }
 
-            @Override
-            protected void requestError(VolleyError error) {
-                ToastUtils.showVolleyError(context);
-                commentList.setAdapter(new ContentNoAdapter(context));
-            }
-        });
-    }
-
-    private void setListView() {
-        commentList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (CommonUtils.getUserId(context) != null) {
-                    discussId = OM.get(position).getId();
-                    if (OM.get(position).getUserId().equals(CommonUtils.getUserId(context))) {
-                        if (discussId != null && !discussId.trim().equals("")) {
-                            confirmDialog.show();
-                        } else {
-                            ToastUtils.show_always(context, "服务器返回数据异常,请稍后重试");
-                        }
-                    } else {
-                        ToastUtils.show_always(context, "这条评论不是您提交的，您无权删除");
-                    }
-                } else {
-                    ToastUtils.show_always(context, "删除评论需要您先登录");
-                }
-                return false;
-            }
-        });
+        if (newList == null || newList.size() == 0) {
+            commentList.setAdapter(new ContentNoAdapter(context));
+            return;
+        }
+        if(adapter==null){
+            adapter=new ChatLVAdapter(context, newList);
+            commentList.setAdapter(adapter);
+        }else{
+            adapter.notifyDataSetChanged();
+        }
     }
 
     // 发表评论
@@ -334,8 +419,7 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
                         // 请求成功 取消 editText 焦点 重新执行获取列表的操作
                         time2 = System.currentTimeMillis();
                         input.setText("");
-                        send();
-                        setResult(1);
+                        getFirstData();
                     } else {
                         ToastUtils.show_always(context, "发表评论失败，请稍后重试!");
                     }
@@ -347,6 +431,61 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
             @Override
             protected void requestError(VolleyError error) {
                 ToastUtils.showVolleyError(context);
+            }
+        });
+    }
+
+    // 获取第一页的数据，为了组装新的展示数据
+    private void getFirstData() {
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("MediaType", mediaType);
+            jsonObject.put("ContentId", contentId);
+            jsonObject.put("IsPub", "1");
+            jsonObject.put("Page", "1");
+            jsonObject.put("PageSize", "1");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        VolleyRequest.requestPost(GlobalConfig.getMyCommentListUrl, tag, jsonObject, new VolleyCallback() {
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (isCancelRequest) return;
+                try {
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        List<opinion> OM = new Gson().fromJson(result.getString("DiscussList"), new TypeToken<List<opinion>>() {
+                        }.getType());
+
+                        for (int i = 0; i < OM.size(); i++) {
+                            if (OM.get(i).getTime() != null) {
+                                long time = Long.valueOf(OM.get(i).getTime());
+                                SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
+                                OM.get(i).setTime(sd.format(new Date(time)));
+                                newList.add(i, OM.get(i));
+                            }
+                        }
+
+                        if (newList == null || newList.size() == 0) {
+                            commentList.setAdapter(new ContentNoAdapter(context));
+                            return;
+                        }
+                        if(adapter==null){
+                            adapter=new ChatLVAdapter(context, newList);
+                            commentList.setAdapter(adapter);
+                        }else{
+                            adapter.notifyDataSetChanged();
+                        }
+                    } else {
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
             }
         });
     }
@@ -382,7 +521,7 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
         // 注：因为每一页末尾都有一个删除图标，所以每一页的实际表情columns *　rows　－　1; 空出最后一个位置给删除图标
         List<String> subList = new ArrayList<>();
         subList.addAll(faceList.subList(position * (columns * rows - 1),
-                        (columns * rows - 1) * (position + 1) > faceList.size() ? faceList.size() : (columns * rows - 1) * (position + 1)));
+                (columns * rows - 1) * (position + 1) > faceList.size() ? faceList.size() : (columns * rows - 1) * (position + 1)));
 
         // 末尾添加删除图标
         subList.add("emotion_del_normal.png");
@@ -479,7 +618,7 @@ public class CommentActivity extends AppBaseActivity implements View.OnClickList
         commentList.setFocusable(true);
         commentList.setFocusableInTouchMode(true);
         commentList.requestFocus();
-        InputMethodManager  imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         // 隐藏键盘
         imm.hideSoftInputFromWindow(commentList.getWindowToken(), 0);
         return true;

@@ -1,128 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/setting_bg_color"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="81dp"
-        android:background="@color/WHITE"
-        android:gravity="left|center"
-        android:orientation="horizontal">
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp">
-
-            <ImageView
-                android:id="@+id/RankImageUrl"
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:layout_centerInParent="true"
-                android:scaleType="centerCrop"/>
-
-            <ImageView
-                android:id="@+id/img_zhezhao"
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:layout_centerInParent="true"/>
-        </RelativeLayout>
+        android:layout_height="82dp">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="13dp"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="81dp"
+            android:background="@color/WHITE"
             android:gravity="left|center"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/RankTitle"
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="11dp"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:text="未知"
-                android:textColor="@color/dinglan_orange"
-                android:textSize="15sp"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="7dp"
-                android:layout_marginTop="5dp"
-                android:gravity="left|center">
+                android:layout_marginLeft="15dp">
 
                 <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_marginRight="6dp"
-                    android:src="@mipmap/image_program_album"/>
+                    android:id="@+id/image"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:layout_centerInParent="true"
+                    android:scaleType="centerCrop" />
 
-                <TextView
-                    android:id="@+id/RankContent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="未知"
-                    android:textColor="@color/beijing"
-                    android:textSize="13sp"/>
+                <ImageView
+                    android:id="@+id/img_cover"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:layout_centerInParent="true" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left|center">
-
-                <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_marginRight="6dp"
-                    android:src="@mipmap/image_program_listener"/>
+                android:layout_height="match_parent"
+                android:layout_marginLeft="13dp"
+                android:layout_marginRight="13dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_num"
+                    android:id="@+id/NameOne"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textColor="@color/beijing"
-                    android:textSize="9sp"/>
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="展示名称"
+                    android:textColor="@color/dinglan_orange"
+                    android:textSize="@dimen/activity_head_right" />
 
-                <ImageView
-                    android:id="@+id/image_last"
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="6dp"
-                    android:src="@mipmap/image_program_time"/>
-
-                <TextView
-                    android:id="@+id/tv_last"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/play_time"
-                    android:textColor="@color/beijing"
-                    android:textSize="9sp"/>
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginTop="5dp"
+                    android:gravity="left|center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/image_seq"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_marginRight="6dp"
+                        android:src="@mipmap/image_program_album" />
+
+                    <ImageView
+                        android:id="@+id/image_anchor"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_marginRight="6dp"
+                        android:src="@mipmap/image_program_anchor" />
+
+                    <TextView
+                        android:id="@+id/NameTwo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="未知"
+                        android:textColor="@color/beijing"
+                        android:textSize="@dimen/text_size_13"
+                        android:visibility="visible" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left|center">
+
+                    <ImageView
+                        android:id="@+id/image_num"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:src="@mipmap/image_program_listener" />
+
+                    <TextView
+                        android:id="@+id/tv_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:singleLine="true"
+                        android:text="130.2万"
+                        android:textColor="@color/beijing"
+                        android:textSize="@dimen/text_size_9" />
+
+
+                    <ImageView
+                        android:id="@+id/image_count"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_marginLeft="16dp"
+                        android:src="@mipmap/image_program_number" />
+
+                    <TextView
+                        android:id="@+id/tv_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="7集"
+                        android:textColor="@color/beijing"
+                        android:textSize="9sp" />
+
+                    <ImageView
+                        android:id="@+id/image_time"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_marginLeft="16dp"
+                        android:src="@mipmap/image_program_time" />
+
+                    <TextView
+                        android:id="@+id/tv_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="20'00"
+                        android:textColor="@color/beijing"
+                        android:textSize="9sp" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/view_color" />
 
         <ImageView
             android:id="@+id/imageView_playering"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_width="15dp"
             android:layout_height="15dp"
-            android:layout_marginRight="31dp"/>
+            android:layout_marginRight="20dp"/>
+    </RelativeLayout>
 
-    </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/view_color"/>
 
 </LinearLayout>
+

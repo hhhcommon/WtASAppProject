@@ -17,23 +17,30 @@ import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
+import com.woting.common.util.CountDownUtil;
+import com.woting.common.util.TimeUtils;
 import com.woting.ui.model.content;
+import com.woting.ui.music.live.model.live;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 /**
- * 推荐数据展示
+ * 直播列表展示数据适配器
  */
 public class LiveAdapter extends BaseAdapter {
-    private List<content> list;
+    private List<live> list;
     private Context context;
     private Bitmap bmp;
-    private String contentImg, contentName, name, playCount;
-    private int type;
+    private String type;
+    private Map<TextView, CountDownUtil> leftTimeMap = new HashMap<TextView, CountDownUtil>();
 
-    public LiveAdapter(Context context, List<content> list,int type) {
+    public LiveAdapter(Context context, List<live> list, String type) {
         this.context = context;
         this.list = list;
         this.type = type;
@@ -66,6 +73,7 @@ public class LiveAdapter extends BaseAdapter {
             holder.img_cover.setImageBitmap(bitmapMask);                                            // 六边形封面图片遮罩
 
             holder.image = (ImageView) convertView.findViewById(R.id.image);                        // 图片
+            holder.classify = (TextView) convertView.findViewById(R.id.tv_classify);                // 分类
 
             holder.NameOne = (TextView) convertView.findViewById(R.id.NameOne);                     // 第一标题
 
@@ -90,10 +98,9 @@ public class LiveAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        content lists = list.get(position);
+        live lists = list.get(position);
 
-        // 封面图片
-        contentImg = lists.getContentImg();
+        String contentImg = lists.getCover();
         if (contentImg == null || contentImg.equals("null") || contentImg.trim().equals("")) {
             holder.image.setImageBitmap(bmp);
         } else {
@@ -104,56 +111,87 @@ public class LiveAdapter extends BaseAdapter {
             AssembleImageUrlUtils.loadImage(_url, contentImg, holder.image, IntegerConstant.TYPE_LIST);
         }
 
+        // 分类
+        try {
+            String classifyName = lists.getChannel().getTitle();
+            if (classifyName == null || classifyName.equals("")) {
+                holder.classify.setVisibility(View.GONE);
+            } else {
+                holder.classify.setVisibility(View.VISIBLE);
+                holder.classify.setText(classifyName);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            holder.classify.setVisibility(View.GONE);
+        }
+
+
         // 第一标题
-        contentName = lists.getContentName();
+        String contentName = lists.getTitle();
         if (contentName == null || contentName.equals("")) {
-            holder.NameOne.setText("未知");
-        }else{
+            holder.NameOne.setText("直播");
+        } else {
             holder.NameOne.setText(contentName);
         }
 
         // 第二标题
         try {
-            name = lists.getContentPersons().get(0).getPerName();
+            String name = lists.getOwner().getName();
             if (name != null && !name.trim().equals("")) {
                 holder.NameTwo.setText(name);
             } else {
-                holder.NameTwo.setText("未知");
+                holder.NameTwo.setText("主播");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            holder.NameTwo.setText("未知");
+            holder.NameTwo.setText("主播");
         }
 
         // 收听次数
-        playCount = lists.getPlayCount();
+        String playCount = lists.getAudience_count();
         if (playCount == null || playCount.equals("") || playCount.equals("null")) {
             holder.tv_num.setText("0");
         } else {
             holder.tv_num.setText(playCount);
         }
 
+        String begin_time = lists.getBegin_at();
+        if (begin_time == null || begin_time.equals("") || begin_time.equals("null")) {
+            holder.tv_time.setText("00:00");
+        } else {
+            holder.tv_time.setText(begin_time);
+        }
 
-        // 测试代码
-        if (type == 2) {
+        // 是否显示倒计时
+        if (type != null && type.trim().equals("parade")) {
             holder.time_end.setVisibility(View.VISIBLE);
             holder.image_isShow.setVisibility(View.GONE);
             if (holder.draw.isRunning()) {
                 holder.draw.stop();
             }
+            long c;
+            try {
+                String a = lists.getBegin_at_timestamp();
+                long b = Long.parseLong(a);
+                long currentSeconds = System.currentTimeMillis() / 1000;// 当前系统时间
+                c = b - currentSeconds;
+            } catch (Exception e) {
+                c = 0;
+            }
 
-            CountDownTimer mCountDownTimer = new CountDownTimer(6000000*(position+1), 1000) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    String timeString = getTime(millisUntilFinished);
-                    holder.time_end.setText(timeString);
-                }
+            //获取控件对应的倒计时控件是否存在,存在就取消,解决时间重叠问题
+            //leftTimeMap哪来的?接着往下看
+            CountDownUtil tc = leftTimeMap.get(holder.time_end);
+            if (tc != null) {
+                tc.cancel();
+            }
+            //实例化倒计时类
+            CountDownUtil cdu = new CountDownUtil(c * 1000, 1000, holder.time_end, begin_time);
+            //开启倒计时
+            cdu.start();
 
-                @Override
-                public void onFinish() {
-                    holder.time_end.setText("直播中");
-                }
-            }.start();
+            //[醒目]此处需要map集合将控件和倒计时类关联起来,就是这里
+            leftTimeMap.put(holder.time_end, cdu);
         } else {
             holder.time_end.setVisibility(View.GONE);
             holder.image_isShow.setVisibility(View.VISIBLE);
@@ -165,16 +203,19 @@ public class LiveAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private String getTime(long time) {
-        SimpleDateFormat format;
-        if(time / 1000 / 60 > 60){
-            format = new SimpleDateFormat("hh:mm:ss");
-        }else{
-            format = new SimpleDateFormat("mm:ss");
+    //作为严谨的码工,当然要善始善终
+    public void cancelAllTimers() {
+        Set<Map.Entry<TextView, CountDownUtil>> s = leftTimeMap.entrySet();
+        Iterator it = s.iterator();
+        while (it.hasNext()) {
+            try {
+                Map.Entry pairs = (Map.Entry) it.next();
+                CountDownUtil cdt = (CountDownUtil) pairs.getValue();
+                cdt.cancel();
+            } catch (Exception e) {
+            }
         }
-        format.setTimeZone(TimeZone.getTimeZone("GMT"));
-        String s = format.format(time);
-        return s;
+        leftTimeMap.clear();
     }
 
     static class ViewHolder {
@@ -191,6 +232,7 @@ public class LiveAdapter extends BaseAdapter {
         public TextView time_end;
         public ImageView image_isShow;
         public AnimationDrawable draw;
+        public TextView classify;
     }
 
 }

@@ -7,6 +7,7 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request.Method;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.CommonUtils;
@@ -59,9 +60,62 @@ public class VolleyRequest {
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(GlobalConfig.HTTP_CONNECTION_TIMEOUT, 1, 1.0f));
         BSApplication.getHttpQueues().add(jsonObjectRequest);// 加入队列
         long a = System.currentTimeMillis();
-        Log.e("请求服务器时间", "--- > > >  " +a);
+        Log.e("请求服务器时间", "--- > > >  " + a);
         Log.i("请求服务器地址", "--- > > >  " + GlobalConfig.baseUrl + url);
         Log.v("请求服务器提交的参数", "--- > > >  " + jsonObject.toString());
+    }
+
+    public static void requestGet(String url, String tag, VolleyNewCallback callback) {
+        StringRequest jsonObjectRequest = new StringRequest(
+                Method.GET, GlobalConfig.BASE_URL + url, callback.loadingListenerString(), callback.errorListener());
+
+        jsonObjectRequest.setTag(tag);// 设置标签
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(GlobalConfig.HTTP_CONNECTION_TIMEOUT, 1, 1.0f));
+        BSApplication.getHttpQueues().add(jsonObjectRequest);// 加入队列
+        long a = System.currentTimeMillis();
+        Log.e("请求服务器时间", "--- > > >  " + a);
+        Log.i("请求服务器地址", "--- > > >  " + GlobalConfig.baseUrl + url);
+    }
+
+    /**
+     * post网络请求  自定义标签  用于取消网络请求
+     *
+     * @param tag        标签
+     * @param url        网络请求地址
+     * @param jsonObject 请求参数
+     * @param callback   返回值
+     */
+    public static void requestLivePost(String url, String tag, JSONObject jsonObject, VolleyCallback callback) {
+        //GlobalConfig.baseUrl="http://182.92.175.134/";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Method.POST, GlobalConfig.BASE_URL + url, jsonObject, callback.loadingListener(), callback.errorListener());
+
+        jsonObjectRequest.setTag(tag);// 设置标签
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(GlobalConfig.HTTP_CONNECTION_TIMEOUT, 1, 1.0f));
+        BSApplication.getHttpQueues().add(jsonObjectRequest);// 加入队列
+        long a = System.currentTimeMillis();
+        Log.e("请求服务器时间", "--- > > >  " + a);
+        Log.i("请求服务器地址", "--- > > >  " + GlobalConfig.baseUrl + url);
+        Log.v("请求服务器提交的参数", "--- > > >  " + jsonObject.toString());
+    }
+
+    /**
+     * 用于直播的请求，不加GlobalConfig.baseUrl
+     *
+     * @param tag        标签
+     * @param url        网络请求地址
+     * @param callback   返回值
+     */
+    public static void requestGetForLive(String url, String tag, VolleyCallback callback) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Method.GET, GlobalConfig.BASE_URL + url, null, callback.loadingListener(), callback.errorListener());
+
+        jsonObjectRequest.setTag(tag);// 设置标签
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(GlobalConfig.HTTP_CONNECTION_TIMEOUT, 1, 1.0f));
+        BSApplication.getHttpQueues().add(jsonObjectRequest);// 加入队列
+        long a = System.currentTimeMillis();
+        Log.e("请求服务器时间", "--- > > >  " +a);
+        Log.i("请求服务器地址", "--- > > >  " +url);
     }
 
     /**

@@ -38,7 +38,6 @@ public class PlayHistoryFragment extends Fragment implements OnClickListener, Ad
     private PlayHistoryAdapter adapter;
 
     private Dialog confirmDialog;
-    private Dialog delDialog;// 长按删除数据确认对话框
     private TextView clearEmpty;
 
     private ListView listView;// 数据列表

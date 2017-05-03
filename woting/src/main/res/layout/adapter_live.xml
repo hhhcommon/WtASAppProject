@@ -44,15 +44,36 @@
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/NameOne"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:text="展示名称"
-                    android:textColor="@color/dinglan_orange"
-                    android:textSize="@dimen/activity_head_right" />
+                    android:gravity="left|center">
+
+                    <TextView
+                        android:id="@+id/tv_classify"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/color_wt_circle_orange_white_live"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="分类分类"
+                        android:textColor="@color/dinglan_orange"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:id="@+id/NameOne"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:text="展示名称"
+                        android:textColor="@color/dinglan_orange"
+                        android:textSize="@dimen/activity_head_right" />
+                </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -86,6 +107,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left|center">
+
                     <ImageView
                         android:id="@+id/image_num"
                         android:layout_width="12dp"
@@ -102,6 +124,7 @@
                         android:text="130.2万"
                         android:textColor="@color/beijing"
                         android:textSize="9sp" />
+
                     <ImageView
                         android:id="@+id/image_time"
                         android:layout_width="12dp"
@@ -123,22 +146,24 @@
             </LinearLayout>
 
         </LinearLayout>
+
         <ImageView
             android:id="@+id/image_isShow"
             android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_height="15dp"
             android:layout_marginRight="20dp" />
+
         <TextView
             android:id="@+id/time_end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="50:00"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
             android:layout_marginBottom="10dp"
             android:layout_marginRight="20dp"
-            android:layout_alignParentRight="true"
+            android:text="50:00"
             android:textColor="@color/dinglan_orange"
             android:textSize="@dimen/text_size_13"
             android:visibility="visible" />

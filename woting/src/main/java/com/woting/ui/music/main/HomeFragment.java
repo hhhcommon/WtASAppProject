@@ -120,7 +120,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         OnLineFragment of = new OnLineFragment();      // 电台
         FenLeiFragment ff = new FenLeiFragment();      // 分类
         LiveFragment lv = new LiveFragment();          // 直播
-
         fragmentList.add(rf);
         fragmentList.add(of);
         fragmentList.add(ff);

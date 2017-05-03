@@ -1011,7 +1011,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         String playerUrI = languageSearchInside.getContentURI();
         String playMediaType = languageSearchInside.getMediaType();
         String playShareUrl = languageSearchInside.getContentShareURL();
-        String playAllTime = languageSearchInside.getPlayerAllTime();
+        String playAllTime = languageSearchInside.getContentTimes();
         String playInTime = languageSearchInside.getPlayerInTime();
         String playContentDesc = languageSearchInside.getContentDescn();
         String playNum = languageSearchInside.getPlayCount();
@@ -1049,7 +1049,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         String IsPlaying = languageSearchInside.getIsPlaying();
         String ColumnNum = languageSearchInside.getColumnNum();
 
-        PlayerHistory history = new PlayerHistory(contentId, playName, playImage, playUrl, playerUrI, playMediaType, playAllTime,
+        PlayerHistory history = new PlayerHistory(ContentID, playName, playImage, playUrl, playerUrI, playMediaType, playAllTime,
                 playerFrom, playContentDesc, contentPlayType, IsPlaying, ColumnNum, playShareUrl, playFavorite, playNum,
                 albumName, albumImg, albumDesc, albumId, playInTime, playZanType, playAddTime, bjUserId);
 
@@ -1240,7 +1240,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
                         if (requestType.equals(StringConstant.PLAY_REQUEST_TYPE_SEARCH_VOICE) && refreshType == 0)
                             playList.clear();
                         page++;
-//                        setPullAndLoad(true, true);
+                        setPullAndLoad(true, true);
                         subList = clearContentPlayNull(list);// 去空
                         mUIHandler.sendEmptyMessageDelayed(IntegerConstant.PLAY_UPDATE_LIST, 100);
                     } else {

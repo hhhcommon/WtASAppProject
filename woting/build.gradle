@@ -6,14 +6,34 @@ android {
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
 
+    signingConfigs {
+        release {
+            storeFile file("woting.jks")
+            keyAlias "com.woting"
+            keyPassword "wt@201509"
+            storePassword "wt@201509"
+        }
+        debug {
+            storeFile file("woting.jks")
+            keyAlias "com.woting"
+            keyPassword "wt@201509"
+            storePassword "wt@201509"
+        }
+    }
     defaultConfig {
         applicationId "com.woting"
-        minSdkVersion 11
-        targetSdkVersion 21
+        minSdkVersion 13
+        targetSdkVersion 22
         versionCode 30
         versionName "0.1.0.X.030"
     }
-
+    allprojects {
+        repositories {
+            mavenCentral()
+            jcenter() // If not already there
+            maven { url "https://jitpack.io" }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -33,4 +53,9 @@ dependencies {
     compile files('libs/libksystat.jar')
     compile files('libs/cyberplayer-sdk.jar')
     compile 'com.youth.banner:banner:1.4.9'
+
+    compile 'com.github.afollestad.material-dialogs:core:0.8.5.9@aar'
+    compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile 'com.zhy:base-rvadapter:3.0.3'
 }

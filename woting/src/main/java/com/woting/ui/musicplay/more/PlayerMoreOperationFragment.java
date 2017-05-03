@@ -107,9 +107,45 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-        registerReceiver();
+        initDao();         // 注册数据库
+        registerReceiver();// 注册广播
+    }
+
+    private void initDao(){
         mFileDao = new FileInfoDao(context);
     }
+
+    // 注册广播
+    private void registerReceiver() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BroadcastConstants.UPDATE_PLAY_VIEW);
+        filter.addAction(BroadcastConstants.UPDATE_DOWN_LOAD_VIEW);
+        filter.addAction(BroadcastConstants.UPDATE_PLAY_IMAGE);
+        filter.addAction(BroadcastConstants.PUSH_ALLURL_CHANGE);
+        context.registerReceiver(mReceiver, filter);
+    }
+
+    // 广播
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            switch (action) {
+                case BroadcastConstants.UPDATE_PLAY_VIEW:
+                    resetView();
+                    break;
+                case BroadcastConstants.UPDATE_PLAY_IMAGE:
+                    isPlaying = intent.getBooleanExtra(StringConstant.PLAY_IMAGE, false);
+                    break;
+                case BroadcastConstants.UPDATE_DOWN_LOAD_VIEW:// 更新已下载
+                    resetView();
+                    break;
+                case BroadcastConstants.PUSH_ALLURL_CHANGE:// 登录状态发生改变
+                    resetView();
+                    break;
+            }
+        }
+    };
 
     @Nullable
     @Override
@@ -118,6 +154,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
             rootView = inflater.inflate(R.layout.fragment_player_more_operation, container, false);
             initView();
             initEvent();
+            resetView();
             shareDialog();
             initGatherData();
         }
@@ -131,28 +168,19 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
             String beginTime=String.valueOf(System.currentTimeMillis());
                 String apiType=StringConstant.APINAME_OPEN;
                 if(GlobalConfig.playerObject.getMediaType().equals("AUDIO")){
-
                     ObjType=StringConstant.OBJTYPE_AUDIO;
-
                 }else if(GlobalConfig.playerObject.getMediaType().equals("RADIO")){
-
                     ObjType=StringConstant.OBJTYPE_RADIO;
-
                 }else{
                     return;
                 }
                 ReqParam mReqParam= new ReqParam();
-
                 String objId=GlobalConfig.playerObject.getContentId();
-
                 DataModel mdataModel=new DataModel(beginTime,apiType,ObjType,mReqParam,objId);
-
                 if(mdataModel!=null){
                     GatherData.collectData(IntegerConstant.DATA_UPLOAD_TYPE_GIVEN,mdataModel);
                 }
-
             }catch (Exception e){
-
                 e.printStackTrace();
             }
         }else{
@@ -180,9 +208,29 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
         viewLinear3 = rootView.findViewById(R.id.view_linear_3);
         view1 = rootView.findViewById(R.id.view_1);
         view2 = rootView.findViewById(R.id.view_2);
-
-        resetView();
     }
+
+    // 初始化点击事件
+    private void initEvent() {
+        rootView.findViewById(R.id.text_shape).setOnClickListener(this);// 分享
+        rootView.findViewById(R.id.text_comment).setOnClickListener(this);// 评论
+        rootView.findViewById(R.id.text_details).setOnClickListener(this);// 节目详情
+        rootView.findViewById(R.id.text_timer).setOnClickListener(this);// 定时关闭
+        mPlayAudioTextLike.setOnClickListener(this);// 喜欢
+        textSequ.setOnClickListener(this);// 查看专辑
+        textAnchor.setOnClickListener(this);// 查看主播
+        mPlayAudioTextDownLoad.setOnClickListener(this);// 下载
+        textProgram.setOnClickListener(this);// 节目播放
+        textReport1.setOnClickListener(this);// 举报
+        textReport2.setOnClickListener(this);// 举报
+
+        textLiked.setOnClickListener(this);// 我喜欢的
+        textSubscribe.setOnClickListener(this);// 我的订阅
+
+        rootView.findViewById(R.id.text_history).setOnClickListener(this);// 播放历史
+        rootView.findViewById(R.id.text_local).setOnClickListener(this);// 我的下载
+    }
+
 
     // 播放节目发生变化时需要更新的 View
     private void resetView() {
@@ -274,59 +322,6 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
             viewLinear3.setVisibility(View.VISIBLE);
         }
     }
-
-    // 初始化点击事件
-    private void initEvent() {
-        rootView.findViewById(R.id.text_shape).setOnClickListener(this);// 分享
-        rootView.findViewById(R.id.text_comment).setOnClickListener(this);// 评论
-        rootView.findViewById(R.id.text_details).setOnClickListener(this);// 节目详情
-        rootView.findViewById(R.id.text_timer).setOnClickListener(this);// 定时关闭
-        mPlayAudioTextLike.setOnClickListener(this);// 喜欢
-        textSequ.setOnClickListener(this);// 查看专辑
-        textAnchor.setOnClickListener(this);// 查看主播
-        mPlayAudioTextDownLoad.setOnClickListener(this);// 下载
-        textProgram.setOnClickListener(this);// 节目播放
-        textReport1.setOnClickListener(this);// 举报
-        textReport2.setOnClickListener(this);// 举报
-
-        textLiked.setOnClickListener(this);// 我喜欢的
-        textSubscribe.setOnClickListener(this);// 我的订阅
-
-        rootView.findViewById(R.id.text_history).setOnClickListener(this);// 播放历史
-        rootView.findViewById(R.id.text_local).setOnClickListener(this);// 我的下载
-    }
-
-    // 注册广播
-    private void registerReceiver() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BroadcastConstants.UPDATE_PLAY_VIEW);
-        filter.addAction(BroadcastConstants.UPDATE_DOWN_LOAD_VIEW);
-        filter.addAction(BroadcastConstants.UPDATE_PLAY_IMAGE);
-        filter.addAction(BroadcastConstants.PUSH_ALLURL_CHANGE);
-        context.registerReceiver(mReceiver, filter);
-    }
-
-    // 广播
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            switch (action) {
-                case BroadcastConstants.UPDATE_PLAY_VIEW:
-                    resetView();
-                    break;
-                case BroadcastConstants.UPDATE_PLAY_IMAGE:
-                    isPlaying = intent.getBooleanExtra(StringConstant.PLAY_IMAGE, false);
-                    break;
-                case BroadcastConstants.UPDATE_DOWN_LOAD_VIEW:// 更新已下载
-                    resetView();
-                    break;
-                case BroadcastConstants.PUSH_ALLURL_CHANGE:// 登录状态发生改变
-                    resetView();
-                    break;
-            }
-        }
-    };
 
     @Override
     public void onClick(View v) {
@@ -447,7 +442,6 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
 
     // 喜欢---不喜欢操作
     private void sendFavorite() {
-        dialog = DialogUtils.Dialog(context);
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("MediaType", GlobalConfig.playerObject.getMediaType());
