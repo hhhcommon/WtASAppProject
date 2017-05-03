@@ -1,11 +1,13 @@
 package com.woting.ui.music.live.model;
 
+import java.io.Serializable;
+
 /**
  * 主播
  * 作者：xinLong on 2017/5/2 13:16
  * 邮箱：645700751@qq.com
  */
-public class owner {
+public class owner implements Serializable{
 
     private String id;                 // 标题 8053ae905e71
     private String avatar;             // 标题 ##userimg##user_42c0.jpg

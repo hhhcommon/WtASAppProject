@@ -291,7 +291,7 @@ public class LiveListFragment extends Fragment implements TipView.WhiteViewClick
                     Intent intent = new Intent(context, LiveParadeActivity.class);
                     Bundle bundle = new Bundle();
                     // 传递数据，暂时，待对接
-                    bundle.putString("", "");
+                    bundle.putSerializable("data", mainList.get(position));
                     intent.putExtras(bundle);
                     startActivity(intent);
                 } else {

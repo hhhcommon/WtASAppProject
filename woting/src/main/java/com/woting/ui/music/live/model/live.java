@@ -1,11 +1,13 @@
 package com.woting.ui.music.live.model;
 
+import java.io.Serializable;
+
 /**
  * live的对象
  * 作者：xinLong on 2017/5/2 10:47
  * 邮箱：645700751@qq.com
  */
-public class live {
+public class live implements Serializable{
     private String id;                      // 标题
     private String title;                   // 标题
     private String cover;                   // 标题

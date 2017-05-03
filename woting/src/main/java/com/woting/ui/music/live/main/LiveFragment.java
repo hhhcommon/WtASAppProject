@@ -303,8 +303,8 @@ public class LiveFragment extends Fragment implements TipView.WhiteViewClick {
                     if (mainList.get(groupPosition).getTitle().trim().contains("预告")) {
                         Intent intent = new Intent(context, LiveParadeActivity.class);
                         Bundle bundle = new Bundle();
-                        // 传递数据，暂时，待对接
-                        bundle.putString("", "");
+                        // 传递数据
+                        bundle.putSerializable("data", mainList.get(groupPosition).getData().get(childPosition));
                         intent.putExtras(bundle);
                         startActivity(intent);
                     } else {
