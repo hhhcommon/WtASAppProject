@@ -43,6 +43,11 @@ public class LiveInfoUser implements Serializable {
             public String userState;
             public String userType;
 
+            public String getPortraitBig() {
+                if (portraitBig == null)
+                    return "http://";
+                return portraitBig;
+            }
         }
     }
 }

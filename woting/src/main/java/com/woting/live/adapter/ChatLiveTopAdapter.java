@@ -1,6 +1,7 @@
 package com.woting.live.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.woting.R;
@@ -29,14 +30,16 @@ public class ChatLiveTopAdapter extends CommonAdapter {
     protected void convert(ViewHolder holder, Object o, int position) {
         if (o instanceof LiveInfoUser.DataBean.UsersBean) {
             LiveInfoUser.DataBean.UsersBean cm = (LiveInfoUser.DataBean.UsersBean) o;
-            ImageView imageView = (ImageView) holder.itemView.findViewById(R.id.ivPhoto);
-            String url = cm.portraitBig;
-            if (!url.startsWith("http:")) {
-                url = AssembleImageUrlUtils.assembleImageUrl150(GlobalConfig.imageurl + url);
-            } else {
-                url = AssembleImageUrlUtils.assembleImageUrl150(url);
+            if (cm != null) {
+                ImageView imageView = (ImageView) holder.itemView.findViewById(R.id.ivPhoto);
+                String url = cm.getPortraitBig();
+                if (!url.startsWith("http:")) {
+                    url = AssembleImageUrlUtils.assembleImageUrl150(GlobalConfig.imageurl + url);
+                } else {
+                    url = AssembleImageUrlUtils.assembleImageUrl150(url);
+                }
+                AssembleImageUrlUtils.loadImage(url, url, imageView, IntegerConstant.TYPE_MINE);
             }
-            AssembleImageUrlUtils.loadImage(url, url, imageView, IntegerConstant.TYPE_MINE);
         }
     }
 
