@@ -21,17 +21,15 @@ import java.util.List;
  */
 
 public class ChatLiveAdapter extends CommonAdapter {
-    private List<ChatModel> chatModels = new ArrayList<>();
 
     public ChatLiveAdapter(Context context, int layoutId, List datas) {
         super(context, layoutId, datas);
-        this.chatModels = datas;
     }
 
     @Override
     protected void convert(ViewHolder holder, Object o, int position) {
         if (o instanceof ChatModel) {
-            ChatModel cm = chatModels.get(position);
+            ChatModel cm = (ChatModel) o;
             TextView textViewContent = (TextView) holder.itemView.findViewById(R.id.tvChatContent);
             switch (cm.type) {
                 case 1:
