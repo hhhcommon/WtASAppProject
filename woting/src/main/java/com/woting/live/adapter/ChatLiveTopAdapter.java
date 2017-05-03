@@ -1,6 +1,7 @@
 package com.woting.live.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.woting.R;
@@ -20,25 +21,25 @@ import java.util.List;
  */
 
 public class ChatLiveTopAdapter extends CommonAdapter {
-    private List<LiveInfoUser.DataBean.UsersBean> chatModels = new ArrayList<>();
 
     public ChatLiveTopAdapter(Context context, int layoutId, List datas) {
         super(context, layoutId, datas);
-        this.chatModels = datas;
     }
 
     @Override
     protected void convert(ViewHolder holder, Object o, int position) {
         if (o instanceof LiveInfoUser.DataBean.UsersBean) {
-            LiveInfoUser.DataBean.UsersBean cm = chatModels.get(position);
-            ImageView imageView = (ImageView) holder.itemView.findViewById(R.id.ivPhoto);
-            String url = cm.portraitBig;
-            if (!url.startsWith("http:")) {
-                url = AssembleImageUrlUtils.assembleImageUrl150(GlobalConfig.imageurl + url);
-            } else {
-                url = AssembleImageUrlUtils.assembleImageUrl150(url);
+            LiveInfoUser.DataBean.UsersBean cm = (LiveInfoUser.DataBean.UsersBean) o;
+            if (cm != null) {
+                ImageView imageView = (ImageView) holder.itemView.findViewById(R.id.ivPhoto);
+                String url = cm.getPortraitBig();
+                if (!url.startsWith("http:")) {
+                    url = AssembleImageUrlUtils.assembleImageUrl150(GlobalConfig.imageurl + url);
+                } else {
+                    url = AssembleImageUrlUtils.assembleImageUrl150(url);
+                }
+                AssembleImageUrlUtils.loadImage(url, url, imageView, IntegerConstant.TYPE_MINE);
             }
-            AssembleImageUrlUtils.loadImage(url, url, imageView, IntegerConstant.TYPE_MINE);
         }
     }
 
