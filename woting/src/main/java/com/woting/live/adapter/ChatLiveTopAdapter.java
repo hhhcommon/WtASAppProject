@@ -20,11 +20,9 @@ import java.util.List;
  */
 
 public class ChatLiveTopAdapter extends CommonAdapter {
-    private List<LiveInfoUser.DataBean.UsersBean> chatModels = new ArrayList<>();
 
     public ChatLiveTopAdapter(Context context, int layoutId, List datas) {
         super(context, layoutId, datas);
-        this.chatModels = datas;
     }
 
     @Override
