@@ -45,7 +45,7 @@ public class LiveInfoUser implements Serializable {
 
             public String getPortraitBig() {
                 if (portraitBig == null)
-                    return "http://";
+                    return "imgs://";
                 return portraitBig;
             }
         }
