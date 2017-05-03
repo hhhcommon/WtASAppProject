@@ -323,13 +323,6 @@ public class ChatRoomLiveActivity extends Activity {
                 .create();
 
 
-        AssetManager am = getAssets();
-        try {
-            mPcmFile = am.open("a.pcm");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         mHandler = new Handler() {
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);

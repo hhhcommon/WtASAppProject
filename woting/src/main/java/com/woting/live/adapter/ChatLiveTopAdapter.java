@@ -30,7 +30,7 @@ public class ChatLiveTopAdapter extends CommonAdapter {
     @Override
     protected void convert(ViewHolder holder, Object o, int position) {
         if (o instanceof LiveInfoUser.DataBean.UsersBean) {
-            LiveInfoUser.DataBean.UsersBean cm = chatModels.get(position);
+            LiveInfoUser.DataBean.UsersBean cm = (LiveInfoUser.DataBean.UsersBean) o;
             ImageView imageView = (ImageView) holder.itemView.findViewById(R.id.ivPhoto);
             String url = cm.portraitBig;
             if (!url.startsWith("http:")) {
