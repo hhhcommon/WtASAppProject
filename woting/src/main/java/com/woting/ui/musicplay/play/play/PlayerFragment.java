@@ -643,6 +643,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
                     contentId = intent.getStringExtra(StringConstant.ID_CONTENT);
                     SortType = intent.getStringExtra("SortType");
 
+                    refreshType = 0;
                     int sequListSize = intent.getIntExtra(StringConstant.SEQU_LIST_SIZE, 0);
                     requestType = StringConstant.PLAY_REQUEST_TYPE_SEARCH_SEQU;
                     if (sequListSize == 0) {
@@ -858,17 +859,17 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
                 if (mediaType != null && !mediaType.equals("TTS")) {
                     String contentPlay;
                     for (int i = 0, size = subList.size(); i < size; i++) {
+                        playList.clear();
                         contentPlay = subList.get(i).getContentPlay();
                         if (contentPlay != null && contentPlay.equals(GlobalConfig.playerObject.getContentPlay())) {
-                            playList.clear();
                             index = i;// 记录当前播放节目在列表中的位置
                             subList.get(i).setType(2);
                         } else {
                             subList.get(i).setType(1);
                         }
+                        playList.addAll(subList);
                     }
                 }
-                playList.addAll(subList);
             }
         } else {
             if (subList != null && subList.size() > 0) {
