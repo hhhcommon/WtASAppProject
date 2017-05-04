@@ -85,7 +85,7 @@ public class DownloadTask{
 				connection.setRequestProperty("Range","bytes=" + start + "-" + mThreadInfo.getEnd());
 				// 设置文件写入位置
 				String name = mFileInfo.getFileName();
-				File file = new File(DownloadClient.DOWNLOAD_PATH,name);
+				File file = new File(DownloadService.DOWNLOAD_PATH,name);
 				raf = new RandomAccessFile(file, "rwd");
 				raf.seek(start);
 				Intent intent = new Intent();

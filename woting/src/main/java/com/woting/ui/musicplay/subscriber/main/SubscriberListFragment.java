@@ -53,7 +53,6 @@ public class SubscriberListFragment extends Fragment implements OnClickListener,
     private FragmentActivity context;
     private SubscriberAdapter adapter;
     private List<SubscriberInfo> newList = new ArrayList<>();
-    private List<SubscriberInfo> subList;
 
     private String tag = "SUBSCRIBER_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
@@ -179,22 +178,31 @@ public class SubscriberListFragment extends Fragment implements OnClickListener,
                 try {
                     String returnType = result.getString("ReturnType");
                     if (returnType != null && returnType.equals("1001")) {
-                        page++;
-                        subList = new Gson().fromJson(result.getString("ResultList"), new TypeToken<List<SubscriberInfo>>() {}.getType());
-                        if (refreshType == 1) newList.clear();
-                        newList.addAll(subList);
-                        if (adapter == null) {
-                            mListView.setAdapter(adapter = new SubscriberAdapter(context, newList));
-                        } else {
-                            adapter.notifyDataSetChanged();
+
+                        List<SubscriberInfo> subList = new Gson().fromJson(result.getString("ResultList"), new TypeToken<List<SubscriberInfo>>() {
+                        }.getType());
+                        if (subList != null && subList.size() > 0) {
+                            if (page == 1) newList.clear();
+                            page++;
+                            newList.addAll(subList);
+                            if (adapter == null) {
+                                mListView.setAdapter(adapter = new SubscriberAdapter(context, newList));
+                            } else {
+                                adapter.notifyDataSetChanged();
+                            }
+                            tipView.setVisibility(View.GONE);
+                            if (newList.size() > 9) {
+                                mListView.setPullLoadEnable(true);
+                            }else{
+                                mListView.setPullLoadEnable(false);
+                            }
                         }
-                        tipView.setVisibility(View.GONE);
                     } else {
-                        mListView.setPullLoadEnable(false);
                         if (refreshType == 1) {
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.NO_DATA, "你还没有订阅哦\n赶紧去订阅一些精彩的节目吧~");
                         } else {
+                            mListView.setPullLoadEnable(false);
                             ToastUtils.show_always(context, getString(R.string.no_data));
                         }
                     }
@@ -203,28 +211,26 @@ public class SubscriberListFragment extends Fragment implements OnClickListener,
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.IS_ERROR);
                     } else {
+                        mListView.setPullLoadEnable(false);
                         ToastUtils.show_always(context, getString(R.string.error_data));
                     }
                 }
-                if (refreshType == 1) {
-                    mListView.stopRefresh();
-                } else {
-                    mListView.stopLoadMore();
-                }
+                mListView.stopRefresh();
+                mListView.stopLoadMore();
             }
 
             @Override
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
                 if (refreshType == 1) {
-                    mListView.stopRefresh();
                     tipView.setVisibility(View.VISIBLE);
                     tipView.setTipView(TipView.TipStatus.IS_ERROR);
                 } else {
-                    ToastUtils.showVolleyError(context);
-                    mListView.stopLoadMore();
                     mListView.setPullLoadEnable(false);
+                    ToastUtils.show_always(context, getString(R.string.error_data));
                 }
+                mListView.stopRefresh();
+                mListView.stopLoadMore();
             }
         });
     }
@@ -234,7 +240,7 @@ public class SubscriberListFragment extends Fragment implements OnClickListener,
         mListView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position - 1 < 0) return ;
+                if (position - 1 < 0) return;
                 position = position - 1;
                 content listInfo = new content();
                 listInfo.setContentName(newList.get(position).getContentSeqName());
@@ -245,8 +251,7 @@ public class SubscriberListFragment extends Fragment implements OnClickListener,
                 AlbumFragment fragment = new AlbumFragment();
                 Bundle bundle = new Bundle();
                 bundle.putInt(StringConstant.FROM_TYPE, type);
-                bundle.putString("type", "radiolistactivity");
-                bundle.putSerializable("list", listInfo);
+                bundle.putString("id", listInfo.getContentId());
                 fragment.setArguments(bundle);
                 if (type == IntegerConstant.TAG_MINE) {
                     MineActivity.open(fragment);

@@ -258,8 +258,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                             AlbumFragment fragment = new AlbumFragment();
                             Bundle bundle = new Bundle();
                             bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_HOME);
-                            bundle.putString("type", "recommend");
-                            bundle.putSerializable("list", newList.get(position - 2));
+                            bundle.putString("id", newList.get(position-2).getContentId());
                             fragment.setArguments(bundle);
                             HomeActivity.open(fragment);
                         } else {

@@ -48,6 +48,7 @@
         android:id="@+id/lv_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scrollbars="none"
         android:layout_below="@+id/relativeLayout3"
         android:background="@color/app_bg"/>
 

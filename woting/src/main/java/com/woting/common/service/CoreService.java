@@ -4,9 +4,8 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 
-import com.woting.ui.musicplay.download.service.DownloadClient;
+import com.woting.ui.musicplay.download.service.DownloadService;
 import com.woting.ui.interphone.commom.service.NotificationClient;
 import com.woting.ui.interphone.commom.service.VoiceStreamPlayer;
 import com.woting.ui.interphone.commom.service.VoiceStreamRecord;
@@ -20,7 +19,6 @@ public class CoreService extends Service {
 
     private LocationInfo locationInfo;// 定位信息
     private SocketClient socketClient;// Socket
-    private DownloadClient downloadClient;// 下载
     private SubclassControl subclassControl;// 单对单控制
     private VoiceStreamRecord record;// 录音
     private VoiceStreamPlayer playerRecord;// 播放录音
@@ -33,7 +31,6 @@ public class CoreService extends Service {
 
         initLocation();
         initSocket();
-        initDownLoad();
         initSubclass();
         initRecord();
         initPlayRecord();
@@ -49,11 +46,6 @@ public class CoreService extends Service {
     private void initSocket() {
         if (socketClient == null) socketClient = new SocketClient(context);
         startForeground(4, socketClient.showNotification());
-    }
-
-    // 下载
-    private void initDownLoad() {
-        if (downloadClient == null) downloadClient = new DownloadClient(this);
     }
 
     // 单对单对讲控制
@@ -87,7 +79,6 @@ public class CoreService extends Service {
 
         locationInfo.stopLocation();
         socketClient.onDestroy();
-        downloadClient.unregister();
         subclassControl.unregister();
         record.stopRecord();
         playerRecord.onDestroy();

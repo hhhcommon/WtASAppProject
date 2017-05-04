@@ -43,13 +43,12 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.HorizontalListView;
-import com.woting.ui.model.album;
 import com.woting.ui.model.content;
 import com.woting.ui.musicplay.download.main.DownloadFragment;
 import com.woting.ui.musicplay.download.dao.FileInfoDao;
 import com.woting.ui.musicplay.download.fragment.DownLoadUnCompletedFragment;
 import com.woting.ui.musicplay.download.model.FileInfo;
-import com.woting.ui.musicplay.download.service.DownloadClient;
+import com.woting.ui.musicplay.download.service.DownloadService;
 import com.woting.ui.musicplay.musicdetails.PlayDetailsFragment;
 import com.woting.ui.musicplay.play.adapter.ImageAdapter;
 import com.woting.ui.model.share.ShareModel;
@@ -368,8 +367,13 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                     AlbumFragment fragment = new AlbumFragment();
                     Bundle bundle = new Bundle();
                     bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_MORE);
-                    bundle.putString("type", "player");
-                    bundle.putSerializable("list", GlobalConfig.playerObject);
+                    String id="";
+                    try {
+                       id= GlobalConfig.playerObject.getSeqInfo().getContentId();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    bundle.putString("id", id);
                     fragment.setArguments(bundle);
                     PlayerMoreOperationActivity.open(fragment);
                 } else {
@@ -526,7 +530,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                 List<FileInfo> fileUnDownLoadList = mFileDao.queryFileInfo("false", CommonUtils.getUserId(context));// 未下载列表
                 for (int kk = 0; kk < fileUnDownLoadList.size(); kk++) {
                     if (fileUnDownLoadList.get(kk).getDownloadtype() == 1) {
-                        DownloadClient.workStop(fileUnDownLoadList.get(kk));
+                        DownloadService.workStop(fileUnDownLoadList.get(kk));
                         mFileDao.updataDownloadStatus(fileUnDownLoadList.get(kk).getUrl(), "2");
                     }
                 }
@@ -534,7 +538,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                     if (fileUnDownLoadList.get(k).getUrl().equals(data.getContentPlay())) {
                         FileInfo file = fileUnDownLoadList.get(k);
                         mFileDao.updataDownloadStatus(data.getContentPlay(), "1");
-                        DownloadClient.workStart(file);
+                        DownloadService.workStart(file);
                         Intent p_intent = new Intent(BroadcastConstants.PUSH_DOWN_UNCOMPLETED);
                         context.sendBroadcast(p_intent);
                         break;
@@ -549,7 +553,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                 if (fileUnDownloadList.get(k).getUrl().equals(data.getContentPlay())) {
                     FileInfo file = fileUnDownloadList.get(k);
                     mFileDao.updataDownloadStatus(data.getContentPlay(), "1");
-                    DownloadClient.workStart(file);
+                    DownloadService.workStart(file);
                     DownLoadUnCompletedFragment.dwType = true;
                     Intent p_intent = new Intent(BroadcastConstants.PUSH_DOWN_UNCOMPLETED);
                     context.sendBroadcast(p_intent);

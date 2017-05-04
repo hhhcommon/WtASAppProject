@@ -227,7 +227,6 @@ public class AnchorListFragment extends Fragment implements View.OnClickListener
                 AlbumFragment fragment = new AlbumFragment();
                 Bundle bundle = new Bundle();
                 bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_HOME);
-                bundle.putString("type", "main");
                 bundle.putString("id", MediaInfoList.get(position - 1).getContentId());
                 fragment.setArguments(bundle);
                 HomeActivity.open(fragment);

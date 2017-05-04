@@ -102,7 +102,6 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
     public static String ContentDesc, ContentImg, ContentShareURL, ContentName, id;
     public static String ContentFavorite;// 从网络获取的当前值，如果为空，表示页面并未获取到此值
     private String tag = "ALBUM_VOLLEY_REQUEST_CANCEL_TAG";
-    private String RadioName;
     private static int flag = 0;// == 0 还没有订阅  == 1 已经订阅
 
     private View rootView;
@@ -115,9 +114,10 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-        handleIntent();
+        handleIntent();// 获取上层界面传递的数据
     }
 
+    // 获取上层界面传递的数据
     private void handleIntent() {
         Bundle bundle = getArguments();
         if (bundle == null) {
@@ -125,55 +125,7 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
             return;
         }
         fromType = bundle.getInt(StringConstant.FROM_TYPE);
-        String type = bundle.getString("type");
-//        if (type != null && type.trim().equals("radiolistactivity")) {
-//            content list = (content) bundle.getSerializable("list");
-//            RadioName = list.getContentName();
-//            ContentDesc = list.getContentDescn();
-//            id = list.getContentId();
-//        } else if (type != null && type.trim().equals("recommend")) {
-//            content list = (content) bundle.getSerializable("list");
-//            RadioName = list.getContentName();
-//            ContentDesc = list.getContentDescn();
-//            id = list.getContentId();
-//        } else if (type != null && type.trim().equals("search")) {
-//            content list = (content) bundle.getSerializable("list");
-//            RadioName = list.getContentName();
-//            ContentDesc = list.getContentDescn();
-//            id = list.getContentId();
-//        } else if (type != null && type.trim().equals("main")) {
-//            // 再做一个
-//            RadioName = bundle.getString("conentname");
-//            id = bundle.getString("id");
-//        } else if (type != null && type.trim().equals("player")) {
-//            // 再做一个
-//            content list = (content) bundle.getSerializable("list");
-//            RadioName = list.getSeqInfo().getContentName();
-//            ContentDesc = list.getSeqInfo().getContentDescn();
-//            id = list.getSeqInfo().getContentId();
-//        } else {
-//            content list = (content) bundle.getSerializable("list");
-//            RadioName = list.getContentName();
-//            ContentDesc = list.getContentDescn();
-//            id = list.getContentId();
-//        }
-
-        if (type != null) {
-            if ( type.trim().equals("main")) {
-                // 再做一个
-                RadioName = bundle.getString("conentname");
-                id = bundle.getString("id");
-            }else{
-                content list = (content) bundle.getSerializable("list");
-                RadioName = list.getContentName();
-                ContentDesc = list.getContentDescn();
-                id = list.getContentId();
-            }
-        }else{
-            RadioName = "";
-            ContentDesc ="";
-            id = "";
-        }
+        id = bundle.getString("id");
     }
 
     @Override
@@ -212,8 +164,8 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
         tipView = (TipView) rootView.findViewById(R.id.tip_view);
         tipView.setWhiteClick(this);
 
-        if (RadioName != null && !RadioName.equals("")) {
-            tv_album_name.setText(RadioName);
+        if (ContentName != null && !ContentName.equals("")) {
+            tv_album_name.setText(ContentName);
         } else {
             tv_album_name.setText("未知");
         }
@@ -259,17 +211,6 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
         mPager.setAdapter(new MyFragmentChildPagerAdapter(getChildFragmentManager(), fragmentList));
         mPager.setOnPageChangeListener(new MyOnPageChangeListener());  // 页面变化时的监听器
         mPager.setCurrentItem(0);                                      // 设置当前显示标签页为第一页 mPager
-    }
-
-    /**
-     * 设置下载需要的专辑信息
-     * @param contentId
-     * @param contentImg
-     * @param contentName
-     * @param contentDesc
-     */
-    public static void setInfo(String contentId, String contentImg, String contentName, String contentDesc) {
-        programFragment.setInfo(contentId, contentImg, contentName, contentDesc);
     }
 
     public class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
@@ -648,7 +589,6 @@ public class AlbumFragment extends Fragment implements OnClickListener, TipView.
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
         context = null;
-        RadioName = null;
         tv_album_name = null;
         img_album = null;
         ContentDesc = null;

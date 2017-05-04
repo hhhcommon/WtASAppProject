@@ -19,6 +19,8 @@ import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
+import com.woting.common.constant.IntegerConstant;
+import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.PhoneMessage;
@@ -179,8 +181,8 @@ public class MyUploadSequFragment extends Fragment implements AdapterView.OnItem
         } else {
             Intent intent = new Intent(context, AlbumFragment.class);
             Bundle bundle = new Bundle();
-            bundle.putString("type", "recommend");
-            bundle.putSerializable("list", newList.get(position));
+            bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_MORE);
+            bundle.putString("id", newList.get(position).getContentId());
             intent.putExtras(bundle);
             startActivityForResult(intent, 1);
         }

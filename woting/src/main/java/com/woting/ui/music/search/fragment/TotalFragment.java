@@ -270,8 +270,13 @@ public class TotalFragment extends Fragment implements OnGroupClickListener {
                         AlbumFragment fragment = new AlbumFragment();
                         Bundle bundle = new Bundle();
                         bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_SEARCH);
-                        bundle.putString("type", "search");
-                        bundle.putSerializable("list", list.get(groupPosition).getList().get(childPosition));
+                        String _id="";
+                        try {
+                            _id=list.get(groupPosition).getList().get(childPosition).getContentId();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        bundle.putString("id", _id);
                         fragment.setArguments(bundle);
                         SearchLikeActivity.open(fragment);
                     } else {

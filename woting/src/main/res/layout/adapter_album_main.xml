@@ -65,6 +65,16 @@
                     android:textColor="@color/beijing"
                     android:textSize="12sp" />
 
+                <TextView
+                    android:id="@+id/text_playTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="已播完"
+                    android:textColor="@color/dinglan_orange"
+                    android:textSize="12sp" />
+
+
             </LinearLayout>
         </LinearLayout>
 

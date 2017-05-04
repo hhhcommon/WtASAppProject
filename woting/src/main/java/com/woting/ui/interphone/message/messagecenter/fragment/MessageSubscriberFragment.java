@@ -176,8 +176,7 @@ public class MessageSubscriberFragment extends Fragment implements OnClickListen
                 AlbumFragment fragment = new AlbumFragment();
                 Bundle bundle = new Bundle();
                 bundle.putInt("fromType", -1);
-                bundle.putString("type", "radiolistactivity");
-                bundle.putSerializable("list", listInfo);
+                bundle.putString("id", listInfo.getContentId());
                 fragment.setArguments(bundle);
                 MessageMainActivity.open(fragment);
 

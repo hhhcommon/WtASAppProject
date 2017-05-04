@@ -178,7 +178,6 @@ public class DetailsFragment extends Fragment implements OnClickListener {
             e.printStackTrace();
         }
         VolleyRequest.requestPost(GlobalConfig.getContentById, tag, jsonObject, new VolleyCallback() {
-            private String contentId;
 
             @Override
             protected void requestSuccess(JSONObject result) {
@@ -191,7 +190,7 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                         JSONObject arg1 = (JSONObject) new JSONTokener(ResultList).nextValue();
 
                         try {
-                            contentId = arg1.getString("ContentId");
+                            AlbumFragment.id = arg1.getString("ContentId");
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -292,18 +291,13 @@ public class DetailsFragment extends Fragment implements OnClickListener {
                                 textContent.setText(Html.fromHtml("<font size='28'>" + contentDesc + "</font>"));
                             } else {
                                 // 设置界面
-                                contentDesc="";
                                 textContent.setText("暂无描述");
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
                             // 设置界面
-                            contentDesc="";
                             textContent.setText("暂无描述");
                         }
-                        // 设置下载需要的专辑信息
-                        AlbumFragment.setInfo(contentId, AlbumFragment.ContentImg, AlbumFragment.ContentName, contentDesc);
-
 
                         // 节目标签
                         try {
