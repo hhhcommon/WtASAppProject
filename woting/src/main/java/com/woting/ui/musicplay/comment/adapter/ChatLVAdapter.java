@@ -101,8 +101,8 @@ public class ChatLVAdapter extends BaseAdapter {
         }
 
         if (opinion.getUserInfo() != null) {
-            if (opinion.getUserInfo().getUserName() != null) {
-                holder.name.setText(opinion.getUserInfo().getUserName());
+            if (opinion.getUserInfo().getNickName() != null) {
+                holder.name.setText(opinion.getUserInfo().getNickName());
             } else {
                 holder.name.setText("游客");
             }

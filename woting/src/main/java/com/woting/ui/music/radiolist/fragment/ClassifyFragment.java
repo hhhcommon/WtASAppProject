@@ -263,8 +263,7 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                         AlbumFragment fragment = new AlbumFragment();
                         Bundle bundle = new Bundle();
                         bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_HOME);
-                        bundle.putString("type", "radiolistactivity");
-                        bundle.putSerializable("list", newList.get(position - 2));
+                        bundle.putString("id", newList.get(position).getContentId());
                         fragment.setArguments(bundle);
                         HomeActivity.open(fragment);
                     } else {

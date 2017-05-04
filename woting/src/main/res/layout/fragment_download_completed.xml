@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_bg"
@@ -10,7 +9,14 @@
         android:id="@+id/tip_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_size"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="30dp"
+        android:text="已占用空间0M，可用空间0M" />
 
     <ListView
         android:id="@+id/listView"
@@ -18,6 +24,6 @@
         android:layout_height="match_parent"
         android:divider="@color/text_line_1"
         android:dividerHeight="0.5dp"
-        android:scrollbars="none"/>
+        android:scrollbars="none" />
 
 </LinearLayout>

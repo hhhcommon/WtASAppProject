@@ -54,7 +54,7 @@ public class ThreadDao {
 	 */
 	public List<ThreadInfo> getThreads(String url) {
 		List<ThreadInfo> list = new ArrayList<ThreadInfo>();
-		SQLiteDatabase db = helper.getWritableDatabase();
+		SQLiteDatabase db = helper.getReadableDatabase();
 		Cursor cursor = db.rawQuery("select * from thread_info where url = ?",new String[] { url });
 		while (cursor.moveToNext()) {
 			ThreadInfo threadInfo = new ThreadInfo();

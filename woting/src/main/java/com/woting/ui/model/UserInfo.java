@@ -5,41 +5,50 @@ package com.woting.ui.model;
  * 作者：xinlong on 2016/8/23 21:18
  * 邮箱：645700751@qq.com
  */
-  public class UserInfo {
-	 public String UserId;/*用户id*/
-	 public String UserName;/*用户名*/
-	 public String PortraitMini;/*头像缩略图*/
-	 public String PortraitBig;/*头像大图*/
+public class UserInfo {
+    public String UserId;/*用户id*/
+    public String UserName;/*用户名*/
+    public String NickName;/*用户名*/
+    public String PortraitMini;/*头像缩略图*/
+    public String PortraitBig;/*头像大图*/
 
-	public String getPortraitMini(){
-		return PortraitMini;
-	 }
+    public String getNickName() {
+        return NickName;
+    }
 
-	 public void setPortraitMini(String portraitMini){
-		PortraitMini = portraitMini;
-	 }
+    public void setNickName(String nickName) {
+        NickName = nickName;
+    }
 
-	 public String getPortraitBig(){
-		return PortraitBig;
-	 }
+    public String getPortraitMini() {
+        return PortraitMini;
+    }
 
-	 public void setPortraitBig(String portraitBig){
-		PortraitBig = portraitBig;
-	 }
+    public void setPortraitMini(String portraitMini) {
+        PortraitMini = portraitMini;
+    }
 
-	 public String getUserId(){
-	 	return UserId;
-	 }
+    public String getPortraitBig() {
+        return PortraitBig;
+    }
 
-	 public void setUserId(String userId){
-		UserId = userId;
-	 }
+    public void setPortraitBig(String portraitBig) {
+        PortraitBig = portraitBig;
+    }
 
-	 public String getUserName(){
-		return UserName;
-	 }
+    public String getUserId() {
+        return UserId;
+    }
 
-	 public void setUserName(String userName){
-		UserName = userName;
-	 }
+    public void setUserId(String userId) {
+        UserId = userId;
+    }
+
+    public String getUserName() {
+        return UserName;
+    }
+
+    public void setUserName(String userName) {
+        UserName = userName;
+    }
 }

@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.woting.common.util.CommonUtils;
 import com.woting.ui.model.content;
 import com.woting.ui.musicplay.download.model.FileInfo;
-import com.woting.ui.musicplay.download.service.DownloadClient;
+import com.woting.ui.musicplay.download.service.DownloadService;
 import com.woting.common.database.SQLiteHelper;
 import com.woting.common.util.SequenceUUID;
 
@@ -300,7 +300,7 @@ public class FileInfoDao {
     // 改
     public void updataFileInfo(String filename) {
         SQLiteDatabase db = helper.getWritableDatabase();
-        String localUrl = DownloadClient.DOWNLOAD_PATH + filename;
+        String localUrl = DownloadService.DOWNLOAD_PATH + filename;
         db.execSQL("update fileInfo set finished=?,localUrl=? where fileName=?",
                 new Object[]{"true", localUrl, filename});
         db.close();
@@ -373,7 +373,7 @@ public class FileInfoDao {
                 String sequimgurl = cursor.getString(cursor.getColumnIndex("albumImgUrl"));
                 String sequdesc = cursor.getString(cursor.getColumnIndex("albumDesc"));
                 String sequid = cursor.getString(cursor.getColumnIndex("albumId"));
-                String filename = cursor.getString(cursor.getColumnIndex("filename"));
+                String filename = cursor.getString(cursor.getColumnIndex("fileName"));
                 String author = cursor.getString(cursor.getColumnIndex("author"));
                 String playerfrom = cursor.getString(cursor.getColumnIndex("playFrom"));
                 // 把每个对象都放到history对象里

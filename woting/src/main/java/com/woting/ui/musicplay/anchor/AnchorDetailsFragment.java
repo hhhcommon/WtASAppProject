@@ -333,7 +333,6 @@ public class AnchorDetailsFragment extends Fragment implements View.OnClickListe
                 AlbumFragment fragment = new AlbumFragment();
                 Bundle bundle = new Bundle();
                 bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_HOME);
-                bundle.putString("type", "main");
                 bundle.putString("id", personInfoList.get(position).getContentId());
                 fragment.setArguments(bundle);
                 HomeActivity.open(fragment);

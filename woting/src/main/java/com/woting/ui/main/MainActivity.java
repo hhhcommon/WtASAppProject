@@ -47,12 +47,13 @@ import com.woting.common.gatherdata.GatherData;
 import com.woting.common.manager.UpdateManager;
 import com.woting.common.receiver.NetWorkChangeReceiver;
 import com.woting.common.receiver.PhoneStatReceiver;
-import com.woting.common.service.CoreService;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
+import com.woting.common.util.FileSizeUtil;
 import com.woting.common.util.JsonEncloseUtils;
 import com.woting.common.util.PhoneMessage;
+import com.woting.common.util.TestAllUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
@@ -64,6 +65,7 @@ import com.woting.ui.common.model.GroupInfo;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.music.citylist.citysmodel.stairCity;
 import com.woting.ui.music.citylist.citysmodel.secondaryCity;
+import com.woting.ui.musicplay.download.service.DownloadService;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
 import com.woting.ui.musicplay.play.model.PlayerHistory;
 import com.woting.ui.musicplay.play.play.PlayerActivity;
@@ -107,14 +109,14 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private static Intent coreService;
 
     private static RoundImageView image0;// 播放
-    private static ImageView image1,image2,image5;
+    private static ImageView image1, image2, image5;
     private Dialog upDataDialog;
-    private ImageView imagePlay,image_delete;
+    private ImageView imagePlay, image_delete;
 
     private static View tabNavigation;// 底部导航菜单
 
     private int upDataType = 1;//1,不需要强制升级2，需要强制升级
-    private String upDataNews,contentId, callId, callerId;
+    private String upDataNews, contentId, callId, callerId;
     private String mPageName = "MainActivity";
     private String tag = "MAIN_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
@@ -139,6 +141,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private AutoScrollTextView tv_notify;
     private LinearLayout lin_notify;
     public static ArrayBlockingQueue<com.woting.ui.interphone.model.Message> MsgQueue = new ArrayBlockingQueue<com.woting.ui.interphone.model.Message>(100);             // 消息队列
+    private Intent download;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,7 +171,10 @@ public class MainActivity extends TabActivity implements OnClickListener {
         }
         messageDeal mDeal = new messageDeal();                                                      // 处理通知消息的线程
         mDeal.start();
+        TestAllUtils.testMemory(context);
     }
+
+
 
     // 设置顶栏样式
     private void setType() {
@@ -209,8 +215,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
 //        startService(Location);
 //        Subclass = new Intent(this, SubclassControl.class);                                         // 单对单接听控制服务
 //        startService(Subclass);
-//        download = new Intent(this, DownloadClient.class);
-//        startService(download);
+        download = new Intent(this, DownloadService.class);
+        startService(download);
 //        Notification = new Intent(this, NotificationClient.class);
 //        startService(Notification);
     }
@@ -329,8 +335,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
             ToastUtils.show_always(context, "网络失败，请检查网络");
         }
     }
-
-
 
 
     // 获取地理位置
@@ -936,7 +940,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     // 播放
     private static void setViewZero() {
-        GlobalConfig.interPhoneType=0;
+        GlobalConfig.interPhoneType = 0;
         tabHost.setCurrentTabByTag("zero");
 //        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_selected);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
@@ -947,7 +951,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     // 享听
     public static void setViewOne() {
-        GlobalConfig.interPhoneType=0;
+        GlobalConfig.interPhoneType = 0;
         tabHost.setCurrentTabByTag("one");
 //        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_selected);
@@ -962,7 +966,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     // 享讲
     private static void setViewTwo() {
-        GlobalConfig.interPhoneType=0;
+        GlobalConfig.interPhoneType = 0;
         tabHost.setCurrentTabByTag("two");
 //        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
@@ -973,7 +977,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     // 我的
     private void setViewFive() {
-        GlobalConfig.interPhoneType=0;
+        GlobalConfig.interPhoneType = 0;
         tabHost.setCurrentTabByTag("five");
 //        image0.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_chat_normal);
         image1.setImageResource(R.mipmap.ic_main_navi_action_bar_tab_feed_normal);
@@ -1305,7 +1309,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     //app退出时执行该操作
     public static void stop() {
-       // context.stopService(coreService);
+        // context.stopService(coreService);
 //        context.stopService(record);
 //        context.stopService(voicePlayer);
 //        context.stopService(Subclass);

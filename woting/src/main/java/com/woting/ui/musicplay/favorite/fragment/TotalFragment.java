@@ -399,8 +399,13 @@ public class TotalFragment extends Fragment implements OnClickListener, TipView.
                     AlbumFragment fragment = new AlbumFragment();
                     Bundle bundle = new Bundle();
                     bundle.putInt(StringConstant.FROM_TYPE, FavoriteFragment.type);
-                    bundle.putString("type", "recommend");
-                    bundle.putSerializable("list", list.get(groupPosition).getList().get(childPosition));
+                    String _id="";
+                    try {
+                        _id=list.get(groupPosition).getList().get(childPosition).getSeqInfo().getContentId();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    bundle.putString("id", _id);
                     fragment.setArguments(bundle);
                     if (FavoriteFragment.type == IntegerConstant.TAG_MINE) {// Mine
                         MineActivity.open(fragment);

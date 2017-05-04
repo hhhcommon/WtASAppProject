@@ -688,6 +688,7 @@
 
         <service android:name=".common.service.timing.TimerService" />
         <service android:name=".common.service.CoreService" />
+        <service android:name="com.woting.ui.musicplay.download.service.DownloadService" />
         <service android:name=".common.service.FloatingWindowService" />
 
         <!-- 集成播放器服务 -->

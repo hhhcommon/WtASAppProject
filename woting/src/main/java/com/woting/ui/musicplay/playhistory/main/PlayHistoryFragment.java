@@ -20,6 +20,8 @@ import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.widgetui.TipView;
+import com.woting.ui.model.album;
+import com.woting.ui.musicplay.album.main.AlbumFragment;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
 import com.woting.ui.musicplay.play.model.PlayerHistory;
 import com.woting.ui.musicplay.more.PlayerMoreOperationActivity;
@@ -48,7 +50,7 @@ public class PlayHistoryFragment extends Fragment implements OnClickListener, Ad
     private int fromType;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         fromType = bundle.getInt(StringConstant.FROM_TYPE);
@@ -134,20 +136,22 @@ public class PlayHistoryFragment extends Fragment implements OnClickListener, Ad
             String playerUri = subList.get(position).getPlayerUrI();
             String playerMediaType = subList.get(position).getPlayerMediaType();
             String playerAllTime = subList.get(position).getPlayerAllTime();
-            String playerInTime = "0";
+            String playerInTime = subList.get(position).getPlayerInTime();
             String playerContentDesc = subList.get(position).getPlayerContentDescn();
             String playerNum = subList.get(position).getPlayCount();
-            String playerZanType = "0";
+            String playerZanType = subList.get(position).getPlayerZanType();
             String playerFrom = subList.get(position).getContentPub();
             String playerAddTime = Long.toString(System.currentTimeMillis());
             String bjUserId = CommonUtils.getUserId(context);
             String contentFavorite = subList.get(position).getContentFavorite();
             String playShareUrl = subList.get(position).getPlayContentShareUrl();
             String contentId = subList.get(position).getContentID();
+
             String sequname = subList.get(position).getSeqName();
             String sequid = subList.get(position).getSeqId();
             String sequdesc = subList.get(position).getSeqDescn();
             String albumImg = subList.get(position).getSeqImg();
+
             String ContentPlayType = subList.get(position).getContentPlayType();
             String IsPlaying = subList.get(position).getIsPlaying();
             String ColumnNum= subList.get(position).getColumnNum();
@@ -164,10 +168,22 @@ public class PlayHistoryFragment extends Fragment implements OnClickListener, Ad
             }
             dbDao.addHistory(history);
 
-            MainActivity.change();
+
             if (mediaType.equals(StringConstant.TYPE_AUDIO)) {
                 Intent intent = new Intent(BroadcastConstants.PLAY_SEQU_LIST);
-                intent.putExtra(StringConstant.ID_CONTENT, contentId);
+
+                Bundle bundle = new Bundle();
+                // 组装需要传递的专辑数据
+                album s = new album();
+                s.setContentDescn(sequdesc);
+                s.setContentName(sequname);
+                s.setContentImg(albumImg);
+                s.setContentId(sequid);
+                bundle.putSerializable("album", s);
+
+                intent.putExtras(bundle);
+                intent.putExtra(StringConstant.ID_CONTENT, sequid);
+                intent.putExtra("SortType", "2");
                 intent.putExtra(StringConstant.SEQU_LIST_SIZE, ColumnNum);
                 context.sendBroadcast(intent);
             } else {
@@ -177,6 +193,7 @@ public class PlayHistoryFragment extends Fragment implements OnClickListener, Ad
                 pushIntent.putExtras(bundle);
                 context.sendBroadcast(pushIntent);
             }
+            MainActivity.change();
         }
     }
 

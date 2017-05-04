@@ -27,7 +27,7 @@ import com.woting.common.widgetui.TipView;
 import com.woting.ui.musicplay.download.adapter.DownloadAdapter;
 import com.woting.ui.musicplay.download.dao.FileInfoDao;
 import com.woting.ui.musicplay.download.model.FileInfo;
-import com.woting.ui.musicplay.download.service.DownloadClient;
+import com.woting.ui.musicplay.download.service.DownloadService;
 import com.woting.ui.musicplay.download.service.DownloadTask;
 
 import java.util.List;
@@ -144,7 +144,7 @@ public class DownLoadUnCompletedFragment extends Fragment implements OnClickList
                         if (fileInfoList.get(i).getDownloadtype() == 1) {
                             fileInfoList.get(i).setDownloadtype(2);
                             FID.updataDownloadStatus(fileInfoList.get(i).getUrl(), "2");
-                            DownloadClient.workStop(fileInfoList.get(i));
+                            DownloadService.workStop(fileInfoList.get(i));
                         }
                     }
                     adapter.notifyDataSetChanged();
@@ -164,7 +164,7 @@ public class DownLoadUnCompletedFragment extends Fragment implements OnClickList
                             if (fileInfoList.get(i).getDownloadtype() == 1) {
                                 fileInfoList.get(i).setDownloadtype(2);
                                 FID.updataDownloadStatus(fileInfoList.get(i).getUrl(), "2");
-                                DownloadClient.workStop(fileInfoList.get(i));
+                                DownloadService.workStop(fileInfoList.get(i));
                             }
                         }
                         if (adapter == null) {
@@ -222,7 +222,7 @@ public class DownLoadUnCompletedFragment extends Fragment implements OnClickList
                         if (fileInfoList.get(i).getDownloadtype() == 1) {
                             fileInfoList.get(i).setDownloadtype(2);
                             FID.updataDownloadStatus(fileInfoList.get(i).getUrl(), "2");
-                            DownloadClient.workStop(fileInfoList.get(i));
+                            DownloadService.workStop(fileInfoList.get(i));
                         }
                     }
                     getFileInfo(fileInfoList.get(position));
@@ -230,7 +230,7 @@ public class DownLoadUnCompletedFragment extends Fragment implements OnClickList
 					// 点击该项目时，此时该项目的状态是下载中 只需要把项目自己变为暂停状态即可
                     fileInfoList.get(position).setDownloadtype(2);
                     FID.updataDownloadStatus(fileInfoList.get(position).getUrl(), "2");
-                    DownloadClient.workStop(fileInfoList.get(position));
+                    DownloadService.workStop(fileInfoList.get(position));
                     adapter.notifyDataSetChanged();
                 } else {
 					// 点击该项目时，该项目为暂停状态 把其它的播放状态变为暂停状态 最后把自己状态变为下载中状态
@@ -238,7 +238,7 @@ public class DownLoadUnCompletedFragment extends Fragment implements OnClickList
                         if (fileInfoList.get(i).getDownloadtype() == 1) {
                             fileInfoList.get(i).setDownloadtype(2);
                             FID.updataDownloadStatus(fileInfoList.get(i).getUrl(), "2");
-                            DownloadClient.workStop(fileInfoList.get(i));
+                            DownloadService.workStop(fileInfoList.get(i));
                         }
                     }
                     getFileInfo(fileInfoList.get(position));
@@ -251,7 +251,7 @@ public class DownLoadUnCompletedFragment extends Fragment implements OnClickList
     private void getFileInfo(FileInfo fileInfo) {
         fileInfo.setDownloadtype(1);
         FID.updataDownloadStatus(fileInfo.getUrl(), "1");
-        DownloadClient.workStart(fileInfo);
+        DownloadService.workStart(fileInfo);
     }
 
     // 更新 UI 的广播接收器
@@ -276,7 +276,7 @@ public class DownLoadUnCompletedFragment extends Fragment implements OnClickList
                     if (fileInfoList != null && fileInfoList.size() > 0) {
                         fileInfoList.get(0).setDownloadtype(1);
                         FID.updataDownloadStatus(fileInfoList.get(0).getUrl(), "1");
-                        DownloadClient.workStart(fileInfoList.get(0));
+                        DownloadService.workStart(fileInfoList.get(0));
                         adapter = new DownloadAdapter(context, fileInfoList);
                         listView.setAdapter(adapter);
                         setOnItemListener();
@@ -327,7 +327,7 @@ public class DownLoadUnCompletedFragment extends Fragment implements OnClickList
     @Override
     public void onDestroy() {
         super.onDestroy();
-        context.stopService(new Intent(context, DownloadClient.class));
+        context.stopService(new Intent(context, DownloadService.class));
         if (receiver != null) {
             context.unregisterReceiver(receiver);
             receiver = null;

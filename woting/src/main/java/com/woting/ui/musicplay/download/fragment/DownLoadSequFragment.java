@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.CommonUtils;
+import com.woting.common.util.FileSizeUtil;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.musicplay.download.main.DownloadFragment;
 import com.woting.ui.musicplay.download.adapter.DownLoadSequAdapter;
@@ -30,6 +31,7 @@ import com.woting.ui.musicplay.download.downloadlist.activity.DownLoadListActivi
 import com.woting.ui.musicplay.download.model.FileInfo;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,14 +53,15 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
     private List<FileInfo> fileSequList;// 专辑 list
     private int index = -1;
 
-    private List<FileInfo> f;
+
+    private TextView tv_size;
 
     private void initDao() {
         FID = new FileInfoDao(context);
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
         initDao();
@@ -98,21 +101,22 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
 
     private void setView() {
         tipView = (TipView) rootView.findViewById(R.id.tip_view);
+        tv_size = (TextView) rootView.findViewById(R.id.tv_size);
         mListView = (ListView) rootView.findViewById(R.id.listView);
     }
 
     // 查询数据库当中已完成的数据，此数据传输到 adapter 中进行适配
     public void setDownLoadSource() {
-        String userId = CommonUtils.getUserId(context);
-        if (f != null) f.clear();
         if (fileSequList != null) fileSequList.clear();
-        f = FID.queryFileInfo("true", userId);
-        Log.v("TAG", "fffffff -- > " + f.size());
+        String userId = CommonUtils.getUserId(context);
+         List<FileInfo>   f = FID.queryFileInfo("true", userId);
+
         if (f.size() > 0) {
             DownloadFragment.setVisibleSequ(true);
             tipView.setVisibility(View.GONE);
+
             fileSequList = FID.GroupFileInfoAll(userId);
-            Log.e("TAG", fileSequList.size() + "");
+
             if (fileSequList.size() > 0) {
                 for (int i = 0; i < fileSequList.size(); i++) {
                     if (fileSequList.get(i).getSequid().equals("woting")) {
@@ -125,6 +129,18 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
                         }
                     }
                 }
+
+                int size=0;
+                for(int i=0;i<fileSequList.size();i++){
+                    try {
+                        size=size+fileSequList.get(i).getSum();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                DecimalFormat df = new DecimalFormat("0.00");
+                long size1= FileSizeUtil.getAvailableInternalMemorySize();//获取手机内部剩余存储空间
+                tv_size.setText("已占用空间"+df.format(size / 1000.0 / 1000.0)+"M,可用空间"+FileSizeUtil.formatFileSize(size1, false)+"M");
                 mListView.setAdapter(adapter = new DownLoadSequAdapter(context, fileSequList));
                 setItemListener();
                 setInterface();
@@ -174,6 +190,8 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
                 break;
             case R.id.tv_confirm:// 确定删除
                 if (index != -1) {
+                    String userId = CommonUtils.getUserId(context);
+                    List<FileInfo>   f = FID.queryFileInfo("true", userId);
                     File file = new File(f.get(index).getLocalurl());
                     if (file.exists()) {
                         if (file.delete()) {
@@ -187,7 +205,9 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
                         FID.deleteSequ(fileSequList.get(i).getSequname(), CommonUtils.getUserId(context));
                         list.add(fileSequList.get(i).getSequid());
                     }
-                    deleteLocal(list);
+                    String userId = CommonUtils.getUserId(context);
+                    List<FileInfo>   f = FID.queryFileInfo("true", userId);
+                    deleteLocal(list,f);
                 }
                 context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));
                 confirmDialog.dismiss();
@@ -198,7 +218,7 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
     }
 
     // 删除
-    private void deleteLocal(List<String> sequIdList) {
+    private void deleteLocal(List<String> sequIdList,List<FileInfo>   f) {
         try {
             for (int i = 0; i < sequIdList.size(); i++) {
                 for (int j = 0; j < f.size(); j++) {

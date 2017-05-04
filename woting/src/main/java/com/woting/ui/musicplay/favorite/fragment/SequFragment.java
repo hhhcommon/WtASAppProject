@@ -141,8 +141,7 @@ public class SequFragment extends Fragment implements TipView.WhiteViewClick {
                         AlbumFragment fragment = new AlbumFragment();
 						Bundle bundle = new Bundle();
                         bundle.putInt(StringConstant.FROM_TYPE, FavoriteFragment.type);
-						bundle.putString("type", "recommend");
-						bundle.putSerializable("list", newList.get(position - 1));
+						bundle.putString("id", newList.get(position-1).getContentId());
                         fragment.setArguments(bundle);
                         if (FavoriteFragment.type == IntegerConstant.TAG_MINE) {// Mine
                             MineActivity.open(fragment);
