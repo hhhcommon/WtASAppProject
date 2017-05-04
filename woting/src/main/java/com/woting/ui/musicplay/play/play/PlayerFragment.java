@@ -858,16 +858,14 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
                 deleteRepeat();
                 if (mediaType != null && !mediaType.equals("TTS")) {
                     String contentPlay;
-                    for (int i = 0, size = subList.size(); i < size; i++) {
-                        playList.clear();
-                        contentPlay = subList.get(i).getContentPlay();
+                    for (int i = 0, size = playList.size(); i < size; i++) {
+                        contentPlay = playList.get(i).getContentPlay();
                         if (contentPlay != null && contentPlay.equals(GlobalConfig.playerObject.getContentPlay())) {
                             index = i;// 记录当前播放节目在列表中的位置
-                            subList.get(i).setType(2);
+                            playList.get(i).setType(2);
                         } else {
-                            subList.get(i).setType(1);
+                            playList.get(i).setType(1);
                         }
-                        playList.addAll(subList);
                     }
                 }
             }
