@@ -2,6 +2,9 @@ package com.woting.common.gatherdata;
 
 import android.util.Log;
 
+import com.woting.common.application.BSApplication;
+import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.CollocationConstant;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.gatherdata.model.DataModel;
 import com.woting.common.gatherdata.thread.GivenUploadDataThread;
@@ -35,6 +38,13 @@ public class GatherData {
     public static void initThread() {
         // 防止 application 创建多次
         if (!isRun) {
+            // 收集数据地址拼接
+            GlobalConfig.gatherData = "http://" +
+                    BSApplication.SharedPreferences.getString(CollocationConstant.socketUrl, "182.92.175.134") +
+                    ":708/sendGatherData.do";
+
+            Log.i("TAG", "数据收集地址 - >  " + GlobalConfig.gatherData);
+
             isRun = true;
 
             // 定量上传数据线程

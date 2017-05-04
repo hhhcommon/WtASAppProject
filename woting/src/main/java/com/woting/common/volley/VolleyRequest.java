@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request.Method;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.woting.common.application.BSApplication;
@@ -189,8 +190,21 @@ public class VolleyRequest {
             e.printStackTrace();
         }
 
+        // 数据上传结果回调  用户不需要知道有数据收集
+        VolleyCallback callback = new VolleyCallback() {
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                Log.v("TAG", "数据上传成功!");
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+                Log.v("TAG", "数据上传失败!");
+            }
+        };
+
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Method.POST, GlobalConfig.gatherData, jsonObject, null, null);
+                Method.POST, GlobalConfig.gatherData, jsonObject, callback.loadingListener(), callback.errorListener());
 
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(GlobalConfig.HTTP_CONNECTION_TIMEOUT, 1, 1.0f));
         BSApplication.getHttpQueues().add(jsonObjectRequest);// 加入队列

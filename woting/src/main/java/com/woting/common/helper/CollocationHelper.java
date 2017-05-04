@@ -23,7 +23,6 @@ public class CollocationHelper {
     private static String _baseUrl = "http://123.56.254.75:808/";//测试服务器地址
     //  private static String _baseUrl = "http://192.168.5.17:808/";
 
-
     public static void setCollocation() {
         // 是不是读取配置文件
         if (GlobalConfig.isCollocation) {
@@ -77,8 +76,6 @@ public class CollocationHelper {
             } else {
                 GlobalConfig.uploadBaseUrl = _uploadBaseUrl;
             }
-
-
         } else {
             GlobalConfig.isToast = false;
             GlobalConfig.PCDType = Integer.parseInt(_PCDType);

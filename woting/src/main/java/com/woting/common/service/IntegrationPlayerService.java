@@ -368,7 +368,7 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
         String objType = mediaType;
         String objId = GlobalConfig.playerObject.getContentId();// ID
         DataModel data = new DataModel(beginTime, endTime, apiName, objType, objId);
-        GatherData.collectData(IntegerConstant.DATA_UPLOAD_TYPE_GIVEN, data);
+        GatherData.collectData(IntegerConstant.DATA_UPLOAD_TYPE_IMM, data);// 需要即时上传的数据
 
         return mediaType != null && (httpUrl != null || localUrl != null);
     }

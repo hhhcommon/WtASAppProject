@@ -18,6 +18,7 @@ public class GivenUploadDataThread extends Thread {
     @Override
     public void run() {
         while (GatherData.isRun) {
+            Log.v("TAG", "Gather Data Thread start");
             try {
                 if (GatherData.givenList.size() >= GatherData.uploadCount) {
                     ArrayList<String> list = new ArrayList<>();
@@ -25,6 +26,7 @@ public class GivenUploadDataThread extends Thread {
                         DataModel n = GatherData.givenList.get(i);
                         String jsonStr = JsonEncloseUtils.btToString(n);
                         list.add(jsonStr);
+                        Log.v("TAG", "Gather Data -- > " + i);
                     }
 
                     String jsonStr = JsonEncloseUtils.jsonEnclose(list).toString();
