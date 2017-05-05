@@ -171,6 +171,7 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
             jsonObject.put("GPS-longitude", PhoneMessage.longitude);
             jsonObject.put("GPS-latitude ", PhoneMessage.latitude);
             jsonObject.put("PCDType", GlobalConfig.PCDType);
+            jsonObject.put("IsAll", "1");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -231,6 +232,11 @@ public class PreferenceActivity extends AppBaseActivity implements View.OnClickL
 
     private void sendTwice() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("IsAll", "0");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         VolleyRequest.requestPost(GlobalConfig.getPreferenceUrl, tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
 

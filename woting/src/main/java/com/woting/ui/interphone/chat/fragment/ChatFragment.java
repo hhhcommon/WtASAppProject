@@ -53,7 +53,7 @@ import com.woting.common.widgetui.MyGridView;
 import com.woting.common.widgetui.MyLinearLayout;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.common.login.LoginActivity;
-import com.woting.ui.common.model.GroupInfo;
+import com.woting.ui.model.GroupInfo;
 import com.woting.ui.common.model.UserInfo;
 import com.woting.ui.interphone.alert.CallAlertActivity;
 import com.woting.ui.interphone.chat.adapter.ChatListAdapter;

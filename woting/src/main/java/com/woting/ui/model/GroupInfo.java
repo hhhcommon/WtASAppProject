@@ -1,4 +1,4 @@
-package com.woting.ui.common.model;
+package com.woting.ui.model;
 
 import java.io.Serializable;
 

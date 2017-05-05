@@ -59,7 +59,7 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.MyGridView;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.common.model.GroupInfo;
+import com.woting.ui.model.GroupInfo;
 import com.woting.ui.common.photocut.PhotoCutActivity;
 import com.woting.ui.common.qrcodes.EWMShowActivity;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
@@ -93,14 +93,13 @@ import java.util.List;
  * 辛龙 2016年1月21日
  */
 public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickListener, OnItemClickListener, TipView.WhiteViewClick {
-    private Bitmap bmp;
+
     private GroupInfo news;
     private GroupTalkAdapter adapter;
     private SearchTalkHistoryDao dbDao;
-    private List<GroupInfo> list;
-    private ArrayList<GroupInfo> lists = new ArrayList<>();
+
+    private ArrayList<GroupInfo> groupListMain = new ArrayList<>();
     private MessageReceivers receiver = new MessageReceivers();
-    private Intent pushIntent = new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN);
 
     private View linearModifyPassword;// 修改密码
     private View linearGroupApply;// 群审核
@@ -141,21 +140,17 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
     private final int TO_GALLERY = 5;       // 打开图库
     private final int TO_CAMERA = 6;        // 打开系统相机
     private final int PHOTO_REQUEST_CUT = 7;// 图片裁剪
-    private final int SET_GROUP_MANAGER=8;  // setGroupManager
+    private final int SET_GROUP_MANAGER = 8;  // setGroupManager
     private View lin_set_manager;
     private String[] ManagerList;
-    private Boolean IsManager= false;
-    private ArrayList<GroupInfo> GroupTransformList= new ArrayList<>();
+    private boolean IsManager = false;
+    private ArrayList<GroupInfo> GroupTransformList = new ArrayList<>();
     private String groupMaster;             // 群主
     private LinearLayout lin_sign;
     private TextView tv_sign;
     private EditText editGroupName;
     private String groupPassword;
 
-    // 初始化数据库命令执行对象
-    private void initDao() {
-        dbDao = new SearchTalkHistoryDao(context);
-    }
 
     @Override
     public void onWhiteViewClick() {
@@ -166,16 +161,24 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_talk_groupnews);
-
-        // 注册广播
-        IntentFilter filters = new IntentFilter();
-        filters.addAction(BroadcastConstants.GROUP_DETAIL_CHANGE);
-        registerReceiver(receiver, filters);
-
+        setReceiver(); // 注册广播
         initDao();
         initDialog();
         setView();
         getData();
+        send();
+    }
+
+    // 注册广播
+    private void setReceiver() {
+        IntentFilter filters = new IntentFilter();
+        filters.addAction(BroadcastConstants.GROUP_DETAIL_CHANGE);
+        registerReceiver(receiver, filters);
+    }
+
+    // 初始化数据库命令执行对象
+    private void initDao() {
+        dbDao = new SearchTalkHistoryDao(context);
     }
 
     // 初始化对话框
@@ -198,95 +201,6 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         confirmDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
     }
 
-    // 获取上一个界面传递过来的数据
-    private void getData() {
-        if (getIntent() == null) {
-            tipView.setVisibility(View.VISIBLE);
-            tipView.setTipView(TipView.TipStatus.IS_ERROR);
-            return;
-        }
-        String type = getIntent().getStringExtra("type");
-        if (type == null || type.equals("")) {
-            tipView.setVisibility(View.VISIBLE);
-            tipView.setTipView(TipView.TipStatus.IS_ERROR);
-            return;
-        }
-        switch (type) {
-            case "talkoldlistfragment":// 聊天界面传过来
-                GroupInfo talkListGP = (GroupInfo) getIntent().getSerializableExtra("data");
-                groupNumber = talkListGP.getGroupNum();
-                groupName = talkListGP.getName();
-                headUrl = talkListGP.getPortrait();
-                groupId = talkListGP.getId();
-                groupMaster=talkListGP.getGroupMasterId();
-                baseCreaterDecideView(talkListGP.getGroupManager(), talkListGP.getGroupMasterId(),talkListGP.getGroupType());
-                groupSignature = talkListGP.getGroupSignature();
-                groupIntroduce = talkListGP.getGroupDescn();
-                groupAlias = talkListGP.getGroupMyAlias();
-                groupType = talkListGP.getGroupType();
-                groupPassword=talkListGP.getGroupPassword();
-                break;
-            case "LinkMan":// 通讯录界面传过来
-                GroupInfo talkGroupInside = (GroupInfo) getIntent().getSerializableExtra("data");
-                groupName = talkGroupInside.getGroupName();
-                headUrl = talkGroupInside.getGroupImg();
-                groupId = talkGroupInside.getGroupId();
-                groupMaster=talkGroupInside.getGroupMasterId();
-                baseCreaterDecideView(talkGroupInside.getGroupManager(),talkGroupInside.getGroupMasterId(),talkGroupInside.getGroupType());
-                groupSignature = talkGroupInside.getGroupSignature();
-                groupIntroduce = talkGroupInside.getGroupMyDescn();
-                groupAlias = talkGroupInside.getGroupMyAlias();
-                groupNumber = talkGroupInside.getGroupNum();
-                groupType = talkGroupInside.getGroupType();
-                groupPassword= talkGroupInside.getGroupPassword();
-                break;
-            case "groupaddactivity":// 添加群组搜索结果或申请加入组成功后进入
-                GroupInfo findGroupNews = (GroupInfo) getIntent().getSerializableExtra("data");
-                groupName = findGroupNews.getGroupName();
-                headUrl = findGroupNews.getGroupImg();
-                groupId = findGroupNews.getGroupId();
-                groupNumber = findGroupNews.getGroupNum();
-                groupMaster=findGroupNews.getGroupMasterId();
-                baseCreaterDecideView(findGroupNews.getGroupManager(), findGroupNews.getGroupMasterId(),findGroupNews.getGroupType());
-                groupSignature = findGroupNews.getGroupSignature();
-                groupIntroduce = findGroupNews.getGroupOriDescn();
-                groupAlias = findGroupNews.getGroupMyAlias();
-                groupType = findGroupNews.getGroupType();
-                groupPassword= findGroupNews.getGroupPassword();
-                break;
-            case "findActivity":// 处理组邀请时进入
-                GroupInfo groupInfo = (GroupInfo) getIntent().getSerializableExtra("data");
-                groupName = groupInfo.getGroupName();
-                headUrl = groupInfo.getGroupImg();
-                groupId = groupInfo.getGroupId();
-                groupNumber = groupInfo.getGroupNum();
-                groupMaster=groupInfo.getGroupMasterId();
-                baseCreaterDecideView(groupInfo.getGroupManager(), groupInfo.getGroupMasterId(),groupInfo.getGroupType());
-                groupSignature = groupInfo.getGroupSignature();
-                groupType = groupInfo.getGroupType();
-                groupPassword= groupInfo.getGroupPassword();
-                break;
-            case "CreateGroupContentActivity":// 创建群组成功时进入
-                GroupInfo groupInformation = (GroupInfo) getIntent().getSerializableExtra("news");
-                headUrl = getIntent().getStringExtra("imageurl");
-                groupName = groupInformation.getGroupName();
-                groupId = groupInformation.getGroupId();
-                groupNumber = groupInformation.getGroupNum();
-                groupType = groupInformation.getGroupType();
-                groupMaster = CommonUtils.getUserId(context);
-                baseCreaterDecideView(CommonUtils.getUserId(context), CommonUtils.getUserId(context),groupInformation.getGroupType());
-                groupSignature = groupInformation.getGroupSignature();
-                groupPassword= groupInformation.getGroupPassword();
-                break;
-        }
-        if (groupId == null || groupId.trim().equals("")) {
-            groupId = "00";// 待定 此处为没有获取到 groupId
-            tipView.setVisibility(View.VISIBLE);
-            tipView.setTipView(TipView.TipStatus.IS_ERROR);
-        }
-
-        setData();
-    }
 
     // 初始化视图
     private void setView() {
@@ -301,8 +215,8 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         tipView = (TipView) findViewById(R.id.tip_view);
         tipView.setWhiteClick(this);
 
-        lin_sign=(LinearLayout)findViewById(R.id.lin_sign);        // 签名模块
-        tv_sign=(TextView)findViewById(R.id.tv_sign);              // 签名TextView
+        lin_sign = (LinearLayout) findViewById(R.id.lin_sign);        // 签名模块
+        tv_sign = (TextView) findViewById(R.id.tv_sign);              // 签名TextView
         lin_sign.setOnClickListener(this);
 
         imageHead = (ImageView) findViewById(R.id.image_touxiang); // 群头像
@@ -323,7 +237,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         LinearTransferAuthority = findViewById(R.id.lin_yijiao);   // 移交管理员权限
         LinearTransferAuthority.setOnClickListener(this);
 
-        lin_set_manager=findViewById(R.id.lin_set_manager);        // 设置群管理员
+        lin_set_manager = findViewById(R.id.lin_set_manager);        // 设置群管理员
         lin_set_manager.setOnClickListener(this);
 
         imageEwm = (ImageView) findViewById(R.id.imageView_ewm);      //  二维码
@@ -342,29 +256,54 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         gridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
     }
 
-    // 数据初始化
-    private void setData() {
+    // 获取上一个界面传递过来的数据
+    private void getData() {
 
-        if (!TextUtils.isEmpty(groupName)){
-            editGroupName.setText("群名:"+groupName);
+        GroupInfo talkGroupInside = (GroupInfo) getIntent().getSerializableExtra("data");
+        groupName = talkGroupInside.getGroupName();
+        headUrl = talkGroupInside.getGroupImg();
+        groupId = talkGroupInside.getGroupId();
+        groupMaster = talkGroupInside.getGroupMasterId();
+        groupSignature = talkGroupInside.getGroupSignature();
+        groupIntroduce = talkGroupInside.getGroupMyDescn();
+        groupAlias = talkGroupInside.getGroupMyAlias();
+        groupNumber = talkGroupInside.getGroupNum();
+        groupType = talkGroupInside.getGroupType();
+        groupPassword = talkGroupInside.getGroupPassword();
+
+        baseCreaterDecideView(talkGroupInside.getGroupManager(), talkGroupInside.getGroupMasterId(), talkGroupInside.getGroupType());
+        setData();// 设置界面数据
+
+    }
+
+    // 设置界面数据
+    private void setData() {
+        if (groupId == null || groupId.trim().equals("")) {
+            groupId = "00";// 待定 此处为没有获取到 groupId
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.IS_ERROR);
         }
 
-        if (groupNumber!= null && !groupNumber.equals("")) {// 群 ID
+        if (!TextUtils.isEmpty(groupName)) {
+            editGroupName.setText("群名:" + groupName);
+        }
+
+        if (groupNumber != null && !groupNumber.equals("")) {// 群 ID
             String idString = "群号:" + groupNumber;
             textGroupId.setText(idString);
         }
 
-        if (!TextUtils.isEmpty(groupAlias)){
+        if (!TextUtils.isEmpty(groupAlias)) {
             editAliasName.setText(groupAlias);
-        }else{
-            if (!TextUtils.isEmpty(groupName)){
+        } else {
+            if (!TextUtils.isEmpty(groupName)) {
                 editAliasName.setText(groupName);
             }
         }
 
-        if(!TextUtils.isEmpty(groupSignature)){
+        if (!TextUtils.isEmpty(groupSignature)) {
             tv_sign.setText(groupSignature);
-        }else{
+        } else {
             tv_sign.setText("还没有签名，快通知管理员去设置一个");
         }
 
@@ -376,11 +315,11 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 headUrl = GlobalConfig.imageurl + headUrl;
             }
             String _url = AssembleImageUrlUtils.assembleImageUrl150(headUrl);
-
             // 加载图片
             AssembleImageUrlUtils.loadImage(_url, headUrl, imageHead, IntegerConstant.TYPE_PERSON);
         }
 
+        // 组装二维码展示数据
         news = new GroupInfo();
         news.setGroupName(groupName);
         news.setGroupType(groupType);
@@ -389,63 +328,57 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         news.setGroupId(groupId);
         news.setGroupNum(groupNumber);
 
-        bmp = CreateQRImageHelper.getInstance().createQRImage(2, news, null, 300, 300);// 群二维码
+        Bitmap bmp = CreateQRImageHelper.getInstance().createQRImage(2, news, null, 300, 300);// 群二维码
         if (bmp == null) {
             bmp = BitmapUtils.readBitMap(context, R.mipmap.ewm);
         }
         imageEwm.setImageBitmap(bmp);
-
-        send();
     }
 
+    // 管理员的界面处理
+    private void baseCreaterDecideView(String GroupManager, String GroupMasterId, String GroupType) {
+        ManagerList = GroupManager.split(",");
+        String userId = CommonUtils.getUserId(context);
+        if (ManagerList != null && ManagerList.length > 0) {
 
-    private void baseCreaterDecideView(String GroupManager,String GroupMasterId,String GroupType){
-           ManagerList=GroupManager.split(",");
-           String userId=CommonUtils.getUserId(context);
-           if(ManagerList!=null&&ManagerList.length>0){
+            for (int i = 0; i < ManagerList.length; i++) {
 
-           for(int i=0;i<ManagerList.length;i++){
-
-               if(ManagerList[i].equals(userId)){
-                //说明是管理员
-                IsManager=true;
-                 }
-           }
-           }else{
-               ToastUtils.show_always(context,"群GroupManager信息获取有误");
-               return;
-           }
-
-            if(IsManager==true){
-                switch (GroupType) {
-                    case "0":// 审核群
-                        linearGroupApply.setVisibility(View.VISIBLE);// 审核消息
-                        linearAddMessage.setVisibility(View.VISIBLE);// 加群消息
-                        break;
-                    case "1":// 公开群
-                        //lin_set_manager.setVisibility(View.VISIBLE);
-                        break;
-                    case "2":// 密码群
-                        linearModifyPassword.setVisibility(View.VISIBLE);// 修改密码
-                        break;
+                if (ManagerList[i].equals(userId)) {
+                    //说明是管理员
+                    IsManager = true;
                 }
+            }
+        }
 
-                if(TextUtils.isEmpty(GroupMasterId)){
-                    LinearTransferAuthority.setVisibility(View.GONE);
-                    lin_set_manager.setVisibility(View.GONE);
-                }else{
-                if(GroupMasterId.equals(userId)){
+        if (IsManager) {
+            switch (GroupType) {
+                case "0":// 审核群
+                    linearGroupApply.setVisibility(View.VISIBLE);// 审核消息
+                    linearAddMessage.setVisibility(View.VISIBLE);// 加群消息
+                    break;
+                case "1":// 公开群
+                    //lin_set_manager.setVisibility(View.VISIBLE);
+                    break;
+                case "2":// 密码群
+                    linearModifyPassword.setVisibility(View.VISIBLE);// 修改密码
+                    break;
+            }
+
+            if (TextUtils.isEmpty(GroupMasterId)) {
+                LinearTransferAuthority.setVisibility(View.GONE);
+                lin_set_manager.setVisibility(View.GONE);
+            } else {
+                if (GroupMasterId.equals(userId)) {
                     //只有群主可以设置管理员
                     LinearTransferAuthority.setVisibility(View.VISIBLE);// 移交权限
                     lin_set_manager.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     LinearTransferAuthority.setVisibility(View.GONE);
                     lin_set_manager.setVisibility(View.GONE);
                 }
-                }
-
             }
 
+        }
     }
 
     // 获取网络数据
@@ -469,64 +402,65 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         }
 
         VolleyRequest.requestPost(GlobalConfig.grouptalkUrl, tag, jsonObject, new VolleyCallback() {
-            private String returnType;
-
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 try {
-                    returnType = result.getString("ReturnType");
+                    String returnType = result.getString("ReturnType");
+                    if (returnType != null && returnType.equals("1011")) {
+
+                        context.sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
+                        finish();
+                        ToastUtils.show_always(context, "对讲组内没有成员自动解散!");
+                    } else {
+                        try {
+                            List<GroupInfo> list = new Gson().fromJson(result.getString("UserList"), new TypeToken<List<GroupInfo>>() {
+                            }.getType());
+                            groupListMain.clear();
+                            String numString = "(" + list.size() + ")";
+                            textGroupNumber.setText(numString);
+                            if (IsManager && list.size() > 6) {// 群主
+                                for (int i = 0; i < 6; i++) {
+                                    groupListMain.add(list.get(i));
+                                }
+                            } else if (!IsManager && list.size() > 7) {// 非群主
+                                for (int i = 0; i < 7; i++) {
+                                    groupListMain.add(list.get(i));
+                                }
+                            } else {
+                                groupListMain.addAll(list);
+                            }
+                            GroupInfo groupTalkInsideType2 = new GroupInfo();// 添加
+                            groupTalkInsideType2.setType(2);
+                            groupListMain.add(groupTalkInsideType2);
+
+                            if (IsManager && list.size() >= 2) {
+                                GroupInfo groupTalkInsideType3 = new GroupInfo();// 删除
+                                groupTalkInsideType3.setType(3);
+                                groupListMain.add(groupTalkInsideType3);
+                            }
+                            if (adapter == null) {
+                                gridView.setAdapter(adapter = new GroupTalkAdapter(context, groupListMain));
+                            } else {
+                                adapter.notifyDataSetChanged();
+                            }
+                            if (list.size() <= 0) {
+                                tipView.setVisibility(View.VISIBLE);
+                                tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                            } else {
+                                tipView.setVisibility(View.GONE);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        }
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (returnType != null && returnType.equals("1011")) {
-                    context.sendBroadcast(pushIntent);
-                    finish();
-                    ToastUtils.show_always(context, "对讲组内没有成员自动解散!");
-                } else {
-                    try {
-                        list = new Gson().fromJson(result.getString("UserList"), new TypeToken<List<GroupInfo>>() {}.getType());
-                        lists.clear();
-                        String numString = "(" + list.size() + ")";
-                        textGroupNumber.setText(numString);
-                        if (IsManager && list.size() > 6) {// 群主
-                            for (int i = 0; i < 6; i++) {
-                                lists.add(list.get(i));
-                            }
-                        } else if (!IsManager && list.size() > 7) {// 非群主
-                            for (int i = 0; i < 7; i++) {
-                                lists.add(list.get(i));
-                            }
-                        } else {
-                            lists.addAll(list);
-                        }
-                        GroupInfo groupTalkInsideType2 = new GroupInfo();// 添加
-                        groupTalkInsideType2.setType(2);
-                        lists.add(groupTalkInsideType2);
 
-                        if (IsManager && list.size() >= 2) {
-                            GroupInfo groupTalkInsideType3 = new GroupInfo();// 删除
-                            groupTalkInsideType3.setType(3);
-                            lists.add(groupTalkInsideType3);
-                        }
-                        if (adapter == null) {
-                            gridView.setAdapter(adapter = new GroupTalkAdapter(context, lists));
-                        } else {
-                            adapter.notifyDataSetChanged();
-                        }
-                        if(list.size() <= 0) {
-                            tipView.setVisibility(View.VISIBLE);
-                            tipView.setTipView(TipView.TipStatus.IS_ERROR);
-                        } else {
-                            tipView.setVisibility(View.GONE);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        tipView.setVisibility(View.VISIBLE);
-                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
-                    }
-                }
             }
 
             @Override
@@ -581,26 +515,26 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
 
                     update = false;
 
-                    String AliasName= editAliasName.getText().toString().trim();
-                    String GroupName= editGroupName.getText().toString().trim();
-                    GroupName=GroupName.replace("群名","").replace(":","");//去除添加的默认字段
+                    String AliasName = editAliasName.getText().toString().trim();
+                    String GroupName = editGroupName.getText().toString().trim();
+                    GroupName = GroupName.replace("群名", "").replace(":", "");//去除添加的默认字段
 
                     //判断更改
-                    if(TextUtils.isEmpty(AliasName)&&TextUtils.isEmpty(GroupName)){
+                    if (TextUtils.isEmpty(AliasName) && TextUtils.isEmpty(GroupName)) {
                         return;
-                    }else{
-                    if (GroupName.equals(groupName) && AliasName.equals(groupAlias)) {
-                        return;
-                    }
+                    } else {
+                        if (GroupName.equals(groupName) && AliasName.equals(groupAlias)) {
+                            return;
+                        }
                     }
 
-                    groupName  =  GroupName;
+                    groupName = GroupName;
                     groupAlias = AliasName;
                     if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                         dialog = DialogUtils.Dialog(context);
-                        if(IsManager){
-                            update(groupName,groupAlias);
-                        }else{
+                        if (IsManager) {
+                            update(groupName, groupAlias);
+                        } else {
                             update(groupAlias);
                         }
 
@@ -625,13 +559,13 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 startToActivity(TransferAuthorityActivity.class, 1);
                 break;
             case R.id.lin_sign:// 修改签名
-                if(IsManager){
-                Intent intent12=new Intent(context, UpdateGroupSignActivity.class);
-                intent12.putExtra("GroupId",groupId);
-                intent12.putExtra("GroupSign",groupSignature);
-                startActivityForResult(intent12,12);
-                }else{
-                    ToastUtils.show_always(context,"您没有本群的管理权限，无法修改群资料");
+                if (IsManager) {
+                    Intent intent12 = new Intent(context, UpdateGroupSignActivity.class);
+                    intent12.putExtra("GroupId", groupId);
+                    intent12.putExtra("GroupSign", groupSignature);
+                    startActivityForResult(intent12, 12);
+                } else {
+                    ToastUtils.show_always(context, "您没有本群的管理权限，无法修改群资料");
                 }
                 break;
             case R.id.lin_changetype:// 改变群类型
@@ -644,7 +578,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 Intent intent2 = new Intent(context, JoinGroupListActivity.class);
                 Bundle bundle2 = new Bundle();
                 bundle2.putString("GroupId", groupId);
-                bundle2.putSerializable("userlist", lists);
+                bundle2.putSerializable("userlist", groupListMain);
                 intent2.putExtras(bundle2);
                 startActivity(intent2);
                 break;
@@ -700,7 +634,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
 
                     if (ReturnType.equals("1001")) {
                         ToastUtils.show_always(context, "已经成功修改该组信息");
-                        sendBroadcast(pushIntent);
+                        sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                     } else {
                         ToastUtils.show_always(context, "修改群组信息失败，请稍后重试!");
                     }
@@ -738,7 +672,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
 
                     if (ReturnType.equals("1001")) {
                         ToastUtils.show_always(context, "已经成功修改该组信息");
-                        sendBroadcast(pushIntent);
+                        sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                     } else {
                         ToastUtils.show_always(context, "修改群组信息失败，请稍后重试!");
                     }
@@ -756,7 +690,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
     }
 
     public void addGroup() {
-        if ((ChatFragment.isCallingForGroup||ChatFragment.isCallingForUser) && ChatFragment.interPhoneType.equals("user")) {// 此时有对讲状态 对讲状态为个人时弹出框展示
+        if ((ChatFragment.isCallingForGroup || ChatFragment.isCallingForUser) && ChatFragment.interPhoneType.equals("user")) {// 此时有对讲状态 对讲状态为个人时弹出框展示
             InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
         }
         ChatFragment.zhiDingGroupSS(groupId);
@@ -785,7 +719,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
 
                     if (ReturnType.equals("1001") || ReturnType.equals("10011")) {
                         ToastUtils.show_always(context, "已经成功退出该组");
-                        sendBroadcast(pushIntent);
+                        sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                         if (ChatFragment.context != null && ChatFragment.interPhoneId != null &&
                                 ChatFragment.interPhoneId.equals(groupId)) {
                             // 保存通讯录是否刷新的属性
@@ -819,14 +753,14 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (lists.get(position).getType() == 1) {
-            if (lists.get(position).getUserId().equals(CommonUtils.getUserId(context))) {
+        if (groupListMain.get(position).getType() == 1) {
+            if (groupListMain.get(position).getUserId().equals(CommonUtils.getUserId(context))) {
                 return;
             }
             boolean isFriend = false;
             if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() != 0) {
                 for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
-                    if (lists.get(position).getUserId().equals(GlobalConfig.list_person.get(i).getUserId())) {
+                    if (groupListMain.get(position).getUserId().equals(GlobalConfig.list_person.get(i).getUserId())) {
                         isFriend = true;
                         break;
                     }
@@ -839,7 +773,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 Intent intent = new Intent(context, TalkPersonNewsActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("type", "GroupFriend");
-                bundle.putSerializable("data", lists.get(position));
+                bundle.putSerializable("data", groupListMain.get(position));
                 bundle.putString("id", groupId);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, 2);
@@ -849,14 +783,14 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 Bundle bundle = new Bundle();
                 bundle.putString("type", "GroupNoFriend");
                 bundle.putString("id", groupId);
-                bundle.putSerializable("data", lists.get(position));
+                bundle.putSerializable("data", groupListMain.get(position));
                 intent.putExtras(bundle);
                 startActivityForResult(intent, 2);
             }
         } else {
-            if (lists.get(position).getType() == 2) {
+            if (groupListMain.get(position).getType() == 2) {
                 startToActivity(GroupMemberAddActivity.class);
-            } else if (lists.get(position).getType() == 3) {
+            } else if (groupListMain.get(position).getType() == 3) {
                 startToActivity(GroupMemberDelActivity.class, 2);
             }
         }
@@ -878,10 +812,10 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 if (resultCode == 1) {
                     LinearTransferAuthority.setVisibility(View.GONE);
                     lin_set_manager.setVisibility(View.GONE);
-                    lists.remove(lists.size() - 1);
-                    GroupTalkAdapter adapter = new GroupTalkAdapter(context, lists);
+                    groupListMain.remove(groupListMain.size() - 1);
+                    GroupTalkAdapter adapter = new GroupTalkAdapter(context, groupListMain);
                     gridView.setAdapter(adapter);
-                    sendBroadcast(pushIntent);
+                    sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                 }
                 break;
             case 2:
@@ -903,17 +837,9 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 if (resultCode == RESULT_OK) {
                     Uri uri = data.getData();
                     Log.e("URI:", uri.toString());
-                    int sdkVersion = Integer.valueOf(Build.VERSION.SDK);
-//                    Log.d("sdkVersion:", String.valueOf(sdkVersion));
-//                    Log.d("KITKAT:", String.valueOf(Build.VERSION_CODES.KITKAT));
-                    String path;
-                    if (sdkVersion >= 19) {
-                        path = getPath_above19(context, uri);
-                    } else {
-                        path = getFilePath_below19(uri);
-                    }
-                    Log.e("path:", path);
-                    startPhotoZoom(Uri.parse(path));
+                    String path = BitmapUtils.getFilePath(context, uri);
+                    Log.e("path:", path+"");
+                    if(path!=null&&!path.trim().equals("")) startPhotoZoom(Uri.parse(path));
                 }
                 break;
             case TO_CAMERA:
@@ -929,23 +855,23 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 }
                 break;
             case SET_GROUP_MANAGER:
-                if(resultCode==1){
-                    sendBroadcast(pushIntent);
+                if (resultCode == 1) {
+                    sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                     finish();
                 }
                 break;
             case 9:
-                if(resultCode==1){
-                    sendBroadcast(pushIntent);
-                    String GroupPassword=data.getStringExtra("GroupPassword");
-                    groupPassword=GroupPassword;
+                if (resultCode == 1) {
+                    sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
+                    String GroupPassword = data.getStringExtra("GroupPassword");
+                    groupPassword = GroupPassword;
                 }
                 break;
             case 12:
-                if(resultCode==1){
-                    sendBroadcast(pushIntent);
-                    String GroupSign=data.getStringExtra("GroupSign");
-                    groupSignature=GroupSign;
+                if (resultCode == 1) {
+                    sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
+                    String GroupSign = data.getStringExtra("GroupSign");
+                    groupSignature = GroupSign;
                     tv_sign.setText(groupSignature);
                 }
                 break;
@@ -994,10 +920,10 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                     if (!miniUri.startsWith("http:")) {
                         miniUri = GlobalConfig.imageurl + miniUri;
                     }
-                    String _url = AssembleImageUrlUtils.assembleImageUrl180( miniUri);
+                    String _url = AssembleImageUrlUtils.assembleImageUrl180(miniUri);
                     // 加载图片
                     AssembleImageUrlUtils.loadImage(_url, miniUri, imageHead, IntegerConstant.TYPE_LIST);
-                    sendBroadcast(pushIntent);
+                    sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                 } else if (msg.what == 0) {
                     ToastUtils.show_short(context, "头像保存失败，请稍后再试");
                 } else if (msg.what == -1) {
@@ -1073,134 +999,13 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         }.start();
     }
 
-    // API19 以下获取图片路径的方法
-    private String getFilePath_below19(Uri uri) {
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(uri, proj, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        System.out.println("***************" + column_index);
-        cursor.moveToFirst();
-        String path = cursor.getString(column_index);
-        System.out.println("path:" + path);
-        return path;
-    }
-
-    /**
-     * API level 19以上才有
-     * 创建项目时，我们设置了最低版本 API Level，比如我的是 10，
-     * 因此，AS 检查我调用的 API 后，发现版本号不能向低版本兼容，
-     * 比如我用的“DocumentsContract.isDocumentUri(context, uri)”是 Level 19 以上才有的，
-     * 自然超过了10，所以提示错误。
-     * 添加    @TargetApi(Build.VERSION_CODES.KITKAT)即可。
-     */
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static String getPath_above19(final Context context, final Uri uri) {
-        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
-            if (isExternalStorageDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-                if ("primary".equalsIgnoreCase(type)) {
-                    return Environment.getExternalStorageDirectory() + "/" + split[1];
-                }
-            } else if (isDownloadsDocument(uri)) {
-                final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-                return getDataColumn(context, contentUri, null, null);
-            } else if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-                Uri contentUri = null;
-                if ("image".equals(type)) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                }
-                final String selection = "_id=?";
-                final String[] selectionArgs = new String[]{split[1]};
-                return getDataColumn(context, contentUri, selection, selectionArgs);
-            }
-        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
-            if (isGooglePhotosUri(uri))
-                return uri.getLastPathSegment();
-            return getDataColumn(context, uri, null, null);
-        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
-        }
-        return null;
-    }
-
-    /**
-     * Get the value of the data column for this Uri. This is useful for
-     * MediaStore Uris, and other file-based ContentProviders.
-     *
-     * @param context       The context.
-     * @param uri           The Uri to query.
-     * @param selection     (Optional) Filter used in the query.
-     * @param selectionArgs (Optional) Selection arguments used in the query.
-     * @return The value of the _data column, which is typically a file path.
-     */
-    public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
-        Cursor cursor = null;
-        final String column = "_data";
-        final String[] projection = {column};
-        try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                final int index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(index);
-            }
-        } finally {
-            if (cursor != null)
-                cursor.close();
-        }
-        return null;
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is ExternalStorageProvider.
-     */
-    public static boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is DownloadsProvider.
-     */
-    public static boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is MediaProvider.
-     */
-    public static boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is Google Photos.
-     */
-    public static boolean isGooglePhotosUri(Uri uri) {
-        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
-    }
-
     // 跳转到新的 Activity
     private void startToActivity(Class toClass) {
         Intent intent = new Intent(context, toClass);
         Bundle bundle = new Bundle();
         bundle.putString("GroupId", groupId);
         intent.putExtras(bundle);
-        startActivityForResult(intent,1);
+        startActivityForResult(intent, 1);
     }
 
     // 跳转到新的 Activity
@@ -1208,9 +1013,9 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         Intent intent = new Intent(context, toClass);
         Bundle bundle = new Bundle();
         bundle.putString("GroupId", groupId);
-        bundle.putString("GroupPassword",groupPassword);
+        bundle.putString("GroupPassword", groupPassword);
         intent.putExtras(bundle);
-        startActivityForResult(intent,9);
+        startActivityForResult(intent, 9);
     }
 
     // 跳转到新的 Activity  带返回值
@@ -1218,34 +1023,34 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         Intent intent = new Intent(context, toClass);
         Bundle bundle = new Bundle();
         bundle.putString("GroupId", groupId);
-        bundle.putSerializable("GroupManager",ManagerList);
+        bundle.putSerializable("GroupManager", ManagerList);
 
-        if(GroupTransformList.size()!=0){
+        if (GroupTransformList.size() != 0) {
             GroupTransformList.clear();
         }
 
-        if(ManagerList!=null&&ManagerList.length>0){
-            if(lists!=null&&lists.size()>0){
-             for(int i =0;i<ManagerList.length;i++){
-                 for(int j=0;j<lists.size();j++){
-                     if(lists.get(j).getUserId()!=null){
-                         if(ManagerList[i].equals(lists.get(j).getUserId())){
-                             GroupTransformList.add(lists.get(j));
-                         }
-                     }
-                 }
-             }
+        if (ManagerList != null && ManagerList.length > 0) {
+            if (groupListMain != null && groupListMain.size() > 0) {
+                for (int i = 0; i < ManagerList.length; i++) {
+                    for (int j = 0; j < groupListMain.size(); j++) {
+                        if (groupListMain.get(j).getUserId() != null) {
+                            if (ManagerList[i].equals(groupListMain.get(j).getUserId())) {
+                                GroupTransformList.add(groupListMain.get(j));
+                            }
+                        }
+                    }
+                }
             }
 
-        }else{
-            ToastUtils.show_always(context,"跳转时数据获取异常");
+        } else {
+            ToastUtils.show_always(context, "跳转时数据获取异常");
             return;
         }
-        if(GroupTransformList!=null&&GroupTransformList.size()>0){
-            String s=GroupTransformList.get(0).getUserId();
-            bundle.putSerializable("GroupManagerData",GroupTransformList);
-        }else{
-            ToastUtils.show_always(context,"跳转时数据列表获取异常");
+        if (GroupTransformList != null && GroupTransformList.size() > 0) {
+            String s = GroupTransformList.get(0).getUserId();
+            bundle.putSerializable("GroupManagerData", GroupTransformList);
+        } else {
+            ToastUtils.show_always(context, "跳转时数据列表获取异常");
             return;
         }
         intent.putExtras(bundle);
@@ -1266,16 +1071,11 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         super.onDestroy();
         unregisterReceiver(receiver);
         isCancelRequest = VolleyRequest.cancelRequest(tag);
-        if (bmp != null && !bmp.isRecycled()) {
-            bmp.recycle();
-            bmp = null;
+
+        if (groupListMain != null) {
+            groupListMain.clear();
+            groupListMain = null;
         }
-        if (list != null) {
-            list.clear();
-            list = null;
-        }
-        lists.clear();
-        lists = null;
 
         dialog = null;
         news = null;

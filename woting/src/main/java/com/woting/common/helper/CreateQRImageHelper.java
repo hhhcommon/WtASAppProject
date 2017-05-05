@@ -8,7 +8,7 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import com.woting.ui.common.model.GroupInfo;
+import com.woting.ui.model.GroupInfo;
 import com.woting.ui.interphone.model.UserInviteMeInside;
 
 import org.json.JSONArray;

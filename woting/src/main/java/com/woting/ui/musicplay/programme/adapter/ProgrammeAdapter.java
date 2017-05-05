@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.ui.model.programme.programme;
+import com.woting.ui.musicplay.programme.model.programme;
 
 import java.util.List;
 

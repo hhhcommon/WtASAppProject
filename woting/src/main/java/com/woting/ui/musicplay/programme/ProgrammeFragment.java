@@ -21,7 +21,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.musicplay.programme.adapter.ProgrammeAdapter;
-import com.woting.ui.model.programme.DProgram;
+import com.woting.ui.musicplay.programme.model.DProgram;
 
 import org.json.JSONException;
 import org.json.JSONObject;

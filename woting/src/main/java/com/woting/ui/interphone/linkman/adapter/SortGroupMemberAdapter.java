@@ -20,10 +20,12 @@ import com.woting.ui.common.model.UserInfo;
 
 import java.util.List;
 
+/**
+ * 好友的适配器
+ */
 public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexer {
-    private List<UserInfo> list = null;
+    private List<UserInfo> list;
     private Context mContext;
-    private UserInfo lists;
     private OnListeners onListeners;
 
     public SortGroupMemberAdapter(Context mContext, List<UserInfo> list) {
@@ -70,6 +72,7 @@ public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexe
             holder.lin_add = (LinearLayout) convertView.findViewById(R.id.lin_add);
             holder.contactLayut = (LinearLayout) convertView.findViewById(R.id.contactLayut);
             holder.indexTv = (TextView) convertView.findViewById(R.id.indexTv);
+
             holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
             Bitmap bmp_zhezhao = BitmapUtils.readBitMap(mContext, R.mipmap.wt_6_b_y_b);
             holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
@@ -78,7 +81,7 @@ public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexe
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        lists = list.get(position);
+        UserInfo lists = list.get(position);
         // 根据position获取分类的首字母的Char ascii值
         int section = getSectionForPosition(position);
         // 如果当前位置等于该分类首字母的Char的位置 ，则认为是第一次出现
@@ -90,11 +93,11 @@ public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexe
             holder.indexLayut.setVisibility(View.GONE);
         }
 
-        if (lists.getUserNum()== null || lists.getUserNum().equals("")) {
+        if (lists.getUserNum() == null || lists.getUserNum().equals("")) {
             holder.tv_b_id.setVisibility(View.GONE);
         } else {
             holder.tv_b_id.setVisibility(View.VISIBLE);
-            holder.tv_b_id.setText("ID: "+lists.getUserNum());//id
+            holder.tv_b_id.setText("ID: " + lists.getUserNum());//id
         }
 
         if (lists.getNickName() == null || lists.getNickName().equals("")) {
@@ -102,6 +105,7 @@ public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexe
         } else {
             holder.tv_name.setText(lists.getNickName());//名
         }
+
         if (lists.getUserAliasName() == null || lists.getUserAliasName().equals("")) {
             holder.tv_b_name.setVisibility(View.GONE);
         } else {
@@ -120,7 +124,6 @@ public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexe
                 url = GlobalConfig.imageurl + lists.getPortraitMini();
             }
             String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
-
             // 加载图片
             AssembleImageUrlUtils.loadImage(_url, url, holder.imageView_touxiang, IntegerConstant.TYPE_PERSON);
         }
@@ -169,22 +172,6 @@ public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexe
         }
 
         return -1;
-    }
-
-    /**
-     * 提取英文的首字母，非英文字母用#代替。
-     *
-     * @param str
-     * @return
-     */
-    private String getAlpha(String str) {
-        String sortStr = str.trim().substring(0, 1).toUpperCase();
-        // 正则表达式，判断首字母是否是英文字母
-        if (sortStr.matches("[A-Z]")) {
-            return sortStr;
-        } else {
-            return "#";
-        }
     }
 
     @Override

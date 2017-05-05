@@ -19,7 +19,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.common.model.GroupInfo;
+import com.woting.ui.model.GroupInfo;
 import com.woting.ui.common.model.UserInfo;
 import com.woting.ui.interphone.group.groupcontrol.addgroupmanager.AddGroupManagerActivity;
 import com.woting.ui.interphone.group.groupcontrol.setgroupmanager.adapter.SetGroupManagerAdapter;

@@ -1,4 +1,4 @@
-package com.woting.ui.model.programme;
+package com.woting.ui.musicplay.programme.model;
 
 import java.io.Serializable;
 

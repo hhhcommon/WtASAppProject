@@ -18,10 +18,12 @@ import com.woting.ui.interphone.model.UserInviteMeInside;
 
 import java.util.List;
 
+/**
+ * 搜索结果好友的适配器
+ */
 public class FindFriendResultAdapter extends BaseAdapter {
     private List<UserInviteMeInside> list;
     private Context context;
-    private String url;
 
     public FindFriendResultAdapter(Context context, List<UserInviteMeInside> list) {
         this.list = list;
@@ -55,12 +57,18 @@ public class FindFriendResultAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.adapter_contactquery, null);
             holder = new ViewHolder();
             holder.textview_invitename = (TextView) convertView.findViewById(R.id.RankTitle);        //人名
+
             holder.textview_invitemessage = (TextView) convertView.findViewById(R.id.RankContent);    //介绍
+            holder.textview_invitemessage.setVisibility(View.GONE);
+
             holder.tv_b_id = (TextView) convertView.findViewById(R.id.RankId);//id
+
             holder.imageview_inviteimage = (ImageView) convertView.findViewById(R.id.RankImageUrl);//该人头像
+
             holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
             Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
             holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -80,27 +88,18 @@ public class FindFriendResultAdapter extends BaseAdapter {
             holder.tv_b_id.setText("用户号: " + Inviter.getUserNum());//id
         }
 
-
-        if (Inviter.getUserSign() == null || Inviter.getUserSign().equals("")) {
-            holder.textview_invitemessage.setVisibility(View.GONE);
-//			holder.textview_invitemessage.setText("驾车体验生活");
-        } else {
-            //holder.textview_invitemessage.setVisibility(View.VISIBLE);
-            holder.textview_invitemessage.setVisibility(View.GONE);
-            //holder.textview_invitemessage.setText("" + Inviter.getUserSign());
-        }
         if (Inviter.getPortraitMini() == null || Inviter.getPortraitMini().equals("")
                 || Inviter.getPortraitMini().equals("null") || Inviter.getPortraitMini().trim().equals("")) {
             Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_hy);
             holder.imageview_inviteimage.setImageBitmap(bmp);
         } else {
+             String url;
             if (Inviter.getPortraitMini().startsWith("http:")) {
                 url = Inviter.getPortraitMini();
             } else {
                 url = GlobalConfig.imageurl + Inviter.getPortraitMini();
             }
             String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
-
             // 加载图片
             AssembleImageUrlUtils.loadImage(url, _url, holder.imageview_inviteimage, IntegerConstant.TYPE_PERSON);
         }

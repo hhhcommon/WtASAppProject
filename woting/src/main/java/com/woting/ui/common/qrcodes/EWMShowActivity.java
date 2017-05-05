@@ -7,7 +7,6 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.IntegerConstant;
@@ -15,7 +14,7 @@ import com.woting.common.helper.CreateQRImageHelper;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.common.model.GroupInfo;
+import com.woting.ui.model.GroupInfo;
 import com.woting.ui.interphone.model.UserInviteMeInside;
 
 /**

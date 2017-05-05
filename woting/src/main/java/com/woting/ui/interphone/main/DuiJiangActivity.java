@@ -54,10 +54,10 @@ public class DuiJiangActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_duijiang);
         context = this;
-        InitTextView();// 初始化视图
-        InitViewPager();// 初始化 ViewPager
-        dialog();// 初始化功能弹出框
-        setType();// 适配顶栏样式
+        InitTextView();  // 初始化视图
+        InitViewPager(); // 初始化 ViewPager
+        dialog();        // 初始化功能弹出框
+        setType();       // 适配顶栏样式
     }
 
     // 适配顶栏样式
@@ -88,9 +88,7 @@ public class DuiJiangActivity extends FragmentActivity {
         LinearLayout lin_c = (LinearLayout) dialog.findViewById(R.id.lin_c);        // 创建群组
         LinearLayout lin_d = (LinearLayout) dialog.findViewById(R.id.lin_d);        // 扫一扫
 
-        /**
-         * 跳转到新消息
-         */
+        // 跳转到新消息
         lin_news.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,9 +102,7 @@ public class DuiJiangActivity extends FragmentActivity {
             }
         });
 
-		/*
-         * 跳转到添加好友
-		 */
+        // 跳转到添加好友
         lin_a.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,9 +121,7 @@ public class DuiJiangActivity extends FragmentActivity {
             }
         });
 
-		/*
-         * 跳转到加入群组
-		 */
+        // 跳转到加入群组
         lin_b.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,9 +140,7 @@ public class DuiJiangActivity extends FragmentActivity {
             }
         });
 
-		/*
-		 * 跳转到创建讨论组
-		 */
+        // 跳转到创建讨论组
         lin_c.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -164,9 +156,7 @@ public class DuiJiangActivity extends FragmentActivity {
             }
         });
 
-		/*
-		 * 跳转到扫描界面
-		 */
+        // 跳转到扫描界面
         lin_d.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -193,16 +183,12 @@ public class DuiJiangActivity extends FragmentActivity {
         addDialog.setHeight(dialog.getMeasuredHeight());
     }
 
-    /*
-     * 初始化视图
-     */
+    // 初始化视图
     private void InitTextView() {
         lin_more = (LinearLayout) findViewById(R.id.lin_more);
         LinearLayout lin_news = (LinearLayout) findViewById(R.id.lin_news);
 
-		/*
-		 * 跳转到新消息界面
-		 */
+        // 跳转到新消息界面
         lin_news.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -211,14 +197,13 @@ public class DuiJiangActivity extends FragmentActivity {
                 startActivity(intent);
             }
         });
+
         view1 = (TextView) findViewById(R.id.tv_guid1);
         view2 = (TextView) findViewById(R.id.tv_guid2);
         view1.setOnClickListener(new txListener(0));
         view2.setOnClickListener(new txListener(1));
 
-		/*
-		 * 弹出功能弹出框
-		 */
+        // 弹出功能弹出框
         lin_more.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -233,9 +218,7 @@ public class DuiJiangActivity extends FragmentActivity {
         });
     }
 
-    /*
-     * TextView 点击事件监听
-     */
+    // TextView 点击事件监听
     public class txListener implements OnClickListener {
         private int index = 0;
 
@@ -280,9 +263,7 @@ public class DuiJiangActivity extends FragmentActivity {
         view2.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.color_wt_circle_orange));
     }
 
-    /*
-     * 初始化ViewPager
-     */
+    // 初始化ViewPager
     public void InitViewPager() {
         mPager = (ViewPager) findViewById(R.id.viewpager);
         mPager.setOffscreenPageLimit(1);
@@ -296,9 +277,7 @@ public class DuiJiangActivity extends FragmentActivity {
         mPager.setCurrentItem(0);                                    // 设置当前显示标签页为第一页
     }
 
-    /*
-     * ViewPager 监听事件
-     */
+    // ViewPager 监听事件
     public class MyOnPageChangeListener implements OnPageChangeListener {
         @Override
         public void onPageScrolled(int arg0, float arg1, int arg2) {

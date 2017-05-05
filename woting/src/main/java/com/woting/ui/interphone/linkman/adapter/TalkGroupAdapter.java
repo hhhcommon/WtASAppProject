@@ -15,7 +15,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
-import com.woting.ui.common.model.GroupInfo;
+import com.woting.ui.model.GroupInfo;
 
 import java.util.List;
 
@@ -29,7 +29,6 @@ public class TalkGroupAdapter extends BaseAdapter {
     private List<GroupInfo> list;
     private Context context;
     private OnListener onListener;
-    private GroupInfo lists;
 
     public TalkGroupAdapter(Context context, List<GroupInfo> list) {
         super();
@@ -72,25 +71,28 @@ public class TalkGroupAdapter extends BaseAdapter {
             holder.tv_b_id = (TextView) convertView.findViewById(R.id.tv_b_id);//id
             holder.imageView_touxiang = (ImageView) convertView.findViewById(R.id.image);
             holder.lin_add = (LinearLayout) convertView.findViewById(R.id.lin_add);
+
             holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
             Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
             holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        lists = list.get(position);
+        GroupInfo lists = list.get(position);
+
         if (lists.getGroupName() == null || lists.getGroupName().equals("")) {
             holder.tv_name.setText("未知");//名
         } else {
             holder.tv_name.setText(lists.getGroupName());//名
         }
 
-        if (lists.getGroupNum()== null || lists.getGroupNum().equals("")) {
+        if (lists.getGroupNum() == null || lists.getGroupNum().equals("")) {
             holder.tv_b_id.setVisibility(View.GONE);
         } else {
             holder.tv_b_id.setVisibility(View.VISIBLE);
-            holder.tv_b_id.setText("ID: "+lists.getGroupNum());//id
+            holder.tv_b_id.setText("ID: " + lists.getGroupNum());//id
         }
 
         if (lists.getGroupMyAlias() == null || lists.getGroupMyAlias().equals("")) {
@@ -99,6 +101,7 @@ public class TalkGroupAdapter extends BaseAdapter {
             holder.tv_b_name.setVisibility(View.VISIBLE);
             holder.tv_b_name.setText(lists.getGroupMyAlias());//名
         }
+
         if (lists.getGroupImg() == null || lists.getGroupImg().equals("") || lists.getGroupImg().equals("null") || lists.getGroupImg().trim().equals("")) {
             Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_qz);
             holder.imageView_touxiang.setImageBitmap(bmp);
@@ -110,7 +113,6 @@ public class TalkGroupAdapter extends BaseAdapter {
                 url = GlobalConfig.imageurl + lists.getGroupImg();
             }
             String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
-
             // 加载图片
             AssembleImageUrlUtils.loadImage(_url, url, holder.imageView_touxiang, IntegerConstant.TYPE_GROUP);
         }

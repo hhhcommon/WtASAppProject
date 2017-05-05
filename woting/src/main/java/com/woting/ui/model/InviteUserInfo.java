@@ -1,4 +1,4 @@
-package com.woting.ui.common.model;
+package com.woting.ui.model;
 
 /**
  * Created by Administrator on 2017/4/22 0022.

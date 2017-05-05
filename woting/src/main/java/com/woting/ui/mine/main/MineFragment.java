@@ -474,16 +474,10 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 if (resultCode == -1) {
                     Uri uri = data.getData();
                     Log.e("URI:", uri.toString());
-                    int sdkVersion = Integer.valueOf(Build.VERSION.SDK);
-                    Log.d("sdkVersion:", String.valueOf(sdkVersion));
-                    String path;
-                    if (sdkVersion >= 19) { // 或者 android.os.Build.VERSION_CODES.KITKAT这个常量的值是19
-                        path = getPath_above19(context, uri);
-                    } else {
-                        path = getFilePath_below19(uri);
-                    }
+                    String path = BitmapUtils.getFilePath(context, uri);
+                    Log.e("path:", path + "");
                     imageNum = 1;
-                    startPhotoZoom(Uri.parse(path));
+                    if (path != null && !path.trim().equals("")) startPhotoZoom(Uri.parse(path));
                 }
                 break;
             case TO_CAMERA:
@@ -630,136 +624,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 handler.sendMessage(msg);
             }
         }.start();
-    }
-
-    // API19以下获取图片路径的方法
-    private String getFilePath_below19(Uri uri) {
-        // 这里开始的第二部分，获取图片的路径：低版本的是没问题的，但是 sdk > 19 会获取不到
-        String[] proj = {MediaStore.Images.Media.DATA};
-
-        // 好像是 android 多媒体数据库的封装接口，具体的看 Android 文档
-        Cursor cursor = context.getContentResolver().query(uri, proj, null, null, null);
-
-        // 获得用户选择的图片的索引值
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        System.out.println("***************" + column_index);
-
-        // 将光标移至开头 ，这个很重要，不小心很容易引起越界
-        cursor.moveToFirst();
-
-        // 最后根据索引值获取图片路径   结果类似：/mnt/sdcard/DCIM/Camera/IMG_20151124_013332.jpg
-        String path = cursor.getString(column_index);
-        System.out.println("path:" + path);
-        return path;
-    }
-
-    /**
-     * APIlevel 19以上才有
-     * 创建项目时，我们设置了最低版本API Level，比如我的是10，
-     * 因此，AS检查我调用的API后，发现版本号不能向低版本兼容，
-     * 比如我用的“DocumentsContract.isDocumentUri(context, uri)”是Level 19 以上才有的，
-     * 自然超过了10，所以提示错误。
-     * 添加    @TargetApi(Build.VERSION_CODES.KITKAT)即可。
-     */
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static String getPath_above19(final Context context, final Uri uri) {
-        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
-            if (isExternalStorageDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-                if ("primary".equalsIgnoreCase(type)) {
-                    return Environment.getExternalStorageDirectory() + "/" + split[1];
-                }
-            } else if (isDownloadsDocument(uri)) {
-                final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-                return getDataColumn(context, contentUri, null, null);
-            } else if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-                Uri contentUri = null;
-                if ("image".equals(type)) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                }
-                final String selection = "_id=?";
-                final String[] selectionArgs = new String[]{split[1]};
-                return getDataColumn(context, contentUri, selection, selectionArgs);
-            }
-        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
-            // Return the remote address
-            if (isGooglePhotosUri(uri))
-                return uri.getLastPathSegment();
-            return getDataColumn(context, uri, null, null);
-        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
-        }
-        return null;
-    }
-
-    /**
-     * Get the value of the data column for this Uri. This is useful for
-     * MediaStore Uris, and other file-based ContentProviders.
-     *
-     * @param context       The context.
-     * @param uri           The Uri to query.
-     * @param selection     (Optional) Filter used in the query.
-     * @param selectionArgs (Optional) Selection arguments used in the query.
-     * @return The value of the _data column, which is typically a file path.
-     */
-    public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
-        Cursor cursor = null;
-        final String column = "_data";
-        final String[] projection = {column};
-        try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                final int index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(index);
-            }
-        } finally {
-            if (cursor != null)
-                cursor.close();
-        }
-        return null;
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is ExternalStorageProvider.
-     */
-    public static boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is DownloadsProvider.
-     */
-    public static boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is MediaProvider.
-     */
-    public static boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is Google Photos.
-     */
-    public static boolean isGooglePhotosUri(Uri uri) {
-        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 
     // 判断个人资料是否有修改过  有则将数据提交服务器

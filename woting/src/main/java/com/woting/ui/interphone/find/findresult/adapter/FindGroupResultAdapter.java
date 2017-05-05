@@ -14,10 +14,12 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
-import com.woting.ui.common.model.GroupInfo;
+import com.woting.ui.model.GroupInfo;
 
 import java.util.List;
-
+/**
+ * 搜索结果群组的适配器
+ */
 public class FindGroupResultAdapter extends BaseAdapter {
     private List<GroupInfo> list;
     private Context context;
@@ -55,12 +57,17 @@ public class FindGroupResultAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.adapter_contactquery, null);
             holder = new ViewHolder();
             holder.textview_invitename = (TextView) convertView.findViewById(R.id.RankTitle);        // 人名
+
             holder.textview_invitemessage = (TextView) convertView.findViewById(R.id.RankContent);    // 介绍
+            holder.textview_invitemessage.setVisibility(View.GONE);
+
             holder.tv_b_id = (TextView) convertView.findViewById(R.id.RankId);//id
             holder.imageview_inviteimage = (ImageView) convertView.findViewById(R.id.RankImageUrl);    // 该人头像
+
             holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
             Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
             holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -80,13 +87,6 @@ public class FindGroupResultAdapter extends BaseAdapter {
             holder.tv_b_id.setText("群号: " + Inviter.getGroupNum());//id
         }
 
-        if (Inviter.getGroupOriDescn() == null || Inviter.getGroupOriDescn().equals("")) {
-            holder.textview_invitemessage.setVisibility(View.GONE);
-        } else {
-            holder.textview_invitemessage.setVisibility(View.GONE);
-       /*     holder.textview_invitemessage.setVisibility(View.VISIBLE);
-            holder.textview_invitemessage.setText(Inviter.getGroupOriDescn());*/
-        }
         if (Inviter.getGroupImg() == null || Inviter.getGroupImg().equals("")
                 || Inviter.getGroupImg().equals("null") || Inviter.getGroupImg().trim().equals("")) {
             Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_qz);
@@ -98,7 +98,6 @@ public class FindGroupResultAdapter extends BaseAdapter {
                 url = GlobalConfig.imageurl + Inviter.getGroupImg();
             }
             String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
-
             // 加载图片
             AssembleImageUrlUtils.loadImage(url, _url, holder.imageview_inviteimage, IntegerConstant.TYPE_GROUP);
         }

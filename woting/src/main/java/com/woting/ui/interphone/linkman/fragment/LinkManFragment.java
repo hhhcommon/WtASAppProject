@@ -41,7 +41,7 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.HeightListView;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.common.login.LoginActivity;
-import com.woting.ui.common.model.GroupInfo;
+import com.woting.ui.model.GroupInfo;
 import com.woting.ui.common.model.UserInfo;
 import com.woting.ui.interphone.alert.CallAlertActivity;
 import com.woting.ui.interphone.chat.fragment.ChatFragment;
@@ -116,9 +116,20 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-        characterParser = CharacterParser.getInstance();// 实例化汉字转拼音类
+        setPinyin();
+        setReceiver();
+        Dialog();
+    }
+
+    // 实例化汉字转拼音类
+    private void setPinyin() {
+        characterParser = CharacterParser.getInstance();
         pinyinComparator = new PinyinComparator();
-        if (Receiver == null) {// 注册广播接收socketService的数据
+    }
+
+    // 注册广播接收socketService的数据
+    private void setReceiver() {
+        if (Receiver == null) {
             Receiver = new MessageReceiver();
             IntentFilter filter = new IntentFilter();
             filter.addAction(BroadcastConstants.PUSH_REFRESH_LINKMAN);
@@ -126,7 +137,51 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
             filter.addAction(BroadcastConstants.PUSH_ALLURL_CHANGE);
             context.registerReceiver(Receiver, filter);
         }
-        Dialog();
+    }
+
+    private void Dialog() {
+        final View dialog1 = LayoutInflater.from(context).inflate(R.layout.dialog_talk_person_del, null);
+        TextView tv_cancel = (TextView) dialog1.findViewById(R.id.tv_cancle);
+        TextView tv_confirm = (TextView) dialog1.findViewById(R.id.tv_confirm);
+        confirmDialog = new Dialog(context, R.style.MyDialog);
+        confirmDialog.setContentView(dialog1);
+        confirmDialog.setCanceledOnTouchOutside(true);
+        confirmDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
+        tv_cancel.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmDialog.dismiss();
+            }
+        });
+
+        tv_confirm.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (type == 1) {
+                    InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
+                    ChatFragment.isCallingForGroup = false;
+                    ChatFragment.isCallingForUser = false;
+                    ChatFragment.lin_notalk.setVisibility(View.VISIBLE);
+                    ChatFragment.lin_personhead.setVisibility(View.GONE);
+                    ChatFragment.lin_head.setVisibility(View.GONE);
+                    ChatFragment.lin_foot.setVisibility(View.GONE);
+                    call(id);
+                    confirmDialog.dismiss();
+                } else {
+                    InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
+                    ChatFragment.isCallingForGroup = false;
+                    ChatFragment.isCallingForUser = false;
+                    ChatFragment.lin_notalk.setVisibility(View.VISIBLE);
+                    ChatFragment.lin_personhead.setVisibility(View.GONE);
+                    ChatFragment.lin_head.setVisibility(View.GONE);
+                    ChatFragment.lin_foot.setVisibility(View.GONE);
+                    ChatFragment.zhiDingGroup(group);
+                    // 对讲主页界面更新
+                    DuiJiangActivity.update();
+                    confirmDialog.dismiss();
+                }
+            }
+        });
     }
 
     @Override
@@ -137,35 +192,6 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
             setEditListener();
         }
         return rootView;
-    }
-
-    /**
-     * 1.判断是否登录
-     * 2.登录了若 personRefresh 为 "true",则刷新数据，否则不处理
-     * 3.若未登录，则隐藏 listView 界面，展示咖啡的界面
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-        setOnResumeView();
-    }
-
-    private void setOnResumeView() {
-        sharedPreferences = BSApplication.SharedPreferences;
-        isLogin = sharedPreferences.getString(StringConstant.ISLOGIN, "false");
-        if (isLogin.equals("true")) {
-            tipView.setVisibility(View.GONE);
-            relative.setVisibility(View.VISIBLE);
-            if (firstEntry) {
-                send();
-                firstEntry = false;
-            }
-        } else {
-            firstEntry = false;
-            tipView.setTipView(TipView.TipStatus.NO_LOGIN);
-            tipView.setVisibility(View.VISIBLE);
-            relative.setVisibility(View.GONE);
-        }
     }
 
     // 初始化视图
@@ -197,6 +223,66 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
 
         tipView = (TipView) rootView.findViewById(R.id.tip_view);
         tipView.setTipClick(this);
+    }
+
+    // 根据输入框输入值的改变来过滤搜索
+    private void setEditListener() {
+        image_clear.setOnClickListener(this);
+        et_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String search_name = s.toString();
+                if (search_name.trim().equals("")) {
+                    image_clear.setVisibility(View.INVISIBLE);
+                    tipSearchNull.setVisibility(View.GONE);// 关键词为空
+                    sortListView.setVisibility(View.VISIBLE);
+                    if (srclist_g != null && srclist_g.size() != 0) {
+                        groupList.clear();
+                        groupList.addAll(srclist_g);
+                        if (adapter_group == null) {
+                            adapter_group = new TalkGroupAdapter(context, groupList);
+                            listView_group.setAdapter(adapter_group);
+                        } else {
+                            adapter_group.ChangeDate(groupList);
+                        }
+                        new HeightListView(context).setListViewHeightBasedOnChildren(listView_group);
+                        setGroupListViewListener();
+                        lin_grouplist.setVisibility(View.VISIBLE);
+                    } else {
+                        lin_grouplist.setVisibility(View.GONE);
+                    }
+                    if (srclist_p == null || srclist_p.size() == 0) {
+                        TalkPersonNoAdapter adapters = new TalkPersonNoAdapter(context);
+                        sortListView.setAdapter(adapters);
+                    } else {
+                        adapter = new SortGroupMemberAdapter(context, srclist_p);
+                        sortListView.setAdapter(adapter);
+                    }
+                } else {// 关键词不为空
+                    image_clear.setVisibility(View.VISIBLE);
+                    groupList.clear();
+                    search(search_name);
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    @Override
+    public void onTipViewClick() {
+        if (isLogin.equals("true")) {
+            send();
+        } else {
+            Intent intent = new Intent(context, LoginActivity.class);
+            startActivityForResult(intent, 1);
+        }
     }
 
     // 为 ListView 填充数据
@@ -252,82 +338,23 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
         return -1;
     }
 
-    @Override
-    public void onTipViewClick() {
-        if (isLogin.equals("true")) {
-            send();
-        } else {
-            Intent intent = new Intent(context, LoginActivity.class);
-            startActivityForResult(intent, 1);
-        }
-    }
-
     class MessageReceiver extends BroadcastReceiver {
-        private String message;
-
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(BroadcastConstants.PUSH_REFRESH_LINKMAN)) {
                 send();
-//				ToastUtils.show_always(context, "重新获取了新数据");
             } else if (action.equals(BroadcastConstants.PUSH_NEWPERSON)) {
                 String messages = intent.getStringExtra("outMessage");
                 if (messages != null && !messages.equals("")) {
-                    message = messages;
+                    tv_newpersons.setText(messages);
                 } else {
-                    message = "新的朋友";
+                    tv_newpersons.setText("新的朋友");
                 }
-                tv_newpersons.setText(message);
             } else if (action.equals(BroadcastConstants.PUSH_ALLURL_CHANGE)) {
                 setOnResumeView();
             }
         }
-    }
-
-    private void Dialog() {
-        final View dialog1 = LayoutInflater.from(context).inflate(R.layout.dialog_talk_person_del, null);
-        TextView tv_cancel = (TextView) dialog1.findViewById(R.id.tv_cancle);
-        TextView tv_confirm = (TextView) dialog1.findViewById(R.id.tv_confirm);
-        confirmDialog = new Dialog(context, R.style.MyDialog);
-        confirmDialog.setContentView(dialog1);
-        confirmDialog.setCanceledOnTouchOutside(true);
-        confirmDialog.getWindow().setBackgroundDrawableResource(R.color.dialog);
-        tv_cancel.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                confirmDialog.dismiss();
-            }
-        });
-
-        tv_confirm.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (type == 1) {
-                    InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
-                    ChatFragment.isCallingForGroup = false;
-                    ChatFragment.isCallingForUser = false;
-                    ChatFragment.lin_notalk.setVisibility(View.VISIBLE);
-                    ChatFragment.lin_personhead.setVisibility(View.GONE);
-                    ChatFragment.lin_head.setVisibility(View.GONE);
-                    ChatFragment.lin_foot.setVisibility(View.GONE);
-                    call(id);
-                    confirmDialog.dismiss();
-                } else {
-                    InterPhoneControl.PersonTalkHangUp(context, InterPhoneControl.bdcallid);
-                    ChatFragment.isCallingForGroup = false;
-                    ChatFragment.isCallingForUser = false;
-                    ChatFragment.lin_notalk.setVisibility(View.VISIBLE);
-                    ChatFragment.lin_personhead.setVisibility(View.GONE);
-                    ChatFragment.lin_head.setVisibility(View.GONE);
-                    ChatFragment.lin_foot.setVisibility(View.GONE);
-                    ChatFragment.zhiDingGroup(group);
-                    // 对讲主页界面更新
-                    DuiJiangActivity.update();
-                    confirmDialog.dismiss();
-                }
-            }
-        });
     }
 
     // 对讲呼叫
@@ -447,56 +474,6 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
                 et_search.setText("");
                 break;
         }
-    }
-
-    // 根据输入框输入值的改变来过滤搜索
-    private void setEditListener() {
-        image_clear.setOnClickListener(this);
-        et_search.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String search_name = s.toString();
-                if (search_name.trim().equals("")) {
-                    image_clear.setVisibility(View.INVISIBLE);
-                    tipSearchNull.setVisibility(View.GONE);// 关键词为空
-                    sortListView.setVisibility(View.VISIBLE);
-                    if (srclist_g != null && srclist_g.size() != 0) {
-                        groupList.clear();
-                        groupList.addAll(srclist_g);
-                        if (adapter_group == null) {
-                            adapter_group = new TalkGroupAdapter(context, groupList);
-                            listView_group.setAdapter(adapter_group);
-                        } else {
-                            adapter_group.ChangeDate(groupList);
-                        }
-                        new HeightListView(context).setListViewHeightBasedOnChildren(listView_group);
-                        setGroupListViewListener();
-                        lin_grouplist.setVisibility(View.VISIBLE);
-                    } else {
-                        lin_grouplist.setVisibility(View.GONE);
-                    }
-                    if (srclist_p == null || srclist_p.size() == 0) {
-                        TalkPersonNoAdapter adapters = new TalkPersonNoAdapter(context);
-                        sortListView.setAdapter(adapters);
-                    } else {
-                        adapter = new SortGroupMemberAdapter(context, srclist_p);
-                        sortListView.setAdapter(adapter);
-                    }
-                } else {// 关键词不为空
-                    image_clear.setVisibility(View.VISIBLE);
-                    groupList.clear();
-                    search(search_name);
-                }
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
     }
 
     private void search(final String search_name) {
@@ -717,6 +694,35 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
                 startActivity(intent);
             }
         });
+    }
+
+    /**
+     * 1.判断是否登录
+     * 2.登录了若 personRefresh 为 "true",则刷新数据，否则不处理
+     * 3.若未登录，则隐藏 listView 界面，展示咖啡的界面
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        setOnResumeView();
+    }
+
+    private void setOnResumeView() {
+        sharedPreferences = BSApplication.SharedPreferences;
+        isLogin = sharedPreferences.getString(StringConstant.ISLOGIN, "false");
+        if (isLogin.equals("true")) {
+            tipView.setVisibility(View.GONE);
+            relative.setVisibility(View.VISIBLE);
+            if (firstEntry) {
+                send();
+                firstEntry = false;
+            }
+        } else {
+            firstEntry = false;
+            tipView.setTipView(TipView.TipStatus.NO_LOGIN);
+            tipView.setVisibility(View.VISIBLE);
+            relative.setVisibility(View.GONE);
+        }
     }
 
     @Override

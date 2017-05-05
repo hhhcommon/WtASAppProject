@@ -5,7 +5,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-
+/**
+ * 没有数据的适配器
+ */
 public class TalkPersonNoAdapter extends BaseAdapter{
 	Context context;
 	public TalkPersonNoAdapter(Context context){
