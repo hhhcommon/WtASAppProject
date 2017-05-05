@@ -26,10 +26,13 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.xlistview.XListView;
+import com.woting.ui.mine.main.MineActivity;
 import com.woting.ui.music.main.HomeActivity;
+import com.woting.ui.music.search.main.SearchLikeActivity;
 import com.woting.ui.musicplay.anchor.adapter.AnchorSequAdapter;
 import com.woting.ui.musicplay.anchor.model.PersonInfo;
 import com.woting.ui.musicplay.album.main.AlbumFragment;
+import com.woting.ui.musicplay.more.PlayerMoreOperationActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +43,7 @@ import java.util.List;
 /**
  * 主播节目列表
  */
-public class AnchorListFragment extends Fragment implements View.OnClickListener {
+public class AnchorListFragment extends Fragment {
     private FragmentActivity context;
     private List<PersonInfo> MediaInfoList = new ArrayList<>();
     private AnchorSequAdapter adapterMain;
@@ -57,27 +60,56 @@ public class AnchorListFragment extends Fragment implements View.OnClickListener
     private int page = 1;
     private int RefreshType = 1;
     private boolean isCancelRequest;
+    private int fromType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
+        handleIntent();
     }
 
-    @Nullable
+    private void handleIntent() {
+        Bundle bundle = getArguments();
+        fromType = bundle.getInt(StringConstant.FROM_TYPE);
+        PersonId = bundle.getString("PersonId");
+        PersonName = bundle.getString("PersonName");
+    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.activity_fmlist, container, false);
-
             initView();
-            handleIntent();
+            if (!TextUtils.isEmpty(PersonId)) {
+                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                    dialog = DialogUtils.Dialog(context);
+                    send();
+                } else {
+                    ToastUtils.show_short(context, "网络失败，请检查网络");
+                }
+            } else {
+                ToastUtils.show_always(context, "获取的信息有误，请返回上一界面重试");
+            }
         }
         return rootView;
     }
 
     private void initView() {
-        rootView.findViewById(R.id.head_left_btn).setOnClickListener(this); // 返回
+        rootView.findViewById(R.id.head_left_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (fromType == IntegerConstant.TAG_HOME) {
+                    HomeActivity.close();
+                } else if (fromType == IntegerConstant.TAG_MINE) {
+                    MineActivity.close();
+                } else if (fromType == IntegerConstant.TAG_MORE) {
+                    PlayerMoreOperationActivity.close();
+                } else if (fromType == IntegerConstant.TAG_SEARCH) {
+                    SearchLikeActivity.close();
+                }
+            }
+        }); // 返回
         tv_name = (TextView) rootView.findViewById(R.id.head_name_tv);         // 专辑名称
         listAnchor = (XListView) rootView.findViewById(R.id.listview_fm);
         listAnchor.setSelector(new ColorDrawable(Color.TRANSPARENT));
@@ -86,8 +118,6 @@ public class AnchorListFragment extends Fragment implements View.OnClickListener
             @Override
             public void onRefresh() {
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                    dialog = DialogUtils.Dialog(context);
-                    listAnchor.stopRefresh();
                     page = 1;
                     RefreshType = 1;
                     send();
@@ -99,36 +129,17 @@ public class AnchorListFragment extends Fragment implements View.OnClickListener
             @Override
             public void onLoadMore() {
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                    dialog = DialogUtils.Dialog(context);
-                    page++;
                     RefreshType = 2;
-                    listAnchor.stopLoadMore();
                     send();
                 } else {
                     ToastUtils.show_short(context, "网络失败，请检查网络");
                 }
             }
         });
-    }
-
-    private void handleIntent() {
-        Bundle bundle = getArguments();
-        PersonId = bundle.getString("PersonId");
-        PersonName = bundle.getString("PersonName");
         if (!TextUtils.isEmpty(PersonName)) {
             tv_name.setText(PersonName);
         } else {
             tv_name.setText("我听科技");
-        }
-        if (!TextUtils.isEmpty(PersonId)) {
-            if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                dialog = DialogUtils.Dialog(context);
-                send();
-            } else {
-                ToastUtils.show_short(context, "网络失败，请检查网络");
-            }
-        } else {
-            ToastUtils.show_always(context, "获取的信息有误，请返回上一界面重试");
         }
     }
 
@@ -151,32 +162,30 @@ public class AnchorListFragment extends Fragment implements View.OnClickListener
                     if (ReturnType != null) {
                         if (ReturnType.equals("1001")) {
                             try {
-                                Gson gson = new Gson();
                                 try {
                                     String MediaList = result.getString("ResultList");
-                                    List<PersonInfo> ResultList = gson.fromJson(MediaList, new TypeToken<List<PersonInfo>>() {}.getType());
+                                    List<PersonInfo> ResultList = new Gson().fromJson(MediaList, new TypeToken<List<PersonInfo>>() {
+                                    }.getType());
+                                    page++;
                                     if (RefreshType == 1) {
-                                        if (MediaInfoList != null) {
+                                        if (ResultList != null && ResultList.size() > 0) {
                                             MediaInfoList.clear();
-                                        }
-                                        MediaInfoList.addAll(ResultList);
-                                        listAnchor.stopRefresh();
-                                        if (MediaInfoList.size() < 10) {
+                                            MediaInfoList.addAll(ResultList);
+                                            if (MediaInfoList.size() < 10) {
+                                                listAnchor.setPullLoadEnable(false);
+                                            }
+                                            listAnchor.setPullLoadEnable(true);
+                                        }else{
                                             listAnchor.setPullLoadEnable(false);
-                                            listAnchor.setPullRefreshEnable(true);
                                         }
                                     } else {
                                         if (ResultList != null && ResultList.size() > 0) {
                                             MediaInfoList.addAll(ResultList);
                                             if (ResultList.size() < 10) {
-                                                listAnchor.stopLoadMore();
                                                 listAnchor.setPullLoadEnable(false);
-                                                listAnchor.setPullRefreshEnable(true);
                                             }
                                         } else {
-                                            listAnchor.stopLoadMore();
                                             listAnchor.setPullLoadEnable(false);
-                                            listAnchor.setPullRefreshEnable(true);
                                             ToastUtils.show_always(context, "已经没有更多数据了");
                                         }
                                     }
@@ -195,9 +204,6 @@ public class AnchorListFragment extends Fragment implements View.OnClickListener
                             }
                         } else {
                             ToastUtils.show_always(context, "出错了，请您稍后再试");
-                            listAnchor.stopLoadMore();
-                            listAnchor.setPullLoadEnable(false);
-                            listAnchor.setPullRefreshEnable(true);
                         }
                     } else {
                         ToastUtils.show_always(context, "出错了，请您稍后再试");
@@ -206,16 +212,18 @@ public class AnchorListFragment extends Fragment implements View.OnClickListener
                     e.printStackTrace();
                     ToastUtils.show_always(context, "出错了，请您稍后再试");
                 }
+                listAnchor.stopRefresh();
+                listAnchor.stopLoadMore();
             }
 
             @Override
             protected void requestError(VolleyError error) {
                 if (dialog != null) {
                     dialog.dismiss();
-                    listAnchor.stopLoadMore();
-                    listAnchor.setPullLoadEnable(false);
-                    listAnchor.setPullRefreshEnable(true);
                 }
+                listAnchor.stopRefresh();
+                listAnchor.stopLoadMore();
+                listAnchor.setPullLoadEnable(false);
             }
         });
     }
@@ -226,10 +234,18 @@ public class AnchorListFragment extends Fragment implements View.OnClickListener
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 AlbumFragment fragment = new AlbumFragment();
                 Bundle bundle = new Bundle();
-                bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_HOME);
+                bundle.putInt(StringConstant.FROM_TYPE, fromType);
                 bundle.putString("id", MediaInfoList.get(position - 1).getContentId());
                 fragment.setArguments(bundle);
-                HomeActivity.open(fragment);
+                if (fromType == IntegerConstant.TAG_HOME) {
+                    HomeActivity.open(fragment);
+                } else if (fromType == IntegerConstant.TAG_MINE) {
+                    MineActivity.open(fragment);
+                } else if (fromType == IntegerConstant.TAG_MORE) {
+                    PlayerMoreOperationActivity.open(fragment);
+                } else if (fromType == IntegerConstant.TAG_SEARCH) {
+                    SearchLikeActivity.open(fragment);
+                }
             }
         });
     }
@@ -240,8 +256,4 @@ public class AnchorListFragment extends Fragment implements View.OnClickListener
         isCancelRequest = VolleyRequest.cancelRequest(tag);
     }
 
-    @Override
-    public void onClick(View v) {
-
-    }
 }

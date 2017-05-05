@@ -87,11 +87,11 @@ public class DownloadAdapter extends BaseAdapter {
             holder.textview_ranktitle.setText(lists.getFileName());
         }
 
-        if (lists.getImageurl() == null || lists.getImageurl().equals("")
-                || lists.getImageurl().equals("null") || lists.getImageurl().trim().equals("")) {
+        String contentImg = lists.getImageurl();
+        if (contentImg == null || contentImg.equals("")
+                ||contentImg.equals("null") || contentImg.trim().equals("")) {
             holder.imageview_rankimage.setImageBitmap(bmp);
         } else {
-            String contentImg = lists.getImageurl();
             if (!contentImg.startsWith("http")) {
                 contentImg = GlobalConfig.imageurl + contentImg;
             }

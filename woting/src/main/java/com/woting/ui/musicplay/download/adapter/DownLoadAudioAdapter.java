@@ -99,12 +99,11 @@ public class DownLoadAudioAdapter extends BaseAdapter {
         if (contentImage == null || contentImage.equals("null") || contentImage.trim().equals("")) {
             holder.imageCover.setImageBitmap(bmp);
         } else {
-            String contentImg = lists.getImageurl();
-            if (!contentImg.startsWith("http")) {
-                contentImg = GlobalConfig.imageurl + contentImg;
+            if (!contentImage.startsWith("http")) {
+                contentImage = GlobalConfig.imageurl + contentImage;
             }
-            String _url = AssembleImageUrlUtils.assembleImageUrl180(contentImg);
-            AssembleImageUrlUtils.loadImage(_url, contentImg, holder.imageCover, IntegerConstant.TYPE_LIST);
+            String _url = AssembleImageUrlUtils.assembleImageUrl180(contentImage);
+            AssembleImageUrlUtils.loadImage(_url, contentImage, holder.imageCover, IntegerConstant.TYPE_LIST);
         }
 
         // 专辑或节目名

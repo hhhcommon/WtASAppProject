@@ -43,7 +43,11 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.HorizontalListView;
+import com.woting.ui.mine.main.MineActivity;
 import com.woting.ui.model.content;
+import com.woting.ui.music.main.HomeActivity;
+import com.woting.ui.music.search.main.SearchLikeActivity;
+import com.woting.ui.musicplay.anchor.AnchorDetailsFragment;
 import com.woting.ui.musicplay.download.main.DownloadFragment;
 import com.woting.ui.musicplay.download.dao.FileInfoDao;
 import com.woting.ui.musicplay.download.fragment.DownLoadUnCompletedFragment;
@@ -110,7 +114,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
         registerReceiver();// 注册广播
     }
 
-    private void initDao(){
+    private void initDao() {
         mFileDao = new FileInfoDao(context);
     }
 
@@ -162,28 +166,28 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
 
 
     private void initGatherData() {
-        if(GlobalConfig.playerObject!=null&&GlobalConfig.playerObject.getMediaType()!=null&&GlobalConfig.playerObject.getContentId()!=null){
-            try{
-            String beginTime=String.valueOf(System.currentTimeMillis());
-                String apiType=StringConstant.APINAME_OPEN;
-                if(GlobalConfig.playerObject.getMediaType().equals("AUDIO")){
-                    ObjType=StringConstant.OBJTYPE_AUDIO;
-                }else if(GlobalConfig.playerObject.getMediaType().equals("RADIO")){
-                    ObjType=StringConstant.OBJTYPE_RADIO;
-                }else{
+        if (GlobalConfig.playerObject != null && GlobalConfig.playerObject.getMediaType() != null && GlobalConfig.playerObject.getContentId() != null) {
+            try {
+                String beginTime = String.valueOf(System.currentTimeMillis());
+                String apiType = StringConstant.APINAME_OPEN;
+                if (GlobalConfig.playerObject.getMediaType().equals("AUDIO")) {
+                    ObjType = StringConstant.OBJTYPE_AUDIO;
+                } else if (GlobalConfig.playerObject.getMediaType().equals("RADIO")) {
+                    ObjType = StringConstant.OBJTYPE_RADIO;
+                } else {
                     return;
                 }
-                ReqParam mReqParam= new ReqParam();
-                String objId=GlobalConfig.playerObject.getContentId();
-                DataModel mdataModel=new DataModel(beginTime,apiType,ObjType,mReqParam,objId);
-                if(mdataModel!=null){
-                    GatherData.collectData(IntegerConstant.DATA_UPLOAD_TYPE_GIVEN,mdataModel);
+                ReqParam mReqParam = new ReqParam();
+                String objId = GlobalConfig.playerObject.getContentId();
+                DataModel mdataModel = new DataModel(beginTime, apiType, ObjType, mReqParam, objId);
+                if (mdataModel != null) {
+                    GatherData.collectData(IntegerConstant.DATA_UPLOAD_TYPE_GIVEN, mdataModel);
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else{
-            Log.e("节目详情页的TAG","GlobalConfig.playerObject是个空");
+        } else {
+            Log.e("节目详情页的TAG", "GlobalConfig.playerObject是个空");
         }
     }
 
@@ -249,7 +253,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
             viewLinear1.setVisibility(View.GONE);
             viewLinear2.setVisibility(View.GONE);
             viewLinear3.setVisibility(View.GONE);
-            return ;
+            return;
         } else {
             viewLinear1.setVisibility(View.VISIBLE);
             viewLinear2.setVisibility(View.VISIBLE);
@@ -349,7 +353,25 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                 break;
             case R.id.text_anchor:// 查看主播
                 if (!CommonHelper.checkNetwork(context)) return;
-                ToastUtils.show_always(context, "查看主播");
+                try {
+                    String PersonId = GlobalConfig.playerObject.getContentPersons().get(0).getPerId();
+                    String ContentPub = GlobalConfig.playerObject.getContentPub();
+                    if (!TextUtils.isEmpty(PersonId) && !TextUtils.isEmpty(ContentPub)) {
+                        AnchorDetailsFragment fragment = new AnchorDetailsFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_MORE);
+                        bundle.putString("PersonId", PersonId);
+                        bundle.putString("ContentPub", ContentPub);
+                        fragment.setArguments(bundle);
+                        PlayerMoreOperationActivity.open(fragment);
+                    } else {
+                        ToastUtils.show_always(context, "此专辑还没有主播哦");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.show_always(context, "此专辑还没有主播哦");
+                }
+
                 break;
             case R.id.text_timer:// 定时关闭
                 Intent intentTimeOff = new Intent(context, TimerPowerOffActivity.class);
@@ -363,13 +385,13 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
             case R.id.text_sequ:// 查看专辑
                 if (!CommonHelper.checkNetwork(context)) return;
                 if (GlobalConfig.playerObject == null) return;
-                if (GlobalConfig.playerObject.getSeqInfo()!=null&&GlobalConfig.playerObject.getSeqInfo().getContentId() != null) {
+                if (GlobalConfig.playerObject.getSeqInfo() != null && GlobalConfig.playerObject.getSeqInfo().getContentId() != null) {
                     AlbumFragment fragment = new AlbumFragment();
                     Bundle bundle = new Bundle();
                     bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_MORE);
-                    String id="";
+                    String id = "";
                     try {
-                       id= GlobalConfig.playerObject.getSeqInfo().getContentId();
+                        id = GlobalConfig.playerObject.getSeqInfo().getContentId();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -385,7 +407,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                 if (!TextUtils.isEmpty(GlobalConfig.playerObject.getContentId()) && !TextUtils.isEmpty(GlobalConfig.playerObject.getMediaType())) {
                     if (CommonUtils.getUserIdNoImei(context) != null && !CommonUtils.getUserIdNoImei(context).equals("")) {
                         Intent intent = new Intent(context, CommentActivity.class);
-                        Bundle _b=new Bundle();
+                        Bundle _b = new Bundle();
                         _b.putString("contentId", GlobalConfig.playerObject.getContentId());
                         _b.putString("MediaType", GlobalConfig.playerObject.getMediaType());
                         intent.putExtras(_b);
@@ -431,7 +453,7 @@ public class PlayerMoreOperationFragment extends Fragment implements View.OnClic
                 String mediaType = GlobalConfig.playerObject.getMediaType();
                 if (mediaType == null || mediaType.equals("") || contentId == null || contentId.equals("")) {
                     ToastUtils.show_always(context, "获取内容信息错误，请重试!");
-                    return ;
+                    return;
                 }
                 AccuseFragment fragment = new AccuseFragment();
                 Bundle bundleReport = new Bundle();

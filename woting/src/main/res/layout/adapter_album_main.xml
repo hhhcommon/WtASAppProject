@@ -71,6 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:text="已播完"
+                    android:visibility="gone"
                     android:textColor="@color/dinglan_orange"
                     android:textSize="12sp" />
 

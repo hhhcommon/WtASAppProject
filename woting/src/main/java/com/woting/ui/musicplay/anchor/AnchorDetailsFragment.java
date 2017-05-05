@@ -112,7 +112,6 @@ public class AnchorDetailsFragment extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.activity_anchor_details, container, false);
-
             initView();
             handleIntent();
 
@@ -253,17 +252,19 @@ public class AnchorDetailsFragment extends Fragment implements View.OnClickListe
                             if (TextUtils.isEmpty(PersonImg)) {
                                 img_head.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx));
                             } else if (!PersonImg.startsWith("http")) {
-                                PersonImg = GlobalConfig.imageurl + PersonImg;
-                                PersonImg = AssembleImageUrlUtils.assembleImageUrl180(PersonImg);
-                                Picasso.with(context).load(PersonImg.replace("\\/", "/")).resize(100, 100).centerCrop().into(img_head);
+                                if (!PersonImg.startsWith("http")) {
+                                    PersonImg = GlobalConfig.imageurl + PersonImg;
+                                }
+                                String _url = AssembleImageUrlUtils.assembleImageUrl180(PersonImg);
+                                AssembleImageUrlUtils.loadImage(_url, PersonImg, img_head, IntegerConstant.TYPE_PERSON);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            img_head.setImageBitmap(BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx));
                         }
-                        Gson gson = new Gson();
                         try {
                             String SeqList = result.getString("SeqMediaList");
-                            personInfoList = gson.fromJson(SeqList, new TypeToken<List<PersonInfo>>() {
+                            personInfoList = new Gson().fromJson(SeqList, new TypeToken<List<PersonInfo>>() {
                             }.getType());
                             if (personInfoList != null && personInfoList.size() > 0) {
                                 // 此处要对 lv_sequ 的高度进行适配
@@ -279,7 +280,7 @@ public class AnchorDetailsFragment extends Fragment implements View.OnClickListe
                         }
                         try {
                             String MediaList = result.getString("MediaAssetList");
-                            MediaInfoList = gson.fromJson(MediaList, new TypeToken<List<PersonInfo>>() {
+                            MediaInfoList = new Gson().fromJson(MediaList, new TypeToken<List<PersonInfo>>() {
                             }.getType());
                             if (MediaInfoList != null && MediaInfoList.size() > 0) {
                                 // listAnchor
@@ -332,10 +333,18 @@ public class AnchorDetailsFragment extends Fragment implements View.OnClickListe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 AlbumFragment fragment = new AlbumFragment();
                 Bundle bundle = new Bundle();
-                bundle.putInt(StringConstant.FROM_TYPE, IntegerConstant.TAG_HOME);
+                bundle.putInt(StringConstant.FROM_TYPE,fromType);
                 bundle.putString("id", personInfoList.get(position).getContentId());
                 fragment.setArguments(bundle);
-                HomeActivity.open(fragment);
+                if (fromType == IntegerConstant.TAG_HOME) {
+                    HomeActivity.open(fragment);
+                } else if (fromType == IntegerConstant.TAG_MINE) {
+                    MineActivity.open(fragment);
+                } else if (fromType == IntegerConstant.TAG_MORE) {
+                    PlayerMoreOperationActivity.open(fragment);
+                } else if (fromType == IntegerConstant.TAG_SEARCH) {
+                    SearchLikeActivity.open(fragment);
+                }
             }
         });
         // 跳到单体
@@ -469,12 +478,21 @@ public class AnchorDetailsFragment extends Fragment implements View.OnClickListe
                 if (!TextUtils.isEmpty(PersonId)) {
                     AnchorListFragment fragment = new AnchorListFragment();
                     Bundle bundle = new Bundle();
+                    bundle.putInt(StringConstant.FROM_TYPE, fromType);
                     bundle.putString("PersonId", PersonId);
                     if (!TextUtils.isEmpty(PersonName)) {
                         bundle.putString("PersonName", PersonName);
                     }
                     fragment.setArguments(bundle);
-                    HomeActivity.open(fragment);
+                    if (fromType == IntegerConstant.TAG_HOME) {
+                        HomeActivity.open(fragment);
+                    } else if (fromType == IntegerConstant.TAG_MINE) {
+                        MineActivity.open(fragment);
+                    } else if (fromType == IntegerConstant.TAG_MORE) {
+                        PlayerMoreOperationActivity.open(fragment);
+                    } else if (fromType == IntegerConstant.TAG_SEARCH) {
+                        SearchLikeActivity.open(fragment);
+                    }
                 } else {
                     ToastUtils.show_always(context, "该主播还没有详细的个人信息~");
                 }

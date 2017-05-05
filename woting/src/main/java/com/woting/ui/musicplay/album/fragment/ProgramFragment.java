@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -111,7 +112,12 @@ public class ProgramFragment extends Fragment implements OnClickListener, TipVie
             initView(rootView);
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                 dialog = DialogUtils.Dialog(context);
-                send();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        send();
+                    }
+                }, 2000);
             } else {
                 tipView.setVisibility(View.VISIBLE);
                 tipView.setTipView(TipView.TipStatus.NO_NET);
