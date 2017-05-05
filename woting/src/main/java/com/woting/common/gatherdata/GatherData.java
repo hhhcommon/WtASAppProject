@@ -64,10 +64,18 @@ public class GatherData {
     public static void collectData(int uploadType, DataModel data) {
         switch (uploadType) {
             case IntegerConstant.DATA_UPLOAD_TYPE_IMM:// 即时上传
-                immQueue.add(data);
+                try{
+                    immQueue.add(data);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case IntegerConstant.DATA_UPLOAD_TYPE_GIVEN:// 定时检查上传
-                givenList.add(data);
+                try{
+                    givenList.add(data);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }

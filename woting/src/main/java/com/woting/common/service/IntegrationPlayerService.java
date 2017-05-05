@@ -362,7 +362,7 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
         Log.v("TAG", "httpUrl -- > > " + httpUrl);
 
         // 开始播放时需要收集数据
-        String beginTime = String.valueOf(System.currentTimeMillis() / 1000);// 事件开始时间  单位 s
+        String beginTime = String.valueOf(System.currentTimeMillis());// 事件开始时间  单位 s
         String endTime = String.valueOf(getCurrentTime() / 1000);// 节目播放时间  单位 s
         String apiName = "E-play";
         String objType = mediaType;
