@@ -12,6 +12,7 @@ import com.woting.common.gatherdata.thread.ImmUploadDataThread;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 
 /**
@@ -24,9 +25,9 @@ public class GatherData {
 
     public static int uploadCount = IntegerConstant.DATA_UPLOAD_COUNT;// 指定上传的数量
 
-    public static SynchronousQueue<DataModel> immQueue = new SynchronousQueue<>();// 保存即时上传数据
+    public static ArrayBlockingQueue<DataModel> immQueue = new ArrayBlockingQueue<DataModel>(1024);// 保存即时上传数据
 
-    public static List<DataModel> givenList = new ArrayList<>();// 保存定时或定量上传的数据
+    public static ArrayBlockingQueue<DataModel> givenList = new ArrayBlockingQueue<DataModel>(1024);// 保存定时或定量上传的数据
 
     private GatherData() {
 

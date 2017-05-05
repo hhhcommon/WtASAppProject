@@ -34,53 +34,68 @@ public class FileInfoDao {
     /**
      * 传递进来的下载地址 对下载地址进行处理使之变成一个list，对其进行保存，默认的finished设置为false；
      */
-    public List<FileInfo> queryFileInfo(String s, String userId) {
+    public List<FileInfo> queryFileInfo(String s, String _userId) {
         List<FileInfo> m = new ArrayList<>();
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cursor = null;
         try {
             // 执行查询语句 返回一个cursor对象
-            cursor = db.rawQuery("Select * from fileInfo where finished like ? and userId like ? order by _id desc", new String[]{s, userId});
+            cursor = db.rawQuery("Select * from fileInfo where finished like ? and userId like ? order by _id desc", new String[]{s, _userId});
             // 循环遍历cursor中储存的键值对
             while (cursor.moveToNext()) {
-                int id = cursor.getInt(0);
+                int id = cursor.getInt(cursor.getColumnIndex("_id"));
+                int start = cursor.getInt(cursor.getColumnIndex("start"));
+                int end = cursor.getInt(cursor.getColumnIndex("end"));
                 String url = cursor.getString(cursor.getColumnIndex("url"));
+                String imageUrl = cursor.getString(cursor.getColumnIndex("imageUrl"));
+                int finished = cursor.getInt(cursor.getColumnIndex("finished"));
                 String author = cursor.getColumnName(cursor.getColumnIndex("author"));
+                String playContent = cursor.getString(cursor.getColumnIndex("playContent"));
                 String filename = cursor.getString(cursor.getColumnIndex("fileName"));
-                String seqimageurl = cursor.getString(cursor.getColumnIndex("albumImgUrl"));
-                String downloadtype = cursor.getString(cursor.getColumnIndex("downloadType"));
-                String userid = cursor.getString(cursor.getColumnIndex("userId"));
-                String sequid = cursor.getString(cursor.getColumnIndex("albumId"));
-                String imagurl = cursor.getString(cursor.getColumnIndex("imageUrl"));
-                int start = cursor.getInt(1);
-                int end = cursor.getInt(2);
-                String playcontentshareurl = cursor.getString(cursor.getColumnIndex("playShareUrl"));
-                String playfavorite = cursor.getString(cursor.getColumnIndex("playFavorite"));
-                String contentid = cursor.getString(cursor.getColumnIndex("contentId"));
-                String playAllTime = cursor.getString(cursor.getColumnIndex("playAllTime"));
-                String playfrom = cursor.getString(cursor.getColumnIndex("playFrom"));
-                String contentDescn = cursor.getString(cursor.getColumnIndex("contentDesc"));
-                String playcount = cursor.getString(cursor.getColumnIndex("playCount"));
-                String contentplaytype = cursor.getString(cursor.getColumnIndex("contentPlayType"));
                 String localUrl = cursor.getString(cursor.getColumnIndex("localUrl"));
+                String albumName = cursor.getString(cursor.getColumnIndex("albumName"));
+                String seqImageUrl = cursor.getString(cursor.getColumnIndex("albumImgUrl"));
+                String albumDesc = cursor.getString(cursor.getColumnIndex("albumDesc"));
+                String seqId = cursor.getString(cursor.getColumnIndex("albumId"));
+                String userId = cursor.getString(cursor.getColumnIndex("userId"));
+                String downloadType = cursor.getString(cursor.getColumnIndex("downloadType"));
+                String playContentShareUrl = cursor.getString(cursor.getColumnIndex("playShareUrl"));
+                String playFavorite = cursor.getString(cursor.getColumnIndex("playFavorite"));
+                String contentId = cursor.getString(cursor.getColumnIndex("contentId"));
+                String playAllTime = cursor.getString(cursor.getColumnIndex("playAllTime"));
+                String playFrom = cursor.getString(cursor.getColumnIndex("playFrom"));
+                String playCount = cursor.getString(cursor.getColumnIndex("playCount"));
+                String contentDesc = cursor.getString(cursor.getColumnIndex("contentDesc"));
+                String playTag = cursor.getString(cursor.getColumnIndex("playTag"));
+                String contentPlayType = cursor.getString(cursor.getColumnIndex("contentPlayType"));
+                String IsPlaying = cursor.getString(cursor.getColumnIndex("IsPlaying"));
+                String ColumnNum = cursor.getString(cursor.getColumnIndex("ColumnNum"));
+
 
                 // 把每个对象都放到history对象里
-                FileInfo h = new FileInfo(url, filename, id, seqimageurl);
+                FileInfo h = new FileInfo(url, filename, id, seqImageUrl);
+                h.setFinished(finished);
+                h.setPlaycontent(playContent);
+                h.setSequname(albumName);
+                h.setSequdesc(albumDesc);
+                h.setPlayTag(playTag);
+                h.setIsPlaying(IsPlaying);
+                h.setColumnNum(ColumnNum);
                 h.setAuthor(author);
                 h.setStart(start);
-                h.setImageurl(imagurl);
-                h.setDownloadtype(Integer.valueOf(downloadtype));
+                h.setImageurl(imageUrl);
+                h.setDownloadtype(Integer.valueOf(downloadType));
                 h.setEnd(end);
-                h.setUserid(userid);
-                h.setSequid(sequid);
-                h.setContentShareURL(playcontentshareurl);
-                h.setContentFavorite(playfavorite);
-                h.setContentId(contentid);
+                h.setUserid(userId);
+                h.setSequid(seqId);
+                h.setContentShareURL(playContentShareUrl);
+                h.setContentFavorite(playFavorite);
+                h.setContentId(contentId);
                 h.setPlayAllTime(playAllTime);
-                h.setPlayFrom(playfrom);
-                h.setContentDescn(contentDescn);
-                h.setPlayCount(playcount);
-                h.setContentPlayType(contentplaytype);
+                h.setPlayFrom(playFrom);
+                h.setContentDescn(contentDesc);
+                h.setPlayCount(playCount);
+                h.setContentPlayType(contentPlayType);
                 h.setLocalurl(localUrl);
                 // 往m里储存每个history对象
                 m.add(h);
@@ -110,42 +125,59 @@ public class FileInfoDao {
                     new String[]{sequid, userid});
             // 循环遍历cursor中储存的键值对
             while (cursor.moveToNext()) {
-                String localurl = cursor.getString(cursor.getColumnIndex("localUrl"));
-                String author = cursor.getColumnName(cursor
-                        .getColumnIndex("author"));
-                String filename = cursor.getString(cursor
-                        .getColumnIndex("fileName"));
-                String sequimgurl = cursor.getString(cursor.getColumnIndex("albumImgUrl"));
-                String imgurl = cursor.getString(cursor.getColumnIndex("imageUrl"));
-                int start = cursor.getInt(1);
-                int end = cursor.getInt(2);
-                String playcontentshareurl = cursor.getString(cursor.getColumnIndex("playShareUrl"));
-                String playfavorite = cursor.getString(cursor.getColumnIndex("playFavorite"));
-                String contentid = cursor.getString(cursor.getColumnIndex("contentId"));
+                int id = cursor.getInt(cursor.getColumnIndex("_id"));
+                int start = cursor.getInt(cursor.getColumnIndex("start"));
+                int end = cursor.getInt(cursor.getColumnIndex("end"));
                 String url = cursor.getString(cursor.getColumnIndex("url"));
-                String playAllTime = cursor.getString(cursor.getColumnIndex("playAllTime"));
-                String playfrom = cursor.getString(cursor.getColumnIndex("playFrom"));
-                String contentDescn = cursor.getString(cursor.getColumnIndex("contentDesc"));
-                String playcount = cursor.getString(cursor.getColumnIndex("playCount"));
-                String contentplaytype = cursor.getString(cursor.getColumnIndex("contentPlayType"));
+                String imageUrl = cursor.getString(cursor.getColumnIndex("imageUrl"));
+                int finished = cursor.getInt(cursor.getColumnIndex("finished"));
+                String author = cursor.getColumnName(cursor.getColumnIndex("author"));
+                String playContent = cursor.getString(cursor.getColumnIndex("playContent"));
+                String filename = cursor.getString(cursor.getColumnIndex("fileName"));
                 String localUrl = cursor.getString(cursor.getColumnIndex("localUrl"));
+                String albumName = cursor.getString(cursor.getColumnIndex("albumName"));
+                String seqImageUrl = cursor.getString(cursor.getColumnIndex("albumImgUrl"));
+                String albumDesc = cursor.getString(cursor.getColumnIndex("albumDesc"));
+                String seqId = cursor.getString(cursor.getColumnIndex("albumId"));
+                String userId = cursor.getString(cursor.getColumnIndex("userId"));
+                String downloadType = cursor.getString(cursor.getColumnIndex("downloadType"));
+                String playContentShareUrl = cursor.getString(cursor.getColumnIndex("playShareUrl"));
+                String playFavorite = cursor.getString(cursor.getColumnIndex("playFavorite"));
+                String contentId = cursor.getString(cursor.getColumnIndex("contentId"));
+                String playAllTime = cursor.getString(cursor.getColumnIndex("playAllTime"));
+                String playFrom = cursor.getString(cursor.getColumnIndex("playFrom"));
+                String playCount = cursor.getString(cursor.getColumnIndex("playCount"));
+                String contentDesc = cursor.getString(cursor.getColumnIndex("contentDesc"));
+                String playTag = cursor.getString(cursor.getColumnIndex("playTag"));
+                String contentPlayType = cursor.getString(cursor.getColumnIndex("contentPlayType"));
+                String IsPlaying = cursor.getString(cursor.getColumnIndex("IsPlaying"));
+                String ColumnNum = cursor.getString(cursor.getColumnIndex("ColumnNum"));
+
+
                 // 把每个对象都放到history对象里
-                FileInfo h = new FileInfo();
-                h.setLocalurl(localurl);
-                h.setUrl(url);
-                h.setFileName(filename);
-                h.setImageurl(imgurl);
-                h.setSequimgurl(sequimgurl);
+                FileInfo h = new FileInfo(url, filename, id, seqImageUrl);
+                h.setFinished(finished);
+                h.setPlaycontent(playContent);
+                h.setSequname(albumName);
+                h.setSequdesc(albumDesc);
+                h.setPlayTag(playTag);
+                h.setIsPlaying(IsPlaying);
+                h.setColumnNum(ColumnNum);
+                h.setAuthor(author);
+                h.setStart(start);
+                h.setImageurl(imageUrl);
+                h.setDownloadtype(Integer.valueOf(downloadType));
                 h.setEnd(end);
-                h.setContentShareURL(playcontentshareurl);
-                h.setContentFavorite(playfavorite);
-                ;
-                h.setContentId(contentid);
+                h.setUserid(userId);
+                h.setSequid(seqId);
+                h.setContentShareURL(playContentShareUrl);
+                h.setContentFavorite(playFavorite);
+                h.setContentId(contentId);
                 h.setPlayAllTime(playAllTime);
-                h.setPlayFrom(playfrom);
-                h.setContentDescn(contentDescn);
-                h.setPlayCount(playcount);
-                h.setContentPlayType(contentplaytype);
+                h.setPlayFrom(playFrom);
+                h.setContentDescn(contentDesc);
+                h.setPlayCount(playCount);
+                h.setContentPlayType(contentPlayType);
                 h.setLocalurl(localUrl);
                 // 往m里储存每个history对象
                 m.add(h);

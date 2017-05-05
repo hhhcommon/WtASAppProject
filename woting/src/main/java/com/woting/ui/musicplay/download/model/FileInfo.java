@@ -46,6 +46,34 @@ public class FileInfo implements Serializable {
 	private String IsPlaying;       // 正在播放
 	private String ColumnNum;
 
+	public FileInfo() {
+
+	}
+
+	public FileInfo(int id, String url, String fileName, int length,
+					int finished) {
+		this.id = id;
+		this.url = url;
+		this.fileName = fileName;
+		this.length = length;
+		this.finished = finished;
+	}
+
+	public FileInfo(String url, String fileName, int id, String seqimageurl) {
+		super();
+		this.url = url;
+		this.fileName = fileName;
+		this.id = id;
+		this.sequimgurl = seqimageurl;
+	}
+
+	public FileInfo(String sequname, String sequimgurl, String sequdesc) {
+		this.sequdesc = sequname;
+		this.sequimgurl = sequimgurl;
+		this.sequdesc = sequdesc;
+	}
+
+
 	public String getColumnNum() {
 		return ColumnNum;
 	}
@@ -222,19 +250,6 @@ public class FileInfo implements Serializable {
 		this.end = end;
 	}
 
-	public FileInfo() {
-
-	}
-
-	public FileInfo(int id, String url, String fileName, int length,
-			int finished) {
-		this.id = id;
-		this.url = url;
-		this.fileName = fileName;
-		this.length = length;
-		this.finished = finished;
-	}
-
 	public String getSequname() {
 		return sequname;
 	}
@@ -256,20 +271,6 @@ public class FileInfo implements Serializable {
 	}
 
 	public void setSequdesc(String sequdesc) {
-		this.sequdesc = sequdesc;
-	}
-
-	public FileInfo(String url, String fileName, int id, String seqimageurl) {
-		super();
-		this.url = url;
-		this.fileName = fileName;
-		this.id = id;
-		this.sequimgurl = seqimageurl;
-	}
-
-	public FileInfo(String sequname, String sequimgurl, String sequdesc) {
-		this.sequdesc = sequname;
-		this.sequimgurl = sequimgurl;
 		this.sequdesc = sequdesc;
 	}
 
@@ -351,4 +352,5 @@ public class FileInfo implements Serializable {
 				+ ", userid=" + userid + ", sequid=" + sequid +", length=" + length
 				+ ", finished=" + finished + "]";
 	}
+
 }

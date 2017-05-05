@@ -30,7 +30,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 + "thread_id integer, url varchar(300), start integer, end integer, finished integer)");
         // 文件数据
         db.execSQL("create table IF NOT EXISTS fileInfo(_id integer primary key autoincrement,"
-                + "start integer,end integer,url varchar(200),imageUrl varchar(300), finished varchar(10),"
+                + "start integer,end integer,url varchar(200),imageUrl varchar(300), finished integer,"
                 + "author varchar(50),playContent varchar(50),fileName varchar(50),localUrl varchar(300),"
                 + "albumName varchar(50),albumImgUrl varchar(300),albumDesc varchar(2000),albumId varchar(50)," +
                 "userId varchar(50),downloadType varchar(10),playShareUrl varchar(100),playFavorite varchar(100),contentId varchar(50)," +

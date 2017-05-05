@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.CommonUtils;
+import com.woting.common.util.FileSizeUtil;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.musicplay.download.main.DownloadFragment;
 import com.woting.ui.musicplay.download.adapter.DownLoadAudioAdapter;
@@ -30,6 +31,7 @@ import com.woting.ui.musicplay.play.model.PlayerHistory;
 import com.woting.ui.main.MainActivity;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -48,18 +50,21 @@ public class DownLoadAudioFragment extends Fragment implements View.OnClickListe
     private Dialog confirmDialog;// 删除对话框
     private View rootView;
     private ListView listView;// 已经下载的节目列表
+    private TextView tv_size;
 
     private int index;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
+        initDao();
+    }
+
+    private void initDao() {
         FID = new FileInfoDao(context);
         dbDao = new SearchPlayerHistoryDao(context);
-        list = FID.queryFileInfo("true", CommonUtils.getUserId(context));
-
-        Log.v("TAG", "list.size  ->  " + list.size());
     }
 
     @Nullable
@@ -69,16 +74,59 @@ public class DownLoadAudioFragment extends Fragment implements View.OnClickListe
             rootView = inflater.inflate(R.layout.fragment_download_audio, container, false);
             rootView.setOnClickListener(this);
             initView();
-            if (receiver == null) {
-                receiver = new MessageReceiver();
-                IntentFilter filter = new IntentFilter();
-                filter.addAction(BroadcastConstants.PUSH_DOWN_COMPLETED);
-                filter.addAction(BroadcastConstants.PUSH_ALLURL_CHANGE);
-                filter.addAction(BroadcastConstants.DOWNLOAD_CLEAR_EMPTY_AUDIO);// 清空下载的全部声音
-                context.registerReceiver(receiver, filter);
-            }
+            initReceiver();
+            setData();
         }
         return rootView;
+    }
+
+    private void initReceiver() {
+        if (receiver == null) {
+            receiver = new MessageReceiver();
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(BroadcastConstants.PUSH_DOWN_COMPLETED);
+            filter.addAction(BroadcastConstants.PUSH_ALLURL_CHANGE);
+            filter.addAction(BroadcastConstants.DOWNLOAD_CLEAR_EMPTY_AUDIO);// 清空下载的全部声音
+            context.registerReceiver(receiver, filter);
+        }
+    }
+
+    // 设置数据
+    private void setData() {
+        list = FID.queryFileInfo("true", CommonUtils.getUserId(context));
+        if (list == null || list.size() <= 0) {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_DATA, "没有下载的内容\n快去把想听的内容下载下来吧");
+            DownloadFragment.setVisibleAudio(false);
+        } else {
+            int size = 0;
+            for (int i = 0; i < list.size(); i++) {
+                try {
+                    size = size + list.get(i).getEnd();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            DecimalFormat df = new DecimalFormat("0.00");
+            long size1 = FileSizeUtil.getAvailableInternalMemorySize();//获取手机内部剩余存储空间
+            tv_size.setText("已占用空间" + df.format(size / 1000.0 / 1000.0) + "M, 可用空间" + FileSizeUtil.formatFileSize(size1, false) + "");
+            if (adapter != null) {
+                adapter.setList(list);
+            } else {
+                adapter = new DownLoadAudioAdapter(context, list);
+                listView.setAdapter(adapter);
+            }
+            tipView.setVisibility(View.GONE);
+            DownloadFragment.setVisibleAudio(true);
+            // 删除
+            adapter.setOnListener(new DownLoadAudioAdapter.DownloadAudioCheck() {
+                @Override
+                public void delPosition(int position) {
+                    index = position;
+                    deleteConfirmDialog();
+                }
+            });
+        }
     }
 
     @Override
@@ -95,26 +143,9 @@ public class DownLoadAudioFragment extends Fragment implements View.OnClickListe
 
     // 初始化视图
     private void initView() {
-        listView = (ListView) rootView.findViewById(R.id.list_view);// 已经下载的节目列表
-        listView.setAdapter(adapter = new DownLoadAudioAdapter(context, list));
-
         tipView = (TipView) rootView.findViewById(R.id.tip_view);
-        if (list == null || list.size() <= 0) {
-            tipView.setVisibility(View.VISIBLE);
-            tipView.setTipView(TipView.TipStatus.NO_DATA, "没有下载的内容\n快去把想听的内容下载下来吧");
-            DownloadFragment.setVisibleAudio(false);
-        } else {
-            DownloadFragment.setVisibleAudio(true);
-        }
-
-        // 删除
-        adapter.setOnListener(new DownLoadAudioAdapter.DownloadAudioCheck() {
-            @Override
-            public void delPosition(int position) {
-                index = position;
-                deleteConfirmDialog();
-            }
-        });
+        listView = (ListView) rootView.findViewById(R.id.list_view);// 已经下载的节目列表
+        tv_size = (TextView) rootView.findViewById(R.id.tv_size);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -144,8 +175,8 @@ public class DownLoadAudioFragment extends Fragment implements View.OnClickListe
                             String albumImg = mFileInfo.getSequimgurl();
                             String albumDesc = mFileInfo.getSequdesc();
                             String contentPlayType = mFileInfo.getContentPlayType();
-                            String IsPlaying=mFileInfo.getIsPlaying();
-                            String ColumnNum=mFileInfo.getColumnNum();
+                            String IsPlaying = mFileInfo.getIsPlaying();
+                            String ColumnNum = mFileInfo.getColumnNum();
 
                             // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
 
@@ -155,7 +186,6 @@ public class DownLoadAudioFragment extends Fragment implements View.OnClickListe
 
                             dbDao.deleteHistory(playUrl);
                             dbDao.addHistory(history);
-
 
 
                             Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
@@ -199,7 +229,7 @@ public class DownLoadAudioFragment extends Fragment implements View.OnClickListe
                     FID.deleteFileInfo(list.get(index).getLocalurl(), CommonUtils.getUserId(context));
                     try {
                         File file = new File(list.get(index).getLocalurl());
-                        if(file.exists()){
+                        if (file.exists()) {
                             if (file.delete()) {
                                 context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));
                                 index = -1;
@@ -207,19 +237,19 @@ public class DownLoadAudioFragment extends Fragment implements View.OnClickListe
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Log.e("TAG","文件：" + list.get(index).getLocalurl() + "删除失败!");
+                        Log.e("TAG", "文件：" + list.get(index).getLocalurl() + "删除失败!");
                     }
                 } else {
-                    for (int i=0; i<list.size(); i++) {
+                    for (int i = 0; i < list.size(); i++) {
                         FID.deleteFileInfo(list.get(i).getLocalurl(), CommonUtils.getUserId(context));
                         try {
                             File file = new File(list.get(i).getLocalurl());
-                            if(file.exists()) {
+                            if (file.exists()) {
                                 file.delete();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Log.e("TAG","文件：" + list.get(i).getLocalurl() + "删除失败!");
+                            Log.e("TAG", "文件：" + list.get(i).getLocalurl() + "删除失败!");
                         }
                     }
                     context.sendBroadcast(new Intent(BroadcastConstants.PUSH_DOWN_COMPLETED));
@@ -250,16 +280,7 @@ public class DownLoadAudioFragment extends Fragment implements View.OnClickListe
                     break;
                 case BroadcastConstants.PUSH_DOWN_COMPLETED:
                 case BroadcastConstants.PUSH_ALLURL_CHANGE:
-                    list = FID.queryFileInfo("true", CommonUtils.getUserId(context));
-                    adapter.setList(list);
-                    if (list == null || list.size() <= 0) {
-                        tipView.setVisibility(View.VISIBLE);
-                        tipView.setTipView(TipView.TipStatus.NO_DATA, "没有下载的内容\n快去把想听的内容下载下来吧");
-                        DownloadFragment.setVisibleAudio(false);
-                    } else {
-                        tipView.setVisibility(View.GONE);
-                        DownloadFragment.setVisibleAudio(true);
-                    }
+                    setData();
                     break;
             }
         }

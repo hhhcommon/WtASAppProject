@@ -59,6 +59,7 @@
                 android:gravity="left|center">
 
                 <ImageView
+                    android:id="@+id/image_icon"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:layout_marginRight="6dp"
@@ -96,19 +97,6 @@
                     android:layout_marginRight="14dp"
                     android:textSize="9sp"/>
 
-                <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_marginRight="6dp"
-                    android:src="@mipmap/image_program_size"/>
-
-                <TextView
-                    android:id="@+id/tv_sum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="MB"
-                    android:textColor="@color/beijing"
-                    android:textSize="9sp"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -118,8 +106,7 @@
             android:layout_width="57dp"
             android:layout_height="57dp"
             android:src="@mipmap/wt_image_down_del"
-            android:padding="15dp"
-            android:layout_marginRight="14dp"/>
+            android:padding="15dp"/>
 
     </LinearLayout>
 

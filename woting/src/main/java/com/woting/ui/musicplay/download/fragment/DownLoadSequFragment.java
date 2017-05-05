@@ -140,7 +140,7 @@ public class DownLoadSequFragment extends Fragment implements OnClickListener {
                 }
                 DecimalFormat df = new DecimalFormat("0.00");
                 long size1= FileSizeUtil.getAvailableInternalMemorySize();//获取手机内部剩余存储空间
-                tv_size.setText("已占用空间"+df.format(size / 1000.0 / 1000.0)+"M,可用空间"+FileSizeUtil.formatFileSize(size1, false)+"M");
+                tv_size.setText("已占用空间"+df.format(size / 1000.0 / 1000.0)+"M, 可用空间"+FileSizeUtil.formatFileSize(size1, false)+"");
                 mListView.setAdapter(adapter = new DownLoadSequAdapter(context, fileSequList));
                 setItemListener();
                 setInterface();

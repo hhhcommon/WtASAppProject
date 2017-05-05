@@ -69,48 +69,11 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="我听科技"
+                    android:text="专辑"
                     android:textColor="@color/beijing"
                     android:textSize="13sp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left|center">
-
-                <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_marginRight="6dp"
-                    android:src="@mipmap/image_program_listener" />
-
-                <TextView
-                    android:id="@+id/tv_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textColor="@color/beijing"
-                    android:textSize="9sp" />
-
-                <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="6dp"
-                    android:src="@mipmap/image_program_size"
-                    android:visibility="gone"
-                    />
-
-                <TextView
-                    android:id="@+id/tv_sum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="MB"
-                    android:visibility="gone"
-                    android:textColor="@color/beijing"
-                    android:textSize="9sp" />
-            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

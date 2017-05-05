@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.R;
+import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.musicplay.download.model.FileInfo;
@@ -22,15 +24,18 @@ import java.util.List;
  * 下载的声音数据展示
  */
 public class DownLoadAudioAdapter extends BaseAdapter {
+    private final Bitmap bmp;
     private List<FileInfo> list;
     private Context context;
     private DownloadAudioCheck downloadCheck;
-    private DecimalFormat df;
+//    private DecimalFormat df;
+
 
     public DownLoadAudioAdapter(Context context, List<FileInfo> list) {
         this.context = context;
         this.list = list;
-        df = new DecimalFormat("0.00");
+//        df = new DecimalFormat("0.00");
+        bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
     }
 
     public void setList(List<FileInfo> list) {
@@ -68,12 +73,19 @@ public class DownLoadAudioAdapter extends BaseAdapter {
             Bitmap bitmap = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
             holder.imageMask = (ImageView) convertView.findViewById(R.id.img_liu);
             holder.imageMask.setImageBitmap(bitmap);
+
             holder.imageCover = (ImageView) convertView.findViewById(R.id.RankImageUrl);// 封面图片
+
+            holder.image_icon = (ImageView) convertView.findViewById(R.id.image_icon);// 主播或专辑
+            holder.image_icon.setImageResource(R.mipmap.image_program_album);
             holder.textTitle = (TextView) convertView.findViewById(R.id.RankTitle);// 专辑或节目名
+
             holder.textContent = (TextView) convertView.findViewById(R.id.RankContent);// 来源
-            holder.textCount = (TextView) convertView.findViewById(R.id.tv_count);// 专辑集数
+
             holder.imageCount = (ImageView) convertView.findViewById(R.id.image_count);// 图标
-            holder.textSum = (TextView) convertView.findViewById(R.id.tv_sum);// 文件大小
+            holder.imageCount.setImageResource(R.mipmap.image_program_time);
+            holder.textCount = (TextView) convertView.findViewById(R.id.tv_count);// 专辑集数
+
             holder.imageDel = (ImageView) convertView.findViewById(R.id.image_del);// 删除
             convertView.setTag(holder);
         } else {
@@ -81,17 +93,18 @@ public class DownLoadAudioAdapter extends BaseAdapter {
         }
 
         FileInfo lists = list.get(position);
-        holder.imageCount.setVisibility(View.GONE);
-        holder.textCount.setVisibility(View.GONE);
 
         // 封面图片
         String contentImage = lists.getSequimgurl();
         if (contentImage == null || contentImage.equals("null") || contentImage.trim().equals("")) {
-            Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_playertx);
             holder.imageCover.setImageBitmap(bmp);
         } else {
-            contentImage = AssembleImageUrlUtils.assembleImageUrl180(contentImage);
-            Picasso.with(context).load(contentImage.replace("\\/", "/")).resize(100, 100).centerCrop().into(holder.imageCover);
+            String contentImg = lists.getImageurl();
+            if (!contentImg.startsWith("http")) {
+                contentImg = GlobalConfig.imageurl + contentImg;
+            }
+            String _url = AssembleImageUrlUtils.assembleImageUrl180(contentImg);
+            AssembleImageUrlUtils.loadImage(_url, contentImg, holder.imageCover, IntegerConstant.TYPE_LIST);
         }
 
         // 专辑或节目名
@@ -101,25 +114,43 @@ public class DownLoadAudioAdapter extends BaseAdapter {
         }
         holder.textTitle.setText(contentTitle);
 
-        // 来源
-        String contentFrom = lists.getPlayFrom();
+        // 专辑
+        String contentFrom = lists.getSequname();
         if (contentFrom == null || contentFrom.equals("")) {
-            contentFrom = "未知";
+            contentFrom = "专辑";
         }
         holder.textContent.setText(contentFrom);
 
-        // 文件大小
-        int end;
+        //  时长
         try {
-            end = lists.getEnd();
-            if (end <= 0) {
-                end = 0;
+            if (lists.getPlayAllTime() == null || lists.getPlayAllTime().equals("")) {
+                holder.textCount.setText(context.getString(R.string.play_time));
+            } else {
+                int minute = Integer.valueOf(lists.getPlayAllTime()) / (1000 * 60);
+                int second = (Integer.valueOf(lists.getPlayAllTime()) / 1000) % 60;
+                if (second < 10) {
+                    holder.textCount.setText(minute + "\'" + " " + "0" + second + "\"");
+                } else {
+                    holder.textCount.setText(minute + "\'" + " " + second + "\"");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
-            end = 0;
+            holder.textCount.setText(context.getString(R.string.play_time));
         }
-        holder.textSum.setText(new DecimalFormat("0.00").format(end / 1000.0 / 1000.0) + "MB");
+
+//        // 文件大小
+//        int end;
+//        try {
+//            end = lists.getEnd();
+//            if (end <= 0) {
+//                end = 0;
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            end = 0;
+//        }
+//        holder.textSum.setText(new DecimalFormat("0.00").format(end / 1000.0 / 1000.0) + "MB");
 
         // 删除
         holder.imageDel.setOnClickListener(new View.OnClickListener() {
@@ -142,7 +173,7 @@ public class DownLoadAudioAdapter extends BaseAdapter {
         public TextView textContent;// 来源
         public TextView textCount;// 专辑集数
         public ImageView imageCount;// 图标
-        public TextView textSum;// 文件大小
         public ImageView imageDel;// 删除
+        public ImageView image_icon;
     }
 }

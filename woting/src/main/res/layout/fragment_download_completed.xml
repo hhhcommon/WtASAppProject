@@ -15,13 +15,19 @@
         android:id="@+id/tv_size"
         android:layout_width="match_parent"
         android:gravity="center"
-        android:layout_height="30dp"
+        android:layout_height="35dp"
+        android:textColor="@color/gray"
+        android:textSize="14sp"
         android:text="已占用空间0M，可用空间0M" />
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/view_color" />
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:divider="@color/text_line_1"
         android:dividerHeight="0.5dp"
         android:scrollbars="none" />
