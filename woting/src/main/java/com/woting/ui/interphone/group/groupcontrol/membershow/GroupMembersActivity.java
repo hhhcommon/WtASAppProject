@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -28,7 +27,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.common.model.UserInfo;
+import com.woting.ui.interphone.model.UserInfo;
 import com.woting.ui.interphone.group.groupcontrol.grouppersonnews.GroupPersonNewsActivity;
 import com.woting.ui.interphone.group.groupcontrol.membershow.adapter.CreateGroupMembersAdapter;
 import com.woting.ui.interphone.group.groupcontrol.personnews.TalkPersonNewsActivity;
@@ -274,8 +273,7 @@ public class GroupMembersActivity extends AppBaseActivity implements
             }
             if (isFriend) {
                 UserInfo tp = new UserInfo();
-                tp.setPortraitBig(userList.get(position).getPortraitBig());
-                tp.setPortraitMini(userList.get(position).getPortraitMini());
+                tp.setPortrait(userList.get(position).getPortrait());
                 tp.setNickName(userList.get(position).getNickName());
                 tp.setUserId(userList.get(position).getUserId());
                 tp.setUserAliasName(userList.get(position).getUserAliasName());

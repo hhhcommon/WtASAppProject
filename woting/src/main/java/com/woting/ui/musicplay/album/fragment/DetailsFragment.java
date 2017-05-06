@@ -36,7 +36,7 @@ import com.woting.ui.musicplay.more.PlayerMoreOperationActivity;
 import com.woting.ui.musicplay.anchor.AnchorDetailsFragment;
 import com.woting.ui.musicplay.album.main.AlbumFragment;
 import com.woting.ui.musicplay.album.model.ContentCatalogs;
-import com.woting.ui.model.anchor;
+import com.woting.ui.music.model.anchor;
 import com.woting.ui.music.search.main.SearchLikeActivity;
 import com.woting.ui.mine.main.MineActivity;
 

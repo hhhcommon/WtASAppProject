@@ -27,7 +27,7 @@ import com.woting.common.widgetui.HorizontalListView;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.musicplay.play.adapter.ImageAdapter;
-import com.woting.ui.model.share.ShareModel;
+import com.woting.ui.music.model.share.ShareModel;
 
 import java.util.List;
 

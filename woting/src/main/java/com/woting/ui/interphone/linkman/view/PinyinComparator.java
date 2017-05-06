@@ -1,6 +1,6 @@
 package com.woting.ui.interphone.linkman.view;
 
-import com.woting.ui.common.model.UserInfo;
+import com.woting.ui.interphone.model.UserInfo;
 
 import java.util.Comparator;
 public class PinyinComparator implements Comparator<UserInfo> {

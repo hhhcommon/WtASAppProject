@@ -3,10 +3,9 @@ package com.woting.ui.musicplay.play.dao;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.woting.common.constant.StringConstant;
-import com.woting.ui.model.content;
+import com.woting.ui.music.model.content;
 import com.woting.ui.musicplay.play.model.PlayerHistory;
 import com.woting.common.database.SQLiteHelper;
 import com.woting.common.util.CommonUtils;

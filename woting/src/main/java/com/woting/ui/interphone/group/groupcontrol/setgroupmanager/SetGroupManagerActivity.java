@@ -19,8 +19,8 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.model.GroupInfo;
-import com.woting.ui.common.model.UserInfo;
+import com.woting.ui.interphone.model.GroupInfo;
+import com.woting.ui.interphone.model.UserInfo;
 import com.woting.ui.interphone.group.groupcontrol.addgroupmanager.AddGroupManagerActivity;
 import com.woting.ui.interphone.group.groupcontrol.setgroupmanager.adapter.SetGroupManagerAdapter;
 
@@ -103,8 +103,8 @@ public class SetGroupManagerActivity extends AppBaseActivity implements OnClickL
                 }else{
                     userInfo.setNickName(tempList.get(i).getName());
                 }
-                if(!TextUtils.isEmpty(tempList.get(i).getPortraitMini())){
-                userInfo.setPortraitMini(tempList.get(i).getPortraitMini());
+                if(!TextUtils.isEmpty(tempList.get(i).getPortrait())){
+                userInfo.setPortrait(tempList.get(i).getPortrait());
                 }
                 if(!TextUtils.isEmpty(tempList.get(i).getUserId())){
                 userInfo.setUserId(tempList.get(i).getUserId());

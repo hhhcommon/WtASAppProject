@@ -88,16 +88,16 @@ public class FindFriendResultAdapter extends BaseAdapter {
             holder.tv_b_id.setText("用户号: " + Inviter.getUserNum());//id
         }
 
-        if (Inviter.getPortraitMini() == null || Inviter.getPortraitMini().equals("")
-                || Inviter.getPortraitMini().equals("null") || Inviter.getPortraitMini().trim().equals("")) {
+        if (Inviter.getPortrait() == null || Inviter.getPortrait().equals("")
+                || Inviter.getPortrait().equals("null") || Inviter.getPortrait().trim().equals("")) {
             Bitmap bmp = BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_hy);
             holder.imageview_inviteimage.setImageBitmap(bmp);
         } else {
              String url;
-            if (Inviter.getPortraitMini().startsWith("http:")) {
-                url = Inviter.getPortraitMini();
+            if (Inviter.getPortrait().startsWith("http:")) {
+                url = Inviter.getPortrait();
             } else {
-                url = GlobalConfig.imageurl + Inviter.getPortraitMini();
+                url = GlobalConfig.imageurl + Inviter.getPortrait();
             }
             String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
             // 加载图片

@@ -53,20 +53,19 @@ import com.woting.common.widgetui.MyGridView;
 import com.woting.common.widgetui.MyLinearLayout;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.common.login.LoginActivity;
-import com.woting.ui.model.GroupInfo;
-import com.woting.ui.common.model.UserInfo;
+import com.woting.ui.interphone.model.GroupInfo;
+import com.woting.ui.interphone.model.UserInfo;
 import com.woting.ui.interphone.alert.CallAlertActivity;
 import com.woting.ui.interphone.chat.adapter.ChatListAdapter;
 import com.woting.ui.interphone.chat.adapter.ChatListAdapter.OnListener;
 import com.woting.ui.interphone.chat.adapter.GroupPersonAdapter;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
 import com.woting.ui.interphone.chat.model.DBTalkHistorary;
-import com.woting.ui.interphone.commom.message.MessageUtils;
-import com.woting.ui.interphone.commom.message.MsgNormal;
-import com.woting.ui.interphone.commom.message.content.MapContent;
-import com.woting.ui.interphone.commom.model.ListInfo;
-import com.woting.ui.interphone.commom.service.InterPhoneControl;
-import com.woting.ui.interphone.commom.service.VoiceStreamRecord;
+import com.woting.ui.interphone.message.MessageUtils;
+import com.woting.ui.interphone.message.MsgNormal;
+import com.woting.ui.interphone.message.content.MapContent;
+import com.woting.common.service.InterPhoneControl;
+import com.woting.common.service.VoiceStreamRecord;
 import com.woting.ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivity;
 import com.woting.ui.interphone.group.groupcontrol.grouppersonnews.GroupPersonNewsActivity;
 import com.woting.ui.interphone.group.groupcontrol.personnews.TalkPersonNewsActivity;
@@ -136,7 +135,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
     private static ArrayList<UserInfo> groupPersonListS = new ArrayList<>();
     private static ArrayList<GroupInfo> allList = new ArrayList<>();//所有数据库数据
     private static List<DBTalkHistorary> historyDataBaseList;//list里边的数据
-    private static List<ListInfo> listInfo;
+    private static List<UserInfo> listInfo;
 
     private String oldTalkId;
     private Handler handler;
@@ -932,7 +931,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                     ListGP.setId(GlobalConfig.list_person.get(j).getUserId());
                                     ListGP.setName(GlobalConfig.list_person.get(j).getNickName());
                                     ListGP.setUserAliasName(GlobalConfig.list_person.get(j).getUserAliasName());
-                                    ListGP.setPortrait(GlobalConfig.list_person.get(j).getPortraitBig());
+                                    ListGP.setPortrait(GlobalConfig.list_person.get(j).getPortrait());
                                     ListGP.setAddTime(historyDataBaseList.get(i).getAddTime());
                                     ListGP.setTyPe(historyDataBaseList.get(i).getTyPe());
                                     ListGP.setDescn(GlobalConfig.list_person.get(j).getDescn());
@@ -1475,7 +1474,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                         JSONObject arg1 = (JSONObject) jsonParser.nextValue();
                                         String ingroupusers = arg1.getString("InGroupUsers");
 
-                                        listInfo = new Gson().fromJson(ingroupusers, new TypeToken<List<ListInfo>>() {
+                                        listInfo = new Gson().fromJson(ingroupusers, new TypeToken<List<UserInfo>>() {
                                         }.getType());
                                         //组内所有在线成员
                                         //组内有人说话时，根据这个list数据，得到该成员信息啊：头像，昵称等
@@ -1667,7 +1666,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                 for (int i = 0; i < groupPersonListS.size(); i++) {
                                     if (groupPersonListS.get(i).getUserId().trim().equals(talkId)) {
                                         userName = groupPersonListS.get(i).getNickName();
-                                        imageUrl = groupPersonListS.get(i).getPortraitBig();
+                                        imageUrl = groupPersonListS.get(i).getPortrait();
                                         break;
                                     }
                                 }
@@ -1677,7 +1676,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                 for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
                                     if (GlobalConfig.list_person.get(i).getUserId().trim().equals(talkId)) {
                                         userName = GlobalConfig.list_person.get(i).getNickName();
-                                        imageUrl = GlobalConfig.list_person.get(i).getPortraitBig();
+                                        imageUrl = GlobalConfig.list_person.get(i).getPortrait();
                                         break;
                                     }
                                 }
@@ -1690,7 +1689,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                     for (int i = 0; i < groupPersonListS.size(); i++) {
                                         if (groupPersonListS.get(i).getUserId().trim().equals(talkId)) {
                                             userName = groupPersonListS.get(i).getNickName();
-                                            imageUrl = groupPersonListS.get(i).getPortraitBig();
+                                            imageUrl = groupPersonListS.get(i).getPortrait();
                                             break;
                                         }
                                     }
@@ -1700,7 +1699,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                     for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
                                         if (GlobalConfig.list_person.get(i).getUserId().trim().equals(talkId)) {
                                             userName = GlobalConfig.list_person.get(i).getNickName();
-                                            imageUrl = GlobalConfig.list_person.get(i).getPortraitBig();
+                                            imageUrl = GlobalConfig.list_person.get(i).getPortrait();
                                             break;
                                         }
                                     }
@@ -1759,7 +1758,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                         String userinfos = arg1.getString("UserInfo");
 
                                         try {
-                                            ListInfo userinfo = new Gson().fromJson(userinfos, new TypeToken<ListInfo>() {
+                                            UserInfo userinfo = new Gson().fromJson(userinfos, new TypeToken<UserInfo>() {
                                             }.getType());
                                             listInfo.add(userinfo);
                                         } catch (Exception e) {
@@ -1794,7 +1793,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                                             String userinfos = arg1.getString("UserInfo");
                                             String userinfoid;
                                             try {
-                                                ListInfo userinfo = new Gson().fromJson(userinfos, new TypeToken<ListInfo>() {
+                                                UserInfo userinfo = new Gson().fromJson(userinfos, new TypeToken<UserInfo>() {
                                                 }.getType());
                                                 userinfoid = userinfo.getUserId();
                                                 for (int i = 0; i < listInfo.size(); i++) {
@@ -1838,7 +1837,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
                             if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
                                 for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
                                     if (callerId.equals(GlobalConfig.list_person.get(i).getUserId())) {
-                                        _image = GlobalConfig.list_person.get(i).getPortraitBig();
+                                        _image = GlobalConfig.list_person.get(i).getPortrait();
                                         _name = GlobalConfig.list_person.get(i).getNickName();
                                         break;
                                     }

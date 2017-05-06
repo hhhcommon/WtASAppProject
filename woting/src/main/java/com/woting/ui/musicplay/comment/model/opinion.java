@@ -1,8 +1,6 @@
 package com.woting.ui.musicplay.comment.model;
 
-
-
-import com.woting.ui.model.UserInfo;
+import com.woting.ui.interphone.model.UserInfo;
 
 import java.io.Serializable;
 
@@ -16,7 +14,7 @@ public class opinion implements Serializable {
     private String ContentImg;
     private String Id;
     private String UserName;
-    private com.woting.ui.model.UserInfo UserInfo;
+    private com.woting.ui.interphone.model.UserInfo UserInfo;
 
     public String getId() {
         return Id;

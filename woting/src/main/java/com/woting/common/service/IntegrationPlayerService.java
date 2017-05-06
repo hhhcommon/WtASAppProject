@@ -33,7 +33,7 @@ import com.woting.common.gatherdata.model.DataModel;
 import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.ResourceUtil;
-import com.woting.ui.model.content;
+import com.woting.ui.music.model.content;
 import com.woting.ui.musicplay.download.dao.FileInfoDao;
 import com.woting.ui.musicplay.download.model.FileInfo;
 

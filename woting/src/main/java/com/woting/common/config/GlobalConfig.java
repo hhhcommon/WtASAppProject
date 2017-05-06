@@ -2,9 +2,9 @@ package com.woting.common.config;
 
 import android.os.Environment;
 
-import com.woting.ui.model.content;
-import com.woting.ui.model.GroupInfo;
-import com.woting.ui.common.model.UserInfo;
+import com.woting.ui.music.model.content;
+import com.woting.ui.interphone.model.GroupInfo;
+import com.woting.ui.interphone.model.UserInfo;
 import com.woting.ui.music.citylist.citysmodel.secondaryCity;
 
 import java.util.ArrayList;

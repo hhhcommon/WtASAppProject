@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.baidu.cyberplayer.core.BVideoView;
 import com.woting.common.service.IntegrationPlayerService;
-import com.woting.ui.model.content;
+import com.woting.ui.music.model.content;
 import java.util.List;
 
 /**

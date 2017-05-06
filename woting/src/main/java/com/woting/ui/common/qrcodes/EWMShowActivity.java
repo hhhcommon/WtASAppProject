@@ -14,7 +14,7 @@ import com.woting.common.helper.CreateQRImageHelper;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.model.GroupInfo;
+import com.woting.ui.interphone.model.GroupInfo;
 import com.woting.ui.interphone.model.UserInviteMeInside;
 
 /**

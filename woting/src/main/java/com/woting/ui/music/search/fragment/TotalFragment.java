@@ -23,26 +23,23 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
-import com.woting.common.util.CommonUtils;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.model.content;
+import com.woting.ui.music.model.content;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
-import com.woting.ui.musicplay.play.model.PlayerHistory;
 import com.woting.ui.musicplay.album.main.AlbumFragment;
 import com.woting.ui.music.search.adapter.SearchContentAdapter;
 import com.woting.ui.music.search.main.SearchLikeActivity;
 import com.woting.ui.music.search.main.SearchLikeFragment;
-import com.woting.ui.model.SuperRankInfo;
+import com.woting.ui.music.model.SuperRankInfo;
 import com.woting.ui.main.MainActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 搜索结果全部列表

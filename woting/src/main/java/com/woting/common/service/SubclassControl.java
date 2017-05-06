@@ -10,23 +10,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.ToastUtils;
 import com.woting.ui.interphone.alert.CallAlertActivity;
 import com.woting.ui.interphone.alert.ReceiveAlertActivity;
-import com.woting.ui.interphone.commom.message.MessageUtils;
-import com.woting.ui.interphone.commom.message.MsgNormal;
-import com.woting.ui.interphone.commom.message.content.MapContent;
-import com.woting.ui.interphone.commom.model.CallerInfo;
-import com.woting.ui.interphone.commom.service.InterPhoneControl;
+import com.woting.ui.interphone.message.MessageUtils;
+import com.woting.ui.interphone.message.MsgNormal;
+import com.woting.ui.interphone.message.content.MapContent;
 
-import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.util.Arrays;
 import java.util.Map;

@@ -8,7 +8,7 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import com.woting.ui.model.GroupInfo;
+import com.woting.ui.interphone.model.GroupInfo;
 import com.woting.ui.interphone.model.UserInviteMeInside;
 
 import org.json.JSONArray;
@@ -66,7 +66,7 @@ public class CreateQRImageHelper {
                 Map<String, Object> DataMap = new HashMap<>();
                 DataMap.put("UserId", newss.getUserId());
                 DataMap.put("UserName", newss.getNickName());
-                DataMap.put("PortraitMini", newss.getPortraitMini());
+                DataMap.put("Portrait", newss.getPortrait());
                 map.put("UserInviteMeInside", DataMap);
                 url = jsonEnclose(map).toString();
             } else {

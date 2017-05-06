@@ -20,7 +20,7 @@ import com.woting.ui.music.live.main.LiveFragment;
 import com.woting.ui.music.radio.main.OnLineFragment;
 import com.woting.ui.music.classify.fragment.FenLeiFragment;
 import com.woting.ui.music.recommended.RecommendFragment;
-import com.woting.ui.interphone.message.messagecenter.activity.MessageMainActivity;
+import com.woting.ui.interphone.notice.messagecenter.activity.MessageMainActivity;
 import com.woting.ui.main.MainActivity;
 
 import java.util.ArrayList;

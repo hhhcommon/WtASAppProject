@@ -51,6 +51,9 @@ public class IntegerConstant {
     // 列表默认图片
     public static final int TYPE_LIST = 0x004;
 
+    // 轮播图默认图片
+    public static final int TYPE_BANNER = 0x006;
+
     // 通知消息默认头像
     public static final int TYPE_NOTIFY = 0x005;
 

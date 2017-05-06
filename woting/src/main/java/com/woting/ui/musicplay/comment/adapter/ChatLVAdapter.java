@@ -106,12 +106,12 @@ public class ChatLVAdapter extends BaseAdapter {
             } else {
                 holder.name.setText("游客");
             }
-            if (opinion.getUserInfo().getPortraitMini() != null && !opinion.getUserInfo().getPortraitMini().equals("")) {
+            if (opinion.getUserInfo().getPortrait() != null && !opinion.getUserInfo().getPortrait().equals("")) {
                 String url;
-                if (opinion.getUserInfo().getPortraitMini().startsWith("http")) {
-                    url = opinion.getUserInfo().getPortraitMini();
+                if (opinion.getUserInfo().getPortrait().startsWith("http")) {
+                    url = opinion.getUserInfo().getPortrait();
                 } else {
-                    url = GlobalConfig.imageurl + opinion.getUserInfo().getPortraitMini();
+                    url = GlobalConfig.imageurl + opinion.getUserInfo().getPortrait();
                 }
                 String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
                 // 加载图片

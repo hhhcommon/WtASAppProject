@@ -21,7 +21,7 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
 import com.woting.ui.mine.myupload.adapter.MyUploadListAdapter;
-import com.woting.ui.model.content;
+import com.woting.ui.music.model.content;
 
 import org.json.JSONException;
 import org.json.JSONObject;

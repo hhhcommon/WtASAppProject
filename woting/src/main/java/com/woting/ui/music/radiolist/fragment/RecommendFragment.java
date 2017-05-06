@@ -30,7 +30,7 @@ import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.music.adapter.ContentAdapter;
-import com.woting.ui.model.content;
+import com.woting.ui.music.model.content;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
 import com.woting.ui.musicplay.album.main.AlbumFragment;
@@ -105,6 +105,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             mLoopViewPager.setVisibility(View.GONE);
             setListener();
             if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {// 发送网络请求
+                dialog = DialogUtils.Dialog(context);
                 sendRequest();
                 getImage();
             } else {
@@ -143,28 +144,26 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
 
     // 请求网络数据
     public void sendRequest() {
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
-            if (dialog != null) dialog.dismiss();
-            RadioListFragment.closeDialog();
-            if (refreshType == 1) {
-                tipView.setVisibility(View.VISIBLE);
-                tipView.setTipView(TipView.TipStatus.NO_NET);
-                mListView.stopRefresh();
-            } else {
-                mListView.stopLoadMore();
-            }
-            return;
-        }
-        VolleyRequest.requestPost(GlobalConfig.getContentUrl, RadioListFragment.tag, setParam(), new VolleyCallback() {
-            private String ReturnType;
 
+            JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+            try {
+                jsonObject.put("MediaType", "");
+                jsonObject.put("CatalogType", RadioListFragment.catalogType);
+                jsonObject.put("CatalogId", RadioListFragment.id);
+                jsonObject.put("Page", String.valueOf(page));
+                jsonObject.put("PerSize", "3");
+                jsonObject.put("ResultType", "3");
+                jsonObject.put("PageSize", "10");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        VolleyRequest.requestPost(GlobalConfig.getContentUrl, RadioListFragment.tag, jsonObject, new VolleyCallback() {
             @Override
             protected void requestSuccess(JSONObject result) {
-                RadioListFragment.closeDialog();
                 if (dialog != null) dialog.dismiss();
                 if (RadioListFragment.isCancel()) return;
                 try {
-                    ReturnType = result.getString("ReturnType");
+                    String ReturnType = result.getString("ReturnType");
                     if (ReturnType != null && ReturnType.equals("1001")) {
                         page++;
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
@@ -210,7 +209,6 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             @Override
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
-                RadioListFragment.closeDialog();
                 if (refreshType == 1) {
                     tipView.setVisibility(View.VISIBLE);
                     tipView.setTipView(TipView.TipStatus.IS_ERROR);
@@ -219,22 +217,6 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                 }
             }
         });
-    }
-
-    private JSONObject setParam() {
-        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        try {
-            jsonObject.put("MediaType", "");
-            jsonObject.put("CatalogType", RadioListFragment.catalogType);
-            jsonObject.put("CatalogId", RadioListFragment.id);
-            jsonObject.put("Page", String.valueOf(page));
-            jsonObject.put("PerSize", "3");
-            jsonObject.put("ResultType", "2");
-            jsonObject.put("PageSize", "10");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
     }
 
     private void setOnItem() {
@@ -317,58 +299,55 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
     private void getImage() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-        /*    jsonObject.put("CatalogType", RadioListFragment.catalogType);
-            jsonObject.put("CatalogId", RadioListFragment.id);
-            jsonObject.put("Size", "4");*/
             jsonObject.put("CatalogType", "-1");
-            jsonObject.put("CatalogId", "cn17");
-            jsonObject.put("Size", "4");// 此处需要改成-1
+            jsonObject.put("CatalogId",RadioListFragment.id);
+            jsonObject.put("Size", "-1");
         } catch (JSONException e) {
             e.printStackTrace();
         }
         VolleyRequest.requestPost(GlobalConfig.getImage, RadioListFragment.tag, jsonObject, new VolleyCallback() {
-            private String ReturnType;
-
             @Override
             protected void requestSuccess(JSONObject result) {
                 if (dialog != null) dialog.dismiss();
                 if (RadioListFragment.isCancel()) return;
                 try {
-                    ReturnType = result.getString("ReturnType");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if (ReturnType != null && ReturnType.equals("1001")) {
-                    try {
-                        imageList = new Gson().fromJson(result.getString("LoopImgs"), new TypeToken<List<Image>>() {
-                        }.getType());
-                        if (imageList != null && imageList.size() > 0) {
-                            // 有轮播图
-                            ImageStringList.clear();
-                            mLoopViewPager.setImageLoader(new PicassoBannerLoader());
-                            for (int i = 0; i < imageList.size(); i++) {
-                                ImageStringList.add(imageList.get(i).getLoopImg());
-                            }
-                            mLoopViewPager.setImages(ImageStringList);
-                            mLoopViewPager.setOnBannerListener(new OnBannerListener() {
-                                @Override
-                                public void OnBannerClick(int position) {
-                                    ToastUtils.show_always(context, ImageStringList.get(position));
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        try {
+                            imageList = new Gson().fromJson(result.getString("LoopImgs"), new TypeToken<List<Image>>() {
+                            }.getType());
+                            if (imageList != null && imageList.size() > 0) {
+                                // 有轮播图
+                                ImageStringList.clear();
+                                mLoopViewPager.setImageLoader(new PicassoBannerLoader());
+                                for (int i = 0; i < imageList.size(); i++) {
+                                    ImageStringList.add(imageList.get(i).getLoopImg());
                                 }
-                            });
-                            mLoopViewPager.start();
-                            tipView.setVisibility(View.GONE);
-                            mLoopViewPager.setVisibility(View.VISIBLE);
-                        } else {
-                            // 无轮播图，原先的轮播图就是隐藏的此处不需要操作
+                                mLoopViewPager.setImages(ImageStringList);
+                                mLoopViewPager.setOnBannerListener(new OnBannerListener() {
+                                    @Override
+                                    public void OnBannerClick(int position) {
+                                        ToastUtils.show_always(context, ImageStringList.get(position));
+                                    }
+                                });
+                                mLoopViewPager.start();
+                                tipView.setVisibility(View.GONE);
+                                mLoopViewPager.setVisibility(View.VISIBLE);
+                            } else {
+                                // 无轮播图，原先的轮播图就是隐藏的此处不需要操作
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            mLoopViewPager.setVisibility(View.GONE);
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } else {
                         mLoopViewPager.setVisibility(View.GONE);
                     }
-                } else {
+                } catch (JSONException e) {
+                    e.printStackTrace();
                     mLoopViewPager.setVisibility(View.GONE);
                 }
+
             }
 
             @Override

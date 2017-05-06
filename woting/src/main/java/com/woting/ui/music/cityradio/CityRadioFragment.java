@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -31,7 +30,7 @@ import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.music.adapter.ContentAdapter;
-import com.woting.ui.model.content;
+import com.woting.ui.music.model.content;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.music.radio.adapter.OnLinesAdapter;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
@@ -82,32 +81,121 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.activity_radio_city, container, false);
-            rootView.setOnClickListener(this);
-
-            setView();
-            handleIntent();
-            initDao();
-        }
-        return rootView;
+        handleIntent();
+        initDao();
     }
 
     private void handleIntent() {
         Bundle bundle = getArguments();
-        String type = bundle.getString("fromtype");
-        if (type != null && type.trim().equals("city")) {
-            CatalogName = bundle.getString("name");
-            CatalogId = bundle.getString("id");
+        CatalogName = bundle.getString("name");
+        CatalogId = bundle.getString("id");
+    }
+
+    // 初始化数据库命令执行对象
+    private void initDao() {
+        dbDao = new SearchPlayerHistoryDao(context);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,  Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.activity_radio_city, container, false);
+            rootView.setOnClickListener(this);
+            setView();
+            getData();
         }
+        return rootView;
+    }
+
+    private void setView() {
+        tipView = (TipView) rootView.findViewById(R.id.tip_view);
+        tipView.setWhiteClick(this);
+
+        rootView.findViewById(R.id.head_left_btn).setOnClickListener(this);
+        mTextView_Head = (TextView) rootView.findViewById(R.id.head_name_tv);
         if (!TextUtils.isEmpty(CatalogName)) {
             mTextView_Head.setText(CatalogName);
         }
+
+        mListView = (ExpandableListView) rootView.findViewById(R.id.listview_fm);
+        mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+        mListView.setGroupIndicator(null);
+        mListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                return true;
+            }
+        });
+
+        mlistView_main = (XListView) rootView.findViewById(R.id.listview_lv);
+        mlistView_main.setSelector(new ColorDrawable(Color.TRANSPARENT));
+        mlistView_main.setPullLoadEnable(true);
+        mlistView_main.setPullRefreshEnable(true);
+        mlistView_main.setXListViewListener(new XListView.IXListViewListener() {
+            @Override
+            public void onRefresh() {
+                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                    RefreshType = 1;
+                    ViewType = -1;
+                    page = 1;
+                    sendTwice();
+                } else {
+                    ToastUtils.show_always(context, "请检查您的网络");
+                }
+            }
+
+            @Override
+            public void onLoadMore() {
+                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                    RefreshType = 2;
+                    page++;
+                    sendTwice();
+                } else {
+                    ToastUtils.show_always(context, "请检查您的网络");
+                }
+            }
+        });
+
+        mPullToRefreshLayout = (PullToRefreshLayout) rootView.findViewById(R.id.refresh_view);
+        mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
+                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                    page = 1;
+                    RefreshType = 1;
+                    BeginCatalogId = "";
+                    if (CatalogId.equals("810000") || CatalogId.equals("710000") || CatalogId.equals("820000")) {
+                        sendTwice();
+                        mListView.setVisibility(View.GONE);
+                        mPullToRefreshLayout.setVisibility(View.GONE);
+                        mlistView_main.setVisibility(View.VISIBLE);
+                    } else {
+                        send();
+                    }
+                } else {
+                    mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.NO_NET);
+                }
+            }
+
+            @Override
+            public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+                page++;
+                RefreshType = 2;
+                if (CatalogId.equals("810000") || CatalogId.equals("710000") || CatalogId.equals("820000")) {
+                    sendTwice();
+                    mListView.setVisibility(View.GONE);
+                    mPullToRefreshLayout.setVisibility(View.GONE);
+                    mlistView_main.setVisibility(View.VISIBLE);
+                } else {
+                    send();
+                }
+            }
+        });
+    }
+
+    private void getData() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1 && CatalogId != null) {
             dialog = DialogUtils.Dialog(context);
             if (CatalogId.equals("810000") || CatalogId.equals("710000") || CatalogId.equals("820000")) {
@@ -126,7 +214,22 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
     }
 
     private void send() {
-        VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, setParamSend(), new VolleyCallback() {
+
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("MediaType", "RADIO");
+            jsonObject.put("CatalogId", CatalogId);
+            jsonObject.put("CatalogType", "2");
+            jsonObject.put("RecursionTree", "1");
+            jsonObject.put("ResultType", "1");
+            jsonObject.put("PageSize", "10");
+            jsonObject.put("Page", String.valueOf(page));
+            jsonObject.put("BeginCatalogId", BeginCatalogId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, jsonObject, new VolleyCallback() {
             private String StringSubList;
             private String ReturnType;
 
@@ -175,7 +278,7 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
                                     }
 
                                     if (adapter == null) {
-                                        adapter = new OnLinesAdapter(context, SubList,3);
+                                        adapter = new OnLinesAdapter(context, SubList, 3);
                                         mListView.setAdapter(adapter);
                                     } else {
                                         adapter.notifyDataSetChanged();
@@ -224,7 +327,6 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
     }
 
     private void setListViewExpand() {
-
         mListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
@@ -233,7 +335,7 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
                     String MediaType = SubList.get(groupPosition).getList().get(childPosition).getMediaType();
                     if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
 
-                        dbDao.savePlayerHistory(MediaType,SubList.get(groupPosition).getList(),childPosition);// 保存播放历史
+                        dbDao.savePlayerHistory(MediaType, SubList.get(groupPosition).getList(), childPosition);// 保存播放历史
 
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
@@ -251,7 +353,21 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
     }
 
     private void sendTwice() {
-        VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, setParam(), new VolleyCallback() {
+
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("MediaType", "RADIO");
+            jsonObject.put("CatalogId", CatalogId);
+            jsonObject.put("CatalogType", "2");
+            jsonObject.put("ResultType", "3");
+            jsonObject.put("PageSize", "10");
+            jsonObject.put("Page", String.valueOf(page));
+            jsonObject.put("BeginCatalogId", BeginCatalogId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, jsonObject, new VolleyCallback() {
             private String StringSubList;
             private String ReturnType;
 
@@ -348,43 +464,7 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
         });
     }
 
-    private JSONObject setParam() {
-        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        try {
-            jsonObject.put("MediaType", "RADIO");
-            jsonObject.put("CatalogId", CatalogId);
-            jsonObject.put("CatalogType", "2");
-            jsonObject.put("ResultType", "3");
-            jsonObject.put("PageSize", "10");
-            jsonObject.put("Page", String.valueOf(page));
-            jsonObject.put("BeginCatalogId", BeginCatalogId);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
-    }
-
-    private JSONObject setParamSend() {
-        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        try {
-            jsonObject.put("MediaType", "RADIO");
-            jsonObject.put("CatalogId", CatalogId);
-            jsonObject.put("CatalogType", "2");
-            jsonObject.put("ResultType", "1");
-            jsonObject.put("PageSize", "10");
-            jsonObject.put("Page", String.valueOf(page));
-            jsonObject.put("BeginCatalogId", BeginCatalogId);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
-    }
-
-    private void initDao() {// 初始化数据库命令执行对象
-        dbDao = new SearchPlayerHistoryDao(context);
-    }
-
-    // 这里要改
+    //
     protected void setListView() {
         mlistView_main.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -392,8 +472,7 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
                 if (newList != null && newList.get(position - 1) != null && newList.get(position - 1).getMediaType() != null) {
                     String MediaType = newList.get(position - 1).getMediaType();
                     if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
-                        dbDao.savePlayerHistory(MediaType,newList,position-1);// 保存播放历史
-
+                        dbDao.savePlayerHistory(MediaType, newList, position - 1);// 保存播放历史
 
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
@@ -401,93 +480,6 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
                         push.putExtras(bundle1);
                         context.sendBroadcast(push);
                     }
-                }
-            }
-        });
-    }
-
-    private void setView() {
-        tipView = (TipView) rootView.findViewById(R.id.tip_view);
-        tipView.setWhiteClick(this);
-
-        rootView.findViewById(R.id.head_left_btn).setOnClickListener(this);
-
-        mListView = (ExpandableListView) rootView.findViewById(R.id.listview_fm);
-        mlistView_main = (XListView) rootView.findViewById(R.id.listview_lv);
-        mTextView_Head = (TextView) rootView.findViewById(R.id.head_name_tv);
-        mListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                return true;
-            }
-        });
-        mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-        mlistView_main.setSelector(new ColorDrawable(Color.TRANSPARENT));
-        mListView.setGroupIndicator(null);
-
-        mlistView_main.setPullLoadEnable(true);
-        mlistView_main.setPullRefreshEnable(true);
-
-        mlistView_main.setXListViewListener(new XListView.IXListViewListener() {
-            @Override
-            public void onRefresh() {
-                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                    RefreshType = 1;
-                    ViewType = -1;
-                    page = 1;
-                    sendTwice();
-                } else {
-                    ToastUtils.show_always(context, "请检查您的网络");
-                }
-            }
-
-            @Override
-            public void onLoadMore() {
-                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                    RefreshType = 2;
-                    page++;
-                    sendTwice();
-                } else {
-                    ToastUtils.show_always(context, "请检查您的网络");
-                }
-            }
-        });
-
-        mPullToRefreshLayout = (PullToRefreshLayout) rootView.findViewById(R.id.refresh_view);
-        mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                    page = 1;
-                    RefreshType = 1;
-                    BeginCatalogId = "";
-                    if (CatalogId.equals("810000") || CatalogId.equals("710000") || CatalogId.equals("820000")) {
-                        sendTwice();
-                        mListView.setVisibility(View.GONE);
-                        mPullToRefreshLayout.setVisibility(View.GONE);
-                        mlistView_main.setVisibility(View.VISIBLE);
-                    } else {
-                        send();
-                    }
-                } else {
-                    mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-                    tipView.setVisibility(View.VISIBLE);
-                    tipView.setTipView(TipView.TipStatus.NO_NET);
-                }
-            }
-
-            @Override
-            public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
-                page++;
-                RefreshType = 2;
-                if (CatalogId.equals("810000") || CatalogId.equals("710000") || CatalogId.equals("820000")) {
-                    sendTwice();
-                    mListView.setVisibility(View.GONE);
-                    mPullToRefreshLayout.setVisibility(View.GONE);
-                    mlistView_main.setVisibility(View.VISIBLE);
-                } else {
-                    send();
                 }
             }
         });

@@ -253,9 +253,7 @@ public class CityListFragment extends Fragment implements OnClickListener, TipVi
                 } else {
                     CityRadioFragment fragment = new CityRadioFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("fromtype", "city");
                     bundle.putString("name", userList.get(position).getCatalogName());
-                    bundle.putString("type", "2");
                     bundle.putString("id", userList.get(position).getCatalogId());
                     fragment.setArguments(bundle);
                     HomeActivity.open(fragment);

@@ -83,7 +83,7 @@ public class FriendAddActivity extends AppBaseActivity implements OnClickListene
         UserInviteMeInside data = (UserInviteMeInside) getIntent().getSerializableExtra("contact");
         if (data != null) {
             nick_name = data.getNickName();
-            imageUrl = data.getPortraitMini();
+            imageUrl = data.getPortrait();
             id = data.getUserId();
             descN = data.getUserSign();
             userNum = data.getUserNum();

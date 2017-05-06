@@ -14,7 +14,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
-import com.woting.ui.model.GroupInfo;
+import com.woting.ui.interphone.model.GroupInfo;
 
 import java.util.List;
 
@@ -74,13 +74,13 @@ public class GroupTalkAdapter extends BaseAdapter {
                     holder.tv_name.setText(lists.getNickName());//名
                 }
             }
-            if (lists.getPortraitBig() == null || lists.getPortraitBig().equals("") || lists.getPortraitBig().equals("null") || lists.getPortraitBig().trim().equals("")) {
+            if (lists.getPortrait() == null || lists.getPortrait().equals("") || lists.getPortrait().equals("null") || lists.getPortrait().trim().equals("")) {
                 holder.imageView_touxiang.setImageResource(R.mipmap.wt_image_tx_hy);
             } else {
-                if (lists.getPortraitMini().startsWith("http:")) {
-                    url = lists.getPortraitMini();
+                if (lists.getPortrait().startsWith("http:")) {
+                    url = lists.getPortrait();
                 } else {
-                    url = GlobalConfig.imageurl + lists.getPortraitMini();
+                    url = GlobalConfig.imageurl + lists.getPortrait();
                 }
                 String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
 

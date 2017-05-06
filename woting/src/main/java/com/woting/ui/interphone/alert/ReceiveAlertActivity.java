@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.woting.R;
@@ -24,7 +23,7 @@ import com.woting.common.util.VibratorUtils;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
 import com.woting.ui.interphone.chat.fragment.ChatFragment;
 import com.woting.ui.interphone.chat.model.DBTalkHistorary;
-import com.woting.ui.interphone.commom.service.InterPhoneControl;
+import com.woting.common.service.InterPhoneControl;
 import com.woting.ui.interphone.main.DuiJiangActivity;
 import com.woting.ui.main.MainActivity;
 
@@ -93,7 +92,7 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
             if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
                 for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
                     if (callerId.equals(GlobalConfig.list_person.get(i).getUserId())) {
-                        image = GlobalConfig.list_person.get(i).getPortraitBig();
+                        image = GlobalConfig.list_person.get(i).getPortrait();
                         name = GlobalConfig.list_person.get(i).getNickName();
                         break;
                     }

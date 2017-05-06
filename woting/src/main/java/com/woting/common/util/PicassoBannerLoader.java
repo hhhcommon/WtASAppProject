@@ -5,6 +5,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.woting.common.config.GlobalConfig;
+import com.woting.common.constant.IntegerConstant;
 import com.youth.banner.loader.ImageLoader;
 
 /**
@@ -18,7 +19,7 @@ public class PicassoBannerLoader extends ImageLoader {
         if (!contentImg.startsWith("http")) {
             contentImg = GlobalConfig.imageurl + contentImg;
         }
-        //contentImg = AssembleImageUrlUtils.assembleImageUrl(contentImg,"1080_450");
-        Picasso.with(context).load(contentImg.replace("\\/", "/")).resize(1080,450).into(imageView);
+        String _url = AssembleImageUrlUtils.assembleImageUrl(contentImg,"1080_450");
+        AssembleImageUrlUtils.loadImage(_url, contentImg, imageView, IntegerConstant.TYPE_BANNER);
     }
 }

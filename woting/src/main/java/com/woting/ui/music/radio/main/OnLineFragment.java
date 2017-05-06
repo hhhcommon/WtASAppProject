@@ -42,7 +42,7 @@ import com.woting.common.widgetui.HeightListView;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout;
 import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout.OnRefreshListener;
-import com.woting.ui.model.content;
+import com.woting.ui.music.model.content;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
 import com.woting.ui.music.citylist.main.CityListFragment;

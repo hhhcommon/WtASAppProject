@@ -1,6 +1,6 @@
 package Test;
 
-import com.woting.ui.interphone.commom.base64.Base64;
+import com.woting.common.base64.Base64;
 
 import java.io.File;
 import java.io.FileInputStream;

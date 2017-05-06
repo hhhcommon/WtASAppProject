@@ -32,8 +32,8 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.model.GroupInfo;
-import com.woting.ui.common.model.UserInfo;
+import com.woting.ui.interphone.model.GroupInfo;
+import com.woting.ui.interphone.model.UserInfo;
 import com.woting.ui.interphone.alert.CallAlertActivity;
 import com.woting.ui.interphone.chat.fragment.ChatFragment;
 import com.woting.ui.interphone.model.UserInviteMeInside;
@@ -100,14 +100,14 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
         } else if (type.equals("talkoldlistfragment_p")) {
             UserInfo data = (UserInfo) getIntent().getSerializableExtra("data");
             name = data.getNickName();
-            imageUrl = data.getPortraitMini();
+            imageUrl = data.getPortrait();
             id = data.getUserId();
             descN = data.getUserSign();
         } else if (type.equals("TalkGroupNewsActivity_p")) {
             GroupInfo data = (GroupInfo) getIntent().getSerializableExtra("data");
             groupId = this.getIntent().getStringExtra("id");
             name = data.getNickName();
-            imageUrl = data.getPortraitBig();
+            imageUrl = data.getPortrait();
             id = data.getUserId();
             descN = data.getGroupSignature();
             viewType = 1;
@@ -124,7 +124,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             UserInfo data = (UserInfo) getIntent().getSerializableExtra("data");
             groupId = this.getIntent().getStringExtra("id");
             name = data.getNickName();
-            imageUrl = data.getPortraitMini();
+            imageUrl = data.getPortrait();
             id = data.getUserId();
             descN = data.getUserSign();
             viewType = 1;
@@ -132,7 +132,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             //从搜索好友界面进来的
             UserInviteMeInside data = (UserInviteMeInside) getIntent().getSerializableExtra("contact");
             nick_name = data.getNickName();
-            imageUrl = data.getPortraitMini();
+            imageUrl = data.getPortrait();
             id = data.getUserId();
             descN = data.getUserSign();
             Usernum = data.getUserNum();
@@ -145,7 +145,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             //从通讯录
             UserInfo data = (UserInfo) getIntent().getSerializableExtra("data");
             nick_name = data.getNickName();
-            imageUrl = data.getPortraitMini();
+            imageUrl = data.getPortrait();
             id = data.getUserId();
             descN = data.getUserSign();
             Usernum = data.getUserNum();
@@ -159,7 +159,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             GroupInfo data = (GroupInfo) getIntent().getSerializableExtra("data");
             groupId = getIntent().getStringExtra("id");
             nick_name = data.getNickName();
-            imageUrl = data.getPortraitMini();
+            imageUrl = data.getPortrait();
             id = data.getUserId();
             descN = data.getUserSign();
             Usernum = data.getUserNum();
@@ -171,7 +171,7 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
         }else {
             UserInfo data = (UserInfo) getIntent().getSerializableExtra("data");
             name = data.getNickName();
-            imageUrl = data.getPortraitMini();
+            imageUrl = data.getPortrait();
             id = data.getUserId();
             descN = data.getUserSign();
         }

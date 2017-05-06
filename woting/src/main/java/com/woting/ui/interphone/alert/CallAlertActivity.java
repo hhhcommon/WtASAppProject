@@ -29,10 +29,10 @@ import com.woting.common.util.CommonUtils;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
 import com.woting.ui.interphone.chat.fragment.ChatFragment;
 import com.woting.ui.interphone.chat.model.DBTalkHistorary;
-import com.woting.ui.interphone.commom.message.MessageUtils;
-import com.woting.ui.interphone.commom.message.MsgNormal;
-import com.woting.ui.interphone.commom.message.content.MapContent;
-import com.woting.ui.interphone.commom.service.InterPhoneControl;
+import com.woting.ui.interphone.message.MessageUtils;
+import com.woting.ui.interphone.message.MsgNormal;
+import com.woting.ui.interphone.message.content.MapContent;
+import com.woting.common.service.InterPhoneControl;
 import com.woting.ui.interphone.main.DuiJiangActivity;
 
 import java.util.Arrays;
@@ -172,7 +172,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
             if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
                 for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
                     if (id.equals(GlobalConfig.list_person.get(i).getUserId())) {
-                        image = GlobalConfig.list_person.get(i).getPortraitBig();
+                        image = GlobalConfig.list_person.get(i).getPortrait();
                         name = GlobalConfig.list_person.get(i).getNickName();
                         break;
                     }
@@ -524,7 +524,7 @@ public class CallAlertActivity extends Activity implements OnClickListener {
                             if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
                                 for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
                                     if (callerId.equals(GlobalConfig.list_person.get(i).getUserId())) {
-                                        _image = GlobalConfig.list_person.get(i).getPortraitBig();
+                                        _image = GlobalConfig.list_person.get(i).getPortrait();
                                         _name = GlobalConfig.list_person.get(i).getNickName();
                                         break;
                                     }

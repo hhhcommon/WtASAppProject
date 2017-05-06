@@ -14,9 +14,7 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
-import com.woting.ui.model.album;
-import com.woting.ui.model.content;
-import com.woting.ui.model.program;
+import com.woting.ui.music.model.content;
 
 import java.util.List;
 

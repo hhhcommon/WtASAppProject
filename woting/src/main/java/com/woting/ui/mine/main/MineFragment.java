@@ -270,7 +270,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.imageView_ewm:        // 展示二维码
                 UserInviteMeInside news = new UserInviteMeInside();
-                news.setPortraitMini(url);
+                news.setPortrait(url);
                 news.setUserId(userId);
                 news.setNickName(userName);
                 Intent intent = new Intent(context, EWMShowActivity.class);

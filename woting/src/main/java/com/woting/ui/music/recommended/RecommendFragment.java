@@ -29,7 +29,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
-import com.woting.ui.model.content;
+import com.woting.ui.music.model.content;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
 import com.woting.ui.musicplay.album.main.AlbumFragment;
@@ -158,8 +158,8 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("CatalogType", "-1");
-            jsonObject.put("CatalogId", "cn17");
-            jsonObject.put("Size", "-1");// 此处需要改成-1
+            jsonObject.put("CatalogId", "cn0");// 此处需要改
+            jsonObject.put("Size", "-1");
         } catch (JSONException e) {
             e.printStackTrace();
         }

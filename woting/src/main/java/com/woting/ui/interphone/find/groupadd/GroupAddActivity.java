@@ -25,7 +25,7 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.model.GroupInfo;
+import com.woting.ui.interphone.model.GroupInfo;
 import com.woting.ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivity;
 
 import org.json.JSONException;

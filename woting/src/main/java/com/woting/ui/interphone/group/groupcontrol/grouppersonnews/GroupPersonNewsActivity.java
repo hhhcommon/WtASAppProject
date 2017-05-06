@@ -27,8 +27,8 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.model.GroupInfo;
-import com.woting.ui.common.model.UserInfo;
+import com.woting.ui.interphone.model.GroupInfo;
+import com.woting.ui.interphone.model.UserInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -119,7 +119,7 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
             GroupInfo data = (GroupInfo) getIntent().getSerializableExtra("data");
             groupId = this.getIntent().getStringExtra("id");
             nick_name = data.getNickName();
-            imageUrl = data.getPortraitMini();
+            imageUrl = data.getPortrait();
             id = data.getUserId();
             descN = data.getUserSign();
             Usernum = data.getUserNum();

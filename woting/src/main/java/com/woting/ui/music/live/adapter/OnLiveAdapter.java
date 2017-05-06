@@ -1,12 +1,9 @@
 package com.woting.ui.music.live.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,23 +19,16 @@ import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CountDownUtil;
-import com.woting.common.util.TimeUtils;
-import com.woting.ui.model.content;
 import com.woting.ui.music.live.livelist.LiveListFragment;
-import com.woting.ui.music.live.liveparade.LiveParadeActivity;
 import com.woting.ui.music.live.model.MainLive;
 import com.woting.ui.music.live.model.live;
 import com.woting.ui.music.main.HomeActivity;
-import com.woting.ui.music.radio.model.RadioPlay;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TimeZone;
 
 /**
  * 适配器

@@ -16,7 +16,7 @@ import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.TimeUtils;
-import com.woting.ui.model.GroupInfo;
+import com.woting.ui.interphone.model.GroupInfo;
 
 import java.util.List;
 

@@ -26,7 +26,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.baseactivity.BaseActivity;
 import com.woting.ui.common.agreement.AgreementActivity;
-import com.woting.ui.interphone.commom.service.InterPhoneControl;
+import com.woting.common.service.InterPhoneControl;
 
 import org.json.JSONException;
 import org.json.JSONObject;

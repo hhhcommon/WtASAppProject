@@ -31,7 +31,7 @@ import com.woting.ui.interphone.chat.fragment.ChatFragment;
 import com.woting.ui.interphone.find.main.FindActivity;
 import com.woting.ui.interphone.group.creatgroup.CreateGroupActivity;
 import com.woting.ui.interphone.linkman.fragment.LinkManFragment;
-import com.woting.ui.interphone.message.messagecenter.activity.MessageMainActivity;
+import com.woting.ui.interphone.notice.messagecenter.activity.MessageMainActivity;
 import com.woting.ui.main.MainActivity;
 
 import java.util.ArrayList;

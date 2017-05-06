@@ -5,11 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
-import com.woting.ui.musicplay.download.service.DownloadService;
-import com.woting.ui.interphone.commom.service.NotificationClient;
-import com.woting.ui.interphone.commom.service.VoiceStreamPlayer;
-import com.woting.ui.interphone.commom.service.VoiceStreamRecord;
-
 /**
  * 应用核心服务
  * Created by Administrator on 2017/4/13.

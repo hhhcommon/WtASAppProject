@@ -1,19 +1,12 @@
 package com.woting.ui.interphone.group.creatgroup;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.ContentUris;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -45,7 +38,7 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.model.GroupInfo;
+import com.woting.ui.interphone.model.GroupInfo;
 import com.woting.ui.common.photocut.PhotoCutActivity;
 import com.woting.ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivity;
 import com.woting.ui.mine.model.UserPortaitInside;

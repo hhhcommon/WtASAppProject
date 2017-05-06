@@ -9,13 +9,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
-import com.woting.ui.common.model.UserInfo;
+import com.woting.ui.interphone.model.UserInfo;
 
 import java.util.List;
 
@@ -80,7 +79,7 @@ public class GroupPersonAdapter extends BaseAdapter{
 		}else{
 			holder.tv_name.setText(lists.getNickName());
 		}
-		if(lists.getPortraitBig()==null||lists.getPortraitBig().equals("")||lists.getPortraitBig().equals("null")||lists.getPortraitBig().trim().equals("")){
+		if(lists.getPortrait()==null||lists.getPortrait().equals("")||lists.getPortrait().equals("null")||lists.getPortrait().trim().equals("")){
 			if(lists.getOnLine()==2){
 				holder.imageView_touxiang.setImageBitmap(bmpa);
 			}else{
@@ -88,10 +87,10 @@ public class GroupPersonAdapter extends BaseAdapter{
 			}
 		}else{
 			String url;
-			if(lists.getPortraitBig().startsWith("http")){
-				url =  lists.getPortraitBig();
+			if(lists.getPortrait().startsWith("http")){
+				url =  lists.getPortrait();
 			}else{
-				url = GlobalConfig.imageurl + lists.getPortraitBig();
+				url = GlobalConfig.imageurl + lists.getPortrait();
 			}
 			final String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
 			final String c_url = url;

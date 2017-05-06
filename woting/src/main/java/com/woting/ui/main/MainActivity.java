@@ -47,6 +47,7 @@ import com.woting.common.gatherdata.GatherData;
 import com.woting.common.manager.UpdateManager;
 import com.woting.common.receiver.NetWorkChangeReceiver;
 import com.woting.common.receiver.PhoneStatReceiver;
+import com.woting.common.service.CoreService;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
@@ -60,7 +61,8 @@ import com.woting.common.widgetui.AutoScrollTextView;
 import com.woting.common.widgetui.RoundImageView;
 import com.woting.ui.common.favoritetype.FavoriteProgramTypeActivity;
 import com.woting.ui.common.login.LoginActivity;
-import com.woting.ui.model.GroupInfo;
+import com.woting.ui.interphone.model.GroupInfo;
+import com.woting.ui.interphone.model.UserInfo;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.music.citylist.citysmodel.stairCity;
 import com.woting.ui.music.citylist.citysmodel.secondaryCity;
@@ -75,13 +77,12 @@ import com.woting.ui.music.search.main.SearchLikeActivity;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
 import com.woting.ui.interphone.chat.fragment.ChatFragment;
 import com.woting.ui.interphone.chat.model.DBTalkHistorary;
-import com.woting.ui.interphone.commom.message.MessageUtils;
-import com.woting.ui.interphone.commom.message.MsgNormal;
-import com.woting.ui.interphone.commom.message.content.MapContent;
-import com.woting.ui.interphone.commom.model.CallerInfo;
-import com.woting.ui.interphone.commom.model.Data;
-import com.woting.ui.interphone.commom.model.MessageForMainGroup;
-import com.woting.ui.interphone.commom.service.InterPhoneControl;
+import com.woting.ui.interphone.message.MessageUtils;
+import com.woting.ui.interphone.message.MsgNormal;
+import com.woting.ui.interphone.message.content.MapContent;
+import com.woting.ui.interphone.model.Data;
+import com.woting.ui.interphone.model.MessageForMainGroup;
+import com.woting.common.service.InterPhoneControl;
 import com.woting.ui.interphone.linkman.model.LinkMan;
 import com.woting.ui.interphone.main.DuiJiangActivity;
 import com.woting.ui.mine.main.MineActivity;
@@ -105,7 +106,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 public class MainActivity extends TabActivity implements OnClickListener {
     private static MainActivity context;
     public static TabHost tabHost;
-    private static Intent coreService;
+    private static Intent coreService,download;
 
     private static RoundImageView image0;// 播放
     private static ImageView image1, image2, image5;
@@ -140,7 +141,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private AutoScrollTextView tv_notify;
     private LinearLayout lin_notify;
     public static ArrayBlockingQueue<com.woting.ui.interphone.model.Message> MsgQueue = new ArrayBlockingQueue<com.woting.ui.interphone.model.Message>(100);             // 消息队列
-    private Intent download;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,7 +174,6 @@ public class MainActivity extends TabActivity implements OnClickListener {
     }
 
 
-
     // 设置顶栏样式
     private void setType() {
         try {
@@ -201,8 +200,8 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     // 创建服务
     private void createService() {
- /*       coreService = new Intent(this, CoreService.class);
-        startService(coreService);*/
+        coreService = new Intent(this, CoreService.class);
+        startService(coreService);
 
 //        Socket = new Intent(this, SocketClient.class);                                             // socket服务
 //        startService(Socket);
@@ -1163,7 +1162,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                                             // 此次呼叫是"我"主动呼叫别人，所以callerId就是自己==主叫方
                                                             callerId = userInfo.getCallerId();
                                                             try {
-                                                                CallerInfo caller = userInfo.getCallerInfo();
+                                                                UserInfo caller = userInfo.getCallerInfo();
                                                                 String name = caller.getNickName();
                                                                 showPerson(name); // 展示上次存在的单对单对讲
 
@@ -1174,7 +1173,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
                                                             // 此次呼叫是"我"被别人呼叫，所以callerId就是对方==被叫方
                                                             callerId = userInfo.getCallederId();
                                                             try {
-                                                                CallerInfo calleder = userInfo.getCallederInfo();
+                                                                UserInfo calleder = userInfo.getCallederInfo();
                                                                 String name = calleder.getNickName();
                                                                 showPerson(name); // 展示上次存在的单对单对讲
                                                             } catch (Exception e) {
@@ -1308,11 +1307,11 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     //app退出时执行该操作
     public static void stop() {
-        // context.stopService(coreService);
+         context.stopService(coreService);
 //        context.stopService(record);
 //        context.stopService(voicePlayer);
 //        context.stopService(Subclass);
-//        context.stopService(download);
+        context.stopService(download);
 //        context.stopService(Location);
 //        context.stopService(Notification);
         Log.v("--- onStop ---", "--- 杀死进程 ---");

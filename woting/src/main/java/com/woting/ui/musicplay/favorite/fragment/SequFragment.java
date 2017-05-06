@@ -30,7 +30,7 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
-import com.woting.ui.model.content;
+import com.woting.ui.music.model.content;
 import com.woting.ui.music.adapter.ContentForCheckAdapter;
 import com.woting.ui.musicplay.more.PlayerMoreOperationActivity;
 import com.woting.ui.musicplay.album.main.AlbumFragment;

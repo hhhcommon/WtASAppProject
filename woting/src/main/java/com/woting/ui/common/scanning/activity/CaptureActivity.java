@@ -28,7 +28,7 @@ import com.woting.R;
 import com.woting.common.manager.MyActivityManager;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.PhoneMessage;
-import com.woting.ui.model.GroupInfo;
+import com.woting.ui.interphone.model.GroupInfo;
 import com.woting.ui.common.scanning.DecodeThread;
 import com.woting.ui.common.scanning.InactivityTimer;
 import com.woting.ui.common.scanning.handle.CaptureActivityHandler;

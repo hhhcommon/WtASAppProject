@@ -1,6 +1,6 @@
 package com.woting.ui.musicplay.play.model;
 
-import com.woting.ui.model.content;
+import com.woting.ui.music.model.content;
 
 import java.io.Serializable;
 import java.util.List;

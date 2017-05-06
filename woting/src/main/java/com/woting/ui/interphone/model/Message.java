@@ -2,6 +2,9 @@ package com.woting.ui.interphone.model;
 
 import java.io.Serializable;
 
+/**
+ * 应用内的消息对象
+ */
 public class Message implements Serializable {
 	public String Src;
 	public String Url;

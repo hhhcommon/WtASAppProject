@@ -30,7 +30,7 @@ import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.music.adapter.ContentAdapter;
-import com.woting.ui.model.content;
+import com.woting.ui.music.model.content;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
 import com.woting.ui.musicplay.album.main.AlbumFragment;
@@ -162,7 +162,20 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
 
     // 请求网络获取分类信息
     private void sendRequest() {
-        VolleyRequest.requestPost(GlobalConfig.getContentUrl, RadioListFragment.tag, setParam(), new VolleyCallback() {
+
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("CatalogType", CatalogType);
+            jsonObject.put("CatalogId", CatalogId);
+            jsonObject.put("Page", String.valueOf(page));
+            jsonObject.put("ResultType", "3");
+            jsonObject.put("RelLevel", "2");
+            jsonObject.put("PageSize", "10");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        VolleyRequest.requestPost(GlobalConfig.getContentUrl, RadioListFragment.tag, jsonObject, new VolleyCallback() {
             private String ReturnType;
 
             @Override
@@ -226,21 +239,6 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                 }
             }
         });
-    }
-
-    private JSONObject setParam() {
-        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        try {
-            jsonObject.put("CatalogType", CatalogType);
-            jsonObject.put("CatalogId", CatalogId);
-            jsonObject.put("Page", String.valueOf(page));
-            jsonObject.put("ResultType", "3");
-            jsonObject.put("RelLevel", "2");
-            jsonObject.put("PageSize", "10");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
     }
 
     private void setOnItem() {
@@ -320,12 +318,9 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
     private void getImage() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-          /*  jsonObject.put("CatalogType", CatalogType);
-            jsonObject.put("CatalogId", CatalogId);
-            jsonObject.put("Size", "10");// 此处需要改成 -1*/
             jsonObject.put("CatalogType", "-1");
-            jsonObject.put("CatalogId", "cn17");
-            jsonObject.put("Size", "4");// 此处需要改成-1
+            jsonObject.put("CatalogId", CatalogId);
+            jsonObject.put("Size", "-1");
         } catch (JSONException e) {
             e.printStackTrace();
         }

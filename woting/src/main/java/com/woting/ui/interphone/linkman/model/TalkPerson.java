@@ -1,6 +1,6 @@
 package com.woting.ui.interphone.linkman.model;
 
-import com.woting.ui.common.model.UserInfo;
+import com.woting.ui.interphone.model.UserInfo;
 
 import java.io.Serializable;
 import java.util.List;

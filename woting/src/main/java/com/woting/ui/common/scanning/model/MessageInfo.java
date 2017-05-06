@@ -1,6 +1,6 @@
 package com.woting.ui.common.scanning.model;
 
-import com.woting.ui.model.GroupInfo;
+import com.woting.ui.interphone.model.GroupInfo;
 import com.woting.ui.interphone.model.UserInviteMeInside;
 import java.io.Serializable;
 

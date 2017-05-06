@@ -29,7 +29,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
-import com.woting.ui.model.content;
+import com.woting.ui.music.model.content;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
 import com.woting.ui.main.MainActivity;
 import com.woting.ui.music.adapter.ContentForCheckAdapter;

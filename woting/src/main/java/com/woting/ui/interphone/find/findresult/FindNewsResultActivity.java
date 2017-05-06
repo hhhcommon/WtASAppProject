@@ -23,7 +23,7 @@ import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.model.GroupInfo;
+import com.woting.ui.interphone.model.GroupInfo;
 import com.woting.ui.interphone.find.findresult.adapter.FindFriendResultAdapter;
 import com.woting.ui.interphone.find.findresult.adapter.FindGroupResultAdapter;
 import com.woting.ui.interphone.find.friendadd.FriendAddActivity;

@@ -9,7 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.ui.model.content;
+import com.woting.ui.music.model.content;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;

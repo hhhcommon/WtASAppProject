@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.woting.common.util.CommonUtils;
-import com.woting.ui.model.content;
+import com.woting.ui.music.model.content;
 import com.woting.ui.musicplay.download.model.FileInfo;
 import com.woting.ui.musicplay.download.service.DownloadService;
 import com.woting.common.database.SQLiteHelper;

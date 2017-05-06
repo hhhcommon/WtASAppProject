@@ -3,7 +3,6 @@ package com.woting.ui.music.live.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
-import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,21 +13,16 @@ import android.widget.TextView;
 import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.IntegerConstant;
-import com.woting.common.constant.StringConstant;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CountDownUtil;
-import com.woting.common.util.TimeUtils;
-import com.woting.ui.model.content;
 import com.woting.ui.music.live.model.live;
 
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TimeZone;
 
 /**
  * 直播列表展示数据适配器

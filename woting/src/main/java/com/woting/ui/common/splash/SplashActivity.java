@@ -15,11 +15,9 @@ import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.helper.CommonHelper;
-import com.woting.common.util.DialogUtils;
-import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.ui.common.model.UserInfo;
+import com.woting.ui.interphone.model.UserInfo;
 import com.woting.ui.common.welcome.activity.WelcomeActivity;
 import com.woting.ui.main.MainActivity;
 
@@ -96,7 +94,7 @@ public class SplashActivity extends Activity {
                                         et.putString(StringConstant.USER_PHONE_NUMBER, "");
                                     }
                                     try {
-                                        String imageUrl = list.getPortraitMini();// 用户头像
+                                        String imageUrl = list.getPortrait();// 用户头像
                                         if (imageUrl != null && !imageUrl.equals("")) {
                                             et.putString(StringConstant.IMAGEURL, imageUrl);
                                         } else {
@@ -107,7 +105,7 @@ public class SplashActivity extends Activity {
                                         et.putString(StringConstant.IMAGEURL, "");
                                     }
                                     try {
-                                        String imageUrlBig = list.getPortraitBig();// 用户大头像
+                                        String imageUrlBig = list.getPortrait();// 用户大头像
                                         if (imageUrlBig != null && !imageUrlBig.equals("")) {
                                             et.putString(StringConstant.IMAGEURBIG, imageUrlBig);
                                         } else {

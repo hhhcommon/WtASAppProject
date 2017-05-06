@@ -19,12 +19,10 @@ import com.woting.common.config.SocketClientConfig;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.JsonEncloseUtils;
 import com.woting.common.util.ToastUtils;
-import com.woting.ui.interphone.commom.message.Message;
-import com.woting.ui.interphone.commom.message.MessageUtils;
-import com.woting.ui.interphone.commom.message.MsgMedia;
-import com.woting.ui.interphone.commom.message.MsgNormal;
-import com.woting.ui.interphone.commom.service.InterPhoneControl;
-import com.woting.ui.interphone.commom.service.VoiceStreamPlayer;
+import com.woting.ui.interphone.message.Message;
+import com.woting.ui.interphone.message.MessageUtils;
+import com.woting.ui.interphone.message.MsgMedia;
+import com.woting.ui.interphone.message.MsgNormal;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

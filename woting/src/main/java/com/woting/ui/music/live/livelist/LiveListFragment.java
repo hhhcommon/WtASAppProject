@@ -3,12 +3,9 @@ package com.woting.ui.music.live.livelist;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +21,6 @@ import com.google.gson.reflect.TypeToken;
 import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
-import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.DialogUtils;
@@ -38,15 +34,10 @@ import com.woting.live.ChatRoomLiveActivity;
 import com.woting.live.model.LiveInfo;
 import com.woting.live.net.NetManger;
 import com.woting.ui.common.login.LoginActivity;
-import com.woting.ui.main.MainActivity;
-import com.woting.ui.model.content;
-import com.woting.ui.music.adapter.ContentAdapter;
 import com.woting.ui.music.live.adapter.LiveAdapter;
 import com.woting.ui.music.live.liveparade.LiveParadeActivity;
 import com.woting.ui.music.live.model.live;
 import com.woting.ui.music.main.HomeActivity;
-import com.woting.ui.music.radio.model.RadioPlay;
-import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,8 +45,6 @@ import org.json.JSONTokener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * 电台列表

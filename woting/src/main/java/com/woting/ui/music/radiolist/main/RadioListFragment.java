@@ -39,13 +39,14 @@ import java.util.List;
 
 /**
  * 某一分类数据
+ *
  * @author 辛龙
- * 2016年4月5日
+ *         2016年4月5日
  */
 public class RadioListFragment extends Fragment implements OnClickListener, TipView.WhiteViewClick {
     private Context context;
-    private List<String> list;
-    private List<Fragment> fragments;
+    private List<String> list = new ArrayList<>();
+    private List<Fragment> fragments = new ArrayList<>();
     private RecommendFragment recommend;
 
     private TipView tipView;// 没有网络提示
@@ -53,7 +54,7 @@ public class RadioListFragment extends Fragment implements OnClickListener, TipV
     private ViewPager viewPager;
     private View rootView;
     private TextView mTextView_Head;
-    private static Dialog dialog;// 加载对话框
+    private  Dialog dialog;// 加载对话框
 
     private int count = 1;
     public static String catalogName;
@@ -72,112 +73,72 @@ public class RadioListFragment extends Fragment implements OnClickListener, TipV
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.activity_radiolist, container, false);
-            rootView.setOnClickListener(this);
-            isCancelRequest = false;
-            fragments = new ArrayList<>();
-            setView();
-            handleRequestType();
-            if (list == null) {
-                list = new ArrayList<>();
-                list.add("推荐");
-                recommend = new RecommendFragment();
-                fragments.add(recommend);
-            }
-
-            dialog = DialogUtils.Dialog(context);
-            sendRequest();
-        }
-        return rootView;
+        handleRequestType();
     }
 
     // 接收上一个页面传递过来的数据
     private void handleRequestType() {
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            String type = bundle.getString("type");
-            if (type != null && type.trim().equals("fenLeiAdapter")) {
-                try {
-                    FenLeiName list = (FenLeiName) bundle.getSerializable("Catalog");
-                    catalogName = list.getName();
-                    catalogType = list.getAttributes().getmId();
-                    id = list.getAttributes().getId();
-                    mTextView_Head.setText(catalogName);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    mTextView_Head.setText("分类");
-                }
+        String type = getArguments().getString("type");
+        if (type != null && type.trim().equals("fenLeiAdapter")) {
+            try {
+                FenLeiName list = (FenLeiName) getArguments().getSerializable("Catalog");
+                catalogName = list.getName();
+                catalogType = list.getAttributes().getmId();
+                id = list.getAttributes().getId();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
 
-    public static boolean isCancel() {
-        return isCancelRequest;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.activity_radiolist, container, false);
+            rootView.setOnClickListener(this);
+            isCancelRequest = false;
+            setView();
+            getData();
+        }
+        return rootView;
+    }
+
+    // 初始化界面
+    private void setView() {
+        tipView = (TipView) rootView.findViewById(R.id.tip_view);
+        tipView.setWhiteClick(this);
+
+        rootView.findViewById(R.id.head_left_btn).setOnClickListener(this);
+        mTextView_Head = (TextView) rootView.findViewById(R.id.head_name_tv);
+        viewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
+
+        pageSlidingTab = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs_title);
+        pageSlidingTab.setIndicatorHeight(4);                                // 滑动指示器的高度
+        pageSlidingTab.setIndicatorColorResource(R.color.dinglan_orange);    // 滑动指示器的颜色
+        pageSlidingTab.setDividerColorResource(R.color.WHITE);                // 菜单之间的分割线颜色
+        pageSlidingTab.setSelectedTextColorResource(R.color.dinglan_orange);// 选中的字体颜色
+        pageSlidingTab.setTextColorResource(R.color.wt_login_third);        // 默认字体颜色
+
+        if (catalogName != null && !catalogName.trim().equals("")) {
+            mTextView_Head.setText(catalogName);
+        } else {
+            mTextView_Head.setText("分类");
+        }
+    }
+
+    // 获取数据
+    private void getData() {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            dialog = DialogUtils.Dialog(context);
+            sendRequest();
+        } else {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
+        }
     }
 
     // 请求网络获取分类信息
     private void sendRequest() {
-        if(GlobalConfig.CURRENT_NETWORK_STATE_TYPE == -1) {
-            if(dialog != null) dialog.dismiss();
-            tipView.setVisibility(View.VISIBLE);
-            tipView.setTipView(TipView.TipStatus.NO_NET);
-            return ;
-        }
-        VolleyRequest.requestPost(GlobalConfig.getCatalogUrl, tag, setParam(), new VolleyCallback() {
-            private List<SubCata> subDataList;
-            @Override
-            protected void requestSuccess(JSONObject result) {
-                tipView.setVisibility(View.GONE);
-                try {
-                    String ReturnType = result.getString("ReturnType");
-                    if (ReturnType != null && ReturnType.equals("1001")) {
-                        try {
-                            String cd = result.getString("CatalogData");
-                            CatalogData catalogData = new Gson().fromJson(cd, new TypeToken<CatalogData>() {}.getType());
-                            subDataList = catalogData.getSubCata();
-                            if (subDataList != null && subDataList.size() > 0) {
-                                for (int i = 0; i < subDataList.size(); i++) {
-                                    list.add(subDataList.get(i).getCatalogName());
-                                    fragments.add(ClassifyFragment.instance(subDataList.get(i).getCatalogId(), subDataList.get(i).getCatalogType()));
-                                    count++;
-                                }
-                            }
-                            viewPager.setAdapter(new MyPagerAdapter(getChildFragmentManager(), list, fragments));
-                            pageSlidingTab.setViewPager(viewPager);
-                            if (count == 1) {
-                                pageSlidingTab.setVisibility(View.GONE);
-                            }else{
-                                pageSlidingTab.setVisibility(View.VISIBLE);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    } else {
-                        ToastUtils.show_always(context, "暂没有该分类数据");
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            protected void requestError(VolleyError error) {
-                closeDialog();
-                tipView.setVisibility(View.VISIBLE);
-                tipView.setTipView(TipView.TipStatus.IS_ERROR);
-            }
-        });
-    }
-
-    private JSONObject setParam() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("CatalogType", catalogType);
@@ -188,30 +149,73 @@ public class RadioListFragment extends Fragment implements OnClickListener, TipV
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return jsonObject;
-    }
+        VolleyRequest.requestPost(GlobalConfig.getCatalogUrl, tag, jsonObject, new VolleyCallback() {
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (dialog != null)  dialog.dismiss();
 
-    // 关闭加载对话框
-    public static void closeDialog() {
-        if (dialog != null) {
-            dialog.dismiss();
-        }
-    }
+                if (RadioListFragment.isCancel()) return;
+                tipView.setVisibility(View.GONE);
+                try {
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        try {
+                            String cd = result.getString("CatalogData");
+                            CatalogData catalogData = new Gson().fromJson(cd, new TypeToken<CatalogData>() {
+                            }.getType());
+                            List<SubCata> subDataList = catalogData.getSubCata();
+                            if (subDataList != null && subDataList.size() > 0) {
+                                for (int i = 0; i < subDataList.size(); i++) {
+                                    list.add(subDataList.get(i).getCatalogName());
+                                    fragments.add(ClassifyFragment.instance(subDataList.get(i).getCatalogId(), subDataList.get(i).getCatalogType()));
+                                    count++;
+                                }
+                            } else {
+                                list.add("推荐");
+                                recommend = new RecommendFragment();
+                                fragments.add(recommend);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            list.add("推荐");
+                            recommend = new RecommendFragment();
+                            fragments.add(recommend);
+                        }
+                    } else {
+                        list.add("推荐");
+                        recommend = new RecommendFragment();
+                        fragments.add(recommend);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    list.add("推荐");
+                    recommend = new RecommendFragment();
+                    fragments.add(recommend);
+                }
+                viewPager.setAdapter(new MyPagerAdapter(getChildFragmentManager(), list, fragments));
+                pageSlidingTab.setViewPager(viewPager);
+                if (count == 1) {
+                    pageSlidingTab.setVisibility(View.GONE);
+                } else {
+                    pageSlidingTab.setVisibility(View.VISIBLE);
+                }
+            }
 
-    // 初始化界面
-    private void setView() {
-        tipView = (TipView) rootView.findViewById(R.id.tip_view);
-        tipView.setWhiteClick(this);
-
-        rootView.findViewById(R.id.head_left_btn).setOnClickListener(this);
-        mTextView_Head = (TextView) rootView.findViewById(R.id.head_name_tv);
-        pageSlidingTab = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs_title);
-        viewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
-        pageSlidingTab.setIndicatorHeight(4);                                // 滑动指示器的高度
-        pageSlidingTab.setIndicatorColorResource(R.color.dinglan_orange);    // 滑动指示器的颜色
-        pageSlidingTab.setDividerColorResource(R.color.WHITE);                // 菜单之间的分割线颜色
-        pageSlidingTab.setSelectedTextColorResource(R.color.dinglan_orange);// 选中的字体颜色
-        pageSlidingTab.setTextColorResource(R.color.wt_login_third);        // 默认字体颜色
+            @Override
+            protected void requestError(VolleyError error) {
+                if (dialog != null)  dialog.dismiss();
+                list.add("推荐");
+                recommend = new RecommendFragment();
+                fragments.add(recommend);
+                viewPager.setAdapter(new MyPagerAdapter(getChildFragmentManager(), list, fragments));
+                pageSlidingTab.setViewPager(viewPager);
+                if (count == 1) {
+                    pageSlidingTab.setVisibility(View.GONE);
+                } else {
+                    pageSlidingTab.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     @Override
@@ -221,6 +225,15 @@ public class RadioListFragment extends Fragment implements OnClickListener, TipV
                 HomeActivity.close();
                 break;
         }
+    }
+
+    /**
+     * 当前页面是否销毁
+     *
+     * @return isCancelRequest
+     */
+    public static boolean isCancel() {
+        return isCancelRequest;
     }
 
     @Override
@@ -240,5 +253,6 @@ public class RadioListFragment extends Fragment implements OnClickListener, TipV
             fragments.clear();
             fragments = null;
         }
+
     }
 }

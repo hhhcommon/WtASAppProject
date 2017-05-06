@@ -1,8 +1,7 @@
 package com.woting.ui.music.radio.model;
 
 
-import com.woting.ui.model.content;
-import com.woting.ui.model.radio;
+import com.woting.ui.music.model.content;
 
 import java.io.Serializable;
 import java.util.ArrayList;

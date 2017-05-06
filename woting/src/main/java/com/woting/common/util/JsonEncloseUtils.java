@@ -3,8 +3,8 @@ package com.woting.common.util;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.woting.ui.interphone.commom.message.Message;
-import com.woting.ui.interphone.commom.message.MessageUtils;
+import com.woting.ui.interphone.message.Message;
+import com.woting.ui.interphone.message.MessageUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

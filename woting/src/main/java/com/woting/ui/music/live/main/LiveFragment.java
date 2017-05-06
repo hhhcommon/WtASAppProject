@@ -2,15 +2,11 @@ package com.woting.ui.music.live.main;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +26,6 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.PicassoBannerLoader;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
-import com.woting.common.volley.VolleyNewCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout;
@@ -39,25 +34,18 @@ import com.woting.live.ChatRoomLiveActivity;
 import com.woting.live.model.LiveInfo;
 import com.woting.live.net.NetManger;
 import com.woting.ui.common.login.LoginActivity;
-import com.woting.ui.common.scanning.activity.CaptureActivity;
-import com.woting.ui.model.content;
 import com.woting.ui.music.live.adapter.OnLiveAdapter;
 import com.woting.ui.music.live.liveparade.LiveParadeActivity;
 import com.woting.ui.music.live.model.MainLive;
-import com.woting.ui.music.radio.model.RadioPlay;
 import com.woting.ui.music.radiolist.mode.Image;
-import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
 import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * 直播主页
