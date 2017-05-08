@@ -216,10 +216,10 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
             public void onClick(View v) {
                 FMListFragment fragment = new FMListFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("fromtype", "net"); // 界面判断标签
-                bundle.putString("name", "网络台");
-                bundle.putString("type", "9");
-                bundle.putString("id", "dtfl2002");
+                bundle.putString("from", "net"); // 界面判断标签
+                bundle.putString("CatalogName", "网络台");
+                bundle.putString("CatalogId", "dtfl2002");
+                bundle.putString("CatalogType", "9");
                 fragment.setArguments(bundle);
                 HomeActivity.open(fragment);
             }
@@ -235,10 +235,10 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
 
                     FMListFragment fragment = new FMListFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("fromtype", "online");
-                    bundle.putString("name", cityName);
-                    bundle.putString("type", "2");
-                    bundle.putString("id", cityId);
+                    bundle.putString("from", "online");
+                    bundle.putString("CatalogName", cityName);
+                    bundle.putString("CatalogType", "2");
+                    bundle.putString("CatalogId", cityId);
                     fragment.setArguments(bundle);
                     HomeActivity.open(fragment);
                 }

@@ -92,6 +92,44 @@ public class FMListFragment extends Fragment implements TipView.WhiteViewClick {
         super.onCreate(savedInstanceState);
         context = getActivity();
         initDao();
+        HandleRequestType();    // 获取上层界面传递的数据
+    }
+
+    private void initDao() {// 初始化数据库命令执行对象
+        dbDao = new SearchPlayerHistoryDao(context);
+    }
+
+    // 获取上层界面传递的数据
+    private void HandleRequestType() {
+        Bundle bundle = getArguments();
+        if (bundle == null) return;
+        String type = bundle.getString("from");// 来源
+        if (type != null && type.trim().equals("cityRadio")) {
+            CatalogName = bundle.getString("CatalogName");
+            CatalogId = bundle.getString("CatalogId");
+            CatalogType = bundle.getString("CatalogType");
+            ViewType=2;
+        } else if (type != null && type.trim().equals("net")) {// 网络台
+            CatalogName = bundle.getString("CatalogName");
+            CatalogId = bundle.getString("CatalogId");
+            CatalogType = bundle.getString("CatalogType");
+            ViewType = 2;
+        }else if (type != null && type.trim().equals("online")) {// 电台页头部更多
+            CatalogName = bundle.getString("CatalogName");
+            CatalogId = bundle.getString("CatalogId");
+            CatalogType = bundle.getString("CatalogType");
+            ViewType = 1;
+        }else if (type != null && type.trim().equals("onlineAdapter")) {
+            CatalogName = bundle.getString("CatalogName");
+            CatalogId = bundle.getString("CatalogId");
+            CatalogType = bundle.getString("CatalogType");
+            ViewType = 4;
+        }else if (type != null && type.trim().equals("onlineAdapterMore")) {
+            CatalogName = bundle.getString("CatalogName");
+            CatalogId = bundle.getString("CatalogId");
+            CatalogType = bundle.getString("CatalogType");
+            ViewType = 3;
+        }
     }
 
     @Override
@@ -101,37 +139,20 @@ public class FMListFragment extends Fragment implements TipView.WhiteViewClick {
             rootView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                 }
             });
             setView();              // 设置界面
             setListener();          // 设置监听
-            HandleRequestType();    // 获取上层界面传递的数据
             getData();              // 获取数据
 
         }
         return rootView;
     }
 
-    private void initDao() {// 初始化数据库命令执行对象
-        dbDao = new SearchPlayerHistoryDao(context);
-    }
-
-    // 获取数据
-    private void getData() {
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-            dialog = DialogUtils.Dialog(context);
-            sendRequest();
-        } else {
-            tipView.setVisibility(View.VISIBLE);
-            tipView.setTipView(TipView.TipStatus.NO_NET);
-        }
-    }
-
     private void setView() {
         mListView = (XListView) rootView.findViewById(R.id.listview_fm);
         mTextView_Head = (TextView) rootView.findViewById(R.id.head_name_tv);
-
+        mTextView_Head.setText(CatalogName);
         tipView = (TipView) rootView.findViewById(R.id.tip_view);
         tipView.setWhiteClick(this);
 
@@ -171,36 +192,15 @@ public class FMListFragment extends Fragment implements TipView.WhiteViewClick {
         });
     }
 
-    private void HandleRequestType() {
-        Bundle bundle = getArguments();
-        if (bundle == null) return;
-        String type = bundle.getString("fromtype");
-        String Position = bundle.getString("Position");
-        if (Position == null || Position.trim().equals("")) {
-            ViewType = 1;
+    // 获取数据
+    private void getData() {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            dialog = DialogUtils.Dialog(context);
+            sendRequest();
         } else {
-            ViewType = -1;
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
         }
-        RadioPlay list;
-        if (type != null && type.trim().equals("online")) {
-            CatalogName = bundle.getString("name");
-            CatalogId = bundle.getString("id");
-        } else if (type != null && type.trim().equals("net")) {
-            CatalogName = bundle.getString("name");
-            CatalogId = bundle.getString("id");
-            CatalogType = bundle.getString("type");
-            ViewType = 2;
-        } else if (type != null && type.trim().equals("cityRadio")) {
-            CatalogName = bundle.getString("name");
-            CatalogId = bundle.getString("id");
-            CatalogType = bundle.getString("type");
-            ViewType = 3;
-        } else {
-            list = (RadioPlay) bundle.getSerializable("list");
-            CatalogName = list.getCatalogName();
-            CatalogId = list.getCatalogId();
-        }
-        mTextView_Head.setText(CatalogName);
     }
 
     private void sendRequest() {
@@ -229,10 +229,10 @@ public class FMListFragment extends Fragment implements TipView.WhiteViewClick {
                 jsonObject.put("ResultType", "3");
                 jsonObject.put("PageSize", "50");
                 jsonObject.put("Page", String.valueOf(page));
-            } else {
+            } else if (ViewType == 4){
                 // 按照分类获取内容
                 JSONObject js = new JSONObject();
-                jsonObject.put("CatalogType", "1");
+                jsonObject.put("CatalogType", CatalogType);
                 jsonObject.put("CatalogId", CatalogId);
                 js.put("CatalogType", "2");
                 js.put("CatalogId", cityId);

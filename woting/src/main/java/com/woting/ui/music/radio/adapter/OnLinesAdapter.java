@@ -110,8 +110,10 @@ public class OnLinesAdapter extends BaseExpandableListAdapter {
                 public void onClick(View v) {
                     FMListFragment fragment = new FMListFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("Position", "GROUP");
-                    bundle.putSerializable("list", lists);
+                    bundle.putString("from", "onlineAdapter");
+                    bundle.putString("CatalogName", lists.getCatalogName());
+                    bundle.putString("CatalogType",lists.getCatalogType());
+                    bundle.putString("CatalogId", lists.getCatalogId());
                     fragment.setArguments(bundle);
                     HomeActivity.open(fragment);
                 }
@@ -128,11 +130,10 @@ public class OnLinesAdapter extends BaseExpandableListAdapter {
                 public void onClick(View v) {
                     FMListFragment fmListFragment = new FMListFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("fromtype", "cityRadio");
-                    bundle.putSerializable("list", lists);
-                    bundle.putString("name", lists.getCatalogName());
-                    bundle.putString("type", "2");
-                    bundle.putString("id", lists.getCatalogId());
+                    bundle.putString("from", "onlineAdapterMore");
+                    bundle.putString("CatalogName", lists.getCatalogName());
+                    bundle.putString("CatalogType",lists.getCatalogType());
+                    bundle.putString("CatalogId", lists.getCatalogId());
                     fmListFragment.setArguments(bundle);
                     HomeActivity.open(fmListFragment);
                 }

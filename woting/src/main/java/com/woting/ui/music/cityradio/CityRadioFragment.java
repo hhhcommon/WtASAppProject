@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -30,6 +32,7 @@ import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.ui.music.adapter.ContentAdapter;
+import com.woting.ui.music.fmlist.FMListFragment;
 import com.woting.ui.music.model.content;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.music.radio.adapter.OnLinesAdapter;
@@ -61,7 +64,10 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
     private List<RadioPlay> SubTempList;
     private Dialog dialog;
     private ExpandableListView mListView;
+    private View headView;
     private XListView mlistView_main;
+    private View rootView;
+    private ListView listView_head;
     private TextView mTextView_Head;
     private TipView tipView;// 没有网络、没有数据提示
 
@@ -74,8 +80,8 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
     private int page = 1;
     private String BeginCatalogId = "";
     private int ViewType = -1; //=-1时 正常处理 等于end时可以加载土司
+    private String ResultType = "1";// 1节点树,3列表
 
-    private View rootView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,7 +103,7 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,  Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.activity_radio_city, container, false);
             rootView.setOnClickListener(this);
@@ -116,6 +122,14 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
         if (!TextUtils.isEmpty(CatalogName)) {
             mTextView_Head.setText(CatalogName);
         }
+
+        headView = LayoutInflater.from(context).inflate(R.layout.headview_fragment_city, null);// 头部 view
+
+        headView.findViewById(R.id.lin_head_more).setOnClickListener(this);
+        TextView tv_name = (TextView) headView.findViewById(R.id.tv_name);
+        tv_name.setText("省级台");
+
+        listView_head = (ListView) headView.findViewById(R.id.listView_head);
 
         mListView = (ExpandableListView) rootView.findViewById(R.id.listview_fm);
         mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
@@ -136,9 +150,8 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
             public void onRefresh() {
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                     RefreshType = 1;
-                    ViewType = -1;
                     page = 1;
-                    sendTwice();
+                    send();
                 } else {
                     ToastUtils.show_always(context, "请检查您的网络");
                 }
@@ -148,8 +161,7 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
             public void onLoadMore() {
                 if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
                     RefreshType = 2;
-                    page++;
-                    sendTwice();
+                    send();
                 } else {
                     ToastUtils.show_always(context, "请检查您的网络");
                 }
@@ -164,14 +176,7 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
                     page = 1;
                     RefreshType = 1;
                     BeginCatalogId = "";
-                    if (CatalogId.equals("810000") || CatalogId.equals("710000") || CatalogId.equals("820000")) {
-                        sendTwice();
-                        mListView.setVisibility(View.GONE);
-                        mPullToRefreshLayout.setVisibility(View.GONE);
-                        mlistView_main.setVisibility(View.VISIBLE);
-                    } else {
-                        send();
-                    }
+                    send();
                 } else {
                     mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
                     tipView.setVisibility(View.VISIBLE);
@@ -181,16 +186,8 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
 
             @Override
             public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
-                page++;
                 RefreshType = 2;
-                if (CatalogId.equals("810000") || CatalogId.equals("710000") || CatalogId.equals("820000")) {
-                    sendTwice();
-                    mListView.setVisibility(View.GONE);
-                    mPullToRefreshLayout.setVisibility(View.GONE);
-                    mlistView_main.setVisibility(View.VISIBLE);
-                } else {
-                    send();
-                }
+                send();
             }
         });
     }
@@ -198,19 +195,104 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
     private void getData() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1 && CatalogId != null) {
             dialog = DialogUtils.Dialog(context);
-            if (CatalogId.equals("810000") || CatalogId.equals("710000") || CatalogId.equals("820000")) {
-                // 处理那几个特殊的崩溃省市
-                sendTwice();
-                mListView.setVisibility(View.GONE);
-                mPullToRefreshLayout.setVisibility(View.GONE);
-                mlistView_main.setVisibility(View.VISIBLE);
-            } else {
-                send();
-            }
+            send();
+            sendForC();
         } else {
             tipView.setVisibility(View.VISIBLE);
             tipView.setTipView(TipView.TipStatus.NO_NET);
         }
+    }
+
+    @Override
+    public void onWhiteViewClick() {
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1 && CatalogId != null) {
+            dialog = DialogUtils.Dialog(context);
+            page = 1;
+            RefreshType = 1;
+            send();
+            sendForC();
+        } else {
+            tipView.setVisibility(View.VISIBLE);
+            tipView.setTipView(TipView.TipStatus.NO_NET);
+        }
+    }
+
+    // 获取省级数据
+    private void sendForC() {
+        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
+        try {
+            jsonObject.put("MediaType", "RADIO");
+            jsonObject.put("CatalogId", CatalogId);
+            jsonObject.put("CatalogType", "2");//以上两个确定安徽省
+            jsonObject.put("RecursionTree", "0");// 不递归，只取安徽省内容
+            jsonObject.put("ResultType", "3");// 返回类型以列表形式
+            jsonObject.put("PageSize", "3");// 每页3个
+            jsonObject.put("Page", "1");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, jsonObject, new VolleyCallback() {
+
+            @Override
+            protected void requestSuccess(JSONObject result) {
+                if (dialog != null) dialog.dismiss();
+                if (isCancelRequest) return;
+                try {
+                    String ReturnType = result.getString("ReturnType");
+                    if (ReturnType != null && ReturnType.equals("1001")) {
+                        try {
+                            JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
+                            try {
+                                String StringSubList = arg1.getString("List");
+                                List<content> list = new Gson().fromJson(StringSubList, new TypeToken<List<content>>() {
+                                }.getType());
+                                if (list != null && list.size() > 0) {
+                                    mListView.addHeaderView(headView);
+                                    listView_head.setAdapter(new ContentAdapter(context, list));
+                                    setHeadListListener(list);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        } catch (Exception e) {
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            protected void requestError(VolleyError error) {
+            }
+        });
+    }
+
+    private void setHeadListListener(final List<content> list) {
+        listView_head.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (list != null && list.get(position) != null
+                        && list.get(position).getMediaType() != null) {
+                    String MediaType = list.get(position).getMediaType();
+                    if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
+
+                        dbDao.savePlayerHistory(MediaType, list, position);// 保存播放历史
+
+                        Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                        Bundle bundle1 = new Bundle();
+                        bundle1.putString(StringConstant.TEXT_CONTENT, list.get(position).getContentName());
+                        push.putExtras(bundle1);
+                        context.sendBroadcast(push);
+                        MainActivity.change();
+                    } else {
+                        ToastUtils.show_short(context, "暂不支持的Type类型");
+                    }
+                }
+            }
+        });
     }
 
     private void send() {
@@ -230,7 +312,6 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
         }
 
         VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, jsonObject, new VolleyCallback() {
-            private String StringSubList;
             private String ReturnType;
 
             @Override
@@ -246,31 +327,53 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
 
                     try {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
+
                         try {
                             BeginCatalogId = arg1.getString("BeginCatalogId");
                         } catch (Exception e) {
                             BeginCatalogId = "";
                         }
+
                         try {
-                            StringSubList = arg1.getString("List");
-                            SubTempList = new Gson().fromJson(StringSubList, new TypeToken<List<RadioPlay>>() {
-                            }.getType());
+                            ResultType = arg1.getString("ResultType");
                         } catch (Exception e) {
-                            e.printStackTrace();
                         }
-                        if (ViewType == -1) {
+
+                        if (ResultType.equals("1")) {
+                            // 节点树的形式
+                            try {
+                                String StringSubList = arg1.getString("List");
+                                SubTempList = new Gson().fromJson(StringSubList, new TypeToken<List<RadioPlay>>() {
+                                }.getType());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             try {
                                 if (SubTempList == null || SubTempList.size() == 0) {
-                                    mListView.setVisibility(View.GONE);
-                                    mPullToRefreshLayout.setVisibility(View.GONE);
-                                    mlistView_main.setVisibility(View.VISIBLE);
-                                    sendTwice();
+
+                                    if (RefreshType == 1) {
+                                        if (ResultType.equals("3")) {
+                                            mPullToRefreshLayout.setVisibility(View.GONE);
+                                        } else {
+                                            mlistView_main.setVisibility(View.GONE);
+                                        }
+                                        tipView.setVisibility(View.VISIBLE);
+                                        tipView.setTipView(TipView.TipStatus.NO_DATA);
+                                    } else {
+                                        if (ResultType.equals("3")) {
+                                            mlistView_main.stopLoadMore();
+                                        } else {
+                                            mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+                                        }
+                                    }
                                 } else {
+                                    page++;
+                                    mPullToRefreshLayout.setVisibility(View.VISIBLE);
+                                    mlistView_main.setVisibility(View.GONE);
+                                    tipView.setVisibility(View.GONE);
                                     if (RefreshType == 1) {
                                         mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-                                        if (SubList.size() > 0) {
-                                            SubList.clear();
-                                        }
+                                        if (SubList != null) SubList.clear();
                                         SubList.addAll(SubTempList);
                                     } else {
                                         mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
@@ -289,39 +392,162 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
                                     }
                                 }
                                 setListViewExpand();
-                                tipView.setVisibility(View.GONE);
-                                if (!TextUtils.isEmpty(BeginCatalogId) && BeginCatalogId.equals("ENDEND")) {
-                                    ViewType = 1;
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                if (RefreshType == 1) {
+                                    if (ResultType.equals("3")) {
+                                        mPullToRefreshLayout.setVisibility(View.GONE);
+                                    } else {
+                                        mlistView_main.setVisibility(View.GONE);
+                                    }
+                                    tipView.setVisibility(View.VISIBLE);
+                                    tipView.setTipView(TipView.TipStatus.NO_DATA);
+                                } else {
+                                    if (ResultType.equals("3")) {
+                                        mlistView_main.stopLoadMore();
+                                    } else {
+                                        mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+                                    }
+                                }
+                            }
+
+                        } else if (ResultType.equals("3")) {
+                            // 列表的形式
+                            try {
+                                String StringSubList = arg1.getString("List");
+                                SubListList = new Gson().fromJson(StringSubList, new TypeToken<List<content>>() {
+                                }.getType());
+
+                                if (SubListList != null && SubListList.size() > 0) {
+                                    page++;
+                                    mPullToRefreshLayout.setVisibility(View.GONE);
+                                    mlistView_main.setVisibility(View.VISIBLE);
+                                    tipView.setVisibility(View.GONE);
+                                    if (RefreshType == 1) {
+                                        mlistView_main.stopRefresh();
+                                        if (newList.size() > 0) newList.clear();
+                                        newList.addAll(SubListList);
+                                    } else {
+                                        mlistView_main.stopLoadMore();
+                                        newList.addAll(SubListList);
+                                    }
+                                    if (adapterList == null) {
+                                        adapterList = new ContentAdapter(context, newList);
+                                        mlistView_main.setAdapter(adapterList);
+                                    } else {
+                                        adapterList.notifyDataSetChanged();
+                                    }
+                                    setListView();
+                                } else {
+                                    if (RefreshType == 1) {
+                                        if (ResultType.equals("3")) {
+                                            mPullToRefreshLayout.setVisibility(View.GONE);
+                                        } else {
+                                            mlistView_main.setVisibility(View.GONE);
+                                        }
+                                        tipView.setVisibility(View.VISIBLE);
+                                        tipView.setTipView(TipView.TipStatus.NO_DATA);
+                                    } else {
+                                        if (ResultType.equals("3")) {
+                                            mlistView_main.stopLoadMore();
+                                        } else {
+                                            mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+                                        }
+                                    }
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-                                tipView.setVisibility(View.VISIBLE);
-                                tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                                if (RefreshType == 1) {
+                                    if (ResultType.equals("3")) {
+                                        mPullToRefreshLayout.setVisibility(View.GONE);
+                                    } else {
+                                        mlistView_main.setVisibility(View.GONE);
+                                    }
+                                    tipView.setVisibility(View.VISIBLE);
+                                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                                } else {
+                                    if (ResultType.equals("3")) {
+                                        mlistView_main.stopLoadMore();
+                                    } else {
+                                        mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+                                    }
+                                }
                             }
                         } else {
-                            mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-                            ToastUtils.show_always(context, "已经没有更多数据了");
+                            if (RefreshType == 1) {
+                                if (ResultType.equals("3")) {
+                                    mPullToRefreshLayout.setVisibility(View.GONE);
+                                } else {
+                                    mlistView_main.setVisibility(View.GONE);
+                                }
+                                tipView.setVisibility(View.VISIBLE);
+                                tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                            } else {
+                                if (ResultType.equals("3")) {
+                                    mlistView_main.stopLoadMore();
+                                } else {
+                                    mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+                                }
+                            }
                         }
+
                     } catch (Exception e) {
-                        mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-                        e.printStackTrace();
-                        tipView.setVisibility(View.VISIBLE);
-                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        if (RefreshType == 1) {
+                            if (ResultType.equals("3")) {
+                                mPullToRefreshLayout.setVisibility(View.GONE);
+                            } else {
+                                mlistView_main.setVisibility(View.GONE);
+                            }
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        } else {
+                            if (ResultType.equals("3")) {
+                                mlistView_main.stopLoadMore();
+                            } else {
+                                mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+                            }
+                        }
                     }
                 } else {
-                    mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-                    tipView.setVisibility(View.VISIBLE);
-                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                    if (RefreshType == 1) {
+                        if (ResultType.equals("3")) {
+                            mPullToRefreshLayout.setVisibility(View.GONE);
+                        } else {
+                            mlistView_main.setVisibility(View.GONE);
+                        }
+                        tipView.setVisibility(View.VISIBLE);
+                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                    } else {
+                        if (ResultType.equals("3")) {
+                            mlistView_main.stopLoadMore();
+                        } else {
+                            mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+                        }
+                    }
                 }
             }
 
             @Override
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
-                tipView.setVisibility(View.VISIBLE);
-                tipView.setTipView(TipView.TipStatus.IS_ERROR);
-                mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+                if (RefreshType == 1) {
+                    if (ResultType.equals("1")) {
+                        mPullToRefreshLayout.setVisibility(View.GONE);
+                        mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+                    } else {
+                        mlistView_main.setVisibility(View.GONE);
+                        mlistView_main.stopRefresh();
+                    }
+
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                } else {
+                    if (ResultType.equals("1")) {
+                        mlistView_main.stopLoadMore();
+                    } else {
+                        mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+                    }
+                }
             }
         });
     }
@@ -352,119 +578,6 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
         });
     }
 
-    private void sendTwice() {
-
-        JSONObject jsonObject = VolleyRequest.getJsonObject(context);
-        try {
-            jsonObject.put("MediaType", "RADIO");
-            jsonObject.put("CatalogId", CatalogId);
-            jsonObject.put("CatalogType", "2");
-            jsonObject.put("ResultType", "3");
-            jsonObject.put("PageSize", "10");
-            jsonObject.put("Page", String.valueOf(page));
-            jsonObject.put("BeginCatalogId", BeginCatalogId);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        VolleyRequest.requestPost(GlobalConfig.getContentUrl, tag, jsonObject, new VolleyCallback() {
-            private String StringSubList;
-            private String ReturnType;
-
-            @Override
-            protected void requestSuccess(JSONObject result) {
-                if (dialog != null) dialog.dismiss();
-                if (isCancelRequest) return;
-                try {
-                    ReturnType = result.getString("ReturnType");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if (ReturnType != null && ReturnType.equals("1001")) {
-                    try {
-
-                        JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-                        try {
-                            StringSubList = arg1.getString("List");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            SubListList = new Gson().fromJson(StringSubList, new TypeToken<List<content>>() {
-                            }.getType());
-                            if (RefreshType == 1) {
-                                mlistView_main.stopRefresh();
-                                if (newList.size() > 0) newList.clear();
-                                if (SubListList != null && SubListList.size() > 0) {
-                                    newList.addAll(SubListList);
-                                    if (adapterList == null) {
-                                        adapterList = new ContentAdapter(context, newList);
-                                        mlistView_main.setAdapter(adapterList);
-                                    } else {
-                                        adapterList.notifyDataSetChanged();
-                                    }
-                                    setListView();
-                                } else {
-                                    mlistView_main.stopRefresh();
-                                }
-                            } else if (RefreshType == 2) {
-                                if (SubListList != null && SubListList.size() > 0) {
-                                    mlistView_main.stopLoadMore();
-                                    newList.addAll(SubListList);
-                                    if (adapterList == null) {
-                                        adapterList = new ContentAdapter(context, newList);
-                                        mlistView_main.setAdapter(adapterList);
-                                    } else {
-                                        adapterList.notifyDataSetChanged();
-                                    }
-                                    setListView();
-                                } else {
-                                    mlistView_main.stopLoadMore();
-                                    mlistView_main.setPullLoadEnable(false);
-                                    ToastUtils.show_always(context, "已经没有更多数据了");
-                                }
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            if (RefreshType == 1) {
-                                mlistView_main.stopRefresh();
-                            } else {
-                                mlistView_main.stopLoadMore();
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (RefreshType == 1) {
-                            mlistView_main.stopRefresh();
-                        } else {
-                            mlistView_main.stopLoadMore();
-                        }
-                    }
-                } else {
-                    ToastUtils.show_always(context, "已经没有相关数据啦");
-                    if (RefreshType == 1) {
-                        mlistView_main.stopRefresh();
-                    } else {
-                        mlistView_main.stopLoadMore();
-                    }
-                }
-            }
-
-            @Override
-            protected void requestError(VolleyError error) {
-                if (dialog != null) dialog.dismiss();
-                ToastUtils.showVolleyError(context);
-                if (RefreshType == 1) {
-                    mlistView_main.stopRefresh();
-                } else {
-                    mlistView_main.stopLoadMore();
-                    mlistView_main.setPullLoadEnable(false);
-                }
-            }
-        });
-    }
-
-    //
     protected void setListView() {
         mlistView_main.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -490,25 +603,16 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
             case R.id.head_left_btn:// 返回
                 HomeActivity.close();
                 break;
-        }
-    }
-
-    @Override
-    public void onWhiteViewClick() {
-        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1 && CatalogId != null) {
-            dialog = DialogUtils.Dialog(context);
-            page = 1;
-            if (CatalogId.equals("810000") || CatalogId.equals("710000") || CatalogId.equals("820000")) {
-                sendTwice();
-                mListView.setVisibility(View.GONE);
-                mPullToRefreshLayout.setVisibility(View.GONE);
-                mlistView_main.setVisibility(View.VISIBLE);
-            } else {
-                send();
-            }
-        } else {
-            tipView.setVisibility(View.VISIBLE);
-            tipView.setTipView(TipView.TipStatus.NO_NET);
+            case R.id.lin_head_more://
+                FMListFragment fragment = new FMListFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("from", "cityRadio");
+                bundle.putString("CatalogName", CatalogName);
+                bundle.putString("CatalogId", CatalogId);
+                bundle.putString("CatalogType", "2");
+                fragment.setArguments(bundle);
+                HomeActivity.open(fragment);
+                break;
         }
     }
 
@@ -526,4 +630,6 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
         }
         adapter = null;
     }
+
+
 }

@@ -111,6 +111,7 @@ public class ProgrammeFragment extends Fragment implements TipView.WhiteViewClic
             @Override
             protected void requestSuccess(JSONObject result) {
                 if(dialog != null) dialog.dismiss();
+                if((ProgrammeActivity) getActivity()==null) return;
                 if (((ProgrammeActivity) getActivity()).isCancel()) return;
                 try {
                     ReturnType = result.getString("ReturnType");
@@ -153,11 +154,11 @@ public class ProgrammeFragment extends Fragment implements TipView.WhiteViewClic
         });
     }
 
-//    @Override
-//    public void onDestroyView() {
-//        super.onDestroyView();
-//        if (null != rootView) {
-//            ((ViewGroup) rootView.getParent()).removeView(rootView);
-//        }
-//    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (null != rootView) {
+            ((ViewGroup) rootView.getParent()).removeView(rootView);
+        }
+    }
 }

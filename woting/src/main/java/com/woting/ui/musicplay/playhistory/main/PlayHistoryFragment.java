@@ -27,6 +27,7 @@ import com.woting.ui.main.MainActivity;
 import com.woting.ui.mine.main.MineActivity;
 import com.woting.ui.musicplay.playhistory.adapter.PlayHistoryAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -82,7 +83,8 @@ public class PlayHistoryFragment extends Fragment implements OnClickListener, Ad
 
     // 初始化数据
     private void initData() {
-        subList = dbDao.queryHistory();
+        List<PlayerHistory> _subList = dbDao.queryHistory();
+        subList=delRepeat(_subList);
         if (subList != null && subList.size() > 0) {
             listView.setAdapter(adapter = new PlayHistoryAdapter(context, subList));
         } else {
@@ -92,6 +94,33 @@ public class PlayHistoryFragment extends Fragment implements OnClickListener, Ad
         }
     }
 
+    /**
+     * List中的内容消重
+     * @param srcList 需要消重的List
+     * @return 消重后的List
+     */
+    private  List<PlayerHistory> delRepeat(List<PlayerHistory> srcList) {
+        if (srcList==null||srcList.isEmpty()) return null;
+        List<PlayerHistory> retList=new ArrayList<PlayerHistory>();
+        for (int i=0; i<srcList.size(); i++) {
+
+            String SeqId = srcList.get(i).getSeqId();
+            if(SeqId!=null&&!SeqId.trim().equals("")){
+                String srcEle = srcList.get(i).getSeqId();
+                int j=0;
+                for (; j<retList.size(); j++) if (retList.get(j).getSeqId().equals(srcEle)) break;
+                if (j==retList.size()) retList.add(srcList.get(i));
+            }else{
+                String srcEle = srcList.get(i).getContentID();
+                int j=0;
+                for (; j<retList.size(); j++) if (retList.get(j).getContentID().equals(srcEle)) break;
+                if (j==retList.size()) retList.add(srcList.get(i));
+            }
+
+        }
+        return retList;
+    }
+    
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -168,26 +197,35 @@ public class PlayHistoryFragment extends Fragment implements OnClickListener, Ad
 
 
             if (mediaType.equals(StringConstant.TYPE_AUDIO)) {
-                Intent intent = new Intent(BroadcastConstants.PLAY_SEQU_LIST);
+                if(sequid!=null&&!sequid.trim().equals("")){
+                    Intent intent = new Intent(BroadcastConstants.PLAY_SEQU_LIST);
 
-                Bundle bundle = new Bundle();
-                // 组装需要传递的专辑数据
-                album s = new album();
-                s.setContentDescn(sequdesc);
-                s.setContentName(sequname);
-                s.setContentImg(albumImg);
-                s.setContentId(sequid);
-                bundle.putSerializable("album", s);
+                    Bundle bundle = new Bundle();
+                    // 组装需要传递的专辑数据
+                    album s = new album();
+                    s.setContentDescn(sequdesc);
+                    s.setContentName(sequname);
+                    s.setContentImg(albumImg);
+                    s.setContentId(sequid);
+                    bundle.putSerializable("album", s);
 
-                intent.putExtras(bundle);
-                intent.putExtra(StringConstant.ID_CONTENT, sequid);
-                intent.putExtra("SortType", "2");
-                intent.putExtra(StringConstant.SEQU_LIST_SIZE, ColumnNum);
-                context.sendBroadcast(intent);
+                    intent.putExtras(bundle);
+                    intent.putExtra(StringConstant.ID_CONTENT, sequid);
+                    intent.putExtra("SortType", "2");
+                    intent.putExtra(StringConstant.SEQU_LIST_SIZE, ColumnNum);
+                    context.sendBroadcast(intent);
+                }else{
+                    Intent pushIntent = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(StringConstant.TEXT_CONTENT, playerName);
+                    pushIntent.putExtras(bundle);
+                    context.sendBroadcast(pushIntent);
+                }
+
             } else {
                 Intent pushIntent = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                 Bundle bundle = new Bundle();
-                bundle.putString(StringConstant.TEXT_CONTENT, subList.get(position).getPlayerName());
+                bundle.putString(StringConstant.TEXT_CONTENT, playerName);
                 pushIntent.putExtras(bundle);
                 context.sendBroadcast(pushIntent);
             }

@@ -897,10 +897,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         if (requestType.equals(StringConstant.PLAY_REQUEST_TYPE_SEARCH_VOICE) && refreshType == 0) {// 语音结束后自动播放第一个节目
             index = 0;
             mPlayer.startPlay(index);
-        } else if (requestType.equals(StringConstant.PLAY_REQUEST_TYPE_SEARCH_SEQU) && refreshType == 0) {// 播放专辑
-            index = 0;
-            mPlayer.startPlay(index);
         }
+//        else if (requestType.equals(StringConstant.PLAY_REQUEST_TYPE_SEARCH_SEQU) && refreshType == 0) {// 播放专辑
+//            index = 0;
+//            mPlayer.startPlay(index);
+//        }
 
         if (dialog != null) dialog.dismiss();
         subList.clear();
