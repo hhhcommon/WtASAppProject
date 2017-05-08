@@ -144,6 +144,9 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
     private TextView tv_sign;
     private EditText editGroupName;
     private String groupPassword;
+    private TextView tv_sign_zhankai;
+    private boolean Flag_sign;
+    private int sign_height;
 
 
     @Override
@@ -209,9 +212,14 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         tipView = (TipView) findViewById(R.id.tip_view);
         tipView.setWhiteClick(this);
 
-        lin_sign = (LinearLayout) findViewById(R.id.lin_sign);        // 签名模块
-        tv_sign = (TextView) findViewById(R.id.tv_sign);              // 签名TextView
+
+        lin_sign = (LinearLayout) findViewById(R.id.lin_sign);           // 签名模块
         lin_sign.setOnClickListener(this);
+
+        tv_sign = (TextView) findViewById(R.id.tv_sign);                 // 签名TextView
+
+        tv_sign_zhankai = (TextView) findViewById(R.id.tv_zhankai);      // 展开按钮
+        tv_sign_zhankai.setOnClickListener(this);
 
         imageHead = (ImageView) findViewById(R.id.image_touxiang); // 群头像
         imageHead.setOnClickListener(this);
@@ -300,6 +308,20 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         } else {
             tv_sign.setText("还没有签名，快通知管理员去设置一个");
         }
+
+        //默认给1行的高度，设置tv_sign的height
+        tv_sign.post(new Runnable() {
+            @Override
+            public void run() {
+                LinearLayout.LayoutParams Params=(LinearLayout.LayoutParams)tv_sign.getLayoutParams();
+                sign_height = tv_sign.getHeight();
+                Log.e("sign_default_high",""+sign_height);
+                Params.height=80;
+                tv_sign.setLayoutParams(Params);
+            }
+        });
+
+
 
         if (headUrl == null || headUrl.equals("null") || headUrl.trim().equals("")) {// 群头像
             Bitmap bitmap = BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_qz);
@@ -603,6 +625,19 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                     ToastUtils.show_always(context, "网络失败，请检查网络");
                 }
                 break;
+            case R.id.tv_zhankai://展开
+                LinearLayout.LayoutParams Params=(LinearLayout.LayoutParams)tv_sign.getLayoutParams();
+                if(Flag_sign){
+                    Params.height=80;
+                    Flag_sign=false;
+                    tv_sign_zhankai.setText("展开");
+                }else{
+                    Params.height=sign_height;
+                    Flag_sign=true;
+                    tv_sign_zhankai.setText("收起");
+                }
+                tv_sign.setLayoutParams(Params);
+                break;
         }
     }
 
@@ -866,7 +901,25 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                     sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
                     String GroupSign = data.getStringExtra("GroupSign");
                     groupSignature = GroupSign;
-                    tv_sign.setText(groupSignature);
+                    if (!TextUtils.isEmpty(groupSignature)) {
+                        tv_sign.setText(groupSignature);
+                    } else {
+                        tv_sign.setText("还没有签名，快通知管理员去设置一个");
+                    }
+                    tv_sign.setVisibility(View.GONE);
+                    tv_sign.setVisibility(View.VISIBLE);
+
+                    tv_sign.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            LinearLayout.LayoutParams Params=(LinearLayout.LayoutParams)tv_sign.getLayoutParams();
+                            sign_height = tv_sign.getHeight();
+                            Log.e("sign_default_high",""+sign_height);
+                            Params.height=80;
+                            tv_sign.setLayoutParams(Params);
+                        }
+                    },1000);
+                   // ToastUtils.show_always(context,"群签名已经修改成功，请您重新进入该租查看");
                 }
                 break;
         }
