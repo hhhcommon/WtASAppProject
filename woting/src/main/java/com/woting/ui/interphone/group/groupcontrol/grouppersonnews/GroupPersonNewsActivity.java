@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -73,6 +74,8 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
     private TextView tv_introduce;
     private TextView tv_nick_name;
     private String userIntroduce;
+    private int sign_height;
+    private boolean Flag_sign;
 
 
     @Override
@@ -95,6 +98,7 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
         lin_sign = (LinearLayout) findViewById(R.id.lin_sign);                  //   Ｓｉｇｎ
         tv_sign = (TextView) findViewById(R.id.tv_sign);                        //　 TextSign　　　　　
         tv_zhankai = (TextView) findViewById(R.id.tv_zhankai);                  //   text_open
+
         et_alias_name = (EditText) findViewById(R.id.tv_alias_name);            //   AliasName
         et_alias_name.setEnabled(false);
         tv_introduce = (TextView) findViewById(R.id.tv_introduce);              //   UserIntroduce
@@ -203,7 +207,36 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
         if (!TextUtils.isEmpty(descN)) {
             lin_sign.setVisibility(View.VISIBLE);
             tv_sign.setText(descN);
+            tv_sign.post(new Runnable() {
+                @Override
+                public void run() {
+                    LinearLayout.LayoutParams Params=(LinearLayout.LayoutParams)tv_sign.getLayoutParams();
+                    sign_height = tv_sign.getHeight();
+                    Log.e("sign_default_high",""+sign_height);
+                    Params.height=80;
+                    tv_sign.setLayoutParams(Params);
+
+                }
+            });
         }
+
+        tv_zhankai.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinearLayout.LayoutParams Params=(LinearLayout.LayoutParams)tv_sign.getLayoutParams();
+                if(Flag_sign){
+                    Params.height=80;
+                    Flag_sign=false;
+                    tv_zhankai.setText("展开");
+                }else{
+                    Params.height=sign_height;
+                    Flag_sign=true;
+                    tv_zhankai.setText("收起");
+                }
+                tv_sign.setLayoutParams(Params);
+            }
+        });
+
 
 
     }

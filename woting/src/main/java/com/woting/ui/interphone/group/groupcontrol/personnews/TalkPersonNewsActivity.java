@@ -72,6 +72,8 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
     private String userIntroduce;
     private String aliasName;
     private String tag = "TALK_PERSON_NEWS_VOLLEY_REQUEST_CANCEL_TAG";
+    private int sign_height;
+    private boolean Flag_sign;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -336,7 +338,35 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
         if (!TextUtils.isEmpty(descN)) {
             lin_sign.setVisibility(View.VISIBLE);
             tv_sign.setText(descN);
+            tv_sign.post(new Runnable() {
+                @Override
+                public void run() {
+                    LinearLayout.LayoutParams Params=(LinearLayout.LayoutParams)tv_sign.getLayoutParams();
+                    sign_height = tv_sign.getHeight();
+                    Log.e("sign_default_high",""+sign_height);
+                    Params.height=80;
+                    tv_sign.setLayoutParams(Params);
+
+                }
+            });
         }
+
+        tv_zhankai.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinearLayout.LayoutParams Params=(LinearLayout.LayoutParams)tv_sign.getLayoutParams();
+                if(Flag_sign){
+                    Params.height=80;
+                    Flag_sign=false;
+                    tv_zhankai.setText("展开");
+                }else{
+                    Params.height=sign_height;
+                    Flag_sign=true;
+                    tv_zhankai.setText("收起");
+                }
+                tv_sign.setLayoutParams(Params);
+            }
+        });
 
     }
 
