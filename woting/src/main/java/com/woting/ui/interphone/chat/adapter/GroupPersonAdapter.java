@@ -96,6 +96,7 @@ public class GroupPersonAdapter extends BaseAdapter{
 			final String c_url = url;
 			AssembleImageUrlUtils.loadImage(_url, c_url, holder.imageView_touxiang, IntegerConstant.TYPE_PERSON);
 		}
+
 		if(lists.getOnLine()==2){
 			holder.tv_name.setTextColor(context.getResources().getColor(R.color.dinglan_orange) );
 			holder.image_bian.setImageBitmap(bmp);

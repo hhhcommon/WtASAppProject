@@ -28,7 +28,7 @@ import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.CommonUtils;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
 import com.woting.ui.interphone.chat.fragment.ChatFragment;
-import com.woting.ui.interphone.chat.model.DBTalkHistorary;
+import com.woting.ui.interphone.chat.model.DBTalkHistory;
 import com.woting.ui.interphone.message.MessageUtils;
 import com.woting.ui.interphone.message.MsgNormal;
 import com.woting.ui.interphone.message.content.MapContent;
@@ -45,16 +45,20 @@ import java.util.Arrays;
  */
 public class CallAlertActivity extends Activity implements OnClickListener {
     public static CallAlertActivity instance;
+
+    private ImageView imageview, small_imageview;
     private TextView tv_news, tv_name, small_tv_name;
     private LinearLayout lin_call, lin_guaduan, lin_two_call;
+
     private MediaPlayer musicPlayer;
     private SearchTalkHistoryDao dbdao;
-    private String id, image, name;
     private MessageReceiver Receiver;
-    private ImageView imageview, small_imageview;
-    private boolean isCall = true;
+
     private String callId;
     private String callerId;
+    private String id, image, name;
+
+    private boolean isCall = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,16 +75,87 @@ public class CallAlertActivity extends Activity implements OnClickListener {
 //        audioManager.setMode(AudioManager.STREAM_MUSIC);
 
         instance = this;
-        getSource();        // 获取展示数据
+        initDao();          // 初始化数据库
         setReceiver();      // 设置广播接收器
+        getSource();        // 获取展示数据
         setView();          // 设置界面，以及界面数据
         setDate();          // 业务数据处理
-        initDao();          // 初始化数据库
     }
 
-    /*
-     *业务数据处理
-     */
+    // 初始化数据库
+    private void initDao() {
+        dbdao = new SearchTalkHistoryDao(instance);
+    }
+
+    // 设置广播接收器
+    private void setReceiver() {
+        if (Receiver == null) {
+            Receiver = new MessageReceiver();
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(BroadcastConstants.PUSH_CALL);
+            filter.addAction(BroadcastConstants.PUSH_CALL_CALLALERT);
+            instance.registerReceiver(Receiver, filter);
+        }
+    }
+
+    // 获取展示数据
+    private void getSource() {
+        Intent intent = getIntent();
+        if (intent != null) {
+            id = intent.getStringExtra("id");
+        }
+        if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
+            for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
+                try {
+                    if (id.equals(GlobalConfig.list_person.get(i).getUserId())) {
+                        image = GlobalConfig.list_person.get(i).getPortrait();
+                        name = GlobalConfig.list_person.get(i).getNickName();
+                        break;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    image = null;
+                    name = "未知";
+                }
+            }
+        } else {
+            image = null;
+            name = "未知";
+        }
+    }
+
+    // 设置界面，以及界面数据
+    private void setView() {
+        findViewById(R.id.image_close).setOnClickListener(this);
+        tv_news = (TextView) findViewById(R.id.tv_news);
+        imageview = (ImageView) findViewById(R.id.image);
+        tv_name = (TextView) findViewById(R.id.tv_name);
+        lin_call = (LinearLayout) findViewById(R.id.lin_call);
+        lin_call.setOnClickListener(this);
+        lin_guaduan = (LinearLayout) findViewById(R.id.lin_guaduan);
+        lin_guaduan.setOnClickListener(this);
+        // 第二次呼叫的界面
+        lin_two_call = (LinearLayout) findViewById(R.id.lin_two_call);
+        small_imageview = (ImageView) findViewById(R.id.small_image);
+        small_tv_name = (TextView) findViewById(R.id.small_tv_name);
+        findViewById(R.id.small_lin_call).setOnClickListener(this);
+        findViewById(R.id.small_lin_guaduan).setOnClickListener(this);
+
+        ImageView img_zhezhao = (ImageView) findViewById(R.id.img_zhezhao);
+        Bitmap bmp_zhezhao = BitmapUtils.readBitMap(instance, R.mipmap.liubianxing_orange_big);
+        img_zhezhao.setImageBitmap(bmp_zhezhao);
+
+        tv_name.setText(name);
+        if (image == null || image.equals("") || image.equals("null") || image.trim().equals("")) {
+            imageview.setImageResource(R.mipmap.wt_image_tx_hy);
+        } else {
+            String url = GlobalConfig.imageurl + image;
+            String _url = AssembleImageUrlUtils.assembleImageUrl300(url);
+            AssembleImageUrlUtils.loadImage(_url, url, imageview, IntegerConstant.TYPE_MINE);
+        }
+    }
+
+    // 业务数据处理
     private void setDate() {
         InterPhoneControl.PersonTalkPress(instance, id);//拨号
         musicPlayer = MediaPlayer.create(instance, R.raw.ringback);
@@ -111,89 +186,6 @@ public class CallAlertActivity extends Activity implements OnClickListener {
 //        return RingtoneManager.getActualDefaultRingtoneUri(this,
 //                RingtoneManager.TYPE_RINGTONE);
 //    }
-
-    /*
-     *设置界面，以及界面数据
-     */
-    private void setView() {
-        findViewById(R.id.image_close).setOnClickListener(this);
-        tv_news = (TextView) findViewById(R.id.tv_news);
-        imageview = (ImageView) findViewById(R.id.image);
-        tv_name = (TextView) findViewById(R.id.tv_name);
-        lin_call = (LinearLayout) findViewById(R.id.lin_call);
-        lin_call.setOnClickListener(this);
-        lin_guaduan = (LinearLayout) findViewById(R.id.lin_guaduan);
-        lin_guaduan.setOnClickListener(this);
-        // 第二次呼叫的界面
-        lin_two_call = (LinearLayout) findViewById(R.id.lin_two_call);
-        small_imageview = (ImageView) findViewById(R.id.small_image);
-        small_tv_name = (TextView) findViewById(R.id.small_tv_name);
-        findViewById(R.id.small_lin_call).setOnClickListener(this);
-        findViewById(R.id.small_lin_guaduan).setOnClickListener(this);
-
-
-        ImageView img_zhezhao = (ImageView) findViewById(R.id.img_zhezhao);
-        Bitmap bmp_zhezhao = BitmapUtils.readBitMap(instance, R.mipmap.liubianxing_orange_big);
-        img_zhezhao.setImageBitmap(bmp_zhezhao);
-
-        tv_name.setText(name);
-        if (image == null || image.equals("") || image.equals("null") || image.trim().equals("")) {
-            imageview.setImageResource(R.mipmap.wt_image_tx_hy);
-        } else {
-            String url = GlobalConfig.imageurl + image;
-            String _url = AssembleImageUrlUtils.assembleImageUrl300(url);
-            // 加载图片
-            AssembleImageUrlUtils.loadImage(_url, url, imageview, IntegerConstant.TYPE_MINE);
-        }
-    }
-
-    /*
-     *设置广播接收器
-     */
-    private void setReceiver() {
-        if (Receiver == null) {
-            Receiver = new MessageReceiver();
-            IntentFilter filter = new IntentFilter();
-            filter.addAction(BroadcastConstants.PUSH_CALL);
-            filter.addAction(BroadcastConstants.PUSH_CALL_CALLALERT);
-            instance.registerReceiver(Receiver, filter);
-        }
-    }
-
-    /*
-     *获取展示数据
-     */
-    private void getSource() {
-        Intent intent = getIntent();
-        if (intent != null) {
-            id = intent.getStringExtra("id");
-        }
-        try {
-            if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
-                for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
-                    if (id.equals(GlobalConfig.list_person.get(i).getUserId())) {
-                        image = GlobalConfig.list_person.get(i).getPortrait();
-                        name = GlobalConfig.list_person.get(i).getNickName();
-                        break;
-                    }
-                }
-            } else {
-                image = null;
-                name = "未知";
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            image = null;
-            name = "未知";
-        }
-    }
-
-    /*
-     * 初始化数据库
-     */
-    private void initDao() {
-        dbdao = new SearchTalkHistoryDao(instance);
-    }
 
     @Override
     public void onClick(View v) {
@@ -278,12 +270,11 @@ public class CallAlertActivity extends Activity implements OnClickListener {
     }
 
     public void addUser(String id) {
-        String addtime = Long.toString(System.currentTimeMillis());    // 获取最新激活状态的数据
-        String bjuserid = CommonUtils.getUserId(instance);
+        String addTime = Long.toString(System.currentTimeMillis());    // 获取最新激活状态的数据
+        String bjUserId = CommonUtils.getUserId(instance);
         dbdao.deleteHistory(id);                                       // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-        DBTalkHistorary history = new DBTalkHistorary(bjuserid, "user", id, addtime);
+        DBTalkHistory history = new DBTalkHistory(bjUserId, "user", id, addTime);
         dbdao.addTalkHistory(history);
-//        DBTalkHistorary talkdb = dbdao.queryHistory().get(0);          // 得到数据库里边数据
         ChatFragment.zhiDingPerson();
         DuiJiangActivity.update();                                     // 对讲主页界面更新
         MyActivityManager mam = MyActivityManager.getInstance();

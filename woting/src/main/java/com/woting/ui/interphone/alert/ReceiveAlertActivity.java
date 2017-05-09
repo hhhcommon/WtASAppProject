@@ -22,7 +22,7 @@ import com.woting.common.util.CommonUtils;
 import com.woting.common.util.VibratorUtils;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
 import com.woting.ui.interphone.chat.fragment.ChatFragment;
-import com.woting.ui.interphone.chat.model.DBTalkHistorary;
+import com.woting.ui.interphone.chat.model.DBTalkHistory;
 import com.woting.common.service.InterPhoneControl;
 import com.woting.ui.interphone.main.DuiJiangActivity;
 import com.woting.ui.main.MainActivity;
@@ -46,7 +46,7 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_receivecall);
-        GlobalConfig.interPhoneType=1;
+        GlobalConfig.interPhoneType = 1;
         instance = this;
         VibratorUtils.Vibrate(instance, Vibrate, true);
         if (DuiJiangActivity.context == null) {
@@ -56,11 +56,42 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
         }
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);        //透明状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);    //透明导航栏
+        initDao();          // 初始化数据库
         getSource();        // 获取展示数据
         setView();          // 设置界面，以及界面数据
-        initDao();          // 初始化数据库
     }
 
+    // 初始化数据库
+    private void initDao() {
+        dbDao = new SearchTalkHistoryDao(instance);
+    }
+
+    // 获取展示数据
+    private void getSource() {
+        //查找当前好友的展示信息
+        callid = getIntent().getStringExtra("callId");
+        callerId = getIntent().getStringExtra("callerId");
+        if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
+            for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
+                try {
+                    if (callerId.equals(GlobalConfig.list_person.get(i).getUserId())) {
+                        image = GlobalConfig.list_person.get(i).getPortrait();
+                        name = GlobalConfig.list_person.get(i).getNickName();
+                        break;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    image = null;
+                    name = "我听科技";
+                }
+            }
+        } else {
+            image = null;
+            name = "我听科技";
+        }
+    }
+
+    // 设置界面，以及界面数据
     private void setView() {
         ImageView imageview = (ImageView) findViewById(R.id.image);
         TextView tv_name = (TextView) findViewById(R.id.tv_name);
@@ -78,41 +109,8 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
         } else {
             String url = GlobalConfig.imageurl + image;
             final String _url = AssembleImageUrlUtils.assembleImageUrl300(url);
-
-            // 加载图片
             AssembleImageUrlUtils.loadImage(_url, url, imageview, IntegerConstant.TYPE_LIST);
         }
-    }
-
-    private void getSource() {
-        //查找当前好友的展示信息
-        callid = getIntent().getStringExtra("callId");
-        callerId = getIntent().getStringExtra("callerId");
-        try {
-            if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() > 0) {
-                for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
-                    if (callerId.equals(GlobalConfig.list_person.get(i).getUserId())) {
-                        image = GlobalConfig.list_person.get(i).getPortrait();
-                        name = GlobalConfig.list_person.get(i).getNickName();
-                        break;
-                    }
-                }
-            } else {
-                image = null;
-                name = "我听科技";
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            image = null;
-            name = "我听科技";
-        }
-    }
-
-    /**
-     * 初始化数据库
-     */
-    private void initDao() {
-        dbDao = new SearchTalkHistoryDao(instance);
     }
 
     @Override
@@ -135,7 +133,7 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
                 break;
             case R.id.lin_guaduan:
                 SubclassControl.isallow = true;
-                InterPhoneControl.PersonTalkOver(getApplicationContext(), callid,callerId);//拒绝应答
+                InterPhoneControl.PersonTalkOver(getApplicationContext(), callid, callerId);//拒绝应答
                 if (SubclassControl.musicPlayer != null) {
                     SubclassControl.musicPlayer.stop();
                     SubclassControl.musicPlayer = null;
@@ -147,13 +145,12 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
 
     public void addUser() {
         //获取最新激活状态的数据
-        String addtime = Long.toString(System.currentTimeMillis());
-        String bjuserid = CommonUtils.getUserId(instance);
+        String addTime = Long.toString(System.currentTimeMillis());
+        String bjUserId = CommonUtils.getUserId(instance);
         //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
         dbDao.deleteHistory(callerId);
-        DBTalkHistorary history = new DBTalkHistorary(bjuserid, "user", callerId, addtime);
+        DBTalkHistory history = new DBTalkHistory(bjUserId, "user", callerId, addTime);
         dbDao.addTalkHistory(history);
-//        DBTalkHistorary talkdb = dbDao.queryHistory().get(0);//得到数据库里边数据
         //对讲主页界面更新
         InterPhoneControl.bdcallid = callid;
         MainActivity.changeTwo();
@@ -168,7 +165,7 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN && KeyEvent.KEYCODE_BACK == keyCode) {
             SubclassControl.isallow = true;
-            InterPhoneControl.PersonTalkOver(getApplicationContext(), callid,callerId);//拒绝应答
+            InterPhoneControl.PersonTalkOver(getApplicationContext(), callid, callerId);//拒绝应答
             if (SubclassControl.musicPlayer != null) {
                 SubclassControl.musicPlayer.stop();
                 SubclassControl.musicPlayer = null;
@@ -182,7 +179,7 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        GlobalConfig.interPhoneType=0;
+        GlobalConfig.interPhoneType = 0;
         VibratorUtils.cancel(instance);
         Log.e("停止震动", "停止震动");
         instance = null;

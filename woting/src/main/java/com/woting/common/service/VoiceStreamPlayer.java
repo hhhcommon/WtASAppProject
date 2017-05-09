@@ -73,7 +73,7 @@ public class VoiceStreamPlayer {
     }
 
     private void createPlayer() {
-        int bufferSize = AudioTrack.getMinBufferSize(frequency, channelConfiguration, audioEncoding)/2;
+        int bufferSize = AudioTrack.getMinBufferSize(frequency, channelConfiguration, audioEncoding);
         Log.e("播放最小缓冲区=============", bufferSize + "");
         audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, frequency, channelConfiguration, audioEncoding, bufferSize, AudioTrack.MODE_STREAM);
         audioTrack.play();

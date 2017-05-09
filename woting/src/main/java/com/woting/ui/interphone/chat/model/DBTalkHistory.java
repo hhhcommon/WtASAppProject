@@ -2,12 +2,12 @@ package com.woting.ui.interphone.chat.model;
 
 import java.io.Serializable;
 
-public class DBTalkHistorary implements Serializable{
+public class DBTalkHistory implements Serializable{
 	private String BJUserId;	//本机userid
 	private String TyPe;		//类别 User，Group
 	private String ID;			//
 	private String AddTime;		//添加时间
-	public DBTalkHistorary(String bjuserid, String type, String id,String addtime) {
+	public DBTalkHistory(String bjuserid, String type, String id, String addtime) {
 		super();
 		BJUserId = bjuserid;
 		TyPe = type;

@@ -60,7 +60,7 @@ import com.woting.ui.interphone.chat.adapter.ChatListAdapter;
 import com.woting.ui.interphone.chat.adapter.ChatListAdapter.OnListener;
 import com.woting.ui.interphone.chat.adapter.GroupPersonAdapter;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
-import com.woting.ui.interphone.chat.model.DBTalkHistorary;
+import com.woting.ui.interphone.chat.model.DBTalkHistory;
 import com.woting.ui.interphone.message.MessageUtils;
 import com.woting.ui.interphone.message.MsgNormal;
 import com.woting.ui.interphone.message.content.MapContent;
@@ -134,7 +134,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
     private static List<UserInfo> groupPersonList = new ArrayList<>();//组成员
     private static ArrayList<UserInfo> groupPersonListS = new ArrayList<>();
     private static ArrayList<GroupInfo> allList = new ArrayList<>();//所有数据库数据
-    private static List<DBTalkHistorary> historyDataBaseList;//list里边的数据
+    private static List<DBTalkHistory> historyDataBaseList;//list里边的数据
     private static List<UserInfo> listInfo;
 
     private String oldTalkId;
@@ -360,7 +360,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         String addTime = Long.toString(System.currentTimeMillis());    // 获取最新激活状态的数据
         String bjuserid = CommonUtils.getUserId(context);
         dbDao.deleteHistory(id);                                       // 如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-        DBTalkHistorary history = new DBTalkHistorary(bjuserid, "user", id, addTime);
+        DBTalkHistory history = new DBTalkHistory(bjuserid, "user", id, addTime);
         dbDao.addTalkHistory(history);
         InterPhoneControl.bdcallid = callid;
         zhiDingPerson();
@@ -635,7 +635,7 @@ public class ChatFragment extends Fragment implements TipView.TipViewClick {
         String addtime = Long.toString(System.currentTimeMillis());
         String bjuserid = CommonUtils.getUserId(context);
         //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
-        DBTalkHistorary history = new DBTalkHistorary(bjuserid, type, groupid, addtime);
+        DBTalkHistory history = new DBTalkHistory(bjuserid, type, groupid, addtime);
         dbDao.addTalkHistory(history);
         historyDataBaseList = dbDao.queryHistory();//得到数据库里边数据
         getList();

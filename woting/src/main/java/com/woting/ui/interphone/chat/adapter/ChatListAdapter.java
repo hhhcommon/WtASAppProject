@@ -72,7 +72,9 @@ public class ChatListAdapter extends BaseAdapter {
 			holder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
 			holder.lin_zhiding = (LinearLayout) convertView.findViewById(R.id.lin_zhiding);
 			holder.imageView_touxiang = (ImageView) convertView.findViewById(R.id.image);
+
 			holder.textGroupNumber = (TextView) convertView.findViewById(R.id.tv_group_number);
+
 			holder.img_zhezhao = (ImageView) convertView.findViewById(R.id.img_zhezhao);
 			Bitmap bmp_zhezhao = BitmapUtils.readBitMap(context, R.mipmap.wt_6_b_y_b);
 			holder.img_zhezhao.setImageBitmap(bmp_zhezhao);
@@ -81,17 +83,20 @@ public class ChatListAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		lists = list.get(position);
+
 		if (lists.getId().trim().equals(id)) {
 			holder.textView_bg.setVisibility(View.VISIBLE);
 		} else {
 			holder.textView_bg.setVisibility(View.GONE);
 		}
+
 		if (lists.getGroupSignature() == null || lists.getGroupSignature().trim().equals("")) {
 			holder.tv_content.setVisibility(View.GONE);
 		} else {
 			holder.tv_content.setVisibility(View.VISIBLE);
 			holder.tv_content.setText(lists.getGroupSignature());
 		}
+
 		if (lists.getTyPe().equals("user")) {
 			if (lists.getUserNum()== null || lists.getUserNum().equals("")) {
 				holder.tv_b_id.setVisibility(View.GONE);
@@ -108,7 +113,6 @@ public class ChatListAdapter extends BaseAdapter {
 			}
 		}
 
-
 		if (lists.getName() == null || lists.getName().equals("")) {
 			holder.tv_name.setText("未知");
 		} else {
@@ -121,11 +125,13 @@ public class ChatListAdapter extends BaseAdapter {
 				holder.textGroupNumber.setText(" " + "(" + lists.getGroupCount() + "人)");
 			}
 		}
+
 		if (lists.getAddTime() == null || lists.getAddTime().equals("")) {
 			holder.tv_time.setText("未知");
 		} else {
 			holder.tv_time.setText(TimeUtils.converTime(Long.parseLong(lists.getAddTime())));
 		}
+
 		if (lists.getPortrait() == null || lists.getPortrait().equals("null") || lists.getPortrait().trim().equals("")) {
 			if (lists.getTyPe().equals("user")) {
 				holder.imageView_touxiang.setImageResource(R.mipmap.wt_image_tx_hy);
@@ -141,10 +147,10 @@ public class ChatListAdapter extends BaseAdapter {
 			}
             final String _url = AssembleImageUrlUtils.assembleImageUrl150(url);
             final String c_url = url;
-
             // 加载图片
             AssembleImageUrlUtils.loadImage(_url, c_url, holder.imageView_touxiang, IntegerConstant.TYPE_PERSON);
 		}
+
 		holder.lin_zhiding.setOnClickListener(new View.OnClickListener() {
 			
 			@Override

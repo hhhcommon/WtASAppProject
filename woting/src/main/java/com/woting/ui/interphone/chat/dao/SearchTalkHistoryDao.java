@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.woting.ui.interphone.chat.model.DBTalkHistorary;
+import com.woting.ui.interphone.chat.model.DBTalkHistory;
 import com.woting.common.database.SQLiteHelper;
 import com.woting.common.util.CommonUtils;
 
@@ -30,7 +30,7 @@ public class SearchTalkHistoryDao {
 	 * 插入搜索历史表一条数据
 	 * @param history
 	 */
-	public void addTalkHistory(DBTalkHistorary history) {
+	public void addTalkHistory(DBTalkHistory history) {
 		//通过helper的实现对象获取可操作的数据库db
 		SQLiteDatabase db = helper.getWritableDatabase();
 		db.execSQL("insert into talkHistory(bjUserId,type,id,addTime) values(?,?,?,?)",
@@ -43,21 +43,21 @@ public class SearchTalkHistoryDao {
 	 * 查询数据库里的数据，无参查询语句 供特定使用
 	 * @return
 	 */
-	public List<DBTalkHistorary> queryHistory() {
-		List<DBTalkHistorary> mylist = new ArrayList<DBTalkHistorary>();
+	public List<DBTalkHistory> queryHistory() {
+		List<DBTalkHistory> myList = new ArrayList<DBTalkHistory>();
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String userid = CommonUtils.getUserId(context);
+		String userId = CommonUtils.getUserId(context);
 		Cursor cursor = null;
 		try {
-			cursor = db.rawQuery("Select * from talkHistory  where bjUserId=? order by addTime desc", new String[]{userid});
+			cursor = db.rawQuery("Select * from talkHistory  where bjUserId=? order by addTime desc", new String[]{userId});
 			while (cursor.moveToNext()) {
-				String bjuserid = cursor.getString(1);
+				String bjUserId = cursor.getString(1);
 				String type = cursor.getString(2);
 				String id = cursor.getString(3);
-				String addtime = cursor.getString(4);
+				String addTime = cursor.getString(4);
 				//把每个对象都放到history对象里
-				DBTalkHistorary h = new DBTalkHistorary(bjuserid,  type,  id, addtime);		
-				mylist.add(h);
+				DBTalkHistory h = new DBTalkHistory(bjUserId,  type,  id, addTime);
+				myList.add(h);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -69,7 +69,7 @@ public class SearchTalkHistoryDao {
 				db.close();
 			}
 		}
-		return mylist;
+		return myList;
 	}
 
 	/**
@@ -79,10 +79,10 @@ public class SearchTalkHistoryDao {
 	 */
 	public void deleteHistory(String id) {
 		SQLiteDatabase db = helper.getReadableDatabase();
-		String userid = CommonUtils.getUserId(context);
+		String userId = CommonUtils.getUserId(context);
 		String uid = id;
 		db.execSQL("Delete from talkHistory where id=? and bjUserId=?",
-				new String[] { uid ,userid});
+				new String[] { uid ,userId});
 		db.close();
 	}
 }

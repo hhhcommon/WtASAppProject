@@ -76,7 +76,7 @@ import com.woting.ui.music.citylist.dao.CityInfoDao;
 import com.woting.ui.music.search.main.SearchLikeActivity;
 import com.woting.ui.interphone.chat.dao.SearchTalkHistoryDao;
 import com.woting.ui.interphone.chat.fragment.ChatFragment;
-import com.woting.ui.interphone.chat.model.DBTalkHistorary;
+import com.woting.ui.interphone.chat.model.DBTalkHistory;
 import com.woting.ui.interphone.message.MessageUtils;
 import com.woting.ui.interphone.message.MsgNormal;
 import com.woting.ui.interphone.message.content.MapContent;
@@ -133,7 +133,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     // 消息通知
     public static GroupInfo groupInfo;
 
-    public static DBTalkHistorary talkdb;
+    public static DBTalkHistory talkdb;
     public static String groupEntryNum;
 
     private ObjectAnimator animator;
@@ -1404,7 +1404,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         //如果该数据已经存在数据库则删除原有数据，然后添加最新数据
         talkDao.deleteHistory(callerId);
         Log.e("=====callerid======", callerId + "");
-        DBTalkHistorary history = new DBTalkHistorary(bjuserid, "user", callerId, addtime);
+        DBTalkHistory history = new DBTalkHistory(bjuserid, "user", callerId, addtime);
         talkDao.addTalkHistory(history);
         talkdb = talkDao.queryHistory().get(0);//得到数据库里边数据
         //对讲主页界面更新
