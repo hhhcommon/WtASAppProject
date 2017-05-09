@@ -99,19 +99,26 @@ public class SetGroupManagerActivity extends AppBaseActivity implements OnClickL
                 if(!TextUtils.isEmpty(tempList.get(i).getUserId())){
                 UserInfo userInfo=new UserInfo();
                 if(!TextUtils.isEmpty(tempList.get(i).getNickName())){
+
                 userInfo.setNickName(tempList.get(i).getNickName());
+
                 }else{
                     userInfo.setNickName(tempList.get(i).getName());
                 }
                 if(!TextUtils.isEmpty(tempList.get(i).getPortrait())){
+
                 userInfo.setPortrait(tempList.get(i).getPortrait());
+
                 }
                 if(!TextUtils.isEmpty(tempList.get(i).getUserId())){
+
                 userInfo.setUserId(tempList.get(i).getUserId());
+
                 }
                     mainList.add(userInfo);
                 }
             }
+
             if(mainList.size()>0){
             adapter = new SetGroupManagerAdapter(context,mainList);
             lv_main.setAdapter(adapter);

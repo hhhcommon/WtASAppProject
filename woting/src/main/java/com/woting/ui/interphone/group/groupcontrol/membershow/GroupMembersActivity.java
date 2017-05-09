@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -25,16 +26,18 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.HeightListView;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.interphone.model.UserInfo;
 import com.woting.ui.interphone.group.groupcontrol.grouppersonnews.GroupPersonNewsActivity;
 import com.woting.ui.interphone.group.groupcontrol.membershow.adapter.CreateGroupMembersAdapter;
+import com.woting.ui.interphone.group.groupcontrol.membershow.adapter.GroupMemberHeadAdapter;
 import com.woting.ui.interphone.group.groupcontrol.personnews.TalkPersonNewsActivity;
 import com.woting.ui.interphone.linkman.view.CharacterParser;
 import com.woting.ui.interphone.linkman.view.PinyinComparator;
 import com.woting.ui.interphone.linkman.view.SideBar;
 import com.woting.ui.interphone.linkman.view.SideBar.OnTouchingLetterChangedListener;
+import com.woting.ui.interphone.model.UserInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,6 +75,11 @@ public class GroupMembersActivity extends AppBaseActivity implements
     private String groupId;
     private String tag = "GROUP_MEMBERS_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
+    private ListView lv_manager;
+    private TextView manager_num;
+    private String[] managerList;
+    private List<UserInfo> headList= new ArrayList<>();
+    private String groupMaster;
 
     @Override
     public void onWhiteViewClick() {
@@ -98,8 +106,10 @@ public class GroupMembersActivity extends AppBaseActivity implements
         tipSearchNull = (TipView) findViewById(R.id.tip_search_null);
 
         groupId = getIntent().getStringExtra("GroupId");
-        findViewById(R.id.head_left_btn).setOnClickListener(this);
+        managerList=(String [])getIntent().getSerializableExtra("GroupManager");
+        groupMaster = getIntent().getStringExtra("GroupMaster");
 
+        findViewById(R.id.head_left_btn).setOnClickListener(this);
         editSearchContent = (EditText) findViewById(R.id.et_search);// 搜索控件
         editSearchContent.addTextChangedListener(this);
 
@@ -115,6 +125,12 @@ public class GroupMembersActivity extends AppBaseActivity implements
         sideBar.setOnTouchingLetterChangedListener(this);
 
         textHeadName = (TextView) findViewById(R.id.head_name_tv);// 更新当前组员人数的控件
+
+        View headView = LayoutInflater.from(context).inflate(R.layout.head_group_member, null);// headview
+        lv_manager = (ListView) headView.findViewById(R.id.lv_manager);
+        manager_num = (TextView) headView.findViewById(R.id.indexTv);  //管理员人数
+        manager_num.setText("群主.管理员 ("+managerList.length+")");
+        listView.addHeaderView(headView);
 
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             dialog = DialogUtils.Dialog(context);
@@ -165,8 +181,30 @@ public class GroupMembersActivity extends AppBaseActivity implements
                             }.getType());
                             if (srcList != null && srcList.size() != 0) {
                                 tipView.setVisibility(View.GONE);
-                                int sum = srcList.size();
-                                textHeadName.setText("全部成员(" + sum + ")");
+
+                                //处理headview的数据，将id相同的数据从排序list里拿掉
+                                if(managerList!=null&&managerList.length>0){
+                                   for(int i =0;i<managerList.length;i++){
+                                       for(int j=0;j<srcList.size();j++){
+                                          if(managerList[i].equals(srcList.get(j).getUserId())){
+                                              UserInfo userInfo = srcList.remove(j);
+                                              String s=userInfo.getNickName();
+                                              if(groupMaster.equals(userInfo.getUserId())){
+                                                  //是群主
+                                                  userInfo.setCheckType(2);//在此处2是群主
+                                                  headList.add(0,userInfo);
+                                              }else{
+                                                  headList.add(userInfo);
+                                              }
+
+                                              break;
+                                          }
+                                       }
+                                   }
+                                }
+                                    lv_manager.setAdapter(new GroupMemberHeadAdapter(context,headList));
+                                    new HeightListView(context).setListViewHeightBasedOnChildren(lv_manager);
+
                                 userList.clear();
                                 userList.addAll(srcList);
                                 filledData(userList);

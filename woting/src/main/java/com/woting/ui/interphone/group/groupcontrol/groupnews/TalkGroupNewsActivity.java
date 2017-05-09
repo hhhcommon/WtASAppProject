@@ -227,33 +227,33 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         imageModify = (ImageView) findViewById(R.id.image_xiugai); // 修改群组资料
         imageModify.setOnClickListener(this);
 
-        linearModifyPassword = findViewById(R.id.lin_modifypassword);// 修改密码
+        linearModifyPassword = findViewById(R.id.lin_modifypassword);    // 修改密码
         linearModifyPassword.setOnClickListener(this);
 
-        linearGroupApply = findViewById(R.id.lin_groupapply);      // 审核消息
+        linearGroupApply = findViewById(R.id.lin_groupapply);            // 审核消息
         linearGroupApply.setOnClickListener(this);
 
-        linearAddMessage = findViewById(R.id.lin_jiaqun);          // 加群消息
+        linearAddMessage = findViewById(R.id.lin_jiaqun);                // 加群消息
         linearAddMessage.setOnClickListener(this);
 
-        LinearTransferAuthority = findViewById(R.id.lin_yijiao);   // 移交管理员权限
+        LinearTransferAuthority = findViewById(R.id.lin_yijiao);         // 移交管理员权限
         LinearTransferAuthority.setOnClickListener(this);
 
-        lin_set_manager = findViewById(R.id.lin_set_manager);        // 设置群管理员
+        lin_set_manager = findViewById(R.id.lin_set_manager);            // 设置群管理员
         lin_set_manager.setOnClickListener(this);
 
-        imageEwm = (ImageView) findViewById(R.id.imageView_ewm);      //  二维码
-        textGroupNumber = (TextView) findViewById(R.id.tv_number);    //  群成员数量
+        imageEwm = (ImageView) findViewById(R.id.imageView_ewm);         //  二维码
+        textGroupNumber = (TextView) findViewById(R.id.tv_number);       //  群成员数量
 
-        editAliasName = (EditText) findViewById(R.id.et_group_alias); //  别名
+        editAliasName = (EditText) findViewById(R.id.et_group_alias);    //  别名
         editAliasName.setEnabled(false);
 
-        editGroupName = (EditText) findViewById(R.id.et_group_name);  //  群名
+        editGroupName = (EditText) findViewById(R.id.et_group_name);     //  群名
         editGroupName.setEnabled(false);
 
-        textGroupId = (TextView) findViewById(R.id.tv_id);            // 群号
+        textGroupId = (TextView) findViewById(R.id.tv_id);               // 群号
 
-        gridView = (MyGridView) findViewById(R.id.gridView);          // 展示群成员
+        gridView = (MyGridView) findViewById(R.id.gridView);             // 展示群成员
         gridView.setOnItemClickListener(this);
         gridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
     }
@@ -507,7 +507,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 finish();
                 break;
             case R.id.lin_allperson:  // 查看所有成员
-                startToActivity(GroupMembersActivity.class);
+                startToActivity(GroupMembersActivity.class,20);
                 break;
             case R.id.tv_delete:      // 退出群组
                 confirmDialog.show();
@@ -1071,7 +1071,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         Bundle bundle = new Bundle();
         bundle.putString("GroupId", groupId);
         bundle.putSerializable("GroupManager", ManagerList);
-
+        bundle.putString("GroupMaster", groupMaster);
         if (GroupTransformList.size() != 0) {
             GroupTransformList.clear();
         }

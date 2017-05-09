@@ -73,7 +73,9 @@
                 android:id="@+id/tip_search_null"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:background="@color/transparent"
+                />
 
             <TextView
                 android:id="@+id/dialog"
