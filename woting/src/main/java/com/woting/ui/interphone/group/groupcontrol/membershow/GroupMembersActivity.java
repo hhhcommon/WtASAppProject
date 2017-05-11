@@ -29,7 +29,9 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.HeightListView;
 import com.woting.common.widgetui.TipView;
 import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.interphone.group.groupcontrol.groupnumdel.GroupMemberDelActivity;
 import com.woting.ui.interphone.group.groupcontrol.grouppersonnews.GroupPersonNewsActivity;
+import com.woting.ui.interphone.group.groupcontrol.memberadd.GroupMemberAddActivity;
 import com.woting.ui.interphone.group.groupcontrol.membershow.adapter.CreateGroupMembersAdapter;
 import com.woting.ui.interphone.group.groupcontrol.membershow.adapter.GroupMemberHeadAdapter;
 import com.woting.ui.interphone.group.groupcontrol.personnews.TalkPersonNewsActivity;
@@ -80,6 +82,7 @@ public class GroupMembersActivity extends AppBaseActivity implements
     private String[] managerList;
     private List<UserInfo> headList= new ArrayList<>();
     private String groupMaster;
+    private Dialog managerDialog;
 
     @Override
     public void onWhiteViewClick() {
@@ -96,8 +99,8 @@ public class GroupMembersActivity extends AppBaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groupmembers);
-
         initView();
+        initDialog();
     }
 
     private void initView() {
@@ -109,6 +112,8 @@ public class GroupMembersActivity extends AppBaseActivity implements
         managerList=(String [])getIntent().getSerializableExtra("GroupManager");
         groupMaster = getIntent().getStringExtra("GroupMaster");
 
+
+        findViewById(R.id.head_right_btn).setOnClickListener(this);
         findViewById(R.id.head_left_btn).setOnClickListener(this);
         editSearchContent = (EditText) findViewById(R.id.et_search);// 搜索控件
         editSearchContent.addTextChangedListener(this);
@@ -152,8 +157,46 @@ public class GroupMembersActivity extends AppBaseActivity implements
                 editSearchContent.setText("");
                 tipSearchNull.setVisibility(View.GONE);
                 break;
+            case R.id.tv_add:
+                //ToastUtils.show_always(context,"添加群成员");
+                startToActivity(GroupMemberAddActivity.class);
+                if(managerDialog!=null&&managerDialog.isShowing()){
+                    managerDialog.dismiss();
+                }
+                break;
+            case R.id.tv_del:
+                startToActivity(GroupMemberDelActivity.class);
+                //ToastUtils.show_always(context,"删除群成员");
+                if(managerDialog!=null&&managerDialog.isShowing()){
+                    managerDialog.dismiss();
+                }
+                break;
+            case R.id.tv_cancel:
+                if(managerDialog!=null&&managerDialog.isShowing()){
+                    managerDialog.dismiss();
+                }
+                break;
+            case R.id.head_right_btn:
+                if(managerDialog!=null){
+                    managerDialog.show();
+                }
+                break;
         }
     }
+
+    // 初始化对话框
+    private void initDialog() {
+        View dialog = LayoutInflater.from(context).inflate(R.layout.dialog_group_manager, null);
+        dialog.findViewById(R.id.tv_add).setOnClickListener(this);
+        dialog.findViewById(R.id.tv_del).setOnClickListener(this);
+        dialog.findViewById(R.id.tv_cancel).setOnClickListener(this);
+        managerDialog = new Dialog(context, R.style.MyDialog);
+        managerDialog .setContentView(dialog);
+        managerDialog .setCanceledOnTouchOutside(true);
+        managerDialog .getWindow().setBackgroundDrawableResource(R.color.dialog);
+    }
+
+
 
     // 网络请求主函数
     private void send() {
@@ -177,8 +220,15 @@ public class GroupMembersActivity extends AppBaseActivity implements
                         tipView.setTipView(TipView.TipStatus.IS_ERROR);
                     } else if (ReturnType.equals("1001") || ReturnType.equals("1002")) {
                         try {
+                            if(srcList!=null&&srcList.size()>0){
+                                srcList.clear();
+                            }
+                            if(headList!=null&&headList.size()>0){
+                                headList.clear();
+                            }
                             srcList = new Gson().fromJson(result.getString("UserList"), new TypeToken<List<UserInfo>>() {
                             }.getType());
+
                             if (srcList != null && srcList.size() != 0) {
                                 tipView.setVisibility(View.GONE);
 
@@ -256,6 +306,32 @@ public class GroupMembersActivity extends AppBaseActivity implements
         }
     }
 
+    // 跳转到新的 Activity
+    private void startToActivity(Class toClass) {
+        Intent intent = new Intent(context, toClass);
+        Bundle bundle = new Bundle();
+        bundle.putString("GroupId", groupId);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case 1:
+                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+                    dialog = DialogUtils.Dialog(context);
+                    send();
+                } else {
+                    tipView.setVisibility(View.VISIBLE);
+                    tipView.setTipView(TipView.TipStatus.NO_NET);
+                }
+                setResult(1);
+                break;
+        }
+    }
+
     // 根据输入框中的值来过滤数据并更新ListView
     private void search(String searchName) {
         List<UserInfo> filterDateList = new ArrayList<>();
@@ -296,12 +372,13 @@ public class GroupMembersActivity extends AppBaseActivity implements
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         boolean isFriend = false;
-        if (userList.get(position).getUserId().equals(CommonUtils.getUserId(context))) {
+ /*       ToastUtils.show_always(context,""+position);*/
+        if (userList.get(position-1).getUserId().equals(CommonUtils.getUserId(context))) {
             ToastUtils.show_always(context, "点击的是本人");
         } else {
             if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() != 0) {
                 for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
-                    if (userList.get(position).getUserId().equals(GlobalConfig.list_person.get(i).getUserId())) {
+                    if (userList.get(position-1).getUserId().equals(GlobalConfig.list_person.get(i).getUserId())) {
                         isFriend = true;
                         break;
                     }
@@ -311,10 +388,10 @@ public class GroupMembersActivity extends AppBaseActivity implements
             }
             if (isFriend) {
                 UserInfo tp = new UserInfo();
-                tp.setPortrait(userList.get(position).getPortrait());
-                tp.setNickName(userList.get(position).getNickName());
-                tp.setUserId(userList.get(position).getUserId());
-                tp.setUserAliasName(userList.get(position).getUserAliasName());
+                tp.setPortrait(userList.get(position-1).getPortrait());
+                tp.setNickName(userList.get(position-1).getNickName());
+                tp.setUserId(userList.get(position-1).getUserId());
+                tp.setUserAliasName(userList.get(position-1).getUserAliasName());
                 Intent intent = new Intent(context, TalkPersonNewsActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("type", "GroupMemers");
@@ -327,7 +404,7 @@ public class GroupMembersActivity extends AppBaseActivity implements
                 Bundle bundle = new Bundle();
                 bundle.putString("type", "GroupMemers");
                 bundle.putString("id", groupId);
-                bundle.putSerializable("data", userList.get(position));
+                bundle.putSerializable("data", userList.get(position-1));
                 intent.putExtras(bundle);
                 startActivityForResult(intent, 2);
             }

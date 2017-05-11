@@ -124,12 +124,16 @@ public class TalkPersonNewsActivity extends AppBaseActivity {
             lin_person_xiu_gai.setVisibility(View.INVISIBLE);
         } else if (type.equals("GroupMemers")) {
             UserInfo data = (UserInfo) getIntent().getSerializableExtra("data");
-            groupId = this.getIntent().getStringExtra("id");
-            name = data.getNickName();
+            nick_name = data.getNickName();
             imageUrl = data.getPortrait();
             id = data.getUserId();
             descN = data.getUserSign();
-            viewType = 1;
+            Usernum = data.getUserNum();
+            aliasName = data.getUserAliasName();
+            phoneNum = data.getPhoneNum();
+            Sex = data.getSex();
+            Region = data.getRegion();
+            viewType = -1;
         } else if (type.equals("findAdd")) {
             //从搜索好友界面进来的
             UserInviteMeInside data = (UserInviteMeInside) getIntent().getSerializableExtra("contact");

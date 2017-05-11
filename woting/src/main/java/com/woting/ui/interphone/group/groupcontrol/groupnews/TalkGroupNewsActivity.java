@@ -922,6 +922,13 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                    // ToastUtils.show_always(context,"群签名已经修改成功，请您重新进入该租查看");
                 }
                 break;
+            case 20:
+                if(resultCode==1){
+                    sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
+                    send();
+                }
+                break;
+
         }
     }
 
