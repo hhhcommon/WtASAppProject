@@ -112,7 +112,7 @@ public class TransferAuthorityActivity extends AppBaseActivity implements OnClic
         imageClear.setOnClickListener(this);
 
         TextView textHeadName = (TextView) findViewById(R.id.head_name_tv);// 标题
-        textHeadName.setText("移交管理员权限");
+        textHeadName.setText("移交群主权限");
 
         groupId = getIntent().getStringExtra("GroupId");
         if (groupId != null && !groupId.equals("")) {

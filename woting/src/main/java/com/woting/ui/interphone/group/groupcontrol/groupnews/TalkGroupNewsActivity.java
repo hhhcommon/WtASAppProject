@@ -236,7 +236,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         linearAddMessage = findViewById(R.id.lin_jiaqun);                // 加群消息
         linearAddMessage.setOnClickListener(this);
 
-        LinearTransferAuthority = findViewById(R.id.lin_yijiao);         // 移交管理员权限
+        LinearTransferAuthority = findViewById(R.id.lin_yijiao);         // 移交群主权限
         LinearTransferAuthority.setOnClickListener(this);
 
         lin_set_manager = findViewById(R.id.lin_set_manager);            // 设置群管理员

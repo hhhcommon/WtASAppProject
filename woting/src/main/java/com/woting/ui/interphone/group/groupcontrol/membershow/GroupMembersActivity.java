@@ -35,6 +35,7 @@ import com.woting.ui.interphone.group.groupcontrol.memberadd.GroupMemberAddActiv
 import com.woting.ui.interphone.group.groupcontrol.membershow.adapter.CreateGroupMembersAdapter;
 import com.woting.ui.interphone.group.groupcontrol.membershow.adapter.GroupMemberHeadAdapter;
 import com.woting.ui.interphone.group.groupcontrol.personnews.TalkPersonNewsActivity;
+import com.woting.ui.interphone.linkman.adapter.TalkPersonNoAdapter;
 import com.woting.ui.interphone.linkman.view.CharacterParser;
 import com.woting.ui.interphone.linkman.view.PinyinComparator;
 import com.woting.ui.interphone.linkman.view.SideBar;
@@ -136,7 +137,7 @@ public class GroupMembersActivity extends AppBaseActivity implements
         manager_num = (TextView) headView.findViewById(R.id.indexTv);  //管理员人数
         manager_num.setText("群主.管理员 ("+managerList.length+")");
         listView.addHeaderView(headView);
-
+        setOnItemClickListener();
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
             dialog = DialogUtils.Dialog(context);
             send();
@@ -144,6 +145,51 @@ public class GroupMembersActivity extends AppBaseActivity implements
             tipView.setVisibility(View.VISIBLE);
             tipView.setTipView(TipView.TipStatus.NO_NET);
         }
+    }
+
+    private void setOnItemClickListener() {
+        lv_manager.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                boolean isFriend = false;
+                if (headList.get(position).getUserId().equals(CommonUtils.getUserId(context))) {
+                    ToastUtils.show_always(context, "点击的是本人");
+                } else {
+                    if (GlobalConfig.list_person != null && GlobalConfig.list_person.size() != 0) {
+                        for (int i = 0; i < GlobalConfig.list_person.size(); i++) {
+                            if (headList.get(position).getUserId().equals(GlobalConfig.list_person.get(i).getUserId())) {
+                                isFriend = true;
+                                break;
+                            }
+                        }
+                    } else {
+                        isFriend = false;// 不是我的好友
+                    }
+                    if (isFriend) {
+                        UserInfo tp = new UserInfo();
+                        tp.setPortrait(headList.get(position).getPortrait());
+                        tp.setNickName(headList.get(position).getNickName());
+                        tp.setUserId(headList.get(position).getUserId());
+                        tp.setUserAliasName(headList.get(position).getUserAliasName());
+                        Intent intent = new Intent(context, TalkPersonNewsActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("type", "GroupMemers");
+                        bundle.putString("id", groupId);
+                        bundle.putSerializable("data", tp);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(context, GroupPersonNewsActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("type", "GroupMemers");
+                        bundle.putString("id", groupId);
+                        bundle.putSerializable("data", headList.get(position));
+                        intent.putExtras(bundle);
+                        startActivityForResult(intent, 2);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -246,20 +292,24 @@ public class GroupMembersActivity extends AppBaseActivity implements
                                               }else{
                                                   headList.add(userInfo);
                                               }
-
                                               break;
                                           }
                                        }
                                    }
                                 }
-                                    lv_manager.setAdapter(new GroupMemberHeadAdapter(context,headList));
-                                    new HeightListView(context).setListViewHeightBasedOnChildren(lv_manager);
 
+                                lv_manager.setAdapter(new GroupMemberHeadAdapter(context,headList));
+                                new HeightListView(context).setListViewHeightBasedOnChildren(lv_manager);
                                 userList.clear();
                                 userList.addAll(srcList);
                                 filledData(userList);
                                 Collections.sort(userList, pinyinComparator);
+                                if(userList!=null&&userList.size()>0){
                                 listView.setAdapter(adapter = new CreateGroupMembersAdapter(context, userList));
+                                }else{
+                                    listView.setAdapter(new TalkPersonNoAdapter(context));
+                                }
+
                             } else {
                                 tipView.setVisibility(View.VISIBLE);
                                 tipView.setTipView(TipView.TipStatus.NO_DATA, "群组中没有成员!");
@@ -348,9 +398,10 @@ public class GroupMembersActivity extends AppBaseActivity implements
             }
         }
         if (filterDateList.size() == 0) {
-            tipSearchNull.setVisibility(View.VISIBLE);
-            tipSearchNull.setTipView(TipView.TipStatus.NO_DATA, "没有找到该好友哟\n换个好友再试一次吧");
-            listView.setVisibility(View.GONE);
+          //  tipSearchNull.setVisibility(View.VISIBLE);
+           // tipSearchNull.setTipView(TipView.TipStatus.NO_DATA, "没有找到该好友哟\n换个好友再试一次吧");
+            //listView.setVisibility(View.GONE);
+            listView.setAdapter(new TalkPersonNoAdapter(context));
         } else {
             tipSearchNull.setVisibility(View.GONE);
             listView.setVisibility(View.VISIBLE);
@@ -418,7 +469,8 @@ public class GroupMembersActivity extends AppBaseActivity implements
             imageClear.setVisibility(View.INVISIBLE);
             tipSearchNull.setVisibility(View.GONE);
             if (srcList == null || srcList.size() == 0) {
-                listView.setVisibility(View.GONE);
+               // listView.setVisibility(View.GONE);
+                listView.setAdapter(new TalkPersonNoAdapter(context));
             } else {
                 listView.setVisibility(View.VISIBLE);
                 userList.clear();
