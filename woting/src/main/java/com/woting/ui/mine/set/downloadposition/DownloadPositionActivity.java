@@ -6,7 +6,7 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.woting.R;
-import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.base.baseactivity.AppBaseActivity;
 import com.woting.ui.musicplay.download.service.DownloadService;
 
 /**

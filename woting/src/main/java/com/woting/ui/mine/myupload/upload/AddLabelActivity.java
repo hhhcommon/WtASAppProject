@@ -27,7 +27,7 @@ import com.woting.common.util.CommonUtils;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.base.baseactivity.AppBaseActivity;
 import com.woting.ui.mine.myupload.adapter.MyTagGridAdapter;
 import com.woting.ui.mine.myupload.model.TagInfo;
 import com.zhy.view.flowlayout.FlowLayout;

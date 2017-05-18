@@ -23,7 +23,7 @@ import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.base.baseactivity.AppBaseActivity;
 import com.woting.ui.interphone.model.UserInfo;
 import com.woting.ui.interphone.group.groupcontrol.transferauthority.adapter.TransferAuthorityAdapter;
 import com.woting.ui.interphone.group.groupcontrol.transferauthority.adapter.TransferAuthorityAdapter.friendCheck;

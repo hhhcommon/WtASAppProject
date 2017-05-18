@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.common.util.PhoneMessage;
-import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.base.baseactivity.AppBaseActivity;
 
 /**
  * 关于

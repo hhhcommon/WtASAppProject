@@ -104,13 +104,22 @@ public class ReceiveAlertActivity extends Activity implements OnClickListener {
 
         //适配好友展示信息
         tv_name.setText(name);
+
         if (image == null || image.equals("") || image.equals("null") || image.trim().equals("")) {
             imageview.setImageResource(R.mipmap.wt_image_tx_hy);
         } else {
-            String url = GlobalConfig.imageurl + image;
-            final String _url = AssembleImageUrlUtils.assembleImageUrl300(url);
-            AssembleImageUrlUtils.loadImage(_url, url, imageview, IntegerConstant.TYPE_LIST);
+            String urls;
+            if (image.startsWith("http")) {
+                urls = image;
+            } else {
+                urls = GlobalConfig.imageurl + image;
+            }
+            final String _url = AssembleImageUrlUtils.assembleImageUrl150(urls);
+            final String c_url = image;
+            // 加载图片
+            AssembleImageUrlUtils.loadImage(_url, c_url, imageview, IntegerConstant.TYPE_PERSON);
         }
+
     }
 
     @Override

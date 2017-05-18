@@ -85,6 +85,18 @@
         android:icon="@mipmap/app_logo"
         android:label="@string/app_name">
 
+        <!-- 百川开始 -->
+        <meta-data
+            android:name="com.taobao.android.hotfix.IDSECRET"
+            android:value="112729-1" />
+        <meta-data
+            android:name="com.taobao.android.hotfix.APPSECRET"
+            android:value="787a9c1d04d2b9882821b5fb8b0b7152" />
+        <meta-data
+            android:name="com.taobao.android.hotfix.RSASECRET"
+            android:value="MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC24NCWf87sTrfJb+5qCGDkZEejfrcBFCsxUMPSOan23hLjjIiI3wn4F38Yoy4/eOTD7FbQH0HuQpz4Gc94quM3YV8V4Cqa8k3DqdI2OfRoDJhuCrJtzl0tq8s/Dgm0ruzqOXZ8XMwj8KlMIV9m5Z/IhBZXpBpiQMyPsT/hPrWEo/ct6mp+MbUSg+QMtMa7LlI4VmHq+pT6cQviKDBkA8spOsGkEhVmIyvu306PNsOWjp6wMeEQk32h+jn79lG6wgSiMZTD49K/vhDxdoiPWSf3XGYtlwdSC7tlwtEsQNJXX5uZHnR2uOalobs/DdL104Yj9xMPk5467aaZ3s0uw/RtAgMBAAECggEAH2mESqWPbGWlCfOw9wOTaQeUio/EbWoCdUkTKbP/7sh8ZBuKhEATXUrj6N52ni5s1P5udvc3gu5sOe1tBqQLvUJ7a62Cg/TkyJwN4ISZ55lqQVSTC2tr8+FTWvRVVHTLevv9zyS9Z9r5qXr+ARWmGXIeyFUGtyO8P15Jw63azfp08+bX0jVDb7zSDazKQIDhLlYV8Ld14CXeDfXeU6fjZrdEA7MCI3W4ONIC9sssZgINYf66V0xBK7E97h2/F9qdEe38MjUnI9T7Om5KNH/XaiPbcfkzNsB7wQRxWCXX2eAtwc81hid4RaFs4u3Q5jk6lXVX2Z7CteBW/o+r+YvAIQKBgQD5FL1PO6xpwa5CqIM7TKmO8t7yY96CZJo5Dn25EZThgoctEZfxep9V8Iv5nNIkKfOyLu3vk4r+9mQXtNwad+Wk4f0TV6EVhBac/f6dcn3wJrYXZQmW6ItKSSCrKU1TqRgBabhUvkYfrHfYb1SbjWgZT92tOfjvariA5HvoKHJkSQKBgQC79Ut+zD2fEoRnI64CkTgQLYlZfu+2oMLIpICAbew3b4+nstCbWOGyaeMVzGOYUyW0rHi37ehxBtDK5amvxudzaOZLhXkVT5Kkp10o+WDwf5fUth4GUxXo21DLU/9MM4Vagm22QqXj5eiVahOA8+PG6hGuctMNIVM24WvXsXoHBQKBgQDncT32wZwTKMSja7GFCFcFXOeMkv/OaWxkV/K6ZHvSj1bLqe1llGs5j6qA5hbdQ54Nk03Dr3UYNBoNbSCX95CLBPIDZwlm1LWuatSLuDcNTuskEd43Ox0yiYCxik8vzY9gwLtnAuZlx/wUQF59q4du/acdryCAVsnZ+nSn4+1nAQKBgEqlxPH6045VoFgGB5nlasqiCyaMD1AM0M825gIbpfDuUbNchRTtW9Wr0BBcOEHK4/K5fMgvqF0bQ9kRFS9GY62mP7BGtiwMikTyY0FeqW1af0ZvfcUtQkpUr+XQ2le9Ln0fx8rW9WNpb9HHay+PrSrW02bhG4jfb1kgdeAYEEqxAoGBAMnPM0turQz/7tLTn7DgY5WwDmhRKKvBrylWZC7dL1tP0a3dtLT7IMqtFFKHJNt5o8V4ebLPioMAK21sT0Oy+TQnhfXpPP67Ml9Qyd+Vwo+HS2Mo3i/Z7bml8pOIhstjBIKjd4mPFK/jQJfZQdXLQZocIRzl6Csiy5M0kXSmewmL" />
+        <!-- 百川结束 -->
+
         <!--  -->
         <meta-data
             android:name="UMENG_APPKEY"
@@ -231,7 +243,7 @@
 
         <!--  -->
         <activity
-            android:name=".ui.common.login.LoginActivity"
+            android:name=".ui.common.login.view.LoginView"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
              />

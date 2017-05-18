@@ -20,7 +20,7 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.ui.baseactivity.AppActivity;
+import com.woting.ui.base.baseactivity.AppActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;

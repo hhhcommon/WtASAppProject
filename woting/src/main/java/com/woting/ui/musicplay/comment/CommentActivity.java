@@ -22,7 +22,6 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -38,7 +37,7 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.MyEditText;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
-import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.base.baseactivity.AppBaseActivity;
 import com.woting.ui.musicplay.comment.adapter.ChatLVAdapter;
 import com.woting.ui.musicplay.comment.adapter.ContentNoAdapter;
 import com.woting.ui.musicplay.comment.adapter.FaceGVAdapter;

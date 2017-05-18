@@ -23,7 +23,7 @@ import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.PhoneMessage;
-import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
+import com.woting.ui.base.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.musicplay.download.fragment.DownLoadAudioFragment;
 import com.woting.ui.musicplay.download.fragment.DownLoadSequFragment;
 import com.woting.ui.musicplay.download.fragment.DownLoadUnCompletedFragment;

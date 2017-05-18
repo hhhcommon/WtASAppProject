@@ -662,7 +662,7 @@ public class SocketClient {
                         if (msg instanceof MsgNormal) {
                             MsgNormal nMsg = (MsgNormal) msg;
                             if (nMsg.isCtlAffirm()) {
-//                                InterPhoneControl.sendControlReceiptMessage(nMsg.getMsgId(), 0);
+                                InterPhoneControl.sendControlReceiptMessage(nMsg.getMsgId(), 0);
                                 Log.i("控制回执消息", "控制回执消息已处理");
                             }
                         }
@@ -681,7 +681,7 @@ public class SocketClient {
         }
     }
 
-    //处理接收到的音频数据的线程(分组到两个)
+    // 处理接收到的音频数据的线程(分组到两个)
     private class AudioDistributed extends Thread {
         public void run() {
             while (true) {

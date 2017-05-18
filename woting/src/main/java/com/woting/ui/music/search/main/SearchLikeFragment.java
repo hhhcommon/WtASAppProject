@@ -52,7 +52,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.MyLinearLayout;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
+import com.woting.ui.base.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.music.search.adapter.SearchHistoryAdapter;
 import com.woting.ui.music.search.adapter.SearchHotAdapter;
 import com.woting.ui.music.search.adapter.SearchLikeAdapter;

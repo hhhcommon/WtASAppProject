@@ -140,7 +140,7 @@ public class ChatRoomLiveActivity extends Activity {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("type", 1);
         String userid = sharedPreferences.getString(StringConstant.USERID, null);
-        String url = sharedPreferences.getString(StringConstant.IMAGEURBIG, "");
+        String url = sharedPreferences.getString(StringConstant.PORTRAIT, "");
         if (!url.equals("")) {
             if (!url.startsWith("http:")) {
                 url = AssembleImageUrlUtils.assembleImageUrl150(GlobalConfig.imageurl + url);

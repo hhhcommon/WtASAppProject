@@ -213,17 +213,17 @@ public class MessageNotifyDao {
                     }
                 }
             }
-        }else if (MessageType.equals("g2")) {
+        } else if (MessageType.equals("g2")) {
             // 申请入组消息
             GroupId = (GroupId == null || GroupId.trim().equals("")) ? "other" : GroupId;
             PersonId = (PersonId == null || PersonId.trim().equals("")) ? "other" : PersonId;
-            if (!GroupId.equals("other")&&!PersonId.equals("other")) {
+            if (!GroupId.equals("other") && !PersonId.equals("other")) {
                 SQLiteDatabase db = helper.getReadableDatabase();
                 String _user_id = CommonUtils.getUserId(context);
                 Cursor cursor = null;
                 try {
                     cursor = db.rawQuery("Select * from message_notify  where message_type=? and group_id=?and person_id=?and user_id=?  ",
-                            new String[]{MessageType, GroupId,PersonId, _user_id});
+                            new String[]{MessageType, GroupId, PersonId, _user_id});
                     while (cursor.moveToNext()) {
                         String message_id = cursor.getString(16);
                         my_list.add(message_id);
@@ -257,6 +257,86 @@ public class MessageNotifyDao {
     }
 
     /**
+     * 得到该reMessageId相同的数据
+     *
+     * @param msgId ID
+     */
+    public List<DBNotifyHistory> queryNotifyMessageForMessageId(String msgId) {
+        List<DBNotifyHistory> my_list = new ArrayList<DBNotifyHistory>();
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String _user_id = CommonUtils.getUserId(context);
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("Select * from message_notify  where user_id=? and message_id=? order by add_time desc",
+                    new String[]{_user_id, msgId});
+            while (cursor.moveToNext()) {
+                String user_id = cursor.getString(1);
+                String image_url = cursor.getString(2);
+                String person_name = cursor.getString(3);
+                String person_id = cursor.getString(4);
+                String group_name = cursor.getString(5);
+                String group_id = cursor.getString(6);
+                String operator_name = cursor.getString(7);
+                String operator_id = cursor.getString(8);
+                String show_type = cursor.getString(9);
+                String message_type = cursor.getString(10);
+                String deal_time = cursor.getString(11);
+                String add_time = cursor.getString(12);
+
+                int biz_type = cursor.getInt(13);
+                int cmd_type = cursor.getInt(14);
+                int command = cursor.getInt(15);
+                String message_id = cursor.getString(16);
+                String message = cursor.getString(17);
+                //把每个对象都放到history对象里
+                DBNotifyHistory h = new DBNotifyHistory(user_id, image_url,
+                        person_name, person_id, group_name, group_id, operator_name,
+                        operator_id, show_type, message_type, deal_time, add_time,
+                        biz_type, cmd_type, command, message_id, message);
+                my_list.add(h);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
+        }
+        return my_list;
+    }
+
+    /**
+     * 删除数据库表中的好友邀请业务重复数据,
+     *
+     * @param personId ID
+     */
+    public void deleteNotifyMessageForInvite(String personId) {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String user_id = CommonUtils.getUserId(context);
+        db.execSQL("Delete from message_notify where message_type=? and user_id=? and person_id =?",
+                new String[]{"p1", user_id, personId});
+        db.close();
+    }
+
+    /**
+     * 删除数据库中群组邀请消息
+     *
+     * @param type
+     * @param group_id
+     * @param person_id
+     */
+    public void deleteNotifyMessageForGroupInvite(String type, String group_id, String person_id) {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String user_id = CommonUtils.getUserId(context);
+        db.execSQL("Delete from message_notify where message_type=? and user_id=? and group_id=? and person_id =?",
+                new String[]{type, user_id, group_id, person_id});
+        db.close();
+    }
+
+    /**
      * 更改展示状态，把true变成false
      *
      * @param MessageId 消息ID
@@ -265,7 +345,7 @@ public class MessageNotifyDao {
         SQLiteDatabase db = helper.getWritableDatabase();
         String user_id = CommonUtils.getUserId(context);
         db.execSQL("update message_notify set show_type=?,message=? where message_id=?and user_id=? and show_type=?",
-                new Object[]{"false", message, MessageId, user_id,"true"});
+                new Object[]{"false", message, MessageId, user_id, "true"});
         db.close();
     }
 
@@ -299,7 +379,7 @@ public class MessageNotifyDao {
                         new String[]{"other", MessageType, GroupId, PersonId, user_id});
                 db.close();
             }
-        }else if (MessageType.equals("g2")) {
+        } else if (MessageType.equals("g2")) {
             // 用户申请消息
             GroupId = GroupId == null || GroupId.trim().equals("") ? "other" : GroupId;
             PersonId = PersonId == null || PersonId.trim().equals("") ? "other" : PersonId;

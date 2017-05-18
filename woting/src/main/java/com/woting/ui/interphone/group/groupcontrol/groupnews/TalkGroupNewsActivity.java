@@ -52,7 +52,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.MyGridView;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.base.baseactivity.AppBaseActivity;
 import com.woting.ui.interphone.model.GroupInfo;
 import com.woting.ui.common.photocut.PhotoCutActivity;
 import com.woting.ui.common.qrcodes.EWMShowActivity;
@@ -308,20 +308,6 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         } else {
             tv_sign.setText("还没有签名，快通知管理员去设置一个");
         }
-
-        //默认给1行的高度，设置tv_sign的height
-        tv_sign.post(new Runnable() {
-            @Override
-            public void run() {
-                LinearLayout.LayoutParams Params=(LinearLayout.LayoutParams)tv_sign.getLayoutParams();
-                sign_height = tv_sign.getHeight();
-                Log.e("sign_default_high",""+sign_height);
-                Params.height=80;
-                tv_sign.setLayoutParams(Params);
-            }
-        });
-
-
 
         if (headUrl == null || headUrl.equals("null") || headUrl.trim().equals("")) {// 群头像
             Bitmap bitmap = BitmapUtils.readBitMap(context, R.mipmap.wt_image_tx_qz);
@@ -626,17 +612,15 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                 }
                 break;
             case R.id.tv_zhankai://展开
-                LinearLayout.LayoutParams Params=(LinearLayout.LayoutParams)tv_sign.getLayoutParams();
                 if(Flag_sign){
-                    Params.height=80;
                     Flag_sign=false;
                     tv_sign_zhankai.setText("展开");
+                    tv_sign.setMaxLines(2);
                 }else{
-                    Params.height=sign_height;
                     Flag_sign=true;
                     tv_sign_zhankai.setText("收起");
+                    tv_sign.setMaxLines(10);
                 }
-                tv_sign.setLayoutParams(Params);
                 break;
         }
     }
@@ -906,20 +890,17 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
                     } else {
                         tv_sign.setText("还没有签名，快通知管理员去设置一个");
                     }
-                    tv_sign.setVisibility(View.GONE);
-                    tv_sign.setVisibility(View.VISIBLE);
-
-                    tv_sign.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            LinearLayout.LayoutParams Params=(LinearLayout.LayoutParams)tv_sign.getLayoutParams();
-                            sign_height = tv_sign.getHeight();
-                            Log.e("sign_default_high",""+sign_height);
-                            Params.height=80;
-                            tv_sign.setLayoutParams(Params);
-                        }
-                    },1000);
-                   // ToastUtils.show_always(context,"群签名已经修改成功，请您重新进入该租查看");
+//                    tv_sign.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            LinearLayout.LayoutParams Params=(LinearLayout.LayoutParams)tv_sign.getLayoutParams();
+//                            sign_height = tv_sign.getHeight();
+//                            Log.e("sign_default_high",""+sign_height);
+//                            Params.height=80;
+//                            tv_sign.setLayoutParams(Params);
+//                        }
+//                    },1000);
+//                   // ToastUtils.show_always(context,"群签名已经修改成功，请您重新进入该租查看");
                 }
                 break;
         }

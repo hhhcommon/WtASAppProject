@@ -17,7 +17,7 @@ import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.CommonUtils;
 import com.woting.common.util.ToastUtils;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.base.baseactivity.BaseActivity;
 import com.woting.ui.musicplay.download.dao.FileInfoDao;
 import com.woting.ui.musicplay.download.downloadlist.adapter.DownLoadListAdapter;
 import com.woting.ui.musicplay.download.downloadlist.adapter.DownLoadListAdapter.downloadlist;

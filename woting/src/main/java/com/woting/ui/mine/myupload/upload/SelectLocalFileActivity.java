@@ -16,7 +16,7 @@ import android.widget.ListView;
 
 import com.woting.R;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.base.baseactivity.AppBaseActivity;
 import com.woting.ui.mine.myupload.adapter.SelectFileListAdapter;
 import com.woting.ui.mine.myupload.model.MediaStoreInfo;
 import com.woting.ui.mine.myupload.upload.recording.MediaRecorderActivity;

@@ -1,23 +1,17 @@
 package com.woting.ui.mine.main;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -49,7 +43,7 @@ import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.ui.common.login.LoginActivity;
+import com.woting.ui.common.login.view.LoginView;
 import com.woting.ui.common.photocut.PhotoCutActivity;
 import com.woting.ui.common.qrcodes.EWMShowActivity;
 import com.woting.ui.musicplay.download.main.DownloadFragment;
@@ -248,7 +242,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 MineActivity.open(historyFrag);
                 break;
             case R.id.text_denglu:          // 登陆
-                startActivity(new Intent(context, LoginActivity.class));
+                startActivity(new Intent(context, LoginView.class));
                 break;
             case R.id.lin_liuliang:         // 流量提示
                 String wifiSet = sharedPreferences.getString(StringConstant.WIFISET, "true");
@@ -318,10 +312,10 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 startActivity(new Intent(context, ShapeAppActivity.class));
                 break;
             case R.id.image_nodenglu:       // 没有登录的默认头像
-                startActivity(new Intent(context, LoginActivity.class));
+                startActivity(new Intent(context, LoginView.class));
                 break;
             case R.id.view_picture:         // 查看大图
-                String _url = sharedPreferences.getString(StringConstant.IMAGEURL, "");     // 用户头像
+                String _url = sharedPreferences.getString(StringConstant.PORTRAIT, "");     // 用户头像
                 ArrayList<String> listUrl = new ArrayList<>();
                 listUrl.add(_url);
 //                listUrl.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1490690384432&di=7d4dddbf5ec3a415a2abfda9b0c771e3&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D600%252C800%2Fsign%3Df8ab0485a964034f0f98ca009ff35509%2Fa71ea8d3fd1f4134245acf26271f95cad1c85e7d.jpg");
@@ -374,7 +368,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             userName = sharedPreferences.getString(StringConstant.NICK_NAME, "");// 昵称
 
             userId = sharedPreferences.getString(StringConstant.USERID, "");    // 用户 ID
-            url = sharedPreferences.getString(StringConstant.IMAGEURL, "");     // 用户头像
+            url = sharedPreferences.getString(StringConstant.PORTRAIT, "");     // 用户头像
             urlBigPicture = url;
             userNum = sharedPreferences.getString(StringConstant.USER_NUM, "");// 用户号
             userSign = sharedPreferences.getString(StringConstant.USER_SIGN, "");// 签名
@@ -536,7 +530,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                     } else {
                         imageUrl = GlobalConfig.imageurl + miniUri;
                     }
-                    et.putString(StringConstant.IMAGEURL, imageUrl);
+                    et.putString(StringConstant.PORTRAIT, imageUrl);
                     if (!et.commit()) {
                         Log.v("commit", "数据 commit 失败!");
                     }

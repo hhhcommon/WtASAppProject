@@ -14,7 +14,7 @@ import com.woting.R;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.util.DialogUtils;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.base.baseactivity.AppBaseActivity;
 
 /**
  * 帮助--h5

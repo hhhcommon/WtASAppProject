@@ -33,7 +33,7 @@ import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
-import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
+import com.woting.ui.base.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.musicplay.more.PlayerMoreOperationActivity;
 import com.woting.ui.musicplay.favorite.fragment.RadioFragment;
 import com.woting.ui.musicplay.favorite.fragment.SequFragment;

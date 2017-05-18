@@ -13,7 +13,7 @@ import com.woting.common.constant.IntegerConstant;
 import com.woting.common.helper.CreateQRImageHelper;
 import com.woting.common.util.AssembleImageUrlUtils;
 import com.woting.common.util.BitmapUtils;
-import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.base.baseactivity.AppBaseActivity;
 import com.woting.ui.interphone.model.GroupInfo;
 import com.woting.ui.interphone.model.UserInviteMeInside;
 

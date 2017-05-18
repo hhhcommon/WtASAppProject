@@ -33,7 +33,7 @@ import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout.OnRefreshLis
 import com.woting.live.ChatRoomLiveActivity;
 import com.woting.live.model.LiveInfo;
 import com.woting.live.net.NetManger;
-import com.woting.ui.common.login.LoginActivity;
+import com.woting.ui.common.login.view.LoginView;
 import com.woting.ui.music.live.adapter.OnLiveAdapter;
 import com.woting.ui.music.live.liveparade.LiveParadeActivity;
 import com.woting.ui.music.live.model.MainLive;
@@ -310,7 +310,7 @@ public class LiveFragment extends Fragment implements TipView.WhiteViewClick {
                                 ToastUtils.show_always(context,"该直播间已被冻结");
                             }
                         } else {
-                            startActivity(new Intent(context, LoginActivity.class));
+                            startActivity(new Intent(context, LoginView.class));
                         }
                     }
                 } else {

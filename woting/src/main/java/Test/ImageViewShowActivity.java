@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.woting.R;
 import com.woting.common.util.PhoneMessage;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.base.baseactivity.BaseActivity;
 
 import java.util.ArrayList;
 

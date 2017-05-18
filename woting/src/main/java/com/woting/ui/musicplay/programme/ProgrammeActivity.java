@@ -19,7 +19,7 @@ import com.woting.R;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.TimeUtils;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.ui.baseactivity.AppBaseFragmentActivity;
+import com.woting.ui.base.baseactivity.AppBaseFragmentActivity;
 import com.woting.ui.musicplay.programme.adapter.MyPagerAdapter;
 
 import java.util.ArrayList;

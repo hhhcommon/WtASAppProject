@@ -13,13 +13,7 @@ import com.woting.common.application.BSApplication;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.DialogUtils;
-import com.woting.common.util.StringUtils;
-import com.woting.ui.baseactivity.AppBaseActivity;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.woting.ui.base.baseactivity.AppBaseActivity;
 
 /**
  * 通知消息的设置

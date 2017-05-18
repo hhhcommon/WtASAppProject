@@ -24,7 +24,7 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.base.baseactivity.BaseActivity;
 import com.woting.ui.common.agreement.AgreementActivity;
 import com.woting.common.service.InterPhoneControl;
 

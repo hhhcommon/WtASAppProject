@@ -17,7 +17,7 @@ import com.woting.R;
 import com.woting.common.application.BSApplication;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.util.BitmapUtils;
-import com.woting.ui.common.login.LoginActivity;
+import com.woting.ui.common.login.view.LoginView;
 import com.woting.ui.common.register.RegisterActivity;
 import com.woting.ui.main.MainActivity;
 
@@ -55,7 +55,7 @@ public class WelcomeThreeFragment extends Fragment implements OnClickListener {
                 getActivity().finish();    // 进入主页后，父级 activity 关闭
                 break;
             case R.id.tv_login:            // 进入登录状态
-                Intent intentLogin = new Intent(context, LoginActivity.class);
+                Intent intentLogin = new Intent(context, LoginView.class);
                 intentLogin.putExtra("type", 1);
                 startActivityForResult(intentLogin, 1);
                 break;

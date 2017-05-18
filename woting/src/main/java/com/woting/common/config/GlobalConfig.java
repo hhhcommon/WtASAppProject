@@ -51,6 +51,10 @@ public class GlobalConfig {
     public static List<secondaryCity> CityCatalogList;
 
     /**
+     * 版本号
+     */
+    public static final String appVersionName = "0.1.0.X.1";
+    /**
      * 数据库版本号
      */
     public static final int dbVersionCode = 57;

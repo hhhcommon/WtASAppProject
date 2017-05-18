@@ -29,7 +29,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.pickview.LoopView;
 import com.woting.common.widgetui.pickview.OnItemSelectedListener;
-import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.base.baseactivity.AppBaseActivity;
 import com.woting.ui.music.citylist.citysmodel.stairCity;
 import com.woting.ui.music.citylist.citysmodel.secondaryCity;
 import com.woting.ui.mine.person.updatepersonnews.model.UpdatePerson;

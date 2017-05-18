@@ -15,7 +15,7 @@ import com.woting.R;
 import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.constant.IntegerConstant;
 import com.woting.common.constant.StringConstant;
-import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
+import com.woting.ui.base.baseadapter.MyFragmentPagerAdapter;
 import com.woting.ui.music.live.main.LiveFragment;
 import com.woting.ui.music.radio.main.OnLineFragment;
 import com.woting.ui.music.classify.fragment.FenLeiFragment;

@@ -5,7 +5,14 @@ android {
     buildToolsVersion "23.0.3"
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
-
+    sourceSets {
+        test {
+            java.srcDir 'test'
+        }
+        androidTest {
+            java.srcDir 'androidTest'
+        }
+    }
     signingConfigs {
         release {
             storeFile file("woting.jks")
@@ -24,18 +31,28 @@ android {
         applicationId "com.woting"
         minSdkVersion 13
         targetSdkVersion 22
-        versionCode 30
-        versionName "0.1.0.X.030"
+        versionCode 1
+        versionName "0.1.0.1"
     }
     allprojects {
         repositories {
             mavenCentral()
             jcenter() // If not already there
-            maven { url "https://jitpack.io" }
+            maven {
+                url "https://jitpack.io"
+            }
+            // 以下是阿里百川
+//            maven {
+//                url "http://repo.baichuan-android.taobao.com/content/groups/BaichuanRepositories"
+//            }
+            maven {
+                url "http://maven.aliyun.com/nexus/content/repositories/releases"
+            }
         }
     }
     buildTypes {
         release {
+            // 代码混淆
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -44,17 +61,24 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
-    compile files('libs/picasso-2.5.2.jar')
-    compile files('libs/libksyhttpcache-proguard.jar')
+
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.zhy:flowlayout-lib:1.0.3'
     compile 'com.android.support:design:23.3.0'
-    compile files('libs/libksystat.jar')
-    compile files('libs/cyberplayer-sdk.jar')
     compile 'com.youth.banner:banner:1.4.9'
-
     compile 'com.github.afollestad.material-dialogs:core:0.8.5.9@aar'
     compile 'com.jakewharton:butterknife:8.4.0'
     compile 'com.zhy:base-rvadapter:3.0.3'
+    // 以下是阿里百川
+//    compile 'com.taobao.android:alisdk-hotfix:2.0.9'
+    compile 'com.aliyun.ams:alicloud-android-hotfix:3.0.0'
+
+//// required if you want to use Mockito for unit tests
+//    testCompile 'org.mockito:mockito-core:1.9.5'
+//// required if you want to use Powermock for unit tests
+//    testCompile 'org.powermock:powermock-module-junit4:1.5.6'
+//    testCompile 'org.powermock:powermock-module-junit4-rule:1.5.6'
+//    testCompile 'org.powermock:powermock-api-mockito:1.5.6'
+//
+//    testCompile 'junit:junit:4.12'
 }

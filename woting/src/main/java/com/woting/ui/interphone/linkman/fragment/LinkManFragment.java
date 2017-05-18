@@ -40,7 +40,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.HeightListView;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.common.login.LoginActivity;
+import com.woting.ui.common.login.view.LoginView;
 import com.woting.ui.interphone.model.GroupInfo;
 import com.woting.ui.interphone.model.UserInfo;
 import com.woting.ui.interphone.alert.CallAlertActivity;
@@ -280,7 +280,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
         if (isLogin.equals("true")) {
             send();
         } else {
-            Intent intent = new Intent(context, LoginActivity.class);
+            Intent intent = new Intent(context, LoginView.class);
             startActivityForResult(intent, 1);
         }
     }

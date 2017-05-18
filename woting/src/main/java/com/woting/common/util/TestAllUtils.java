@@ -29,6 +29,10 @@ public class TestAllUtils {
         long size5 = FileSizeUtil.getAvailableMemory(context);//获取当前可用内存，返回数据以字节为单位
         Log.e("当前可用内存","==="+size5);
         Log.e("当前可用内存","==="+FileSizeUtil.formatFileSize(size5, false));
+
+
+        ToastUtils.show_always(context, "测试：第1版，错误的");
+        ToastUtils.show_always(context, "测试：第2版，正确的");
     }
 
 }

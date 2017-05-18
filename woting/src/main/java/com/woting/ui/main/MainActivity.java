@@ -60,7 +60,7 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.AutoScrollTextView;
 import com.woting.common.widgetui.RoundImageView;
 import com.woting.ui.common.favoritetype.FavoriteProgramTypeActivity;
-import com.woting.ui.common.login.LoginActivity;
+import com.woting.ui.common.login.view.LoginView;
 import com.woting.ui.interphone.model.GroupInfo;
 import com.woting.ui.interphone.model.UserInfo;
 import com.woting.ui.music.main.HomeActivity;
@@ -171,6 +171,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         messageDeal mDeal = new messageDeal();                                                      // 处理通知消息的线程
         mDeal.start();
         TestAllUtils.testMemory(context);
+
     }
 
 
@@ -645,7 +646,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
     private void update() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            jsonObject.put("Version", PhoneMessage.appVersonName);
+            jsonObject.put("Version", GlobalConfig.appVersionName);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -698,7 +699,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
 
     // 检查版本更新
     protected void dealVersion(String ResultList, String mastUpdate) {
-        String Version = "0.1.0.X.0";
+        String Version = "0.1.0.X.1";
         String DescN = null;
         try {
             JSONTokener jsonParser = new JSONTokener(ResultList);
@@ -1274,7 +1275,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
         et.putString(StringConstant.ISLOGIN, "false");
         et.putString(StringConstant.USERID, "");
         et.putString(StringConstant.USER_NUM, "");
-        et.putString(StringConstant.IMAGEURL, "");
+        et.putString(StringConstant.PORTRAIT, "");
         et.putString(StringConstant.USER_PHONE_NUMBER, "");
         et.putString(StringConstant.USER_NUM, "");
         et.putString(StringConstant.GENDERUSR, "");
@@ -1363,7 +1364,7 @@ public class MainActivity extends TabActivity implements OnClickListener {
             @Override
             public void onClick(View v) {
                 if (type == 1) {
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    startActivity(new Intent(MainActivity.this, LoginView.class));
                 } else if (type == 2) {
                     addUser();
                 } else if (type == 3) {

@@ -29,7 +29,7 @@ import com.woting.common.constant.BroadcastConstants;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
-import com.woting.ui.baseactivity.AppBaseFragmentActivity;
+import com.woting.ui.base.baseactivity.AppBaseFragmentActivity;
 import com.woting.ui.mine.myupload.fragment.MyUploadSequFragment;
 import com.woting.ui.mine.myupload.fragment.MyUploadSoundFragment;
 import com.woting.ui.mine.myupload.upload.SelectLocalFileActivity;

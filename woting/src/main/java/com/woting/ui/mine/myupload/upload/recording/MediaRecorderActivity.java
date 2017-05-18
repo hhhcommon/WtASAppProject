@@ -22,7 +22,7 @@ import com.example.lamemp3.MP3Recorder;
 import com.woting.R;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.ToastUtils;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.base.baseactivity.BaseActivity;
 import com.woting.ui.mine.myupload.upload.UploadActivity;
 
 import java.io.File;

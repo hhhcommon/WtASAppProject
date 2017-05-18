@@ -12,7 +12,7 @@ import com.woting.common.application.BSApplication;
 import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.CollocationConstant;
 import com.woting.common.util.ToastUtils;
-import com.woting.ui.baseactivity.BaseActivity;
+import com.woting.ui.base.baseactivity.BaseActivity;
 
 /**
  * 配置设置

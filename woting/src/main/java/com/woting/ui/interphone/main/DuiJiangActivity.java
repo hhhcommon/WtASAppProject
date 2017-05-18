@@ -24,8 +24,8 @@ import com.woting.common.config.GlobalConfig;
 import com.woting.common.constant.StringConstant;
 import com.woting.common.service.SocketClient;
 import com.woting.common.util.ToastUtils;
-import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
-import com.woting.ui.common.login.LoginActivity;
+import com.woting.ui.base.baseadapter.MyFragmentPagerAdapter;
+import com.woting.ui.common.login.view.LoginView;
 import com.woting.ui.common.scanning.activity.CaptureActivity;
 import com.woting.ui.interphone.chat.fragment.ChatFragment;
 import com.woting.ui.interphone.find.main.FindActivity;
@@ -115,7 +115,7 @@ public class DuiJiangActivity extends FragmentActivity {
                     startActivity(Intent);
                     GlobalConfig.interPhoneType = 0;
                 } else {
-                    startActivity(new Intent(context, LoginActivity.class));
+                    startActivity(new Intent(context, LoginView.class));
                 }
                 addDialog.dismiss();
             }
@@ -134,7 +134,7 @@ public class DuiJiangActivity extends FragmentActivity {
                     startActivity(Intent);
                     GlobalConfig.interPhoneType = 0;
                 } else {
-                    startActivity(new Intent(context, LoginActivity.class));
+                    startActivity(new Intent(context, LoginView.class));
                 }
                 addDialog.dismiss();
             }
@@ -150,7 +150,7 @@ public class DuiJiangActivity extends FragmentActivity {
                     GlobalConfig.interPhoneType = 0;
                     startActivity(intent);
                 } else {
-                    startActivity(new Intent(context, LoginActivity.class));
+                    startActivity(new Intent(context, LoginView.class));
                 }
                 addDialog.dismiss();
             }
@@ -165,7 +165,7 @@ public class DuiJiangActivity extends FragmentActivity {
                     startActivity(new Intent(context, CaptureActivity.class));
                     GlobalConfig.interPhoneType = 0;
                 } else {
-                    startActivity(new Intent(context, LoginActivity.class));
+                    startActivity(new Intent(context, LoginView.class));
                 }
                 addDialog.dismiss();
             }

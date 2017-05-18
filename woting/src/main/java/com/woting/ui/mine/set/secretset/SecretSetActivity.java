@@ -19,13 +19,10 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.common.widgetui.TipView;
-import com.woting.ui.baseactivity.AppBaseActivity;
-import com.woting.ui.mine.person.updatepersonnews.model.UpdatePerson;
+import com.woting.ui.base.baseactivity.AppBaseActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 /**
  * 隐私设置

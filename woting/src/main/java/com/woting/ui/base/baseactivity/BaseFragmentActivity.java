@@ -1,4 +1,4 @@
-package com.woting.ui.baseactivity;
+package com.woting.ui.base.baseactivity;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.WindowManager;
 
 /**
  * 作者：xinlong on 2016/10/25 21:18

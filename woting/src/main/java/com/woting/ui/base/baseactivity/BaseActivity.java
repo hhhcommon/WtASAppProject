@@ -1,4 +1,4 @@
-package com.woting.ui.baseactivity;
+package com.woting.ui.base.baseactivity;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

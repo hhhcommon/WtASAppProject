@@ -30,8 +30,7 @@ import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.ui.baseactivity.BaseActivity;
-import com.woting.ui.mine.feedback.activity.FeedbackActivity;
+import com.woting.ui.base.baseactivity.BaseActivity;
 import com.woting.ui.mine.feedback.feedbacklist.activity.FeedbackListActivity;
 import com.woting.ui.mine.person.modifypassword.ModifyPasswordActivity;
 import com.woting.ui.mine.person.phonecheck.PhoneCheckActivity;
@@ -272,7 +271,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
                 et.putString(StringConstant.ISLOGIN, "false");
                 et.putString(StringConstant.USERID, "");
                 et.putString(StringConstant.USER_NUM, "");
-                et.putString(StringConstant.IMAGEURL, "");
+                et.putString(StringConstant.PORTRAIT, "");
                 et.putString(StringConstant.USER_PHONE_NUMBER, "");
                 et.putString(StringConstant.USER_NUM, "");
                 et.putString(StringConstant.GENDERUSR, "");
@@ -312,7 +311,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
     private void sendRequestUpdate() {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
-            jsonObject.put("Version", PhoneMessage.appVersonName);
+            jsonObject.put("Version", GlobalConfig.appVersionName);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -351,7 +350,7 @@ public class SetActivity extends BaseActivity implements OnClickListener {
 
     // 检查版本更新
     protected void dealVersion(String ResultList, String mastUpdate) {
-        String version = "0.1.0.X.0";
+        String version = "0.1.0.X.1";
         String Descn = null;
         try {
             JSONObject arg1 = (JSONObject) new JSONTokener(ResultList).nextValue();

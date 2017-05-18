@@ -718,9 +718,9 @@ public class InterPhoneControl {
      */
     public static void universalControlReply(String ReMsgId,int BizType, int CmdType, int Command ) {
         MsgNormal msg = new MsgNormal();
-        // 消息分类：MsgType 原始数据：1主动发出的消息；-1应答消息；	最新数据：0000主动发送；1000应答消息
+        // 消息分类：MsgType 原始数据：0主动发出的消息；1应答消息；	最新数据：0000主动发送；1000应答消息
         //16进制编码：0000=0；1000=8
-        msg.setMsgType(8);
+        msg.setMsgType(1);
         //是否需要确认：NeedAffirm 原始数据：1需要确认，其他不需要确认 最新数据：0000不需要确认；1000需要确认
         // 16进制编码：0000=0；1000=8
         msg.setAffirm(0);
@@ -738,6 +738,7 @@ public class InterPhoneControl {
         if (CommonUtils.getSocketUserId() != null)
             msg.setUserId(CommonUtils.getSocketUserId());
         msg.setDeviceId(PhoneMessage.imei);
+
         Map<String, Object> DataMap = new HashMap<String, Object>();
         DataMap.put("DealType", "1");
         MapContent map = new MapContent(DataMap);

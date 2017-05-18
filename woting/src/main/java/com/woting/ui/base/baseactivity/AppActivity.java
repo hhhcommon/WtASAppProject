@@ -1,4 +1,4 @@
-package com.woting.ui.baseactivity;
+package com.woting.ui.base.baseactivity;
 
 import android.content.Context;
 import android.os.Bundle;

@@ -32,7 +32,7 @@ import com.woting.common.helper.CommonHelper;
 import com.woting.common.util.BitmapUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.widgetui.MyLinearLayout;
-import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.base.baseactivity.AppBaseActivity;
 import com.woting.ui.common.scanning.activity.CaptureActivity;
 import com.woting.ui.interphone.find.findresult.FindNewsResultActivity;
 import com.woting.video.VoiceRecognizer;

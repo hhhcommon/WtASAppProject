@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.android.volley.VolleyError;
@@ -23,6 +24,8 @@ import com.woting.ui.main.MainActivity;
 
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
+
 /**
  * 启动页面，第一个activity
  * author：辛龙 (xinLong)
@@ -34,28 +37,46 @@ public class SplashActivity extends Activity {
     private String first;
     private String tag = "SPLASH_VOLLEY_REQUEST_CANCEL_TAG";
     private boolean isCancelRequest;
+    private SplashActivity context;
+    private final InnerHandler mHandler = new InnerHandler(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        context = this;
         first = sharedPreferences.getString(StringConstant.FIRST, "0");// 是否是第一次登录
         Editor et = sharedPreferences.edit();
         et.putString(StringConstant.PERSONREFRESHB, "true");
         if (!et.commit()) {
             Log.v("commit", "数据 commit 失败!");
         }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                CommonHelper.checkNetworkStatus(SplashActivity.this); // 网络设置获取
-                if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
-                    send();
-                } else {
-                    close();    // 界面跳转
-                }
+        // 防止内存泄漏
+        mHandler.sendEmptyMessageDelayed(0, 1000);
+    }
+
+    private static class InnerHandler extends Handler {
+        private final WeakReference<SplashActivity> mActivity;
+
+        public InnerHandler(SplashActivity activity) {
+            mActivity = new WeakReference<SplashActivity>(activity);
+        }
+
+        public void handleMessage(Message msg) {
+            SplashActivity activity = mActivity.get();
+            if (activity == null) {
+                return;
             }
-        }, 1000);
+            activity.todo();
+        }
+    }
+
+    public void todo() {
+        CommonHelper.checkNetworkStatus(context); // 网络设置获取
+        if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1) {
+            send();
+        } else {
+            close();    // 界面跳转
+        }
     }
 
     protected void send() {
@@ -96,25 +117,15 @@ public class SplashActivity extends Activity {
                                     try {
                                         String imageUrl = list.getPortrait();// 用户头像
                                         if (imageUrl != null && !imageUrl.equals("")) {
-                                            et.putString(StringConstant.IMAGEURL, imageUrl);
+                                            et.putString(StringConstant.PORTRAIT, imageUrl);
                                         } else {
-                                            et.putString(StringConstant.IMAGEURL, "");
+                                            et.putString(StringConstant.PORTRAIT, "");
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
-                                        et.putString(StringConstant.IMAGEURL, "");
+                                        et.putString(StringConstant.PORTRAIT, "");
                                     }
-                                    try {
-                                        String imageUrlBig = list.getPortrait();// 用户大头像
-                                        if (imageUrlBig != null && !imageUrlBig.equals("")) {
-                                            et.putString(StringConstant.IMAGEURBIG, imageUrlBig);
-                                        } else {
-                                            et.putString(StringConstant.IMAGEURBIG, "");
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                        et.putString(StringConstant.IMAGEURBIG, "");
-                                    }
+
                                     try {
                                         String isPub = list.getPhoneNumIsPub();
                                         et.putString(StringConstant.PHONE_NUMBER_FIND, isPub);
@@ -297,7 +308,7 @@ public class SplashActivity extends Activity {
         et.putString(StringConstant.ISLOGIN, "false");
         et.putString(StringConstant.USERID, "");
         et.putString(StringConstant.USER_NUM, "");
-        et.putString(StringConstant.IMAGEURL, "");
+        et.putString(StringConstant.PORTRAIT, "");
         et.putString(StringConstant.USER_PHONE_NUMBER, "");
         et.putString(StringConstant.USER_NUM, "");
         et.putString(StringConstant.GENDERUSR, "");
@@ -318,5 +329,6 @@ public class SplashActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         isCancelRequest = VolleyRequest.cancelRequest(tag);
+        mHandler.removeCallbacksAndMessages(null);
     }
 }

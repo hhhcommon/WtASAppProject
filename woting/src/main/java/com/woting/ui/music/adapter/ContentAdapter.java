@@ -85,194 +85,195 @@ public class ContentAdapter extends BaseAdapter {
         }
 
         content lists = list.get(position);
-        String mediaType = lists.getMediaType();// 媒体类型
-        if (mediaType != null) {
-            switch (mediaType) {
-                case StringConstant.TYPE_SEQU:// 专辑  显示集数
-                    // 设置控件的显示
-                    holder.image_seq.setVisibility(View.GONE);               // 专辑图标
-                    holder.image_anchor.setVisibility(View.VISIBLE);         // 主播图标
-                    holder.image_num.setVisibility(View.VISIBLE);            // 收听次数图标
-                    holder.tv_num.setVisibility(View.VISIBLE);               // 收听次数
-                    holder.image_count.setVisibility(View.VISIBLE);          // 集数图标
-                    holder.tv_count.setVisibility(View.VISIBLE);             // 集数次数
-                    holder.image_time.setVisibility(View.GONE);              // 时间图标
-                    holder.tv_time.setVisibility(View.GONE);                 // 时间
-                    holder.text_update_count.setVisibility(View.GONE);       // 更新
+        if (lists != null) {
+            String mediaType = lists.getMediaType();// 媒体类型
+            if (mediaType != null) {
+                switch (mediaType) {
+                    case StringConstant.TYPE_SEQU:// 专辑  显示集数
+                        // 设置控件的显示
+                        holder.image_seq.setVisibility(View.GONE);               // 专辑图标
+                        holder.image_anchor.setVisibility(View.VISIBLE);         // 主播图标
+                        holder.image_num.setVisibility(View.VISIBLE);            // 收听次数图标
+                        holder.tv_num.setVisibility(View.VISIBLE);               // 收听次数
+                        holder.image_count.setVisibility(View.VISIBLE);          // 集数图标
+                        holder.tv_count.setVisibility(View.VISIBLE);             // 集数次数
+                        holder.image_time.setVisibility(View.GONE);              // 时间图标
+                        holder.tv_time.setVisibility(View.GONE);                 // 时间
+                        holder.text_update_count.setVisibility(View.GONE);       // 更新
 
-                    // 封面图片
-                    contentImg = lists.getContentImg();
-                    if (contentImg == null || contentImg.equals("null") || contentImg.trim().equals("")) {
-                        holder.image.setImageBitmap(bmp);
-                    } else {
-                        if (!contentImg.startsWith("http")) {
-                            contentImg = GlobalConfig.imageurl + contentImg;
-                        }
-                        String _url = AssembleImageUrlUtils.assembleImageUrl180(contentImg);
-                        AssembleImageUrlUtils.loadImage(_url, contentImg, holder.image, IntegerConstant.TYPE_LIST);
-                    }
-
-                    // 第一标题
-                    contentName = lists.getContentName();
-                    if (contentName == null || contentName.equals("")) {
-                        holder.NameOne.setText("未知");
-                    }else{
-                        holder.NameOne.setText(contentName);
-                    }
-
-                    // 第二标题
-                    try {
-                        name = lists.getContentPersons().get(0).getPerName();
-                        if (name != null && !name.trim().equals("")) {
-                            holder.NameTwo.setText(name);
+                        // 封面图片
+                        contentImg = lists.getContentImg();
+                        if (contentImg == null || contentImg.equals("null") || contentImg.trim().equals("")) {
+                            holder.image.setImageBitmap(bmp);
                         } else {
+                            if (!contentImg.startsWith("http")) {
+                                contentImg = GlobalConfig.imageurl + contentImg;
+                            }
+                            String _url = AssembleImageUrlUtils.assembleImageUrl180(contentImg);
+                            AssembleImageUrlUtils.loadImage(_url, contentImg, holder.image, IntegerConstant.TYPE_LIST);
+                        }
+
+                        // 第一标题
+                        contentName = lists.getContentName();
+                        if (contentName == null || contentName.equals("")) {
+                            holder.NameOne.setText("未知");
+                        } else {
+                            holder.NameOne.setText(contentName);
+                        }
+
+                        // 第二标题
+                        try {
+                            name = lists.getContentPersons().get(0).getPerName();
+                            if (name != null && !name.trim().equals("")) {
+                                holder.NameTwo.setText(name);
+                            } else {
+                                holder.NameTwo.setText("未知");
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                             holder.NameTwo.setText("未知");
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        holder.NameTwo.setText("未知");
-                    }
 
-                    // 收听次数
-                    playCount = lists.getPlayCount();
-                    if (playCount == null || playCount.equals("") || playCount.equals("null")) {
-                        holder.tv_num.setText("0");
-                    } else {
-                        holder.tv_num.setText(playCount);
-                    }
-
-                    // 集数
-                    contentCount = lists.getContentSubCount();
-                    if (contentCount == null || contentCount.equals("") || contentCount.equals("null")) {
-                        holder.tv_count.setText("0集");
-                    } else {
-                        holder.tv_count.setText(contentCount);
-                    }
-                    break;
-                case StringConstant.TYPE_AUDIO:// 单体节目
-                    // 设置控件的显示
-                    holder.image_seq.setVisibility(View.VISIBLE);            // 专辑图标
-                    holder.image_anchor.setVisibility(View.GONE);            // 主播图标
-                    holder.image_num.setVisibility(View.VISIBLE);            // 收听次数图标
-                    holder.tv_num.setVisibility(View.VISIBLE);               // 收听次数
-                    holder.image_count.setVisibility(View.GONE);             // 集数图标
-                    holder.tv_count.setVisibility(View.GONE);                // 集数次数
-                    holder.image_time.setVisibility(View.VISIBLE);           // 时间图标
-                    holder.tv_time.setVisibility(View.VISIBLE);              // 时间
-                    holder.text_update_count.setVisibility(View.GONE);       // 更新
-
-                    // 封面图片
-                    contentImg = lists.getContentImg();
-                    if (contentImg == null || contentImg.equals("null") || contentImg.trim().equals("")) {
-                        holder.image.setImageBitmap(bmp);
-                    } else {
-                        if (!contentImg.startsWith("http")) {
-                            contentImg = GlobalConfig.imageurl + contentImg;
-                        }
-                        String _url = AssembleImageUrlUtils.assembleImageUrl180(contentImg);
-                        AssembleImageUrlUtils.loadImage(_url, contentImg, holder.image, IntegerConstant.TYPE_LIST);
-                    }
-
-                    contentName = lists.getContentName();
-                    if (contentName == null || contentName.equals("")) {
-                        holder.NameOne.setText("未知");
-                    }else{
-                        holder.NameOne.setText(contentName);
-                    }
-
-                    // 第二标题
-                    try {
-                        name = lists.getSeqInfo().getContentName();
-                        if (name != null && !name.trim().equals("")) {
-                            holder.NameTwo.setText(name);
+                        // 收听次数
+                        playCount = lists.getPlayCount();
+                        if (playCount == null || playCount.equals("") || playCount.equals("null")) {
+                            holder.tv_num.setText("0");
                         } else {
+                            holder.tv_num.setText(playCount);
+                        }
+
+                        // 集数
+                        contentCount = lists.getContentSubCount();
+                        if (contentCount == null || contentCount.equals("") || contentCount.equals("null")) {
+                            holder.tv_count.setText("0集");
+                        } else {
+                            holder.tv_count.setText(contentCount);
+                        }
+                        break;
+                    case StringConstant.TYPE_AUDIO:// 单体节目
+                        // 设置控件的显示
+                        holder.image_seq.setVisibility(View.VISIBLE);            // 专辑图标
+                        holder.image_anchor.setVisibility(View.GONE);            // 主播图标
+                        holder.image_num.setVisibility(View.VISIBLE);            // 收听次数图标
+                        holder.tv_num.setVisibility(View.VISIBLE);               // 收听次数
+                        holder.image_count.setVisibility(View.GONE);             // 集数图标
+                        holder.tv_count.setVisibility(View.GONE);                // 集数次数
+                        holder.image_time.setVisibility(View.VISIBLE);           // 时间图标
+                        holder.tv_time.setVisibility(View.VISIBLE);              // 时间
+                        holder.text_update_count.setVisibility(View.GONE);       // 更新
+
+                        // 封面图片
+                        contentImg = lists.getContentImg();
+                        if (contentImg == null || contentImg.equals("null") || contentImg.trim().equals("")) {
+                            holder.image.setImageBitmap(bmp);
+                        } else {
+                            if (!contentImg.startsWith("http")) {
+                                contentImg = GlobalConfig.imageurl + contentImg;
+                            }
+                            String _url = AssembleImageUrlUtils.assembleImageUrl180(contentImg);
+                            AssembleImageUrlUtils.loadImage(_url, contentImg, holder.image, IntegerConstant.TYPE_LIST);
+                        }
+
+                        contentName = lists.getContentName();
+                        if (contentName == null || contentName.equals("")) {
+                            holder.NameOne.setText("未知");
+                        } else {
+                            holder.NameOne.setText(contentName);
+                        }
+
+                        // 第二标题
+                        try {
+                            name = lists.getSeqInfo().getContentName();
+                            if (name != null && !name.trim().equals("")) {
+                                holder.NameTwo.setText(name);
+                            } else {
+                                holder.NameTwo.setText("未知");
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                             holder.NameTwo.setText("未知");
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        holder.NameTwo.setText("未知");
-                    }
 
-                    // 收听次数
-                    playCount = lists.getPlayCount();
-                    if (playCount == null || playCount.equals("") || playCount.equals("null")) {
-                        holder.tv_num.setText("0");
-                    } else {
-                        holder.tv_num.setText(playCount);
-                    }
-
-                    // 时长
-                    contentTime = lists.getContentTimes();
-                    if (contentTime == null || contentTime.equals("") || contentTime.equals("null")) {
-                        contentTime = context.getString(R.string.play_time);
-                    } else {
-                        long minute = Long.valueOf(lists.getContentTimes()) / (1000 * 60);
-                        long second = (Long.valueOf(lists.getContentTimes()) / 1000) % 60;
-                        if (second < 10) {
-                            contentTime = minute + "\'" + " " + "0" + second + "\"";
+                        // 收听次数
+                        playCount = lists.getPlayCount();
+                        if (playCount == null || playCount.equals("") || playCount.equals("null")) {
+                            holder.tv_num.setText("0");
                         } else {
-                            contentTime = minute + "\'" + " " + second + "\"";
+                            holder.tv_num.setText(playCount);
                         }
-                    }
-                    holder.tv_time.setText(contentTime);
-                    break;
-                case StringConstant.TYPE_TTS://
-                    break;
-                case StringConstant.TYPE_RADIO:
-                    // 设置控件的显示
-                    holder.image_seq.setVisibility(View.GONE);               // 专辑图标
-                    holder.image_anchor.setVisibility(View.GONE);            // 主播图标
-                    holder.image_num.setVisibility(View.VISIBLE);            // 收听次数图标
-                    holder.tv_num.setVisibility(View.VISIBLE);               // 收听次数
-                    holder.image_count.setVisibility(View.GONE);             // 集数图标
-                    holder.tv_count.setVisibility(View.GONE);                // 集数次数
-                    holder.image_time.setVisibility(View.GONE);              // 时间图标
-                    holder.tv_time.setVisibility(View.GONE);                 // 时间
-                    holder.text_update_count.setVisibility(View.GONE);       // 更新
 
-                    // 封面图片
-                    contentImg = lists.getContentImg();
-                    if (contentImg == null || contentImg.equals("null") || contentImg.trim().equals("")) {
-                        holder.image.setImageBitmap(bmp);
-                    } else {
-                        if (!contentImg.startsWith("http")) {
-                            contentImg = GlobalConfig.imageurl + contentImg;
-                        }
-                        String _url = AssembleImageUrlUtils.assembleImageUrl180(contentImg);
-                        AssembleImageUrlUtils.loadImage(_url, contentImg, holder.image, IntegerConstant.TYPE_LIST);
-                    }
-
-                    // 第一标题
-                    contentName = lists.getContentName();
-                    if (contentName == null || contentName.equals("")) {
-                        contentName = "未知";
-                    }
-                    holder.NameOne.setText(contentName);
-
-                    // 第二标题
-                    try {
-                        name = lists.getIsPlaying();
-                        if (name != null && !name.trim().equals("")) {
-                            holder.NameTwo.setText(name);
+                        // 时长
+                        contentTime = lists.getContentTimes();
+                        if (contentTime == null || contentTime.equals("") || contentTime.equals("null")) {
+                            contentTime = context.getString(R.string.play_time);
                         } else {
-                            holder.NameTwo.setText("直播中");
+                            long minute = Long.valueOf(lists.getContentTimes()) / (1000 * 60);
+                            long second = (Long.valueOf(lists.getContentTimes()) / 1000) % 60;
+                            if (second < 10) {
+                                contentTime = minute + "\'" + " " + "0" + second + "\"";
+                            } else {
+                                contentTime = minute + "\'" + " " + second + "\"";
+                            }
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        holder.NameTwo.setText("未知");
-                    }
+                        holder.tv_time.setText(contentTime);
+                        break;
+                    case StringConstant.TYPE_TTS://
+                        break;
+                    case StringConstant.TYPE_RADIO:
+                        // 设置控件的显示
+                        holder.image_seq.setVisibility(View.GONE);               // 专辑图标
+                        holder.image_anchor.setVisibility(View.GONE);            // 主播图标
+                        holder.image_num.setVisibility(View.VISIBLE);            // 收听次数图标
+                        holder.tv_num.setVisibility(View.VISIBLE);               // 收听次数
+                        holder.image_count.setVisibility(View.GONE);             // 集数图标
+                        holder.tv_count.setVisibility(View.GONE);                // 集数次数
+                        holder.image_time.setVisibility(View.GONE);              // 时间图标
+                        holder.tv_time.setVisibility(View.GONE);                 // 时间
+                        holder.text_update_count.setVisibility(View.GONE);       // 更新
 
-                    // 收听次数
-                    playCount = lists.getPlayCount();
-                    if (playCount == null || playCount.equals("") || playCount.equals("null")) {
-                        holder.tv_num.setText("0");
-                    } else {
-                        holder.tv_num.setText(playCount);
-                    }
-                    break;
+                        // 封面图片
+                        contentImg = lists.getContentImg();
+                        if (contentImg == null || contentImg.equals("null") || contentImg.trim().equals("")) {
+                            holder.image.setImageBitmap(bmp);
+                        } else {
+                            if (!contentImg.startsWith("http")) {
+                                contentImg = GlobalConfig.imageurl + contentImg;
+                            }
+                            String _url = AssembleImageUrlUtils.assembleImageUrl180(contentImg);
+                            AssembleImageUrlUtils.loadImage(_url, contentImg, holder.image, IntegerConstant.TYPE_LIST);
+                        }
+
+                        // 第一标题
+                        contentName = lists.getContentName();
+                        if (contentName == null || contentName.equals("")) {
+                            contentName = "未知";
+                        }
+                        holder.NameOne.setText(contentName);
+
+                        // 第二标题
+                        try {
+                            name = lists.getIsPlaying();
+                            if (name != null && !name.trim().equals("")) {
+                                holder.NameTwo.setText(name);
+                            } else {
+                                holder.NameTwo.setText("直播中");
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            holder.NameTwo.setText("未知");
+                        }
+
+                        // 收听次数
+                        playCount = lists.getPlayCount();
+                        if (playCount == null || playCount.equals("") || playCount.equals("null")) {
+                            holder.tv_num.setText("0");
+                        } else {
+                            holder.tv_num.setText(playCount);
+                        }
+                        break;
+                }
             }
         }
-
         return convertView;
     }
 

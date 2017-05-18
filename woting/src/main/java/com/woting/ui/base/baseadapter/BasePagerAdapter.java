@@ -1,4 +1,4 @@
-package com.woting.ui.baseadapter;
+package com.woting.ui.base.baseadapter;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -14,7 +14,7 @@ import com.woting.R;
 import com.woting.ui.common.welcome.fragment.WelcomeOneFragment;
 import com.woting.ui.common.welcome.fragment.WelcomeThreeFragment;
 import com.woting.ui.common.welcome.fragment.WelcomeTwoFragment;
-import com.woting.ui.baseadapter.MyFragmentPagerAdapter;
+import com.woting.ui.base.baseadapter.MyFragmentPagerAdapter;
 import com.woting.common.util.BitmapUtils;
 
 import java.util.ArrayList;

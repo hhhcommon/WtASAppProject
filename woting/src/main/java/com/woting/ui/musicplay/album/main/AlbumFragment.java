@@ -47,7 +47,7 @@ import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.HorizontalListView;
 import com.woting.common.widgetui.TipView;
-import com.woting.ui.baseadapter.MyFragmentChildPagerAdapter;
+import com.woting.ui.base.baseadapter.MyFragmentChildPagerAdapter;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.musicplay.play.adapter.ImageAdapter;
 import com.woting.ui.music.model.share.ShareModel;

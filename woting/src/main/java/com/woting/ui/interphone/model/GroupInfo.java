@@ -15,7 +15,7 @@ public class GroupInfo implements Serializable {
     private String GroupName;
     private String GroupNum;        //群号
     private String GroupImg;
-    public String GroupId;
+    private String GroupId;
     private String GroupType;   //组的类型
     private String GroupCreator;
     private String GroupManager;
@@ -26,13 +26,12 @@ public class GroupInfo implements Serializable {
     private String GroupMyAlias;	//别名
     private String GroupSignature;   //签名
     private String GroupMyDescn;
-    public int Type = 1;
+    private int Type = 1;
     private String truename;
     private String Name;
     private String UserAliasName;
     private String Portrait;
     private String Id;
-//    private String GroupDesc;
     private String TyPe;			// 类别 user，group
     private String AddTime;			// 添加时间
     private String UserNum;			// 用户码

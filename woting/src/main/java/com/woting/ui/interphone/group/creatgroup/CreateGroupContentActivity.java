@@ -37,7 +37,7 @@ import com.woting.common.util.PhoneMessage;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
-import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.base.baseactivity.AppBaseActivity;
 import com.woting.ui.interphone.model.GroupInfo;
 import com.woting.ui.common.photocut.PhotoCutActivity;
 import com.woting.ui.interphone.group.groupcontrol.groupnews.TalkGroupNewsActivity;
@@ -615,7 +615,7 @@ public class CreateGroupContentActivity extends AppBaseActivity implements OnCli
                         String filePath = PhotoCutAfterImagePath;
                         String ExtName = filePath.substring(filePath.lastIndexOf("."));
                         String TestURI = GlobalConfig.baseUrl + "wt/common/upload4App.do?FType=GroupP&ExtName=";
-                        String Response = MyHttp.postFile(new File(filePath), TestURI + ExtName + "&PCDType=" + GlobalConfig.PCDType + "&GroupId=" + groupinfo.GroupId
+                        String Response = MyHttp.postFile(new File(filePath), TestURI + ExtName + "&PCDType=" + GlobalConfig.PCDType + "&GroupId=" + groupinfo.getGroupId()
                                 + "&IMEI=" + PhoneMessage.imei);
                         Log.e("图片上传数据", TestURI + ExtName
                                 + "&UserId=" + CommonUtils.getUserId(getApplicationContext()) + "&IMEI=" + PhoneMessage.imei);

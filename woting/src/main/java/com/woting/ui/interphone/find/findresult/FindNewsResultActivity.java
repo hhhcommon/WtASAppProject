@@ -22,7 +22,7 @@ import com.woting.common.volley.VolleyRequest;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.xlistview.XListView;
 import com.woting.common.widgetui.xlistview.XListView.IXListViewListener;
-import com.woting.ui.baseactivity.AppBaseActivity;
+import com.woting.ui.base.baseactivity.AppBaseActivity;
 import com.woting.ui.interphone.model.GroupInfo;
 import com.woting.ui.interphone.find.findresult.adapter.FindFriendResultAdapter;
 import com.woting.ui.interphone.find.findresult.adapter.FindGroupResultAdapter;

@@ -12,8 +12,7 @@ public class StringConstant {
     public static final String ISLOGIN = "IS_LOGIN";                               // 是否登录
     public static final String FIRST = "FIRST";                                    // 引导页
     public static final String PREFERENCE = "PREFERENCE";                          // 偏好设置页
-    public static final String IMAGEURL = "IMAGE_URL";                             // 头像Image地址
-    public static final String IMAGEURBIG = "IMAGE_URL_BIG";                       // 头像Image地址
+    public static final String PORTRAIT = "PORTRAIT";                             // 头像Image地址
     public static final String USER_PHONE_NUMBER = "USER_PHONE_NUMBER";            // 用户注册手机号
     public static final String USER_NUM = "USER_NUM";                              // woTing号
     public static final String GENDERUSR = "GENDERUSR";                            // 性别

@@ -198,8 +198,8 @@
                     android:paddingRight="15dp"
                     android:lineSpacingExtra="2dp"
                     android:paddingBottom="10dp"
+                    android:maxLines="2"
                     android:layout_marginLeft="5dp"
-                    android:maxLines="3"
                     android:textSize="@dimen/wt_login_text_wjmm" />
                 <TextView
                     android:id="@+id/tv_zhankai"

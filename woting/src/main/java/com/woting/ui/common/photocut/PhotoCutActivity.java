@@ -11,7 +11,6 @@ import android.view.View.OnClickListener;
 
 import com.woting.R;
 import com.woting.common.widgetui.photocut.ClipImageLayout;
-import com.woting.ui.baseactivity.AppBaseActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
