@@ -236,7 +236,7 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
         linearAddMessage = findViewById(R.id.lin_jiaqun);                // 加群消息
         linearAddMessage.setOnClickListener(this);
 
-        LinearTransferAuthority = findViewById(R.id.lin_yijiao);         // 移交管理员权限
+        LinearTransferAuthority = findViewById(R.id.lin_yijiao);         // 移交群主权限
         LinearTransferAuthority.setOnClickListener(this);
 
         lin_set_manager = findViewById(R.id.lin_set_manager);            // 设置群管理员
@@ -903,6 +903,13 @@ public class TalkGroupNewsActivity extends AppBaseActivity implements OnClickLis
 //                   // ToastUtils.show_always(context,"群签名已经修改成功，请您重新进入该租查看");
                 }
                 break;
+            case 20:
+                if(resultCode==1){
+                    sendBroadcast(new Intent(BroadcastConstants.PUSH_REFRESH_LINKMAN));
+                    send();
+                }
+                break;
+
         }
     }
 

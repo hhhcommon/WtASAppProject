@@ -213,6 +213,7 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
         et_search = (EditText) rootView.findViewById(R.id.et_search);
         image_clear = (ImageView) rootView.findViewById(R.id.image_clear);
         sortListView.addHeaderView(headView);// 添加头部 view
+
         lin_news_message.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -300,7 +301,6 @@ public class LinkManFragment extends Fragment implements SectionIndexer, OnClick
             }
         }
     }
-
     // 根据输入框中的值来过滤数据并更新 ListView
     private List<UserInfo> filterData(String filterStr) {
         List<UserInfo> filterDateList = new ArrayList<>();

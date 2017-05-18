@@ -407,7 +407,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="20dp"
-                    android:text="移交管理权限"
+                    android:text="移交群主权限"
                     android:layout_centerVertical="true"
                     android:textColor="@color/beijing"
                     android:textSize="@dimen/wt_login_text_wjmm" />
@@ -470,6 +470,7 @@
                 android:layout_marginBottom="15dp"
                 android:background="@drawable/zhuxiao_press"
                 android:text="退出该群"
+                android:gravity="center"
                 android:textColor="@color/WHITE"
                 android:textSize="@dimen/wt_button_default_text" />
 

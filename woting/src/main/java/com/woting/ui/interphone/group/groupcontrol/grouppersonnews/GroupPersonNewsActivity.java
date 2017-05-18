@@ -133,6 +133,15 @@ public class GroupPersonNewsActivity extends AppBaseActivity {
             Region = data.getRegion();
         } else if (type.equals("GroupMemers")) {
             UserInfo data = (UserInfo) getIntent().getSerializableExtra("data");
+            nick_name = data.getNickName();
+            imageUrl = data.getPortrait();
+            id = data.getUserId();
+            descN = data.getUserSign();
+            Usernum = data.getUserNum();
+            aliasName = data.getUserAliasName();
+            phoneNum = data.getPhoneNum();
+            Sex = data.getSex();
+            Region = data.getRegion();
         }
     }
 
