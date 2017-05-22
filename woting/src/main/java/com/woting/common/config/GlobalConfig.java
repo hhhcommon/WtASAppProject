@@ -28,7 +28,6 @@ public class GlobalConfig {
     public static String oldBCCallId;// 上次存在的对讲ID
     public static int interPhoneType = 0;// 此时的对讲状态
 
-    public static ArrayList<String> staticFacesList;   //从Asset中取出的表情list
     // 网络情况 1为成功WiFi已连接，2为cmnet，3为cmwap，4为ctwap， -1为网络未连接
     public static final int NETWORK_STATE_IDLE = -1;
     public static final int NETWORK_STATE_WIFI = 1;
@@ -36,19 +35,24 @@ public class GlobalConfig {
     public static final int NETWORK_STATE_CMWAP = 3;
     public static final int NETWORK_STATE_CTWAP = 4;
     public static int CURRENT_NETWORK_STATE_TYPE = NETWORK_STATE_IDLE;
+
     //volley请求超时 时间
     public static final int HTTP_CONNECTION_TIMEOUT = 0 * 1000;
-    public static List<GroupInfo> list_group;       // 通讯录中的对讲组
-    public static List<UserInfo> list_person;       // 通讯录中的好友
-    public static content playerObject;// 播放器播放对象
+
+
+    public static List<secondaryCity> CityCatalogList; // 缓存的城市列表
+    public static ArrayList<String> staticFacesList;   // 从Asset中取出的表情list
+    public static List<GroupInfo> list_group;          // 通讯录中的对讲组
+    public static List<UserInfo> list_person;          // 通讯录中的好友
+    public static content playerObject;                // 播放器播放对象
+
     //缓存路径
     public static String playCacheDirI = Environment.getRootDirectory().getAbsolutePath(); // 获取手机根目录
     public static String playCacheDirO = Environment.getExternalStorageDirectory().getAbsolutePath(); // 获取 SD 卡根目录
     public static String ksyPlayCache = "/WTFM/playCache/";// 金山云缓存地址
     public static String upLoadCache = "/WTFM/APP/";// app安装地址
 
-    //缓存的城市列表
-    public static List<secondaryCity> CityCatalogList;
+
 
     /**
      * 版本号

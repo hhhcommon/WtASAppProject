@@ -1,7 +1,7 @@
 package com.woting.common.constant;
 
 /**
- * DB常量类
+ * 常量类
  * author：辛龙 (xinLong)
  * 2016/12/28 11:21
  * 邮箱：645700751@qq.com

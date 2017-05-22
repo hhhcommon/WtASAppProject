@@ -7,6 +7,7 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
@@ -127,6 +128,7 @@ public class IntegrationPlayerService extends Service implements OnCacheStatusLi
         initVlc();
         initTts();
         initIntent();
+
     }
 
     // 初始化数据库对象

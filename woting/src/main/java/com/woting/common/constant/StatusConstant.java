@@ -9,5 +9,5 @@ package com.woting.common.constant;
  */
 public class StatusConstant {
 	/**test*/
-	public static boolean isSendNetRequest = false;
+	public static boolean IS_LOGIN = false;
 }
