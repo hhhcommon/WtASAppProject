@@ -160,7 +160,7 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
         setUserVisibleHint(getUserVisibleHint());
     }
 
-    // 请求网络获取分类信息
+    // 请求网络
     private void sendRequest() {
 
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
@@ -170,6 +170,7 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
             jsonObject.put("Page", String.valueOf(page));
             jsonObject.put("ResultType", "3");
             jsonObject.put("RelLevel", "2");
+            jsonObject.put("PageType", "0");
             jsonObject.put("PageSize", "10");
         } catch (JSONException e) {
             e.printStackTrace();
@@ -200,25 +201,41 @@ public class ClassifyFragment extends Fragment implements TipView.WhiteViewClick
                             adapter.notifyDataSetChanged();
                         }
                         setOnItem();
+                        mListView.setPullLoadEnable(true);
                         tipView.setVisibility(View.GONE);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        mListView.setAdapter(new ForNullAdapter(context));
-                        if (newList == null || newList.size() <= 0) {
+                        if(newList.size()>0){
+                            if (adapter == null) {
+                                mListView.setAdapter(adapter = new ContentAdapter(context, newList));
+                            } else {
+                                adapter.notifyDataSetChanged();
+                            }
+                        }else{
+                            mListView.setAdapter(new ForNullAdapter(context));
+                        }
+                        if (RefreshType == 1) {
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.IS_ERROR);
-                        } else {
-                            ToastUtils.show_always(context, getString(R.string.error_data));
+                        } else{
+                            mListView.setPullLoadEnable(false);
                         }
                     }
                 } else {
-                    mListView.setPullLoadEnable(false);
-                    mListView.setAdapter(new ForNullAdapter(context));
-                    if (newList == null || newList.size() <= 0) {
+                    if(newList.size()>0){
+                        if (adapter == null) {
+                            mListView.setAdapter(adapter = new ContentAdapter(context, newList));
+                        } else {
+                            adapter.notifyDataSetChanged();
+                        }
+                    }else{
+                        mListView.setAdapter(new ForNullAdapter(context));
+                    }
+                    if (RefreshType == 1) {
                         tipView.setVisibility(View.VISIBLE);
-                        tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
-                    } else {
-                        ToastUtils.show_always(context, getString(R.string.no_data));
+                        tipView.setTipView(TipView.TipStatus.NO_DATA);
+                    } else{
+                        mListView.setPullLoadEnable(false);
                     }
                 }
                 if (RefreshType == 1) {

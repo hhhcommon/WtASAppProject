@@ -57,7 +57,7 @@ public class GlobalConfig {
     /**
      * 版本号
      */
-    public static final String appVersionName = "0.1.0.X.1";
+    public static final String appVersionName = "0.1.0.X.45";
     /**
      * 数据库版本号
      */

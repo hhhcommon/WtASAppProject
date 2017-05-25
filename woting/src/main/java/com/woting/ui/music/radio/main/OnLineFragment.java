@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -52,9 +53,11 @@ import com.woting.ui.music.nationalradio.NationalRadioFragment;
 import com.woting.ui.music.radio.model.RadioPlay;
 import com.woting.ui.music.fmlist.FMListFragment;
 import com.woting.ui.main.MainActivity;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -171,7 +174,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
     private void setAdapter() {
         adapters = new CityNewAdapter(context, mainLists);
         gridView.setAdapter(adapters);
-        adapter = new OnLinesAdapter(context, newList,1);
+        adapter = new OnLinesAdapter(context, newList, 1);
         expandableListMain.setAdapter(adapter);
     }
 
@@ -309,7 +312,6 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
     }
 
 
-
     private void getCity() {
         // 此处在 splashActivity 中 refreshB 设置成 true
         cityId = shared.getString(StringConstant.CITYID, "110000");
@@ -334,7 +336,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
             protected void requestSuccess(JSONObject result) {
                 if (isCancelRequest) return;
                 try {
-                  String  returnType = result.getString("ReturnType");
+                    String returnType = result.getString("ReturnType");
                     if (returnType != null && returnType.equals("1001")) {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         String MainList = arg1.getString("List");
@@ -394,12 +396,12 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 try {
-                   String returnType = result.getString("ReturnType");
+                    String returnType = result.getString("ReturnType");
                     if (returnType != null && returnType.equals("1001")) {
                         page++;
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                         beginCatalogId = arg1.getString("BeginCatalogId");
-                         List<RadioPlay>  mainList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RadioPlay>>() {
+                        List<RadioPlay> mainList = new Gson().fromJson(arg1.getString("List"), new TypeToken<List<RadioPlay>>() {
                         }.getType());
                         if (RefreshType == 1) {
                             newList.clear();
@@ -413,8 +415,11 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                         setItemListener();
                         tipView.setVisibility(View.GONE);
                     } else {
-                        tipView.setVisibility(View.VISIBLE);
-                        tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
+                        if (newList.size() > 0) {
+                         } else {
+                            tipView.setVisibility(View.VISIBLE);
+                            tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -445,7 +450,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                 if (mainLists != null && mainLists.get(position) != null && mainLists.get(position).getMediaType() != null) {
                     String MediaType = mainLists.get(position).getMediaType();
                     if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
-                        dbDao.savePlayerHistory(MediaType,mainLists,position);// 保存播放历史
+                        dbDao.savePlayerHistory(MediaType, mainLists, position);// 保存播放历史
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();
                         bundle1.putString(StringConstant.TEXT_CONTENT, mainLists.get(position).getContentName());
@@ -468,7 +473,7 @@ public class OnLineFragment extends Fragment implements TipView.WhiteViewClick {
                     String MediaType = newList.get(groupPosition).getList().get(childPosition).getMediaType();
                     if (MediaType.equals(StringConstant.TYPE_RADIO) || MediaType.equals(StringConstant.TYPE_AUDIO)) {
 
-                        dbDao.savePlayerHistory(MediaType,newList.get(groupPosition).getList(),childPosition);// 保存播放历史
+                        dbDao.savePlayerHistory(MediaType, newList.get(groupPosition).getList(), childPosition);// 保存播放历史
 
                         Intent push = new Intent(BroadcastConstants.PLAY_TEXT_VOICE_SEARCH);
                         Bundle bundle1 = new Bundle();

@@ -158,7 +158,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("CatalogType", "-1");
-            jsonObject.put("CatalogId", "cn0");// 此处需要改
+            jsonObject.put("CatalogId", "top01");// 此处需要改
             jsonObject.put("Size", "-1");
         } catch (JSONException e) {
             e.printStackTrace();
@@ -219,6 +219,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
             jsonObject.put("Page", String.valueOf(page));
             jsonObject.put("PerSize", "3");
             jsonObject.put("ResultType", "3");
+            jsonObject.put("PageType", "0");
             jsonObject.put("PageSize", "10");
         } catch (JSONException e) {
             e.printStackTrace();

@@ -31,8 +31,8 @@ public class TestAllUtils {
         Log.e("当前可用内存","==="+FileSizeUtil.formatFileSize(size5, false));
 
 
-        ToastUtils.show_always(context, "测试：第1版，错误的");
-        ToastUtils.show_always(context, "测试：第2版，正确的");
+//        ToastUtils.show_always(context, "测试：第1版，错误的");
+//        ToastUtils.show_always(context, "测试：第2版，正确的");
     }
 
 }

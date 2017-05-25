@@ -18,7 +18,7 @@ public class CollocationHelper {
     private static String _uploadBaseUrl = "http://182.92.175.134:908/CM/";
     private static String _socketUrl = "182.92.175.134";//生产服务器地址
 //    private static String _socketUrl = "123.56.254.75";//测试服务器地址
-    //	private static String _socketUrl = "192.168.5.17";//
+//    	private static String _socketUrl = "192.168.5.17";//
     private static String _baseUrl = "http://182.92.175.134:808/";//生产服务器地址
 //    private static String _baseUrl = "http://123.56.254.75:808/";//测试服务器地址
     //  private static String _baseUrl = "http://192.168.5.17:808/";

@@ -153,6 +153,7 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                 jsonObject.put("Page", String.valueOf(page));
                 jsonObject.put("PerSize", "3");
                 jsonObject.put("ResultType", "3");
+                jsonObject.put("PageType", "0");
                 jsonObject.put("PageSize", "10");
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -177,25 +178,41 @@ public class RecommendFragment extends Fragment implements TipView.WhiteViewClic
                             adapter.notifyDataSetChanged();
                         }
                         setOnItem();
+                        mListView.setPullLoadEnable(true);
                         tipView.setVisibility(View.GONE);
                     } else {
-                        mListView.setPullLoadEnable(false);
-                        mListView.setAdapter(new ForNullAdapter(context));
+                        if(newList.size()>0){
+                            if (adapter == null) {
+                                mListView.setAdapter(adapter = new ContentAdapter(context, newList));
+                            } else {
+                                adapter.notifyDataSetChanged();
+                            }
+                        }else{
+                            mListView.setAdapter(new ForNullAdapter(context));
+                        }
                         if (refreshType == 1) {
                             tipView.setVisibility(View.VISIBLE);
                             tipView.setTipView(TipView.TipStatus.NO_DATA, "数据君不翼而飞了\n点击界面会重新获取数据哟");
                         } else {
-                            ToastUtils.show_always(context, getString(R.string.no_data));
+                            mListView.setPullLoadEnable(false);
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    mListView.setAdapter(new ForNullAdapter(context));
+                    if(newList.size()>0){
+                        if (adapter == null) {
+                            mListView.setAdapter(adapter = new ContentAdapter(context, newList));
+                        } else {
+                            adapter.notifyDataSetChanged();
+                        }
+                    }else{
+                        mListView.setAdapter(new ForNullAdapter(context));
+                    }
                     if (refreshType == 1) {
                         tipView.setVisibility(View.VISIBLE);
                         tipView.setTipView(TipView.TipStatus.IS_ERROR);
-                    } else {
-                        ToastUtils.show_always(context, getString(R.string.error_data));
+                    } else{
+                        mListView.setPullLoadEnable(false);
                     }
                 }
 

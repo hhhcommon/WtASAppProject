@@ -28,6 +28,7 @@ import com.woting.common.util.DialogUtils;
 import com.woting.common.util.ToastUtils;
 import com.woting.common.volley.VolleyCallback;
 import com.woting.common.volley.VolleyRequest;
+import com.woting.common.widgetui.HeightListView;
 import com.woting.common.widgetui.TipView;
 import com.woting.common.widgetui.pulltorefresh.PullToRefreshLayout;
 import com.woting.common.widgetui.xlistview.XListView;
@@ -36,6 +37,7 @@ import com.woting.ui.music.fmlist.FMListFragment;
 import com.woting.ui.music.model.content;
 import com.woting.ui.music.main.HomeActivity;
 import com.woting.ui.music.radio.adapter.OnLinesAdapter;
+import com.woting.ui.music.radiolist.adapter.ForNullAdapter;
 import com.woting.ui.musicplay.play.dao.SearchPlayerHistoryDao;
 import com.woting.ui.music.radio.model.RadioPlay;
 import com.woting.ui.main.MainActivity;
@@ -80,7 +82,9 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
     private int page = 1;
     private String BeginCatalogId = "";
     private int ViewType = -1; //=-1时 正常处理 等于end时可以加载土司
-    private String ResultType = "1";// 1节点树,3列表
+    private String ResultType = "3";// 1节点树,3列表
+    private List<content> headList;
+    private boolean showHeadView=false;
 
 
     @Override
@@ -195,7 +199,7 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
     private void getData() {
         if (GlobalConfig.CURRENT_NETWORK_STATE_TYPE != -1 && CatalogId != null) {
             dialog = DialogUtils.Dialog(context);
-            send();
+
             sendForC();
         } else {
             tipView.setVisibility(View.VISIBLE);
@@ -209,7 +213,6 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
             dialog = DialogUtils.Dialog(context);
             page = 1;
             RefreshType = 1;
-            send();
             sendForC();
         } else {
             tipView.setVisibility(View.VISIBLE);
@@ -236,6 +239,8 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
 
             @Override
             protected void requestSuccess(JSONObject result) {
+                send();
+
                 if (dialog != null) dialog.dismiss();
                 if (isCancelRequest) return;
                 try {
@@ -245,13 +250,9 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
                             JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
                             try {
                                 String StringSubList = arg1.getString("List");
-                                List<content> list = new Gson().fromJson(StringSubList, new TypeToken<List<content>>() {
+                                headList = new Gson().fromJson(StringSubList, new TypeToken<List<content>>() {
                                 }.getType());
-                                if (list != null && list.size() > 0) {
-                                    mListView.addHeaderView(headView);
-                                    listView_head.setAdapter(new ContentAdapter(context, list));
-                                    setHeadListListener(list);
-                                }
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -266,9 +267,12 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
 
             @Override
             protected void requestError(VolleyError error) {
+                send();
+
             }
         });
     }
+
 
     private void setHeadListListener(final List<content> list) {
         listView_head.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -324,10 +328,8 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
                     e.printStackTrace();
                 }
                 if (ReturnType != null && ReturnType.equals("1001")) {
-
                     try {
                         JSONObject arg1 = (JSONObject) new JSONTokener(result.getString("ResultList")).nextValue();
-
                         try {
                             BeginCatalogId = arg1.getString("BeginCatalogId");
                         } catch (Exception e) {
@@ -350,67 +352,27 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
                             }
                             try {
                                 if (SubTempList == null || SubTempList.size() == 0) {
-
-                                    if (RefreshType == 1) {
-                                        if (ResultType.equals("3")) {
-                                            mPullToRefreshLayout.setVisibility(View.GONE);
-                                        } else {
-                                            mlistView_main.setVisibility(View.GONE);
-                                        }
-                                        tipView.setVisibility(View.VISIBLE);
-                                        tipView.setTipView(TipView.TipStatus.NO_DATA);
+                                    if (headList != null && headList.size() > 0) {
+                                        setShowView(1);
                                     } else {
-                                        if (ResultType.equals("3")) {
-                                            mlistView_main.stopLoadMore();
-                                        } else {
-                                            mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
-                                        }
+                                        setShowView(6);
                                     }
                                 } else {
+                                    if (headList != null && headList.size() > 0) {
+                                        setShowView(4);
+                                    } else {
+                                        setShowView(2);
+                                    }
                                     page++;
-                                    mPullToRefreshLayout.setVisibility(View.VISIBLE);
-                                    mlistView_main.setVisibility(View.GONE);
-                                    tipView.setVisibility(View.GONE);
-                                    if (RefreshType == 1) {
-                                        mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-                                        if (SubList != null) SubList.clear();
-                                        SubList.addAll(SubTempList);
-                                    } else {
-                                        mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
-                                        SubList.addAll(SubTempList);
-                                    }
-
-                                    if (adapter == null) {
-                                        adapter = new OnLinesAdapter(context, SubList, 3);
-                                        mListView.setAdapter(adapter);
-                                    } else {
-                                        adapter.notifyDataSetChanged();
-                                    }
-
-                                    for (int i = 0; i < SubList.size(); i++) {
-                                        mListView.expandGroup(i);
-                                    }
                                 }
-                                setListViewExpand();
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                if (RefreshType == 1) {
-                                    if (ResultType.equals("3")) {
-                                        mPullToRefreshLayout.setVisibility(View.GONE);
-                                    } else {
-                                        mlistView_main.setVisibility(View.GONE);
-                                    }
-                                    tipView.setVisibility(View.VISIBLE);
-                                    tipView.setTipView(TipView.TipStatus.NO_DATA);
+                                if (headList != null && headList.size() > 0) {
+                                    setShowView(1);
                                 } else {
-                                    if (ResultType.equals("3")) {
-                                        mlistView_main.stopLoadMore();
-                                    } else {
-                                        mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
-                                    }
+                                    setShowView(7);
                                 }
                             }
-
                         } else if (ResultType.equals("3")) {
                             // 列表的形式
                             try {
@@ -419,110 +381,46 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
                                 }.getType());
 
                                 if (SubListList != null && SubListList.size() > 0) {
+                                    if (headList != null && headList.size() > 0) {
+                                        setShowView(5);
+                                    } else {
+                                        setShowView(3);
+                                    }
                                     page++;
-                                    mPullToRefreshLayout.setVisibility(View.GONE);
-                                    mlistView_main.setVisibility(View.VISIBLE);
-                                    tipView.setVisibility(View.GONE);
-                                    if (RefreshType == 1) {
-                                        mlistView_main.stopRefresh();
-                                        if (newList.size() > 0) newList.clear();
-                                        newList.addAll(SubListList);
-                                    } else {
-                                        mlistView_main.stopLoadMore();
-                                        newList.addAll(SubListList);
-                                    }
-                                    if (adapterList == null) {
-                                        adapterList = new ContentAdapter(context, newList);
-                                        mlistView_main.setAdapter(adapterList);
-                                    } else {
-                                        adapterList.notifyDataSetChanged();
-                                    }
-                                    setListView();
                                 } else {
-                                    if (RefreshType == 1) {
-                                        if (ResultType.equals("3")) {
-                                            mPullToRefreshLayout.setVisibility(View.GONE);
-                                        } else {
-                                            mlistView_main.setVisibility(View.GONE);
-                                        }
-                                        tipView.setVisibility(View.VISIBLE);
-                                        tipView.setTipView(TipView.TipStatus.NO_DATA);
+                                    if (headList != null && headList.size() > 0) {
+                                        setShowView(1);
                                     } else {
-                                        if (ResultType.equals("3")) {
-                                            mlistView_main.stopLoadMore();
-                                        } else {
-                                            mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
-                                        }
+                                        setShowView(6);
                                     }
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                if (RefreshType == 1) {
-                                    if (ResultType.equals("3")) {
-                                        mPullToRefreshLayout.setVisibility(View.GONE);
-                                    } else {
-                                        mlistView_main.setVisibility(View.GONE);
-                                    }
-                                    tipView.setVisibility(View.VISIBLE);
-                                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                                if (headList != null && headList.size() > 0) {
+                                    setShowView(1);
                                 } else {
-                                    if (ResultType.equals("3")) {
-                                        mlistView_main.stopLoadMore();
-                                    } else {
-                                        mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
-                                    }
+                                    setShowView(7);
                                 }
                             }
                         } else {
-                            if (RefreshType == 1) {
-                                if (ResultType.equals("3")) {
-                                    mPullToRefreshLayout.setVisibility(View.GONE);
-                                } else {
-                                    mlistView_main.setVisibility(View.GONE);
-                                }
-                                tipView.setVisibility(View.VISIBLE);
-                                tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                            if (headList != null && headList.size() > 0) {
+                                setShowView(1);
                             } else {
-                                if (ResultType.equals("3")) {
-                                    mlistView_main.stopLoadMore();
-                                } else {
-                                    mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
-                                }
+                                setShowView(6);
                             }
                         }
-
                     } catch (Exception e) {
-                        if (RefreshType == 1) {
-                            if (ResultType.equals("3")) {
-                                mPullToRefreshLayout.setVisibility(View.GONE);
-                            } else {
-                                mlistView_main.setVisibility(View.GONE);
-                            }
-                            tipView.setVisibility(View.VISIBLE);
-                            tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                        if (headList != null && headList.size() > 0) {
+                            setShowView(1);
                         } else {
-                            if (ResultType.equals("3")) {
-                                mlistView_main.stopLoadMore();
-                            } else {
-                                mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
-                            }
+                            setShowView(6);
                         }
                     }
                 } else {
-                    if (RefreshType == 1) {
-                        if (ResultType.equals("3")) {
-                            mPullToRefreshLayout.setVisibility(View.GONE);
-                        } else {
-                            mlistView_main.setVisibility(View.GONE);
-                        }
-                        tipView.setVisibility(View.VISIBLE);
-                        tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                    if (headList != null && headList.size() > 0) {
+                        setShowView(1);
                     } else {
-                        if (ResultType.equals("3")) {
-                            mlistView_main.stopLoadMore();
-                        } else {
-                            mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
-                        }
+                        setShowView(6);
                     }
                 }
             }
@@ -530,28 +428,211 @@ public class CityRadioFragment extends Fragment implements View.OnClickListener,
             @Override
             protected void requestError(VolleyError error) {
                 if (dialog != null) dialog.dismiss();
-                if (RefreshType == 1) {
-                    if (ResultType.equals("1")) {
-                        mPullToRefreshLayout.setVisibility(View.GONE);
-                        mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-                    } else {
-                        mlistView_main.setVisibility(View.GONE);
-                        mlistView_main.stopRefresh();
-                    }
-
-                    tipView.setVisibility(View.VISIBLE);
-                    tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                if (headList != null && headList.size() > 0) {
+                    setShowView(1);
                 } else {
-                    if (ResultType.equals("1")) {
-                        mlistView_main.stopLoadMore();
-                    } else {
-                        mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
-                    }
+                    setShowView(7);
                 }
             }
         });
     }
+///////////////////////////
 
+    /**
+     * 数据展示
+     *
+     * @param type
+     */
+    private void setShowView(int type) {
+        switch (type) {
+            case 1:// 只展示headView
+                if (headList != null && headList.size() > 0) {
+                    tipView.setVisibility(View.GONE);
+                    if (RefreshType == 1) {
+                        if (ResultType.equals("1")) {
+                            if (!showHeadView) {
+                                mListView.addHeaderView(headView);
+                                showHeadView=true;
+                            }
+                            mListView.setAdapter(new ForNullAdapter(context));
+                            mPullToRefreshLayout.setVisibility(View.VISIBLE);
+                            mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+                            mlistView_main.setVisibility(View.GONE);
+                        } else {
+                            if (!showHeadView) {
+                                mlistView_main.addHeaderView(headView);
+                                showHeadView=true;
+                            }
+                            mlistView_main.setAdapter(new ForNullAdapter(context));
+                            mPullToRefreshLayout.setVisibility(View.GONE);
+                            mlistView_main.setVisibility(View.VISIBLE);
+                            mlistView_main.stopRefresh();
+                        }
+                    } else {
+                        if (ResultType.equals("1")) {
+                            if (!showHeadView) {
+                                mListView.addHeaderView(headView);
+                                showHeadView=true;
+                            }
+                            mListView.setAdapter(new ForNullAdapter(context));
+                            mPullToRefreshLayout.setVisibility(View.VISIBLE);
+                            mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+                            mlistView_main.setVisibility(View.GONE);
+                        } else {
+                            if (!showHeadView) {
+                                mlistView_main.addHeaderView(headView);
+                                showHeadView=true;
+                            }
+                            mlistView_main.setAdapter(new ForNullAdapter(context));
+                            mPullToRefreshLayout.setVisibility(View.GONE);
+                            mlistView_main.setVisibility(View.VISIBLE);
+                            mlistView_main.stopLoadMore();
+                        }
+                    }
+
+                    listView_head.setAdapter(new ContentAdapter(context, headList));
+                    new HeightListView(context).setListViewHeightBasedOnChildren(listView_head);
+
+                    setHeadListListener(headList);
+                }
+                break;
+            case 2:// 展示ExpView
+                mPullToRefreshLayout.setVisibility(View.VISIBLE);
+                mlistView_main.setVisibility(View.GONE);
+                tipView.setVisibility(View.GONE);
+                if (RefreshType == 1) {
+                    mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+                    if (SubList != null) SubList.clear();
+                    SubList.addAll(SubTempList);
+                } else {
+                    mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+                    SubList.addAll(SubTempList);
+                }
+
+                if (adapter == null) {
+                    adapter = new OnLinesAdapter(context, SubList, 3);
+                    mListView.setAdapter(adapter);
+                } else {
+                    adapter.notifyDataSetChanged();
+                }
+
+                for (int i = 0; i < SubList.size(); i++) {
+                    mListView.expandGroup(i);
+                }
+                setListViewExpand();
+                break;
+            case 3:// 展示ListView
+                mPullToRefreshLayout.setVisibility(View.GONE);
+                mlistView_main.setVisibility(View.VISIBLE);
+                tipView.setVisibility(View.GONE);
+                if (RefreshType == 1) {
+                    mlistView_main.stopRefresh();
+                    if (newList.size() > 0) newList.clear();
+                    newList.addAll(SubListList);
+                } else {
+                    mlistView_main.stopLoadMore();
+                    newList.addAll(SubListList);
+                }
+                if (adapterList == null) {
+                    adapterList = new ContentAdapter(context, newList);
+                    mlistView_main.setAdapter(adapterList);
+                } else {
+                    adapterList.notifyDataSetChanged();
+                }
+                setListView();
+                break;
+            case 4:// 展示headView+ExpView
+                if (headList != null && headList.size() > 0) {
+                    if (!showHeadView) {
+                        mListView.addHeaderView(headView);
+                        listView_head.setAdapter(new ContentAdapter(context, headList));
+                        new HeightListView(context).setListViewHeightBasedOnChildren(listView_head);
+                        setHeadListListener(headList);
+                        showHeadView=true;
+                    }
+                }
+                mPullToRefreshLayout.setVisibility(View.VISIBLE);
+                mlistView_main.setVisibility(View.GONE);
+                tipView.setVisibility(View.GONE);
+                if (RefreshType == 1) {
+                    mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+                    if (SubList != null) SubList.clear();
+                    SubList.addAll(SubTempList);
+                } else {
+                    mPullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+                    SubList.addAll(SubTempList);
+                }
+
+                if (adapter == null) {
+                    adapter = new OnLinesAdapter(context, SubList, 3);
+                    mListView.setAdapter(adapter);
+                } else {
+                    adapter.notifyDataSetChanged();
+                }
+
+                for (int i = 0; i < SubList.size(); i++) {
+                    mListView.expandGroup(i);
+                }
+                setListViewExpand();
+                break;
+            case 5:// 展示headView+ListView
+                if (headList != null && headList.size() > 0) {
+                    if (!showHeadView) {
+                        mlistView_main.addHeaderView(headView);
+                        listView_head.setAdapter(new ContentAdapter(context, headList));
+                        new HeightListView(context).setListViewHeightBasedOnChildren(listView_head);
+                        setHeadListListener(headList);
+                        showHeadView=true;
+                    }
+                }
+
+                mPullToRefreshLayout.setVisibility(View.GONE);
+                mlistView_main.setVisibility(View.VISIBLE);
+                tipView.setVisibility(View.GONE);
+                if (RefreshType == 1) {
+                    mlistView_main.stopRefresh();
+                    if (newList.size() > 0) newList.clear();
+                    newList.addAll(SubListList);
+                } else {
+                    mlistView_main.stopLoadMore();
+                    newList.addAll(SubListList);
+                }
+                if (adapterList == null) {
+                    adapterList = new ContentAdapter(context, newList);
+                    mlistView_main.setAdapter(adapterList);
+                } else {
+                    adapterList.notifyDataSetChanged();
+                }
+                setListView();
+                break;
+            case 6:// 展示无数据
+                if (ResultType.equals("1")) {
+                    mPullToRefreshLayout.setVisibility(View.GONE);
+                    mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+                } else {
+                    mlistView_main.setVisibility(View.GONE);
+                    mlistView_main.stopRefresh();
+                }
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.NO_DATA);
+                break;
+            case 7:// 展示错误数据
+                if (ResultType.equals("1")) {
+                    mPullToRefreshLayout.setVisibility(View.GONE);
+                    mPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+                } else {
+                    mlistView_main.setVisibility(View.GONE);
+                    mlistView_main.stopRefresh();
+                }
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setTipView(TipView.TipStatus.IS_ERROR);
+                break;
+        }
+
+    }
+
+
+    /////////////////////////
     private void setListViewExpand() {
         mListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override

@@ -178,7 +178,7 @@ public class LiveFragment extends Fragment implements TipView.WhiteViewClick {
         JSONObject jsonObject = VolleyRequest.getJsonObject(context);
         try {
             jsonObject.put("CatalogType", "-1");
-            jsonObject.put("CatalogId", "cn0");
+            jsonObject.put("CatalogId", "top05");
             jsonObject.put("Size", "-1");// 此处需要改成-1
         } catch (JSONException e) {
             e.printStackTrace();
